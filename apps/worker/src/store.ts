@@ -19,6 +19,18 @@ export interface AppUser {
   activeTracks: TrackId[];
 }
 
+/** آمار انگیزشی کاربر (واژه‌راه-مانند): سکه، روز پیوسته، شمارهٔ روز و تاریخ کنکور */
+export interface UserStats {
+  userId: string;
+  coins: number;
+  streakDays: number;
+  /** YYYY-MM-DD — آخرین روز مطالعه (به وقت تهران) */
+  lastStudyDate: string | null;
+  dayNumber: number;
+  /** YYYY-MM-DD — تاریخ کنکور داوطلب */
+  examDate: string | null;
+}
+
 export interface AnswerEvent {
   id: string;
   userId: string;
@@ -35,6 +47,11 @@ export interface DataStore {
   getUserByTelegramId(telegramUserId: number): Promise<AppUser | null>;
   createUser(input: { telegramUserId?: number; displayName?: string }): Promise<AppUser>;
   setActiveTracks(userId: string, tracks: TrackId[]): Promise<void>;
+
+  getStats(userId: string): Promise<UserStats | null>;
+  upsertStats(stats: UserStats): Promise<void>;
+  /** پاسخ‌های کاربر از یک زمان به بعد (برای کوییز شبانه و آمار امروز) */
+  listAnswersSince(userId: string, sinceIso: string): Promise<AnswerEvent[]>;
 
   listNodes(): Promise<KnowledgeNode[]>;
   listDependencies(): Promise<NodeDependency[]>;
@@ -128,6 +145,54 @@ export class SupabaseStore implements DataStore {
       `app_users?id=eq.${userId}`,
       { active_tracks: tracks },
     );
+  }
+
+  async getStats(userId: string): Promise<UserStats | null> {
+    const rows = (await this.request(
+      'GET',
+      'app_users',
+      undefined,
+      `?id=eq.${userId}&select=coins,streak_days,last_study_date,day_number,exam_date`,
+    )) as Record<string, unknown>[] | null;
+    const row = rows?.[0];
+    if (!row) return null;
+    return {
+      userId,
+      coins: Number(row.coins ?? 0),
+      streakDays: Number(row.streak_days ?? 0),
+      lastStudyDate: row.last_study_date ? String(row.last_study_date) : null,
+      dayNumber: Number(row.day_number ?? 0),
+      examDate: row.exam_date ? String(row.exam_date) : null,
+    };
+  }
+
+  async upsertStats(stats: UserStats): Promise<void> {
+    await this.request('PATCH', `app_users?id=eq.${stats.userId}`, {
+      coins: stats.coins,
+      streak_days: stats.streakDays,
+      last_study_date: stats.lastStudyDate,
+      day_number: stats.dayNumber,
+      exam_date: stats.examDate,
+    });
+  }
+
+  async listAnswersSince(userId: string, sinceIso: string): Promise<AnswerEvent[]> {
+    const rows = (await this.request(
+      'GET',
+      'answer_events',
+      undefined,
+      `?user_id=eq.${userId}&answered_at=gte.${sinceIso}&select=*`,
+    )) as Record<string, unknown>[] | null;
+    return (rows ?? []).map((row) => ({
+      id: String(row.id),
+      userId: String(row.user_id),
+      questionId: String(row.question_id),
+      selectedOption: Number(row.selected_option),
+      isCorrect: Boolean(row.is_correct),
+      attemptId: String(row.attempt_id),
+      answeredAt: String(row.answered_at),
+      rippleReport: row.ripple_report,
+    }));
   }
 
   async listNodes(): Promise<KnowledgeNode[]> {

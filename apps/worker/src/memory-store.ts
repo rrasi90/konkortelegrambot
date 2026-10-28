@@ -40,6 +40,22 @@ export class MemoryStore implements DataStore {
     if (user) user.activeTracks = tracks;
   }
 
+  stats = new Map<string, import('./store').UserStats>();
+
+  async getStats(userId: string): Promise<import('./store').UserStats | null> {
+    return this.stats.get(userId) ?? null;
+  }
+
+  async upsertStats(stats: import('./store').UserStats): Promise<void> {
+    this.stats.set(stats.userId, { ...stats });
+  }
+
+  async listAnswersSince(userId: string, sinceIso: string): Promise<AnswerEvent[]> {
+    return this.answers.filter(
+      (a) => a.userId === userId && new Date(a.answeredAt) >= new Date(sinceIso),
+    );
+  }
+
   async listNodes() {
     return this.nodes;
   }

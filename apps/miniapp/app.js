@@ -39,6 +39,8 @@
     currentIndex: 0,
     selectedTrack: null,
     telegram: null,
+    nightMode: false,
+    home: null,
   };
 
   /* ---------- نمایش ---------- */
@@ -48,13 +50,47 @@
     });
   }
 
+  var TABS = ['home', 'today', 'map', 'settings'];
   function showTab(tab) {
-    ['today', 'map', 'settings'].forEach(function (t) {
+    TABS.forEach(function (t) {
       el('tab-' + t).hidden = t !== tab;
-      var btn = document.querySelector('.tab[data-tab="' + t + '"]');
+      var btn = document.querySelector('.nav-btn[data-tab="' + t + '"]');
       if (btn) btn.classList.toggle('active', t === tab);
     });
     if (tab === 'map') loadMap();
+    if (tab === 'home') loadHome();
+    if (tab === 'settings') renderSettings();
+  }
+
+  /* ---------- سرصفحه: سلام و آمار ---------- */
+  function renderHeader() {
+    var h = state.home;
+    if (!h) return;
+    el('header-greeting').hidden = false;
+    el('header-greeting').textContent = greetingFor() + (h.user.displayName || 'داوطلب');
+    el('chip-streak').hidden = false;
+    el('chip-coins').hidden = false;
+    el('chip-streak-n').textContent = h.stats.streakDays + ' روز پیوسته';
+    el('chip-coins-n').textContent = h.stats.coins;
+  }
+
+  function greetingFor() {
+    var hour = new Date().getHours();
+    if (hour < 5) return 'شب‌های بخیر، ';
+    if (hour < 12) return 'صبح بخیر، ';
+    if (hour < 17) return 'وقت‌بخیر، ';
+    if (hour < 21) return 'عصر بخیر، ';
+    return 'شب بخیر، ';
+  }
+
+  function updateStatsChips(stats) {
+    if (!stats) return;
+    if (state.home) {
+      state.home.stats.coins = stats.coins;
+      state.home.stats.streakDays = stats.streakDays;
+    }
+    el('chip-streak-n').textContent = stats.streakDays + ' روز پیوسته';
+    el('chip-coins-n').textContent = stats.coins;
   }
 
   /* ---------- ورود ---------- */
@@ -76,9 +112,13 @@
       // فقط هستهٔ مشترک — انتخاب گرایش لازم است
       showView('view-tracks');
     } else {
-      showView('view-app');
-      loadQueue();
+      enterApp();
     }
+  }
+
+  function enterApp() {
+    showView('view-app');
+    showTab('home');
   }
 
   el('btn-login').addEventListener('click', function () {
@@ -109,20 +149,112 @@
     if (!state.selectedTrack) return;
     API.put('/api/tracks', { tracks: [state.selectedTrack] }).then(function () {
       state.tracks = ['common', state.selectedTrack];
-      showView('view-app');
-      loadQueue();
+      enterApp();
     });
   });
 
-  /* ---------- تب‌ها ---------- */
-  document.querySelectorAll('.tab').forEach(function (btn) {
+  /* ---------- ناوبری پایین ---------- */
+  document.querySelectorAll('.nav-btn').forEach(function (btn) {
     btn.addEventListener('click', function () { showTab(btn.dataset.tab); });
   });
+
+  /* ---------- داشبورد خانه ---------- */
+  function loadHome() {
+    API.get('/api/home').then(function (data) {
+      state.home = data;
+      renderHeader();
+      renderHome(data);
+    });
+  }
+
+  function renderHome(h) {
+    var container = el('home-container');
+    var trackName = { business: 'مدیریت بازرگانی', technology: 'مدیریت تکنولوژی' }[
+      (h.user.activeTracks || []).filter(function (t) { return t !== 'common'; })[0]
+    ] || 'هستهٔ مشترک';
+
+    var html = '';
+
+    // کارت همراه (ماسکات) + پیام منتور
+    html +=
+      '<section class="dash-card mascot-card">' +
+      '<div class="mascot" aria-hidden="true">' +
+      '<svg viewBox="0 0 64 64" width="56" height="56">' +
+      '<circle cx="32" cy="32" r="30" fill="var(--primary-soft)"/>' +
+      '<path d="M18 34a14 14 0 0 1 28 0" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>' +
+      '<circle cx="24" cy="30" r="3" fill="var(--primary)"/>' +
+      '<circle cx="40" cy="30" r="3" fill="var(--primary)"/>' +
+      '<path d="M26 42c2 2 4 3 6 3s4-1 6-3" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>' +
+      '</svg></div>' +
+      '<div class="mascot-text"><strong>همراه شما</strong>' +
+      '<p>' + escapeHtml(h.mentorMessage) + '</p></div></section>';
+
+    // کارت هدف: شمارش معکوس + پیشرفت کل مسیر
+    html += '<section class="dash-card goal-card">';
+    if (h.stats.daysLeft !== null && h.stats.daysLeft >= 0) {
+      html +=
+        '<div class="goal-countdown"><span class="count-num">' + h.stats.daysLeft + '</span>' +
+        '<span class="count-label">روز تا کنکور</span></div>';
+    }
+    html +=
+      '<div class="goal-title">هدف: ' + escapeHtml(trackName) + '</div>' +
+      '<div class="labels"><span>کل مسیر</span><span>' + h.progress.overall + '٪</span></div>' +
+      '<div class="bar"><div class="fill" style="width:' + h.progress.overall + '%"></div></div>' +
+      '</section>';
+
+    // کارت درس روز
+    html +=
+      '<section class="dash-card lesson-card">' +
+      '<div class="lesson-head"><span>روز ' + (h.stats.dayNumber + (h.today.answered > 0 ? 0 : 1)) + '</span>' +
+      '<span>' + h.reviewDue + ' کارت برای مرور</span></div>' +
+      '<p class="lesson-sub">امروز ' + h.today.answered + ' پاسخ ثبت کرده‌اید (' + h.today.correct + ' درست)</p>' +
+      '<button id="btn-start-lesson" class="btn primary">شروع درس امروز</button>' +
+      '</section>';
+
+    // کوییز شبانه
+    html += '<section class="dash-card night-card' + (h.nightQuiz.available ? '' : ' off') + '">';
+    if (h.nightQuiz.available) {
+      html +=
+        '<div class="night-head"><span class="night-icon" aria-hidden="true">' +
+        '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" fill="currentColor"/></svg></span>' +
+        '<div><strong>کوییز شبانه</strong>' +
+        '<p>' + h.nightQuiz.wrongCount + ' سؤالِ اشتباه امروز را دوباره می‌سنجیم</p></div></div>' +
+        '<button id="btn-night-quiz" class="btn ghost small">شروع کوییز شبانه</button>';
+    } else {
+      html +=
+        '<div class="night-head"><div><strong>کوییز شبانه</strong>' +
+        '<p>امروز اشتباهی نداشته‌اید؛ شب که شد، گره‌های متزلزل را مرور می‌کنیم.</p></div></div>';
+    }
+    html += '</section>';
+
+    container.innerHTML = html;
+
+    var startBtn = el('btn-start-lesson');
+    if (startBtn) startBtn.addEventListener('click', function () {
+      state.nightMode = false;
+      showTab('today');
+      loadQueue();
+    });
+    var nightBtn = el('btn-night-quiz');
+    if (nightBtn) nightBtn.addEventListener('click', startNightQuiz);
+  }
+
+  function startNightQuiz() {
+    API.get('/api/night-quiz').then(function (data) {
+      if (!data.items || data.items.length === 0) return;
+      state.queue = data.items;
+      state.nightMode = true;
+      state.currentIndex = 0;
+      showTab('today');
+      renderCurrent();
+    });
+  }
 
   /* ---------- صف امروز ---------- */
   function loadQueue() {
     API.get('/api/queue?limit=10').then(function (data) {
       state.queue = data.items || [];
+      state.nightMode = false;
       state.currentIndex = 0;
       renderCurrent();
     });
@@ -134,13 +266,16 @@
     if (state.currentIndex >= state.queue.length) {
       card.hidden = true;
       empty.hidden = false;
+      empty.querySelector('p').textContent = state.nightMode
+        ? 'کوییز شبانه تمام شد؛ خواب خوبی داشته باشید.'
+        : 'برای امروز برنامه‌ای نمانده است. خسته نباشید!';
       return;
     }
     empty.hidden = true;
     card.hidden = false;
     el('answer-feedback').hidden = true;
     var item = state.queue[state.currentIndex];
-    el('q-course').textContent = item.course || '';
+    el('q-course').textContent = (state.nightMode ? 'کوییز شبانه — ' : '') + (item.course || '');
     el('q-chapter').textContent = item.chapter || '';
     var isTrap = item.card.cardType === 'trap_note';
     el('q-card-type').hidden = !isTrap;
@@ -186,6 +321,7 @@
       questionId: questionId,
       selectedOption: selected,
     }).then(function (data) {
+      if (data.stats) updateStatsChips(data.stats);
       showFeedback(item, data.report, selected, data.correctOption);
     });
   }
@@ -275,11 +411,14 @@
     });
   }
 
-  /* ---------- تنظیمات ---------- */
+  /* ---------- تنظیمات / من ---------- */
   function renderSettings() {
     document.querySelectorAll('.track-toggle .toggle').forEach(function (btn) {
       btn.classList.toggle('on', state.tracks.indexOf(btn.dataset.track) !== -1);
     });
+    if (state.home && state.home.stats.examDate) {
+      el('input-exam-date').value = state.home.stats.examDate;
+    }
   }
 
   document.querySelectorAll('.track-toggle .toggle').forEach(function (btn) {
@@ -290,8 +429,16 @@
       var tracks = state.tracks.filter(function (x) { return x !== 'common'; });
       API.put('/api/tracks', { tracks: tracks }).then(function () {
         renderSettings();
-        loadQueue();
       });
+    });
+  });
+
+  el('btn-save-exam').addEventListener('click', function () {
+    var value = el('input-exam-date').value || null;
+    API.put('/api/settings', { examDate: value }).then(function () {
+      el('settings-saved').hidden = false;
+      loadHome();
+      setTimeout(function () { el('settings-saved').hidden = true; }, 2000);
     });
   });
 
@@ -300,12 +447,10 @@
     showView('view-login');
   });
 
-  el('tab-settings').addEventListener('click', renderSettings);
-
   /* ---------- راه‌اندازی ---------- */
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
-            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&#34;', "'": '&#39;' }[c];
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&#34;', "'": '&#39;' }[c];
     });
   }
 
@@ -313,7 +458,7 @@
     API.get('/api/me').then(function (data) {
       state.tracks = (data.user && data.user.activeTracks) || ['common'];
       if (state.tracks.length <= 1) showView('view-tracks');
-      else { showView('view-app'); loadQueue(); }
+      else enterApp();
     }).catch(function () { /* 401 → صفحهٔ ورود */ });
   } else {
     tryTelegramLogin().then(function (ok) {

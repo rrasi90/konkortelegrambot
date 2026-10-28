@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>مسیر دکتری — یادگیری تطبیقی</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=2" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -49,17 +49,31 @@
   </section>
 
   <!-- اپ اصلی -->
-  <section id="view-app" class="view" hidden>
+  <section id="view-app" class="view app-shell" hidden>
     <header class="app-header">
-      <div class="tabs" role="tablist">
-        <button class="tab active" data-tab="today" role="tab">امروز</button>
-        <button class="tab" data-tab="map" role="tab">مسیر</button>
-        <button class="tab" data-tab="settings" role="tab">تنظیمات</button>
+      <div class="header-title">
+        <span class="app-name">مسیر دکتری</span>
+        <div class="stat-chips">
+          <span id="chip-streak" class="chip stat-chip" hidden>
+            <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M12 2c1 4-3 5-3 9a3 3 0 0 0 6 0c0-2-1-3-1-3s3 1 3 4a5 5 0 0 1-10 0c0-5 4-6 5-10z" fill="currentColor"/></svg>
+            <span id="chip-streak-n"></span>
+          </span>
+          <span id="chip-coins" class="chip stat-chip" hidden>
+            <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v10M9.5 9.5h5M9.5 14.5h5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+            <span id="chip-coins-n"></span>
+          </span>
+        </div>
       </div>
+      <p id="header-greeting" class="header-greeting" hidden></p>
     </header>
 
+    <!-- تب خانه -->
+    <main id="tab-home" class="tab-panel" hidden>
+      <div id="home-container"></div>
+    </main>
+
     <!-- تب امروز -->
-    <main id="tab-today" class="tab-panel">
+    <main id="tab-today" class="tab-panel" hidden>
       <div id="queue-empty" class="empty-state" hidden>
         <p>برای امروز برنامه‌ای نمانده است. خسته نباشید!</p>
       </div>
@@ -87,10 +101,10 @@
       <div id="map-container"></div>
     </main>
 
-    <!-- تب تنظیمات -->
+    <!-- تب من -->
     <main id="tab-settings" class="tab-panel" hidden>
-      <div class="login-card">
-        <h1>تنظیمات</h1>
+      <div class="login-card settings-card">
+        <h1>من</h1>
         <div class="settings-row">
           <span>گرایش فعال</span>
           <div class="track-toggle">
@@ -98,11 +112,39 @@
             <button class="toggle" data-track="technology">تکنولوژی</button>
           </div>
         </div>
+        <div class="settings-row">
+          <span>تاریخ کنکور</span>
+          <div class="exam-date-row">
+            <input id="input-exam-date" type="date" />
+            <button id="btn-save-exam" class="btn small primary">ذخیره</button>
+          </div>
+        </div>
+        <p id="settings-saved" class="saved-msg" hidden>ذخیره شد.</p>
         <button id="btn-logout" class="btn ghost">خروج</button>
       </div>
     </main>
+
+    <!-- ناوبری پایین -->
+    <nav class="bottom-nav" role="tablist">
+      <button class="nav-btn active" data-tab="home" role="tab">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 11 12 4l8 7v9h-5v-6h-6v6H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <span>خانه</span>
+      </button>
+      <button class="nav-btn" data-tab="today" role="tab">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 3v4M16 3v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>امروز</span>
+      </button>
+      <button class="nav-btn" data-tab="map" role="tab">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 6l6-2 4 2 6-2v14l-6 2-4-2-6 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 4v14M14 6v14" stroke="currentColor" stroke-width="2"/></svg>
+        <span>مسیر</span>
+      </button>
+      <button class="nav-btn" data-tab="settings" role="tab">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5.5 21c1-4 3.5-6 6.5-6s5.5 2 6.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>من</span>
+      </button>
+    </nav>
   </section>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>

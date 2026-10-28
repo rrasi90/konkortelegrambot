@@ -17,7 +17,7 @@ import {
 import type { EngineState, QueueItem } from '@ael/engine';
 import type { ReviewCard, TrackId } from '@ael/contracts';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
-import type { AppUser, DataStore } from './store';
+import type { AppUser, DataStore, UserStats } from './store';
 import { MemoryStore } from './memory-store';
 import { SupabaseStore } from './store';
 
@@ -67,6 +67,67 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   function authError(c: AppContext) {
     return c.json({ error: 'ابتدا وارد شوید' }, 401);
+  }
+
+  /* ---------- آمار و انگیزش (الهام از واژه‌راه) ---------- */
+
+  /** تاریخ امروز تهران به شکل YYYY-MM-DD (ایران از ۲۰۲۲ ساعت تابستانی ندارد) */
+  function tehranDateStr(offsetDays = 0): string {
+    const d = new Date(Date.now() + offsetDays * 86_400_000);
+    return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }).format(d);
+  }
+
+  /** نیمه‌شب تهران امروز به‌صورت UTC ISO — مرز «امروز» برای پاسخ‌ها */
+  function tehranMidnightIso(): string {
+    return new Date(`${tehranDateStr()}T00:00:00+03:30`).toISOString();
+  }
+
+  function daysBetween(fromIsoDate: string, toIsoDate: string): number {
+    return Math.round(
+      (new Date(`${toIsoDate}T00:00:00Z`).getTime() - new Date(`${fromIsoDate}T00:00:00Z`).getTime()) /
+        86_400_000,
+    );
+  }
+
+  async function ensureStats(userId: string): Promise<UserStats> {
+    return (
+      (await store.getStats(userId)) ?? {
+        userId,
+        coins: 0,
+        streakDays: 0,
+        lastStudyDate: null,
+        dayNumber: 0,
+        examDate: null,
+      }
+    );
+  }
+
+  /** سکه و روز پیوسته را پس از اولین پاسخ روز به‌روز می‌کند */
+  async function applyStatsForAnswer(userId: string, wasCorrect: boolean): Promise<UserStats> {
+    const stats = await ensureStats(userId);
+    const today = tehranDateStr();
+    if (stats.lastStudyDate !== today) {
+      stats.streakDays = stats.lastStudyDate === tehranDateStr(-1) ? stats.streakDays + 1 : 1;
+      stats.dayNumber += 1;
+      stats.lastStudyDate = today;
+    }
+    stats.coins += wasCorrect ? 2 : 1;
+    await store.upsertStats(stats);
+    return stats;
+  }
+
+  const MENTOR_MESSAGES = {
+    newUser: 'خوش اومدی! هر روز چند سؤال، آرام ولی پیوسته — نقشهٔ تسلطت کم‌کم ساخته می‌شود.',
+    streak: 'روز {n} پیوسته! همین آهنگ را حفظ کن؛ موتور موج، جای خالی‌ها را خودش پیدا می‌کند.',
+    weak: 'امروز روی گره‌های قرمز نقشه تمرکز کن؛ پیش‌نیازهایشان هم با هم ترمیم می‌شوند.',
+    strong: 'نقشه‌ات خوب پیش می‌رود؛ وقتشه گره‌های متزلزل را به تثبیت‌شده برسانی.',
+  };
+
+  function mentorMessageFor(stats: UserStats, overall: number, answeredToday: number): string {
+    if (stats.streakDays === 0 || stats.dayNumber === 0) return MENTOR_MESSAGES.newUser;
+    if (answeredToday === 0) return MENTOR_MESSAGES.weak;
+    if (stats.streakDays >= 2) return MENTOR_MESSAGES.streak.replace('{n}', String(stats.streakDays));
+    return overall >= 60 ? MENTOR_MESSAGES.strong : MENTOR_MESSAGES.weak;
   }
 
   async function loadEngineState(userId: string): Promise<EngineState> {
@@ -247,7 +308,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     await store.upsertMastery(user.id, result.masteryUpdates);
     await store.upsertCards([...result.cardUpdates, ...result.createdCards]);
 
-    return c.json({ report: result.report, correctOption: question.correctOption, replay: false });
+    // آمار انگیزشی: سکه + روز پیوسته (فقط برای پاسخ‌های تازه، نه replay)
+    const stats = await applyStatsForAnswer(user.id, wasCorrect);
+
+    return c.json({
+      report: result.report,
+      correctOption: question.correctOption,
+      replay: false,
+      stats: { coins: stats.coins, streakDays: stats.streakDays, dayNumber: stats.dayNumber },
+    });
   });
 
   app.get('/api/map', async (c) => {
@@ -286,6 +355,90 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         chapters: [...c.chapters.values()],
       })),
     });
+  });
+
+  /* ---------- داشبورد خانه (الهام از واژه‌راه) ---------- */
+  app.get('/api/home', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const [stats, nodes, masteryRows, cards, todayAnswers] = await Promise.all([
+      ensureStats(user.id),
+      store.listNodes(),
+      store.listMastery(user.id),
+      store.listCards(user.id),
+      store.listAnswersSince(user.id, tehranMidnightIso()),
+    ]);
+    const masteryByNode = new Map(masteryRows.map((m) => [m.nodeId, m.mastery]));
+    const visible = nodes.filter(
+      (n) => n.track === 'common' || user.activeTracks.includes(n.track),
+    );
+    const overall = visible.length
+      ? visible.reduce((sum, n) => sum + (masteryByNode.get(n.id) ?? DEFAULT_MASTERY), 0) /
+        visible.length
+      : 0;
+    const now = Date.now();
+    const reviewDue = cards.filter((card) => {
+      if (new Date(card.dueAt).getTime() > now) return false;
+      const node = nodes.find((n) => n.id === card.nodeId);
+      return !!node && (node.track === 'common' || user.activeTracks.includes(node.track));
+    }).length;
+    const wrongToday = todayAnswers.filter((a) => !a.isCorrect);
+    return c.json({
+      user: { displayName: user.displayName, activeTracks: user.activeTracks },
+      stats: {
+        coins: stats.coins,
+        streakDays: stats.streakDays,
+        dayNumber: stats.dayNumber,
+        examDate: stats.examDate,
+        daysLeft: stats.examDate ? daysBetween(tehranDateStr(), stats.examDate) : null,
+      },
+      progress: { overall: Math.round(overall), nodes: visible.length },
+      today: { answered: todayAnswers.length, correct: todayAnswers.length - wrongToday.length },
+      reviewDue,
+      nightQuiz: { available: wrongToday.length > 0, wrongCount: wrongToday.length },
+      mentorMessage: mentorMessageFor(stats, overall, todayAnswers.length),
+    });
+  });
+
+  /* ---------- کوییز شبانه: مرور پاسخ‌های غلط امروز ---------- */
+  app.get('/api/night-quiz', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const [todayAnswers, questions] = await Promise.all([
+      store.listAnswersSince(user.id, tehranMidnightIso()),
+      store.listQuestions(),
+    ]);
+    const questionMap = new Map(questions.map((q) => [q.id, q]));
+    const nodeMap = new Map((await store.listNodes()).map((n) => [n.id, n]));
+    const wrongIds = [...new Set(todayAnswers.filter((a) => !a.isCorrect).map((a) => a.questionId))];
+    // ترتیب سؤال‌ها را می‌شکنیم؛ ترتیب گزینه‌ها ثابت می‌ماند (شناسهٔ گزینه کلید ثبت پاسخ است)
+    const items = wrongIds
+      .map((id) => questionMap.get(id))
+      .filter((q): q is NonNullable<typeof q> => !!q)
+      .sort(() => Math.random() - 0.5)
+      .map((q) => ({
+        card: { questionId: q.id, nodeId: q.nodeId, cardType: 'question' as const },
+        question: { ...q, correctOption: -1 as unknown as number },
+        course: nodeMap.get(q.nodeId)?.course,
+        chapter: nodeMap.get(q.nodeId)?.chapter,
+        topic: nodeMap.get(q.nodeId)?.topic,
+      }));
+    return c.json({ items });
+  });
+
+  /* ---------- تنظیمات: تاریخ کنکور ---------- */
+  app.put('/api/settings', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as { examDate?: string | null } | null;
+    if (!body || !('examDate' in body)) return c.json({ error: 'ورودی نامعتبر' }, 400);
+    if (body.examDate != null && !/^\d{4}-\d{2}-\d{2}$/.test(body.examDate)) {
+      return c.json({ error: 'examDate باید YYYY-MM-DD باشد' }, 400);
+    }
+    const stats = await ensureStats(user.id);
+    stats.examDate = body.examDate ?? null;
+    await store.upsertStats(stats);
+    return c.json({ ok: true, examDate: stats.examDate });
   });
 
   return app;

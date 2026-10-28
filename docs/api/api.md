@@ -75,6 +75,34 @@ Authorization: Bearer <session_token>
 
 نقشهٔ مسیر: درس‌ها → فصل‌ها → مبحث‌ها با تسلط و وضعیت (فقط گرایش‌های فعال).
 
+### `GET /api/home`
+
+داشبورد خانه (الهام از واژه‌راه): سلام، سکه، روز پیوسته، شمارهٔ روز، شمارش معکوس تا کنکور، پیشرفت کل مسیر، خلاصهٔ امروز، تعداد کارت‌های سررسید، وضعیت کوییز شبانه و پیام منتور.
+
+```json
+{
+  "user": { "displayName": "…", "activeTracks": ["common", "technology"] },
+  "stats": { "coins": 1, "streakDays": 1, "dayNumber": 1, "examDate": "2027-02-19", "daysLeft": 113 },
+  "progress": { "overall": 48, "nodes": 10 },
+  "today": { "answered": 1, "correct": 0 },
+  "reviewDue": 4,
+  "nightQuiz": { "available": true, "wrongCount": 1 },
+  "mentorMessage": "…"
+}
+```
+
+### `GET /api/night-quiz`
+
+کوییز شبانه: سؤال‌هایی که کاربر امروز غلط جواب داده (ترتیب شانسی، بدون کلید صحیح). پاسخ‌ها از همان `POST /api/answers` با `attemptId` تازه عبور می‌کنند — یعنی ثبت مجدد واقعی است و تسلط را به‌روز می‌کند.
+
+### `PUT /api/settings`
+
+تنظیم تاریخ کنکور: `{ "examDate": "YYYY-MM-DD" }` (یا `null` برای حذف). فرمت نامعتبر ۴۰۰ می‌دهد.
+
+### آمار در پاسخ ثبت
+
+پاسخ `POST /api/answers` حالا `stats` هم دارد: `{ "coins": 3, "streakDays": 1, "dayNumber": 1 }` — سکهٔ زنده برای هدر اپ (پاسخ درست ۲ سکه، غلط ۱ سکه؛ روز پیوسته با تقویم تهران محاسبه می‌شود).
+
 ## کدهای وضعیت
 
 | کد | معنی |

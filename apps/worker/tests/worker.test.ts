@@ -181,3 +181,92 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe('worker API — داشبورد خانه و کوییز شبانه (واژه‌راه-مانند)', () => {
+  it('خانه در ابتدا: صفر و خنثی، بدون کوییز شبانه', async () => {
+    const token = await login();
+    const home = await json(await app.request('/api/home', authed(token)));
+    expect(home.stats.coins).toBe(0);
+    expect(home.stats.streakDays).toBe(0);
+    expect(home.stats.dayNumber).toBe(0);
+    expect(home.stats.daysLeft).toBeNull();
+    expect(home.nightQuiz.available).toBe(false);
+    expect(home.mentorMessage).toBeTruthy();
+    expect(home.progress.nodes).toBeGreaterThan(0);
+    expect(home.progress.overall).toBeGreaterThanOrEqual(0);
+  });
+
+  it('پاسخ غلط: سکه و روز پیوسته ثبت می‌شود و کوییز شبانه همان سؤال را برمی‌گرداند', async () => {
+    const token = await login();
+    await app.request(
+      '/api/tracks',
+      authed(token, { method: 'PUT', body: JSON.stringify({ tracks: ['technology'] }) }),
+    );
+    const queue = await json(await app.request('/api/queue?limit=5', authed(token)));
+    const target = queue.items.find((i: any) => i.card.nodeId === 'sm.value_chain');
+    const question = store.questions.find((q: any) => q.id === target.question.id)!;
+    const wrongOption = (question.correctOption + 1) % question.options.length;
+
+    const res = await json(
+      await app.request(
+        '/api/answers',
+        authed(token, {
+          method: 'POST',
+          body: JSON.stringify({ attemptId: 'home-t1', questionId: question.id, selectedOption: wrongOption }),
+        }),
+      ),
+    );
+    // سکه: پاسخ غلط هم ۱ سکه (مشارکت)
+    expect(res.stats).toEqual({ coins: 1, streakDays: 1, dayNumber: 1 });
+
+    // داشبورد خانه پس از پاسخ
+    const home = await json(await app.request('/api/home', authed(token)));
+    expect(home.stats.coins).toBe(1);
+    expect(home.stats.streakDays).toBe(1);
+    expect(home.today.answered).toBe(1);
+    expect(home.today.correct).toBe(0);
+    expect(home.nightQuiz.available).toBe(true);
+    expect(home.nightQuiz.wrongCount).toBe(1);
+
+    // کوییز شبانه: همان سؤالِ غلط، بدون کلید صحیح
+    const night = await json(await app.request('/api/night-quiz', authed(token)));
+    expect(night.items.length).toBe(1);
+    expect(night.items[0].card.questionId).toBe(question.id);
+    expect(night.items[0].question.correctOption).not.toBeGreaterThanOrEqual(0);
+
+    // پاسخ درست در کوییز شبانه → سکه بیشتر (۲) و گزارش درست
+    const nightRes = await json(
+      await app.request(
+        '/api/answers',
+        authed(token, {
+          method: 'POST',
+          body: JSON.stringify({ attemptId: 'home-t2', questionId: question.id, selectedOption: question.correctOption }),
+        }),
+      ),
+    );
+    expect(nightRes.report.wasCorrect).toBe(true);
+    expect(nightRes.stats.coins).toBe(3); // ۱ + ۲
+  });
+
+  it('تنظیم تاریخ کنکور → شمارش معکوس؛ فرمت نامعتبر رد می‌شود', async () => {
+    const token = await login();
+    const bad = await app.request(
+      '/api/settings',
+      authed(token, { method: 'PUT', body: JSON.stringify({ examDate: 'دیروز' }) }),
+    );
+    expect(bad.status).toBe(400);
+
+    const future = new Date(Date.now() + 78 * 86_400_000).toISOString().slice(0, 10);
+    const ok = await json(
+      await app.request(
+        '/api/settings',
+        authed(token, { method: 'PUT', body: JSON.stringify({ examDate: future }) }),
+      ),
+    );
+    expect(ok.examDate).toBe(future);
+
+    const home = await json(await app.request('/api/home', authed(token)));
+    expect(home.stats.daysLeft).toBeGreaterThanOrEqual(77);
+    expect(home.stats.daysLeft).toBeLessThanOrEqual(79);
+  });
+});
