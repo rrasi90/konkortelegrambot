@@ -8,7 +8,6 @@ function json(body: Record<string, unknown>, status = 200, origin?: string): Res
     "cache-control": "no-store",
     "x-content-type-options": "nosniff",
   });
-
   if (origin) {
     headers.set("access-control-allow-origin", origin);
     headers.set("vary", "Origin");
@@ -23,51 +22,28 @@ export default {
     const url = new URL(request.url);
     const origin = request.headers.get("origin");
     const allowedOrigin = env.APP_ORIGIN && origin === env.APP_ORIGIN ? origin : undefined;
-
     if (request.method === "OPTIONS") {
-      if (origin && !allowedOrigin) return json({ error: "origin_not_allowed" }, 403);
+      if (origin && env.APP_ORIGIN && !allowedOrigin) return json({ error: "origin_not_allowed" }, 403);
       return new Response(null, {
         status: 204,
-        headers: allowedOrigin
-          ? {
-              "access-control-allow-origin": allowedOrigin,
-              "access-control-allow-methods": "GET, POST, OPTIONS",
-              "access-control-allow-headers": "content-type, authorization",
-              "access-control-max-age": "600",
-              vary: "Origin",
-            }
-          : {},
+        headers: allowedOrigin ? {
+          "access-control-allow-origin": allowedOrigin,
+          "access-control-allow-methods": "GET, POST, OPTIONS",
+          "access-control-allow-headers": "content-type, authorization",
+          "access-control-max-age": "600",
+          vary: "Origin",
+        } : {},
       });
     }
-
-    if (origin && env.APP_ORIGIN && !allowedOrigin) {
-      return json({ error: "origin_not_allowed" }, 403);
-    }
-
+    if (origin && env.APP_ORIGIN && !allowedOrigin) return json({ error: "origin_not_allowed" }, 403);
     if (request.method === "GET" && url.pathname === "/health") {
       return json({ status: "ok", service: "konkor-api", implementation: "scaffold" }, 200, allowedOrigin);
     }
-
     if (request.method === "GET" && url.pathname === "/api/v1/status") {
-      return json({
-        state: "scaffold_only",
-        connected: {
-          telegramWebhook: false,
-          telegramInitDataValidation: false,
-          database: false,
-          learnerEvents: false,
-        },
-      }, 200, allowedOrigin);
+      return json({ state: "scaffold_only", connected: { telegramWebhook: false, telegramInitDataValidation: false, database: false, learnerEvents: false } }, 200, allowedOrigin);
     }
-
-    if (url.pathname === "/telegram/webhook") {
-      return json({ error: "telegram_webhook_not_configured" }, 503, allowedOrigin);
-    }
-
-    if (url.pathname.startsWith("/api/")) {
-      return json({ error: "not_implemented", message: "This endpoint is intentionally unavailable in the scaffold." }, 501, allowedOrigin);
-    }
-
+    if (url.pathname === "/telegram/webhook") return json({ error: "telegram_webhook_not_configured" }, 503, allowedOrigin);
+    if (url.pathname.startsWith("/api/")) return json({ error: "not_implemented", message: "This endpoint is intentionally unavailable in the scaffold." }, 501, allowedOrigin);
     return json({ error: "not_found" }, 404, allowedOrigin);
   },
 };
