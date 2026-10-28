@@ -32,11 +32,12 @@ describe("priority and daily planner", () => {
     expect(result.reduce((sum, item) => sum + item.estimatedMinutes, 0)).toBeLessThanOrEqual(10);
   });
 
-  it("excludes paper-based and holdout activities from commute practice", () => {
+  it("excludes paper-based, draft, and holdout activities from commute practice", () => {
     const result = selectActivities({
       activities: [
         activity({ id: "desk", requiresPaper: true }),
         activity({ id: "holdout", poolType: "holdout_eval" }),
+        activity({ id: "hidden-kind", kind: "holdout_assessment" }),
         activity({ id: "draft", contentStatus: "ai_suggested" }),
         activity({ id: "safe" }),
       ],
@@ -44,6 +45,24 @@ describe("priority and daily planner", () => {
       studyMode: "commute",
     });
     expect(result.map((item) => item.id)).toEqual(["safe"]);
+  });
+
+  it("reserves a minimum share for new learning before high-priority review", () => {
+    const result = selectActivities({
+      activities: [
+        activity({ id: "review", kind: "spaced_review", estimatedMinutes: 10, examValue: 10 }),
+        activity({ id: "new-a", kind: "new_learning", estimatedMinutes: 3, examValue: 0.1 }),
+        activity({ id: "new-b", kind: "new_learning", estimatedMinutes: 3, examValue: 0.1 }),
+      ],
+      dailyBudgetMinutes: 20,
+      studyMode: "desk",
+      minNewLearningShare: 0.3,
+    });
+    const newLearningMinutes = result
+      .filter((item) => item.kind === "new_learning")
+      .reduce((sum, item) => sum + item.estimatedMinutes, 0);
+    expect(newLearningMinutes).toBeGreaterThanOrEqual(6);
+    expect(result.some((item) => item.id === "review")).toBe(true);
   });
 
   it("caps remediation share rather than filling the whole day with remediation", () => {
@@ -63,6 +82,16 @@ describe("priority and daily planner", () => {
 
   it("rejects invalid time estimates in the priority function", () => {
     expect(() => scorePriority(activity({ estimatedMinutes: 0 }))).toThrow(RangeError);
+  });
+
+  it("rejects incompatible new-learning and remediation bounds", () => {
+    expect(() => selectActivities({
+      activities: [],
+      dailyBudgetMinutes: 10,
+      studyMode: "desk",
+      maxRemediationShare: 0.8,
+      minNewLearningShare: 0.5,
+    })).toThrow(RangeError);
   });
 });
 
