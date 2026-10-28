@@ -2,6 +2,27 @@
 -- PostgreSQL 15+ / Supabase
 create extension if not exists pgcrypto;
 
+-- سازگاری با PostgreSQL خام (خارج از Supabase):
+-- اگر schema واقعی auth ساپ‌بیس موجود نباشد، یک جایگزین مینیمال می‌سازیم تا
+-- policyهای auth.uid() قابل اعمال باشند. در Supabase واقعی این بلوک رد می‌شود.
+do $$
+begin
+  if not exists (select 1 from pg_namespace where nspname = 'auth') then
+    execute 'create schema auth';
+    execute 'create function auth.uid() returns uuid language sql stable as ''select null::uuid''';
+  end if;
+  if not exists (select 1 from pg_roles where rolname = 'authenticated') then
+    execute 'create role authenticated nologin';
+  end if;
+  if not exists (select 1 from pg_roles where rolname = 'anon') then
+    execute 'create role anon nologin';
+  end if;
+  if not exists (select 1 from pg_roles where rolname = 'service_role') then
+    execute 'create role service_role nologin';
+  end if;
+end
+$$;
+
 -- کاربران
 create table if not exists app_users (
   id uuid primary key default gen_random_uuid(),
@@ -137,8 +158,9 @@ alter table daily_plan enable row level security;
 create policy read_nodes on knowledge_nodes for select using (true);
 create policy read_deps on node_dependencies for select using (true);
 create policy read_questions on questions for select using (verification_status in ('verified','demo'));
-create policy read_own_answers on answer_events for select using (auth.uid() = user_id);
-create policy read_own_mastery on user_node_mastery for select using (auth.uid() = user_id);
-create policy read_own_cards on review_cards for select using (auth.uid() = user_id);
-create policy read_own_plan on daily_plan for select using (auth.uid() = user_id);
-create policy read_own_trap_cards on trap_cards for select using (true);
+create policy read_own_answers on answer_events for select to authenticated using (auth.uid() = user_id);
+create policy read_own_mastery on user_node_mastery for select to authenticated using (auth.uid() = user_id);
+create policy read_own_cards on review_cards for select to authenticated using (auth.uid() = user_id);
+create policy read_own_plan on daily_plan for select to authenticated using (auth.uid() = user_id);
+-- trap_cards محتوای عمومی است (بدون user_id)؛ فقط خواندن عمومی
+create policy read_trap_cards on trap_cards for select using (true);

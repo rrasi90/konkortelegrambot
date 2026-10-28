@@ -10,7 +10,8 @@
 | ثبت پاسخ idempotent | تست یکپارچگی API: تلاش تکراری `replay: true` |
 | حلقهٔ کامل مینی‌اپ | QA مرورگری: ورود دمو ← انتخاب گرایش ← پاسخ غلط ← گزارش موج با سرایت پیش‌نیاز (sm.rbv ۵۰→۳۸، sm.value_chain ۵۰→۴۴) ← نقشهٔ مسیر |
 | نشست و احراز هویت | توکن امضاشده، initData تلگرام (پیاده‌سازی HMAC)، رد توکن جعلی (تست‌شده) |
-| دیتابیس | مهاجرت + بذر + ۷ تست یکپارچگی (idempotency، بازهٔ وزن، تسلط، RLS policy) — در CI با PostgreSQL 16 واقعی |
+| دیتابیس | مهاجرت + بذر + ۷ تست یکپارچگی (idempotency، بازهٔ وزن، تسلط، RLS policy) — روی PostgreSQL واقعی (توکار و CI) |
+| سازگاری دیتابیس | مهاجرت هم روی Supabase (با auth واقعی) و هم PostgreSQL خام (شیم auth) کار می‌کند |
 | CI | GitHub Actions: typecheck + تست واحد/یکپارچگی + اعتبارسنجی محتوا + جاب دیتابیس |
 | موبایل | ۳۷۵px بدون سرریز افقی (بررسی برنامه‌ای) |
 
@@ -34,6 +35,11 @@
 ```bash
 npm install
 npm run typecheck && npm test          # تست‌ها
-npx tsx scripts/dev-server.mjs          # http://localhost:8787 (مینی‌اپ + API با بستهٔ دمو)
-npm run db:test                        # نیازمند DATABASE_URL
+npx tsx scripts/dev-server.mjs        # http://localhost:8787 (مینی‌اپ + API با بستهٔ دمو)
+npm run db:test:embedded               # تست دیتابیس بدون Docker (PostgreSQL توکار)
+npm run db:test                       # نیازمند DATABASE_URL و psql
 ```
+
+## نکتهٔ CI
+
+در زمان نگارش این سند، اجرای GitHub Actions روی کل حساب کاربری با خطای زیرساختی (شروع‌نشدن جاب‌ها، بدون اجرای هیچ step) مواجه است — اجراهای همهٔ مخازن از ~۲۷ اکتبر ۲۰۲۶ همین الگو را دارند و این ربطی به فایل workflow این مخزن ندارد. تا رفع آن، صحت مسیر CI محلی اثبات شده است: `npm run typecheck`، `npm test`، `npm run validate:content` و `npm run db:test:embedded` همگی سبزند.
