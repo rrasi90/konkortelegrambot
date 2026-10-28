@@ -57,6 +57,7 @@ DATABASE_URL=postgres://… npm run db:test
 - [درون‌ریزی محتوا](docs/content/content-import.md)
 - [مرجع API](docs/api/api.md)
 - [طرح اجرایی و مراحل](docs/roadmap/implementation-roadmap.md)
+- [بنچمارک ویژگی‌ها با واژه‌راه](docs/product/feature-benchmark-vajerah.md)
 - [تصمیم‌ها و پرسش‌های باز](docs/decisions/decision-log.md)
 - [حاکمیت محتوای آزمون و هوش مصنوعی](docs/governance/content-and-ai-governance.md)
 - [وضعیت پیاده‌سازی](docs/status/implementation-status.md)
