@@ -1,0 +1,7 @@
+name = "konkor-api"
+main = "src/index.ts"
+compatibility_date = "2026-10-29"
+workers_dev = true
+
+# Add secrets through Wrangler secret commands; never commit tokens.
+# Define APP_ORIGIN as a deployment variable after choosing the public URL.

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/exam-pack.schema.json",
+  "title": "Exam Pack manifest",
+  "description": "Versioned, domain-agnostic exam configuration. Replace example.invalid before publishing a formal schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "slug", "version", "title", "level", "status", "tracks"],
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,80}$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "level": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["draft", "published", "retired"] },
+    "officialSource": { "type": ["string", "null"], "format": "uri" },
+    "officiallyVerified": { "type": "boolean", "default": false },
+    "licensingStatus": { "enum": ["unknown", "personal-use-reviewed", "public-distribution-cleared", "restricted"] },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slug", "title", "courses"],
+        "properties": {
+          "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,80}$" },
+          "title": { "type": "string", "minLength": 1 },
+          "scoringRules": { "type": "object" },
+          "courses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["slug", "title", "coefficient"],
+              "properties": {
+                "slug": { "type": "string" },
+                "title": { "type": "string" },
+                "coefficient": { "type": ["number", "null"], "minimum": 0 },
+                "sourceReference": { "type": ["string", "null"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "contentSources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sourceId", "reference", "rightsStatus"],
+        "properties": {
+          "sourceId": { "type": "string" },
+          "reference": { "type": "string" },
+          "rightsStatus": { "enum": ["unknown", "review-needed", "cleared", "restricted"] },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}
