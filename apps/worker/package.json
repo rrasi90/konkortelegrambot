@@ -1,0 +1,16 @@
+{
+  "name": "@ael/worker",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "@ael/contracts": "*",
+    "@ael/engine": "*"
+  }
+}

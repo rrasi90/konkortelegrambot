@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/contracts" },
+    { "path": "packages/learning-engine" },
+    { "path": "apps/worker" }
+  ]
+}

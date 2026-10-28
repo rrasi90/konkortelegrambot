@@ -1,0 +1,6 @@
+{
+  "name": "adaptive-exam-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-01-01",
+  "assets": { "directory": "../miniapp" }
+}

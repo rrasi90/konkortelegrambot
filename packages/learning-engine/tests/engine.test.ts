@@ -1,0 +1,416 @@
+import { describe, expect, it } from 'vitest';
+import {
+  DEFAULT_ENGINE_CONFIG,
+  DEFAULT_MASTERY,
+  addDays,
+  applyAnswer,
+  buildDailyQueue,
+  masteryOf,
+  questionCardId,
+  statusFromMastery,
+  trapCardId,
+  type EngineState,
+  type ReviewCard,
+} from '@ael/engine';
+import type { KnowledgeNode, NodeDependency, Question, TrackId } from '@ael/contracts';
+
+/* ----------------------------- fixtures ------------------------------ */
+
+const NOW = new Date('2026-10-29T08:00:00.000Z');
+
+function node(id: string, track: KnowledgeNode['track'], topic: string): KnowledgeNode {
+  return { id, track, course: 'درس', chapter: 'فصل', topic };
+}
+
+const nodes: KnowledgeNode[] = [
+  node('sm.rbv', 'common', 'دیدگاه مبتنی بر منابع'),
+  node('sm.value_chain', 'common', 'زنجیره ارزش پورتر'),
+  node('mkt.brand_equity', 'business', 'دارایی‌های برند'),
+  node('tech.absorptive', 'technology', 'ظرفیت جذب'),
+  node('stats.anova', 'common', 'تحلیل واریانس دوطرفه'),
+  node('stats.scales', 'common', 'مقیاس‌های اندازه‌گیری'),
+];
+
+const dependencies: NodeDependency[] = [
+  { source: 'sm.rbv', target: 'sm.value_chain', relation: 'prerequisite', weight: 0.4 },
+  { source: 'mkt.brand_equity', target: 'sm.rbv', relation: 'prerequisite', weight: 0.6 },
+  { source: 'sm.rbv', target: 'mkt.brand_equity', relation: 'cross_course', weight: 0.5 },
+  { source: 'sm.rbv', target: 'tech.absorptive', relation: 'cross_course', weight: 0.5 },
+  { source: 'stats.anova', target: 'stats.scales', relation: 'prerequisite', weight: 0.5 },
+];
+
+const questions: Question[] = [
+  {
+    id: 'q-rbv-1',
+    nodeId: 'sm.rbv',
+    text: 'کدام گزینه VRIN را کامل توصیف می‌کند؟',
+    options: ['ارزش‌مندی، کمیابی، تقلیدناپذیری، جایگزینی‌ناپذیری', 'کیفیت، قیمت، توزیع، تبلیغ'],
+    correctOption: 0,
+    explanation: 'مدل بارنی.',
+    trapNote: 'دام رایج: خلط VRIN با VRIO.',
+  },
+  {
+    id: 'q-rbv-2',
+    nodeId: 'sm.rbv',
+    text: 'قابلیت‌های پویا در چه چیزی تعریف می‌شوند؟',
+    options: ['بازآرایی منابع برای محیط متغیر', 'ثابت‌ماندن فرایندها'],
+    correctOption: 0,
+  },
+  {
+    id: 'q-brand-1',
+    nodeId: 'mkt.brand_equity',
+    text: 'دارایی برند از دید آکر کدام است؟',
+    options: ['آگاهی، تداعی، ادراک کیفیت، وفاداری', 'فقط قیمت'],
+    correctOption: 0,
+  },
+  {
+    id: 'q-anova-1',
+    nodeId: 'stats.anova',
+    text: 'در ANOVA دوطرفه، کدام مفروض بررسی می‌شود؟',
+    options: ['همسانی واریانس‌ها', 'نرمال‌بودن رتبه‌ها'],
+    correctOption: 0,
+  },
+];
+
+function buildState(overrides: Partial<EngineState> = {}): EngineState {
+  return {
+    config: { ...DEFAULT_ENGINE_CONFIG },
+    nodes: new Map(nodes.map((n) => [n.id, n])),
+    dependencies,
+    questions: new Map(questions.map((q) => [q.id, q])),
+    mastery: new Map(),
+    cards: [],
+    ...overrides,
+  };
+}
+
+function card(id: string, nodeId: string, opts: Partial<ReviewCard> = {}): ReviewCard {
+  return {
+    id,
+    userId: 'user-1',
+    nodeId,
+    cardType: 'question',
+    questionId: id.startsWith('trap') ? undefined : id.replace(/^card:/, ''),
+    dueAt: addDays(NOW, 20).toISOString(),
+    intervalDays: 20,
+    ease: 2.5,
+    isRepair: false,
+    timesSeen: 1,
+    timesCorrect: 1,
+    ...opts,
+  };
+}
+
+const user = { userId: 'user-1', activeTracks: ['common', 'technology'] as TrackId[] };
+
+/* ------------------------------ tests -------------------------------- */
+
+describe('mastery formulas (فرمول‌های تسلط)', () => {
+  it('پاسخ درست: M_new = M_old + (100 - M_old) × 0.15', () => {
+    const state = buildState({ mastery: new Map([['sm.rbv', 50]]) });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a1', selectedOption: 0, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common', 'business'] },
+    );
+    expect(res.report.topicMastery.before).toBe(50);
+    expect(res.report.topicMastery.after).toBe(57.5);
+  });
+
+  it('پاسخ غلط: M_new = M_old × 0.75', () => {
+    const state = buildState({ mastery: new Map([['sm.rbv', 80]]) });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a2', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.report.topicMastery.after).toBe(60);
+  });
+
+  it('گرهٔ تازه با تسلط پیش‌فرض ۵۰ شروع می‌شود', () => {
+    const state = buildState();
+    expect(masteryOf(state, 'sm.rbv')).toBe(DEFAULT_MASTERY);
+  });
+
+  it('نقشهٔ وضعیت از عدد تسلط ساخته می‌شود', () => {
+    expect(statusFromMastery(30)).toBe('weak');
+    expect(statusFromMastery(50)).toBe('unstable');
+    expect(statusFromMastery(70)).toBe('learning');
+    expect(statusFromMastery(90)).toBe('mastered');
+  });
+});
+
+describe('layer 1 — direct reset & trap card', () => {
+  it('کارت غلط به ۱ روز بازمی‌گردد و سهولت آن ۰٫۲ کم می‌شود', () => {
+    const existing: ReviewCard = {
+      ...card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv'),
+      intervalDays: 15,
+      ease: 2.5,
+      timesSeen: 3,
+    };
+    const state = buildState({ cards: [existing] });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a3', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    const updated = res.cardUpdates.find((c) => c.id === existing.id);
+    expect(updated?.intervalDays).toBe(1);
+    expect(updated?.ease).toBeCloseTo(2.3);
+    expect(new Date(updated?.dueAt ?? '').getTime()).toBe(addDays(NOW, 1).getTime());
+    expect(res.report.directReset).toBe(true);
+  });
+
+  it('سهولت هرگز زیر ۱٫۳ نمی‌رود', () => {
+    const existing: ReviewCard = {
+      ...card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv'),
+      intervalDays: 15,
+      ease: 1.35,
+    };
+    const state = buildState({ cards: [existing] });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a4', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    const updated = res.cardUpdates.find((c) => c.id === existing.id);
+    expect(updated?.ease).toBe(1.3);
+  });
+
+  it('کارت دام تستی فقط یک بار ساخته می‌شود (بدون تکرار)', () => {
+    const state = buildState();
+    const r1 = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a5', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    const r2 = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a6', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(r1.report.trapCardCreated).toBe(true);
+    expect(r2.report.trapCardCreated).toBe(false);
+    const traps = state.cards.filter((c) => c.id === trapCardId('user-1', 'q-rbv-1'));
+    expect(traps.length).toBe(1);
+  });
+
+  it('پاسخ درست فاصلهٔ مرور را بزرگ می‌کند', () => {
+    const existing: ReviewCard = {
+      ...card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv'),
+      intervalDays: 10,
+      ease: 2.0,
+    };
+    const state = buildState({ cards: [existing] });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a7', selectedOption: 0, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    const updated = res.cardUpdates.find((c) => c.id === existing.id);
+    expect(updated?.intervalDays).toBe(21); // round(10 × 2.05) = round(20.5) = 21
+    expect(updated?.ease).toBeCloseTo(2.05);
+  });
+});
+
+describe('layer 2 — sibling shock', () => {
+  it('با سقوط تسلط زیر ۶۰، فاصلهٔ کارت‌های هم‌خانوادهٔ سررسیددار نصف می‌شود', () => {
+    const failed = card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv', { intervalDays: 5 });
+    const sib1 = card(questionCardId('user-1', 'q-rbv-2'), 'sm.rbv', { intervalDays: 20 });
+    const sib2 = card('user-1:question:q-other', 'sm.rbv', { intervalDays: 9 });
+    const state = buildState({ cards: [failed, sib1, sib2] });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a8', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    const s1 = state.cards.find((c) => c.id === sib1.id);
+    const s2 = state.cards.find((c) => c.id === sib2.id);
+    expect(s1?.intervalDays).toBe(10);
+    expect(s2?.intervalDays).toBe(4);
+    expect(s1?.isRepair).toBe(true);
+    expect(s1?.previousIntervalDays).toBe(20);
+    expect(res.report.siblingShock?.applied).toBe(2);
+  });
+
+  it('کارت خودِ سؤالِ غلط دوباره نصف نمی‌شود و کارت سررسیدشده جلو نمی‌افتد', () => {
+    const failed = card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv', { intervalDays: 5 });
+    const dueSibling = card(questionCardId('user-1', 'q-rbv-2'), 'sm.rbv', {
+      intervalDays: 7,
+      dueAt: addDays(NOW, -1).toISOString(),
+    });
+    const state = buildState({ cards: [failed, dueSibling] });
+    applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a9', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    const dueCard = state.cards.find((c) => c.id === dueSibling.id);
+    expect(dueCard?.intervalDays).toBe(7);
+  });
+
+  it('اگر تسلط بالای آستانه بماند، شوک فعال نمی‌شود', () => {
+    const failed = card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv', { intervalDays: 5 });
+    const sib = card(questionCardId('user-1', 'q-rbv-2'), 'sm.rbv', { intervalDays: 20 });
+    const state = buildState({
+      cards: [failed, sib],
+      mastery: new Map([['sm.rbv', 85]]),
+    });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a10', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.report.topicMastery.after).toBe(63.8);
+    expect(res.report.siblingShock).toBeNull();
+    const s1 = state.cards.find((c) => c.id === sib.id);
+    expect(s1?.intervalDays).toBe(20);
+  });
+
+  it('تعداد کارت‌های جلوافتاده به ظرفیت موج محدود می‌ماند', () => {
+    const failed = card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv');
+    const siblings = Array.from({ length: 10 }, (_, i) =>
+      card(questionCardId('user-1', `q-${i}`), 'sm.rbv', { intervalDays: 20 + i }),
+    );
+    const state = buildState({ cards: [failed, ...siblings] });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a11', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.report.siblingShock?.applied).toBeLessThanOrEqual(
+      DEFAULT_ENGINE_CONFIG.rippleCapacity,
+    );
+    expect(res.report.siblingShock?.deferred).toBeGreaterThan(0);
+  });
+
+  it('پاسخ درستِ کارت ترمیمی، فاصلهٔ اصلی را بازمی‌گرداند (تأیید ترمیم)', () => {
+    const repaired: ReviewCard = {
+      ...card(questionCardId('user-1', 'q-rbv-2'), 'sm.rbv'),
+      intervalDays: 10,
+      previousIntervalDays: 20,
+      isRepair: true,
+    };
+    const state = buildState({ cards: [repaired] });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-2', attemptId: 'a12', selectedOption: 0, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    const updated = res.cardUpdates.find((c) => c.id === repaired.id);
+    expect(updated?.intervalDays).toBe(20);
+    expect(updated?.isRepair).toBe(false);
+  });
+});
+
+describe('layers 3 & 4 — prerequisite & cross-course ripple', () => {
+  it('خطا در مبحث پیشرفته، تسلط پیش‌نیاز را با ضریب یال کم می‌کند', () => {
+    const state = buildState({
+      mastery: new Map([
+        ['stats.anova', 80],
+        ['stats.scales', 90],
+      ]),
+    });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-anova-1', attemptId: 'a13', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.report.prerequisiteRepairs.length).toBe(1);
+    expect(res.report.prerequisiteRepairs[0]?.nodeId).toBe('stats.scales');
+    expect(res.report.prerequisiteRepairs[0]?.to).toBe(78.8); // 90 × (1 − 0.25×0.5)
+  });
+
+  it('پل بین‌درسی فقط برای گرایش‌های فعال کاربر فعال می‌شود', () => {
+    const state = buildState();
+    // کاربر تکنولوژی است؛ نباید به مبحث بازرگانی (brand_equity) سرایت کند
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a14', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common', 'technology'] },
+    );
+    const deltas = res.report.masteryDeltas.map((d) => d.nodeId);
+    expect(deltas).toContain('tech.absorptive');
+    expect(deltas).not.toContain('mkt.brand_equity');
+  });
+
+  it('پاسخ درست هیچ موجی ایجاد نمی‌کند', () => {
+    const state = buildState({ mastery: new Map([['sm.rbv', 70]]) });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a15', selectedOption: 0, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common', 'business'] },
+    );
+    expect(res.report.masteryDeltas.length).toBe(1);
+    expect(res.report.siblingShock).toBeNull();
+    expect(res.report.prerequisiteRepairs.length).toBe(0);
+  });
+});
+
+describe('daily queue', () => {
+  it('فقط کارت‌های سررسیدشده و در محدودهٔ گرایش کاربر برمی‌گردد', () => {
+    const due = card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv', {
+      dueAt: addDays(NOW, -2).toISOString(),
+    });
+    const future = card(questionCardId('user-1', 'q-rbv-2'), 'sm.rbv');
+    const business = card(questionCardId('user-1', 'q-brand-1'), 'mkt.brand_equity', {
+      dueAt: addDays(NOW, -2).toISOString(),
+    });
+    const state = buildState({ cards: [due, future, business] });
+    const queue = buildDailyQueue(state, user, { limit: 10, now: NOW });
+    expect(queue.length).toBe(1);
+    expect(queue[0]?.card.id).toBe(due.id);
+  });
+});
+
+describe('mentor message', () => {
+  it('پیام فارسی برای پاسخ غلط با تمام لایه‌ها ساخته می‌شود', () => {
+    const sibling = card(questionCardId('user-1', 'q-rbv-2'), 'sm.rbv', { intervalDays: 20 });
+    const state = buildState({
+      mastery: new Map([['sm.rbv', 75]]),
+      cards: [sibling],
+    });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a16', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common', 'business'] },
+    );
+    const msg = res.report.mentorMessage;
+    expect(msg).toContain('هنوز برات جا نیفتاده');
+    expect(msg).toContain('هم‌خانواده');
+  });
+
+  it('پیام پاسخ درست مثبت است', () => {
+    const state = buildState({ mastery: new Map([['sm.rbv', 90]]) });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a17', selectedOption: 0, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.report.mentorMessage).toContain('آفرین');
+  });
+});
+
+describe('input validation', () => {
+  it('سؤال ناشناخته خطا می‌دهد', () => {
+    const state = buildState();
+    expect(() =>
+      applyAnswer(
+        state,
+        { userId: 'u', questionId: 'nope', attemptId: 'x', selectedOption: 0 },
+        { userId: 'u', activeTracks: ['common'] },
+      ),
+    ).toThrow();
+  });
+
+  it('گزینهٔ خارج از محدوده خطا می‌دهد', () => {
+    const state = buildState();
+    expect(() =>
+      applyAnswer(
+        state,
+        { userId: 'u', questionId: 'q-rbv-1', attemptId: 'x', selectedOption: 9 },
+        { userId: 'u', activeTracks: ['common'] },
+      ),
+    ).toThrow();
+  });
+});

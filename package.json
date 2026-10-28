@@ -1,0 +1,26 @@
+{
+  "name": "adaptive-exam-learning",
+  "version": "0.1.0",
+  "private": true,
+  "description": "موتور یادگیری تطبیقی کنکور — Graph-based adaptive learning engine",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "typecheck": "tsc -b",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "npm run build --workspaces --if-present",
+    "validate:content": "node scripts/validate-content.mjs content/examples/demo-pack.json",
+    "db:test": "bash supabase/tests/run.sh",
+    "seed:sql": "node scripts/import-content.mjs content/examples/demo-pack.json --sql > supabase/seeds/0001_demo_pack.sql"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  }
+}

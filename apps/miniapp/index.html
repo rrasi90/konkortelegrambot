@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>مسیر دکتری — یادگیری تطبیقی</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- صفحهٔ ورود -->
+  <section id="view-login" class="view">
+    <div class="login-card">
+      <div class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="52" height="52">
+          <path d="M8 30c6-14 12-14 16-8s10 6 16-6" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="40" cy="16" r="5" fill="currentColor"/>
+        </svg>
+      </div>
+      <h1>مسیر دکتری</h1>
+      <p class="subtitle">موتور یادگیری تطبیقی کنکور دکتری مدیریت</p>
+      <button id="btn-login" class="btn primary">ورود با تلگرام</button>
+      <button id="btn-demo" class="btn ghost">ورود نمایشی (دمو)</button>
+      <p id="login-error" class="error" hidden></p>
+      <p class="hint">هر پاسخ غلط، فقط یک کارت را جابه‌جا نمی‌کند؛ کل فصل، پیش‌نیازها و درس‌های مرتبط را دوباره می‌سنجد.</p>
+    </div>
+  </section>
+
+  <!-- انتخاب گرایش -->
+  <section id="view-tracks" class="view" hidden>
+    <div class="login-card">
+      <h1>گرایش خود را انتخاب کنید</h1>
+      <p class="subtitle">هستهٔ مشترک همیشه فعال است</p>
+      <div class="track-options">
+        <button class="track-card" data-track="business">
+          <strong>مدیریت بازرگانی</strong>
+          <span>بازاریابی پیشرفته، رفتار مصرف‌کننده، برند</span>
+        </button>
+        <button class="track-card" data-track="technology">
+          <strong>مدیریت تکنولوژی</strong>
+          <span>نوآوری، منحنی S فناوری، ظرفیت جذب</span>
+        </button>
+      </div>
+      <button id="btn-tracks-save" class="btn primary" disabled>ادامه</button>
+    </div>
+  </section>
+
+  <!-- اپ اصلی -->
+  <section id="view-app" class="view" hidden>
+    <header class="app-header">
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="today" role="tab">امروز</button>
+        <button class="tab" data-tab="map" role="tab">مسیر</button>
+        <button class="tab" data-tab="settings" role="tab">تنظیمات</button>
+      </div>
+    </header>
+
+    <!-- تب امروز -->
+    <main id="tab-today" class="tab-panel">
+      <div id="queue-empty" class="empty-state" hidden>
+        <p>برای امروز برنامه‌ای نمانده است. خسته نباشید!</p>
+      </div>
+      <article id="quiz-card" class="quiz-card" hidden>
+        <div class="quiz-meta">
+          <span id="q-course" class="chip"></span>
+          <span id="q-chapter" class="chip ghost"></span>
+          <span id="q-card-type" class="chip warn">نکتهٔ دام</span>
+        </div>
+        <h2 id="q-text"></h2>
+        <div id="q-options" class="options"></div>
+        <div id="answer-feedback" hidden>
+          <div id="feedback-head" class="feedback-head"></div>
+          <p id="feedback-explanation"></p>
+          <div id="feedback-trap" class="trap-box" hidden></div>
+          <div id="feedback-mentor" class="mentor-box"></div>
+          <div id="feedback-ripple" class="ripple-box"></div>
+          <button id="btn-next" class="btn primary">سؤال بعدی</button>
+        </div>
+      </article>
+    </main>
+
+    <!-- تب مسیر -->
+    <main id="tab-map" class="tab-panel" hidden>
+      <div id="map-container"></div>
+    </main>
+
+    <!-- تب تنظیمات -->
+    <main id="tab-settings" class="tab-panel" hidden>
+      <div class="login-card">
+        <h1>تنظیمات</h1>
+        <div class="settings-row">
+          <span>گرایش فعال</span>
+          <div class="track-toggle">
+            <button class="toggle" data-track="business">بازرگانی</button>
+            <button class="toggle" data-track="technology">تکنولوژی</button>
+          </div>
+        </div>
+        <button id="btn-logout" class="btn ghost">خروج</button>
+      </div>
+    </main>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
