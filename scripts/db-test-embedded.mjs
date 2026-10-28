@@ -4,13 +4,16 @@
  * کاربرد: node scripts/db-test-embedded.mjs
  * اجرای migrations + seeds + تست‌های یکپارچگی (همان supabase/tests/run.sh اما محلی).
  */
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import EmbeddedPostgres from 'embedded-postgres';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const dbDir = join(root, '.embedded-pg');
+
+// همیشه از دیتایرس تازه شروع می‌کنیم (اجرای قبلی ممکن است ناتمام مانده باشد)
+rmSync(dbDir, { recursive: true, force: true });
 
 const pg = new EmbeddedPostgres({
   databaseDir: dbDir,

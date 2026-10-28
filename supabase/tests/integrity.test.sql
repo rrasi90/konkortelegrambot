@@ -82,21 +82,33 @@ exception when check_violation then
 end
 $$;
 
--- ۷) RLS: کاربر ناشناس به رویدادها دسترسی ندارد (role anon فقط اگر موجود باشد)
+-- ۷) RLS: policy خواندن برای authenticated تعریف شده باشد
 do $$
 begin
-  if exists (select 1 from pg_roles where rolname = 'anon') then
-    if (select count(*) from answer_events) > 0 then
-      -- فقط بررسی می‌کنیم که policy خواندن برای auth.uid تعریف شده باشد
-      if not exists (select 1 from pg_policies where tablename = 'answer_events' and cmd = 'SELECT' and roles @> '{authenticated}') then
-        raise exception 'policy خواندن answer_events برای authenticated تعریف نشده';
-      end if;
-    end if;
+  if not exists (select 1 from pg_policies where tablename = 'answer_events' and cmd = 'SELECT' and roles @> '{authenticated}') then
+    raise exception 'policy خواندن answer_events برای authenticated تعریف نشده';
   end if;
 end
 $$;
 
+-- ۸) ایزولاسیون واقعی RLS (در سطح psql، با تعویض نقش)
+insert into app_users (id, display_name) values ('22222222-2222-2222-2222-222222222222', 'تست ۲') on conflict do nothing;
+insert into answer_events (user_id, question_id, attempt_id, selected_option, is_correct)
+select '22222222-2222-2222-2222-222222222222', id, 'test-rls-1', 1, false from questions limit 1;
+
+set local role authenticated;
+-- کاربر ۲ باید رویداد خودش را ببیند (اگر نبود، خطا: تقسیم بر صفر)
+set local ael.uid = '22222222-2222-2222-2222-222222222222';
+-- توجه: 1/0 ثابت در زمان plan ارزیابی می‌شود؛ بنابراین مخرج باید runtime باشد
+select 1/((count(*) > 0)::int) as own_visible
+from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
+-- کاربر ۱ نباید رویداد کاربر ۲ را ببیند (اگر دید، خطا)
+set local ael.uid = '11111111-1111-1111-1111-111111111111';
+select 1/((count(*) = 0)::int) as foreign_hidden
+from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
+reset role;
+
 -- پاک‌سازی دادهٔ تست
-delete from answer_events where attempt_id = 'test-attempt-1';
-delete from user_node_mastery where user_id = '11111111-1111-1111-1111-111111111111';
-delete from app_users where id = '11111111-1111-1111-1111-111111111111';
+delete from answer_events where attempt_id in ('test-attempt-1', 'test-rls-1');
+delete from user_node_mastery where user_id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222');
+delete from app_users where id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222');

@@ -7,10 +7,7 @@ create extension if not exists pgcrypto;
 -- policyهای auth.uid() قابل اعمال باشند. در Supabase واقعی این بلوک رد می‌شود.
 do $$
 begin
-  if not exists (select 1 from pg_namespace where nspname = 'auth') then
-    execute 'create schema auth';
-    execute 'create function auth.uid() returns uuid language sql stable as ''select null::uuid''';
-  end if;
+  -- نقش‌های Supabase (در محیط واقعی از قبل موجودند)
   if not exists (select 1 from pg_roles where rolname = 'authenticated') then
     execute 'create role authenticated nologin';
   end if;
@@ -18,7 +15,16 @@ begin
     execute 'create role anon nologin';
   end if;
   if not exists (select 1 from pg_roles where rolname = 'service_role') then
-    execute 'create role service_role nologin';
+    -- در Supabase واقعی service_role دارای bypassrls است
+    execute 'create role service_role nologin bypassrls';
+  end if;
+  -- شیم auth برای اجرای مهاجرت روی PostgreSQL خام (خارج از Supabase)
+  if not exists (select 1 from pg_namespace where nspname = 'auth') then
+    execute 'create schema auth';
+    -- uid از تنظیم نشست خوانده می‌شود تا ایزولاسیون RLS قابل تست باشد
+    execute 'create function auth.uid() returns uuid language sql stable as ''select nullif(current_setting(''''ael.uid'''', true), '''''''')::uuid''';
+    execute 'grant usage on schema auth to authenticated';
+    execute 'grant execute on function auth.uid() to authenticated';
   end if;
 end
 $$;
@@ -164,3 +170,13 @@ create policy read_own_cards on review_cards for select to authenticated using (
 create policy read_own_plan on daily_plan for select to authenticated using (auth.uid() = user_id);
 -- trap_cards محتوای عمومی است (بدون user_id)؛ فقط خواندن عمومی
 create policy read_trap_cards on trap_cards for select using (true);
+
+-- دسترسی‌ها: در Supabase به‌صورت پیش‌فرض داده می‌شوند؛ برای اجرای مستقل روی
+-- PostgreSQL خام صریحاً اضافه می‌شوند. RLS فقط ردیف‌ها را فیلتر می‌کند و
+-- جایگزین GRANT نیست.
+grant select on app_users, knowledge_nodes, node_dependencies, questions,
+  answer_events, user_node_mastery, trap_cards, review_cards, daily_plan
+  to authenticated;
+grant select on app_users, knowledge_nodes, node_dependencies, questions,
+  answer_events, user_node_mastery, trap_cards, review_cards, daily_plan
+  to anon;
