@@ -40,6 +40,7 @@
 - [قواعد موتور یادگیری](docs/learning/learning-engine.md)
 - [طرح بستهٔ آزمون](schemas/exam-pack.schema.json)
 - [حاکمیت محتوا و هوش مصنوعی](docs/governance/content-and-ai-governance.md)
+- [قرارداد امنیتی تحویل سؤال و کلید پاسخ](docs/security/content-delivery.md)
 - [سناریوهای پذیرش](docs/testing/acceptance-scenarios.md)
 - [نقشهٔ اجرایی](docs/roadmap/implementation-roadmap.md)
 - [ثبت تصمیم‌ها](docs/decisions/decision-log.md)
