@@ -171,7 +171,11 @@ describe('review scheduling remains separate from proficiency', () => {
       selectedOption: 0, seenBefore: true, answeredAt: NOW.toISOString(),
     }, user);
     const updated = result.cardUpdates.find((row) => row.id === existing.id);
-    expect(updated?.intervalDays).toBe(21);
+    expect(updated?.fsrsState).toBeDefined();
+    expect(updated?.fsrsState?.reps).toBe(1);
+    expect(updated?.dueAt).toBe(updated?.fsrsState?.due);
+    expect(new Date(updated!.dueAt).getTime()).toBeGreaterThan(NOW.getTime());
+    // The legacy ease field is retained for old clients; FSRS is authoritative for interval/due time.
     expect(updated?.ease).toBeCloseTo(2.05);
   });
 
