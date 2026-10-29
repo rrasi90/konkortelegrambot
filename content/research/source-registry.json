@@ -1,0 +1,65 @@
+[
+  {
+    "source_id": "src-sanjesh-portal",
+    "name": "سازمان سنجش آموزش کشور",
+    "url": "https://sanjesh.org",
+    "type": "official_government",
+    "reliability": "tier_1_authoritative",
+    "description": "درگاه رسمی انتشار دفترچه‌های راهنما، اطلاعیه‌ها، دفترچه سؤالات و کلیدهای اولیه و نهایی آزمون دکتری",
+    "rights_status": "public_domain"
+  },
+  {
+    "source_id": "src-msrt-curriculum",
+    "name": "دفتر برنامه‌ریزی آموزش عالی وزارت علوم",
+    "url": "https://curriculum.msrt.ir",
+    "type": "official_government",
+    "reliability": "tier_1_authoritative",
+    "description": "سرفصل مصوب دوره‌های کارشناسی و کارشناسی ارشد مدیریت برای استخراج سرفصل و مهارت‌ها",
+    "rights_status": "public_domain"
+  },
+  {
+    "source_id": "src-nlai",
+    "name": "سازمان اسناد و کتابخانه ملی ایران",
+    "url": "https://nlai.ir",
+    "type": "national_library",
+    "reliability": "tier_2_verified",
+    "description": "مرجع فیپا، شابک و اطلاعات کتابشناختی دقیق کتب مرجع دانشگاهی",
+    "rights_status": "public_domain"
+  },
+  {
+    "source_id": "src-modir-ir",
+    "name": "پایگاه تخصصی مدیر (Modir.ir)",
+    "url": "https://modir.ir",
+    "type": "educational_archive",
+    "reliability": "tier_4_unofficial",
+    "description": "آرشیو تخصصی کنکور دکتری مدیریت، بررسی نظرات اساتید و کلیدهای پیشنهادی و پاسخ‌های تشریحی",
+    "rights_status": "review_required"
+  },
+  {
+    "source_id": "src-phdtest-ir",
+    "name": "پایگاه آزمون دکتری پی‌اچ‌دی‌تست (PhDTest.ir)",
+    "url": "https://phdtest.ir",
+    "type": "educational_archive",
+    "reliability": "tier_4_unofficial",
+    "description": "آرشیو دفترچه‌ها، کلیدهای رسمی سنجش و پاسخنامه‌های تشریحی موسسات",
+    "rights_status": "review_required"
+  },
+  {
+    "source_id": "src-samt-publisher",
+    "name": "سازمان مطالعه و تدوین کتب علوم انسانی (سمت)",
+    "url": "https://samt.ac.ir",
+    "type": "academic_publisher",
+    "reliability": "tier_3_publisher",
+    "description": "ناشر رسمی کتب مرجع دانشگاهی مدیریت (آمار دکتر آذر، رفتار سازمانی دکتر رضائیان و...)",
+    "rights_status": "licensed"
+  },
+  {
+    "source_id": "src-negahdanesh",
+    "name": "انتشارات نگاه دانش",
+    "url": "https://negahdanesh.com",
+    "type": "academic_publisher",
+    "reliability": "tier_3_publisher",
+    "description": "ناشر کتب مرجع کنکوری و دانشگاهی پیشرفته مدیریت (تئوری‌های مدیریت دکتر سیدجوادین، بازاریابی)",
+    "rights_status": "licensed"
+  }
+]
