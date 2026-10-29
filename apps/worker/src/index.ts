@@ -522,7 +522,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       | { skillId?: string; errorType?: 'conceptual' | 'confusable' | 'computational' | 'slip'; note?: string }
       | null;
     if (!body || typeof body.skillId !== 'string' ||
-        !['conceptual', 'confusable', 'computational', 'slip'].includes(body.errorType ?? '') ||
+        (body.errorType !== 'conceptual' && body.errorType !== 'confusable' &&
+          body.errorType !== 'computational' && body.errorType !== 'slip') ||
         (body.note !== undefined && (typeof body.note !== 'string' || body.note.length > 400))) {
       return c.json({ error: 'نوع خطا یا مهارت نامعتبر است' }, 400);
     }
@@ -599,7 +600,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       | { skillId?: string; assetId?: string; status?: 'started' | 'completed' }
       | null;
     if (!body || typeof body.skillId !== 'string' || typeof body.assetId !== 'string' ||
-        !['started', 'completed'].includes(body.status ?? '')) {
+        (body.status !== 'started' && body.status !== 'completed')) {
       return c.json({ error: 'مهارت، محتوای ترمیم و وضعیت نامعتبر است' }, 400);
     }
     const node = (await store.listNodes()).find((item) => item.id === body.skillId);
