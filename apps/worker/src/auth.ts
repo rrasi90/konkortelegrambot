@@ -19,26 +19,64 @@ export function toHex(buf: ArrayBuffer): string {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
-/** توکن نشست: `${userId}.${hmac(secret, userId)}` — قابل جعل نیست بدون کلید سرور */
+/** نشست ۳۰روزه؛ انقضا داخل دادهٔ امضاشده است و توکن‌های قدیمی بدون انقضا رد می‌شوند. */
 export async function issueSessionToken(userId: string, secret: string): Promise<string> {
-  return `${userId}.${await hmacSha256Hex(secret, userId)}`;
+  const expiresAt = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60;
+  const payload = `${userId}.${expiresAt}`;
+  return `${payload}.${await hmacSha256Hex(secret, payload)}`;
+}
+
+function constantTimeEqual(expected: string, provided: string): boolean {
+  if (provided.length !== expected.length) return false;
+  let diff = 0;
+  for (let i = 0; i < expected.length; i++) {
+    diff |= expected.charCodeAt(i) ^ provided.charCodeAt(i);
+  }
+  return diff === 0;
 }
 
 export async function verifySessionToken(
   token: string,
   secret: string,
 ): Promise<string | null> {
-  const idx = token.lastIndexOf('.');
-  if (idx <= 0) return null;
-  const userId = token.slice(0, idx);
-  const expected = await hmacSha256Hex(secret, userId);
-  const provided = token.slice(idx + 1);
-  if (provided.length !== expected.length) return null;
-  let diff = 0;
-  for (let i = 0; i < expected.length; i++) {
-    diff |= expected.charCodeAt(i) ^ provided.charCodeAt(i);
-  }
-  return diff === 0 ? userId : null;
+  const signatureSeparator = token.lastIndexOf('.');
+  if (signatureSeparator <= 0) return null;
+  const payload = token.slice(0, signatureSeparator);
+  const payloadSeparator = payload.lastIndexOf('.');
+  if (payloadSeparator <= 0) return null;
+  const userId = payload.slice(0, payloadSeparator);
+  const expiresAt = Number(payload.slice(payloadSeparator + 1));
+  if (!userId || !Number.isSafeInteger(expiresAt) || expiresAt <= Math.floor(Date.now() / 1000)) return null;
+  const expected = await hmacSha256Hex(secret, payload);
+  return constantTimeEqual(expected, token.slice(signatureSeparator + 1)) ? userId : null;
+}
+
+/** توکن تلاش متصل به کاربر/سؤال/شناسهٔ تلاش؛ عمر پیش‌فرض ۲۰ دقیقه. */
+export async function issueQuestionAttemptToken(
+  userId: string,
+  questionId: string,
+  attemptId: string,
+  secret: string,
+  expiresAt = Math.floor(Date.now() / 1000) + 20 * 60,
+): Promise<string> {
+  const payload = `${userId}\n${questionId}\n${attemptId}\n${expiresAt}`;
+  return `${expiresAt}.${await hmacSha256Hex(secret, payload)}`;
+}
+
+export async function verifyQuestionAttemptToken(
+  token: string,
+  userId: string,
+  questionId: string,
+  attemptId: string,
+  secret: string,
+): Promise<boolean> {
+  const separator = token.lastIndexOf('.');
+  if (separator <= 0) return false;
+  const expiresAt = Number(token.slice(0, separator));
+  if (!Number.isSafeInteger(expiresAt) || expiresAt <= Math.floor(Date.now() / 1000)) return false;
+  const payload = `${userId}\n${questionId}\n${attemptId}\n${expiresAt}`;
+  const expected = await hmacSha256Hex(secret, payload);
+  return constantTimeEqual(expected, token.slice(separator + 1));
 }
 
 /**
