@@ -291,6 +291,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const state = await loadEngineState(user.id);
     const question = state.questions.get(body.questionId);
     if (!question) return c.json({ error: 'سؤال ناشناخته' }, 404);
+    const questionNode = state.nodes.get(question.nodeId);
+    if (!questionNode || (questionNode.track !== 'common' && !user.activeTracks.includes(questionNode.track))) {
+      return c.json({ error: 'این سؤال در مسیر فعال شما نیست' }, 403);
+    }
     if (body.selectedOption >= question.options.length) return c.json({ error: 'شمارهٔ گزینه خارج از محدوده است' }, 400);
 
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
@@ -407,7 +411,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       const node = nodes.find((n) => n.id === card.nodeId);
       return !!node && (node.track === 'common' || user.activeTracks.includes(node.track));
     }).length;
-    const wrongToday = todayAnswers.filter((a) => !a.isCorrect);
+    const latestTodayByQuestion = new Map<string, (typeof todayAnswers)[number]>();
+    for (const answer of [...todayAnswers].sort((a, b) => a.answeredAt.localeCompare(b.answeredAt))) {
+      latestTodayByQuestion.set(answer.questionId, answer);
+    }
+    const wrongToday = [...latestTodayByQuestion.values()].filter((answer) => !answer.isCorrect);
     return c.json({
       user: { displayName: user.displayName, activeTracks: user.activeTracks },
       stats: {
@@ -496,6 +504,14 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 /* برای محیط اجرای Cloudflare Workers */
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    const configuredSecret = typeof env.SESSION_SECRET === 'string' && env.SESSION_SECRET.length >= 32;
+    const configuredDatabase = Boolean(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY);
+    if (!configuredSecret || !configuredDatabase) {
+      return new Response(
+        JSON.stringify({ error: 'پیکربندی امن کامل نیست؛ SUPABASE_URL، کلید سرویس و SESSION_SECRET حداقل ۳۲ نویسه‌ای لازم است.' }),
+        { status: 503, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' } },
+      );
+    }
     return createApp(env).fetch(request);
   },
 };
