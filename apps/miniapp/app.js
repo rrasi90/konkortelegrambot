@@ -307,22 +307,50 @@
     var btn = document.createElement('button');
     btn.className = 'option';
     btn.innerHTML = '<span class="key">✓</span><span>خواندم؛ این دام را به خاطر می‌سپارم</span>';
-    btn.addEventListener('click', function () { submitAnswer(0); });
+    btn.addEventListener('click', markTrapRead);
     box.appendChild(btn);
+  }
+
+  function markTrapRead() {
+    var item = state.queue[state.currentIndex];
+    document.querySelectorAll('.option').forEach(function (b) { b.disabled = true; });
+    API.post('/api/trap-cards/seen', { cardId: item.card.id }).then(function () {
+      el('answer-feedback').hidden = false;
+      el('feedback-head').textContent = 'نکته ثبت شد';
+      el('feedback-head').className = 'feedback-head ok';
+      el('feedback-explanation').textContent = item.trapNote || 'این نکته برای مرور بعدی زمان‌بندی شد.';
+      el('feedback-trap').hidden = true;
+      el('feedback-mentor').textContent = 'مرور نکته ثبت شد؛ این کار به‌تنهایی به‌عنوان پاسخ درست یا افزایش تسلط شمرده نمی‌شود.';
+      el('feedback-ripple').innerHTML = '';
+      el('btn-next').onclick = function () { state.currentIndex += 1; renderCurrent(); };
+    }).catch(function () {
+      document.querySelectorAll('.option').forEach(function (b) { b.disabled = false; });
+      el('answer-feedback').hidden = false;
+      el('feedback-head').textContent = 'خطا در ثبت مرور';
+      el('feedback-explanation').textContent = 'ارتباط برقرار نشد. دوباره تلاش کنید.';
+    });
   }
 
   function submitAnswer(selected) {
     var item = state.queue[state.currentIndex];
-    var questionId = item.card.questionId;
-    var attemptId = 'att-' + questionId + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6);
+    if (!item || item.card.cardType === 'trap_note' || !item.question || !item.attemptId) {
+      el('feedback-mentor').textContent = 'این سؤال نشست معتبر ندارد؛ صف سؤال‌ها را دوباره بارگیری کنید.';
+      return;
+    }
+    var questionId = item.question.id;
     document.querySelectorAll('.option').forEach(function (b) { b.disabled = true; });
     API.post('/api/answers', {
-      attemptId: attemptId,
+      attemptId: item.attemptId,
       questionId: questionId,
       selectedOption: selected,
     }).then(function (data) {
       if (data.stats) updateStatsChips(data.stats);
       showFeedback(item, data.report, selected, data.correctOption);
+    }).catch(function () {
+      document.querySelectorAll('.option').forEach(function (b) { b.disabled = false; });
+      el('answer-feedback').hidden = false;
+      el('feedback-head').textContent = 'خطا در ثبت پاسخ';
+      el('feedback-explanation').textContent = 'پاسخ ذخیره نشد. اتصال را بررسی کنید و دوباره تلاش کنید.';
     });
   }
 
