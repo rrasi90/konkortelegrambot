@@ -444,12 +444,13 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       answeredAt,
       rippleReport: result.report,
       responseTimeMs: body.responseTimeMs,
-      seenBefore: (currentQuestionCard?.timesSeen ?? 0) > 0,
+      seenBefore,
       confidenceBefore: body.confidenceBefore,
       assistance: body.assistance ?? [],
       studyMode: body.studyMode ?? 'desk',
       engineVersion: '0.2.0',
       itemVersion: '1',
+      learnerSkillState,
     }, result.masteryUpdates, [...result.cardUpdates, ...result.createdCards]);
 
     if (commit.replay) return c.json({ report: commit.report ?? result.report, replay: true });
@@ -458,6 +459,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       report: result.report,
       correctOption: question.correctOption,
       replay: false,
+      learnerState: {
+        proficiencyProbability: learnerSkillState.proficiencyProbability,
+        estimateConfidence: learnerSkillState.estimateConfidence,
+        evidenceCount: learnerSkillState.evidenceCount,
+        memoryRetrievability: learnerSkillState.memoryRetrievability,
+        fluencyScore: learnerSkillState.fluencyScore,
+        dominantErrorType: learnerSkillState.dominantErrorType,
+        coverageState: learnerSkillState.coverageState,
+      },
       stats: { coins: stats.coins, streakDays: stats.streakDays, dayNumber: stats.dayNumber },
     });
   });
