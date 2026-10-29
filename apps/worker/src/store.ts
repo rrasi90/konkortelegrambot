@@ -269,18 +269,24 @@ export class SupabaseStore implements DataStore {
       'GET',
       'node_dependencies',
       undefined,
-      '?select=source_node_id,target_node_id,relation,impact_weight',
+      '?select=source_node_id,target_node_id,relation,impact_weight,verification_status,source_ref,confidence',
     )) as {
       source_node_id: string;
       target_node_id: string;
       relation: NodeDependency['relation'];
       impact_weight: number;
+      verification_status: NodeDependency['verificationStatus'];
+      source_ref: string | null;
+      confidence: number | null;
     }[];
     return rows.map((r) => ({
       source: r.source_node_id,
       target: r.target_node_id,
       relation: r.relation,
       weight: Number(r.impact_weight),
+      verificationStatus: r.verification_status,
+      sourceRef: r.source_ref ?? undefined,
+      confidence: r.confidence == null ? undefined : Number(r.confidence),
     }));
   }
 
