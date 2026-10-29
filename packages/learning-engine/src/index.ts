@@ -11,6 +11,7 @@ import {
   isQuestion,
   isTrackId,
 } from '@ael/contracts';
+import { scheduleFsrsReview } from './spaced-repetition';
 import type {
   AnswerInput,
   CardAction,
@@ -174,17 +175,20 @@ export function applyAnswer(
   if (!wasCorrect) {
     // بازنشانی مستقیم: فاصلهٔ ۱ روز + کاهش سهولت
     const before = clone(qCard);
-    qCard.ease = Math.max(cfg.easeMin, qCard.ease - cfg.easePenalty);
-    qCard.intervalDays = 1;
-    qCard.dueAt = addDays(now, 1).toISOString();
+    qCard.ease = Math.max(cfg.easeMin, qCard.ease - cfg.easePenalty); // legacy display compatibility; FSRS owns due dates
+    const scheduled = scheduleFsrsReview(qCard.fsrsState, false, now);
+    qCard.fsrsState = scheduled.state;
+    qCard.intervalDays = scheduled.intervalDays;
+    qCard.dueAt = scheduled.dueAt;
     qCard.timesSeen += 1;
     qCard.isRepair = false;
+    qCard.previousIntervalDays = undefined;
     if (!createdCards.has(qCard.id)) cardUpdates.set(qCard.id, qCard);
-    if (before.intervalDays !== qCard.intervalDays) {
+    if (before.intervalDays !== qCard.intervalDays || before.dueAt !== qCard.dueAt) {
       actions.push({
         cardId: qCard.id,
         kind: 'reset_failed_card',
-        payload: { nodeId: question.nodeId, fromInterval: before.intervalDays, toInterval: 1 },
+        payload: { nodeId: question.nodeId, fromInterval: before.intervalDays, toInterval: scheduled.intervalDays, dueAt: scheduled.dueAt },
       });
     }
 
@@ -219,15 +223,15 @@ export function applyAnswer(
     // رشد فاصلهٔ مرور
     const wasRepair = qCard.isRepair;
     const prevInterval = qCard.intervalDays;
-    qCard.ease = Math.min(cfg.easeMax, qCard.ease + cfg.easeGain);
-    qCard.intervalDays = Math.max(1, Math.round(qCard.intervalDays * qCard.ease));
-    // اگر کارتِ ترمیمی درست جواب داده شد، فاصلهٔ قبلی را به‌جای رشد تازه برمی‌گردانیم
+    qCard.ease = Math.min(cfg.easeMax, qCard.ease + cfg.easeGain); // legacy display compatibility
+    const scheduled = scheduleFsrsReview(qCard.fsrsState, true, now);
+    qCard.fsrsState = scheduled.state;
+    qCard.intervalDays = scheduled.intervalDays;
+    qCard.dueAt = scheduled.dueAt;
     if (wasRepair) {
-      qCard.intervalDays = qCard.previousIntervalDays ?? qCard.intervalDays;
       qCard.isRepair = false;
       qCard.previousIntervalDays = undefined;
     }
-    qCard.dueAt = addDays(now, qCard.intervalDays).toISOString();
     qCard.timesSeen += 1;
     qCard.timesCorrect += 1;
     if (!createdCards.has(qCard.id)) cardUpdates.set(qCard.id, qCard);
@@ -237,7 +241,8 @@ export function applyAnswer(
       payload: {
         nodeId: question.nodeId,
         fromInterval: prevInterval,
-        toInterval: qCard.intervalDays,
+        toInterval: scheduled.intervalDays,
+        dueAt: scheduled.dueAt,
       },
     });
   }
