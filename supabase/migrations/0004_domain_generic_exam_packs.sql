@@ -41,6 +41,10 @@ alter table public.questions add column if not exists item_version text not null
 alter table public.questions add column if not exists is_holdout boolean not null default false;
 alter table public.review_cards add column if not exists fsrs_state jsonb not null default '{}'::jsonb
   check (jsonb_typeof(fsrs_state) = 'object');
+alter table public.app_users
+  drop constraint if exists app_users_daily_capacity_range_check;
+alter table public.app_users
+  add constraint app_users_daily_capacity_range_check check (daily_capacity between 10 and 480);
 
 create table if not exists public.exam_packs (
   id text primary key,
