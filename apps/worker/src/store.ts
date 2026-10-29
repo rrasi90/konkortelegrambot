@@ -40,6 +40,19 @@ export interface AnswerEvent {
   attemptId: string;
   answeredAt: string;
   rippleReport: unknown;
+  responseTimeMs?: number;
+  seenBefore?: boolean;
+  confidenceBefore?: number;
+  assistance?: unknown[];
+  studyMode?: 'desk' | 'commute' | 'exam';
+  engineVersion?: string;
+  itemVersion?: string;
+}
+
+export interface CommitAnswerResult {
+  replay: boolean;
+  report?: unknown;
+  stats?: UserStats;
 }
 
 export interface DataStore {
@@ -65,6 +78,8 @@ export interface DataStore {
 
   findAnswerByAttempt(userId: string, attemptId: string): Promise<AnswerEvent | null>;
   insertAnswerEvent(event: AnswerEvent): Promise<void>;
+  createQuestionAttempt(userId: string, questionId: string, attemptId: string, ttlSeconds?: number): Promise<string>;
+  commitAnswer(event: AnswerEvent, masteryRows: UserNodeMastery[], cards: ReviewCard[]): Promise<CommitAnswerResult>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -89,7 +104,7 @@ export class SupabaseStore implements DataStore {
         apikey: this.serviceRoleKey,
         Authorization: `Bearer ${this.serviceRoleKey}`,
         'Content-Type': 'application/json',
-        ...(method === 'POST' ? { Prefer: 'resolution=merge-duplicates' } : {}),
+        ...(method === 'POST' ? { Prefer: 'resolution=merge-duplicates,return=representation' } : {}),
       },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
@@ -135,8 +150,12 @@ export class SupabaseStore implements DataStore {
         telegram_user_id: input.telegramUserId ?? null,
         display_name: input.displayName ?? null,
       },
-    ])) as Record<string, unknown>[];
-    return this.toUser(rows[0] ?? {});
+    ])) as Record<string, unknown>[] | null;
+    const row = rows?.[0];
+    if (!row || typeof row.id !== 'string') {
+      throw new Error('Supabase did not return the created user row; refusing to issue an invalid session');
+    }
+    return this.toUser(row);
   }
 
   async setActiveTracks(userId: string, tracks: TrackId[]): Promise<void> {
@@ -366,6 +385,7 @@ export class SupabaseStore implements DataStore {
 
   async insertAnswerEvent(event: AnswerEvent): Promise<void> {
     await this.request('POST', 'answer_events', {
+      id: event.id,
       user_id: event.userId,
       question_id: event.questionId,
       selected_option: event.selectedOption,
@@ -373,6 +393,76 @@ export class SupabaseStore implements DataStore {
       attempt_id: event.attemptId,
       answered_at: event.answeredAt,
       ripple_report: event.rippleReport,
+      response_time_ms: event.responseTimeMs ?? null,
+      seen_before: event.seenBefore ?? false,
+      confidence_before: event.confidenceBefore ?? null,
+      assistance: event.assistance ?? [],
+      study_mode: event.studyMode ?? 'desk',
+      engine_version: event.engineVersion ?? '0.2.0',
+      item_version: event.itemVersion ?? '1',
     });
+  }
+
+  async createQuestionAttempt(userId: string, questionId: string, attemptId: string, ttlSeconds = 900): Promise<string> {
+    const result = await this.request('POST', 'rpc/issue_question_attempt', {
+      p_user_id: userId,
+      p_question_id: questionId,
+      p_attempt_id: attemptId,
+      p_ttl_seconds: ttlSeconds,
+    });
+    if (typeof result !== 'string' || !result) throw new Error('Could not issue a question attempt');
+    return result;
+  }
+
+  async commitAnswer(event: AnswerEvent, masteryRows: UserNodeMastery[], cards: ReviewCard[]): Promise<CommitAnswerResult> {
+    const cardRows = cards.map((c) => ({
+      id: c.id,
+      user_id: c.userId,
+      node_id: c.nodeId,
+      card_type: c.cardType,
+      question_id: c.questionId ?? null,
+      trap_card_id: c.trapCardId ?? null,
+      due_at: c.dueAt,
+      interval_days: c.intervalDays,
+      previous_interval_days: c.previousIntervalDays ?? null,
+      ease: c.ease,
+      is_repair: c.isRepair,
+      times_seen: c.timesSeen,
+      times_correct: c.timesCorrect,
+    }));
+    const result = await this.request('POST', 'rpc/commit_answer', {
+      p_event: {
+        id: event.id,
+        user_id: event.userId,
+        question_id: event.questionId,
+        selected_option: event.selectedOption,
+        is_correct: event.isCorrect,
+        attempt_id: event.attemptId,
+        answered_at: event.answeredAt,
+        ripple_report: event.rippleReport,
+        response_time_ms: event.responseTimeMs ?? null,
+        seen_before: event.seenBefore ?? false,
+        confidence_before: event.confidenceBefore ?? null,
+        assistance: event.assistance ?? [],
+        study_mode: event.studyMode ?? 'desk',
+        engine_version: event.engineVersion ?? '0.2.0',
+        item_version: event.itemVersion ?? '1',
+      },
+      p_mastery: masteryRows,
+      p_cards: cardRows,
+    }) as { replay?: boolean; report?: unknown; stats?: Record<string, unknown> };
+    const stats = result?.stats;
+    return {
+      replay: result?.replay === true,
+      report: result?.report,
+      ...(stats ? { stats: {
+        userId: String(stats.userId),
+        coins: Number(stats.coins ?? 0),
+        streakDays: Number(stats.streakDays ?? 0),
+        lastStudyDate: stats.lastStudyDate ? String(stats.lastStudyDate) : null,
+        dayNumber: Number(stats.dayNumber ?? 0),
+        examDate: stats.examDate ? String(stats.examDate) : null,
+      } } : {}),
+    };
   }
 }
