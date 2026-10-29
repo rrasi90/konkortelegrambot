@@ -18,6 +18,8 @@ export interface AppUser {
   telegramUserId?: number;
   displayName?: string;
   activeTracks: TrackId[];
+  /** Daily time budget in minutes, persisted in app_users.daily_capacity. */
+  dailyCapacity?: number;
 }
 
 /** آمار انگیزشی کاربر (واژه‌راه-مانند): سکه، روز پیوسته، شمارهٔ روز و تاریخ کنکور */
@@ -61,6 +63,7 @@ export interface DataStore {
   getUserByTelegramId(telegramUserId: number): Promise<AppUser | null>;
   createUser(input: { telegramUserId?: number; displayName?: string }): Promise<AppUser>;
   setActiveTracks(userId: string, tracks: TrackId[]): Promise<void>;
+  setDailyCapacity(userId: string, dailyCapacity: number): Promise<void>;
 
   getStats(userId: string): Promise<UserStats | null>;
   upsertStats(stats: UserStats): Promise<void>;
@@ -123,6 +126,7 @@ export class SupabaseStore implements DataStore {
       telegramUserId: row.telegram_user_id === null ? undefined : Number(row.telegram_user_id),
       displayName: row.display_name === null ? undefined : String(row.display_name),
       activeTracks: (row.active_tracks as TrackId[]) ?? ['common'],
+      dailyCapacity: Number.isInteger(Number(row.daily_capacity)) ? Number(row.daily_capacity) : 30,
     };
   }
 
@@ -165,6 +169,13 @@ export class SupabaseStore implements DataStore {
       `app_users?id=eq.${userId}`,
       { active_tracks: tracks },
     );
+  }
+
+  async setDailyCapacity(userId: string, dailyCapacity: number): Promise<void> {
+    if (!Number.isInteger(dailyCapacity) || dailyCapacity < 10 || dailyCapacity > 480) {
+      throw new Error('dailyCapacity must be an integer from 10 to 480 minutes');
+    }
+    await this.request('PATCH', `app_users?id=eq.${userId}`, { daily_capacity: dailyCapacity });
   }
 
   async getStats(userId: string): Promise<UserStats | null> {
