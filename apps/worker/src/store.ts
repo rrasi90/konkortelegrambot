@@ -4,8 +4,10 @@
  * - MemoryStore: برای تست و محیط دمو
  */
 import type {
+  DominantErrorType,
   FSRSCardState,
   KnowledgeNode,
+  LearnerSkillState,
   NodeDependency,
   Question,
   ReviewCard,
@@ -50,12 +52,33 @@ export interface AnswerEvent {
   studyMode?: 'desk' | 'commute' | 'exam';
   engineVersion?: string;
   itemVersion?: string;
+  learnerSkillState?: LearnerSkillState;
 }
 
 export interface CommitAnswerResult {
   replay: boolean;
   report?: unknown;
   stats?: UserStats;
+}
+
+export interface LearningAsset {
+  id: string;
+  packId?: string;
+  skillId?: string;
+  type: 'mini_lesson' | 'worked_example' | 'diagnostic_probe' | 'remediation' | 'comparison' | 'summary' | 'explanation';
+  title: string;
+  content: Record<string, unknown>;
+  version: number;
+  rightsStatus: string;
+  verificationStatus: string;
+  sourceRef?: string;
+}
+
+export interface LearnerDiagnosis {
+  errorType: DominantErrorType;
+  state: LearnerSkillState;
+  clientEventId: string;
+  reason: Record<string, unknown>;
 }
 
 export interface PlannerDecisionInput {
@@ -91,6 +114,9 @@ export interface DataStore {
 
   listMastery(userId: string): Promise<UserNodeMastery[]>;
   upsertMastery(userId: string, rows: UserNodeMastery[]): Promise<void>;
+  getLearnerSkillState(userId: string, skillId: string): Promise<LearnerSkillState | null>;
+  recordLearningDiagnosis(userId: string, skillId: string, diagnosis: LearnerDiagnosis): Promise<LearnerSkillState>;
+  listLearningAssets(skillId: string, assetType: LearningAsset['type']): Promise<LearningAsset[]>;
 
   listCards(userId: string): Promise<ReviewCard[]>;
   upsertCards(cards: ReviewCard[]): Promise<void>;
