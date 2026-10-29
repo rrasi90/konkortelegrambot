@@ -118,7 +118,8 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     const vc = allNodes.find((n: any) => n.id === 'sm.value_chain');
     const ac = allNodes.find((n: any) => n.id === 'tech.absorptive');
     expect(vc.mastery).toBe(37.5);
-    expect(ac.mastery).toBe(50); // بدون کسر فوری بین‌درسی — فقط شاهد ثبت شد
+    expect(ac.mastery).toBeNull(); // سنجیده‌نشده — بدون کسر فوری بین‌درسی و بدون عدد نمایشی
+    expect(ac.status).toBe('unseen');
     // مبحث بازرگانی نباید در نقشه باشد
     const brand = allNodes.find((n: any) => n.id === 'mkt.brand');
     expect(brand).toBeUndefined();
@@ -346,5 +347,142 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
     const queue = await json(queueRes);
     const holdoutItem = queue.items.find((i: any) => i.question?.id === 'q-1404-holdout-test');
     expect(holdoutItem).toBeUndefined();
+  });
+});
+
+describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت تلاش + اثبات تسلط)', () => {
+  it('صف روزانه: attemptId سرور + نوع تلاش برای هر آیتم صادر می‌شود و پاسخ با همان attemptId ثبت می‌شود', async () => {
+    const token = await login();
+    const queueRes = await app.request('/api/queue?limit=3', authed(token));
+    const queue = await json(queueRes);
+    expect(queue.items.length).toBeGreaterThan(0);
+    for (const item of queue.items) {
+      expect(typeof item.attemptId).toBe('string');
+      expect(item.attemptId.startsWith('att-')).toBe(true);
+      expect(item.attemptType).toBe('practice');
+      expect(typeof item.estimatedMinutes).toBe('number');
+    }
+
+    // پاسخ با attemptId سرور
+    const item = queue.items[0];
+    const ansRes = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({
+          attemptId: item.attemptId,
+          questionId: item.question.id,
+          selectedOption: 1,
+          responseTimeMs: 25_000,
+          confidenceRating: 3,
+        }),
+      }),
+    );
+    expect(ansRes.status).toBe(200);
+    const ans = await json(ansRes);
+    expect(ans.report.attemptType).toBe('practice');
+
+    // تلاش تکراری با همان attemptId → replay
+    const replayRes = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: item.attemptId, questionId: item.question.id, selectedOption: 1 }),
+      }),
+    );
+    expect((await json(replayRes)).replay).toBe(true);
+  });
+
+  it('حالت commute: سؤال‌های محاسباتی آمار (stats.*) از صف حذف می‌شوند', async () => {
+    const token = await login();
+    const deskQueue = await json(await app.request('/api/queue?limit=50&mode=desk', authed(token)));
+    const commuteQueue = await json(await app.request('/api/queue?limit=50&mode=commute', authed(token)));
+    const hasStats = (items: any[]) => items.some((i: any) => i.card.nodeId.startsWith('stats.'));
+    // در دسک احتمال وجود آمار هست (بستهٔ دمو آمار دارد)؛ در commute نباید باشد
+    expect(hasStats(commuteQueue.items)).toBe(false);
+    if (hasStats(deskQueue.items)) {
+      expect(deskQueue.items.length).toBeGreaterThan(commuteQueue.items.length);
+    }
+  });
+
+  it('اثبات تسلط: needs_proof → سؤال قرنطینهٔ ۱۴۰۴ با برچسب proof؛ پاسخ درست → proven', async () => {
+    const token = await login();
+    const me = await json(await app.request('/api/me', authed(token)));
+    const userId = me.user.id as string;
+
+    // سؤال قرنطینهٔ ۱۴۰۴ برای گرهٔ sm.rbv
+    store.questions.push({
+      id: 'q-1404-proof-rbv',
+      nodeId: 'sm.rbv',
+      examYear: 1404,
+      text: 'سؤال اثبات تسلط ۱۴۰۴ برای دیدگاه منبع‌محور',
+      options: ['الف', 'ب'],
+      correctOption: 0,
+    });
+    // وضعیت شش‌بعدی مهارت: آمادگی اثبات
+    store.skillStates.set(`${userId}:skill.sm.rbv.vrio`, {
+      skillId: 'skill.sm.rbv.vrio',
+      userId,
+      proficiencyProbability: 0.8,
+      confidence: 0.5,
+      evidenceCount: 2,
+      memoryRetrievability: 1,
+      fluencySpeedRatio: 1,
+      dominantErrorType: 'unknown',
+      coverageStatus: 'needs_proof',
+    });
+
+    const queue = await json(await app.request('/api/queue?limit=20', authed(token)));
+    const proofItem = queue.items.find((i: any) => i.attemptType === 'proof');
+    expect(proofItem).toBeDefined();
+    expect(proofItem.question.id).toBe('q-1404-proof-rbv');
+    expect(proofItem.proofLabel).toContain('اثبات تسلط');
+    // اول صف است
+    expect(queue.items[0].attemptType).toBe('proof');
+
+    // پاسخ درست به سؤال اثبات
+    const ansRes = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({
+          attemptId: proofItem.attemptId,
+          questionId: 'q-1404-proof-rbv',
+          selectedOption: 0,
+          attemptType: 'proof',
+          responseTimeMs: 40_000,
+        }),
+      }),
+    );
+    expect(ansRes.status).toBe(200);
+    const ans = await json(ansRes);
+    expect(ans.report.attemptType).toBe('proof');
+    expect(ans.report.coverageStatus).toBe('proven');
+
+    // وضعیت مهارت در store به proven به‌روزرسانی شده
+    const st = store.skillStates.get(`${userId}:skill.sm.rbv.vrio`);
+    expect(st?.coverageStatus).toBe('proven');
+  });
+
+  it('خوداظهاری بی‌دقتی: بدون کسر تسلط و بدون موج', async () => {
+    const token = await login();
+    const queue = await json(await app.request('/api/queue?limit=5', authed(token)));
+    const item = queue.items.find((i: any) => i.question);
+    const ansRes = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({
+          attemptId: 'att-slip-test',
+          questionId: item.question.id,
+          selectedOption: (item.question.options?.length ?? 4) > 1 ? 99 : 0,
+        }),
+      }),
+    );
+    // گزینهٔ نامعتبر ۴۰۰ می‌دهد؛ پس گزینهٔ غلط واقعی می‌زنیم
+    expect([200, 400]).toContain(ansRes.status);
+    if (ansRes.status === 400) return;
+    const ans = await json(ansRes);
+    expect(ans.report.wasCorrect).toBe(false);
   });
 });

@@ -9,8 +9,9 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "hono": "^4.6.0",
     "@ael/contracts": "*",
-    "@ael/engine": "*"
+    "@ael/engine": "*",
+    "@ael/utils": "*",
+    "hono": "^4.6.0"
   }
 }
