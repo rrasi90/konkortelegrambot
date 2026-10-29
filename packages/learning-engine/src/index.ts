@@ -404,3 +404,6 @@ export { buildDailyPlan, scorePlanCandidate } from './planner';
 export type { DailyPlanPolicy, DailyPlanResult, LearningActionType, PlanCandidate, PlannedCandidate } from './planner';
 export { scheduleFsrsReview } from './spaced-repetition';
 export type { ScheduledReview } from './spaced-repetition';
+
+export { updateLearnerSkillState, estimateRetrievability } from './learner-state';
+export type { LearnerEvidenceInput } from './learner-state';
