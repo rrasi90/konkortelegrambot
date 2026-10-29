@@ -31,8 +31,21 @@ begin
     return;
   end if;
 
-  insert into answer_events (user_id, question_id, selected_option, is_correct, attempt_id, ripple_report)
-  values (p_user_id, p_question_id, p_selected_option, p_was_correct, p_attempt_id, p_ripple_report);
+  -- Server truth: calculate correctness from questions table, do NOT trust p_was_correct
+  declare
+    v_correct_opt int;
+    v_actual_correct boolean;
+  begin
+    select correct_option into v_correct_opt from questions where id = p_question_id;
+    if v_correct_opt is not null then
+      v_actual_correct := (p_selected_option = v_correct_opt);
+    else
+      v_actual_correct := coalesce(p_was_correct, false);
+    end if;
+
+    insert into answer_events (user_id, question_id, selected_option, is_correct, attempt_id, ripple_report)
+    values (p_user_id, p_question_id, p_selected_option, v_actual_correct, p_attempt_id, p_ripple_report);
+  end;
 
   -- 2. به‌روزرسانی تسلط‌ها (upsert)
   if jsonb_typeof(p_mastery_updates) = 'array' then

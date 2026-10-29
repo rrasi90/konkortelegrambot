@@ -66,16 +66,23 @@ declare
   v_question record;
   v_ticket record;
   v_existing uuid;
+  v_existing_qid text;
   v_is_correct boolean;
   v_result jsonb;
+  v_skill_rec record;
 begin
   -- Idempotency check: if already answered with this attempt_id
-  select id, is_correct, ripple_report into v_existing, v_is_correct, v_result
+  select id, question_id, is_correct, ripple_report into v_existing, v_existing_qid, v_is_correct, v_result
   from answer_events
   where user_id = p_user_id and attempt_id = p_attempt_id
   limit 1;
 
   if v_existing is not null then
+    -- Security check: Attempt ID must match the same question!
+    if v_existing_qid <> p_question_id then
+      raise exception 'Attempt ID already registered for a different question' using errcode = '45002';
+    end if;
+
     -- Return existing answer feedback without duplicating mutations
     select q.correct_option, q.explanation, q.trap_note into v_question
     from questions q where q.id = p_question_id;
@@ -100,13 +107,30 @@ begin
     raise exception 'Question not found' using errcode = '45001';
   end if;
 
+  -- Attempt ticket strict validation (if ticket exists in attempt_tickets)
+  select * into v_ticket
+  from attempt_tickets
+  where attempt_id = p_attempt_id;
+
+  if v_ticket.attempt_id is not null then
+    if v_ticket.user_id <> p_user_id then
+      raise exception 'Attempt ticket belongs to another user' using errcode = '45003';
+    end if;
+    if v_ticket.question_id <> p_question_id then
+      raise exception 'Attempt ticket question mismatch' using errcode = '45004';
+    end if;
+    if v_ticket.consumed_at is not null then
+      raise exception 'Attempt ticket already consumed' using errcode = '45005';
+    end if;
+    if v_ticket.expires_at < now() then
+      raise exception 'Attempt ticket expired' using errcode = '45006';
+    end if;
+
+    update attempt_tickets set consumed_at = now() where attempt_id = p_attempt_id;
+  end if;
+
   -- Server-side key verification: compare selected_option with database correct_option
   v_is_correct := (p_selected_option = v_question.correct_option);
-
-  -- Consume attempt ticket if exists
-  update attempt_tickets
-  set consumed_at = now()
-  where attempt_id = p_attempt_id and user_id = p_user_id and question_id = p_question_id and consumed_at is null;
 
   -- Insert immutable answer event
   insert into answer_events (
@@ -116,6 +140,41 @@ begin
     p_user_id, p_question_id, p_selected_option, v_is_correct, p_attempt_id,
     now(), p_ripple_report, v_question.exam_pack_id, coalesce(v_question.item_version, '1.0'), now(), now()
   );
+
+  -- Apply 6D learner skill state updates for all mapped skills
+  for v_skill_rec in
+    select skill_id, is_primary from question_skill_mappings where question_id = p_question_id
+  loop
+    insert into learner_skill_states (
+      user_id, skill_id, proficiency_probability, confidence, evidence_count,
+      memory_retrievability, coverage_status, last_evaluated_at, updated_at
+    ) values (
+      p_user_id,
+      v_skill_rec.skill_id,
+      case when v_is_correct then 0.65 else 0.35 end,
+      0.25,
+      1,
+      case when v_is_correct then 1.0 else 0.8 end,
+      case when v_is_correct then 'learning' else 'remediated' end,
+      now(),
+      now()
+    )
+    on conflict (user_id, skill_id) do update set
+      proficiency_probability = case
+        when v_is_correct then least(1.0, learner_skill_states.proficiency_probability + 0.10 * (1.0 - learner_skill_states.proficiency_probability))
+        else greatest(0.0, learner_skill_states.proficiency_probability - 0.15 * learner_skill_states.proficiency_probability)
+      end,
+      confidence = least(1.0, learner_skill_states.confidence + 0.05),
+      evidence_count = learner_skill_states.evidence_count + 1,
+      memory_retrievability = case when v_is_correct then 1.0 else 0.8 end,
+      coverage_status = case
+        when v_is_correct and learner_skill_states.evidence_count >= 3 and learner_skill_states.proficiency_probability >= 0.85 then 'mastered'
+        when v_is_correct then 'learning'
+        else 'remediated'
+      end,
+      last_evaluated_at = now(),
+      updated_at = now();
+  end loop;
 
   -- Apply mastery updates
   if jsonb_typeof(p_mastery_updates) = 'array' then
@@ -189,7 +248,14 @@ begin
 end;
 $$;
 
--- 5. RLS & Permissions
+-- 5. Strict Table Permissions Hardening
+-- Revoke direct SELECT on questions from client roles to ensure correct_option and explanations never leak
+revoke select on questions from public, anon, authenticated;
+
+-- Grant SELECT exclusively on safe public view
+grant select on v_public_questions to authenticated, anon;
+
+-- RLS & Permissions for learner states and tickets
 alter table learner_skill_states enable row level security;
 alter table attempt_tickets enable row level security;
 
@@ -198,5 +264,4 @@ create policy user_own_attempt_tickets on attempt_tickets for select using (auth
 
 grant select on learner_skill_states to authenticated;
 grant select on attempt_tickets to authenticated;
-grant select on v_public_questions to authenticated, anon;
 grant execute on function submit_answer_secure to authenticated, service_role;

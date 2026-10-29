@@ -269,4 +269,80 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
     expect(home.stats.daysLeft).toBeGreaterThanOrEqual(77);
     expect(home.stats.daysLeft).toBeLessThanOrEqual(79);
   });
+  it('محیط پروداکشن: شکست در صورت عدم وجود کلید یا مغایرت تنظیمات (Fail-Closed)', () => {
+    // 1. کلید پیش‌فرض یا کوتاه در پروداکشن
+    expect(() => {
+      createApp({
+        ENVIRONMENT: 'production',
+        SESSION_SECRET: 'dev-secret',
+      });
+    }).toThrow(/SECURITY VIOLATION/);
+
+    // 2. ورود دمو در پروداکشن ممنوع است
+    expect(() => {
+      createApp({
+        ENVIRONMENT: 'production',
+        SESSION_SECRET: 'production-super-secret-key-32chars',
+        ALLOW_DEMO_AUTH: 'true',
+        SUPABASE_URL: 'https://test.supabase.co',
+        SUPABASE_SERVICE_ROLE_KEY: 'service-key',
+      });
+    }).toThrow(/ALLOW_DEMO_AUTH must not be enabled/);
+
+    // 3. نبود دیتابیس پایدار در پروداکشن ممنوع است (Fallback به MemoryStore رد می‌شود)
+    expect(() => {
+      createApp({
+        ENVIRONMENT: 'production',
+        SESSION_SECRET: 'production-super-secret-key-32chars',
+      });
+    }).toThrow(/In-memory store fallback is prohibited/);
+  });
+
+  it('بررسی تقلب در تلاش مجدد: تلاش مجدد با شناسه سؤال دیگر خطا می‌دهد (۴۰۰)', async () => {
+    const token = await login();
+    const queueRes = await app.request('/api/queue?limit=5', authed(token));
+    const queue = await json(queueRes);
+    const q1 = queue.items[0].question.id;
+    const q2 = queue.items[1].question.id;
+
+    // ثبت پاسخ برای q1 با شناسه تلاش att-1
+    const ans1 = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: 'att-security-test', questionId: q1, selectedOption: 0 }),
+      }),
+    );
+    expect(ans1.status).toBe(200);
+
+    // تلاش برای استفاده مجدد از att-1 برای سؤال دیگر (q2)
+    const badReplay = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: 'att-security-test', questionId: q2, selectedOption: 0 }),
+      }),
+    );
+    expect(badReplay.status).toBe(400);
+    const errBody = await json(badReplay);
+    expect(errBody.error).toContain('شناسه تلاش قبلاً برای سؤال دیگری ثبت شده است');
+  });
+
+  it('قرنطینهٔ سؤالات هولدآوت: سؤالات سال ۱۴۰۴ در صف تمرین روزمره قرار نمی‌گیرند', async () => {
+    const token = await login();
+    // افزودن یک سوال سال 1404 به استور
+    store.questions.push({
+      id: 'q-1404-holdout-test',
+      nodeId: 'sm.value_chain',
+      examYear: 1404,
+      text: 'سؤال تستی سال ۱۴۰۴ در قرنطینه',
+      options: ['۱', '۲', '۳', '۴'],
+      correctOption: 1,
+    });
+
+    const queueRes = await app.request('/api/queue?limit=50', authed(token));
+    const queue = await json(queueRes);
+    const holdoutItem = queue.items.find((i: any) => i.question?.id === 'q-1404-holdout-test');
+    expect(holdoutItem).toBeUndefined();
+  });
 });
