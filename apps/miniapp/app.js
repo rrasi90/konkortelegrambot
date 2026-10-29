@@ -275,6 +275,7 @@
     card.hidden = false;
     el('answer-feedback').hidden = true;
     var item = state.queue[state.currentIndex];
+    item.startedAt = Date.now();
     el('q-course').textContent = (state.nightMode ? 'کوییز شبانه — ' : '') + (item.course || '');
     el('q-chapter').textContent = item.chapter || '';
     var isTrap = item.card.cardType === 'trap_note';
@@ -343,6 +344,9 @@
       attemptId: item.attemptId,
       questionId: questionId,
       selectedOption: selected,
+      responseTimeMs: Math.min(3600000, Math.max(0, Date.now() - (item.startedAt || Date.now()))),
+      studyMode: 'desk',
+      assistance: [],
     }).then(function (data) {
       if (data.stats) updateStatsChips(data.stats);
       showFeedback(item, data.report, selected, data.correctOption);
