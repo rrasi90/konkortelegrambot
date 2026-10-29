@@ -519,7 +519,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
     const wrongToday = [...latestTodayByQuestion.values()].filter((answer) => !answer.isCorrect);
     return c.json({
-      user: { displayName: user.displayName, activeTracks: user.activeTracks },
+      user: {
+        displayName: user.displayName,
+        activeTracks: user.activeTracks,
+        dailyCapacity: user.dailyCapacity ?? 30,
+      },
       stats: {
         coins: stats.coins,
         streakDays: stats.streakDays,
@@ -589,15 +593,43 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.put('/api/settings', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
-    const body = (await c.req.json().catch(() => null)) as { examDate?: string | null } | null;
-    if (!body || !('examDate' in body)) return c.json({ error: 'ورودی نامعتبر' }, 400);
-    if (body.examDate != null && !/^\d{4}-\d{2}-\d{2}$/.test(body.examDate)) {
-      return c.json({ error: 'examDate باید YYYY-MM-DD باشد' }, 400);
+    const body = (await c.req.json().catch(() => null)) as
+      | { examDate?: string | null; dailyMinutes?: number }
+      | null;
+    if (!body || (!('examDate' in body) && !('dailyMinutes' in body))) {
+      return c.json({ error: 'حداقل یک تنظیم باید ارسال شود' }, 400);
     }
-    const stats = await ensureStats(user.id);
-    stats.examDate = body.examDate ?? null;
-    await store.upsertStats(stats);
-    return c.json({ ok: true, examDate: stats.examDate });
+
+    if ('examDate' in body && body.examDate != null) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(body.examDate)) {
+        return c.json({ error: 'تاریخ باید به شکل YYYY-MM-DD باشد' }, 400);
+      }
+      const date = new Date(`${body.examDate}T00:00:00Z`);
+      if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== body.examDate) {
+        return c.json({ error: 'تاریخ واردشده معتبر نیست' }, 400);
+      }
+    }
+    if ('dailyMinutes' in body &&
+        (!Number.isInteger(body.dailyMinutes) || body.dailyMinutes! < 10 || body.dailyMinutes! > 480)) {
+      return c.json({ error: 'زمان مطالعه باید عدد صحیحی بین ۱۰ تا ۴۸۰ دقیقه باشد' }, 400);
+    }
+
+    let examDate: string | null | undefined;
+    if ('examDate' in body) {
+      const stats = await ensureStats(user.id);
+      stats.examDate = body.examDate ?? null;
+      await store.upsertStats(stats);
+      examDate = stats.examDate;
+    }
+    if ('dailyMinutes' in body) {
+      await store.setDailyCapacity(user.id, body.dailyMinutes!);
+      user.dailyCapacity = body.dailyMinutes;
+    }
+    return c.json({
+      ok: true,
+      ...(examDate !== undefined ? { examDate } : {}),
+      dailyMinutes: user.dailyCapacity ?? 30,
+    });
   });
 
   return app;
