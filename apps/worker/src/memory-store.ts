@@ -4,6 +4,8 @@ import type { AnswerEvent, AppUser, DataStore } from './store';
 
 export class MemoryStore implements DataStore {
   users = new Map<string, AppUser>();
+  private attempts = new Map<string, { userId: string; questionId: string; attemptId: string; expiresAt: number; usedAt?: number; issuedAt: number }>();
+  private latestAttemptByQuestion = new Map<string, string>();
   private tgIndex = new Map<number, string>();
   nodes: import('@ael/contracts').KnowledgeNode[] = [];
   dependencies: import('@ael/contracts').NodeDependency[] = [];
@@ -12,6 +14,10 @@ export class MemoryStore implements DataStore {
   cards = new Map<string, ReviewCard>();
   answers: AnswerEvent[] = [];
   private seq = 0;
+
+  private attemptKey(userId: string, questionId: string): string {
+    return userId + ':' + questionId;
+  }
 
   async getUser(userId: string): Promise<AppUser | null> {
     return this.users.get(userId) ?? null;
@@ -92,5 +98,46 @@ export class MemoryStore implements DataStore {
 
   async insertAnswerEvent(event: AnswerEvent): Promise<void> {
     this.answers.push(event);
+  }
+
+  async createQuestionAttempt(userId: string, questionId: string, attemptId: string, ttlSeconds = 900): Promise<string> {
+    const now = Date.now();
+    const key = this.attemptKey(userId, questionId);
+    const previousId = this.latestAttemptByQuestion.get(key);
+    const previous = previousId ? this.attempts.get(previousId) : undefined;
+    if (previous && !previous.usedAt && previous.expiresAt > now) return previous.attemptId;
+    const recent = [...this.attempts.values()].filter((a) => a.userId === userId && a.questionId === questionId && a.issuedAt > now - 3_600_000).length;
+    if (recent >= 5) throw new Error('attempt issuance limit reached');
+    this.attempts.set(attemptId, { userId, questionId, attemptId, issuedAt: now, expiresAt: now + ttlSeconds * 1000 });
+    this.latestAttemptByQuestion.set(key, attemptId);
+    return attemptId;
+  }
+
+  async commitAnswer(event: AnswerEvent, masteryRows: UserNodeMastery[], cards: ReviewCard[]) {
+    const existing = await this.findAnswerByAttempt(event.userId, event.attemptId);
+    if (existing) return { replay: true, report: existing.rippleReport };
+    const attempt = this.attempts.get(event.attemptId);
+    if (!attempt || attempt.userId !== event.userId || attempt.questionId !== event.questionId || attempt.usedAt || attempt.expiresAt <= Date.now()) {
+      throw new Error('attempt missing, expired, or already used');
+    }
+    attempt.usedAt = Date.now();
+    this.answers.push(event);
+    for (const row of masteryRows) this.mastery.set(`${event.userId}:${row.nodeId}`, row);
+    for (const card of cards) this.cards.set(card.id, card);
+
+    const stats = this.stats.get(event.userId) ?? {
+      userId: event.userId, coins: 0, streakDays: 0, lastStudyDate: null, dayNumber: 0, examDate: null,
+    };
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }).format(new Date(event.answeredAt));
+    const yesterday = new Date(new Date(`${today}T00:00:00+03:30`).getTime() - 86_400_000);
+    const yesterdayStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }).format(yesterday);
+    if (stats.lastStudyDate !== today) {
+      stats.streakDays = stats.lastStudyDate === yesterdayStr ? stats.streakDays + 1 : 1;
+      stats.dayNumber += 1;
+      stats.lastStudyDate = today;
+    }
+    stats.coins += event.isCorrect ? 2 : 1;
+    this.stats.set(event.userId, { ...stats });
+    return { replay: false, stats: { ...stats } };
   }
 }
