@@ -171,7 +171,7 @@ describe('worker API — secure adaptive learning loop', () => {
       expect((await app.request(path)).status).toBe(401);
     }
 
-    const disabled = createApp(ENV, { store });
+    const disabled = createApp({ ...ENV, ALLOW_DEMO_AUTH: 'false' }, { store });
     const forbidden = await disabled.request('/api/auth/demo', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}),
     });
