@@ -15,6 +15,7 @@ import type {
 export interface AppUser {
   id: string;
   telegramUserId?: number;
+  telegramUsername?: string;
   displayName?: string;
   activeTracks: TrackId[];
 }
@@ -45,7 +46,8 @@ export interface AnswerEvent {
 export interface DataStore {
   getUser(userId: string): Promise<AppUser | null>;
   getUserByTelegramId(telegramUserId: number): Promise<AppUser | null>;
-  createUser(input: { telegramUserId?: number; displayName?: string }): Promise<AppUser>;
+  getUserByTelegramUsername?(username: string): Promise<AppUser | null>;
+  createUser(input: { telegramUserId?: number; telegramUsername?: string; displayName?: string }): Promise<AppUser>;
   setActiveTracks(userId: string, tracks: TrackId[]): Promise<void>;
 
   getStats(userId: string): Promise<UserStats | null>;

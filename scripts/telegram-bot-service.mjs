@@ -39,14 +39,17 @@ async function startPolling() {
 
           const chatId = msg.chat.id;
           const userFirstName = msg.from?.first_name || 'داوطلب';
+          const username = msg.from?.username ? `@${msg.from.username}` : userFirstName;
           const text = (msg.text || '').trim();
 
           console.log(`[Telegram Service] Message from ${userFirstName} (${chatId}): ${text}`);
 
+          const userLink = `${APP_URL}?tg=${encodeURIComponent(username)}`;
+
           if (text.startsWith('/start')) {
             await tg('sendMessage', {
               chat_id: chatId,
-              text: `سلام ${userFirstName} عزیز! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nسامانهٔ هوشمند سنجش و تثبیت تسلط بر سرفصل‌های آزمون دکتری مدیریت.\n\nبرای شروع تمرین، بررسی وضعیت تسلط و برنامهٔ روزانه، روی دکمهٔ زیر بزنید:`,
+              text: `سلام ${userFirstName} عزیز! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nپروفایل اختصاصی شما ثبت شد. برای ورود و شروع مطالعه، روی دکمهٔ زیر بزنید:`,
               reply_markup: {
                 inline_keyboard: [
                   [
@@ -55,19 +58,31 @@ async function startPolling() {
                       web_app: { url: APP_URL },
                     },
                   ],
+                  [
+                    {
+                      text: '🌐 ورود مستقیم در مرورگر',
+                      url: userLink,
+                    },
+                  ],
                 ],
               },
             });
           } else {
             await tg('sendMessage', {
               chat_id: chatId,
-              text: 'برای ورود به سامانهٔ «آموزش کنکور» و شروع تمرین، لطفاً از دکمهٔ زیر استفاده کنید:',
+              text: `برای ورود به سامانهٔ «آموزش کنکور» و مشاهدهٔ سرفصل‌ها و تست‌های تطبیقی، روی دکمهٔ زیر بزنید:`,
               reply_markup: {
                 inline_keyboard: [
                   [
                     {
                       text: '🚀 باز کردن آموزش کنکور',
                       web_app: { url: APP_URL },
+                    },
+                  ],
+                  [
+                    {
+                      text: '🌐 ورود مستقیم در مرورگر',
+                      url: userLink,
                     },
                   ],
                 ],

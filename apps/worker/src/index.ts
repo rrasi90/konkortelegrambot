@@ -246,13 +246,43 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   });
 
   app.post('/api/auth/telegram', async (c) => {
-    const body = (await c.req.json()) as { initData?: string };
-    if (!body.initData) return c.json({ error: 'initData لازم است' }, 400);
-    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 500);
-    const result = await verifyTelegramInitData(body.initData, env.TELEGRAM_BOT_TOKEN);
-    if (!result.ok) return c.json({ error: 'دادهٔ تلگرام نامعتبر' }, 401);
-    let user = await store.getUserByTelegramId(result.userId);
-    if (!user) user = await store.createUser({ telegramUserId: result.userId, displayName: result.firstName });
+    const body = (await c.req.json().catch(() => ({}))) as {
+      initData?: string;
+      telegramUsername?: string;
+      displayName?: string;
+    };
+
+    // حالت ۱: ورود رسمی از درون تلگرام با initData
+    if (body.initData) {
+      if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 500);
+      const result = await verifyTelegramInitData(body.initData, env.TELEGRAM_BOT_TOKEN);
+      if (!result.ok) return c.json({ error: 'دادهٔ تلگرام نامعتبر: ' + result.error }, 401);
+
+      let user = await store.getUserByTelegramId(result.userId);
+      if (!user) {
+        user = await store.createUser({
+          telegramUserId: result.userId,
+          displayName: result.firstName || 'داوطلب دکتری',
+        });
+      }
+      return c.json({ token: await issueSessionToken(user.id, secret), user });
+    }
+
+    // حالت ۲: ورود از طریق نام کاربری یا شناسه داوطلب در وب
+    const rawUsername = (body.telegramUsername || body.displayName || '').trim();
+    if (!rawUsername) {
+      return c.json({ error: 'لطفاً شناسه یا نام کاربری تلگرام خود را وارد کنید' }, 400);
+    }
+
+    const clean = rawUsername.replace(/^@/, '').trim();
+    let user = (await store.getUserByTelegramUsername?.(clean)) ?? null;
+    if (!user) {
+      user = await store.createUser({
+        telegramUsername: clean,
+        displayName: rawUsername.startsWith('@') ? rawUsername : `@${clean}`,
+      });
+    }
+
     return c.json({ token: await issueSessionToken(user.id, secret), user });
   });
 

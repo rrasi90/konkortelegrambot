@@ -6,6 +6,7 @@ import type { AnswerEvent, AppUser, DataStore } from './store';
 export class MemoryStore implements DataStore {
   users = new Map<string, AppUser>();
   private tgIndex = new Map<number, string>();
+  private usernameIndex = new Map<string, string>();
   nodes: import('@ael/contracts').KnowledgeNode[] = [];
   dependencies: import('@ael/contracts').NodeDependency[] = [];
   questions: import('@ael/contracts').Question[] = [];
@@ -38,16 +39,25 @@ export class MemoryStore implements DataStore {
     return id ? (this.users.get(id) ?? null) : null;
   }
 
-  async createUser(input: { telegramUserId?: number; displayName?: string }): Promise<AppUser> {
+  async getUserByTelegramUsername(username: string): Promise<AppUser | null> {
+    const clean = username.replace(/^@/, '').toLowerCase().trim();
+    const id = this.usernameIndex.get(clean);
+    return id ? (this.users.get(id) ?? null) : null;
+  }
+
+  async createUser(input: { telegramUserId?: number; telegramUsername?: string; displayName?: string }): Promise<AppUser> {
     const id = `user-${++this.seq}`;
+    const cleanUser = input.telegramUsername ? input.telegramUsername.replace(/^@/, '').trim() : undefined;
     const user: AppUser = {
       id,
       telegramUserId: input.telegramUserId,
-      displayName: input.displayName || 'داوطلب دکتری',
+      telegramUsername: cleanUser,
+      displayName: input.displayName || (cleanUser ? `@${cleanUser}` : 'داوطلب دکتری'),
       activeTracks: ['common'],
     };
     this.users.set(id, user);
     if (input.telegramUserId) this.tgIndex.set(input.telegramUserId, id);
+    if (cleanUser) this.usernameIndex.set(cleanUser.toLowerCase(), id);
 
     // تضمین خالی بودن کامل پروفایل جدید در هنگام ثبت‌نام
     this.stats.set(id, {
