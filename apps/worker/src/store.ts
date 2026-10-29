@@ -58,12 +58,27 @@ export interface CommitAnswerResult {
   stats?: UserStats;
 }
 
+export interface PlannerDecisionInput {
+  id: string;
+  actionType: 'spaced_review' | 'diagnostic_probe' | 'remediation' | 'new_material' | 'unseen_verification' | 'strategic_skip';
+  targetId: string;
+  examValue: number;
+  expectedBenefit: number;
+  urgency: number;
+  estimatedMinutes: number;
+  score: number;
+  selected: boolean;
+  reason: Record<string, unknown>;
+  plannerVersion?: string;
+}
+
 export interface DataStore {
   getUser(userId: string): Promise<AppUser | null>;
   getUserByTelegramId(telegramUserId: number): Promise<AppUser | null>;
   createUser(input: { telegramUserId?: number; displayName?: string }): Promise<AppUser>;
   setActiveTracks(userId: string, tracks: TrackId[]): Promise<void>;
   setDailyCapacity(userId: string, dailyCapacity: number): Promise<void>;
+  logPlannerDecisions(userId: string, planDate: string, decisions: PlannerDecisionInput[]): Promise<void>;
 
   getStats(userId: string): Promise<UserStats | null>;
   upsertStats(stats: UserStats): Promise<void>;
@@ -176,6 +191,25 @@ export class SupabaseStore implements DataStore {
       throw new Error('dailyCapacity must be an integer from 10 to 480 minutes');
     }
     await this.request('PATCH', `app_users?id=eq.${userId}`, { daily_capacity: dailyCapacity });
+  }
+
+  async logPlannerDecisions(userId: string, planDate: string, decisions: PlannerDecisionInput[]): Promise<void> {
+    if (!decisions.length) return;
+    await this.request('POST', 'planner_decision_logs', decisions.map((decision) => ({
+      id: decision.id,
+      user_id: userId,
+      plan_date: planDate,
+      action_type: decision.actionType,
+      target_id: decision.targetId,
+      exam_value: decision.examValue,
+      expected_benefit: decision.expectedBenefit,
+      urgency: decision.urgency,
+      estimated_minutes: decision.estimatedMinutes,
+      score: decision.score,
+      selected: decision.selected,
+      reason: decision.reason,
+      planner_version: decision.plannerVersion ?? '0.1.0',
+    })));
   }
 
   async getStats(userId: string): Promise<UserStats | null> {
