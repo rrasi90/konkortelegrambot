@@ -7,6 +7,10 @@ begin;
 -- Browser clients must never read answer keys or the private user table.
 revoke all on public.questions from public, anon, authenticated;
 revoke all on public.app_users from public, anon, authenticated;
+-- The Mini App never connects with anon/authenticated database credentials; all personal data
+-- and answer grading are accessed only through the Worker service-role boundary.
+revoke all on public.answer_events, public.user_node_mastery, public.trap_cards,
+  public.review_cards, public.daily_plan from public, anon, authenticated;
 
 drop view if exists public.public_questions;
 create view public.public_questions
@@ -359,6 +363,19 @@ begin
           question_id = excluded.question_id,
           trap_card_id = excluded.trap_card_id;
   end loop;
+
+  -- State projections can only be written against a skill mapped to this question.
+  if jsonb_typeof(p_event->'learner_skill_state') = 'object' then
+    if not exists (
+      select 1
+      from public.question_skill_mappings mapping
+      where mapping.question_id = v_question_id
+        and mapping.skill_id = p_event->'learner_skill_state'->>'skillId'
+        and mapping.verification_status <> 'rejected'
+    ) then
+      raise exception 'learner skill state is not mapped to the answered question';
+    end if;
+  end if;
 
   -- Persist the six-dimensional skill projection and evidence event in the same transaction.
   if jsonb_typeof(p_event->'learner_skill_state') = 'object' then
