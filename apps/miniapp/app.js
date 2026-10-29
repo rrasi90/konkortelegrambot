@@ -102,16 +102,35 @@
       state.telegram.ready();
       return API.post('/api/auth/telegram', { initData: state.telegram.initData })
         .then(function (data) { onAuthed(data); return true; })
-        .catch(function () { return false; });
+        .catch(function (err) {
+          console.warn('Telegram WebApp auth error:', err);
+          return false;
+        });
     }
     return Promise.resolve(false);
+  }
+
+  function loginWithUsername(username) {
+    var err = el('login-error');
+    if (err) err.hidden = true;
+    return API.post('/api/auth/telegram', { telegramUsername: username })
+      .then(function (data) {
+        onAuthed(data);
+        return true;
+      })
+      .catch(function (e) {
+        if (err) {
+          err.textContent = e.message || 'خطا در ورود به پروفایل';
+          err.hidden = false;
+        }
+        return false;
+      });
   }
 
   function onAuthed(data) {
     localStorage.setItem('session_token', data.token);
     state.tracks = (data.user && data.user.activeTracks) || ['common'];
     if (state.tracks.length <= 1) {
-      // فقط هستهٔ مشترک — انتخاب گرایش لازم است
       showView('view-tracks');
     } else {
       enterApp();
@@ -123,20 +142,53 @@
     showTab('home');
   }
 
-  el('btn-login').addEventListener('click', function () {
-    tryTelegramLogin().then(function (ok) {
-      if (!ok) {
-        var err = el('login-error');
-        err.textContent = 'دسترسی تلگرام در دسترس نیست؛ از ورود نمایشی استفاده کنید.';
-        err.hidden = false;
-      }
+  var btnLogin = el('btn-login');
+  if (btnLogin) {
+    btnLogin.addEventListener('click', function () {
+      tryTelegramLogin().then(function (ok) {
+        if (!ok) {
+          var input = el('input-tg-username');
+          var username = input ? (input.value || '').trim() : '';
+          if (username) {
+            loginWithUsername(username);
+          } else {
+            var err = el('login-error');
+            if (err) {
+              err.textContent = 'برای ورود، شناسهٔ تلگرام خود را در کادر زیر وارد کنید یا دکمهٔ باز کردن ربات را لمس کنید.';
+              err.hidden = false;
+            }
+            if (input) input.focus();
+          }
+        }
+      });
     });
-  });
+  }
 
-  var demoBtn = el('btn-demo');
-  if (demoBtn) {
-    demoBtn.addEventListener('click', function () {
-      API.post('/api/auth/demo', { displayName: 'داوطلب' }).then(onAuthed);
+  var btnWebLogin = el('btn-web-login');
+  if (btnWebLogin) {
+    btnWebLogin.addEventListener('click', function () {
+      var input = el('input-tg-username');
+      var username = input ? (input.value || '').trim() : '';
+      if (!username) {
+        var err = el('login-error');
+        if (err) {
+          err.textContent = 'لطفاً نام یا شناسهٔ تلگرام خود را در کادر بالا وارد کنید.';
+          err.hidden = false;
+        }
+        if (input) input.focus();
+        return;
+      }
+      loginWithUsername(username);
+    });
+  }
+
+  var inputTg = el('input-tg-username');
+  if (inputTg) {
+    inputTg.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        var username = (inputTg.value || '').trim();
+        if (username) loginWithUsername(username);
+      }
     });
   }
 
@@ -478,7 +530,15 @@
     }).catch(function () { /* 401 → صفحهٔ ورود */ });
   } else {
     tryTelegramLogin().then(function (ok) {
-      if (!ok) showView('view-login');
+      if (!ok) {
+        var params = new URLSearchParams(window.location.search);
+        var tgParam = params.get('tg') || params.get('user');
+        if (tgParam) {
+          loginWithUsername(tgParam);
+        } else {
+          showView('view-login');
+        }
+      }
     });
   }
 })();
