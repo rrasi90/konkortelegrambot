@@ -62,6 +62,8 @@ export interface Question {
   explanation?: string;
   /** نکتهٔ دام تستی — منبع کارت‌های لایهٔ ۱ */
   trapNote?: string;
+  /** Holdout content is only eligible for unseen verification, never ordinary new-material queues. */
+  isHoldout?: boolean;
 }
 
 export type VerificationStatus = 'unverified' | 'verified' | 'quarantined' | 'demo';
