@@ -19,6 +19,10 @@ if (!path) {
 }
 
 const pack = JSON.parse(readFileSync(path, 'utf8'));
+if (pack.meta?.synthetic !== true && !['authorized', 'public_domain', 'licensed'].includes(pack.meta?.rightsStatus)) {
+  console.error('درون‌ریزی محتوای غیرساختگی به مجوز صریح و ثبت‌شده نیاز دارد (meta.rightsStatus: authorized/public_domain/licensed).');
+  process.exit(2);
+}
 
 function sqlStr(value) {
   return `'${String(value ?? '').replace(/'/g, "''")}'`;
@@ -44,7 +48,7 @@ function generateSql() {
   lines.push('');
   for (const q of pack.questions ?? []) {
     lines.push(
-      `INSERT INTO questions (id, node_id, exam_year, question_text, options, correct_option, explanation, trap_note, verification_status) VALUES (${sqlStr(q.id)}, ${sqlStr(q.nodeId)}, ${q.examYear ?? 'NULL'}, ${sqlStr(q.text)}, '${JSON.stringify(q.options).replace(/'/g, "''")}'::jsonb, ${q.correctOption}, ${sqlStr(q.explanation)}, ${sqlStr(q.trapNote)}, 'demo') ON CONFLICT (id) DO NOTHING;`,
+      `INSERT INTO questions (id, node_id, exam_year, question_text, options, correct_option, explanation, trap_note, verification_status) VALUES (${sqlStr(q.id)}, ${sqlStr(q.nodeId)}, ${q.examYear ?? 'NULL'}, ${sqlStr(q.text)}, '${JSON.stringify(q.options).replace(/'/g, "''")}'::jsonb, ${q.correctOption}, ${sqlStr(q.explanation)}, ${sqlStr(q.trapNote)}, ${sqlStr(pack.meta?.synthetic ? 'demo' : 'unverified')}) ON CONFLICT (id) DO NOTHING;`,
     );
   }
   lines.push('');
