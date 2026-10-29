@@ -179,14 +179,14 @@ grant all on public.exam_packs, public.syllabus_topics, public.atomic_skills,
   public.learning_events, public.planner_decisions to service_role;
 
 -- Recreate the public projection to include provenance without including the answer key.
-create or replace view public.questions_public
+create or replace view public.public_questions
 with (security_barrier = true) as
 select id, node_id, exam_year, question_text, options, explanation, trap_note,
        verification_status, source_ref, item_version, rights_status
 from public.questions
 where verification_status in ('verified', 'demo')
   and rights_status <> 'blocked';
-grant select on public.questions_public to anon, authenticated;
+grant select on public.public_questions to anon, authenticated;
 
 -- Extend the atomic answer procedure after the event/skill tables exist.
 create or replace function public.commit_answer(
