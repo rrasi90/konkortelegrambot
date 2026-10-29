@@ -112,8 +112,9 @@ export interface FSRSCardState {
 
 export interface ReviewCard {
   /** مثلاً «q:demo-001» برای سؤال یا «trap:demo-001» برای کارت دام */
-  fsrsState?: FSRSCardState;
   id: string;
+  /** وضعیت پایدار الگوریتم FSRS؛ زمان‌بندی قدیمی ease فقط برای سازگاری باقی مانده است. */
+  fsrsState?: FSRSCardState;
   userId: string;
   nodeId: string;
   cardType: CardType;
