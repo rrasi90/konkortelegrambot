@@ -6,9 +6,7 @@
 do $$
 begin
   perform set_config('assert.status', 'ok', false);
-  if exists (select 1 from knowledge_nodes where track not in ('common','business','technology')) then
-    raise exception 'track نامعتبر در knowledge_nodes';
-  end if;
+  if exists (select 1 from knowledge_nodes where track !~ '^[a-z][a-z0-9_-]{1,39}
   if not exists (select 1 from questions where verification_status = 'demo') then
     raise exception 'سؤال‌های نمونه (demo) درون‌ریزی نشده‌اند';
   end if;
@@ -91,24 +89,143 @@ begin
 end
 $$;
 
--- ۸) ایزولاسیون واقعی RLS (در سطح psql، با تعویض نقش)
+-- ۸) ایزولاسیون واقعی RLS؛ SET LOCAL و متغیر auth باید داخل یک تراکنش باشند.
 insert into app_users (id, display_name) values ('22222222-2222-2222-2222-222222222222', 'تست ۲') on conflict do nothing;
 insert into answer_events (user_id, question_id, attempt_id, selected_option, is_correct)
 select '22222222-2222-2222-2222-222222222222', id, 'test-rls-1', 1, false from questions limit 1;
 
+begin;
 set local role authenticated;
--- کاربر ۲ باید رویداد خودش را ببیند (اگر نبود، خطا: تقسیم بر صفر)
-set local ael.uid = '22222222-2222-2222-2222-222222222222';
--- توجه: 1/0 ثابت در زمان plan ارزیابی می‌شود؛ بنابراین مخرج باید runtime باشد
+select set_config('ael.uid', '22222222-2222-2222-2222-222222222222', true);
 select 1/((count(*) > 0)::int) as own_visible
 from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
--- کاربر ۱ نباید رویداد کاربر ۲ را ببیند (اگر دید، خطا)
-set local ael.uid = '11111111-1111-1111-1111-111111111111';
+select set_config('ael.uid', '11111111-1111-1111-1111-111111111111', true);
 select 1/((count(*) = 0)::int) as foreign_hidden
 from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
 reset role;
+commit;
 
--- پاک‌سازی دادهٔ تست
+-- ۹) هیچ نقش مرورگری نباید به کلید پاسخ یا اطلاعات خصوصی کاربر دسترسی مستقیم داشته باشد.
+do $$
+begin
+  if has_table_privilege('anon', 'public.questions', 'SELECT') then
+    raise exception 'anon همچنان می‌تواند correct_option را از questions بخواند';
+  end if;
+  if has_table_privilege('authenticated', 'public.questions', 'SELECT') then
+    raise exception 'authenticated همچنان می‌تواند correct_option را از questions بخواند';
+  end if;
+  if has_table_privilege('anon', 'public.app_users', 'SELECT')
+     or has_table_privilege('authenticated', 'public.app_users', 'SELECT') then
+    raise exception 'دسترسی مستقیم مرورگر به app_users باید بسته باشد';
+  end if;
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'public_questions'
+      and column_name = 'correct_option'
+  ) then
+    raise exception 'public_questions نباید ستون correct_option داشته باشد';
+  end if;
+  if to_regclass('public.question_attempts') is null then
+    raise exception 'question_attempts ساخته نشده است';
+  end if;
+end
+$$;
+
+-- ۱۰) مسیر کامل RPC: تلاش یک‌بارمصرف، ثبت اتمیک، کارت دام معتبر و replay بدون سکهٔ اضافه.
+do $$
+declare
+  v_uid uuid := '33333333-3333-3333-3333-333333333333';
+  v_qid text;
+  v_node text;
+  v_track text;
+  v_correct integer;
+  v_attempt text := 'rpc-integration-attempt-0001';
+  v_event jsonb;
+  v_cards jsonb;
+  v_first jsonb;
+  v_second jsonb;
+  v_count integer;
+  v_coins integer;
+begin
+  insert into app_users(id, display_name, active_tracks)
+  values (v_uid, 'تست RPC', array['common','business','technology'])
+  on conflict (id) do update set active_tracks = excluded.active_tracks;
+
+  select q.id, q.node_id, q.correct_option, n.track
+    into v_qid, v_node, v_correct, v_track
+  from questions q
+  join knowledge_nodes n on n.id = q.node_id
+  where q.verification_status = 'demo' and q.trap_note is not null
+  limit 1;
+  if v_qid is null then raise exception 'برای تست RPC سؤال demo دارای trap_note موجود نیست'; end if;
+
+  perform public.issue_question_attempt(v_uid, v_qid, v_attempt, 900, false, 'rpc-test-v1');
+  v_event := jsonb_build_object(
+    'id', '33333333-3333-3333-3333-333333333334',
+    'user_id', v_uid,
+    'question_id', v_qid,
+    'selected_option', v_correct,
+    'is_correct', false,
+    'attempt_id', v_attempt,
+    'answered_at', now(),
+    'response_time_ms', 1250,
+    'seen_before', false,
+    'confidence_before', 4,
+    'assistance', '[]'::jsonb,
+    'study_mode', 'desk',
+    'engine_version', '0.2.0',
+    'item_version', 'rpc-test-v1',
+    'ripple_report', jsonb_build_object('wasCorrect', false, 'diagnosticRequired', false)
+  );
+  v_cards := jsonb_build_array(
+    jsonb_build_object(
+      'id', 'rpc-question-card-' || v_uid::text,
+      'user_id', v_uid, 'node_id', v_node, 'card_type', 'question',
+      'question_id', v_qid, 'trap_card_id', null, 'due_at', now(),
+      'interval_days', 1, 'previous_interval_days', null, 'ease', 2.5,
+      'is_repair', false, 'times_seen', 1, 'times_correct', 1
+    ),
+    jsonb_build_object(
+      'id', 'rpc-trap-card-' || v_uid::text,
+      'user_id', v_uid, 'node_id', v_node, 'card_type', 'trap_note',
+      'question_id', v_qid, 'trap_card_id', null, 'due_at', now(),
+      'interval_days', 1, 'previous_interval_days', null, 'ease', 2.5,
+      'is_repair', false, 'times_seen', 0, 'times_correct', 0
+    )
+  );
+
+  v_first := public.commit_answer(v_event, '[]'::jsonb, v_cards);
+  if coalesce((v_first->>'replay')::boolean, true) then
+    raise exception 'ثبت نخست نباید replay باشد';
+  end if;
+  if coalesce((v_first->'stats'->>'coins')::integer, -1) <> 2 then
+    raise exception 'سکهٔ پاسخ درست باید دقیقاً ۲ شود';
+  end if;
+
+  v_second := public.commit_answer(v_event, '[]'::jsonb, v_cards);
+  if coalesce((v_second->>'replay')::boolean, false) is not true then
+    raise exception 'تلاش تکراری باید replay شود';
+  end if;
+
+  select coins into v_coins from app_users where id = v_uid;
+  if v_coins <> 2 then raise exception 'replay نباید سکهٔ اضافه بدهد: %', v_coins; end if;
+  select count(*) into v_count from answer_events where user_id = v_uid and attempt_id = v_attempt;
+  if v_count <> 1 then raise exception 'باید دقیقاً یک answer_event وجود داشته باشد'; end if;
+  select count(*) into v_count from review_cards where user_id = v_uid and question_id = v_qid;
+  if v_count <> 2 then raise exception 'کارت سؤال و کارت دام باید هم‌زمان ذخیره شوند؛ count=%', v_count; end if;
+  if not exists (select 1 from trap_cards where id = 'trap:' || v_qid) then
+    raise exception 'دارایی trap_cards به‌صورت خودکار ساخته نشد';
+  end if;
+
+  delete from answer_events where user_id = v_uid;
+  delete from review_cards where user_id = v_uid;
+  delete from question_attempts where user_id = v_uid;
+  delete from user_node_mastery where user_id = v_uid;
+  delete from app_users where id = v_uid;
+end
+$$;
+
+-- پاک‌سازی داده‌های تست‌های قبلی
 delete from answer_events where attempt_id in ('test-attempt-1', 'test-rls-1');
 delete from user_node_mastery where user_id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222');
 delete from app_users where id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222');
