@@ -23,6 +23,13 @@ import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from '.
 import type { AppUser, DataStore, UserStats } from './store';
 import { MemoryStore } from './memory-store';
 import { SupabaseStore } from './store';
+import { skillMetaMap, estimatedMinutesForNode, skillForNode, skillTitle, nodeForSkill } from './skills-data';
+import {
+  calculateUrgencyV2,
+  calculateExamValue,
+  calculateExpectedBenefit,
+} from '@ael/utils';
+import type { LearnerSkillState } from '@ael/contracts';
 
 export interface Env {
   ENVIRONMENT?: string;
@@ -169,15 +176,18 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   }
 
   async function loadEngineState(userId: string): Promise<EngineState> {
-    const [nodes, deps, questions, masteryRows, cards] = await Promise.all([
+    const [nodes, deps, questions, masteryRows, cards, skillStates] = await Promise.all([
       store.listNodes(),
       store.listDependencies(),
       store.listQuestions(),
       store.listMastery(userId),
       store.listCards(userId),
+      store.getSkillStates(userId).catch(() => [] as LearnerSkillState[]),
     ]);
     const mastery = new Map<string, number>();
     for (const row of masteryRows) mastery.set(row.nodeId, row.mastery);
+    const skillStatesMap = new Map<string, LearnerSkillState>();
+    for (const row of skillStates) skillStatesMap.set(row.skillId, row);
     return {
       config: { ...DEFAULT_ENGINE_CONFIG },
       nodes: new Map(nodes.map((n) => [n.id, n])),
@@ -185,6 +195,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       questions: new Map(questions.map((q) => [q.id, q])),
       mastery,
       cards: cards.map((c) => ({ ...c })),
+      skills: skillMetaMap(),
+      skillStates: skillStatesMap,
     };
   }
 
@@ -314,15 +326,30 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     return c.json({ ok: true, tracks });
   });
 
+  app.get('/api/tracks', async (c) => {
+    const packs = await store.listPacks().catch(() => []);
+    const tracks = new Set<TrackId>(['common']);
+    for (const p of packs) for (const t of p.tracks) tracks.add(t);
+    if (packs.length === 0) for (const t of ['common', 'business', 'technology', 'strategy'] as TrackId[]) tracks.add(t);
+    return c.json({ tracks: [...tracks], packs });
+  });
+
   app.get('/api/queue', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
     const limit = Math.min(Number(c.req.query('limit') ?? 10), 50);
+    const mode = c.req.query('mode') === 'commute' ? 'commute' : 'desk';
+    const budgetMinutes = Number(c.req.query('budgetMinutes') ?? 0) || undefined;
     const state = await loadEngineState(user.id);
+    const engineUser = { userId: user.id, activeTracks: user.activeTracks };
+    const stats = await ensureStats(user.id);
+
+    // در حالت «در مسیر» (مترو)، سؤال‌های محاسباتی آمار کنار گذاشته می‌شوند
+    const isConceptualNode = (nodeId: string): boolean =>
+      mode === 'desk' || !nodeId.startsWith('stats.');
 
     // کارت‌های تازه: اگر صف سررسیدشده‌ها پر نشد، برای سؤال‌های دیده‌نشدهٔ گرایش‌های فعال کارت بساز
-    const engineUser = { userId: user.id, activeTracks: user.activeTracks };
-    let queue = buildDailyQueue(state, engineUser, { limit });
+    let queue = buildDailyQueue(state, engineUser, { limit: 50 });
     if (queue.length < limit) {
       const seenQuestionIds = new Set(state.cards.map((card) => card.questionId).filter(Boolean));
       const allowed = (nodeId: string): boolean => {
@@ -330,7 +357,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         return !!n && (n.track === 'common' || user.activeTracks.includes(n.track));
       };
       const freshQuestions = [...state.questions.values()].filter(
-        (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id) && q.examYear !== 1404,
+        (q) =>
+          allowed(q.nodeId) &&
+          !seenQuestionIds.has(q.id) &&
+          q.examYear !== 1404 && // قرنطینه ۱۴۰۴ فقط از مسیر اثبات تسلط باز می‌شود
+          isConceptualNode(q.nodeId),
       );
       const now = new Date();
       const newCards: ReviewCard[] = [];
@@ -355,31 +386,167 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       if (newCards.length > 0) {
         await store.upsertCards(newCards);
         for (const card of newCards) state.cards.push(card);
-        queue = buildDailyQueue(state, engineUser, { limit });
+        queue = buildDailyQueue(state, engineUser, { limit: 50 });
       }
     }
 
-    const items = queue.map(
-      (item) => {
-        const node = state.nodes.get(item.card.nodeId);
-        return {
-          ...item,
-          // در پاسخ به کلاینت، سؤال بدون کلید پاسخ، بدون توضیح و بدون یادداشت دام ارسال می‌شود
-          question: item.question ? toPublicQuestion(item.question) : undefined,
-          course: node?.course,
-          chapter: node?.chapter,
-          topic: node?.topic,
+    // ---------- گام ۴: آزمونک اثبات تسلط (Holdout Proof) ----------
+    // مهارت با احتمال تسلط ≥ ۰٫۷۵ و پوششِ نیازمند اثبات → ۱ سؤال قرنطینهٔ ۱۴۰۴ همان گره
+    const now = new Date();
+    const proofCards: ReviewCard[] = [];
+    for (const st of (state.skillStates ?? new Map()).values()) {
+      if (st.coverageStatus !== 'needs_proof') continue;
+      const meta = (state.skills ?? new Map()).get(st.skillId);
+      if (!meta) continue;
+      const proofQuestion = [...state.questions.values()].find(
+        (q) => q.nodeId === meta.nodeId && q.examYear === 1404,
+      );
+      if (!proofQuestion) continue;
+      const proofCardId = questionCardId(user.id, proofQuestion.id);
+      const existing = state.cards.find((card) => card.id === proofCardId);
+      if (existing) {
+        // کارت اثبات قبلی همچنان باز است؛ موعدش را به امروز می‌آوریم
+        if (!existing.isProof) continue; // قبلاً به‌عنوان تمرین عادی پاسخ داده شده
+        existing.isProof = true;
+        existing.dueAt = now.toISOString();
+        proofCards.push(existing);
+      } else {
+        const proofCard: ReviewCard = {
+          id: proofCardId,
+          userId: user.id,
+          nodeId: proofQuestion.nodeId,
+          cardType: 'question',
+          questionId: proofQuestion.id,
+          dueAt: now.toISOString(),
+          intervalDays: 1,
+          ease: 2.5,
+          isRepair: false,
+          timesSeen: 0,
+          timesCorrect: 0,
+          isProof: true,
         };
-      },
-    );
-    return c.json({ items });
+        proofCards.push(proofCard);
+        state.cards.push(proofCard);
+      }
+    }
+    if (proofCards.length > 0) {
+      await store.upsertCards(proofCards);
+      // کارت‌های اثبات به صف جاری اضافه شوند (ساخت queue پیش از تزریق بود)
+      for (const pc of proofCards) {
+        if (!queue.some((q) => q.card.id === pc.id)) {
+          queue = [...queue, { card: pc, question: state.questions.get(pc.questionId ?? '') }];
+        }
+      }
+    }
+
+    // ---------- گام ۳: برنامه‌ریز بودجه‌محور (ROI Planner) ----------
+    // Priority = ExamValue × ExpectedBenefit × Urgency ÷ EstimatedMinutes
+    const masteryMap = state.mastery;
+    const examDate = stats.examDate ? new Date(`${stats.examDate}T00:00:00Z`) : undefined;
+    const proofIds = new Set(proofCards.map((pc) => pc.id));
+    const scored = queue
+      .filter((item) => isConceptualNode(item.card.nodeId))
+      .map((item) => {
+        const activityType = item.card.isProof
+          ? ('proof' as const)
+          : item.card.isRepair
+            ? ('remedial' as const)
+            : ('review' as const);
+        const urgency = calculateUrgencyV2(
+          { intervalDays: item.card.intervalDays, dueAt: item.card.dueAt, nodeId: item.card.nodeId },
+          { masteryMap, examDate },
+        );
+        const examValue = calculateExamValue(item.card.nodeId, {
+          examPackWeights: new Map<string, number>(),
+          currentPack: '',
+          masteryMap,
+        });
+        const benefit = calculateExpectedBenefit(activityType, {
+          masteryMap,
+          evidenceLevel: 'partial',
+        });
+        const minutes = estimatedMinutesForNode(item.card.nodeId);
+        return {
+          item,
+          minutes,
+          isProof: proofIds.has(item.card.id) || item.card.isProof === true,
+          priority: (examValue * benefit * urgency) / Math.max(1, minutes),
+        };
+      });
+    const nonProof = scored
+      .filter((s) => !s.isProof)
+      .sort((a, b) => b.priority - a.priority);
+    const proofItems = scored.filter((s) => s.isProof);
+
+    // بودجهٔ زمانی روزانه: آیتم‌های اثبات همیشه می‌مانند؛ بقیه تا سقف بودجه
+    let spentMinutes = 0;
+    const selected: typeof scored = [...proofItems];
+    for (const s of nonProof) {
+      if (budgetMinutes !== undefined && spentMinutes + s.minutes > budgetMinutes && selected.length > proofItems.length) {
+        continue;
+      }
+      selected.push(s);
+      spentMinutes += s.minutes;
+      if (selected.length >= limit) break;
+    }
+
+    // ---------- صدور بلیت تلاش (attempt tickets) ----------
+    const attemptIdByCard = new Map<string, string>();
+    const tickets: { attemptId: string; questionId: string; attemptType: 'practice' | 'proof'; itemVersion?: string }[] = [];
+    for (const s of selected) {
+      const qid = s.item.card.questionId;
+      if (!qid) continue;
+      const attemptId = `att-${crypto.randomUUID()}`;
+      attemptIdByCard.set(s.item.card.id, attemptId);
+      tickets.push({ attemptId, questionId: qid, attemptType: s.isProof ? 'proof' : 'practice' });
+    }
+    await store.issueAttemptTickets(user.id, tickets).catch(() => undefined);
+
+    const items = selected.map((s) => {
+      const node = state.nodes.get(s.item.card.nodeId);
+      const skill = skillForNode(s.item.card.nodeId);
+      return {
+        ...s.item,
+        // در پاسخ به کلاینت، سؤال بدون کلید پاسخ، بدون توضیح و بدون یادداشت دام ارسال می‌شود
+        question: s.item.question ? toPublicQuestion(s.item.question) : undefined,
+        course: node?.course,
+        chapter: node?.chapter,
+        topic: node?.topic,
+        attemptId: attemptIdByCard.get(s.item.card.id),
+        attemptType: s.isProof ? ('proof' as const) : ('practice' as const),
+        estimatedMinutes: s.minutes,
+        priority: Math.round(s.priority * 100) / 100,
+        proofLabel: s.isProof ? '🎯 تست اثبات تسلط (سؤال دیده‌نشده)' : undefined,
+        comparison: s.item.card.cardType === 'comparison_card'
+          ? {
+              skills: s.item.card.comparisonSkills ?? [],
+              titles: (s.item.card.comparisonSkills ?? []).map((id) => skillTitle(id)).filter(Boolean),
+            }
+          : undefined,
+        skillEvidence: skill ? { skillId: skill.id, estimatedMinutes: skill.estimatedMinutes } : undefined,
+      };
+    });
+    return c.json({
+      items,
+      mode,
+      budgetMinutes: budgetMinutes ?? null,
+      spentMinutes,
+    });
   });
 
   app.post('/api/answers', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
     const body = (await c.req.json().catch(() => null)) as
-      | { attemptId?: string; questionId?: string; selectedOption?: number }
+      | {
+          attemptId?: string;
+          questionId?: string;
+          selectedOption?: number;
+          responseTimeMs?: number;
+          confidenceRating?: number;
+          selfReport?: 'slip' | 'didnt_know';
+          attemptType?: 'practice' | 'diagnostic' | 'verification' | 'proof';
+        }
       | null;
     if (
       !body ||
@@ -389,6 +556,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     ) {
       return c.json({ error: 'ورودی نامعتبر' }, 400);
     }
+    const confidenceRating =
+      typeof body.confidenceRating === 'number'
+        ? Math.max(1, Math.min(5, Math.round(body.confidenceRating)))
+        : undefined;
+    const responseTimeMs =
+      typeof body.responseTimeMs === 'number' && body.responseTimeMs >= 0
+        ? Math.min(body.responseTimeMs, 30 * 60_000)
+        : undefined;
+    const selfReport =
+      body.selfReport === 'slip' || body.selfReport === 'didnt_know' ? body.selfReport : undefined;
+    const attemptType =
+      body.attemptType === 'proof' || body.attemptType === 'diagnostic' || body.attemptType === 'verification'
+        ? body.attemptType
+        : 'practice';
 
     // idempotency: تلاش تکراری همان نتیجهٔ قبلی را برمی‌گرداند
     const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
@@ -423,20 +604,30 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!question) return c.json({ error: 'سؤال ناشناخته' }, 404);
 
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
-    const result = applyAnswer(
-      state,
-      {
-        userId: user.id,
-        questionId: body.questionId,
-        attemptId: body.attemptId,
-        selectedOption: body.selectedOption,
-      },
-      engineUser,
-    );
+    let result;
+    try {
+      result = applyAnswer(
+        state,
+        {
+          userId: user.id,
+          questionId: body.questionId,
+          attemptId: body.attemptId,
+          selectedOption: body.selectedOption,
+          responseTimeMs,
+          confidenceRating,
+          selfReport,
+          attemptType,
+        },
+        engineUser,
+      );
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'خطای موتور';
+      return c.json({ error: message }, 400);
+    }
 
     const wasCorrect = result.report.wasCorrect;
 
-    // ثبت اتمیک در دیتابیس (پاسخ + تسلط + کارت‌ها در یک تراکنش)
+    // ثبت اتمیک و امن در دیتابیس (RPC امن: تعیین کلید سمت سرور + مصرف بلیت تلاش)
     await store.submitAnswerAtomic({
       userId: user.id,
       questionId: body.questionId,
@@ -449,15 +640,35 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       cardInserts: result.createdCards,
     });
 
+    // پایدارسازی وضعیت شش‌بعدی مهارت (learner_skill_states)
+    if (result.skillStateUpdate) {
+      await store
+        .upsertSkillState(user.id, {
+          skillId: result.skillStateUpdate.state.skillId,
+          nodeId: result.skillStateUpdate.nodeId,
+          state: result.skillStateUpdate.state,
+        })
+        .catch(() => undefined);
+    }
+
     // آمار انگیزشی: سکه + روز پیوسته (فقط برای پاسخ‌های تازه، نه replay)
     const stats = await applyStatsForAnswer(user.id, wasCorrect);
 
     const lesson = findLessonForNode(question.nodeId);
+    // محتوای مقایسه برای کارت مفاهیم متشابه
+    const comparison = result.createdCards.find((card) => card.cardType === 'comparison_card');
     return c.json({
       report: result.report,
       correctOption: question.correctOption,
       explanation: question.explanation,
       trapNote: question.trapNote,
+      comparison: comparison
+        ? {
+            skills: comparison.comparisonSkills ?? [],
+            titles: (comparison.comparisonSkills ?? []).map((id) => skillTitle(id)).filter(Boolean),
+          }
+        : undefined,
+      proofReady: result.report.proofCandidate ?? undefined,
       lesson: lesson ? {
         id: lesson.id,
         topic: lesson.topic,
@@ -476,11 +687,17 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.get('/api/map', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
-    const [nodes, masteryRows] = await Promise.all([
+    const [nodes, masteryRows, skillStates] = await Promise.all([
       store.listNodes(),
       store.listMastery(user.id),
+      store.getSkillStates(user.id).catch(() => [] as LearnerSkillState[]),
     ]);
     const masteryByNode = new Map(masteryRows.map((m) => [m.nodeId, m]));
+    const coverageByNode = new Map<string, LearnerSkillState>();
+    for (const st of skillStates) {
+      const nodeId = nodeForSkill(st.skillId);
+      if (nodeId) coverageByNode.set(nodeId, st);
+    }
     const visible = nodes.filter(
       (n) => n.track === 'common' || user.activeTracks.includes(n.track),
     );
@@ -490,18 +707,40 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         course: string;
         chapters: Map<
           string,
-          { chapter: string; nodes: { id: string; topic: string; mastery: number; status: string }[] }
+          {
+            chapter: string;
+            nodes: {
+              id: string;
+              topic: string;
+              /** null = سنجیده‌نشده — نباید به‌شکل درصد تسلط نمایش داده شود */
+              mastery: number | null;
+              status: string;
+              coverageStatus?: string;
+              evidenceCount?: number;
+              proficiency?: number;
+            }[];
+          }
         >;
       }
     >();
     for (const n of visible) {
       const row = masteryByNode.get(n.id);
-      const mastery = row?.mastery ?? DEFAULT_MASTERY;
-      const status = row?.status ?? statusFromMastery(mastery);
+      const coverage = coverageByNode.get(n.id);
+      const assessed = !!row || !!coverage;
+      const mastery = assessed ? (row?.mastery ?? DEFAULT_MASTERY) : null;
+      const status = row?.status ?? (assessed ? statusFromMastery(mastery!) : 'unseen');
       if (!courses.has(n.course)) courses.set(n.course, { course: n.course, chapters: new Map() });
       const course = courses.get(n.course)!;
       if (!course.chapters.has(n.chapter)) course.chapters.set(n.chapter, { chapter: n.chapter, nodes: [] });
-      course.chapters.get(n.chapter)!.nodes.push({ id: n.id, topic: n.topic, mastery, status });
+      course.chapters.get(n.chapter)!.nodes.push({
+        id: n.id,
+        topic: n.topic,
+        mastery,
+        status,
+        coverageStatus: coverage?.coverageStatus,
+        evidenceCount: coverage?.evidenceCount,
+        proficiency: coverage ? Math.round(coverage.proficiencyProbability * 100) : undefined,
+      });
     }
     return c.json({
       courses: [...courses.values()].map((c) => ({
@@ -555,6 +794,59 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   });
 
   /* ---------- کوییز شبانه: مرور پاسخ‌های غلط امروز ---------- */
+  /* ---------- خوداظهاری نوع خطا پس از پاسخ غلط ---------- */
+  app.post('/api/self-report', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as
+      | { attemptId?: string; questionId?: string; selfReport?: 'slip' | 'didnt_know' }
+      | null;
+    if (
+      !body ||
+      typeof body.attemptId !== 'string' ||
+      typeof body.questionId !== 'string' ||
+      (body.selfReport !== 'slip' && body.selfReport !== 'didnt_know')
+    ) {
+      return c.json({ error: 'ورودی نامعتبر' }, 400);
+    }
+    const event = await store.findAnswerByAttempt(user.id, body.attemptId);
+    if (!event || event.questionId !== body.questionId) {
+      return c.json({ error: 'تلاش یافت نشد' }, 404);
+    }
+    const state = await loadEngineState(user.id);
+    const question = state.questions.get(body.questionId);
+    const skill = question ? skillForNode(question.nodeId) : undefined;
+    if (skill) {
+      const states = await store.getSkillStates(user.id);
+      const current = states.find((s) => s.skillId === skill.id);
+      const dominant = body.selfReport === 'slip' ? 'slip' : 'concept_gap';
+      await store
+        .upsertSkillState(user.id, {
+          skillId: skill.id,
+          nodeId: question!.nodeId,
+          state: {
+            skillId: skill.id,
+            proficiencyProbability: current?.proficiencyProbability ?? 0.5,
+            confidence: current?.confidence ?? 0.1,
+            evidenceCount: current?.evidenceCount ?? 1,
+            memoryRetrievability: current?.memoryRetrievability ?? 1,
+            fluencySpeedRatio: current?.fluencySpeedRatio ?? 1,
+            dominantErrorType: dominant,
+            coverageStatus: current?.coverageStatus ?? 'diagnosed',
+          },
+        })
+        .catch(() => undefined);
+    }
+    return c.json({
+      ok: true,
+      selfReport: body.selfReport,
+      note:
+        body.selfReport === 'slip'
+          ? 'ثبت شد؛ فردا یک مرور سریع برای اطمینان در صف توست.'
+          : 'ثبت شد؛ جدول مقایسه و مرور مفهومی در راه است.',
+    });
+  });
+
   app.get('/api/night-quiz', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);

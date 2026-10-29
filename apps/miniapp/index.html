@@ -63,6 +63,10 @@
           <strong>مدیریت تکنولوژی</strong>
           <span>نوآوری، منحنی S فناوری، ظرفیت جذب</span>
         </button>
+        <button class="track-card" data-track="strategy">
+          <strong>مدیریت استراتژیک و آینده‌پژوهی</strong>
+          <span>استراتژی، آینده‌پژوهی، تحلیل محیطی</span>
+        </button>
       </div>
       <button id="btn-tracks-save" class="btn primary" disabled>ادامه</button>
     </div>
@@ -103,6 +107,7 @@
           <span id="q-chapter" class="chip ghost"></span>
           <span id="q-verification" class="chip ghost" hidden></span>
           <span id="q-card-type" class="chip warn">نکتهٔ دام</span>
+          <span id="q-proof-label" class="chip proof" hidden></span>
         </div>
         <h2 id="q-text"></h2>
         <div id="q-options" class="options"></div>
@@ -110,6 +115,9 @@
           <div id="feedback-head" class="feedback-head"></div>
           <p id="feedback-explanation"></p>
           <div id="feedback-trap" class="trap-box" hidden></div>
+          <div id="feedback-comparison" class="comparison-box" hidden></div>
+          <div id="feedback-self-report" class="self-report-box" hidden></div>
+          <div id="feedback-proof-ready" class="proof-ready-box" hidden></div>
           <div id="feedback-mentor" class="mentor-box"></div>
           <div id="feedback-ripple" class="ripple-box"></div>
 
@@ -152,6 +160,14 @@
           <div class="track-toggle">
             <button class="toggle" data-track="business">بازرگانی</button>
             <button class="toggle" data-track="technology">تکنولوژی</button>
+            <button class="toggle" data-track="strategy">استراتژی</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <span>حالت مطالعه</span>
+          <div class="study-mode-toggle">
+            <button class="toggle" data-mode="desk" id="mode-desk">🪑 پشت میز</button>
+            <button class="toggle" data-mode="commute" id="mode-commute">🚇 در مسیر</button>
           </div>
         </div>
         <div class="settings-row">

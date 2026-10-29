@@ -528,3 +528,69 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
   font-size: 12px;
   line-height: 1.7;
 }
+
+/* ---------- سیم‌کشی نسل دوم ---------- */
+.chip.proof {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  font-weight: 700;
+}
+.comparison-box {
+  background: var(--primary-soft, #eef2ff);
+  border: 1px solid var(--primary, #4f46e5);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin: 8px 0;
+}
+.self-report-box {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+.self-report-btn {
+  flex: 1;
+  border: 1px solid var(--border, #ddd);
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.self-report-btn:active {
+  background: var(--primary-soft, #eef2ff);
+}
+.self-report-done {
+  font-size: 13px;
+  color: var(--ok, #059669);
+}
+.proof-ready-box {
+  background: #fffbeb;
+  border: 1px dashed #d97706;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin: 8px 0;
+}
+.study-mode-toggle {
+  display: flex;
+  gap: 6px;
+}
+.study-mode-toggle .toggle {
+  border: 1px solid var(--border, #ddd);
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.study-mode-toggle .toggle.on {
+  background: var(--primary, #4f46e5);
+  color: #fff;
+  border-color: var(--primary, #4f46e5);
+}
+.status-badge.unseen {
+  background: #f3f4f6;
+  color: #6b7280;
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@ael/utils",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "priority-calculations.ts",
+  "types": "priority-calculations.ts",
+  "exports": {
+    ".": "./priority-calculations.ts"
+  }
+}

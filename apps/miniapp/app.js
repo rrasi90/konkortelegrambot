@@ -226,7 +226,11 @@
 
   function renderHome(h) {
     var container = el('home-container');
-    var trackName = { business: 'مدیریت بازرگانی', technology: 'مدیریت تکنولوژی' }[
+    var trackName = {
+      business: 'مدیریت بازرگانی',
+      technology: 'مدیریت تکنولوژی',
+      strategy: 'استراتژی و آینده‌پژوهی',
+    }[
       (h.user.activeTracks || []).filter(function (t) { return t !== 'common'; })[0]
     ] || 'هستهٔ مشترک';
 
@@ -308,8 +312,12 @@
   }
 
   /* ---------- صف امروز ---------- */
+  function studyMode() {
+    return localStorage.getItem('study_mode') === 'commute' ? 'commute' : 'desk';
+  }
+
   function loadQueue() {
-    API.get('/api/queue?limit=10').then(function (data) {
+    API.get('/api/queue?limit=10&mode=' + studyMode() + '&budgetMinutes=30').then(function (data) {
       state.queue = data.items || [];
       state.nightMode = false;
       state.currentIndex = 0;
@@ -332,8 +340,14 @@
     card.hidden = false;
     el('answer-feedback').hidden = true;
     var item = state.queue[state.currentIndex];
+    state.questionShownAt = Date.now(); // مبنای روانی اجرا و تشخیص لغزش
     el('q-course').textContent = (state.nightMode ? 'کوییز شبانه — ' : '') + (item.course || '');
     el('q-chapter').textContent = item.chapter || '';
+    var proofChip = el('q-proof-label');
+    if (proofChip) {
+      proofChip.hidden = !item.proofLabel;
+      if (item.proofLabel) proofChip.textContent = item.proofLabel;
+    }
     var isTrap = item.card.cardType === 'trap_note';
     el('q-card-type').hidden = !isTrap;
     var vChip = el('q-verification');
@@ -382,19 +396,24 @@
   function submitAnswer(selected) {
     var item = state.queue[state.currentIndex];
     var questionId = item.card.questionId;
-    var attemptId = 'att-' + questionId + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6);
+    // attemptId سرور (بلیت تلاش)؛ اگر نبود، جایگزین محلی برای سازگاری قدیمی
+    var attemptId = item.attemptId || ('att-' + questionId + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6));
+    state.lastSelfReport = null;
     document.querySelectorAll('.option').forEach(function (b) { b.disabled = true; });
     API.post('/api/answers', {
       attemptId: attemptId,
       questionId: questionId,
       selectedOption: selected,
+      responseTimeMs: state.questionShownAt ? Date.now() - state.questionShownAt : undefined,
+      attemptType: item.attemptType === 'proof' ? 'proof' : undefined,
     }).then(function (data) {
       if (data.stats) updateStatsChips(data.stats);
-      showFeedback(item, data.report, selected, data.correctOption, data.explanation, data.trapNote, data.lesson);
+      state.lastAttemptId = attemptId;
+      showFeedback(item, data.report, selected, data.correctOption, data.explanation, data.trapNote, data.lesson, data.comparison, data.proofReady);
     });
   }
 
-  function showFeedback(item, report, selected, correctOption, explanation, trapNote, lesson) {
+  function showFeedback(item, report, selected, correctOption, explanation, trapNote, lesson, comparison, proofReady) {
     var box = el('answer-feedback');
     box.hidden = false;
     var head = el('feedback-head');
@@ -411,6 +430,58 @@
       options[correctOption].classList.add('correct');
     }
     if (options[selected] && !report.wasCorrect) options[selected].classList.add('wrong');
+
+    // جدول مقایسهٔ مفاهیم متشابه (confusable_with)
+    var cmpBox = el('feedback-comparison');
+    if (cmpBox) {
+      if (!report.wasCorrect && comparison && comparison.titles && comparison.titles.length >= 2) {
+        cmpBox.hidden = false;
+        cmpBox.innerHTML = '<strong>⚠️ دو مفهوم متشابه که احتمالاً با هم خلط شدند:</strong><ul style="margin:6px 0 0;padding-right:16px;">' +
+          comparison.titles.map(function (t) { return '<li>' + escapeHtml(t) + '</li>'; }).join('') +
+          '</ul>';
+      } else {
+        cmpBox.hidden = true;
+      }
+    }
+
+    // خوداظهاری پس از پاسخ غلط: بی‌دقتی یا نیاز به مرور مفهوم
+    var srBox = el('feedback-self-report');
+    if (srBox) {
+      if (!report.wasCorrect && state.lastAttemptId && !state.nightMode) {
+        srBox.hidden = false;
+        srBox.innerHTML = '';
+        var mkBtn = function (label, kind, note) {
+          var b = document.createElement('button');
+          b.className = 'self-report-btn';
+          b.textContent = label;
+          b.addEventListener('click', function () {
+            API.post('/api/self-report', {
+              attemptId: state.lastAttemptId,
+              questionId: question ? question.id : item.card.questionId,
+              selfReport: kind,
+            }).then(function (res) {
+              srBox.innerHTML = '<span class="self-report-done">✓ ' + escapeHtml(res.note || note) + '</span>';
+            });
+          });
+          return b;
+        };
+        srBox.appendChild(mkBtn('🤦‍♂️ بی‌دقتی در خواندن سوال', 'slip', 'ثبت شد.'));
+        srBox.appendChild(mkBtn('🧠 نیاز به مرور مفهوم', 'didnt_know', 'ثبت شد.'));
+      } else {
+        srBox.hidden = true;
+      }
+    }
+
+    // راهنمای اثبات تسلط
+    var proofBox = el('feedback-proof-ready');
+    if (proofBox) {
+      if (proofReady && report.coverageStatus === 'needs_proof') {
+        proofBox.hidden = false;
+        proofBox.textContent = '🎯 آمادگی اثبات این مهارت را داری؛ سؤال دیده‌نشدهٔ سال ۱۴۰۴ در صف بعدی توست.';
+      } else {
+        proofBox.hidden = true;
+      }
+    }
 
     var finalExplanation = explanation || (question && question.explanation) || (item.trapNote || '');
     el('feedback-explanation').textContent = finalExplanation;
@@ -492,20 +563,47 @@
     API.get('/api/map').then(function (data) {
       var container = el('map-container');
       var html = '';
+      var coverageLabel = {
+        unseen: 'سنجیده‌نشده',
+        diagnosed: 'در حال سنجش',
+        learning: 'در حال یادگیری',
+        remediated: 'ترمیم‌شده',
+        needs_proof: 'نیازمند اثبات',
+        proven: 'اثبات‌شده',
+        mastered: 'تسلط کامل',
+      };
       (data.courses || []).forEach(function (course) {
         html += '<section class="course-block"><h3 class="course-title">' + escapeHtml(course.course) + '</h3>';
         course.chapters.forEach(function (chapter) {
           html += '<p class="chapter-title">' + escapeHtml(chapter.chapter) + '</p>';
           chapter.nodes.forEach(function (node) {
+            // مهارت سنجیده‌نشده: بدون درصد — با برچسب وضعیت و شواهد
+            if (node.mastery === null || node.mastery === undefined) {
+              html +=
+                '<div class="node-row"><div class="labels"><span class="node-name">' +
+                escapeHtml(node.topic) + '</span>' +
+                '<span class="status-badge unseen">سنجیده‌نشده</span></div>' +
+                '<div class="bar"><div class="fill" style="width:0%"></div></div></div>';
+              return;
+            }
             var pct = Math.round(node.mastery);
             var cls = pct < 40 ? 'bad' : pct < 60 ? 'warn' : pct < 85 ? '' : 'ok';
             var badge = {
               weak: 'ضعیف', unstable: 'متزلزل', learning: 'در حال یادگیری', mastered: 'تثبیت‌شده',
             }[node.status] || node.status;
+            // ترکیب برچسب تسلط با کفایت شواهد (مدل ۶ بعدی)
+            var sub = badge + ' · ' + pct + '٪';
+            if (node.coverageStatus) {
+              var covLabel = coverageLabel[node.coverageStatus] || node.coverageStatus;
+              sub += ' · ' + covLabel;
+              if (typeof node.evidenceCount === 'number' && node.evidenceCount > 0) {
+                sub += ' · شواهد: ' + node.evidenceCount + ' تست';
+              }
+            }
             html +=
               '<div class="node-row"><div class="labels"><span class="node-name">' +
               escapeHtml(node.topic) + '</span>' +
-              '<span class="status-badge ' + node.status + '">' + badge + ' · ' + pct + '٪</span></div>' +
+              '<span class="status-badge ' + node.status + '">' + escapeHtml(sub) + '</span></div>' +
               '<div class="bar"><div class="fill ' + cls + '" style="width:' + pct + '%"></div></div></div>';
           });
         });
@@ -520,6 +618,7 @@
     document.querySelectorAll('.track-toggle .toggle').forEach(function (btn) {
       btn.classList.toggle('on', state.tracks.indexOf(btn.dataset.track) !== -1);
     });
+    renderStudyMode();
     if (state.home && state.home.stats.examDate) {
       el('input-exam-date').value = state.home.stats.examDate;
     }
@@ -535,6 +634,23 @@
         renderSettings();
       });
     });
+  });
+
+  /* ---------- حالت مطالعه (پشت میز / در مسیر) ---------- */
+  function renderStudyMode() {
+    var mode = localStorage.getItem('study_mode') === 'commute' ? 'commute' : 'desk';
+    el('mode-desk').classList.toggle('on', mode === 'desk');
+    el('mode-commute').classList.toggle('on', mode === 'commute');
+  }
+  el('mode-desk').addEventListener('click', function () {
+    localStorage.setItem('study_mode', 'desk');
+    renderStudyMode();
+    loadQueue();
+  });
+  el('mode-commute').addEventListener('click', function () {
+    localStorage.setItem('study_mode', 'commute');
+    renderStudyMode();
+    loadQueue();
   });
 
   el('btn-save-exam').addEventListener('click', function () {
