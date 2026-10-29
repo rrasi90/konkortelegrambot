@@ -69,7 +69,7 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(queue.items.length).toBeGreaterThan(0);
     // کلید صحیح نباید به کلاینت نشت کند
     for (const item of queue.items) {
-      if (item.question) expect(item.question.correctOption).not.toBeGreaterThanOrEqual(0);
+      if (item.question) { expect(item.question.correctOption).toBeUndefined(); expect(item.question.explanation).toBeUndefined(); expect(item.question.trapNote).toBeUndefined(); }
     }
 
     // پیدا کردن سؤال sm.value_chain (که هم پیش‌نیاز و هم دو پل بین‌درسی دارد)
@@ -232,7 +232,7 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
     const night = await json(await app.request('/api/night-quiz', authed(token)));
     expect(night.items.length).toBe(1);
     expect(night.items[0].card.questionId).toBe(question.id);
-    expect(night.items[0].question.correctOption).not.toBeGreaterThanOrEqual(0);
+    expect(night.items[0].question.correctOption).toBeUndefined(); expect(night.items[0].question.explanation).toBeUndefined(); expect(night.items[0].question.trapNote).toBeUndefined();
 
     // پاسخ درست در کوییز شبانه → سکه بیشتر (۲) و گزارش درست
     const nightRes = await json(

@@ -7,52 +7,57 @@ export function calculateUrgency(
   now: Date = new Date()
 ): number {
   const due = new Date(cardDueDate).getTime();
-  const created = new Date(cardCreatedDate).getTime();
   const nowMs = now.getTime();
-  
-  // Days overdue (negative means not yet due)
-  const daysOverdue = Math.max(0, (due - nowMs) / 86400000);
-  const daysSinceCreated = (nowMs - created) / 86400000;
-  
-  // Base urgency: 1/intervalDays when on schedule
-  const baseUrgency = daysOverdue > 0
-    ? 1 / Math.max(1, daysOverdue)
-    : 1 / Math.max(1, 30 - daysSinceCreated); // decay from 30-day half-life
-  
-  // Exponential increase for overdue cards
-  const overdueFactor = daysOverdue > 0 ? Math.exp(daysOverdue / 7) : 1;
-  
-  return baseUrgency * overdueFactor;
+
+  // Days overdue (positive means past due date)
+  const diffDays = (nowMs - due) / 86400000;
+
+  if (diffDays >= 0) {
+    // Card is due or overdue
+    const daysOverdue = diffDays;
+    const overdueFactor = 1.0 + Math.min(4.0, daysOverdue / 7);
+    return overdueFactor;
+  }
+
+  // Card is not yet due (in future)
+  const daysUntilDue = -diffDays;
+  return 1.0 / (1.0 + daysUntilDue);
 }
 
-/** Calculate mastery-based urgency */
+/** Calculate mastery-based urgency: lower mastery = higher urgency */
 export function calculateMasteryUrgency(
   masteryScore: number, // 0-100
-  opts: { threshold: number } = { threshold: 50 }
+  opts: { threshold?: number } = { threshold: 50 }
 ): number {
-  // Lower mastery = higher urgency
-  const aboveThreshold = Math.max(0, masteryScore - (opts.threshold || 50));
-  const range = 100 - (opts.threshold || 50);
-  return aboveThreshold / range;
+  const threshold = opts.threshold ?? 50;
+  const normalized = Math.max(0, Math.min(100, masteryScore));
+
+  if (normalized >= threshold) {
+    // Meets or exceeds threshold: urgency is low (0 to 0.3)
+    const span = Math.max(1, 100 - threshold);
+    return Math.max(0, ((100 - normalized) / span) * 0.3);
+  }
+
+  // Below threshold: urgency is high (0.3 to 1.0)
+  return 0.3 + 0.7 * ((threshold - normalized) / Math.max(1, threshold));
 }
 
-/** Calculate exam value from pack metadata */
+/** Calculate exam value from pack metadata and user mastery */
 export function calculateExamValue(
-  questionId: string,
+  targetId: string,
   userState: {
     examPackWeights: Map<string, number>;
-    currentPack: string;
+    currentPack?: string;
     masteryMap: Map<string, number>;
   }
 ): number {
-  // In real implementation, query DB for question's exam pack membership
-  // For now, use default
   const defaultPackWeight = 1.0;
-  const weight = userState.examPackWeights.get(questionId) || defaultPackWeight;
-  const mastery = userState.masteryMap.get(questionId) || 50;
-  
-  // Final value: 0.5 - 1.5 range typically
-  return Math.min(1.5, Math.max(0.5, 1.0 + (weight - 0.5) * 0.3 + (mastery - 50) / 200 * 0.3));
+  const weight = userState.examPackWeights.get(targetId) || defaultPackWeight;
+  const mastery = userState.masteryMap.get(targetId) ?? 50;
+
+  // High weight + lower mastery produces higher urgency to learn
+  const masteryGap = (100 - Math.min(100, Math.max(0, mastery))) / 100;
+  return Math.min(2.0, Math.max(0.5, weight * (0.8 + 0.4 * masteryGap)));
 }
 
 /** Calculate expected benefit based on activity type */
@@ -61,18 +66,22 @@ export function calculateExpectedBenefit(
   userState: {
     masteryMap: Map<string, number>;
     evidenceLevel: 'none' | 'partial' | 'complete' | 'certified';
-  }
+  },
+  targetId?: string
 ): number {
-  const baseMastery = userState.masteryMap.get('current') || 50;
-  
+  const baseMastery =
+    (targetId ? userState.masteryMap.get(targetId) : undefined) ??
+    userState.masteryMap.get('current') ??
+    50;
+
   switch (activityType) {
     case 'review':
-      return (baseMastery / 100) * 1.0;
+      return Math.min(1.5, 0.5 + (baseMastery / 100) * 0.7);
     case 'diagnostic':
-      return (1 - baseMastery / 100) * 1.5;
+      return Math.min(1.5, 1.5 - (baseMastery / 100) * 0.5);
     case 'remedial':
-      return 0.8 + 0.2 * (1 - baseMastery / 100);
-    case 'proof':
+      return Math.min(1.5, 0.8 + 0.6 * (1 - baseMastery / 100));
+    case 'proof': {
       const evidenceMap: Record<string, number> = {
         none: 1.0,
         partial: 1.1,
@@ -80,6 +89,7 @@ export function calculateExpectedBenefit(
         certified: 1.3,
       };
       return evidenceMap[userState.evidenceLevel] || 1.0;
+    }
     case 'exam':
       return 1.1;
     default:
@@ -87,7 +97,7 @@ export function calculateExpectedBenefit(
   }
 }
 
-/** Calculate urgency with all factors */
+/** Calculate urgency with all factors combined */
 export function calculateUrgencyV2(
   card: {
     intervalDays: number;
@@ -98,24 +108,27 @@ export function calculateUrgencyV2(
     masteryMap: Map<string, number>;
     fsrsRetentionMap?: Map<string, number>;
     examDate?: Date;
-  }
+  },
+  now: Date = new Date()
 ): number {
-  const now = new Date();
-  // Use the card's due date directly
   const dueDate = new Date(card.dueAt);
-  const daysOverdue = Math.max(0, (dueDate.getTime() - now.getTime()) / 86400000);
-  
-  const baseUrgency = 1 / Math.max(1, card.intervalDays);
-  const overdueFactor = daysOverdue > 0 ? Math.exp(daysOverdue / 7) : 1;
-  
-  const mastery = userState.masteryMap.get(card.nodeId) || 50;
-  const examProximity = userState.examDate 
-    ? 9999 / (9999 + (userState.examDate.getTime() - now.getTime()) / 86400000)
-    : 1;
-  
-  const masteryDecay = 1 - mastery / 100;
-  
-  return Math.round(
-    (baseUrgency * 0.3 + overdueFactor * 0.4 + (1 - mastery / 100) * 0.2 + (1 - examProximity) * 0.1) * 10
-  );
+  const nowMs = now.getTime();
+  const dueMs = dueDate.getTime();
+  const diffDays = (nowMs - dueMs) / 86400000;
+
+  const baseUrgency = diffDays >= 0
+    ? 1.0 + Math.min(4.0, diffDays / 7)
+    : 1.0 / (1.0 + Math.abs(diffDays));
+
+  const mastery = userState.masteryMap.get(card.nodeId) ?? 50;
+  const masteryUrgency = Math.max(0, (100 - mastery) / 100);
+
+  let examUrgency = 0.5;
+  if (userState.examDate) {
+    const daysUntilExam = Math.max(0, (userState.examDate.getTime() - nowMs) / 86400000);
+    // As exam approaches (fewer days left), exam urgency increases
+    examUrgency = 1.0 / (1.0 + daysUntilExam / 30);
+  }
+
+  return Math.round(baseUrgency * 40 + masteryUrgency * 40 + examUrgency * 20);
 }

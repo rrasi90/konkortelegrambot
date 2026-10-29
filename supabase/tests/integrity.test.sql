@@ -98,9 +98,11 @@ select '22222222-2222-2222-2222-222222222222', id, 'test-rls-1', 1, false from q
 
 -- تعویض نقش بهAuthenticated برای تست RLS
 set role authenticated;
+set ael.uid = '22222222-2222-2222-2222-222222222222';
 -- کاربر ۲ باید رویداد خودش را ببیند (اگر نبود، خطا: تقسیم بر صفر)
 select 1/((count(*) > 0)::int) as own_visible
 from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
+set ael.uid = '11111111-1111-1111-1111-111111111111';
 -- کاربر ۱ نباید رویداد کاربر ۲ را ببیند (اگر دید، خطا)
 select 1/((count(*) = 0)::int) as foreign_hidden
 from answer_events where user_id = '22222222-2222-2222-2222-222222222222';

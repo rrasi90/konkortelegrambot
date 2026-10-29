@@ -93,4 +93,28 @@ export class MemoryStore implements DataStore {
   async insertAnswerEvent(event: AnswerEvent): Promise<void> {
     this.answers.push(event);
   }
+  async submitAnswerAtomic(input: {
+    userId: string;
+    questionId: string;
+    selectedOption: number;
+    attemptId: string;
+    wasCorrect: boolean;
+    rippleReport: unknown;
+    masteryUpdates: UserNodeMastery[];
+    cardUpserts: ReviewCard[];
+    cardInserts: ReviewCard[];
+  }): Promise<void> {
+    await this.insertAnswerEvent({
+      id: crypto.randomUUID(),
+      userId: input.userId,
+      questionId: input.questionId,
+      selectedOption: input.selectedOption,
+      isCorrect: input.wasCorrect,
+      attemptId: input.attemptId,
+      answeredAt: new Date().toISOString(),
+      rippleReport: input.rippleReport,
+    });
+    await this.upsertMastery(input.userId, input.masteryUpdates);
+    await this.upsertCards([...input.cardUpserts, ...input.cardInserts]);
+  }
 }

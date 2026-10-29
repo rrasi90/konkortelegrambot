@@ -322,11 +322,11 @@
       selectedOption: selected,
     }).then(function (data) {
       if (data.stats) updateStatsChips(data.stats);
-      showFeedback(item, data.report, selected, data.correctOption);
+      showFeedback(item, data.report, selected, data.correctOption, data.explanation, data.trapNote);
     });
   }
 
-  function showFeedback(item, report, selected, correctOption) {
+  function showFeedback(item, report, selected, correctOption, explanation, trapNote) {
     var box = el('answer-feedback');
     box.hidden = false;
     var head = el('feedback-head');
@@ -344,12 +344,12 @@
     }
     if (options[selected] && !report.wasCorrect) options[selected].classList.add('wrong');
 
-    el('feedback-explanation').textContent = question && question.explanation
-      ? question.explanation
-      : (item.trapNote || '');
+    var finalExplanation = explanation || (question && question.explanation) || (item.trapNote || '');
+    el('feedback-explanation').textContent = finalExplanation;
+    var finalTrap = trapNote || (question && question.trapNote) || '';
     var trap = el('feedback-trap');
-    if (question && question.trapNote) {
-      trap.textContent = 'دام طراح: ' + question.trapNote;
+    if (finalTrap) {
+      trap.textContent = 'دام طراح: ' + finalTrap;
       trap.hidden = false;
     } else {
       trap.hidden = true;

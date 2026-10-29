@@ -19,7 +19,7 @@ const pg = new EmbeddedPostgres({
   databaseDir: dbDir,
   user: 'ael',
   password: 'ael',
-  port: 5432,
+  port: 5434,
   persistent: false,
   onLog: () => {},
   onError: () => {},
@@ -30,10 +30,10 @@ await pg.start();
 const admin = pg.getPgClient();
 await admin.connect();
 await admin.query('DROP DATABASE IF EXISTS ael_test');
-await admin.query('CREATE DATABASE ael_test');
+await admin.query("CREATE DATABASE ael_test WITH TEMPLATE template0 ENCODING 'UTF8'");
 await admin.end();
 
-const client = pg.getPgClient();
+const client = pg.getPgClient('ael_test');
 await client.connect();
 await client.query('SET client_min_messages TO warning');
 

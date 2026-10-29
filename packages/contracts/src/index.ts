@@ -56,6 +56,15 @@ export interface Question {
   trapNote?: string;
 }
 
+/** سؤالی که به کلاینت فرستاده می‌شود — بدون گزینهٔ صحیح، بدون توضیح تشریحی و بدون یادداشت دام */
+export interface PublicQuestion {
+  id: string;
+  nodeId: string;
+  examYear?: number;
+  text: string;
+  options: string[];
+}
+
 export type VerificationStatus = 'unverified' | 'verified' | 'quarantined';
 
 /* ---------- User State ---------- */
