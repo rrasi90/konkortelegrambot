@@ -22,6 +22,7 @@ import { MemoryStore } from './memory-store';
 import { SupabaseStore } from './store';
 
 export interface Env {
+  ENVIRONMENT?: string;
   SUPABASE_URL?: string;
   SUPABASE_SERVICE_ROLE_KEY?: string;
   SESSION_SECRET: string;
@@ -55,8 +56,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     (env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
       ? new SupabaseStore(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
       : new MemoryStore());
-  if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production' && (!env.SESSION_SECRET || env.SESSION_SECRET === 'dev-secret')) {
-    throw new Error('SECURITY: SESSION_SECRET is required and must not use dev default in production');
+  const isProduction =
+    env.ENVIRONMENT === 'production' ||
+    (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production');
+
+  if (isProduction) {
+    if (!env.SESSION_SECRET || env.SESSION_SECRET === 'dev-secret' || env.SESSION_SECRET.length < 16) {
+      throw new Error('SECURITY VIOLATION: Secure SESSION_SECRET (min 16 chars) is strictly required in production.');
+    }
+    if (!options.store && (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY)) {
+      throw new Error('CONFIG ERROR: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are strictly required in production. In-memory store fallback is prohibited.');
+    }
+    if (env.ALLOW_DEMO_AUTH === 'true') {
+      throw new Error('SECURITY VIOLATION: ALLOW_DEMO_AUTH must not be enabled in production.');
+    }
   }
   const secret = env.SESSION_SECRET || 'dev-secret';
   const allowDemoAuth = env.ALLOW_DEMO_AUTH === 'true';
@@ -223,7 +236,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         return !!n && (n.track === 'common' || user.activeTracks.includes(n.track));
       };
       const freshQuestions = [...state.questions.values()].filter(
-        (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id),
+        (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id) && q.examYear !== 1404,
       );
       const now = new Date();
       const newCards: ReviewCard[] = [];
@@ -286,6 +299,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     // idempotency: تلاش تکراری همان نتیجهٔ قبلی را برمی‌گرداند
     const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
     if (existing) {
+      if (existing.questionId !== body.questionId) {
+        return c.json({ error: 'شناسه تلاش قبلاً برای سؤال دیگری ثبت شده است' }, 400);
+      }
       const state = await loadEngineState(user.id);
       const q = state.questions.get(existing.questionId);
       return c.json({
@@ -315,18 +331,18 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
     const wasCorrect = result.report.wasCorrect;
 
-    await store.insertAnswerEvent({
-      id: crypto.randomUUID(),
+    // ثبت اتمیک در دیتابیس (پاسخ + تسلط + کارت‌ها در یک تراکنش)
+    await store.submitAnswerAtomic({
       userId: user.id,
       questionId: body.questionId,
       selectedOption: body.selectedOption,
-      isCorrect: wasCorrect,
       attemptId: body.attemptId,
-      answeredAt: new Date().toISOString(),
+      wasCorrect,
       rippleReport: result.report,
+      masteryUpdates: result.masteryUpdates,
+      cardUpserts: result.cardUpdates,
+      cardInserts: result.createdCards,
     });
-    await store.upsertMastery(user.id, result.masteryUpdates);
-    await store.upsertCards([...result.cardUpdates, ...result.createdCards]);
 
     // آمار انگیزشی: سکه + روز پیوسته (فقط برای پاسخ‌های تازه، نه replay)
     const stats = await applyStatsForAnswer(user.id, wasCorrect);

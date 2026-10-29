@@ -6,8 +6,12 @@
     "operational_definition": "توانایی تشخیص الزامات ساختاری سازمان در مواجهه با عدم‌قطعیت محیطی از طریق ترکیب مناسب زیرسیستم‌های تمایزیافته با سازوکارهای یکپارچه‌ساز قوی.",
     "cognitive_level": "Analysis",
     "bloom_level": 4,
-    "prerequisites": ["skill.mb.structure.mechanic_organic"],
-    "confusable_with": ["skill.mb.structure.mechanic_organic"],
+    "prerequisites": [
+      "skill.mb.structure.mechanic_organic"
+    ],
+    "confusable_with": [
+      "skill.mb.structure.mechanic_organic"
+    ],
     "difficulty_estimate": 70,
     "estimated_study_minutes": 45
   },
@@ -42,7 +46,9 @@
     "operational_definition": "توانایی استخراج ضریب همبستگی از روی ضریب تعیین، تعیین علامت بر اساس شیب خط رگرسیون و تفسیر سهم تبیین واریانس متغیر وابسته.",
     "cognitive_level": "Application",
     "bloom_level": 3,
-    "prerequisites": ["skill.stats.scales.identify"],
+    "prerequisites": [
+      "skill.stats.scales.identify"
+    ],
     "confusable_with": [],
     "difficulty_estimate": 65,
     "estimated_study_minutes": 40
@@ -54,8 +60,12 @@
     "operational_definition": "توانایی تشخیص ضرورت آزمون F برای مقایسه بیش از دو گروه مستقل، آزمون همسانی واریانس لون و نرمال بودن باقیمانده‌ها.",
     "cognitive_level": "Analysis",
     "bloom_level": 4,
-    "prerequisites": ["skill.stats.scales.identify"],
-    "confusable_with": ["skill.stats.nonparam.kruskal"],
+    "prerequisites": [
+      "skill.stats.scales.identify"
+    ],
+    "confusable_with": [
+      "skill.stats.nonparam.kruskal"
+    ],
     "difficulty_estimate": 75,
     "estimated_study_minutes": 50
   },
@@ -90,8 +100,12 @@
     "operational_definition": "توانایی طبقه‌بندی منابع سازمان در ابعاد ارزش، کمیابی، تقلیدناپذیری و سازمان‌یافتگی جهت تعیین مزیت رقابتی پایدار یا موقت.",
     "cognitive_level": "Evaluation",
     "bloom_level": 5,
-    "prerequisites": ["skill.sm.value_chain.porter"],
-    "confusable_with": ["skill.sm.dynamic_capabilities.reconfiguration"],
+    "prerequisites": [
+      "skill.sm.value_chain.porter"
+    ],
+    "confusable_with": [
+      "skill.sm.dynamic_capabilities.reconfiguration"
+    ],
     "difficulty_estimate": 80,
     "estimated_study_minutes": 50
   },
@@ -114,8 +128,12 @@
     "operational_definition": "به‌کارگیری آزمون‌های سه‌گانه (دسترسی به بازار، ارزش مشتری، تقلیدناپذیری) برای شناسایی شایستگی محوری بنگاه.",
     "cognitive_level": "Analysis",
     "bloom_level": 4,
-    "prerequisites": ["skill.sm.rbv.vrio"],
-    "confusable_with": ["skill.sm.rbv.vrio"],
+    "prerequisites": [
+      "skill.sm.rbv.vrio"
+    ],
+    "confusable_with": [
+      "skill.sm.rbv.vrio"
+    ],
     "difficulty_estimate": 70,
     "estimated_study_minutes": 45
   },
@@ -126,8 +144,12 @@
     "operational_definition": "تفسیر چارچوب احساس، کسب فرصت و بازآرایی (Sensing, Seizing, Transforming) دیوید تیس برای حفظ مزیت در فناوری‌های سریع.",
     "cognitive_level": "Evaluation",
     "bloom_level": 5,
-    "prerequisites": ["skill.sm.rbv.vrio"],
-    "confusable_with": ["skill.sm.rbv.vrio"],
+    "prerequisites": [
+      "skill.sm.rbv.vrio"
+    ],
+    "confusable_with": [
+      "skill.sm.rbv.vrio"
+    ],
     "difficulty_estimate": 85,
     "estimated_study_minutes": 55
   },
@@ -138,7 +160,9 @@
     "operational_definition": "توانایی تشریح ۴ لایه و ۶ بلوک هرم کلر از برجستگی، عملکرد و تصویر تا قضاوت، احساسات و رزونانس نهایی برند.",
     "cognitive_level": "Analysis",
     "bloom_level": 4,
-    "prerequisites": ["skill.mkt.stp.positioning"],
+    "prerequisites": [
+      "skill.mkt.stp.positioning"
+    ],
     "confusable_with": [],
     "difficulty_estimate": 75,
     "estimated_study_minutes": 50
@@ -150,8 +174,12 @@
     "operational_definition": "توانایی ارزیابی هم‌افزایی ارزش ویژه دو برند، کاهش ریسک ادراک‌شده مشتری و مدیریت تعارض هویت در همکاری مشترک تجاری.",
     "cognitive_level": "Evaluation",
     "bloom_level": 5,
-    "prerequisites": ["skill.mkt.brand.cbbe_pyramid"],
-    "confusable_with": ["skill.mkt.brand.cbbe_pyramid"],
+    "prerequisites": [
+      "skill.mkt.brand.cbbe_pyramid"
+    ],
+    "confusable_with": [
+      "skill.mkt.brand.cbbe_pyramid"
+    ],
     "difficulty_estimate": 70,
     "estimated_study_minutes": 40
   },
@@ -174,8 +202,12 @@
     "operational_definition": "تحلیل ساختاری ترکیب هم‌زمان واحدهای بهره‌برداری (Exploitation) و اکتشاف (Exploration) تحت هدایت راهبردی مشترک.",
     "cognitive_level": "Analysis",
     "bloom_level": 4,
-    "prerequisites": ["skill.mb.structure.mechanic_organic"],
-    "confusable_with": ["skill.mb.structure.mechanic_organic"],
+    "prerequisites": [
+      "skill.mb.structure.mechanic_organic"
+    ],
+    "confusable_with": [
+      "skill.mb.structure.mechanic_organic"
+    ],
     "difficulty_estimate": 75,
     "estimated_study_minutes": 45
   },
@@ -190,5 +222,42 @@
     "confusable_with": [],
     "difficulty_estimate": 65,
     "estimated_study_minutes": 40
+  },
+  {
+    "id": "skill.mkt.plc.stages",
+    "node_id": "mkt.plc",
+    "title": "تحلیل مراحل چرخه عمر محصول (PLC) و راهبردهای بازاریابی متناسب با هر مرحله",
+    "bloom_level": 4,
+    "prerequisites": [],
+    "confusable_with": [
+      "skill.mkt.brand.cbbe_pyramid"
+    ],
+    "difficulty_estimate": 0.65
+  },
+  {
+    "id": "skill.sm.portfolio.bcg_ge",
+    "node_id": "sm.portfolio",
+    "title": "تحلیل سبد کسب‌وکار با ماتریس‌های رشد-سهم (BCG) و جذابیت-توانمندی جنرال الکتریک (GE)",
+    "bloom_level": 4,
+    "prerequisites": [
+      "skill.sm.value_chain.porter"
+    ],
+    "confusable_with": [
+      "skill.sm.core_competencies.prahalad"
+    ],
+    "difficulty_estimate": 0.7
+  },
+  {
+    "id": "skill.sm.rbv.isolating_mechanisms",
+    "node_id": "sm.rbv",
+    "title": "تحلیل مکانیسم‌های انزوا، نایافت‌پذیری و تقلیدناپذیری در تئوری منبع‌محور (RBV) بارنی",
+    "bloom_level": 5,
+    "prerequisites": [
+      "skill.sm.rbv.vrio"
+    ],
+    "confusable_with": [
+      "skill.sm.core_competencies.prahalad"
+    ],
+    "difficulty_estimate": 0.75
   }
 ]

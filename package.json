@@ -13,7 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "npm run build --workspaces --if-present",
-    "validate:content": "node scripts/validate-content.mjs content/examples/demo-pack.json",
+    "validate:content": "node scripts/validate-content.mjs content/examples/demo-pack.json && node scripts/validate-content.mjs content/knowledge/exam-packs/phd-management-business-v1.json",
     "db:test": "bash supabase/tests/run.sh",
     "seed:sql": "node scripts/import-content.mjs content/examples/demo-pack.json --sql > supabase/seeds/0001_demo_pack.sql",
     "db:test:embedded": "node scripts/db-test-embedded.mjs"

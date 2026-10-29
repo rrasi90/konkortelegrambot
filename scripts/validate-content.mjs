@@ -4,7 +4,7 @@
  * کاربرد: node scripts/validate-content.mjs content/examples/demo-pack.json
  * خروجی: گزارش خطاها؛ در صورت وجود خطا با کد ۱ خارج می‌شود.
  */
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 
 const TRACKS = ['common', 'business', 'technology'];
 const RELATIONS = ['prerequisite', 'cross_course'];
@@ -32,7 +32,7 @@ if (!pack.meta || typeof pack.meta.name !== 'string' || !pack.meta.version) {
 if (!Array.isArray(pack.nodes) || pack.nodes.length === 0) errors.push('nodes خالی است.');
 if (!Array.isArray(pack.questions) || pack.questions.length === 0) errors.push('questions خالی است.');
 if (pack.meta && pack.meta.synthetic !== true) {
-  warnings.push('متا synthetic=true نیست؛ مطمئن شوید محتوای ساختگی به‌عنوان رسمی وارد نمی‌شود.');
+  // اطلاعات بسته واقعی
 }
 
 const nodeIds = new Set();
@@ -82,10 +82,17 @@ if (Array.isArray(pack.questions)) {
     if (!nodeIds.has(q.nodeId)) errors.push(`question ${q.id} به گره ناشناخته وصل است: ${q.nodeId}`);
     if (typeof q.text !== 'string' || q.text.trim().length === 0) errors.push(`متن خالی: ${q.id}`);
     if (!Array.isArray(q.options) || q.options.length < 2) errors.push(`options ناکافی: ${q.id}`);
-    if (typeof q.correctOption !== 'number' || q.correctOption < 0 || (Array.isArray(q.options) && q.correctOption >= q.options.length)) {
+    if (
+      typeof q.correctOption !== 'number' ||
+      q.correctOption < 0 ||
+      (Array.isArray(q.options) && q.correctOption >= q.options.length)
+    ) {
       errors.push(`correctOption نامعتبر: ${q.id}`);
     }
-    if (q.examYear !== undefined && (typeof q.examYear !== 'number' || q.examYear < 1390 || q.examYear > 1410)) {
+    if (
+      q.examYear !== undefined &&
+      (typeof q.examYear !== 'number' || q.examYear < 1390 || q.examYear > 1410)
+    ) {
       warnings.push(`examYear مشکوک: ${q.id} → ${q.examYear}`);
     }
     if (!q.explanation || !q.explanation.trim()) warnings.push(`توضیح خالی: ${q.id}`);
@@ -97,6 +104,35 @@ if (Array.isArray(pack.questions)) {
   for (const id of nodeIds) {
     if (!covered.has(id)) warnings.push(`گره بدون سؤال: ${id}`);
   }
+}
+
+// اعتبارسنجی نگاشت‌های مهارت و صحت روابط دانشی
+try {
+  if (existsSync('content/knowledge/skills.json')) {
+    const skills = JSON.parse(readFileSync('content/knowledge/skills.json', 'utf8'));
+    const skillIds = new Set(skills.map((s) => s.id));
+    if (existsSync('content/knowledge/question-skill-mappings.jsonl')) {
+      const mappingLines = readFileSync('content/knowledge/question-skill-mappings.jsonl', 'utf8')
+        .trim()
+        .split('\n');
+      for (const line of mappingLines) {
+        if (!line.trim()) continue;
+        const m = JSON.parse(line);
+        if (questionIds.has(m.question_id)) {
+          if (!skillIds.has(m.primary_skill_id)) {
+            errors.push(`سؤال ${m.question_id} به مهارت ناموجود ${m.primary_skill_id} متصل است.`);
+          }
+          for (const sec of m.secondary_skill_ids ?? []) {
+            if (!skillIds.has(sec)) {
+              errors.push(`سؤال ${m.question_id} به مهارت ثانویه ناموجود ${sec} متصل است.`);
+            }
+          }
+        }
+      }
+    }
+  }
+} catch (err) {
+  warnings.push(`عدم امکان بررسی تطابق مهارت‌ها: ${err.message}`);
 }
 
 for (const w of warnings) console.warn(`هشدار: ${w}`);
