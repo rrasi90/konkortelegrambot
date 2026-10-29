@@ -95,8 +95,22 @@ export interface UserNodeMastery {
   lastErrorAt?: string;
 }
 
+export interface FSRSCardState {
+  /** Serialized ts-fsrs Card state; dates are ISO-8601 strings for JSON/Postgres. */
+  due: string;
+  stability: number;
+  difficulty: number;
+  elapsed_days: number;
+  scheduled_days: number;
+  reps: number;
+  lapses: number;
+  state: number;
+  last_review?: string | null;
+}
+
 export interface ReviewCard {
   /** مثلاً «q:demo-001» برای سؤال یا «trap:demo-001» برای کارت دام */
+  fsrsState?: FSRSCardState;
   id: string;
   userId: string;
   nodeId: string;
