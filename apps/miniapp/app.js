@@ -451,6 +451,9 @@
     if (state.home && state.home.stats.examDate) {
       el('input-exam-date').value = state.home.stats.examDate;
     }
+    if (state.home && state.home.user && Number.isInteger(state.home.user.dailyCapacity)) {
+      el('input-daily-minutes').value = String(state.home.user.dailyCapacity);
+    }
   }
 
   document.querySelectorAll('.track-toggle .toggle').forEach(function (btn) {
@@ -471,6 +474,27 @@
       el('settings-saved').hidden = false;
       loadHome();
       setTimeout(function () { el('settings-saved').hidden = true; }, 2000);
+    });
+  });
+
+  el('btn-save-daily').addEventListener('click', function () {
+    var minutes = Number(el('input-daily-minutes').value);
+    if (!Number.isInteger(minutes) || minutes < 10 || minutes > 480) {
+      el('settings-saved').hidden = false;
+      el('settings-saved').textContent = 'زمان باید بین ۱۰ تا ۴۸۰ دقیقه باشد.';
+      return;
+    }
+    API.put('/api/settings', { dailyMinutes: minutes }).then(function () {
+      el('settings-saved').textContent = 'زمان مطالعه ذخیره شد.';
+      el('settings-saved').hidden = false;
+      loadHome();
+      setTimeout(function () {
+        el('settings-saved').hidden = true;
+        el('settings-saved').textContent = 'ذخیره شد.';
+      }, 2000);
+    }).catch(function () {
+      el('settings-saved').textContent = 'ذخیره انجام نشد؛ دوباره تلاش کنید.';
+      el('settings-saved').hidden = false;
     });
   });
 
