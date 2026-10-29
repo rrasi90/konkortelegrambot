@@ -61,10 +61,20 @@ where qp.holdout_status = 'active' and qp.restricted = false;
 alter table exam_packs enable row level security;
 alter table exam_pack_questions enable row level security;
 
+-- Only active and published non-quarantined packs are readable by students
 drop policy if exists read_exam_packs on exam_packs;
-create policy read_exam_packs on exam_packs for select using (true);
+create policy read_exam_packs on exam_packs for select using (
+  status in ('published', 'active') and is_active = true
+);
 grant select on exam_packs to authenticated, anon;
 
+-- Only non-holdout, non-restricted practice questions are readable
 drop policy if exists read_holdout_context on exam_pack_questions;
-create policy read_holdout_context on exam_pack_questions for select using (true);
+drop policy if exists read_exam_pack_questions on exam_pack_questions;
+create policy read_exam_pack_questions on exam_pack_questions for select using (
+  is_holdout = false and holdout_status = 'inactive' and restricted = false
+);
 grant select on exam_pack_questions to authenticated;
+
+-- Quarantined holdout view: revoke from public/anon/authenticated
+revoke all on v_active_holdout_questions from public, anon, authenticated;

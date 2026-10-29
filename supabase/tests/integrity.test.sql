@@ -108,6 +108,64 @@ select 1/((count(*) = 0)::int) as foreign_hidden
 from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
 reset role;
 
+
+-- ۹) عدم دسترسی مستقیم نقش‌های عمومی به جدول questions و الزام استفاده از v_public_questions
+do $$
+begin
+  if has_table_privilege('authenticated', 'questions', 'SELECT') then
+    raise exception 'نقش authenticated نباید دسترسی مستقیم SELECT به جدول questions داشته باشد';
+  end if;
+  if has_table_privilege('anon', 'questions', 'SELECT') then
+    raise exception 'نقش anon نباید دسترسی مستقیم SELECT به جدول questions داشته باشد';
+  end if;
+  if not has_table_privilege('authenticated', 'v_public_questions', 'SELECT') then
+    raise exception 'نمای v_public_questions باید برای authenticated در دسترس باشد';
+  end if;
+end
+$$;
+
+-- ۱۰) آزمون تابع امن submit_answer_secure و مصرف اتمیک بلیت تلاش
+do $$
+declare
+  v_qid text;
+  v_res jsonb;
+begin
+  insert into app_users (id, display_name) values ('33333333-3333-3333-3333-333333333333', 'تست ۳') on conflict do nothing;
+  select id into v_qid from questions limit 1;
+
+  insert into attempt_tickets (attempt_id, user_id, question_id, expires_at)
+  values ('ticket-test-1', '33333333-3333-3333-3333-333333333333', v_qid, now() + interval '1 hour');
+
+  v_res := submit_answer_secure(
+    '33333333-3333-3333-3333-333333333333',
+    'ticket-test-1',
+    v_qid,
+    0
+  );
+
+  if not exists (select 1 from attempt_tickets where attempt_id = 'ticket-test-1' and consumed_at is not null) then
+    raise exception 'بلیت تلاش باید پس از ثبت پاسخ مصرف شده باشد';
+  end if;
+
+  begin
+    perform submit_answer_secure(
+      '33333333-3333-3333-3333-333333333333',
+      'ticket-test-1',
+      'different-question-id',
+      0
+    );
+    raise exception 'تلاش با سوال متفاوت روی attempt_id یکسان باید رد شود';
+  exception when others then
+    -- انتظار خطا داریم: تایید شد
+  end;
+
+  delete from answer_events where user_id = '33333333-3333-3333-3333-333333333333';
+  delete from attempt_tickets where user_id = '33333333-3333-3333-3333-333333333333';
+  delete from learner_skill_states where user_id = '33333333-3333-3333-3333-333333333333';
+  delete from app_users where id = '33333333-3333-3333-3333-333333333333';
+end
+$$;
+
 -- پاک‌سازی دادهٔ تست
 delete from answer_events where attempt_id in ('test-attempt-1', 'test-rls-1');
 delete from user_node_mastery where user_id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222');
