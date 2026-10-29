@@ -12,6 +12,7 @@ import {
   buildDailyPlan,
   isTrackId,
   questionCardId,
+  updateLearnerSkillState,
   statusFromMastery,
   DEFAULT_MASTERY,
 } from '@ael/engine';
