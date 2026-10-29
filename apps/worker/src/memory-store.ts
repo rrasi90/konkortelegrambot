@@ -1,6 +1,6 @@
 /** پیاده‌سازی درون‌حافظه‌ای لایهٔ داده — برای تست و دمو */
 import type { ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
-import type { AnswerEvent, AppUser, DataStore } from './store';
+import type { AnswerEvent, AppUser, DataStore, PlannerDecisionInput } from './store';
 
 export class MemoryStore implements DataStore {
   users = new Map<string, AppUser>();
@@ -13,6 +13,7 @@ export class MemoryStore implements DataStore {
   mastery = new Map<string, UserNodeMastery>(); // key: userId:nodeId
   cards = new Map<string, ReviewCard>();
   answers: AnswerEvent[] = [];
+  plannerDecisions: Array<PlannerDecisionInput & { userId: string; planDate: string }> = [];
   private seq = 0;
 
   private attemptKey(userId: string, questionId: string): string {
@@ -53,6 +54,10 @@ export class MemoryStore implements DataStore {
     }
     const user = this.users.get(userId);
     if (user) user.dailyCapacity = dailyCapacity;
+  }
+
+  async logPlannerDecisions(userId: string, planDate: string, decisions: PlannerDecisionInput[]): Promise<void> {
+    this.plannerDecisions.push(...decisions.map((decision) => ({ ...decision, userId, planDate })));
   }
 
   stats = new Map<string, import('./store').UserStats>();
