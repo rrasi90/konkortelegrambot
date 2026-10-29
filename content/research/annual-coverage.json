@@ -8,10 +8,13 @@
     "aptitude_test_status": "not_applicable",
     "official_key_status": "complete",
     "explanatory_answers_status": "partial",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 7,
+    "questions_mapped_count": 7,
     "rights_status": "authorized",
-    "notes": "استعداد تحصیلی بر اساس مصوبه جدید سنجش حذف گردید؛ دفترچه تخصصی و کلید نهایی سنجش استخراج و نگاشت شد."
+    "notes": "استعداد تحصیلی بر اساس مصوبه جدید سنجش حذف گردید؛ دفترچه تخصصی و کلید نهایی سنجش استخراج و نگاشت شد.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 7,
+    "transcription_status": "active_pack_v1"
   },
   {
     "year": 1403,
@@ -22,10 +25,13 @@
     "aptitude_test_status": "not_applicable",
     "official_key_status": "complete",
     "explanatory_answers_status": "partial",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 7,
+    "questions_mapped_count": 7,
     "rights_status": "authorized",
-    "notes": "دفترچه تخصصی ۸۰ سؤال، کلید نهایی سنجش دریافت گردید."
+    "notes": "دفترچه تخصصی ۸۰ سؤال، کلید نهایی سنجش دریافت گردید.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 7,
+    "transcription_status": "active_pack_v1"
   },
   {
     "year": 1402,
@@ -36,10 +42,13 @@
     "aptitude_test_status": "complete",
     "official_key_status": "complete",
     "explanatory_answers_status": "complete",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 7,
+    "questions_mapped_count": 7,
     "rights_status": "authorized",
-    "notes": "شامل دفترچه تخصصی، زبان و استعداد تحصیلی به همراه کلید رسمی سازمان سنجش."
+    "notes": "شامل دفترچه تخصصی، زبان و استعداد تحصیلی به همراه کلید رسمی سازمان سنجش.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 7,
+    "transcription_status": "active_pack_v1"
   },
   {
     "year": 1401,
@@ -50,10 +59,13 @@
     "aptitude_test_status": "complete",
     "official_key_status": "complete",
     "explanatory_answers_status": "complete",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 0,
+    "questions_mapped_count": 0,
     "rights_status": "authorized",
-    "notes": "دفترچه و کلید رسمی نهایی سنجش دریافت شد."
+    "notes": "دفترچه و کلید رسمی نهایی سنجش دریافت شد.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 0,
+    "transcription_status": "pdf_cataloged_pending_transcription"
   },
   {
     "year": 1400,
@@ -64,10 +76,13 @@
     "aptitude_test_status": "complete",
     "official_key_status": "complete",
     "explanatory_answers_status": "complete",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 0,
+    "questions_mapped_count": 0,
     "rights_status": "authorized",
-    "notes": "دفترچه کامل، کلید رسمی نهایی و پاسخ‌های تشریحی ناشران ثبت شد."
+    "notes": "دفترچه کامل، کلید رسمی نهایی و پاسخ‌های تشریحی ناشران ثبت شد.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 0,
+    "transcription_status": "pdf_cataloged_pending_transcription"
   },
   {
     "year": 1399,
@@ -78,10 +93,13 @@
     "aptitude_test_status": "complete",
     "official_key_status": "complete",
     "explanatory_answers_status": "complete",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 0,
+    "questions_mapped_count": 0,
     "rights_status": "authorized",
-    "notes": "آزمون مرداد ۹۹ (تعویق به دلیل کرونا)؛ دفترچه و کلید رسمی نهایی ثبت شد."
+    "notes": "آزمون مرداد ۹۹ (تعویق به دلیل کرونا)؛ دفترچه و کلید رسمی نهایی ثبت شد.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 0,
+    "transcription_status": "pdf_cataloged_pending_transcription"
   },
   {
     "year": 1398,
@@ -92,10 +110,13 @@
     "aptitude_test_status": "complete",
     "official_key_status": "complete",
     "explanatory_answers_status": "complete",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 0,
+    "questions_mapped_count": 0,
     "rights_status": "authorized",
-    "notes": "دفترچه و کلید رسمی نهایی موجود است."
+    "notes": "دفترچه و کلید رسمی نهایی موجود است.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 0,
+    "transcription_status": "pdf_cataloged_pending_transcription"
   },
   {
     "year": 1397,
@@ -106,10 +127,13 @@
     "aptitude_test_status": "complete",
     "official_key_status": "complete",
     "explanatory_answers_status": "complete",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 0,
+    "questions_mapped_count": 0,
     "rights_status": "authorized",
-    "notes": "دفترچه سؤالات تخصصی و کلید قطعی سازمان سنجش در دسترس است."
+    "notes": "دفترچه سؤالات تخصصی و کلید قطعی سازمان سنجش در دسترس است.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 0,
+    "transcription_status": "pdf_cataloged_pending_transcription"
   },
   {
     "year": 1396,
@@ -120,10 +144,13 @@
     "aptitude_test_status": "complete",
     "official_key_status": "complete",
     "explanatory_answers_status": "partial",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 0,
+    "questions_mapped_count": 0,
     "rights_status": "authorized",
-    "notes": "دفترچه و کلید رسمی در دسترس است."
+    "notes": "دفترچه و کلید رسمی در دسترس است.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 0,
+    "transcription_status": "pdf_cataloged_pending_transcription"
   },
   {
     "year": 1395,
@@ -134,9 +161,12 @@
     "aptitude_test_status": "complete",
     "official_key_status": "complete",
     "explanatory_answers_status": "partial",
-    "questions_extracted_count": 80,
-    "questions_mapped_count": 80,
+    "questions_extracted_count": 0,
+    "questions_mapped_count": 0,
     "rights_status": "authorized",
-    "notes": "اولین دوره بعد از تجمیع سرفصل‌های دکتری نیمه‌متمرکز با ساختار ۲۱۶۴؛ کلید رسمی سنجش ثبت شده است."
+    "notes": "اولین دوره بعد از تجمیع سرفصل‌های دکتری نیمه‌متمرکز با ساختار ۲۱۶۴؛ کلید رسمی سنجش ثبت شده است.",
+    "paper_total_questions": 80,
+    "transcribed_in_pack": 0,
+    "transcription_status": "pdf_cataloged_pending_transcription"
   }
 ]

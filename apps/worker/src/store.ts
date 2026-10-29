@@ -449,35 +449,23 @@ export class SupabaseStore implements DataStore {
 }
 
 /** Adjust mastery based on answer with confidence and error type */
-async function adjustMasteryWithInsights(input: {
-  userId: string;
-  questionId: string;
+export function calculateMasteryDeltaWithInsights(input: {
+  currentMastery: number;
   wasCorrect: boolean;
-  confidenceBefore?: number; // 1-5
-  errorType?: string; // ErrorType enum value or 'unknown'
+  confidenceBefore?: number;
   studyMode?: 'focused' | 'casual' | 'exam';
   hintsUsed?: number;
-}): Promise<{ masteryDelta: number; updatedConfidence: number }> {
-  const userState = await this.getUserStats(input.userId);
-  const currentMastery = userState.mastery ?? 50;
+}): { masteryDelta: number; updatedConfidence: number } {
+  const currentMastery = input.currentMastery ?? 50;
 
-  // 1. Base delta based on correctness
-  let baseDelta: number;
-  if (input.wasCorrect) {
-    baseDelta = 0.15; // Mastery increase for correct answer
-  } else {
-    baseDelta = -0.10; // Mastery decrease for incorrect
-  }
+  let baseDelta: number = input.wasCorrect ? 0.15 : -0.10;
 
-  // 2. Adjust based on confidence before answer
   let confidenceFactor = 1.0;
   if (input.confidenceBefore !== undefined) {
-    // Confidence 1-5, center at 3
     confidenceFactor = 1 + (input.confidenceBefore - 3) * 0.05;
     confidenceFactor = Math.max(0.5, Math.min(1.5, confidenceFactor));
   }
 
-  // 3. Adjust for study mode
   let modeFactor = 1.0;
   if (input.studyMode) {
     const modeFactors: Record<string, number> = {
@@ -488,23 +476,18 @@ async function adjustMasteryWithInsights(input: {
     modeFactor = modeFactors[input.studyMode] || 1.0;
   }
 
-  // 4. Penalty for hints used (if incorrect)
   let hintsFactor = 1.0;
-  if (!input.wasCorrect && input.hintsUsed > 0) {
-    hintsFactor = Math.max(0.5, 1 - 0.05 * input.hintsUsed);
+  if (!input.wasCorrect && (input.hintsUsed ?? 0) > 0) {
+    hintsFactor = Math.max(0.5, 1 - 0.05 * (input.hintsUsed ?? 0));
   }
 
-  // 5. Final delta
   const masteryDelta = baseDelta * confidenceFactor * modeFactor * hintsFactor;
-
-  // 6. Clamp to valid range (0-100)
   const newMastery = Math.max(0, Math.min(100, currentMastery + masteryDelta));
   const actualDelta = newMastery - currentMastery;
 
-  // 7. Update evidence tracking (simplified - would need actual DB update)
   const updatedConfidence = input.confidenceBefore !== undefined
-    ? Math.max(0, Math.min(1, input.confidenceBefore / 5)) // Normalize to 0-1
-    : userState.evidenceQuality ?? 0;
+    ? Math.max(0, Math.min(1, input.confidenceBefore / 5))
+    : 0.5;
 
   return { masteryDelta: actualDelta, updatedConfidence };
 }

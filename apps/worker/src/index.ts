@@ -15,7 +15,7 @@ import {
   DEFAULT_MASTERY,
 } from '@ael/engine';
 import type { EngineState, QueueItem } from '@ael/engine';
-import type { ReviewCard, TrackId } from '@ael/contracts';
+import type { ReviewCard, TrackId, Question, PublicQuestion } from '@ael/contracts';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
 import type { AppUser, DataStore, UserStats } from './store';
 import { MemoryStore } from './memory-store';
@@ -31,6 +31,16 @@ export interface Env {
 
 type AppContext = Context<{ Variables: { store: DataStore; secret: string; allowDemoAuth: boolean } }>;
 
+export function toPublicQuestion(q: Question): PublicQuestion {
+  return {
+    id: q.id,
+    nodeId: q.nodeId,
+    examYear: q.examYear,
+    text: q.text,
+    options: q.options,
+  };
+}
+
 export interface CreateAppOptions {
   /** برای تست: تزریق لایهٔ داده */
   store?: DataStore;
@@ -45,6 +55,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     (env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
       ? new SupabaseStore(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
       : new MemoryStore());
+  if (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production' && (!env.SESSION_SECRET || env.SESSION_SECRET === 'dev-secret')) {
+    throw new Error('SECURITY: SESSION_SECRET is required and must not use dev default in production');
+  }
   const secret = env.SESSION_SECRET || 'dev-secret';
   const allowDemoAuth = env.ALLOW_DEMO_AUTH === 'true';
 
@@ -56,6 +69,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   });
 
   /* ------------------------------ helpers ------------------------------ */
+
 
   async function currentUser(c: AppContext): Promise<AppUser | null> {
     const auth = c.req.header('Authorization');
@@ -238,15 +252,13 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       }
     }
 
-    const items: (QueueItem & { course?: string; chapter?: string; topic?: string })[] = queue.map(
+    const items = queue.map(
       (item) => {
         const node = state.nodes.get(item.card.nodeId);
         return {
           ...item,
-          // در پاسخ به کلاینت، متن سؤال بدون کلید صحیح ارسال می‌شود
-          question: item.question
-            ? { ...item.question, correctOption: -1 as unknown as number }
-            : undefined,
+          // در پاسخ به کلاینت، سؤال بدون کلید پاسخ، بدون توضیح و بدون یادداشت دام ارسال می‌شود
+          question: item.question ? toPublicQuestion(item.question) : undefined,
           course: node?.course,
           chapter: node?.chapter,
           topic: node?.topic,
@@ -274,7 +286,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     // idempotency: تلاش تکراری همان نتیجهٔ قبلی را برمی‌گرداند
     const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
     if (existing) {
-      return c.json({ report: existing.rippleReport, replay: true });
+      const state = await loadEngineState(user.id);
+      const q = state.questions.get(existing.questionId);
+      return c.json({
+        report: existing.rippleReport,
+        correctOption: q?.correctOption,
+        explanation: q?.explanation,
+        trapNote: q?.trapNote,
+        replay: true,
+      });
     }
 
     const state = await loadEngineState(user.id);
@@ -314,6 +334,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     return c.json({
       report: result.report,
       correctOption: question.correctOption,
+      explanation: question.explanation,
+      trapNote: question.trapNote,
       replay: false,
       stats: { coins: stats.coins, streakDays: stats.streakDays, dayNumber: stats.dayNumber },
     });
@@ -418,7 +440,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       .sort(() => Math.random() - 0.5)
       .map((q) => ({
         card: { questionId: q.id, nodeId: q.nodeId, cardType: 'question' as const },
-        question: { ...q, correctOption: -1 as unknown as number },
+        question: toPublicQuestion(q),
         course: nodeMap.get(q.nodeId)?.course,
         chapter: nodeMap.get(q.nodeId)?.chapter,
         topic: nodeMap.get(q.nodeId)?.topic,
