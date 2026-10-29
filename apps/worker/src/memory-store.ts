@@ -140,4 +140,43 @@ export class MemoryStore implements DataStore {
     this.stats.set(event.userId, { ...stats });
     return { replay: false, stats: { ...stats } };
   }
+
+  async persistAnswerResult(
+    event: AnswerEvent,
+    masteryRows: UserNodeMastery[],
+    cards: ReviewCard[],
+  ): Promise<import('./store').PersistAnswerResult> {
+    const existing = await this.findAnswerByAttempt(event.userId, event.attemptId);
+    if (existing) return { replay: true, report: existing.rippleReport };
+
+    // A single synchronous mutation batch mirrors the database RPC in local tests.
+    this.answers.push(event);
+    for (const row of masteryRows) {
+      this.mastery.set(`${event.userId}:${row.nodeId}`, row);
+    }
+    for (const card of cards) this.cards.set(card.id, card);
+
+    const tehranDate = (offsetDays = 0) =>
+      new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }).format(
+        new Date(Date.now() + offsetDays * 86_400_000),
+      );
+    const today = tehranDate();
+    const stats = { ...(this.stats.get(event.userId) ?? {
+      userId: event.userId,
+      coins: 0,
+      streakDays: 0,
+      lastStudyDate: null,
+      dayNumber: 0,
+      examDate: null,
+    }) };
+    if (stats.lastStudyDate !== today) {
+      stats.streakDays = stats.lastStudyDate === tehranDate(-1) ? stats.streakDays + 1 : 1;
+      stats.dayNumber += 1;
+      stats.lastStudyDate = today;
+    }
+    stats.coins += event.isCorrect ? 2 : 1;
+    this.stats.set(event.userId, stats);
+    return { replay: false, report: event.rippleReport };
+  }
+
 }
