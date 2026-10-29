@@ -283,6 +283,14 @@ declare
   v_event_type text;
   v_inserted uuid;
   v_state jsonb;
+  v_previous_correct integer := 0;
+  v_previous_gaps integer := 0;
+  v_correct_count integer := 0;
+  v_gap_count integer := 0;
+  v_evidence_count integer := 0;
+  v_proficiency numeric := 0.5;
+  v_estimate_confidence numeric := 0;
+  v_previous_fluency numeric := 0;
 begin
   if p_error_type not in ('conceptual','confusable','computational','slip','unknown') then
     raise exception 'invalid diagnosis type';
@@ -302,6 +310,16 @@ begin
   end if;
 
   v_event_type := case when p_error_type = 'slip' then 'self_report_slip' else 'self_report_gap' end;
+  select correct_evidence_count, assessed_gap_evidence_count, fluency_score
+    into v_previous_correct, v_previous_gaps, v_previous_fluency
+  from public.learner_skill_states
+  where user_id = p_user_id and skill_id = p_skill_id
+  for update;
+  if not found then
+    v_previous_correct := 0;
+    v_previous_gaps := 0;
+    v_previous_fluency := 0;
+  end if;
   insert into public.learning_evidence_events(
     user_id, skill_id, client_event_id, event_type, payload, engine_version
   ) values (
@@ -322,6 +340,13 @@ begin
     return coalesce(v_state, '{}'::jsonb) || jsonb_build_object('replay', true);
   end if;
 
+  v_correct_count := coalesce(v_previous_correct, 0);
+  v_gap_count := coalesce(v_previous_gaps, 0) +
+    case when p_error_type in ('conceptual','confusable','computational') then 1 else 0 end;
+  v_evidence_count := v_correct_count + v_gap_count;
+  v_proficiency := (2.0 + v_correct_count) / (4.0 + v_correct_count + v_gap_count);
+  v_estimate_confidence := 1.0 - exp(-v_evidence_count::numeric / 5.0);
+
   insert into public.learner_skill_states(
     user_id, skill_id, proficiency_probability, estimate_confidence, evidence_count,
     correct_evidence_count, assessed_gap_evidence_count, memory_retrievability,
@@ -329,13 +354,13 @@ begin
   ) values (
     p_user_id,
     p_skill_id,
-    coalesce(nullif(p_state->>'proficiencyProbability','')::numeric, 0.5),
-    coalesce(nullif(p_state->>'estimateConfidence','')::numeric, 0),
-    coalesce(nullif(p_state->>'evidenceCount','')::integer, 0),
-    coalesce(nullif(p_state->>'correctEvidenceCount','')::integer, 0),
-    coalesce(nullif(p_state->>'assessedGapEvidenceCount','')::integer, 0),
+    v_proficiency,
+    v_estimate_confidence,
+    v_evidence_count,
+    v_correct_count,
+    v_gap_count,
     coalesce(nullif(p_state->>'memoryRetrievability','')::numeric, 0.5),
-    coalesce(nullif(p_state->>'fluencyScore','')::numeric, 0),
+    coalesce(v_previous_fluency, nullif(p_state->>'fluencyScore','')::numeric, 0),
     p_error_type,
     'diagnosed',
     now()
