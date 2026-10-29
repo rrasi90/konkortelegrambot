@@ -55,6 +55,11 @@ export interface CommitAnswerResult {
   stats?: UserStats;
 }
 
+export interface PersistAnswerResult {
+  replay: boolean;
+  report?: unknown;
+}
+
 export interface DataStore {
   getUser(userId: string): Promise<AppUser | null>;
   getUserByTelegramId(telegramUserId: number): Promise<AppUser | null>;
@@ -466,5 +471,30 @@ export class SupabaseStore implements DataStore {
         examDate: stats.examDate ? String(stats.examDate) : null,
       } } : {}),
     };
+  }
+
+  async persistAnswerResult(
+    event: AnswerEvent,
+    masteryRows: UserNodeMastery[],
+    cards: ReviewCard[],
+  ): Promise<PersistAnswerResult> {
+    const result = (await this.request('POST', 'rpc/persist_answer_result', {
+      p_event: {
+        id: event.id,
+        user_id: event.userId,
+        question_id: event.questionId,
+        selected_option: event.selectedOption,
+        is_correct: event.isCorrect,
+        attempt_id: event.attemptId,
+        answered_at: event.answeredAt,
+        ripple_report: event.rippleReport,
+      },
+      p_mastery: masteryRows,
+      p_cards: cards,
+    })) as { replay?: boolean; report?: unknown } | null;
+    if (!result || typeof result.replay !== 'boolean') {
+      throw new Error('persist_answer_result returned an invalid response');
+    }
+    return { replay: result.replay, report: result.report };
   }
 }
