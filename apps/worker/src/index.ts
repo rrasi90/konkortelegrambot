@@ -271,7 +271,112 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       return c.json({ error: 'ورودی نامعتبر' }, 400);
     }
 
+    // چک: آیا کاربر امروز (از شبکه Tehran midnightIso) پاسخ داده است؟
+    // اگر سوال در این قائمة باشد، اجازه ثبت پاسخ می‌دهیم، در غیر این صورت ممنوعیت می‌کنیم
+    const todayIso = tehranMidnightIso();
+    const todayAnswers = await store.listAnswersSince(user.id, todayIso);
+    const todayQuestionIds = new Set(todayAnswers.map((a) => a.questionId));
+
+    // اگر امروز سوال پاسخ داده نشده باشد (و امتحان یا تمرکز نباشد)، خطا برگردان
+    if (!todayQuestionIds.has(body.questionId)) {
+      return c.json({ error: 'امروز بازپخش این سوال مجاز نیست' }, 403);
+    }
+
     // idempotency: تلاش تکراری همان نتیجهٔ قبلی را برمی‌گرداند
+    const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
+    if (existing) {
+      return c.json({ report: existing.rippleReport, replay: true });
+    }
+
+    // atomic submit ( réponse, mastery, cards ) - این فراخوانی هم‌زمان انجام می‌شود
+    const masteryUpdates: UserNodeMastery[] = [];
+    const cardUpserts: ReviewCard[] = [];
+    const cardInserts: ReviewCard[] = [];
+
+    // ابتدا motor result را که شامل masteryUpdates, cardUpdates, createdCards است، به دست می‌آوریم
+    const state = await loadEngineState(user.id);
+    const question = state.questions.get(body.questionId);
+    if (!question) return c.json({ error: 'سؤال ناشناخته' }, 404);
+
+    const engineUser = { userId: user.id, activeTracks: user.activeTracks };
+    const result = applyAnswer(
+      state,
+      {
+        userId: user.id,
+        questionId: body.questionId,
+        attemptId: body.attemptId,
+        selectedOption: body.selectedOption,
+      },
+      engineUser,
+    );
+
+    // آماده‌سازی آرایه‌های batched برای atomic RPC
+    for (const m of result.masteryUpdates) {
+      masteryUpdates.push({
+        nodeId: m.nodeId,
+        mastery: m.mastery,
+        status: m.status,
+        lastErrorAt: m.lastErrorAt ?? undefined,
+      });
+    }
+    for (const c of result.cardUpdates) {
+      cardUpserts.push({
+        id: c.id,
+        userId: c.userId,
+        nodeId: c.nodeId,
+        cardType: c.cardType,
+        questionId: c.questionId ?? undefined,
+        trapCardId: c.trapCardId ?? undefined,
+        dueAt: c.dueAt,
+        intervalDays: c.intervalDays,
+        previousIntervalDays: c.previousIntervalDays ?? undefined,
+        ease: c.ease,
+        isRepair: c.isRepair,
+        timesSeen: c.timesSeen,
+        timesCorrect: c.timesCorrect,
+      });
+    }
+    for (const c of result.createdCards) {
+      cardInserts.push({
+        id: c.id,
+        userId: c.userId,
+        nodeId: c.nodeId,
+        cardType: c.cardType,
+        questionId: c.questionId ?? undefined,
+        trapCardId: c.trapCardId ?? undefined,
+        dueAt: c.dueAt,
+        intervalDays: c.intervalDays,
+        previousIntervalDays: c.previousIntervalDays ?? undefined,
+        ease: c.ease,
+        isRepair: c.isRepair,
+        timesSeen: c.timesSeen,
+        timesCorrect: c.timesCorrect,
+      });
+    }
+
+    // atomic database submit (idempotent, upsert mastery+cards in one go)
+    await store.submitAnswerAtomic({
+      userId: user.id,
+      questionId: body.questionId,
+      selectedOption: body.selectedOption,
+      attemptId: body.attemptId,
+      wasCorrect: result.report.wasCorrect,
+      rippleReport: result.report,
+      masteryUpdates,
+      cardUpserts,
+      cardInserts,
+    });
+
+    // آمار انگیزشی: سکه + روز پیوسته (فقط برای پاسخ‌های تازه، نه replay)
+    // (آمار داخل atomic function به‌روزرسانی می‌شود)
+
+    return c.json({
+      report: result.report,
+      correctOption: question.correctOption,
+      replay: false,
+      stats: { coins: 0, streakDays: 0, dayNumber: 0 }, // stats handled inside atomic function; client can fetch via /api/home
+    });
+  });جهٔ قبلی را برمی‌گرداند
     const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
     if (existing) {
       return c.json({ report: existing.rippleReport, replay: true });

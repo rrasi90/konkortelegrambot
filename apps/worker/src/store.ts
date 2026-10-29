@@ -65,6 +65,19 @@ export interface DataStore {
 
   findAnswerByAttempt(userId: string, attemptId: string): Promise<AnswerEvent | null>;
   insertAnswerEvent(event: AnswerEvent): Promise<void>;
+
+  /** ثبت اتمی پاسخ، تسلط و کارت‌ها در یک تراکنش */
+  submitAnswerAtomic(input: {
+    userId: string;
+    questionId: string;
+    selectedOption: number;
+    attemptId: string;
+    wasCorrect: boolean;
+    rippleReport: unknown;
+    masteryUpdates: UserNodeMastery[];
+    cardUpserts: ReviewCard[];
+    cardInserts: ReviewCard[];
+  }): Promise<void>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -89,7 +102,7 @@ export class SupabaseStore implements DataStore {
         apikey: this.serviceRoleKey,
         Authorization: `Bearer ${this.serviceRoleKey}`,
         'Content-Type': 'application/json',
-        ...(method === 'POST' ? { Prefer: 'resolution=merge-duplicates' } : {}),
+        ...(method === 'POST' ? { Prefer: 'resolution=merge-duplicates,return=representation' } : {}),
       },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
@@ -373,6 +386,64 @@ export class SupabaseStore implements DataStore {
       attempt_id: event.attemptId,
       answered_at: event.answeredAt,
       ripple_report: event.rippleReport,
+    });
+  }
+
+  async submitAnswerAtomic(input: {
+    userId: string;
+    questionId: string;
+    selectedOption: number;
+    attemptId: string;
+    wasCorrect: boolean;
+    rippleReport: unknown;
+    masteryUpdates: UserNodeMastery[];
+    cardUpserts: ReviewCard[];
+    cardInserts: ReviewCard[];
+  }): Promise<void> {
+    // تبدیل آرایه‌ها به فرمت JSONB مناسب برای تابع دیتابیس
+    const masteryUpdatesJson = input.masteryUpdates.map(m => ({
+      nodeId: m.nodeId,
+      mastery: m.mastery,
+      status: m.status,
+      lastErrorAt: m.lastErrorAt ?? null,
+    }));
+    const cardUpsertsJson = input.cardUpserts.map(c => ({
+      id: c.id,
+      userId: c.userId,
+      dueAt: c.dueAt,
+      intervalDays: c.intervalDays,
+      previousIntervalDays: c.previousIntervalDays ?? null,
+      ease: c.ease,
+      isRepair: c.isRepair,
+      timesSeen: c.timesSeen,
+      timesCorrect: c.timesCorrect,
+    }));
+    const cardInsertsJson = input.cardInserts.map(c => ({
+      id: c.id,
+      userId: c.userId,
+      nodeId: c.nodeId,
+      cardType: c.cardType,
+      questionId: c.questionId ?? null,
+      trapCardId: c.trapCardId ?? null,
+      dueAt: c.dueAt,
+      intervalDays: c.intervalDays,
+      previousIntervalDays: c.previousIntervalDays ?? null,
+      ease: c.ease,
+      isRepair: c.isRepair,
+      timesSeen: c.timesSeen,
+      timesCorrect: c.timesCorrect,
+    }));
+
+    await this.request('POST', 'rpc/submit_answer_atomic', {
+      p_user_id: input.userId,
+      p_question_id: input.questionId,
+      p_selected_option: input.selectedOption,
+      p_attempt_id: input.attemptId,
+      p_was_correct: input.wasCorrect,
+      p_ripple_report: input.rippleReport,
+      p_mastery_updates: masteryUpdatesJson,
+      p_card_upserts: cardUpsertsJson,
+      p_card_inserts: cardInsertsJson,
     });
   }
 }
