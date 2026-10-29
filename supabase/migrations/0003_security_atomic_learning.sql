@@ -126,6 +126,10 @@ begin
     raise exception 'invalid attempt ttl';
   end if;
 
+  -- Serialize queue refreshes for the same learner/item so concurrent requests
+  -- cannot issue parallel unused attempts for the exact same question.
+  perform pg_advisory_xact_lock(hashtextextended(p_user_id::text || ':' || p_question_id, 0));
+
   select u.active_tracks, n.track
     into v_active_tracks, v_track
   from public.app_users u
