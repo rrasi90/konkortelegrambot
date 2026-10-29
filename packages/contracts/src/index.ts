@@ -5,8 +5,9 @@
 
 /* ---------- Track & Knowledge Graph ---------- */
 
+/** Track IDs are pack-defined slugs. The engine must not encode domain names. */
 export const TRACK_IDS = ['common', 'business', 'technology'] as const;
-export type TrackId = (typeof TRACK_IDS)[number];
+export type TrackId = string;
 
 /** گرهٔ دانش: یک مبحث مشخص در یک فصل از یک درس */
 export interface KnowledgeNode {
@@ -21,7 +22,11 @@ export interface KnowledgeNode {
   topic: string;
 }
 
-export const DEPENDENCY_RELATIONS = ['prerequisite', 'cross_course'] as const;
+/** Semantic graph types. Legacy values remain readable while old packs are migrated. */
+export const DEPENDENCY_RELATIONS = [
+  'prerequisite_of', 'confusable_with', 'applied_in', 'part_of', 'related_to',
+  'prerequisite', 'cross_course',
+] as const;
 export type DependencyRelation = (typeof DEPENDENCY_RELATIONS)[number];
 
 /**
@@ -34,8 +39,11 @@ export interface NodeDependency {
   source: string;
   target: string;
   relation: DependencyRelation;
-  /** ضریب همبستگی ۰٫۲ تا ۰٫۶ */
+  /** ضریب ارتباط؛ heuristic only, not a mastery penalty */
   weight: number;
+  verificationStatus?: 'unverified' | 'verified' | 'rejected';
+  sourceRef?: string;
+  confidence?: number;
 }
 
 /* ---------- Questions & Cards ---------- */
@@ -56,7 +64,24 @@ export interface Question {
   trapNote?: string;
 }
 
-export type VerificationStatus = 'unverified' | 'verified' | 'quarantined';
+export type VerificationStatus = 'unverified' | 'verified' | 'quarantined' | 'demo';
+
+export type CoverageState = 'unseen' | 'diagnosed' | 'remediating' | 'verified_by_unseen';
+export type DominantErrorType = 'conceptual' | 'confusable' | 'computational' | 'slip' | 'unknown';
+
+/** Six independent signals; none is inferred from a single wrong answer alone. */
+export interface LearnerSkillState {
+  skillId: string;
+  proficiencyProbability: number;
+  estimateConfidence: number;
+  evidenceCount: number;
+  memoryRetrievability: number;
+  fluencyScore: number;
+  dominantErrorType: DominantErrorType;
+  coverageState: CoverageState;
+  updatedAt: string;
+}
+
 
 /* ---------- User State ---------- */
 
@@ -108,6 +133,14 @@ export interface AnswerInput {
   attemptId: string;
   selectedOption: number;
   answeredAt?: string;
+  /** Whether this item had been presented to this learner before. */
+  seenBefore?: boolean;
+  responseTimeMs?: number;
+  confidenceBefore?: number;
+  assistance?: string[];
+  studyMode?: 'desk' | 'commute' | 'exam';
+  engineVersion?: string;
+  itemVersion?: string;
 }
 
 export interface MasteryDelta {
@@ -154,6 +187,10 @@ export interface RippleReport {
   mentorMessage: string;
   /** اقدامات کارت برای پایدارسازی */
   actions: CardAction[];
+  /** A wrong response is evidence for diagnosis, not a mastery verdict. */
+  diagnosticRequired?: boolean;
+  evidenceOnly?: boolean;
+  nextAction?: 'diagnostic_probe' | 'targeted_remediation' | 'unseen_verification' | 'spaced_review';
 }
 
 /* ---------- Engine Result ---------- */
@@ -171,7 +208,7 @@ export interface EngineResult {
 /* ---------- Validation helpers (no external deps) ---------- */
 
 export function isTrackId(value: unknown): value is TrackId {
-  return typeof value === 'string' && (TRACK_IDS as readonly string[]).includes(value);
+  return typeof value === 'string' && /^[a-z][a-z0-9_-]{1,39}$/.test(value);
 }
 
 export function isNodeDependency(value: unknown): value is NodeDependency {
