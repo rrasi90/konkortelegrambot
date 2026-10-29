@@ -399,3 +399,8 @@ export function round1(x: number): number {
 
 export { isTrackId, isQuestion, isNodeDependency, TRACK_IDS, DEPENDENCY_RELATIONS };
 export type { TrackId, DependencyRelation, ReviewCard, Question, KnowledgeNode, NodeDependency, UserNodeMastery };
+
+export { buildDailyPlan, scorePlanCandidate } from './planner';
+export type { DailyPlanPolicy, DailyPlanResult, LearningActionType, PlanCandidate, PlannedCandidate } from './planner';
+export { scheduleFsrsReview } from './spaced-repetition';
+export type { ScheduledReview } from './spaced-repetition';
