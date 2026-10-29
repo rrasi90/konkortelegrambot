@@ -1,4 +1,4 @@
-import { COURSES_LESSONS } from './lessons-data';
+import { COURSES_LESSONS, findLessonForNode } from './lessons-data';
 let globalMemoryStore: DataStore | null = null;
 
 /**
@@ -398,11 +398,22 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       }
       const state = await loadEngineState(user.id);
       const q = state.questions.get(existing.questionId);
+      const lesson = q ? findLessonForNode(q.nodeId) : null;
       return c.json({
         report: existing.rippleReport,
         correctOption: q?.correctOption,
         explanation: q?.explanation,
         trapNote: q?.trapNote,
+        lesson: lesson ? {
+          id: lesson.id,
+          topic: lesson.topic,
+          chapter: lesson.chapter,
+          course: lesson.course,
+          konkoorWeight: lesson.konkoorWeight,
+          summary: lesson.summary,
+          konkoorTips: lesson.konkoorTips,
+          keyTerms: lesson.keyTerms,
+        } : null,
         replay: true,
       });
     }
@@ -441,11 +452,22 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     // آمار انگیزشی: سکه + روز پیوسته (فقط برای پاسخ‌های تازه، نه replay)
     const stats = await applyStatsForAnswer(user.id, wasCorrect);
 
+    const lesson = findLessonForNode(question.nodeId);
     return c.json({
       report: result.report,
       correctOption: question.correctOption,
       explanation: question.explanation,
       trapNote: question.trapNote,
+      lesson: lesson ? {
+        id: lesson.id,
+        topic: lesson.topic,
+        chapter: lesson.chapter,
+        course: lesson.course,
+        konkoorWeight: lesson.konkoorWeight,
+        summary: lesson.summary,
+        konkoorTips: lesson.konkoorTips,
+        keyTerms: lesson.keyTerms,
+      } : null,
       replay: false,
       stats: { coins: stats.coins, streakDays: stats.streakDays, dayNumber: stats.dayNumber },
     });

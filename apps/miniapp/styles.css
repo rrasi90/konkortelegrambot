@@ -479,3 +479,52 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
 .lesson-tips-list li { margin-bottom: 4px; }
 .lesson-terms { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
 .lesson-term-badge { font-size: 10px; background: var(--bg); border: 1px solid var(--line); padding: 2px 6px; border-radius: 4px; color: var(--ink-soft); direction: ltr; font-family: monospace; }
+
+/* ---------- آموزش کامل مبحث کنکور در فیدبک سوال ---------- */
+.lesson-feedback-card {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1.5px solid #38bdf8;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.12);
+  text-align: right;
+}
+.lesson-feedback-header {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+.lesson-feedback-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0369a1;
+  background: #e0f2fe;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.lesson-feedback-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.lesson-feedback-body {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--ink);
+  white-space: pre-line;
+  margin-bottom: 12px;
+}
+.lesson-feedback-tips {
+  background: #fffbeb;
+  border-right: 3px solid #f59e0b;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 1.7;
+}

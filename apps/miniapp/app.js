@@ -390,11 +390,11 @@
       selectedOption: selected,
     }).then(function (data) {
       if (data.stats) updateStatsChips(data.stats);
-      showFeedback(item, data.report, selected, data.correctOption, data.explanation, data.trapNote);
+      showFeedback(item, data.report, selected, data.correctOption, data.explanation, data.trapNote, data.lesson);
     });
   }
 
-  function showFeedback(item, report, selected, correctOption, explanation, trapNote) {
+  function showFeedback(item, report, selected, correctOption, explanation, trapNote, lesson) {
     var box = el('answer-feedback');
     box.hidden = false;
     var head = el('feedback-head');
@@ -424,6 +424,42 @@
     }
     el('feedback-mentor').textContent = report.mentorMessage || '';
     renderRipple(report);
+
+    // آموزش کامل مبحث کنکور زیر هر سؤال
+    var lessonBox = el('feedback-lesson-card');
+    if (lessonBox) {
+      if (lesson) {
+        lessonBox.hidden = false;
+        el('lesson-feedback-title').textContent = (lesson.course ? lesson.course + ' — ' : '') + (lesson.topic || '');
+        el('lesson-feedback-body').textContent = lesson.summary || '';
+
+        var tipsBox = el('lesson-feedback-tips');
+        if (tipsBox) {
+          if (lesson.konkoorTips && lesson.konkoorTips.length > 0) {
+            tipsBox.hidden = false;
+            tipsBox.innerHTML = '<strong>💡 نکات طلایی و تله‌های تستی کنکور دکتری:</strong><ul style="margin:6px 0 0;padding-right:16px;">' +
+              lesson.konkoorTips.map(function (tip) { return '<li>' + escapeHtml(tip) + '</li>'; }).join('') +
+              '</ul>';
+          } else {
+            tipsBox.hidden = true;
+          }
+        }
+
+        var termsBox = el('lesson-feedback-terms');
+        if (termsBox) {
+          if (lesson.keyTerms && lesson.keyTerms.length > 0) {
+            termsBox.hidden = false;
+            termsBox.innerHTML = '<span style="font-size:11px;color:var(--ink-soft);margin-left:4px;">اصطلاحات تخصصی:</span>' +
+              lesson.keyTerms.map(function (term) { return '<span class="lesson-term-badge">' + escapeHtml(term) + '</span>'; }).join('');
+          } else {
+            termsBox.hidden = true;
+          }
+        }
+      } else {
+        lessonBox.hidden = true;
+      }
+    }
+
     el('btn-next').onclick = function () {
       state.currentIndex += 1;
       renderCurrent();
