@@ -5,7 +5,7 @@
 
 /* ---------- Track & Knowledge Graph ---------- */
 
-export const TRACK_IDS = ['common', 'business', 'technology'] as const;
+export const TRACK_IDS = ['common', 'business', 'technology', 'strategy'] as const;
 export type TrackId = (typeof TRACK_IDS)[number];
 
 /** گرهٔ دانش: یک مبحث مشخص در یک فصل از یک درس */
@@ -40,8 +40,20 @@ export interface NodeDependency {
 
 /* ---------- Questions & Cards ---------- */
 
-export const CARD_TYPES = ['question', 'trap_note'] as const;
+export const CARD_TYPES = ['question', 'trap_note', 'comparison_card'] as const;
 export type CardType = (typeof CARD_TYPES)[number];
+
+/** وضعیت مدتی FSRS روی کارت — تولیدشده توسط موتور حافظه */
+export interface CardFSRSState {
+  stability: number;
+  difficulty: number;
+  retrievability: number;
+  reps: number;
+  lapses: number;
+  lastReviewedAt: string;
+  dueAt: string;
+  intervalDays: number;
+}
 
 export interface Question {
   id: string;
@@ -55,6 +67,8 @@ export interface Question {
   /** نکتهٔ دام تستی — منبع کارت‌های لایهٔ ۱ */
   trapNote?: string;
   isVerified?: boolean;
+  /** زمان موردانتظار پاسخ‌گویی (میلی‌ثانیه) — مبنای روانی اجرا */
+  expectedTimeMs?: number;
 }
 
 /** سؤالی که به کلاینت فرستاده می‌شود — بدون گزینهٔ صحیح، بدون توضیح تشریحی و بدون یادداشت دام */
@@ -144,48 +158,23 @@ export interface ReviewCard {
   cardType: CardType;
   questionId?: string;
   trapCardId?: string;
+  /** برای comparison_card: زوج مهارت‌های قابل‌خلط [اول، دوم] */
+  comparisonSkills?: [string, string];
   /** تاریخ سررسید مرور بعدی (ISO) */
   dueAt: string;
   intervalDays: number;
   /** فاصلهٔ قبلی برای بازگرداندن وضعیت پس از ترمیم */
   previousIntervalDays?: number;
-  /** ضریب سهولت، بین ۱٫۳ و ۲٫۸ */
+  /** ضریب سهولت، بین ۱٫۳ و ۲٫۸ (سازگاری قدیمی؛ زمان‌بندی جدید از fsrs می‌آید) */
   ease: number;
   /** آیا این کارت برای ترمیم جلو افتاده است؟ */
   isRepair: boolean;
   timesSeen: number;
   timesCorrect: number;
-}
-
-export interface EngineResult {
-  report: RippleReport;
-  /** نقشهٔ به‌روزشدهٔ تسلط گره‌ها */
-  masteryUpdates: UserNodeMastery[];
-  /** کارت‌های به‌روزشده (شامل کارت سؤال پاسخ‌گرفته‌شده) */
-  cardUpdates: ReviewCard[];
-  /** کارت‌های تازه ساخته‌شده */
-  createdCards: ReviewCard[];
-}
-
-export interface ReviewCard {
-  /** مثلاً «q:demo-001» برای سؤال یا «trap:demo-001» برای کارت دام */
-  id: string;
-  userId: string;
-  nodeId: string;
-  cardType: CardType;
-  questionId?: string;
-  trapCardId?: string;
-  /** تاریخ سررسید مرور بعدی (ISO) */
-  dueAt: string;
-  intervalDays: number;
-  /** فاصلهٔ قبلی برای بازگرداندن وضعیت پس از ترمیم */
-  previousIntervalDays?: number;
-  /** ضریب سهولت، بین ۱٫۳ و ۲٫۸ */
-  ease: number;
-  /** آیا این کارت برای ترمیم جلو افتاده است؟ */
-  isRepair: boolean;
-  timesSeen: number;
-  timesCorrect: number;
+  /** وضعیت موتور حافظهٔ FSRS برای این کارت */
+  fsrs?: CardFSRSState;
+  /** آیا این تلاش از نوع اثبات یادگیری (Holdout Proof) است؟ */
+  isProof?: boolean;
 }
 
 export type PlanReason =
@@ -198,6 +187,8 @@ export type PlanReason =
 
 /* ---------- Engine Input/Output ---------- */
 
+export type SelfReport = 'slip' | 'didnt_know';
+
 export interface AnswerInput {
   userId: string;
   questionId: string;
@@ -205,6 +196,12 @@ export interface AnswerInput {
   attemptId: string;
   selectedOption: number;
   answeredAt?: string;
+  /** زمان صرف‌شده تا ثبت پاسخ (میلی‌ثانیه) — مبنای روانی اجرا و تشخیص لغزش */
+  responseTimeMs?: number;
+  /** اطمینان پیش از پاسخ از ۱ (کم) تا ۵ (زیاد) */
+  confidenceRating?: number;
+  /** خوداظهاری کاربر پس از پاسخ غلط */
+  selfReport?: SelfReport;
 }
 
 export interface MasteryDelta {
@@ -251,6 +248,16 @@ export interface RippleReport {
   mentorMessage: string;
   /** اقدامات کارت برای پایدارسازی */
   actions: CardAction[];
+  /** نوع خطای تشخیص‌داده‌شدهٔ موتور ('none' برای پاسخ درست) */
+  errorType?: 'slip' | 'concept_gap' | 'prerequisite_failure' | 'misread' | 'none';
+  /** گره‌هایی که به‌جای کسر نمره، نیازمند سؤال تشخیصی (Probe) شده‌اند */
+  probeTargets?: string[];
+  /** اگر آمادگی اثبات رسید: گره و مهارتِ نیازمند سؤال دیده‌نشده */
+  proofCandidate?: { nodeId: string; skillId: string } | null;
+  /** برچسب این تلاش */
+  attemptType?: 'practice' | 'diagnostic' | 'verification' | 'proof';
+  /** وضعیت پوشش مهارتِ اصلی پس از این پاسخ (از مدل ۶ بعدی) */
+  coverageStatus?: string;
 }
 
 /* ---------- Engine Result ---------- */
