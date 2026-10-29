@@ -420,6 +420,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
     const wasCorrect = result.report.wasCorrect;
     const answeredAt = new Date().toISOString();
+    const seenBefore = (currentQuestionCard?.timesSeen ?? 0) > 0;
+    const scheduledQuestionCard = [...result.cardUpdates, ...result.createdCards]
+      .find((card) => card.cardType === 'question' && card.questionId === question.id) ?? currentQuestionCard;
+    const previousSkillState = await store.getLearnerSkillState(user.id, question.nodeId);
+    const learnerSkillState = updateLearnerSkillState({
+      skillId: question.nodeId,
+      previous: previousSkillState,
+      wasCorrect,
+      seenBefore,
+      isHoldout: question.isHoldout === true,
+      responseTimeMs: body.responseTimeMs,
+      fsrsState: scheduledQuestionCard?.fsrsState,
+      now: new Date(answeredAt),
+    });
     const commit = await store.commitAnswer({
       id: crypto.randomUUID(),
       userId: user.id,
