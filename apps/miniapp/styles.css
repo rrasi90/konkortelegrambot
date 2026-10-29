@@ -412,3 +412,29 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
   background: var(--bg);
 }
 .saved-msg { color: var(--ok); font-size: 12px; margin: 8px 0 0; }
+
+
+/* ---------- تشخیص، ترمیم و اثبات ---------- */
+.diagnosis-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 14px 0;
+}
+.diagnosis-choice { text-align: right; min-height: 42px; }
+.diagnosis-result, #verification-note {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.9;
+  margin: 8px 0;
+}
+.learning-asset {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 8px 0;
+}
+.learning-asset strong { font-size: 13px; }
+.learning-asset p { color: var(--ink-soft); font-size: 12.5px; line-height: 1.9; }
+#btn-start-verification { margin-top: 10px; }
