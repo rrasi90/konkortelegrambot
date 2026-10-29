@@ -211,12 +211,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       return c.json({
         method: 'sendMessage',
         chat_id: chatId,
-        text: 'سلام! به سامانهٔ یادگیری تطبیقی «مسیر دکتری» خوش آمدید 🎓\n\nسامانهٔ هوشمند سنجش و تثبیت تسلط بر سرفصل‌های آزمون دکتری مدیریت.\n\nبرای شروع تمرین و ارزیابی هوشمند، روی دکمهٔ زیر بزنید:',
+        text: 'سلام! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nسامانهٔ هوشمند سنجش و تثبیت تسلط بر سرفصل‌های آزمون دکتری مدیریت.\n\nبرای شروع تمرین و ارزیابی هوشمند، روی دکمهٔ زیر بزنید:',
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: '🚀 باز کردن مسیر دکتری',
+                text: '🚀 باز کردن آموزش کنکور',
                 web_app: { url: appUrl },
               },
             ],
@@ -233,7 +233,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         inline_keyboard: [
           [
             {
-              text: '🚀 باز کردن مسیر دکتری',
+              text: '🚀 باز کردن آموزش کنکور',
               web_app: { url: appUrl },
             },
           ],
