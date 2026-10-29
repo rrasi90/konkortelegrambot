@@ -96,7 +96,9 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     const bridgeNodes = report.crossCourseBridges.map((b: any) => b.nodeId);
     expect(bridgeNodes).toContain('tech.absorptive');
     expect(bridgeNodes).not.toContain('mkt.brand');
-    expect(report.mentorMessage).toContain('هنوز برات جا نیفتاده');
+    // لایه‌های ۳/۴: بدون کسر فوری — پیشنهاد بررسی تشخیصی
+    expect(report.probeTargets).toContain('tech.absorptive');
+    expect(report.mentorMessage).toContain('شاهد اولیه');
 
     // idempotency: همان attemptId همان نتیجه را برمی‌گرداند
     const replayRes = await app.request(
@@ -116,7 +118,7 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     const vc = allNodes.find((n: any) => n.id === 'sm.value_chain');
     const ac = allNodes.find((n: any) => n.id === 'tech.absorptive');
     expect(vc.mastery).toBe(37.5);
-    expect(ac.mastery).toBeLessThan(50); // سرایت بین‌درسی رخ داد
+    expect(ac.mastery).toBe(50); // بدون کسر فوری بین‌درسی — فقط شاهد ثبت شد
     // مبحث بازرگانی نباید در نقشه باشد
     const brand = allNodes.find((n: any) => n.id === 'mkt.brand');
     expect(brand).toBeUndefined();

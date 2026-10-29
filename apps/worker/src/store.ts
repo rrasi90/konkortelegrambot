@@ -5,6 +5,7 @@
  */
 import type {
   KnowledgeNode,
+  LearnerSkillState,
   NodeDependency,
   Question,
   ReviewCard,
@@ -68,7 +69,7 @@ export interface DataStore {
   findAnswerByAttempt(userId: string, attemptId: string): Promise<AnswerEvent | null>;
   insertAnswerEvent(event: AnswerEvent): Promise<void>;
 
-  /** ثبت اتمی پاسخ، تسلط و کارت‌ها در یک تراکنش */
+  /** ثبت اتمی و امن پاسخ، تسلط و کارت‌ها (RPC امن مهاجرت 0006) */
   submitAnswerAtomic(input: {
     userId: string;
     questionId: string;
@@ -79,7 +80,25 @@ export interface DataStore {
     masteryUpdates: UserNodeMastery[];
     cardUpserts: ReviewCard[];
     cardInserts: ReviewCard[];
+  }): Promise<{ correctOption?: number; replay?: boolean } | null>;
+
+  /** صدور بلیت تلاش برای هر آیتم صف (مصرف در submit_answer_secure) */
+  issueAttemptTickets(
+    userId: string,
+    tickets: { attemptId: string; questionId: string; attemptType: 'practice' | 'diagnostic' | 'verification' | 'proof' | 'holdout' | 'exam_simulation'; itemVersion?: string }[],
+  ): Promise<void>;
+
+  /** وضعیت شش‌بعدی مهارت‌های کاربر (learner_skill_states) */
+  getSkillStates(userId: string): Promise<LearnerSkillState[]>;
+  /** ثبت وضعیت شش‌بعدی یک مهارت */
+  upsertSkillState(userId: string, update: {
+    skillId: string;
+    nodeId: string;
+    state: LearnerSkillState;
   }): Promise<void>;
+
+  /** فهرست گرایش‌ها از بسته‌های آزمون (برای /api/tracks داینامیک) */
+  listPacks(): Promise<{ packId: string; title: string; tracks: TrackId[]; isDemo: boolean }[]>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -309,6 +328,7 @@ export class SupabaseStore implements DataStore {
       card_type: ReviewCard['cardType'];
       question_id: string | null;
       trap_card_id: string | null;
+      comparison_skills: [string, string] | null;
       due_at: string;
       interval_days: number;
       previous_interval_days: number | null;
@@ -316,6 +336,8 @@ export class SupabaseStore implements DataStore {
       is_repair: boolean;
       times_seen: number;
       times_correct: number;
+      fsrs_state: ReviewCard['fsrs'] | null;
+      is_proof: boolean;
     }[];
     return rows.map((r) => ({
       id: r.id,
@@ -324,6 +346,7 @@ export class SupabaseStore implements DataStore {
       cardType: r.card_type,
       questionId: r.question_id ?? undefined,
       trapCardId: r.trap_card_id ?? undefined,
+      comparisonSkills: r.comparison_skills ?? undefined,
       dueAt: r.due_at,
       intervalDays: r.interval_days,
       previousIntervalDays: r.previous_interval_days ?? undefined,
@@ -331,6 +354,8 @@ export class SupabaseStore implements DataStore {
       isRepair: r.is_repair,
       timesSeen: r.times_seen,
       timesCorrect: r.times_correct,
+      fsrs: r.fsrs_state ?? undefined,
+      isProof: r.is_proof,
     }));
   }
 
@@ -346,6 +371,7 @@ export class SupabaseStore implements DataStore {
         card_type: c.cardType,
         question_id: c.questionId ?? null,
         trap_card_id: c.trapCardId ?? null,
+        comparison_skills: c.comparisonSkills ?? null,
         due_at: c.dueAt,
         interval_days: c.intervalDays,
         previous_interval_days: c.previousIntervalDays ?? null,
@@ -353,6 +379,8 @@ export class SupabaseStore implements DataStore {
         is_repair: c.isRepair,
         times_seen: c.timesSeen,
         times_correct: c.timesCorrect,
+        fsrs_state: c.fsrs ?? null,
+        is_proof: c.isProof ?? false,
       })),
     );
   }
@@ -401,15 +429,15 @@ export class SupabaseStore implements DataStore {
     masteryUpdates: UserNodeMastery[];
     cardUpserts: ReviewCard[];
     cardInserts: ReviewCard[];
-  }): Promise<void> {
-    // تبدیل آرایه‌ها به فرمت JSONB مناسب برای تابع دیتابیس
-    const masteryUpdatesJson = input.masteryUpdates.map(m => ({
+  }): Promise<{ correctOption?: number; replay?: boolean } | null> {
+    // تبدیل آرایه‌ها به فرمت JSONB موردانتظار تابع امن submit_answer_secure (مهاجرت 0006)
+    const masteryUpdatesJson = input.masteryUpdates.map((m) => ({
       nodeId: m.nodeId,
       mastery: m.mastery,
       status: m.status,
       lastErrorAt: m.lastErrorAt ?? null,
     }));
-    const cardUpsertsJson = input.cardUpserts.map(c => ({
+    const cardUpsertsJson = input.cardUpserts.map((c) => ({
       id: c.id,
       userId: c.userId,
       dueAt: c.dueAt,
@@ -419,8 +447,9 @@ export class SupabaseStore implements DataStore {
       isRepair: c.isRepair,
       timesSeen: c.timesSeen,
       timesCorrect: c.timesCorrect,
+      fsrsState: c.fsrs ?? null,
     }));
-    const cardInsertsJson = input.cardInserts.map(c => ({
+    const cardInsertsJson = input.cardInserts.map((c) => ({
       id: c.id,
       userId: c.userId,
       nodeId: c.nodeId,
@@ -434,19 +463,109 @@ export class SupabaseStore implements DataStore {
       isRepair: c.isRepair,
       timesSeen: c.timesSeen,
       timesCorrect: c.timesCorrect,
+      fsrsState: c.fsrs ?? null,
     }));
 
-    await this.request('POST', 'rpc/submit_answer_atomic', {
+    // RPC امن: کلید صحیح سمت سرور تعیین و بلیت تلاش مصرف می‌شود
+    const feedback = (await this.request('POST', 'rpc/submit_answer_secure', {
       p_user_id: input.userId,
+      p_attempt_id: input.attemptId,
       p_question_id: input.questionId,
       p_selected_option: input.selectedOption,
-      p_attempt_id: input.attemptId,
-      p_was_correct: input.wasCorrect,
       p_ripple_report: input.rippleReport,
       p_mastery_updates: masteryUpdatesJson,
       p_card_upserts: cardUpsertsJson,
       p_card_inserts: cardInsertsJson,
-    });
+    })) as { correctOption?: number; replay?: boolean } | null;
+    return feedback;
+  }
+
+  async issueAttemptTickets(
+    userId: string,
+    tickets: {
+      attemptId: string;
+      questionId: string;
+      attemptType: 'practice' | 'diagnostic' | 'verification' | 'proof' | 'holdout' | 'exam_simulation';
+      itemVersion?: string;
+    }[],
+  ): Promise<void> {
+    if (tickets.length === 0) return;
+    await this.request(
+      'POST',
+      'attempt_tickets',
+      tickets.map((t) => ({
+        attempt_id: t.attemptId,
+        user_id: userId,
+        question_id: t.questionId,
+        attempt_type: t.attemptType,
+        item_version: t.itemVersion ?? '1',
+      })),
+    );
+  }
+
+  async getSkillStates(userId: string): Promise<LearnerSkillState[]> {
+    const rows = (await this.request(
+      'GET',
+      'learner_skill_states',
+      undefined,
+      `?user_id=eq.${userId}&select=*`,
+    )) as {
+      skill_id: string;
+      proficiency_probability: number;
+      confidence: number;
+      evidence_count: number;
+      memory_retrievability: number;
+      fluency_speed_ratio: number;
+      dominant_error_type: string;
+      coverage_status: LearnerSkillState['coverageStatus'];
+    }[];
+    return rows.map((r) => ({
+      skillId: r.skill_id,
+      userId,
+      proficiencyProbability: Number(r.proficiency_probability),
+      confidence: Number(r.confidence),
+      evidenceCount: Number(r.evidence_count),
+      memoryRetrievability: Number(r.memory_retrievability),
+      fluencySpeedRatio: Number(r.fluency_speed_ratio),
+      dominantErrorType: r.dominant_error_type,
+      coverageStatus: r.coverage_status,
+    }));
+  }
+
+  async upsertSkillState(
+    userId: string,
+    update: { skillId: string; nodeId: string; state: LearnerSkillState },
+  ): Promise<void> {
+    await this.request(
+      'POST',
+      'learner_skill_states?on_conflict=user_id,skill_id',
+      {
+        user_id: userId,
+        skill_id: update.skillId,
+        proficiency_probability: update.state.proficiencyProbability,
+        confidence: update.state.confidence,
+        evidence_count: update.state.evidenceCount,
+        memory_retrievability: update.state.memoryRetrievability,
+        fluency_speed_ratio: update.state.fluencySpeedRatio,
+        dominant_error_type: update.state.dominantErrorType,
+        coverage_status: update.state.coverageStatus,
+      },
+    );
+  }
+
+  async listPacks(): Promise<{ packId: string; title: string; tracks: TrackId[]; isDemo: boolean }[]> {
+    const rows = (await this.request(
+      'GET',
+      'exam_packs',
+      undefined,
+      '?select=pack_id,title,tracks,is_demo',
+    )) as { pack_id: string; title: string; tracks: string[] | null; is_demo: boolean | null }[];
+    return (rows ?? []).map((r) => ({
+      packId: r.pack_id,
+      title: r.title,
+      tracks: (r.tracks ?? ['common']) as TrackId[],
+      isDemo: Boolean(r.is_demo),
+    }));
   }
 }
 

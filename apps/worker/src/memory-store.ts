@@ -1,6 +1,6 @@
 import { defaultSeed } from './default-seed';
 /** پیاده‌سازی درون‌حافظه‌ای لایهٔ داده — برای تست و دمو */
-import type { ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
+import type { LearnerSkillState, ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
 import type { AnswerEvent, AppUser, DataStore } from './store';
 
 export class MemoryStore implements DataStore {
@@ -139,7 +139,7 @@ export class MemoryStore implements DataStore {
     masteryUpdates: UserNodeMastery[];
     cardUpserts: ReviewCard[];
     cardInserts: ReviewCard[];
-  }): Promise<void> {
+  }): Promise<{ correctOption?: number; replay?: boolean } | null> {
     await this.insertAnswerEvent({
       id: crypto.randomUUID(),
       userId: input.userId,
@@ -152,5 +152,46 @@ export class MemoryStore implements DataStore {
     });
     await this.upsertMastery(input.userId, input.masteryUpdates);
     await this.upsertCards([...input.cardUpserts, ...input.cardInserts]);
+    return null;
+  }
+
+  async issueAttemptTickets(
+    userId: string,
+    tickets: { attemptId: string; questionId: string; attemptType: string; itemVersion?: string }[],
+  ): Promise<void> {
+    for (const t of tickets) {
+      this.tickets.set(t.attemptId, { userId, questionId: t.questionId, attemptType: t.attemptType });
+    }
+  }
+
+  tickets = new Map<string, { userId: string; questionId: string; attemptType: string }>();
+
+  skillStates = new Map<string, LearnerSkillState & { userId: string }>(); // key: userId:skillId
+
+  async getSkillStates(userId: string): Promise<LearnerSkillState[]> {
+    const out: LearnerSkillState[] = [];
+    for (const [key, row] of this.skillStates) {
+      if (key.startsWith(`${userId}:`)) out.push(row);
+    }
+    return out;
+  }
+
+  async upsertSkillState(
+    userId: string,
+    update: { skillId: string; nodeId: string; state: LearnerSkillState },
+  ): Promise<void> {
+    this.skillStates.set(`${userId}:${update.skillId}`, { ...update.state, userId });
+  }
+
+  async listPacks(): Promise<{ packId: string; title: string; tracks: TrackId[]; isDemo: boolean }[]> {
+    const meta = (defaultSeed as unknown as { meta?: { packId?: string; title?: string; isDemo?: boolean } }).meta ?? {};
+    return [
+      {
+        packId: meta.packId ?? 'demo-pack-phd-management',
+        title: meta.title ?? 'بستهٔ نمایشی دکتری مدیریت',
+        tracks: ['common', 'business', 'technology', 'strategy'],
+        isDemo: meta.isDemo ?? true,
+      },
+    ];
   }
 }

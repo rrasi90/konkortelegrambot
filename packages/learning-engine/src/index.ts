@@ -478,7 +478,7 @@ export function applyAnswer(
       proofCandidate = { nodeId: question.nodeId, skillId: skillMeta.id };
     }
     coverageStatus = sixD.coverageStatus;
-    skillStateUpdate = { skillId: skillMeta.id, nodeId: question.nodeId, state: sixD };
+    skillStateUpdate = { nodeId: question.nodeId, state: { ...sixD, skillId: skillMeta.id } };
   }
 
   /* ---------- پیام منتور ---------- */

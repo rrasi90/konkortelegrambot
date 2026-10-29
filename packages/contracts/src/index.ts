@@ -267,6 +267,8 @@ export interface RippleReport {
 
 /** وضعیت شش‌بعدی یادگیرنده برای یک مهارت (ساختار هم‌ارز مدل موتور FSRS) */
 export interface LearnerSkillState {
+  /** شناسهٔ مهارتِ متصل */
+  skillId: string;
   /** احتمال تسلط P(L) بین ۰ و ۱ */
   proficiencyProbability: number;
   /** اطمینان به برآورد بین ۰ و ۱ */
@@ -285,7 +287,6 @@ export interface LearnerSkillState {
 
 /** به‌روزرسانی وضعیت یک مهارت برای پایدارسازی در learner_skill_states */
 export interface SkillStateUpdate {
-  skillId: string;
   nodeId: string;
   state: LearnerSkillState;
 }
