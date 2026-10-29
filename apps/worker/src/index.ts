@@ -1,3 +1,4 @@
+import { COURSES_LESSONS } from './lessons-data';
 let globalMemoryStore: DataStore | null = null;
 
 /**
@@ -190,6 +191,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   /* ------------------------------ routes ------------------------------ */
 
   app.get('/api/health', (c) => c.json({ ok: true }));
+
+  app.get('/api/lessons', (c) => c.json({ courses: COURSES_LESSONS }));
 
   app.post('/api/telegram/webhook', async (c) => {
     const update = (await c.req.json().catch(() => null)) as {

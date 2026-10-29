@@ -50,13 +50,15 @@
     });
   }
 
-  var TABS = ['home', 'today', 'map', 'settings'];
+  var TABS = ['home', 'today', 'lessons', 'map', 'settings'];
   function showTab(tab) {
     TABS.forEach(function (t) {
-      el('tab-' + t).hidden = t !== tab;
+      var panel = el('tab-' + t);
+      if (panel) panel.hidden = t !== tab;
       var btn = document.querySelector('.nav-btn[data-tab="' + t + '"]');
       if (btn) btn.classList.toggle('active', t === tab);
     });
+    if (tab === 'lessons') loadLessons();
     if (tab === 'map') loadMap();
     if (tab === 'home') loadHome();
     if (tab === 'settings') renderSettings();
@@ -131,9 +133,12 @@
     });
   });
 
-  el('btn-demo').addEventListener('click', function () {
-    API.post('/api/auth/demo', { displayName: 'داوطلب' }).then(onAuthed);
-  });
+  var demoBtn = el('btn-demo');
+  if (demoBtn) {
+    demoBtn.addEventListener('click', function () {
+      API.post('/api/auth/demo', { displayName: 'داوطلب' }).then(onAuthed);
+    });
+  }
 
   /* ---------- انتخاب گرایش ---------- */
   document.querySelectorAll('.track-card').forEach(function (btn) {

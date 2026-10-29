@@ -412,3 +412,70 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
   background: var(--bg);
 }
 .saved-msg { color: var(--ok); font-size: 12px; margin: 8px 0 0; }
+
+/* ---------- بخش آموزش درس ---------- */
+.lessons-header { margin-bottom: 16px; }
+.lessons-header h2 { font-size: 16px; margin: 0 0 4px; color: var(--ink); }
+.lessons-header .subtitle { font-size: 12px; color: var(--ink-soft); margin: 0; }
+
+.course-box {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.course-box-header {
+  padding: 14px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.course-box-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+.course-box-sub { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+
+.lesson-item {
+  border-bottom: 1px solid var(--line);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.lesson-item:last-child { border-bottom: none; }
+.lesson-item:hover { background: var(--primary-soft); }
+
+.lesson-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+.lesson-item-title { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.5; }
+.lesson-meta-chips { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.lesson-chip-freq { font-size: 10.5px; padding: 2px 8px; border-radius: 6px; background: #e0f2fe; color: #0284c7; font-weight: 600; }
+.lesson-chip-weight { font-size: 10.5px; padding: 2px 8px; border-radius: 6px; background: #fef3c7; color: #b45309; font-weight: 600; }
+
+.lesson-item-body {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+.lesson-summary-text { white-space: pre-line; margin-bottom: 12px; }
+.lesson-tips-box {
+  background: #fffbeb;
+  border-right: 3px solid #f59e0b;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.lesson-tips-title { font-weight: 700; color: #b45309; margin-bottom: 6px; }
+.lesson-tips-list { margin: 0; padding-right: 18px; }
+.lesson-tips-list li { margin-bottom: 4px; }
+.lesson-terms { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.lesson-term-badge { font-size: 10px; background: var(--bg); border: 1px solid var(--line); padding: 2px 6px; border-radius: 4px; color: var(--ink-soft); direction: ltr; font-family: monospace; }
