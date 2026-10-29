@@ -201,6 +201,8 @@ declare
   v_today date := (now() at time zone 'Asia/Tehran')::date;
   v_stats public.app_users%rowtype;
   v_report jsonb := coalesce(p_event->'ripple_report', '{}'::jsonb);
+  v_event_state jsonb := p_event->'learner_skill_state';
+  v_question_is_holdout boolean := false;
 begin
   if v_user_id is null or v_question_id is null or v_attempt_id is null then
     raise exception 'missing answer identity';
@@ -249,7 +251,7 @@ begin
     raise exception 'attempt expired';
   end if;
 
-  select q.correct_option into v_correct_option
+  select q.correct_option, q.is_holdout into v_correct_option, v_question_is_holdout
   from public.questions q
   join public.knowledge_nodes n on n.id = q.node_id
   join public.app_users u on u.id = v_user_id
@@ -357,6 +359,75 @@ begin
           question_id = excluded.question_id,
           trap_card_id = excluded.trap_card_id;
   end loop;
+
+  -- Persist the six-dimensional skill projection and evidence event in the same transaction.
+  if jsonb_typeof(p_event->'learner_skill_state') = 'object' then
+    insert into public.learner_skill_states(
+      user_id, skill_id, proficiency_probability, estimate_confidence, evidence_count,
+      correct_evidence_count, assessed_gap_evidence_count, memory_retrievability,
+      fluency_score, dominant_error_type, coverage_state, updated_at
+    ) values (
+      v_user_id,
+      v_event_state->>'skillId',
+      (v_event_state->>'proficiencyProbability')::numeric,
+      (v_event_state->>'estimateConfidence')::numeric,
+      (v_event_state->>'evidenceCount')::integer,
+      (v_event_state->>'correctEvidenceCount')::integer,
+      (v_event_state->>'assessedGapEvidenceCount')::integer,
+      (v_event_state->>'memoryRetrievability')::numeric,
+      (v_event_state->>'fluencyScore')::numeric,
+      v_event_state->>'dominantErrorType',
+      case
+        when v_question_is_holdout and not v_attempt.seen_before and v_is_correct then 'verified_by_unseen'
+        else v_event_state->>'coverageState'
+      end,
+      now()
+    )
+    on conflict (user_id, skill_id) do update set
+      proficiency_probability = excluded.proficiency_probability,
+      estimate_confidence = excluded.estimate_confidence,
+      evidence_count = excluded.evidence_count,
+      correct_evidence_count = excluded.correct_evidence_count,
+      assessed_gap_evidence_count = excluded.assessed_gap_evidence_count,
+      memory_retrievability = excluded.memory_retrievability,
+      fluency_score = excluded.fluency_score,
+      dominant_error_type = case
+        when excluded.dominant_error_type = 'unknown' then public.learner_skill_states.dominant_error_type
+        else excluded.dominant_error_type
+      end,
+      coverage_state = case
+        when v_question_is_holdout and not v_attempt.seen_before and v_is_correct then 'verified_by_unseen'
+        when excluded.coverage_state = 'unseen' then public.learner_skill_states.coverage_state
+        else excluded.coverage_state
+      end,
+      updated_at = now();
+
+    insert into public.learning_evidence_events(
+      user_id, skill_id, question_id, client_event_id, event_type, payload,
+      engine_version, item_version, occurred_at
+    ) values (
+      v_user_id, v_event_state->>'skillId', v_question_id,
+      'answer:' || v_attempt_id, 'learner_state_updated',
+      jsonb_build_object('state', v_event_state, 'wasCorrect', v_is_correct, 'seenBefore', v_attempt.seen_before),
+      coalesce(nullif(p_event->>'engine_version',''), '0.2.0'),
+      coalesce(nullif(p_event->>'item_version',''), v_attempt.item_version),
+      coalesce(nullif(p_event->>'answered_at','')::timestamptz, now())
+    ) on conflict (user_id, client_event_id) do nothing;
+
+    if v_question_is_holdout and not v_attempt.seen_before and v_is_correct then
+      insert into public.learning_evidence_events(
+        user_id, skill_id, question_id, client_event_id, event_type, payload,
+        engine_version, item_version, occurred_at
+      ) values (
+        v_user_id, v_event_state->>'skillId', v_question_id,
+        'proof:' || v_attempt_id, 'unseen_verification',
+        jsonb_build_object('source','holdout_question','verified',true,'attemptId',v_attempt_id),
+        coalesce(nullif(p_event->>'engine_version',''), '0.2.0'),
+        coalesce(nullif(p_event->>'item_version',''), v_attempt.item_version),
+        coalesce(nullif(p_event->>'answered_at','')::timestamptz, now())
+      ) on conflict (user_id, client_event_id) do nothing;
+    end if;
+  end if;
 
   update public.app_users u
   set coins = u.coins + case when v_is_correct then 2 else 1 end,
