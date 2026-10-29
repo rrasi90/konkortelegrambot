@@ -39,6 +39,8 @@ alter table public.questions add column if not exists verified_by text;
 alter table public.questions add column if not exists verified_at timestamptz;
 alter table public.questions add column if not exists item_version text not null default '1';
 alter table public.questions add column if not exists is_holdout boolean not null default false;
+alter table public.review_cards add column if not exists fsrs_state jsonb not null default '{}'::jsonb
+  check (jsonb_typeof(fsrs_state) = 'object');
 
 create table if not exists public.exam_packs (
   id text primary key,
