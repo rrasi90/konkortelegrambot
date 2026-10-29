@@ -55,11 +55,6 @@ export interface CommitAnswerResult {
   stats?: UserStats;
 }
 
-export interface PersistAnswerResult {
-  replay: boolean;
-  report?: unknown;
-}
-
 export interface DataStore {
   getUser(userId: string): Promise<AppUser | null>;
   getUserByTelegramId(telegramUserId: number): Promise<AppUser | null>;
