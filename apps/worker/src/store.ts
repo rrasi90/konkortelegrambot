@@ -4,6 +4,7 @@
  * - MemoryStore: برای تست و محیط دمو
  */
 import type {
+  FSRSCardState,
   KnowledgeNode,
   NodeDependency,
   Question,
@@ -320,6 +321,7 @@ export class SupabaseStore implements DataStore {
       is_repair: boolean;
       times_seen: number;
       times_correct: number;
+      fsrs_state: Record<string, unknown> | null;
     }[];
     return rows.map((r) => ({
       id: r.id,
@@ -335,6 +337,19 @@ export class SupabaseStore implements DataStore {
       isRepair: r.is_repair,
       timesSeen: r.times_seen,
       timesCorrect: r.times_correct,
+      fsrsState: r.fsrs_state && typeof r.fsrs_state.due === 'string'
+        ? {
+            due: String(r.fsrs_state.due),
+            stability: Number(r.fsrs_state.stability),
+            difficulty: Number(r.fsrs_state.difficulty),
+            elapsed_days: Number(r.fsrs_state.elapsed_days),
+            scheduled_days: Number(r.fsrs_state.scheduled_days),
+            reps: Number(r.fsrs_state.reps),
+            lapses: Number(r.fsrs_state.lapses),
+            state: Number(r.fsrs_state.state),
+            last_review: r.fsrs_state.last_review == null ? null : String(r.fsrs_state.last_review),
+          } satisfies FSRSCardState
+        : undefined,
     }));
   }
 
@@ -357,6 +372,7 @@ export class SupabaseStore implements DataStore {
         is_repair: c.isRepair,
         times_seen: c.timesSeen,
         times_correct: c.timesCorrect,
+        fsrs_state: c.fsrsState ?? {},
       })),
     );
   }
@@ -431,6 +447,7 @@ export class SupabaseStore implements DataStore {
       is_repair: c.isRepair,
       times_seen: c.timesSeen,
       times_correct: c.timesCorrect,
+      fsrs_state: c.fsrsState ?? {},
     }));
     const result = await this.request('POST', 'rpc/commit_answer', {
       p_event: {
