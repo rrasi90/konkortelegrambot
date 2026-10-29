@@ -131,6 +131,32 @@ export class MemoryStore implements DataStore {
     return diagnosis.state;
   }
 
+  async recordLearningMilestone(
+    userId: string,
+    skillId: string,
+    eventType: 'remediation_started' | 'remediation_completed',
+    clientEventId: string,
+    reason: Record<string, unknown>,
+  ): Promise<void> {
+    const repeated = this.learningEvidence.some(
+      (event) => event.userId === userId && event.clientEventId === clientEventId,
+    );
+    if (repeated) return;
+    const node = this.nodes.find((item) => item.id === skillId);
+    const user = this.users.get(userId);
+    if (!node || !user || (node.track !== 'common' && !user.activeTracks.includes(node.track))) {
+      throw new Error('Learner or active skill not found');
+    }
+    this.learningEvidence.push({ userId, skillId, eventType, clientEventId, payload: reason });
+    if (eventType === 'remediation_started') {
+      const key = this.skillStateKey(userId, skillId);
+      const old = this.learnerSkillStates.get(key);
+      if (old && old.coverageState !== 'verified_by_unseen') {
+        this.learnerSkillStates.set(key, { ...old, coverageState: 'remediating', updatedAt: new Date().toISOString() });
+      }
+    }
+  }
+
   async listLearningAssets(skillId: string, assetType: LearningAsset['type']): Promise<LearningAsset[]> {
     return this.learningAssets
       .filter((asset) => asset.skillId === skillId && asset.type === assetType &&
