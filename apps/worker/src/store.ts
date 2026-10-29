@@ -171,6 +171,22 @@ export class SupabaseStore implements DataStore {
     };
   }
 
+  private toLearnerSkillState(row: Record<string, unknown>): LearnerSkillState {
+    return {
+      skillId: String(row.skill_id),
+      proficiencyProbability: Number(row.proficiency_probability ?? 0.5),
+      estimateConfidence: Number(row.estimate_confidence ?? 0),
+      evidenceCount: Number(row.evidence_count ?? 0),
+      correctEvidenceCount: Number(row.correct_evidence_count ?? 0),
+      assessedGapEvidenceCount: Number(row.assessed_gap_evidence_count ?? 0),
+      memoryRetrievability: Number(row.memory_retrievability ?? 0.5),
+      fluencyScore: Number(row.fluency_score ?? 0),
+      dominantErrorType: String(row.dominant_error_type ?? 'unknown') as LearnerSkillState['dominantErrorType'],
+      coverageState: String(row.coverage_state ?? 'unseen') as LearnerSkillState['coverageState'],
+      updatedAt: String(row.updated_at ?? new Date(0).toISOString()),
+    };
+  }
+
   async getUser(userId: string): Promise<AppUser | null> {
     const rows = (await this.request('GET', 'app_users', undefined, `?id=eq.${userId}&select=*`)) as
       | Record<string, unknown>[]
@@ -381,6 +397,55 @@ export class SupabaseStore implements DataStore {
     );
   }
 
+  async getLearnerSkillState(userId: string, skillId: string): Promise<LearnerSkillState | null> {
+    const rows = (await this.request(
+      'GET',
+      'learner_skill_states',
+      undefined,
+      `?user_id=eq.${userId}&skill_id=eq.${skillId}&select=*`,
+    )) as Record<string, unknown>[] | null;
+    return rows?.[0] ? this.toLearnerSkillState(rows[0]) : null;
+  }
+
+  async recordLearningDiagnosis(userId: string, skillId: string, diagnosis: LearnerDiagnosis): Promise<LearnerSkillState> {
+    await this.request('POST', 'rpc/record_learning_diagnosis', {
+      p_user_id: userId,
+      p_skill_id: skillId,
+      p_error_type: diagnosis.errorType,
+      p_state: diagnosis.state,
+      p_client_event_id: diagnosis.clientEventId,
+      p_reason: diagnosis.reason,
+    });
+    const state = await this.getLearnerSkillState(userId, skillId);
+    if (!state) throw new Error('Learner-state projection was not persisted after diagnosis');
+    return state;
+  }
+
+  async listLearningAssets(skillId: string, assetType: LearningAsset['type']): Promise<LearningAsset[]> {
+    const rows = (await this.request(
+      'GET',
+      'learning_assets',
+      undefined,
+      `?skill_id=eq.${encodeURIComponent(skillId)}&asset_type=eq.${encodeURIComponent(assetType)}&verification_status=eq.verified&select=id,pack_id,skill_id,asset_type,title,content,version,rights_status,verification_status,source_ref&order=version.desc`,
+    )) as Record<string, unknown>[] | null;
+    return (rows ?? [])
+      .filter((row) => row.rights_status !== 'blocked')
+      .map((row) => ({
+        id: String(row.id),
+        packId: row.pack_id == null ? undefined : String(row.pack_id),
+        skillId: row.skill_id == null ? undefined : String(row.skill_id),
+        type: String(row.asset_type) as LearningAsset['type'],
+        title: String(row.title),
+        content: row.content && typeof row.content === 'object' && !Array.isArray(row.content)
+          ? row.content as Record<string, unknown>
+          : {},
+        version: Number(row.version ?? 1),
+        rightsStatus: String(row.rights_status ?? 'unknown'),
+        verificationStatus: String(row.verification_status ?? 'unverified'),
+        sourceRef: row.source_ref == null ? undefined : String(row.source_ref),
+      }));
+  }
+
   async listCards(userId: string): Promise<ReviewCard[]> {
     const rows = (await this.request(
       'GET',
@@ -545,6 +610,7 @@ export class SupabaseStore implements DataStore {
         study_mode: event.studyMode ?? 'desk',
         engine_version: event.engineVersion ?? '0.2.0',
         item_version: event.itemVersion ?? '1',
+        learner_skill_state: event.learnerSkillState ?? null,
       },
       p_mastery: masteryRows,
       p_cards: cardRows,
