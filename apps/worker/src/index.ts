@@ -472,6 +472,164 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     });
   });
 
+  app.get('/api/verification', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const state = await loadEngineState(user.id);
+    const [answers, nodes] = await Promise.all([
+      store.listAnswersSince(user.id, '2000-01-01T00:00:00.000Z'),
+      store.listNodes(),
+    ]);
+    const answeredIds = new Set(answers.map((answer) => answer.questionId));
+    const nodeById = new Map(nodes.map((node) => [node.id, node]));
+    const candidate = [...state.questions.values()]
+      .filter((question) => question.isHoldout === true && !answeredIds.has(question.id))
+      .filter((question) => {
+        const node = nodeById.get(question.nodeId);
+        return !!node && (node.track === 'common' || user.activeTracks.includes(node.track));
+      })
+      .sort((a, b) => a.id.localeCompare(b.id))[0];
+    if (!candidate) {
+      return c.json({
+        available: false,
+        message: 'سؤالِ دیده‌نشدهٔ تأییدشده برای این مسیر موجود نیست. باید ابتدا بانک مستقلِ اثبات آماده و بازبینی شود.',
+      });
+    }
+    const attemptId = await store.createQuestionAttempt(
+      user.id, candidate.id, crypto.randomUUID(), 900, false, '1',
+    );
+    const node = nodeById.get(candidate.nodeId);
+    return c.json({
+      available: true,
+      kind: 'unseen_verification',
+      attemptId,
+      skillId: candidate.nodeId,
+      question: {
+        id: candidate.id,
+        text: candidate.text,
+        options: candidate.options,
+      },
+      course: node?.course,
+      chapter: node?.chapter,
+      note: 'کلید و توضیح تا ثبت پاسخ ارسال نمی‌شوند. سؤال‌های ساختگی فقط برای آزمون فنی مسیر هستند، نه اثبات علمی تسلط.',
+    });
+  });
+
+  app.post('/api/diagnosis', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as
+      | { skillId?: string; errorType?: 'conceptual' | 'confusable' | 'computational' | 'slip'; note?: string }
+      | null;
+    if (!body || typeof body.skillId !== 'string' ||
+        !['conceptual', 'confusable', 'computational', 'slip'].includes(body.errorType ?? '') ||
+        (body.note !== undefined && (typeof body.note !== 'string' || body.note.length > 400))) {
+      return c.json({ error: 'نوع خطا یا مهارت نامعتبر است' }, 400);
+    }
+    const node = (await store.listNodes()).find((item) => item.id === body.skillId);
+    if (!node) return c.json({ error: 'مهارت پیدا نشد' }, 404);
+    if (node.track !== 'common' && !user.activeTracks.includes(node.track)) {
+      return c.json({ error: 'این مهارت در مسیر فعال شما نیست' }, 403);
+    }
+
+    const previous = await store.getLearnerSkillState(user.id, body.skillId);
+    const state = updateLearnerSkillState({
+      skillId: body.skillId,
+      previous,
+      wasCorrect: false,
+      seenBefore: false,
+      isHoldout: false,
+      diagnosedErrorType: body.errorType,
+      now: new Date(),
+    });
+    const persisted = await store.recordLearningDiagnosis(user.id, body.skillId, {
+      errorType: body.errorType,
+      state,
+      clientEventId: `diagnosis:${crypto.randomUUID()}`,
+      reason: {
+        source: 'learner_self_report',
+        note: body.note?.trim() || null,
+        explanation: 'این برچسب خوداظهاری است، نه تشخیص تخصصی یا نتیجه‌گیری خودکار از پاسخ غلط.',
+      },
+    });
+    const assets = await Promise.all(
+      (['mini_lesson', 'remediation', 'worked_example', 'comparison'] as const)
+        .map((type) => store.listLearningAssets(body.skillId!, type)),
+    );
+    const approvedAssets = assets.flat();
+    return c.json({
+      ok: true,
+      source: 'learner_self_report',
+      expertVerified: false,
+      learnerState: persisted,
+      remediationReady: approvedAssets.length > 0,
+      assets: approvedAssets,
+      nextStep: approvedAssets.length
+        ? 'یک محتوای کوتاه را بخوانید، سپس برای راستی‌آزمایی از سؤال دیده‌نشده استفاده کنید.'
+        : 'محتوای ترمیمیِ تأییدشده برای این مهارت هنوز وارد نشده است؛ سؤال غلط به‌تنهایی باعث کاهش تسلط نشده است.',
+    });
+  });
+
+  app.get('/api/remediation', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const skillId = c.req.query('skillId');
+    if (!skillId) return c.json({ error: 'skillId الزامی است' }, 400);
+    const node = (await store.listNodes()).find((item) => item.id === skillId);
+    if (!node) return c.json({ error: 'مهارت پیدا نشد' }, 404);
+    if (node.track !== 'common' && !user.activeTracks.includes(node.track)) {
+      return c.json({ error: 'این مهارت در مسیر فعال شما نیست' }, 403);
+    }
+    const types = ['mini_lesson', 'remediation', 'worked_example', 'comparison'] as const;
+    const assets = (await Promise.all(types.map((type) => store.listLearningAssets(skillId, type)))).flat();
+    return c.json({
+      skillId,
+      assets,
+      ready: assets.length > 0,
+      message: assets.length
+        ? 'فقط محتوای تأییدشده برگشت داده شده است.'
+        : 'هنوز محتوای ترمیمیِ تأییدشده‌ای برای این مهارت منتشر نشده است.',
+    });
+  });
+
+  app.post('/api/remediation', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as
+      | { skillId?: string; assetId?: string; status?: 'started' | 'completed' }
+      | null;
+    if (!body || typeof body.skillId !== 'string' || typeof body.assetId !== 'string' ||
+        !['started', 'completed'].includes(body.status ?? '')) {
+      return c.json({ error: 'مهارت، محتوای ترمیم و وضعیت نامعتبر است' }, 400);
+    }
+    const node = (await store.listNodes()).find((item) => item.id === body.skillId);
+    if (!node) return c.json({ error: 'مهارت پیدا نشد' }, 404);
+    if (node.track !== 'common' && !user.activeTracks.includes(node.track)) {
+      return c.json({ error: 'این مهارت در مسیر فعال شما نیست' }, 403);
+    }
+    const types = ['mini_lesson', 'remediation', 'worked_example', 'comparison'] as const;
+    const assets = (await Promise.all(types.map((type) => store.listLearningAssets(body.skillId!, type)))).flat();
+    const asset = assets.find((item) => item.id === body.assetId);
+    if (!asset) return c.json({ error: 'محتوای تأییدشده پیدا نشد' }, 404);
+    const eventType = body.status === 'started' ? 'remediation_started' : 'remediation_completed';
+    await store.recordLearningMilestone(
+      user.id,
+      body.skillId,
+      eventType,
+      `remediation:${body.status}:${crypto.randomUUID()}`,
+      { assetId: asset.id, assetVersion: asset.version, sourceRef: asset.sourceRef ?? null },
+    );
+    return c.json({
+      ok: true,
+      event: eventType,
+      skillId: body.skillId,
+      assetId: asset.id,
+      nextStep: body.status === 'completed'
+        ? 'برای تأیید یادگیری، یک سؤال دیده‌نشده لازم است؛ محتوای خوانده‌شده به‌تنهایی اثبات تسلط نیست.'
+        : 'پس از مطالعه، وضعیت completed را ثبت کنید و سپس یک سؤال تازه حل کنید.',
+    });
+  });
+
   app.get('/api/map', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
