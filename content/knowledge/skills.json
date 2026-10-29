@@ -227,17 +227,22 @@
     "id": "skill.mkt.plc.stages",
     "node_id": "mkt.plc",
     "title": "تحلیل مراحل چرخه عمر محصول (PLC) و راهبردهای بازاریابی متناسب با هر مرحله",
+    "operational_definition": "توانایی تشخیص مرحلهٔ جاری محصول (معرفی، رشد، بلوغ، افول) از روی شاخص‌های فروش و سود و انتخاب آمیزهٔ بازاریابی متناسب با هر مرحله",
+    "cognitive_level": "Analysis",
     "bloom_level": 4,
     "prerequisites": [],
     "confusable_with": [
       "skill.mkt.brand.cbbe_pyramid"
     ],
-    "difficulty_estimate": 0.65
+    "difficulty_estimate": 65,
+    "estimated_study_minutes": 35
   },
   {
     "id": "skill.sm.portfolio.bcg_ge",
     "node_id": "sm.portfolio",
     "title": "تحلیل سبد کسب‌وکار با ماتریس‌های رشد-سهم (BCG) و جذابیت-توانمندی جنرال الکتریک (GE)",
+    "operational_definition": "توانایی طبقه‌بندی واحدهای کسب‌وکار در ماتریس‌های BCG و GE و استخراج راهبرد تخصیص منابع متناسب با هر خانهٔ ماتریس",
+    "cognitive_level": "Analysis",
     "bloom_level": 4,
     "prerequisites": [
       "skill.sm.value_chain.porter"
@@ -245,12 +250,15 @@
     "confusable_with": [
       "skill.sm.core_competencies.prahalad"
     ],
-    "difficulty_estimate": 0.7
+    "difficulty_estimate": 70,
+    "estimated_study_minutes": 45
   },
   {
     "id": "skill.sm.rbv.isolating_mechanisms",
     "node_id": "sm.rbv",
     "title": "تحلیل مکانیسم‌های انزوا، نایافت‌پذیری و تقلیدناپذیری در تئوری منبع‌محور (RBV) بارنی",
+    "operational_definition": "توانایی شناسایی مکانیسم‌های انزوا (مسیر وابستگی، ابهام علّی، پیچیدگی اجتماعی و...) که تداوم مزیت رقابتی را در چارچوب VRIN/VRIO تضمین می‌کنند",
+    "cognitive_level": "Evaluation",
     "bloom_level": 5,
     "prerequisites": [
       "skill.sm.rbv.vrio"
@@ -258,6 +266,7 @@
     "confusable_with": [
       "skill.sm.core_competencies.prahalad"
     ],
-    "difficulty_estimate": 0.75
+    "difficulty_estimate": 75,
+    "estimated_study_minutes": 50
   }
 ]
