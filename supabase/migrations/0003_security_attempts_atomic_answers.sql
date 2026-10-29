@@ -28,6 +28,8 @@ create table if not exists public.question_attempts (
 );
 create index if not exists question_attempts_recent_idx
   on public.question_attempts(user_id, question_id, issued_at desc);
+alter table public.question_attempts add column if not exists seen_before boolean not null default false;
+alter table public.question_attempts add column if not exists item_version text not null default '1';
 alter table public.question_attempts enable row level security;
 revoke all on public.question_attempts from anon, authenticated;
 grant all on public.question_attempts to service_role;
@@ -85,7 +87,9 @@ create or replace function public.issue_question_attempt(
   p_user_id uuid,
   p_question_id text,
   p_attempt_id text,
-  p_ttl_seconds integer default 900
+  p_ttl_seconds integer default 900,
+  p_seen_before boolean default false,
+  p_item_version text default '1'
 ) returns text
 language plpgsql
 security definer
@@ -120,8 +124,8 @@ begin
     raise exception 'attempt issuance limit reached' using errcode = 'P0001';
   end if;
 
-  insert into public.question_attempts(user_id, question_id, attempt_id, expires_at)
-  values (p_user_id, p_question_id, p_attempt_id, now() + make_interval(secs => p_ttl_seconds));
+  insert into public.question_attempts(user_id, question_id, attempt_id, expires_at, seen_before, item_version)
+  values (p_user_id, p_question_id, p_attempt_id, now() + make_interval(secs => p_ttl_seconds), p_seen_before, coalesce(p_item_version, '1'));
   return p_attempt_id;
 end;
 $$;
@@ -148,6 +152,9 @@ declare
   v_stats jsonb;
   v_card jsonb;
   v_source_question_id text;
+  v_correct_option integer;
+  v_options_count integer;
+  v_track text;
 begin
   select * into v_existing
   from public.answer_events
@@ -165,6 +172,26 @@ begin
     return v_stats;
   end if;
 
+  select q.correct_option, jsonb_array_length(q.options), n.track
+    into v_correct_option, v_options_count, v_track
+  from public.questions q
+  join public.knowledge_nodes n on n.id = q.node_id
+  where q.id = v_question_id and q.verification_status in ('verified', 'demo');
+  if v_correct_option is null or v_options_count is null then
+    raise exception 'question is not available for scoring' using errcode = '22023';
+  end if;
+  if (p_event->>'selected_option')::integer < 0 or (p_event->>'selected_option')::integer >= v_options_count then
+    raise exception 'selected option out of range' using errcode = '22023';
+  end if;
+  if ((p_event->>'selected_option')::integer = v_correct_option) is distinct from ((p_event->>'is_correct')::boolean) then
+    raise exception 'answer correctness does not match server key' using errcode = '22023';
+  end if;
+  if v_track <> 'common' and not exists (
+    select 1 from public.app_users u where u.id = v_user_id and v_track = any(u.active_tracks)
+  ) then
+    raise exception 'question track is not active for this user' using errcode = '42501';
+  end if;
+
   update public.question_attempts
   set used_at = now()
   where user_id = v_user_id
@@ -178,7 +205,8 @@ begin
   end if;
 
   insert into public.answer_events (
-    id, user_id, question_id, selected_option, is_correct, attempt_id, answered_at, ripple_report
+    id, user_id, question_id, selected_option, is_correct, attempt_id, answered_at, ripple_report,
+    response_time_ms, seen_before, confidence_before, assistance, study_mode, engine_version, item_version
   ) values (
     coalesce((p_event->>'id')::uuid, gen_random_uuid()),
     v_user_id,
@@ -187,7 +215,14 @@ begin
     (p_event->>'is_correct')::boolean,
     v_attempt_id,
     v_answered_at,
-    p_event->'ripple_report'
+    p_event->'ripple_report',
+    nullif(p_event->>'response_time_ms', '')::integer,
+    coalesce((p_event->>'seen_before')::boolean, false),
+    nullif(p_event->>'confidence_before', '')::smallint,
+    coalesce(p_event->'assistance', '[]'::jsonb),
+    coalesce(p_event->>'study_mode', 'desk'),
+    coalesce(p_event->>'engine_version', '0.2.0'),
+    coalesce(p_event->>'item_version', '1')
   ) returning id into v_inserted;
 
   for v_card in select value from jsonb_array_elements(coalesce(p_mastery, '[]'::jsonb))
@@ -281,9 +316,22 @@ begin
 end;
 $$;
 
-revoke all on function public.issue_question_attempt(uuid, text, text, integer) from public, anon, authenticated;
+revoke all on function public.issue_question_attempt(uuid, text, text, integer, boolean, text) from public, anon, authenticated;
 revoke all on function public.commit_answer(jsonb, jsonb, jsonb) from public, anon, authenticated;
-grant execute on function public.issue_question_attempt(uuid, text, text, integer) to service_role;
+grant execute on function public.issue_question_attempt(uuid, text, text, integer, boolean, text) to service_role;
 grant execute on function public.commit_answer(jsonb, jsonb, jsonb) to service_role;
+
+-- Domain-neutral taxonomy: pack-defined slugs and semantic, provenance-aware edges.
+alter table public.knowledge_nodes drop constraint if exists knowledge_nodes_track_check;
+alter table public.knowledge_nodes add constraint knowledge_nodes_track_slug_check
+  check (track ~ '^[a-z][a-z0-9_-]{1,39}
+);
+alter table public.node_dependencies drop constraint if exists node_dependencies_relation_check;
+alter table public.node_dependencies add constraint node_dependencies_relation_semantic_check
+  check (relation in ('prerequisite_of','confusable_with','applied_in','part_of','related_to','prerequisite','cross_course'));
+alter table public.node_dependencies add column if not exists verification_status text not null default 'unverified'
+  check (verification_status in ('unverified','verified','rejected'));
+alter table public.node_dependencies add column if not exists source_ref text;
+alter table public.node_dependencies add column if not exists confidence numeric check (confidence is null or confidence between 0 and 1);
 
 commit;
