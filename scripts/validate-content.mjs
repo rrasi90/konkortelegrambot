@@ -30,6 +30,21 @@ try {
 if (!pack.meta || typeof pack.meta.name !== 'string' || !pack.meta.version) {
   errors.push('meta.name و meta.version الزامی‌اند.');
 }
+if (pack.meta && pack.meta.examLevel !== undefined &&
+    (typeof pack.meta.examLevel !== 'string' || !pack.meta.examLevel.trim())) {
+  errors.push('meta.examLevel باید رشتهٔ غیرخالی باشد.');
+}
+if (pack.meta && pack.meta.contentVersion !== undefined &&
+    (!Number.isInteger(pack.meta.contentVersion) || pack.meta.contentVersion < 1)) {
+  errors.push('meta.contentVersion باید عدد صحیح مثبت باشد.');
+}
+if (pack.meta && pack.meta.scoringRules !== undefined &&
+    (typeof pack.meta.scoringRules !== 'object' || pack.meta.scoringRules === null || Array.isArray(pack.meta.scoringRules))) {
+  errors.push('meta.scoringRules باید یک شیء JSON باشد.');
+}
+if (!pack.meta?.syllabusVersion) {
+  warnings.push('نسخهٔ سرفصل رسمی ثبت نشده؛ برای بستهٔ آزمایشی قابل قبول است اما نباید پوشش رسمی ادعا شود.');
+}
 if (!Array.isArray(pack.nodes) || pack.nodes.length === 0) errors.push('nodes خالی است.');
 if (!Array.isArray(pack.questions) || pack.questions.length === 0) errors.push('questions خالی است.');
 if (pack.meta && pack.meta.synthetic !== true) {
@@ -71,6 +86,7 @@ if (Array.isArray(pack.dependencies)) {
       errors.push(`weight خارج از بازهٔ ۰٫۲ تا ۰٫۶: ${d.source} → ${d.target} (${d.weight})`);
     }
     if (d.confidence !== undefined && (typeof d.confidence !== 'number' || d.confidence < 0 || d.confidence > 1)) errors.push(`confidence نامعتبر برای یال ${d.source} → ${d.target}`);
+    if (d.verificationStatus === 'verified' && !d.sourceRef) errors.push(`یال تأییدشدهٔ ${d.source} → ${d.target} باید منبع قابل رهگیری داشته باشد.`);
     if (d.verificationStatus !== undefined && !['unverified','verified','rejected'].includes(d.verificationStatus)) errors.push(`verificationStatus نامعتبر برای یال ${d.source} → ${d.target}`);
     if (RELATIONS.includes(d.relation) && ['prerequisite_of','confusable_with','applied_in','part_of','related_to'].includes(d.relation) && d.verificationStatus !== 'verified') warnings.push(`یال معنایی ${d.source} → ${d.target} هنوز تأیید متخصص ندارد و نباید محرک تصمیم خودکار باشد.`);
   }
@@ -86,6 +102,19 @@ if (Array.isArray(pack.questions)) {
     if (questionIds.has(q.id)) errors.push(`question.id تکراری: ${q.id}`);
     questionIds.add(q.id);
     if (!nodeIds.has(q.nodeId)) errors.push(`question ${q.id} به گره ناشناخته وصل است: ${q.nodeId}`);
+    const mappedSkillIds = [
+      ...(Array.isArray(q.skillIds) ? q.skillIds : []),
+      ...(Array.isArray(q.skillMappings) ? q.skillMappings.map((mapping) => mapping?.skillId) : []),
+    ];
+    for (const skillId of mappedSkillIds) {
+      if (typeof skillId !== 'string' || !nodeIds.has(skillId)) errors.push(`question ${q.id} به مهارت ناشناخته وصل است: ${skillId}`);
+    }
+    if (q.verificationStatus === 'verified' && (!q.verifiedBy || !q.verifiedAt || !(q.sourceRef || pack.meta?.sourceRef))) {
+      errors.push(`سؤال ${q.id} نمی‌تواند verified باشد مگر بازبین، زمان و منبع ثبت شده باشد.`);
+    }
+    if (q.isHoldout === true && q.verificationStatus && !['verified','demo'].includes(q.verificationStatus)) {
+      warnings.push(`holdout ${q.id} هنوز تأیید محتوایی کامل ندارد؛ وارد آزمون رسمی نشود.`);
+    }
     if (typeof q.text !== 'string' || q.text.trim().length === 0) errors.push(`متن خالی: ${q.id}`);
     if (!Array.isArray(q.options) || q.options.length < 2) errors.push(`options ناکافی: ${q.id}`);
     if (!Array.isArray(q.options) || q.options.some((option) => typeof option !== 'string' || option.trim().length === 0)) errors.push(`گزینهٔ خالی/نامعتبر: ${q.id}`);
@@ -103,6 +132,21 @@ if (Array.isArray(pack.questions)) {
   const covered = new Set(pack.questions.map((q) => q.nodeId));
   for (const id of nodeIds) {
     if (!covered.has(id)) warnings.push(`گره بدون سؤال: ${id}`);
+  }
+}
+
+if (Array.isArray(pack.assets)) {
+  const assetIds = new Set();
+  const allowedTypes = ['mini_lesson','worked_example','diagnostic_probe','remediation','comparison','summary','explanation'];
+  for (const asset of pack.assets) {
+    if (typeof asset.id !== 'string' || !asset.id.trim()) errors.push('asset.id نامعتبر است.');
+    else if (assetIds.has(asset.id)) errors.push(`asset.id تکراری: ${asset.id}`);
+    else assetIds.add(asset.id);
+    if (!allowedTypes.includes(asset.type)) errors.push(`نوع asset نامعتبر: ${asset.id ?? '(بدون شناسه)'} → ${asset.type}`);
+    if (typeof asset.title !== 'string' || !asset.title.trim()) errors.push(`عنوان asset خالی است: ${asset.id}`);
+    if (asset.skillId && !nodeIds.has(asset.skillId)) errors.push(`asset ${asset.id} به مهارت ناشناخته وصل است: ${asset.skillId}`);
+    if (asset.content === undefined || asset.content === null || typeof asset.content !== 'object') errors.push(`محتوای asset باید شیء JSON باشد: ${asset.id}`);
+    if (asset.verificationStatus === 'verified' && !(asset.sourceRef || pack.meta?.sourceRef)) errors.push(`asset تأییدشدهٔ ${asset.id} باید منبع ثبت‌شده داشته باشد.`);
   }
 }
 
