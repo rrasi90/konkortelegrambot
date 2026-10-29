@@ -1,11 +1,8 @@
 /**
- * موتور یادگیری تطبیقی — پیاده‌سازی «موج ضربه خطا» چهارلایه
- * Pure, deterministic decision logic. No I/O, no framework.
- *
- * لایهٔ ۱: بازنشانی خودِ کارت + ساخت کارت دام (Direct Reset)
- * لایهٔ ۲: شوک به کل فصل و تست‌های هم‌خانواده (Sibling Shock)
- * لایهٔ ۳: بازگشت به پیش‌نیاز (Prerequisite Backtracking)
- * لایهٔ ۴: پل بین‌درسی (Cross-Course Bridge)
+ * موتور یادگیری تطبیقی — زمان‌بندی مرور از تشخیص آموزشی جداست.
+ * A wrong answer is evidence that triggers diagnosis, not a verdict about mastery.
+ * Semantic edges can recommend probes/transfer checks but never mutate another
+ * skill's mastery automatically. Legacy report fields remain for UI compatibility.
  */
 import {
   DEPENDENCY_RELATIONS,
@@ -134,12 +131,15 @@ export function applyAnswer(
   if (!question) {
     throw new EngineError(`سؤال ناشناخته: ${input.questionId}`);
   }
-  if (input.selectedOption < 0 || input.selectedOption >= question.options.length) {
+  if (!Number.isInteger(input.selectedOption) || input.selectedOption < 0 || input.selectedOption >= question.options.length) {
     throw new EngineError('گزینهٔ نامعتبر');
   }
   const node = state.nodes.get(question.nodeId);
   if (!node) {
     throw new EngineError(`گره ناشناخته: ${question.nodeId}`);
+  }
+  if (node.track !== 'common' && !user.activeTracks.includes(node.track)) {
+    throw new EngineError('این سؤال در مسیرهای فعال شما نیست');
   }
   const now = new Date(input.answeredAt ?? Date.now());
 
@@ -197,8 +197,7 @@ export function applyAnswer(
           userId: user.userId,
           nodeId: question.nodeId,
           cardType: 'trap_note',
-          questionId: question.id,
-          trapCardId: tCardId,
+          trapCardId: `trap:${question.id}`,
           dueAt: addDays(now, 1).toISOString(),
           intervalDays: 1,
           ease: 2.5,
@@ -242,92 +241,36 @@ export function applyAnswer(
     });
   }
 
-  /* ---------- لایهٔ ۲: تسلط فصل + شوک هم‌خانواده‌ها ---------- */
+  /* ---------- به‌روزرسانی مبتنی بر شواهد ---------- */
+  // Scheduling records that this item was answered. Mastery changes only from
+  // correct evidence on a previously unseen question; a wrong answer never
+  // causes a fixed chapter drop or any cross-skill/cross-course penalty.
   const before = masteryOf(state, question.nodeId);
-  const after = wasCorrect
+  const canUpdateProficiency = wasCorrect && input.seenBefore !== true;
+  const after = canUpdateProficiency
     ? round1(before + (100 - before) * cfg.masteryGain)
-    : round1(before * cfg.masteryPenalty);
-  state.mastery.set(question.nodeId, after);
+    : before;
   const topicDelta: MasteryDelta = {
     nodeId: question.nodeId,
     before,
     after,
     reason: 'direct',
   };
-  masteryUpdates.set(question.nodeId, {
-    nodeId: question.nodeId,
-    mastery: after,
-    status: statusFromMastery(after),
-    // lastErrorAt فقط با پاسخ غلط معنی دارد؛ در پاسخ درست دست نمی‌زنیم
-    ...(wasCorrect ? {} : { lastErrorAt: now.toISOString() }),
-  });
-
-  let siblingShock: RippleReport['siblingShock'] = null;
-  if (!wasCorrect && after < cfg.rippleThreshold) {
-    const siblings = state.cards.filter(
-      (c) =>
-        c.nodeId === question.nodeId &&
-        c.id !== qCardId &&
-        c.cardType === 'question' &&
-        new Date(c.dueAt).getTime() > now.getTime(),
-    );
-    siblings.sort((a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime());
-    const applied: string[] = [];
-    let deferred = 0;
-    for (const sib of siblings) {
-      if (applied.length >= cfg.rippleCapacity) {
-        deferred += 1;
-        continue;
-      }
-      const beforeSib = clone(sib);
-      const newInterval = Math.max(1, Math.floor(beforeSib.intervalDays * cfg.siblingIntervalFactor));
-      sib.intervalDays = newInterval;
-      // فاصلهٔ اصلی فقط بار اول ذخیره شود تا شوک‌های تکراری آن را بازنویسی نکنند
-      if (!sib.isRepair) sib.previousIntervalDays = beforeSib.intervalDays;
-      sib.dueAt = addDays(now, newInterval).toISOString();
-      sib.isRepair = true;
-      if (!createdCards.has(sib.id) && !cardUpdates.has(sib.id)) cardUpdates.set(sib.id, sib);
-      applied.push(sib.id);
-    }
-    siblingShock = { cardIds: applied, applied: applied.length, deferred };
-    if (applied.length > 0) {
-      actions.push({
-        cardId: qCardId,
-        kind: 'reschedule_siblings',
-        payload: { nodeId: question.nodeId, cardIds: applied },
-      });
-    }
+  if (canUpdateProficiency) {
+    state.mastery.set(question.nodeId, after);
+    masteryUpdates.set(question.nodeId, {
+      nodeId: question.nodeId,
+      mastery: after,
+      status: statusFromMastery(after),
+    });
   }
 
-  /* ---------- لایهٔ ۳ و ۴: سرایت از طریق یال‌ها ---------- */
+  // Legacy fields are intentionally empty: relations are evidence for a future
+  // diagnostic/transfer check, not permission to mutate connected skill mastery.
+  const siblingShock: RippleReport['siblingShock'] = null;
   const prerequisites: { nodeId: string; from: number; to: number }[] = [];
   const bridges: { nodeId: string; from: number; to: number }[] = [];
-  const masteryDeltas: MasteryDelta[] = [topicDelta];
-
-  if (!wasCorrect) {
-    const edges = state.dependencies.filter((d) => d.source === question.nodeId);
-    for (const edge of edges) {
-      const targetNode = state.nodes.get(edge.target);
-      if (!targetNode) continue;
-      // لایهٔ ۴ فقط برای گرایش‌های فعال کاربر معنا دارد
-      if (edge.relation === 'cross_course' && !user.activeTracks.includes(targetNode.track)) {
-        continue;
-      }
-      const b = masteryOf(state, edge.target);
-      const a = round1(b * (1 - cfg.linkedPenalty * edge.weight));
-      state.mastery.set(edge.target, a);
-      masteryUpdates.set(edge.target, {
-        nodeId: edge.target,
-        mastery: a,
-        status: statusFromMastery(a),
-        lastErrorAt: now.toISOString(),
-      });
-      const entry = { nodeId: edge.target, from: b, to: a };
-      if (edge.relation === 'prerequisite') prerequisites.push(entry);
-      else bridges.push(entry);
-      masteryDeltas.push({ nodeId: edge.target, before: b, after: a, reason: edge.relation });
-    }
-  }
+  const masteryDeltas: MasteryDelta[] = canUpdateProficiency && after !== before ? [topicDelta] : [];
 
   /* ---------- پیام منتور ---------- */
   const mentorMessage = buildMentorMessage({
@@ -343,7 +286,7 @@ export function applyAnswer(
   const report: RippleReport = {
     questionId: question.id,
     wasCorrect,
-    directReset: !wasCorrect,
+    directReset: false,
     trapCardCreated,
     topicMastery: topicDelta,
     siblingShock,
@@ -352,6 +295,11 @@ export function applyAnswer(
     masteryDeltas,
     mentorMessage,
     actions,
+    diagnosticRequired: !wasCorrect,
+    evidenceOnly: !wasCorrect,
+    nextAction: wasCorrect
+      ? (input.seenBefore === true ? 'spaced_review' : 'unseen_verification')
+      : 'diagnostic_probe',
   };
 
   // کارت‌های تازه‌ساخته به state اضافه شوند تا فراخوانی‌های بعدی آن‌ها را ببینند (dedup)
@@ -393,8 +341,12 @@ export function buildDailyQueue(
     .sort((a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime());
   return due.slice(0, opts.limit).map((card) => {
     const item: QueueItem = { card };
-    if (card.questionId) {
-      const q = state.questions.get(card.questionId);
+    const trapSourceId = card.cardType === 'trap_note' && card.trapCardId?.startsWith('trap:')
+      ? card.trapCardId.slice('trap:'.length)
+      : undefined;
+    const sourceQuestionId = card.questionId ?? trapSourceId;
+    if (sourceQuestionId) {
+      const q = state.questions.get(sourceQuestionId);
       if (q) item.question = q;
       if (q?.trapNote) item.trapNote = q.trapNote;
     }
@@ -415,31 +367,14 @@ function buildMentorMessage(args: {
   bridges: { nodeId: string; from: number; to: number }[];
   nodes: Map<string, KnowledgeNode>;
 }): string {
-  const { node, wasCorrect, topicDelta, siblingShock, prerequisites, bridges, nodes } = args;
-  if (wasCorrect) {
-    const stable = topicDelta.after >= 85;
-    return stable
-      ? `آفرین! تسلط مبحث «${node.topic}» به ${topicDelta.after.toFixed(0)}٪ رسید و تثبیت شده است.`
-      : `درست بود؛ تسلط «${node.topic}» به ${topicDelta.after.toFixed(0)}٪ رسید. با چند پاسخ درست دیگر تثبیت می‌شود.`;
+  const { node, wasCorrect, topicDelta } = args;
+  if (!wasCorrect) {
+    return `از یک پاسخ نادرست به‌تنهایی نمی‌توان نتیجه گرفت که بر مبحث «${node.topic}» تسلط ندارید. گام بعدی، یک سؤال تشخیصی کوتاه است تا خطای بی‌دقتی را از شکاف مفهومی جدا کنیم؛ سپس تمرین هدفمند و یک سؤال تازه برای راستی‌آزمایی.`;
   }
-  const parts: string[] = [
-    `این پاسخ نشون می‌ده مبحث «${node.topic}» هنوز برات جا نیفتاده؛ تسلط فصل از ${topicDelta.before.toFixed(0)}٪ به ${topicDelta.after.toFixed(0)}٪ رسید.`,
-  ];
-  const bits: string[] = [];
-  if (siblingShock && siblingShock.applied > 0) {
-    bits.push(`${siblingShock.applied} تست هم‌خانواده از همین فصل جلو افتاد`);
+  if (topicDelta.after >= 85) {
+    return `پاسخ درست بود. برآورد فعلی مبحث «${node.topic}» ${topicDelta.after.toFixed(0)}٪ است؛ تثبیت نهایی فقط با شواهد کافی از سؤال‌های تازه انجام می‌شود.`;
   }
-  for (const p of prerequisites) {
-    const n = nodes.get(p.nodeId);
-    if (n) bits.push(`یک مرور از پیش‌نیاز «${n.topic}» به برنامهٔ فردا اضافه شد`);
-  }
-  for (const b of bridges) {
-    const n = nodes.get(b.nodeId);
-    if (n) bits.push(`یک پیوند از درس «${n.course}» فعال شد`);
-  }
-  if (bits.length > 0) parts.push(`برای فردا: ${bits.join('، ')}.`);
-  parts.push('تا کامل ببندیمش!');
-  return parts.join(' ');
+  return `پاسخ درست بود. برآورد مبحث «${node.topic}» به ${topicDelta.after.toFixed(0)}٪ رسید. مرور فاصله‌دار را ادامه می‌دهیم و تسلط را با سؤال‌های دیده‌نشده می‌سنجیم.`;
 }
 
 /* ------------------------------------------------------------------ */
