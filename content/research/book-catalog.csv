@@ -1,0 +1,10 @@
+book_id,title_fa,authors,publisher,course_name,track_ids,recommendation_type,rights_status
+book-robinson-org-theory,تئوری سازمان: ساختار و طرح سازمانی,استفن پی. رابینز,صفار,مبانی سازمان و مدیریت,"common,business,technology",core_reference,licensed
+book-alvani-general-management,مدیریت عمومی,سید مهدی الوانی,نشر نی,مبانی سازمان و مدیریت,"common,business,technology",core_reference,licensed
+book-rezaeian-ob,مبانی مدیریت رفتار سازمانی,علی رضائیان,سمت,مبانی سازمان و مدیریت (رفتار),"common,business,technology",core_reference,licensed
+book-azar-momeni-stats-1-2,آمار و کاربرد آن در مدیریت,عادل آذر و منصور مؤمنی,سمت,آمار و کاربرد آن در مدیریت,"common,business,technology",core_reference,licensed
+book-pourezzat-islamic-mgmt,مدیریت ما: مبانی و ریشه‌های مدیریت اسلامی,علی‌اصغر پورعزت,دانشگاه تهران,اصول و مبانی مدیریت اسلامی,"common,business,technology",core_reference,licensed
+book-kotler-keller-marketing,مدیریت بازاریابی,فیلیپ کاتلر و کوین لین کلر,نگاه دانش,بازاریابی و مدیریت بازار پیشرفته,business,core_reference,licensed
+book-david-strategic-mgmt,مدیریت استراتژیک,فرد آر. دیوید,دفتر پژوهش‌های فرهنگی,مدیریت استراتژیک پیشرفته,"common,business,technology",core_reference,licensed
+book-barney-rbv-strategy,کسب و حفظ مزیت رقابتی (RBV),جی. بی. بارنی,آریانا قلم,مدیریت استراتژیک پیشرفته,"common,business,technology",core_reference,licensed
+book-schilling-tech-innovation,مدیریت استراتژیک نوآوری فناورانه,ملیسا شیلینگ,دفتر پژوهش‌های فرهنگی,تئوری‌های نوآوری و فناوری,technology,core_reference,licensed

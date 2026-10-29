@@ -1,0 +1,56 @@
+[
+  {
+    "course_id": "course-org-theory",
+    "name": "مبانی سازمان و مدیریت",
+    "level": "undergraduate_core",
+    "tracks": ["common", "business", "technology"],
+    "coefficient": 5,
+    "exam_code": "2164",
+    "description": "نظریه‌های سازمان، طراحی ساختار، رفتار سازمانی و فرایندهای رهبری و انگیزش"
+  },
+  {
+    "course_id": "course-stats",
+    "name": "آمار و کاربرد آن در مدیریت",
+    "level": "undergraduate_core",
+    "tracks": ["common", "business", "technology"],
+    "coefficient": 5,
+    "exam_code": "2164",
+    "description": "آمار توصیفی، استنباطی، آزمون‌های فرض پارامتریک و ناپارامتریک و مدل‌های رگرسیون"
+  },
+  {
+    "course_id": "course-islamic-mgmt",
+    "name": "اصول و مبانی مدیریت از دیدگاه اسلام",
+    "level": "undergraduate_core",
+    "tracks": ["common", "business", "technology"],
+    "coefficient": 5,
+    "exam_code": "2164",
+    "description": "مبانی نظری مدیریت اسلامی، سیره نبوی و علوی، عهدنامه مالک اشتر و اصول حاکمیت"
+  },
+  {
+    "course_id": "course-strategic-mgmt",
+    "name": "مدیریت استراتژیک پیشرفته",
+    "level": "graduate_specialized",
+    "tracks": ["common", "business", "technology"],
+    "coefficient": 5,
+    "exam_code": "2164",
+    "description": "مدیریت استراتژیک، مزیت رقابتی، دیدگاه مبتنی بر منابع (RBV)، قابلیت‌های پویا و ماتریس‌های پورتفولیو"
+  },
+  {
+    "course_id": "course-marketing",
+    "name": "بازاریابی و مدیریت بازار پیشرفته",
+    "level": "graduate_specialized",
+    "tracks": ["business"],
+    "coefficient": 5,
+    "exam_code": "2164",
+    "description": "استراتژی‌های بازاریابی، مدیریت برند، رفتار مصرف‌کننده، STP و آمیخته بازاریابی پیشرفته"
+  },
+  {
+    "course_id": "course-innovation-mgmt",
+    "name": "تئوری‌های نوآوری و مدیریت فناوری",
+    "level": "graduate_specialized",
+    "tracks": ["technology"],
+    "coefficient": 5,
+    "exam_code": "2164",
+    "description": "چرخه عمر فناوری، سازمان‌های دوپهلو، منحنی S فناوری، استراتژی‌های ورود و ظرفیت جذب"
+  }
+]

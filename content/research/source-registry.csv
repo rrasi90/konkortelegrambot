@@ -1,0 +1,8 @@
+source_id,name,url,type,reliability,rights_status
+src-sanjesh-portal,سازمان سنجش آموزش کشور,https://sanjesh.org,official_government,tier_1_authoritative,public_domain
+src-msrt-curriculum,دفتر برنامه‌ریزی آموزش عالی وزارت علوم,https://curriculum.msrt.ir,official_government,tier_1_authoritative,public_domain
+src-nlai,سازمان اسناد و کتابخانه ملی ایران,https://nlai.ir,national_library,tier_2_verified,public_domain
+src-modir-ir,پایگاه تخصصی مدیر,https://modir.ir,educational_archive,tier_4_unofficial,review_required
+src-phdtest-ir,پایگاه آزمون دکتری پی‌اچ‌دی‌تست,https://phdtest.ir,educational_archive,tier_4_unofficial,review_required
+src-samt-publisher,سازمان مطالعه و تدوین کتب علوم انسانی (سمت),https://samt.ac.ir,academic_publisher,tier_3_publisher,licensed
+src-negahdanesh,انتشارات نگاه دانش,https://negahdanesh.com,academic_publisher,tier_3_publisher,licensed
