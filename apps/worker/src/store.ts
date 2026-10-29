@@ -116,6 +116,7 @@ export interface DataStore {
   upsertMastery(userId: string, rows: UserNodeMastery[]): Promise<void>;
   getLearnerSkillState(userId: string, skillId: string): Promise<LearnerSkillState | null>;
   recordLearningDiagnosis(userId: string, skillId: string, diagnosis: LearnerDiagnosis): Promise<LearnerSkillState>;
+  recordLearningMilestone(userId: string, skillId: string, eventType: 'remediation_started' | 'remediation_completed', clientEventId: string, reason: Record<string, unknown>): Promise<void>;
   listLearningAssets(skillId: string, assetType: LearningAsset['type']): Promise<LearningAsset[]>;
 
   listCards(userId: string): Promise<ReviewCard[]>;
@@ -419,6 +420,22 @@ export class SupabaseStore implements DataStore {
     const state = await this.getLearnerSkillState(userId, skillId);
     if (!state) throw new Error('Learner-state projection was not persisted after diagnosis');
     return state;
+  }
+
+  async recordLearningMilestone(
+    userId: string,
+    skillId: string,
+    eventType: 'remediation_started' | 'remediation_completed',
+    clientEventId: string,
+    reason: Record<string, unknown>,
+  ): Promise<void> {
+    await this.request('POST', 'rpc/record_learning_milestone', {
+      p_user_id: userId,
+      p_skill_id: skillId,
+      p_event_type: eventType,
+      p_client_event_id: clientEventId,
+      p_reason: reason,
+    });
   }
 
   async listLearningAssets(skillId: string, assetType: LearningAsset['type']): Promise<LearningAsset[]> {
