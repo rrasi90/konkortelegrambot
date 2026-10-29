@@ -388,10 +388,105 @@
     }
     el('feedback-mentor').textContent = report.mentorMessage || '';
     renderRipple(report);
+    renderDiagnosisControls(item, report);
     el('btn-next').onclick = function () {
       state.currentIndex += 1;
       renderCurrent();
     };
+  }
+
+  function renderDiagnosisControls(item, report) {
+    var box = el('diagnosis-controls');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'diagnosis-controls';
+      box.className = 'diagnosis-controls';
+      el('btn-next').parentNode.insertBefore(box, el('btn-next'));
+    }
+    box.innerHTML = '';
+    if (report.wasCorrect || !item || !item.card || !item.card.nodeId) return;
+
+    var title = document.createElement('p');
+    title.className = 'lesson-sub';
+    title.textContent = 'برای انتخاب گام بعدی، نوع خطا را مشخص کنید؛ این انتخاب خوداظهاری است و از پاسخ غلط به‌تنهایی نتیجه‌گیری نمی‌کند.';
+    box.appendChild(title);
+    var options = [
+      { value: 'slip', label: 'بی‌دقتی یا لغزش' },
+      { value: 'conceptual', label: 'شکاف مفهومی' },
+      { value: 'confusable', label: 'اشتباه بین دو مفهوم' },
+      { value: 'computational', label: 'اشتباه محاسباتی' }
+    ];
+    options.forEach(function (option) {
+      var button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'btn ghost diagnosis-choice';
+      button.textContent = option.label;
+      button.addEventListener('click', function () {
+        box.querySelectorAll('button').forEach(function (b) { b.disabled = true; });
+        API.post('/api/diagnosis', {
+          skillId: item.card.nodeId,
+          errorType: option.value
+        }).then(function (data) {
+          var message = document.createElement('p');
+          message.className = 'diagnosis-result';
+          message.textContent = data.nextStep || 'نوع خطا ثبت شد.';
+          box.appendChild(message);
+          if (data.assets && data.assets.length) {
+            data.assets.forEach(function (asset) {
+              var lesson = document.createElement('article');
+              lesson.className = 'learning-asset';
+              var heading = document.createElement('strong');
+              heading.textContent = asset.title;
+              lesson.appendChild(heading);
+              var content = document.createElement('p');
+              content.textContent = typeof asset.content.text === 'string'
+                ? asset.content.text
+                : typeof asset.content.body === 'string'
+                  ? asset.content.body
+                  : 'محتوای این بخش در قالب ساخت‌یافتهٔ تأییدشده آماده شده است.';
+              lesson.appendChild(content);
+              var start = document.createElement('button');
+              start.type = 'button';
+              start.className = 'btn small primary';
+              start.textContent = 'شروع مطالعه';
+              start.addEventListener('click', function () {
+                API.post('/api/remediation', {
+                  skillId: item.card.nodeId,
+                  assetId: asset.id,
+                  status: 'started'
+                }).then(function () {
+                  start.textContent = 'مطالعه شروع شد';
+                  start.disabled = true;
+                  var complete = document.createElement('button');
+                  complete.type = 'button';
+                  complete.className = 'btn small ghost';
+                  complete.textContent = 'مطالعه تمام شد';
+                  complete.addEventListener('click', function () {
+                    API.post('/api/remediation', {
+                      skillId: item.card.nodeId,
+                      assetId: asset.id,
+                      status: 'completed'
+                    }).then(function () {
+                      complete.textContent = 'ثبت شد؛ سؤال تازه لازم است';
+                      complete.disabled = true;
+                    });
+                  });
+                  lesson.appendChild(complete);
+                });
+              });
+              lesson.appendChild(start);
+              box.appendChild(lesson);
+            });
+          }
+        }).catch(function () {
+          var error = document.createElement('p');
+          error.className = 'diagnosis-result';
+          error.textContent = 'ثبت نوع خطا انجام نشد؛ اتصال را بررسی کنید.';
+          box.appendChild(error);
+        });
+      });
+      box.appendChild(button);
+    });
   }
 
   function renderRipple(report) {
@@ -501,6 +596,37 @@
   el('btn-logout').addEventListener('click', function () {
     localStorage.removeItem('session_token');
     showView('view-login');
+  });
+
+  el('btn-start-verification').addEventListener('click', function () {
+    var button = el('btn-start-verification');
+    var note = el('verification-note');
+    button.disabled = true;
+    API.get('/api/verification').then(function (data) {
+      if (!data.available) {
+        note.textContent = data.message || 'سؤال دیده‌نشدهٔ آماده‌ای وجود ندارد.';
+        note.hidden = false;
+        button.disabled = false;
+        return;
+      }
+      state.queue = [{
+        card: { id: 'verification:' + data.question.id, nodeId: data.skillId, cardType: 'question', questionId: data.question.id },
+        question: data.question,
+        attemptId: data.attemptId,
+        course: data.course || 'اثبات یادگیری',
+        chapter: data.chapter || '',
+        isVerification: true
+      }];
+      state.currentIndex = 0;
+      state.nightMode = false;
+      note.textContent = data.note || '';
+      note.hidden = false;
+      renderCurrent();
+    }).catch(function () {
+      note.textContent = 'دریافت سؤال تازه انجام نشد؛ اتصال را بررسی کنید.';
+      note.hidden = false;
+      button.disabled = false;
+    });
   });
 
   /* ---------- راه‌اندازی ---------- */
