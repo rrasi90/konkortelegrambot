@@ -525,6 +525,7 @@ describe('comparison card (کارت مقایسهٔ مفاهیم متشابه)', 
 
 describe('6D learner state & holdout proof (مدل ۶ بعدی و اثبات)', () => {
   const prior6D = {
+    skillId: smRbvSkill.id,
     proficiencyProbability: 0.8,
     confidence: 0.5,
     evidenceCount: 1,
@@ -551,7 +552,7 @@ describe('6D learner state & holdout proof (مدل ۶ بعدی و اثبات)', 
       { userId: 'user-1', activeTracks: ['common'] },
     );
     expect(res.skillStateUpdate).toBeDefined();
-    expect(res.skillStateUpdate?.skillId).toBe('skill.sm.rbv.vrio');
+    expect(res.skillStateUpdate?.state.skillId).toBe('skill.sm.rbv.vrio');
     expect(res.skillStateUpdate?.state.proficiencyProbability).toBeGreaterThanOrEqual(0.75);
     expect(res.skillStateUpdate?.state.coverageStatus).toBe('needs_proof');
     expect(res.report.proofCandidate).toEqual({ nodeId: 'sm.rbv', skillId: 'skill.sm.rbv.vrio' });

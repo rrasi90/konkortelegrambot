@@ -27,3 +27,8 @@ create policy read_learning_assets on learning_assets for select
   using (verification_status in ('verified','demo'));
 
 grant select on learning_assets to authenticated, anon;
+
+-- ۳) ستون‌های جدید کارت‌های مرور برای موتور FSRS و کارت مقایسه
+alter table review_cards add column if not exists fsrs_state jsonb;
+alter table review_cards add column if not exists comparison_skills jsonb;
+alter table review_cards add column if not exists is_proof boolean not null default false;
