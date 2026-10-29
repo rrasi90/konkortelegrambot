@@ -197,6 +197,7 @@ export function applyAnswer(
           userId: user.userId,
           nodeId: question.nodeId,
           cardType: 'trap_note',
+          questionId: question.id,
           trapCardId: `trap:${question.id}`,
           dueAt: addDays(now, 1).toISOString(),
           intervalDays: 1,
