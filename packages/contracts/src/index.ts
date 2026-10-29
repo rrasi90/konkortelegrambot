@@ -288,3 +288,43 @@ export function isQuestion(value: unknown): value is Question {
     v.correctOption < v.options.length
   );
 }
+
+/* ---------- User Skill State ---------- */
+
+export interface UserSkillState {
+  skillId: string;
+  userId: string;
+
+  // 1. Tentative Mastery Estimate
+  masteryEstimate: number; // 0-100, marked as 'tentative' if low evidence
+  masteryConfidence: number; // 0-1, based on evidence count and quality
+
+  // 2. Evidence Sufficiency
+  evidenceCount: number; // validated responses count
+  evidenceQuality: number; // average confidence of evidence (0-1)
+  lastEvidenceAt: string; // ISO timestamp
+
+  // 3. Memory Retrieval (FSRS-based)
+  memoryScore: number; // FSRS retention score (0-1)
+  lastReviewedAt: string;
+  scheduledNextReview: string; // ISO
+
+  // 4. Execution Fluency
+  avgResponseTime: number; // milliseconds (baseline per skill)
+  responseTimeStdDev: number;
+  fluencyStatus: 'slow' | 'normal' | 'fast' | 'exceptional';
+
+  // 5. Dominant Error Type
+  dominantErrorType: string | 'unknown';
+  errorHistory: {
+    type: string;
+    count: number;
+    lastAt: string;
+    resolved: boolean;
+  }[];
+
+  // 6. Skill Coverage
+  coveredConcepts: string[];
+  uncoveredGaps: string[];
+  progressPercent: number; // 0-100, clearly labeled
+}
