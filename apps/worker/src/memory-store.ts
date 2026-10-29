@@ -35,6 +35,7 @@ export class MemoryStore implements DataStore {
       telegramUserId: input.telegramUserId,
       displayName: input.displayName,
       activeTracks: ['common'],
+      dailyCapacity: 30,
     };
     this.users.set(id, user);
     if (input.telegramUserId) this.tgIndex.set(input.telegramUserId, id);
@@ -44,6 +45,14 @@ export class MemoryStore implements DataStore {
   async setActiveTracks(userId: string, tracks: TrackId[]): Promise<void> {
     const user = this.users.get(userId);
     if (user) user.activeTracks = tracks;
+  }
+
+  async setDailyCapacity(userId: string, dailyCapacity: number): Promise<void> {
+    if (!Number.isInteger(dailyCapacity) || dailyCapacity < 10 || dailyCapacity > 480) {
+      throw new Error('dailyCapacity must be an integer from 10 to 480 minutes');
+    }
+    const user = this.users.get(userId);
+    if (user) user.dailyCapacity = dailyCapacity;
   }
 
   stats = new Map<string, import('./store').UserStats>();
