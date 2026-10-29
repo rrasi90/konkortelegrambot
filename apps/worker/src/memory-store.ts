@@ -1,3 +1,4 @@
+import { defaultSeed } from './default-seed';
 /** پیاده‌سازی درون‌حافظه‌ای لایهٔ داده — برای تست و دمو */
 import type { ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
 import type { AnswerEvent, AppUser, DataStore } from './store';
@@ -12,6 +13,21 @@ export class MemoryStore implements DataStore {
   cards = new Map<string, ReviewCard>();
   answers: AnswerEvent[] = [];
   private seq = 0;
+
+  constructor(initialData?: {
+    nodes?: import('@ael/contracts').KnowledgeNode[];
+    dependencies?: import('@ael/contracts').NodeDependency[];
+    questions?: import('@ael/contracts').Question[];
+  }) {
+    if (initialData?.nodes) this.nodes = initialData.nodes;
+    else if (defaultSeed?.nodes) this.nodes = (defaultSeed.nodes as unknown as any[]).map((n) => ({ ...n }));
+
+    if (initialData?.dependencies) this.dependencies = initialData.dependencies;
+    else if (defaultSeed?.dependencies) this.dependencies = (defaultSeed.dependencies as unknown as any[]).map((d) => ({ ...d }));
+
+    if (initialData?.questions) this.questions = initialData.questions;
+    else if (defaultSeed?.questions) this.questions = (defaultSeed.questions as unknown as any[]).map((q) => ({ ...q }));
+  }
 
   async getUser(userId: string): Promise<AppUser | null> {
     return this.users.get(userId) ?? null;
