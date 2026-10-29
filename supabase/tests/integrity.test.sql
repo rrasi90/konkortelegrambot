@@ -89,21 +89,31 @@ begin
 end
 $$;
 
--- ۸) ایزولاسیون واقعی RLS؛ SET LOCAL و متغیر auth باید داخل یک تراکنش باشند.
-insert into app_users (id, display_name) values ('22222222-2222-2222-2222-222222222222', 'تست ۲') on conflict do nothing;
-insert into answer_events (user_id, question_id, attempt_id, selected_option, is_correct)
-select '22222222-2222-2222-2222-222222222222', id, 'test-rls-1', 1, false from questions limit 1;
-
-begin;
-set local role authenticated;
-select set_config('ael.uid', '22222222-2222-2222-2222-222222222222', true);
-select 1/((count(*) > 0)::int) as own_visible
-from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
-select set_config('ael.uid', '11111111-1111-1111-1111-111111111111', true);
-select 1/((count(*) = 0)::int) as foreign_hidden
-from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
-reset role;
-commit;
+-- ۸) مرز دسترسی مرورگر: داده‌های کاربر فقط از طریق Worker سرو می‌شوند.
+-- در این معماری حتی SELECT مستقیم به نقش authenticated داده نمی‌شود؛ بنابراین
+-- آزمون سیاست‌های ردیفی از مسیر SQL مرورگر مجاز نیست و privilege denial قوی‌تر است.
+do $$
+declare
+  private_table text;
+begin
+  foreach private_table in array array[
+    'public.app_users',
+    'public.answer_events',
+    'public.user_node_mastery',
+    'public.review_cards',
+    'public.trap_cards',
+    'public.question_attempts',
+    'public.learner_skill_states',
+    'public.learning_evidence_events',
+    'public.planner_decision_logs'
+  ] loop
+    if has_table_privilege('anon', private_table, 'SELECT')
+       or has_table_privilege('authenticated', private_table, 'SELECT') then
+      raise exception 'دسترسی SELECT مرورگر به جدول خصوصی باید بسته باشد: %', private_table;
+    end if;
+  end loop;
+end
+$$;
 
 -- ۹) هیچ نقش مرورگری نباید به کلید پاسخ یا اطلاعات خصوصی کاربر دسترسی مستقیم داشته باشد.
 do $$
