@@ -4,7 +4,6 @@
  * SQL mode is deterministic; direct mode requires a server-side Supabase service-role key.
  */
 import { readFileSync } from 'node:fs';
-import { createHash } from 'node:crypto';
 
 const args = process.argv.slice(2);
 const path = args[0];
@@ -28,7 +27,7 @@ if (!meta.name || !meta.version || !Array.isArray(pack.nodes) || !Array.isArray(
 }
 const rightsStatus = meta.rightsStatus ?? 'unknown';
 const packId = `${meta.packId ?? meta.name}@${meta.version}`;
-const courseKey = (node) => node.courseKey || ('course_' + createHash('sha256').update(String(node.course)).digest('hex').slice(0, 16));
+const courseKey = (node) => node.courseKey || ('course_' + encodeURIComponent(String(node.course)).replace(/%/g, '_').toLowerCase());
 const courseMap = new Map();
 for (const node of pack.nodes) {
   const key = courseKey(node);
