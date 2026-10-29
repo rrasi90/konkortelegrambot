@@ -77,9 +77,18 @@ function questionMappings(q) {
   }
   return rows;
 }
+function questionVerificationStatus(q) {
+  const itemRights = q.rightsStatus ?? rightsStatus;
+  if (itemRights === 'blocked') return 'quarantined';
+  if (synthetic) return 'demo';
+  if (q.verificationStatus === 'quarantined') return 'quarantined';
+  if (q.verificationStatus === 'verified' && q.verifiedBy && q.verifiedAt && (q.sourceRef || meta.sourceRef)) {
+    return 'verified';
+  }
+  return 'unverified';
+}
 function questionPackRow(q) {
-  const status = ['unverified', 'verified', 'quarantined', 'demo'].includes(q.verificationStatus)
-    ? q.verificationStatus : (synthetic ? 'demo' : 'unverified');
+  const status = questionVerificationStatus(q);
   return {
     pack_id: packId, question_id: q.id, item_version: String(q.itemVersion ?? '1'),
     source_ref: q.sourceRef ?? meta.sourceRef ?? null,
@@ -99,8 +108,7 @@ const questionRows = (pack.questions ?? []).map((q) => ({
   correct_option: q.correctOption,
   explanation: q.explanation ?? null,
   trap_note: q.trapNote ?? null,
-  verification_status: ['unverified', 'verified', 'quarantined', 'demo'].includes(q.verificationStatus)
-    ? q.verificationStatus : (synthetic ? 'demo' : 'unverified'),
+  verification_status: questionVerificationStatus(q),
   source_ref: q.sourceRef ?? meta.sourceRef ?? null,
   source_hash: q.sourceHash ?? null,
   rights_status: q.rightsStatus ?? rightsStatus,
