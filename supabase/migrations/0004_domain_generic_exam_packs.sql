@@ -172,6 +172,8 @@ create table if not exists public.learner_skill_states (
   proficiency_probability numeric not null default 0.5 check (proficiency_probability between 0 and 1),
   estimate_confidence numeric not null default 0 check (estimate_confidence between 0 and 1),
   evidence_count integer not null default 0 check (evidence_count >= 0),
+  correct_evidence_count integer not null default 0 check (correct_evidence_count >= 0),
+  assessed_gap_evidence_count integer not null default 0 check (assessed_gap_evidence_count >= 0),
   memory_retrievability numeric not null default 0.5 check (memory_retrievability between 0 and 1),
   fluency_score numeric not null default 0 check (fluency_score between 0 and 1),
   dominant_error_type text not null default 'unknown'
@@ -191,7 +193,7 @@ create table if not exists public.learning_evidence_events (
   question_id text references public.questions(id) on delete set null,
   client_event_id text,
   event_type text not null
-    check (event_type in ('diagnostic_probe','self_report_slip','remediation_started','remediation_completed','unseen_verification','learner_state_updated')),
+    check (event_type in ('diagnostic_probe','self_report_slip','self_report_gap','remediation_started','remediation_completed','unseen_verification','learner_state_updated')),
   payload jsonb not null default '{}'::jsonb,
   engine_version text not null default '0.2.0',
   item_version text,
@@ -200,6 +202,105 @@ create table if not exists public.learning_evidence_events (
 );
 create index if not exists learning_evidence_events_user_time_idx
   on public.learning_evidence_events(user_id, occurred_at desc);
+
+-- Record a learner's explicit error classification with an idempotent evidence event.
+-- This is self-report evidence, not an automatic or expert diagnosis.
+create or replace function public.record_learning_diagnosis(
+  p_user_id uuid,
+  p_skill_id text,
+  p_error_type text,
+  p_state jsonb,
+  p_client_event_id text,
+  p_reason jsonb default '{}'::jsonb
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $
+declare
+  v_active_tracks text[];
+  v_track text;
+  v_event_type text;
+  v_inserted uuid;
+  v_state jsonb;
+begin
+  if p_error_type not in ('conceptual','confusable','computational','slip','unknown') then
+    raise exception 'invalid diagnosis type';
+  end if;
+  if p_client_event_id is null or length(p_client_event_id) < 8 or length(p_client_event_id) > 160 then
+    raise exception 'invalid client event id';
+  end if;
+
+  perform pg_advisory_xact_lock(hashtextextended(p_user_id::text || ':' || p_skill_id, 1));
+  select u.active_tracks, n.track into v_active_tracks, v_track
+  from public.app_users u
+  join public.knowledge_nodes n on n.id = p_skill_id
+  where u.id = p_user_id;
+  if not found then raise exception 'learner or skill not found'; end if;
+  if v_track <> 'common' and not (v_track = any(coalesce(v_active_tracks, array['common']::text[]))) then
+    raise exception 'skill is outside active tracks';
+  end if;
+
+  v_event_type := case when p_error_type = 'slip' then 'self_report_slip' else 'self_report_gap' end;
+  insert into public.learning_evidence_events(
+    user_id, skill_id, client_event_id, event_type, payload, engine_version
+  ) values (
+    p_user_id, p_skill_id, p_client_event_id, v_event_type,
+    coalesce(p_reason, '{}'::jsonb) || jsonb_build_object(
+      'errorType', p_error_type,
+      'source', 'learner_self_report',
+      'notExpertVerified', true
+    ),
+    coalesce(nullif(p_state->>'engineVersion',''), '0.2.0')
+  )
+  on conflict (user_id, client_event_id) do nothing
+  returning id into v_inserted;
+
+  if v_inserted is null then
+    select to_jsonb(ls) into v_state from public.learner_skill_states ls
+    where ls.user_id = p_user_id and ls.skill_id = p_skill_id;
+    return coalesce(v_state, '{}'::jsonb) || jsonb_build_object('replay', true);
+  end if;
+
+  insert into public.learner_skill_states(
+    user_id, skill_id, proficiency_probability, estimate_confidence, evidence_count,
+    correct_evidence_count, assessed_gap_evidence_count, memory_retrievability,
+    fluency_score, dominant_error_type, coverage_state, updated_at
+  ) values (
+    p_user_id,
+    p_skill_id,
+    coalesce(nullif(p_state->>'proficiencyProbability','')::numeric, 0.5),
+    coalesce(nullif(p_state->>'estimateConfidence','')::numeric, 0),
+    coalesce(nullif(p_state->>'evidenceCount','')::integer, 0),
+    coalesce(nullif(p_state->>'correctEvidenceCount','')::integer, 0),
+    coalesce(nullif(p_state->>'assessedGapEvidenceCount','')::integer, 0),
+    coalesce(nullif(p_state->>'memoryRetrievability','')::numeric, 0.5),
+    coalesce(nullif(p_state->>'fluencyScore','')::numeric, 0),
+    p_error_type,
+    'diagnosed',
+    now()
+  )
+  on conflict (user_id, skill_id) do update set
+    proficiency_probability = excluded.proficiency_probability,
+    estimate_confidence = excluded.estimate_confidence,
+    evidence_count = excluded.evidence_count,
+    correct_evidence_count = excluded.correct_evidence_count,
+    assessed_gap_evidence_count = excluded.assessed_gap_evidence_count,
+    memory_retrievability = excluded.memory_retrievability,
+    fluency_score = excluded.fluency_score,
+    dominant_error_type = excluded.dominant_error_type,
+    coverage_state = 'diagnosed',
+    updated_at = now();
+
+  select to_jsonb(ls) into v_state from public.learner_skill_states ls
+  where ls.user_id = p_user_id and ls.skill_id = p_skill_id;
+  return coalesce(v_state, '{}'::jsonb) || jsonb_build_object('replay', false);
+end;
+$;
+
+revoke all on function public.record_learning_diagnosis(uuid, text, text, jsonb, text, jsonb) from public, anon, authenticated;
+grant execute on function public.record_learning_diagnosis(uuid, text, text, jsonb, text, jsonb) to service_role;
 
 create table if not exists public.planner_decision_logs (
   id uuid primary key default gen_random_uuid(),
