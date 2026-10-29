@@ -6,13 +6,7 @@ begin;
 revoke select on table public.questions from anon, authenticated;
 drop policy if exists read_questions on public.questions;
 
--- A safe projection intentionally excludes correct_option.
-create or replace view public.questions_public
-with (security_barrier = true) as
-select id, node_id, exam_year, question_text, options, explanation, trap_note, verification_status
-from public.questions
-where verification_status in ('verified', 'demo');
-grant select on public.questions_public to anon, authenticated;
+-- Public question projection without answer keys is defined in 0003_security_atomic_learning.sql.
 
 -- Durable, short-lived attempts. A client may answer only a question the server issued.
 create table if not exists public.question_attempts (
@@ -34,8 +28,9 @@ alter table public.question_attempts enable row level security;
 revoke all on public.question_attempts from anon, authenticated;
 grant all on public.question_attempts to service_role;
 
--- Existing trap cards used user-scoped IDs as the FK to a global trap card and
--- populated question_id, conflicting with one_owner_per_question_card.
+-- Normalize existing trap reviews to a stable, shared trap-asset ID.
+-- The previous 0003 migration's trigger creates/verifies the asset and preserves
+-- question_id; the partial unique index only applies to question-type cards.
 insert into public.trap_cards (id, question_id, node_id, content)
 select 'trap:' || q.id, q.id, q.node_id, q.trap_note
 from public.questions q
@@ -45,8 +40,7 @@ set question_id = excluded.question_id,
     node_id = excluded.node_id,
     content = excluded.content;
 update public.review_cards
-set trap_card_id = 'trap:' || question_id,
-    question_id = null
+set trap_card_id = 'trap:' || question_id
 where card_type = 'trap_note'
   and question_id is not null;
 
