@@ -1,3 +1,5 @@
+let globalMemoryStore: DataStore | null = null;
+
 /**
  * API اصلی سامانه — Cloudflare Workers (Hono)
  * همهٔ منطق تصمیم در @ael/engine است؛ این لایه فقط ارکستراسیون و پایدارسازی است.
@@ -39,6 +41,7 @@ export function toPublicQuestion(q: Question): PublicQuestion {
     examYear: q.examYear,
     text: q.text,
     options: q.options,
+    isVerified: q.isVerified ?? false,
   };
 }
 
@@ -55,7 +58,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     options.store ??
     (env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
       ? new SupabaseStore(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
-      : new MemoryStore());
+      : (globalMemoryStore ??= new MemoryStore()));
   const isProduction =
     env.ENVIRONMENT === 'production' ||
     (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production');
@@ -89,7 +92,14 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!auth?.startsWith('Bearer ')) return null;
     const userId = await verifySessionToken(auth.slice(7), secret);
     if (!userId) return null;
-    return store.getUser(userId);
+    let user = await store.getUser(userId);
+    if (!user && !env.SUPABASE_URL) {
+      user = { id: userId, displayName: 'داوطلب', activeTracks: ['common', 'business'] };
+      if ('users' in (store as any)) {
+        (store as any).users.set(userId, user);
+      }
+    }
+    return user;
   }
 
   function authError(c: AppContext) {
@@ -180,6 +190,57 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   /* ------------------------------ routes ------------------------------ */
 
   app.get('/api/health', (c) => c.json({ ok: true }));
+
+  app.post('/api/telegram/webhook', async (c) => {
+    const update = (await c.req.json().catch(() => null)) as {
+      message?: { chat?: { id?: number }; text?: string };
+      edited_message?: { chat?: { id?: number }; text?: string };
+    } | null;
+    if (!update) return c.json({ ok: false }, 400);
+
+    const message = update.message || update.edited_message;
+    if (!message || !message.chat?.id) return c.json({ ok: true });
+
+    const chatId = message.chat.id;
+    const text = (message.text || '').trim();
+
+    const url = new URL(c.req.url);
+    const appUrl = url.origin;
+
+    if (text.startsWith('/start')) {
+      return c.json({
+        method: 'sendMessage',
+        chat_id: chatId,
+        text: 'سلام! به سامانهٔ یادگیری تطبیقی «مسیر دکتری» خوش آمدید 🎓\n\nسامانهٔ هوشمند سنجش و تثبیت تسلط بر سرفصل‌های آزمون دکتری مدیریت.\n\nبرای شروع تمرین و ارزیابی هوشمند، روی دکمهٔ زیر بزنید:',
+        reply_markup: {
+          inline_keyboard: [
+            [
+              {
+                text: '🚀 باز کردن مسیر دکتری',
+                web_app: { url: appUrl },
+              },
+            ],
+          ],
+        },
+      });
+    }
+
+    return c.json({
+      method: 'sendMessage',
+      chat_id: chatId,
+      text: 'برای تمرین و یادگیری تطبیقی، لطفاً از دکمهٔ زیر استفاده کنید:',
+      reply_markup: {
+        inline_keyboard: [
+          [
+            {
+              text: '🚀 باز کردن مسیر دکتری',
+              web_app: { url: appUrl },
+            },
+          ],
+        ],
+      },
+    });
+  });
 
   app.post('/api/auth/telegram', async (c) => {
     const body = (await c.req.json()) as { initData?: string };

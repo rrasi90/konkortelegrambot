@@ -54,6 +54,7 @@ export interface Question {
   explanation?: string;
   /** نکتهٔ دام تستی — منبع کارت‌های لایهٔ ۱ */
   trapNote?: string;
+  isVerified?: boolean;
 }
 
 /** سؤالی که به کلاینت فرستاده می‌شود — بدون گزینهٔ صحیح، بدون توضیح تشریحی و بدون یادداشت دام */
@@ -63,6 +64,7 @@ export interface PublicQuestion {
   examYear?: number;
   text: string;
   options: string[];
+  isVerified?: boolean;
 }
 
 export type VerificationStatus = 'unverified' | 'verified' | 'quarantined';

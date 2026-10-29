@@ -279,6 +279,17 @@
     el('q-chapter').textContent = item.chapter || '';
     var isTrap = item.card.cardType === 'trap_note';
     el('q-card-type').hidden = !isTrap;
+    var vChip = el('q-verification');
+    if (vChip) {
+      vChip.hidden = false;
+      if (item.question && item.question.isVerified) {
+        vChip.className = 'chip success';
+        vChip.textContent = 'سؤال رسمی تأییدشده';
+      } else {
+        vChip.className = 'chip ghost';
+        vChip.textContent = 'نمونهٔ آموزشی (تأییدنشده)';
+      }
+    }
 
     if (isTrap) {
       el('q-text').textContent = 'نکتهٔ دام: ' + (item.trapNote || item.question && item.question.text);
