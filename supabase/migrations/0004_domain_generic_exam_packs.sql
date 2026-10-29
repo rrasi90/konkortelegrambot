@@ -184,6 +184,65 @@ create table if not exists public.learner_skill_states (
   primary key (user_id, skill_id)
 );
 
+create or replace function public.record_learning_milestone(
+  p_user_id uuid,
+  p_skill_id text,
+  p_event_type text,
+  p_client_event_id text,
+  p_reason jsonb default '{}'::jsonb
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public, pg_temp
+as $
+declare
+  v_tracks text[];
+  v_track text;
+  v_count integer;
+  v_coverage text;
+begin
+  if p_event_type not in ('remediation_started','remediation_completed') then
+    raise exception 'invalid learning milestone type';
+  end if;
+  if p_client_event_id is null or length(p_client_event_id) < 8 or length(p_client_event_id) > 160 then
+    raise exception 'invalid client event id';
+  end if;
+
+  perform pg_advisory_xact_lock(hashtextextended(p_user_id::text || ':' || p_skill_id, 1));
+  select u.active_tracks, n.track into v_tracks, v_track
+  from public.app_users u
+  join public.knowledge_nodes n on n.id = p_skill_id
+  where u.id = p_user_id;
+  if not found then raise exception 'learner or skill not found'; end if;
+  if v_track <> 'common' and not (v_track = any(coalesce(v_tracks, array['common']::text[]))) then
+    raise exception 'skill is outside active tracks';
+  end if;
+
+  insert into public.learning_evidence_events(
+    user_id, skill_id, client_event_id, event_type, payload, engine_version
+  ) values (
+    p_user_id, p_skill_id, p_client_event_id, p_event_type,
+    coalesce(p_reason, '{}'::jsonb), '0.2.0'
+  ) on conflict (user_id, client_event_id) do nothing;
+
+  if p_event_type = 'remediation_started' then
+    update public.learner_skill_states
+      set coverage_state = case when coverage_state = 'verified_by_unseen' then coverage_state else 'remediating' end,
+          updated_at = now()
+    where user_id = p_user_id and skill_id = p_skill_id;
+  end if;
+  select coverage_state into v_coverage from public.learner_skill_states
+    where user_id = p_user_id and skill_id = p_skill_id;
+  select count(*) into v_count from public.learning_evidence_events
+    where user_id = p_user_id and skill_id = p_skill_id;
+  return jsonb_build_object('ok', true, 'coverageState', coalesce(v_coverage, 'unseen'), 'evidenceEventCount', v_count);
+end;
+$;
+
+revoke all on function public.record_learning_milestone(uuid, text, text, text, jsonb) from public, anon, authenticated;
+grant execute on function public.record_learning_milestone(uuid, text, text, text, jsonb) to service_role;
+
 -- Append-only cross-event evidence. Answer events retain the graded answer; this table stores probes,
 -- self-reported slips, remediation milestones, holdout proofs and diagnostic state transitions.
 create table if not exists public.learning_evidence_events (
