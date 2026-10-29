@@ -96,14 +96,12 @@ insert into app_users (id, display_name) values ('22222222-2222-2222-2222-222222
 insert into answer_events (user_id, question_id, attempt_id, selected_option, is_correct)
 select '22222222-2222-2222-2222-222222222222', id, 'test-rls-1', 1, false from questions limit 1;
 
-set local role authenticated;
+-- تعویض نقش بهAuthenticated برای تست RLS
+set role authenticated;
 -- کاربر ۲ باید رویداد خودش را ببیند (اگر نبود، خطا: تقسیم بر صفر)
-set local ael.uid = '22222222-2222-2222-2222-222222222222';
--- توجه: 1/0 ثابت در زمان plan ارزیابی می‌شود؛ بنابراین مخرج باید runtime باشد
 select 1/((count(*) > 0)::int) as own_visible
 from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
 -- کاربر ۱ نباید رویداد کاربر ۲ را ببیند (اگر دید، خطا)
-set local ael.uid = '11111111-1111-1111-1111-111111111111';
 select 1/((count(*) = 0)::int) as foreign_hidden
 from answer_events where user_id = '22222222-2222-2222-2222-222222222222';
 reset role;
