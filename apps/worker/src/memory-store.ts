@@ -43,11 +43,21 @@ export class MemoryStore implements DataStore {
     const user: AppUser = {
       id,
       telegramUserId: input.telegramUserId,
-      displayName: input.displayName,
+      displayName: input.displayName || 'داوطلب دکتری',
       activeTracks: ['common'],
     };
     this.users.set(id, user);
     if (input.telegramUserId) this.tgIndex.set(input.telegramUserId, id);
+
+    // تضمین خالی بودن کامل پروفایل جدید در هنگام ثبت‌نام
+    this.stats.set(id, {
+      userId: id,
+      coins: 0,
+      streakDays: 0,
+      lastStudyDate: null,
+      dayNumber: 0,
+      examDate: null,
+    });
     return user;
   }
 
