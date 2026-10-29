@@ -1,6 +1,6 @@
 /** پیاده‌سازی درون‌حافظه‌ای لایهٔ داده — برای تست و دمو */
-import type { ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
-import type { AnswerEvent, AppUser, DataStore, PlannerDecisionInput } from './store';
+import type { LearnerSkillState, ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
+import type { AnswerEvent, AppUser, DataStore, LearningAsset, LearnerDiagnosis, PlannerDecisionInput } from './store';
 
 export class MemoryStore implements DataStore {
   users = new Map<string, AppUser>();
@@ -14,6 +14,9 @@ export class MemoryStore implements DataStore {
   cards = new Map<string, ReviewCard>();
   answers: AnswerEvent[] = [];
   plannerDecisions: Array<PlannerDecisionInput & { userId: string; planDate: string }> = [];
+  learnerSkillStates = new Map<string, LearnerSkillState>();
+  learningAssets: LearningAsset[] = [];
+  learningEvidence: Array<{ userId: string; skillId: string; eventType: string; clientEventId: string; payload: Record<string, unknown> }> = [];
   private seq = 0;
 
   private attemptKey(userId: string, questionId: string): string {
@@ -98,6 +101,44 @@ export class MemoryStore implements DataStore {
     for (const r of rows) this.mastery.set(`${userId}:${r.nodeId}`, r);
   }
 
+  private skillStateKey(userId: string, skillId: string): string {
+    return `${userId}:${skillId}`;
+  }
+
+  async getLearnerSkillState(userId: string, skillId: string): Promise<LearnerSkillState | null> {
+    return this.learnerSkillStates.get(this.skillStateKey(userId, skillId)) ?? null;
+  }
+
+  async recordLearningDiagnosis(userId: string, skillId: string, diagnosis: LearnerDiagnosis): Promise<LearnerSkillState> {
+    const key = this.skillStateKey(userId, skillId);
+    const repeated = this.learningEvidence.some(
+      (event) => event.userId === userId && event.clientEventId === diagnosis.clientEventId,
+    );
+    if (repeated) return this.learnerSkillStates.get(key) ?? diagnosis.state;
+    const node = this.nodes.find((item) => item.id === skillId);
+    const user = this.users.get(userId);
+    if (!node || !user || (node.track !== 'common' && !user.activeTracks.includes(node.track))) {
+      throw new Error('Learner or active skill not found');
+    }
+    this.learnerSkillStates.set(key, diagnosis.state);
+    this.learningEvidence.push({
+      userId,
+      skillId,
+      clientEventId: diagnosis.clientEventId,
+      eventType: diagnosis.errorType === 'slip' ? 'self_report_slip' : 'self_report_gap',
+      payload: { ...diagnosis.reason, errorType: diagnosis.errorType, source: 'learner_self_report', notExpertVerified: true },
+    });
+    return diagnosis.state;
+  }
+
+  async listLearningAssets(skillId: string, assetType: LearningAsset['type']): Promise<LearningAsset[]> {
+    return this.learningAssets
+      .filter((asset) => asset.skillId === skillId && asset.type === assetType &&
+        asset.verificationStatus === 'verified' && asset.rightsStatus !== 'blocked')
+      .sort((a, b) => b.version - a.version)
+      .map((asset) => ({ ...asset }));
+  }
+
   async listCards(userId: string): Promise<ReviewCard[]> {
     return [...this.cards.values()].filter((c) => c.userId === userId);
   }
@@ -136,6 +177,28 @@ export class MemoryStore implements DataStore {
     }
     attempt.usedAt = Date.now();
     this.answers.push(event);
+    if (event.learnerSkillState) {
+      this.learnerSkillStates.set(this.skillStateKey(event.userId, event.learnerSkillState.skillId), event.learnerSkillState);
+      const stateEventId = `answer:${event.attemptId}`;
+      if (!this.learningEvidence.some((entry) => entry.userId === event.userId && entry.clientEventId === stateEventId)) {
+        this.learningEvidence.push({
+          userId: event.userId,
+          skillId: event.learnerSkillState.skillId,
+          clientEventId: stateEventId,
+          eventType: 'learner_state_updated',
+          payload: { state: event.learnerSkillState, wasCorrect: event.isCorrect, seenBefore: event.seenBefore ?? false },
+        });
+        if (event.learnerSkillState.coverageState === 'verified_by_unseen') {
+          this.learningEvidence.push({
+            userId: event.userId,
+            skillId: event.learnerSkillState.skillId,
+            clientEventId: `proof:${event.attemptId}`,
+            eventType: 'unseen_verification',
+            payload: { source: 'holdout_question', verified: true, attemptId: event.attemptId },
+          });
+        }
+      }
+    }
     for (const row of masteryRows) this.mastery.set(`${event.userId}:${row.nodeId}`, row);
     for (const card of cards) this.cards.set(card.id, card);
 
