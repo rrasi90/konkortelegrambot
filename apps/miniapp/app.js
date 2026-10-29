@@ -349,6 +349,8 @@
       assistance: [],
     }).then(function (data) {
       if (data.stats) updateStatsChips(data.stats);
+      if (item.question && data.explanation) item.question.explanation = data.explanation;
+      if (item.question && data.trapNote) item.question.trapNote = data.trapNote;
       showFeedback(item, data.report, selected, data.correctOption);
     }).catch(function () {
       document.querySelectorAll('.option').forEach(function (b) { b.disabled = false; });
@@ -609,8 +611,9 @@
         button.disabled = false;
         return;
       }
+      button.disabled = false;
       state.queue = [{
-        card: { id: 'verification:' + data.question.id, nodeId: data.skillId, cardType: 'question', questionId: data.question.id },
+        card: { id: 'verification:' + data.question.id, nodeId: data.skillId, cardType: 'question', questionId: data.question.id, timesSeen: 0 },
         question: data.question,
         attemptId: data.attemptId,
         course: data.course || 'اثبات یادگیری',
