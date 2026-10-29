@@ -77,6 +77,10 @@ export interface LearnerSkillState {
   proficiencyProbability: number;
   estimateConfidence: number;
   evidenceCount: number;
+  /** Classified correct evidence on unseen questions. */
+  correctEvidenceCount: number;
+  /** Conceptual/confusable/computational gaps explicitly confirmed by diagnosis. A wrong answer alone does not increment this. */
+  assessedGapEvidenceCount: number;
   memoryRetrievability: number;
   fluencyScore: number;
   dominantErrorType: DominantErrorType;
