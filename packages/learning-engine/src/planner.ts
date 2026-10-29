@@ -132,11 +132,11 @@ export function buildDailyPlan(
   }
 
   for (const row of ranked) {
+    if (selectedIds.has(row.candidate.id)) continue;
     if (selected.length >= maxItems) {
       deferred.set(row.candidate.id, { candidate: row.candidate, reason: 'سقف تعداد آیتم‌های برنامه پر شده است', score: row.score });
       continue;
     }
-    if (selectedIds.has(row.candidate.id)) continue;
     pick(row.candidate, row.score, 'امتیاز اولویت = ارزش آزمونی × منفعت مورد انتظار × فوریت ÷ دقیقه');
   }
 
