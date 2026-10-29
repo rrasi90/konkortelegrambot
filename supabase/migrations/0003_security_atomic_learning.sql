@@ -207,6 +207,16 @@ declare
   v_report jsonb := coalesce(p_event->'ripple_report', '{}'::jsonb);
   v_event_state jsonb := p_event->'learner_skill_state';
   v_question_is_holdout boolean := false;
+  v_previous_correct integer := 0;
+  v_previous_gaps integer := 0;
+  v_previous_fluency numeric := 0;
+  v_correct_count integer := 0;
+  v_gap_count integer := 0;
+  v_evidence_count integer := 0;
+  v_proficiency numeric := 0.5;
+  v_estimate_confidence numeric := 0;
+  v_fluency numeric := 0;
+  v_response_signal numeric;
 begin
   if v_user_id is null or v_question_id is null or v_attempt_id is null then
     raise exception 'missing answer identity';
@@ -377,8 +387,39 @@ begin
     end if;
   end if;
 
-  -- Persist the six-dimensional skill projection and evidence event in the same transaction.
+  -- Serialize projection updates per learner-skill. Counts are computed from committed
+  -- database state, not a potentially stale client snapshot, so concurrent answers cannot lose evidence.
   if jsonb_typeof(p_event->'learner_skill_state') = 'object' then
+    perform pg_advisory_xact_lock(hashtextextended(
+      v_user_id::text || ':' || (v_event_state->>'skillId'), 1
+    ));
+    select correct_evidence_count, assessed_gap_evidence_count, fluency_score
+      into v_previous_correct, v_previous_gaps, v_previous_fluency
+    from public.learner_skill_states
+    where user_id = v_user_id and skill_id = v_event_state->>'skillId'
+    for update;
+    if not found then
+      v_previous_correct := 0;
+      v_previous_gaps := 0;
+      v_previous_fluency := 0;
+    end if;
+    v_correct_count := coalesce(v_previous_correct, 0) +
+      case when v_is_correct and not v_attempt.seen_before then 1 else 0 end;
+    v_gap_count := coalesce(v_previous_gaps, 0);
+    v_evidence_count := v_correct_count + v_gap_count;
+    v_proficiency := (2.0 + v_correct_count) / (4.0 + v_correct_count + v_gap_count);
+    v_estimate_confidence := 1.0 - exp(-v_evidence_count::numeric / 5.0);
+    if nullif(p_event->>'response_time_ms', '') is not null then
+      v_response_signal := exp(-least(greatest((p_event->>'response_time_ms')::numeric, 0), 3600000) / 30000.0);
+      v_fluency := coalesce(v_previous_fluency, v_response_signal) * 0.7 + v_response_signal * 0.3;
+    else
+      v_fluency := coalesce(
+        v_previous_fluency,
+        nullif(v_event_state->>'fluencyScore','')::numeric,
+        0
+      );
+    end if;
+
     insert into public.learner_skill_states(
       user_id, skill_id, proficiency_probability, estimate_confidence, evidence_count,
       correct_evidence_count, assessed_gap_evidence_count, memory_retrievability,
@@ -386,13 +427,13 @@ begin
     ) values (
       v_user_id,
       v_event_state->>'skillId',
-      (v_event_state->>'proficiencyProbability')::numeric,
-      (v_event_state->>'estimateConfidence')::numeric,
-      (v_event_state->>'evidenceCount')::integer,
-      (v_event_state->>'correctEvidenceCount')::integer,
-      (v_event_state->>'assessedGapEvidenceCount')::integer,
+      v_proficiency,
+      v_estimate_confidence,
+      v_evidence_count,
+      v_correct_count,
+      v_gap_count,
       (v_event_state->>'memoryRetrievability')::numeric,
-      (v_event_state->>'fluencyScore')::numeric,
+      v_fluency,
       v_event_state->>'dominantErrorType',
       case
         when v_question_is_holdout and not v_attempt.seen_before and v_is_correct then 'verified_by_unseen'
