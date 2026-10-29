@@ -113,11 +113,19 @@
           </div>
         </div>
         <div class="settings-row">
-          <span>تاریخ کنکور</span>
+          <label for="input-exam-date">تاریخ کنکور</label>
           <div class="exam-date-row">
             <input id="input-exam-date" type="date" />
             <button id="btn-save-exam" class="btn small primary">ذخیره</button>
           </div>
+        </div>
+        <div class="settings-row">
+          <label for="input-daily-minutes">زمان مطالعهٔ روزانه (دقیقه)</label>
+          <div class="exam-date-row">
+            <input id="input-daily-minutes" type="number" min="10" max="480" step="5" value="30" inputmode="numeric" />
+            <button id="btn-save-daily" class="btn small primary">ذخیره</button>
+          </div>
+          <small>برنامهٔ امروز بر اساس این سقف زمان انتخاب می‌شود.</small>
         </div>
         <p id="settings-saved" class="saved-msg" hidden>ذخیره شد.</p>
         <button id="btn-logout" class="btn ghost">خروج</button>
