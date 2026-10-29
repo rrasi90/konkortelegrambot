@@ -245,7 +245,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const items = await Promise.all(queue.map(async (item) => {
       const node = state.nodes.get(item.card.nodeId);
       const attemptId = item.card.cardType === 'question' && item.question
-        ? await store.createQuestionAttempt(user.id, item.question.id, crypto.randomUUID(), 900)
+        ? await store.createQuestionAttempt(user.id, item.question.id, crypto.randomUUID(), 900,
+            (state.cards.find((card) => card.cardType === 'question' && card.questionId === item.question!.id)?.timesSeen ?? 0) > 0, '1')
         : undefined;
       return {
         ...item,
@@ -266,13 +267,17 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const user = await currentUser(c);
     if (!user) return authError(c);
     const body = (await c.req.json().catch(() => null)) as
-      | { attemptId?: string; questionId?: string; selectedOption?: number }
+      | { attemptId?: string; questionId?: string; selectedOption?: number; responseTimeMs?: number; confidenceBefore?: number; assistance?: string[]; studyMode?: 'desk' | 'commute' | 'exam' }
       | null;
     if (
       !body ||
       typeof body.questionId !== 'string' ||
       typeof body.selectedOption !== 'number' || !Number.isInteger(body.selectedOption) || body.selectedOption < 0 ||
-      typeof body.attemptId !== 'string' || body.attemptId.length < 8 || body.attemptId.length > 128
+      typeof body.attemptId !== 'string' || body.attemptId.length < 8 || body.attemptId.length > 128 ||
+      (body.responseTimeMs !== undefined && (!Number.isInteger(body.responseTimeMs) || body.responseTimeMs < 0 || body.responseTimeMs > 3_600_000)) ||
+      (body.confidenceBefore !== undefined && (!Number.isInteger(body.confidenceBefore) || body.confidenceBefore < 1 || body.confidenceBefore > 5)) ||
+      (body.assistance !== undefined && (!Array.isArray(body.assistance) || body.assistance.length > 10 || body.assistance.some((v) => typeof v !== 'string' || v.length > 100))) ||
+      (body.studyMode !== undefined && !['desk', 'commute', 'exam'].includes(body.studyMode))
     ) {
       return c.json({ error: 'ورودی نامعتبر' }, 400);
     }
@@ -286,6 +291,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const state = await loadEngineState(user.id);
     const question = state.questions.get(body.questionId);
     if (!question) return c.json({ error: 'سؤال ناشناخته' }, 404);
+    if (body.selectedOption >= question.options.length) return c.json({ error: 'شمارهٔ گزینه خارج از محدوده است' }, 400);
 
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
     const currentQuestionCard = state.cards.find((card) => card.cardType === 'question' && card.questionId === question.id);
@@ -297,6 +303,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         attemptId: body.attemptId,
         selectedOption: body.selectedOption,
         seenBefore: (currentQuestionCard?.timesSeen ?? 0) > 0,
+        responseTimeMs: body.responseTimeMs,
+        confidenceBefore: body.confidenceBefore,
+        assistance: body.assistance ?? [],
+        studyMode: body.studyMode ?? 'desk',
       },
       engineUser,
     );
@@ -312,6 +322,13 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       attemptId: body.attemptId,
       answeredAt,
       rippleReport: result.report,
+      responseTimeMs: body.responseTimeMs,
+      seenBefore: (currentQuestionCard?.timesSeen ?? 0) > 0,
+      confidenceBefore: body.confidenceBefore,
+      assistance: body.assistance ?? [],
+      studyMode: body.studyMode ?? 'desk',
+      engineVersion: '0.2.0',
+      itemVersion: '1',
     }, result.masteryUpdates, [...result.cardUpdates, ...result.createdCards]);
 
     if (commit.replay) return c.json({ report: commit.report ?? result.report, replay: true });
@@ -449,7 +466,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       .sort(() => Math.random() - 0.5)
       .map(async (q) => ({
         card: { questionId: q.id, nodeId: q.nodeId, cardType: 'question' as const },
-        attemptId: await store.createQuestionAttempt(user.id, q.id, crypto.randomUUID(), 900),
+        attemptId: await store.createQuestionAttempt(user.id, q.id, crypto.randomUUID(), 900, true, '1'),
         question: { ...q, correctOption: -1 as unknown as number },
         course: nodeMap.get(q.nodeId)?.course,
         chapter: nodeMap.get(q.nodeId)?.chapter,
