@@ -24,7 +24,7 @@ import { SupabaseStore } from './store';
 export interface Env {
   SUPABASE_URL?: string;
   SUPABASE_SERVICE_ROLE_KEY?: string;
-  SESSION_SECRET: string;
+  SESSION_SECRET?: string;
   TELEGRAM_BOT_TOKEN?: string;
   ALLOW_DEMO_AUTH?: string;
 }
@@ -40,15 +40,22 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   const app: Hono<{ Variables: { store: DataStore; secret: string; allowDemoAuth: boolean } }> = new Hono();
   app.use('*', cors());
 
-  const store: DataStore =
-    options.store ??
-    (env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
-      ? new SupabaseStore(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
-      : new MemoryStore());
-  const secret = env.SESSION_SECRET || 'dev-secret';
   const allowDemoAuth = env.ALLOW_DEMO_AUTH === 'true';
+  const hasSupabase = Boolean(env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY);
+  const secret = env.SESSION_SECRET ?? '';
+  // MemoryStore is only allowed when explicitly enabling local/demo authentication.
+  const store: DataStore = options.store ??
+    (hasSupabase
+      ? new SupabaseStore(env.SUPABASE_URL!, env.SUPABASE_SERVICE_ROLE_KEY!)
+      : allowDemoAuth
+        ? new MemoryStore()
+        : new MemoryStore());
+  const configurationError = !secret || (!options.store && !hasSupabase && !allowDemoAuth);
 
   app.use('*', async (c, next) => {
+    if (configurationError && c.req.path !== '/api/health') {
+      return c.json({ error: 'محیط اجرا پیکربندی نشده است؛ پایگاه دادهٔ پایدار و SESSION_SECRET لازم است.' }, 503);
+    }
     c.set('store', store);
     c.set('secret', secret);
     c.set('allowDemoAuth', allowDemoAuth);
@@ -102,25 +109,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     );
   }
 
-  /** سکه و روز پیوسته را پس از اولین پاسخ روز به‌روز می‌کند */
-  async function applyStatsForAnswer(userId: string, wasCorrect: boolean): Promise<UserStats> {
-    const stats = await ensureStats(userId);
-    const today = tehranDateStr();
-    if (stats.lastStudyDate !== today) {
-      stats.streakDays = stats.lastStudyDate === tehranDateStr(-1) ? stats.streakDays + 1 : 1;
-      stats.dayNumber += 1;
-      stats.lastStudyDate = today;
-    }
-    stats.coins += wasCorrect ? 2 : 1;
-    await store.upsertStats(stats);
-    return stats;
-  }
 
   const MENTOR_MESSAGES = {
     newUser: 'خوش اومدی! هر روز چند سؤال، آرام ولی پیوسته — نقشهٔ تسلطت کم‌کم ساخته می‌شود.',
-    streak: 'روز {n} پیوسته! همین آهنگ را حفظ کن؛ موتور موج، جای خالی‌ها را خودش پیدا می‌کند.',
-    weak: 'امروز روی گره‌های قرمز نقشه تمرکز کن؛ پیش‌نیازهایشان هم با هم ترمیم می‌شوند.',
-    strong: 'نقشه‌ات خوب پیش می‌رود؛ وقتشه گره‌های متزلزل را به تثبیت‌شده برسانی.',
+    streak: 'روز {n} پیوسته! همین آهنگ را حفظ کن؛ مرور و سؤال‌های تازه را ادامه بده.',
+    weak: 'یک پاسخ اشتباه به‌تنهایی نشانهٔ ناتوانی نیست؛ اول نوع خطا را تشخیص می‌دهیم.',
+    strong: 'پیشرفتت را با شواهد و سؤال‌های دیده‌نشده می‌سنجیم، نه فقط پاسخ‌های تکراری.',
   };
 
   function mentorMessageFor(stats: UserStats, overall: number, answeredToday: number): string {
@@ -152,7 +146,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   /* ------------------------------ routes ------------------------------ */
 
-  app.get('/api/health', (c) => c.json({ ok: true }));
+  app.get('/api/health', (c) => c.json({ ok: !configurationError, configured: !configurationError }, configurationError ? 503 : 200));
 
   app.post('/api/auth/telegram', async (c) => {
     const body = (await c.req.json()) as { initData?: string };
@@ -161,7 +155,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const result = await verifyTelegramInitData(body.initData, env.TELEGRAM_BOT_TOKEN);
     if (!result.ok) return c.json({ error: 'دادهٔ تلگرام نامعتبر' }, 401);
     let user = await store.getUserByTelegramId(result.userId);
-    if (!user) user = await store.createUser({ telegramUserId: result.userId, displayName: result.firstName });
+    if (!user) {
+      try {
+        user = await store.createUser({ telegramUserId: result.userId, displayName: result.firstName });
+      } catch (error) {
+        // A concurrent first login may win the unique Telegram ID insert.
+        user = await store.getUserByTelegramId(result.userId);
+        if (!user) throw error;
+      }
+    }
     return c.json({ token: await issueSessionToken(user.id, secret), user });
   });
 
@@ -196,14 +198,16 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.get('/api/queue', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
-    const limit = Math.min(Number(c.req.query('limit') ?? 10), 50);
+    const requestedLimit = Number(c.req.query('limit') ?? 10);
+    if (!Number.isInteger(requestedLimit) || requestedLimit < 1) return c.json({ error: 'limit نامعتبر است' }, 400);
+    const limit = Math.min(requestedLimit, 20);
     const state = await loadEngineState(user.id);
 
     // کارت‌های تازه: اگر صف سررسیدشده‌ها پر نشد، برای سؤال‌های دیده‌نشدهٔ گرایش‌های فعال کارت بساز
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
     let queue = buildDailyQueue(state, engineUser, { limit });
     if (queue.length < limit) {
-      const seenQuestionIds = new Set(state.cards.map((card) => card.questionId).filter(Boolean));
+      const seenQuestionIds = new Set(state.cards.filter((card) => card.cardType === 'question').map((card) => card.questionId).filter(Boolean));
       const allowed = (nodeId: string): boolean => {
         const n = state.nodes.get(nodeId);
         return !!n && (n.track === 'common' || user.activeTracks.includes(n.track));
@@ -238,21 +242,23 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       }
     }
 
-    const items: (QueueItem & { course?: string; chapter?: string; topic?: string })[] = queue.map(
-      (item) => {
-        const node = state.nodes.get(item.card.nodeId);
-        return {
-          ...item,
-          // در پاسخ به کلاینت، متن سؤال بدون کلید صحیح ارسال می‌شود
-          question: item.question
-            ? { ...item.question, correctOption: -1 as unknown as number }
-            : undefined,
-          course: node?.course,
-          chapter: node?.chapter,
-          topic: node?.topic,
-        };
-      },
-    );
+    const items = await Promise.all(queue.map(async (item) => {
+      const node = state.nodes.get(item.card.nodeId);
+      const attemptId = item.card.cardType === 'question' && item.question
+        ? await store.createQuestionAttempt(user.id, item.question.id, crypto.randomUUID(), 900)
+        : undefined;
+      return {
+        ...item,
+        attemptId,
+        // Never send the answer key to the Mini App.
+        question: item.question
+          ? { ...item.question, correctOption: -1 as unknown as number }
+          : undefined,
+        course: node?.course,
+        chapter: node?.chapter,
+        topic: node?.topic,
+      };
+    }));
     return c.json({ items });
   });
 
@@ -265,8 +271,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (
       !body ||
       typeof body.questionId !== 'string' ||
-      typeof body.selectedOption !== 'number' ||
-      typeof body.attemptId !== 'string'
+      typeof body.selectedOption !== 'number' || !Number.isInteger(body.selectedOption) || body.selectedOption < 0 ||
+      typeof body.attemptId !== 'string' || body.attemptId.length < 8 || body.attemptId.length > 128
     ) {
       return c.json({ error: 'ورودی نامعتبر' }, 400);
     }
@@ -282,6 +288,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!question) return c.json({ error: 'سؤال ناشناخته' }, 404);
 
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
+    const currentQuestionCard = state.cards.find((card) => card.cardType === 'question' && card.questionId === question.id);
     const result = applyAnswer(
       state,
       {
@@ -289,28 +296,26 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         questionId: body.questionId,
         attemptId: body.attemptId,
         selectedOption: body.selectedOption,
+        seenBefore: (currentQuestionCard?.timesSeen ?? 0) > 0,
       },
       engineUser,
     );
 
-    // پایدارسازی اتمی‌شونده: رویداد پاسخ + تسلط‌ها + کارت‌ها
     const wasCorrect = result.report.wasCorrect;
-    await store.insertAnswerEvent({
+    const answeredAt = new Date().toISOString();
+    const commit = await store.commitAnswer({
       id: crypto.randomUUID(),
       userId: user.id,
       questionId: body.questionId,
       selectedOption: body.selectedOption,
       isCorrect: wasCorrect,
       attemptId: body.attemptId,
-      answeredAt: new Date().toISOString(),
+      answeredAt,
       rippleReport: result.report,
-    });
-    await store.upsertMastery(user.id, result.masteryUpdates);
-    await store.upsertCards([...result.cardUpdates, ...result.createdCards]);
+    }, result.masteryUpdates, [...result.cardUpdates, ...result.createdCards]);
 
-    // آمار انگیزشی: سکه + روز پیوسته (فقط برای پاسخ‌های تازه، نه replay)
-    const stats = await applyStatsForAnswer(user.id, wasCorrect);
-
+    if (commit.replay) return c.json({ report: commit.report ?? result.report, replay: true });
+    const stats = commit.stats ?? await ensureStats(user.id);
     return c.json({
       report: result.report,
       correctOption: question.correctOption,
@@ -372,9 +377,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const visible = nodes.filter(
       (n) => n.track === 'common' || user.activeTracks.includes(n.track),
     );
-    const overall = visible.length
-      ? visible.reduce((sum, n) => sum + (masteryByNode.get(n.id) ?? DEFAULT_MASTERY), 0) /
-        visible.length
+    // Unseen skills are unknown, not 50% mastered; show observed evidence only.
+    const observedMastery = visible
+      .map((n) => masteryByNode.get(n.id))
+      .filter((value): value is number => value !== undefined);
+    const overall = observedMastery.length
+      ? observedMastery.reduce((sum, value) => sum + value, 0) / observedMastery.length
       : 0;
     const now = Date.now();
     const reviewDue = cards.filter((card) => {
@@ -392,12 +400,27 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         examDate: stats.examDate,
         daysLeft: stats.examDate ? daysBetween(tehranDateStr(), stats.examDate) : null,
       },
-      progress: { overall: Math.round(overall), nodes: visible.length },
+      progress: { overall: Math.round(overall), nodes: visible.length, observedNodes: observedMastery.length, isEvidenceBased: true },
       today: { answered: todayAnswers.length, correct: todayAnswers.length - wrongToday.length },
       reviewDue,
       nightQuiz: { available: wrongToday.length > 0, wrongCount: wrongToday.length },
       mentorMessage: mentorMessageFor(stats, overall, todayAnswers.length),
     });
+  });
+
+  /* ---------- ثبت مرور کارت دام بدون ثبت پاسخ یا تغییر تسلط ---------- */
+  app.post('/api/trap-cards/seen', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as { cardId?: string } | null;
+    if (!body || typeof body.cardId !== 'string') return c.json({ error: 'cardId نامعتبر است' }, 400);
+    const cards = await store.listCards(user.id);
+    const card = cards.find((item) => item.id === body.cardId && item.cardType === 'trap_note');
+    if (!card) return c.json({ error: 'کارت دام پیدا نشد' }, 404);
+    card.timesSeen += 1;
+    card.dueAt = new Date(Date.now() + 7 * 86_400_000).toISOString();
+    await store.upsertCards([card]);
+    return c.json({ ok: true, dueAt: card.dueAt });
   });
 
   /* ---------- کوییز شبانه: مرور پاسخ‌های غلط امروز ---------- */
@@ -410,19 +433,28 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     ]);
     const questionMap = new Map(questions.map((q) => [q.id, q]));
     const nodeMap = new Map((await store.listNodes()).map((n) => [n.id, n]));
-    const wrongIds = [...new Set(todayAnswers.filter((a) => !a.isCorrect).map((a) => a.questionId))];
-    // ترتیب سؤال‌ها را می‌شکنیم؛ ترتیب گزینه‌ها ثابت می‌ماند (شناسهٔ گزینه کلید ثبت پاسخ است)
-    const items = wrongIds
+    // Use the latest event per question; a later correct response clears a stale wrong flag.
+    const latestByQuestion = new Map<string, typeof todayAnswers[number]>();
+    for (const answer of [...todayAnswers].sort((a, b) => a.answeredAt.localeCompare(b.answeredAt))) {
+      latestByQuestion.set(answer.questionId, answer);
+    }
+    const wrongIds = [...latestByQuestion.values()].filter((a) => !a.isCorrect).map((a) => a.questionId);
+    const items = await Promise.all(wrongIds
       .map((id) => questionMap.get(id))
       .filter((q): q is NonNullable<typeof q> => !!q)
+      .filter((q) => {
+        const node = nodeMap.get(q.nodeId);
+        return !!node && (node.track === 'common' || user.activeTracks.includes(node.track));
+      })
       .sort(() => Math.random() - 0.5)
-      .map((q) => ({
+      .map(async (q) => ({
         card: { questionId: q.id, nodeId: q.nodeId, cardType: 'question' as const },
+        attemptId: await store.createQuestionAttempt(user.id, q.id, crypto.randomUUID(), 900),
         question: { ...q, correctOption: -1 as unknown as number },
         course: nodeMap.get(q.nodeId)?.course,
         chapter: nodeMap.get(q.nodeId)?.chapter,
         topic: nodeMap.get(q.nodeId)?.topic,
-      }));
+      })));
     return c.json({ items });
   });
 
