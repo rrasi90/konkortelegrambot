@@ -9,12 +9,13 @@ import {
   DEFAULT_ENGINE_CONFIG,
   applyAnswer,
   buildDailyQueue,
+  buildDailyPlan,
   isTrackId,
   questionCardId,
   statusFromMastery,
   DEFAULT_MASTERY,
 } from '@ael/engine';
-import type { EngineState, QueueItem } from '@ael/engine';
+import type { EngineState, PlanCandidate, QueueItem } from '@ael/engine';
 import type { ReviewCard, TrackId } from '@ael/contracts';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
 import type { AppUser, DataStore, UserStats } from './store';
@@ -201,57 +202,145 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const requestedLimit = Number(c.req.query('limit') ?? 10);
     if (!Number.isInteger(requestedLimit) || requestedLimit < 1) return c.json({ error: 'limit نامعتبر است' }, 400);
     const limit = Math.min(requestedLimit, 20);
+    const dailyMinutes = Math.max(10, Math.min(480, user.dailyCapacity ?? 30));
     const state = await loadEngineState(user.id);
-
-    // کارت‌های تازه: اگر صف سررسیدشده‌ها پر نشد، برای سؤال‌های دیده‌نشدهٔ گرایش‌های فعال کارت بساز
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
-    let queue = buildDailyQueue(state, engineUser, { limit });
-    if (queue.length < limit) {
-      const seenQuestionIds = new Set(state.cards.filter((card) => card.cardType === 'question').map((card) => card.questionId).filter(Boolean));
-      const allowed = (nodeId: string): boolean => {
-        const n = state.nodes.get(nodeId);
-        return !!n && (n.track === 'common' || user.activeTracks.includes(n.track));
-      };
-      const freshQuestions = [...state.questions.values()].filter(
-        (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id),
-      );
-      const now = new Date();
-      const newCards: ReviewCard[] = [];
-      for (const q of freshQuestions) {
-        if (queue.length + newCards.length >= limit) break;
-        const id = questionCardId(user.id, q.id);
-        if (state.cards.some((card) => card.id === id)) continue;
-        newCards.push({
-          id,
-          userId: user.id,
-          nodeId: q.nodeId,
-          cardType: 'question',
-          questionId: q.id,
-          dueAt: now.toISOString(),
-          intervalDays: 1,
-          ease: 2.5,
-          isRepair: false,
-          timesSeen: 0,
-          timesCorrect: 0,
-        });
-      }
-      if (newCards.length > 0) {
-        await store.upsertCards(newCards);
-        for (const card of newCards) state.cards.push(card);
-        queue = buildDailyQueue(state, engineUser, { limit });
-      }
+    const now = new Date();
+    const dueQueue = buildDailyQueue(state, engineUser, { limit: Math.max(1, state.cards.length), now });
+    const candidates: PlanCandidate[] = [];
+    const candidateItems = new Map<string, QueueItem>();
+    const newlyCreatedCards = new Map<string, ReviewCard>();
+
+    const allowed = (nodeId: string): boolean => {
+      const node = state.nodes.get(nodeId);
+      return !!node && (node.track === 'common' || user.activeTracks.includes(node.track));
+    };
+    const dueQuestionIds = new Set<string>();
+    for (const item of dueQueue) {
+      candidateItems.set(item.card.id, item);
+      if (item.card.cardType === 'question' && item.card.questionId) dueQuestionIds.add(item.card.questionId);
+      const overdueDays = Math.max(0, (now.getTime() - new Date(item.card.dueAt).getTime()) / 86_400_000);
+      candidates.push({
+        id: item.card.id,
+        targetId: item.card.id,
+        actionType: item.card.isRepair ? 'remediation' : 'spaced_review',
+        examValue: 0.5,
+        expectedBenefit: item.card.isRepair ? 0.85 : item.card.cardType === 'trap_note' ? 0.55 : 0.65,
+        urgency: Math.min(1, 0.55 + overdueDays / 14),
+        estimatedMinutes: item.card.cardType === 'trap_note' ? 1 : 2,
+        reason: 'مرور سررسیدشده؛ امتیاز رسمی آزمونی برای این مبحث هنوز از بستهٔ تأییدشده دریافت نشده است.',
+      });
     }
+
+    // Only non-holdout items may enter the ordinary queue. Holdout questions are
+    // reserved for unseen verification and must never leak through the new-material path.
+    const seenQuestionIds = new Set(
+      state.cards
+        .filter((card) => card.cardType === 'question' && card.timesSeen > 0)
+        .map((card) => card.questionId)
+        .filter((id): id is string => Boolean(id)),
+    );
+    const nowIso = now.toISOString();
+    const freshQuestions = [...state.questions.values()].filter(
+      (question) =>
+        !question.isHoldout &&
+        allowed(question.nodeId) &&
+        !seenQuestionIds.has(question.id) &&
+        !dueQuestionIds.has(question.id),
+    );
+
+    for (const question of freshQuestions) {
+      const id = questionCardId(user.id, question.id);
+      const existing = state.cards.find((card) => card.id === id);
+      const card: ReviewCard = existing ?? {
+        id,
+        userId: user.id,
+        nodeId: question.nodeId,
+        cardType: 'question',
+        questionId: question.id,
+        dueAt: nowIso,
+        intervalDays: 1,
+        ease: 2.5,
+        isRepair: false,
+        timesSeen: 0,
+        timesCorrect: 0,
+      };
+      const item: QueueItem = { card, question, ...(question.trapNote ? { trapNote: question.trapNote } : {}) };
+      candidateItems.set(card.id, item);
+      if (!existing) newlyCreatedCards.set(card.id, card);
+      candidates.push({
+        id: card.id,
+        targetId: card.id,
+        actionType: 'new_material',
+        examValue: 0.5,
+        expectedBenefit: 0.75,
+        urgency: 0.55,
+        estimatedMinutes: 3,
+        reason: 'محتوای جدید؛ تا زمان ثبت ضرایب رسمی، ارزش آزمونی با مقدار خنثی ۰٫۵ برآورد شده است.',
+      });
+    }
+
+    const plan = buildDailyPlan(candidates, {
+      dailyMinutes,
+      maxItems: limit,
+      minimumNewMaterialShare: 0.25,
+      maximumRemediationShare: 0.4,
+    });
+    const queue = plan.selected
+      .map((planned) => candidateItems.get(planned.targetId))
+      .filter((item): item is QueueItem => Boolean(item));
+
+    const cardsToPersist = plan.selected
+      .map((planned) => newlyCreatedCards.get(planned.targetId))
+      .filter((card): card is ReviewCard => Boolean(card));
+    if (cardsToPersist.length) {
+      await store.upsertCards(cardsToPersist);
+      for (const card of cardsToPersist) state.cards.push(card);
+    }
+
+    // Persist a compact audit trail: chosen actions plus the most relevant deferred alternatives.
+    const decisions = [
+      ...plan.selected.map((row) => ({ row, selected: true, note: row.selectionReason })),
+      ...plan.deferred.slice(0, 20).map((row) => ({ row: { ...row.candidate, score: row.score }, selected: false, note: row.reason })),
+    ].map(({ row, selected, note }) => ({
+      id: crypto.randomUUID(),
+      actionType: row.actionType,
+      targetId: row.targetId,
+      examValue: row.examValue,
+      expectedBenefit: row.expectedBenefit,
+      urgency: row.urgency,
+      estimatedMinutes: row.estimatedMinutes,
+      score: row.score,
+      selected,
+      reason: {
+        note,
+        officialExamWeightKnown: false,
+        dailyBudgetMinutes: plan.budgetMinutes,
+        plannerFormula: 'examValue * expectedBenefit * urgency / estimatedMinutes',
+      },
+      plannerVersion: '0.1.0',
+    }));
+    await store.logPlannerDecisions(user.id, tehranDateStr(), decisions);
 
     const items = await Promise.all(queue.map(async (item) => {
       const node = state.nodes.get(item.card.nodeId);
       const attemptId = item.card.cardType === 'question' && item.question
-        ? await store.createQuestionAttempt(user.id, item.question.id, crypto.randomUUID(), 900,
-            (state.cards.find((card) => card.cardType === 'question' && card.questionId === item.question!.id)?.timesSeen ?? 0) > 0, '1')
+        ? await store.createQuestionAttempt(
+            user.id,
+            item.question.id,
+            crypto.randomUUID(),
+            900,
+            item.card.timesSeen > 0,
+            '1',
+          )
         : undefined;
+      const planned = plan.selected.find((row) => row.targetId === item.card.id);
       return {
         ...item,
         attemptId,
-        // Never send the answer key to the Mini App.
+        estimatedMinutes: planned?.estimatedMinutes,
+        priorityScore: planned?.score,
+        planReason: planned?.selectionReason,
         question: item.question
           ? { ...item.question, correctOption: -1 as unknown as number }
           : undefined,
@@ -260,7 +349,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         topic: node?.topic,
       };
     }));
-    return c.json({ items });
+    return c.json({
+      items,
+      plan: {
+        budgetMinutes: plan.budgetMinutes,
+        usedMinutes: plan.usedMinutes,
+        remainingMinutes: Math.max(0, plan.budgetMinutes - plan.usedMinutes),
+        newMaterialMinutes: plan.newMaterialMinutes,
+        remediationMinutes: plan.remediationMinutes,
+        warnings: [
+          ...plan.warnings,
+          'وزن رسمی آزمونی هنوز به این بسته متصل نشده است؛ مقدار خنثی استفاده شده و امتیاز برنامه‌ریز یک heuristic است.',
+        ],
+      },
+    });
   });
 
   app.post('/api/answers', async (c) => {
