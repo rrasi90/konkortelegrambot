@@ -202,6 +202,8 @@ export interface AnswerInput {
   confidenceRating?: number;
   /** خوداظهاری کاربر پس از پاسخ غلط */
   selfReport?: SelfReport;
+  /** نوع این تلاش (اثبات تسلط روی کارت Holdout) */
+  attemptType?: 'practice' | 'diagnostic' | 'verification' | 'proof';
 }
 
 export interface MasteryDelta {
@@ -216,6 +218,7 @@ export interface CardAction {
   kind:
     | 'reset_failed_card'
     | 'create_trap_card'
+    | 'create_comparison_card'
     | 'reschedule_siblings'
     | 'schedule_repair'
     | 'grow_interval';
@@ -262,6 +265,31 @@ export interface RippleReport {
 
 /* ---------- Engine Result ---------- */
 
+/** وضعیت شش‌بعدی یادگیرنده برای یک مهارت (ساختار هم‌ارز مدل موتور FSRS) */
+export interface LearnerSkillState {
+  /** احتمال تسلط P(L) بین ۰ و ۱ */
+  proficiencyProbability: number;
+  /** اطمینان به برآورد بین ۰ و ۱ */
+  confidence: number;
+  /** شمار شواهد معتبر */
+  evidenceCount: number;
+  /** بازیابی حافظه از FSRS بین ۰ و ۱ */
+  memoryRetrievability: number;
+  /** نسبت زمان پاسخ به مبنای سؤال */
+  fluencySpeedRatio: number;
+  /** نوع غالب خطا */
+  dominantErrorType: string;
+  /** وضعیت چرخهٔ پوشش */
+  coverageStatus: 'unseen' | 'diagnosed' | 'learning' | 'remediated' | 'needs_proof' | 'proven' | 'mastered';
+}
+
+/** به‌روزرسانی وضعیت یک مهارت برای پایدارسازی در learner_skill_states */
+export interface SkillStateUpdate {
+  skillId: string;
+  nodeId: string;
+  state: LearnerSkillState;
+}
+
 export interface EngineResult {
   report: RippleReport;
   /** نقشهٔ به‌روزشدهٔ تسلط گره‌ها */
@@ -270,6 +298,8 @@ export interface EngineResult {
   cardUpdates: ReviewCard[];
   /** کارت‌های تازه ساخته‌شده */
   createdCards: ReviewCard[];
+  /** وضعیت شش‌بعدی به‌روزشدهٔ مهارتِ اصلی سؤال */
+  skillStateUpdate?: SkillStateUpdate;
 }
 
 /* ---------- Validation helpers (no external deps) ---------- */
