@@ -100,7 +100,7 @@ create table if not exists public.learner_skill_state (
   dominant_error_type text not null default 'unknown'
     check (dominant_error_type in ('conceptual','confusable','computational','slip','unknown')),
   coverage_state text not null default 'unseen'
-    check (coverage_state in ('unseen','diagnosis_pending','diagnosed','remediating','verified_by_unseen')),
+    check (coverage_state in ('unseen','diagnosis_pending','diagnosed','remediating','practice_in_progress','verified_by_unseen')),
   updated_at timestamptz not null default now(),
   primary key (user_id, skill_id)
 );
@@ -210,7 +210,9 @@ declare
   v_card jsonb;
   v_source_question_id text;
   v_skill record;
-  v_new_proficiency numeric;
+  v_correct_option integer;
+  v_options_count integer;
+  v_track text;
 begin
   select * into v_existing
   from public.answer_events
@@ -219,18 +221,24 @@ begin
     return jsonb_build_object('replay', true, 'report', v_existing.ripple_report);
   end if;
 
-  select q.correct_option, jsonb_array_length(q.options)
-    into v_inserted, v_new_proficiency
+  select q.correct_option, jsonb_array_length(q.options), n.track
+    into v_correct_option, v_options_count, v_track
   from public.questions q
+  join public.knowledge_nodes n on n.id = q.node_id
   where q.id = v_question_id and q.verification_status in ('verified', 'demo');
-  if v_inserted is null or v_new_proficiency is null then
+  if v_correct_option is null or v_options_count is null then
     raise exception 'question is not available for scoring' using errcode = '22023';
   end if;
-  if (p_event->>'selected_option')::integer < 0 or (p_event->>'selected_option')::integer >= v_new_proficiency::integer then
+  if (p_event->>'selected_option')::integer < 0 or (p_event->>'selected_option')::integer >= v_options_count then
     raise exception 'selected option out of range' using errcode = '22023';
   end if;
-  if ((p_event->>'selected_option')::integer = v_inserted::integer) is distinct from ((p_event->>'is_correct')::boolean) then
+  if ((p_event->>'selected_option')::integer = v_correct_option) is distinct from ((p_event->>'is_correct')::boolean) then
     raise exception 'answer correctness does not match server key' using errcode = '22023';
+  end if;
+  if v_track <> 'common' and not exists (
+    select 1 from public.app_users u where u.id = v_user_id and v_track = any(u.active_tracks)
+  ) then
+    raise exception 'question track is not active for this user' using errcode = '42501';
   end if;
 
   update public.question_attempts
@@ -286,7 +294,7 @@ begin
       case when (p_event->>'is_correct')::boolean and not coalesce((p_event->>'seen_before')::boolean, false)
         then 0.55 else 0.5 end,
       0.1, 1, 0.5, 0.5, 'unknown',
-      case when (p_event->>'is_correct')::boolean then 'unseen' else 'diagnosis_pending' end
+      case when (p_event->>'is_correct')::boolean then 'practice_in_progress' else 'diagnosis_pending' end
     )
     on conflict (user_id, skill_id) do update set
       proficiency_probability = case
@@ -300,6 +308,7 @@ begin
       coverage_state = case
         when not (p_event->>'is_correct')::boolean then 'diagnosis_pending'
         when public.learner_skill_state.coverage_state = 'verified_by_unseen' then 'verified_by_unseen'
+        when public.learner_skill_state.coverage_state = 'unseen' then 'practice_in_progress'
         else public.learner_skill_state.coverage_state
       end,
       updated_at = now();
