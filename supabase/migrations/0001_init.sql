@@ -122,7 +122,8 @@ create table if not exists review_cards (
   times_seen int not null default 0,
   times_correct int not null default 0,
   updated_at timestamptz not null default now(),
-  constraint one_owner_per_question_card unique (user_id, question_id)
+  -- Allow one question card AND one trap_note card per user per question
+  constraint one_owner_per_question_card_type unique (user_id, question_id, card_type)
 );
 create index if not exists review_cards_due_idx on review_cards (user_id, due_at);
 
