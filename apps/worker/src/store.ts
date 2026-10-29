@@ -299,6 +299,7 @@ export class SupabaseStore implements DataStore {
       correct_option: number;
       explanation: string | null;
       trap_note: string | null;
+      is_holdout: boolean;
     }[];
     return rows.map((r) => ({
       id: r.id,
@@ -309,6 +310,7 @@ export class SupabaseStore implements DataStore {
       correctOption: r.correct_option,
       explanation: r.explanation ?? undefined,
       trapNote: r.trap_note ?? undefined,
+      isHoldout: r.is_holdout === true,
     }));
   }
 
