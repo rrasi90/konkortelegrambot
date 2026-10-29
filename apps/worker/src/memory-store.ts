@@ -100,14 +100,14 @@ export class MemoryStore implements DataStore {
     this.answers.push(event);
   }
 
-  async createQuestionAttempt(userId: string, questionId: string, attemptId: string, ttlSeconds = 900): Promise<string> {
+  async createQuestionAttempt(userId: string, questionId: string, attemptId: string, ttlSeconds = 900, _seenBefore = false, _itemVersion = '1'): Promise<string> {
     const now = Date.now();
     const key = this.attemptKey(userId, questionId);
     const previousId = this.latestAttemptByQuestion.get(key);
     const previous = previousId ? this.attempts.get(previousId) : undefined;
     if (previous && !previous.usedAt && previous.expiresAt > now) return previous.attemptId;
-    const recent = [...this.attempts.values()].filter((a) => a.userId === userId && a.questionId === questionId && a.issuedAt > now - 3_600_000).length;
-    if (recent >= 5) throw new Error('attempt issuance limit reached');
+    const recent = [...this.attempts.values()].filter((a) => a.userId === userId && a.questionId === questionId && a.usedAt !== undefined && a.issuedAt > now - 3_600_000).length;
+    if (recent >= 2) throw new Error('attempt issuance limit reached');
     this.attempts.set(attemptId, { userId, questionId, attemptId, issuedAt: now, expiresAt: now + ttlSeconds * 1000 });
     this.latestAttemptByQuestion.set(key, attemptId);
     return attemptId;
