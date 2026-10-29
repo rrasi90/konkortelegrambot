@@ -48,6 +48,7 @@ const questions: Question[] = [
     correctOption: 0,
     explanation: 'مدل بارنی.',
     trapNote: 'دام رایج: خلط VRIN با VRIO.',
+    expectedTimeMs: 60_000,
   },
   {
     id: 'q-rbv-2',
@@ -71,6 +72,15 @@ const questions: Question[] = [
     correctOption: 0,
   },
 ];
+
+/** مهارت خرد متصل به گرهٔ sm.rbv (برای تشخیص و کارت مقایسه) */
+const smRbvSkill = {
+  id: 'skill.sm.rbv.vrio',
+  nodeId: 'sm.rbv',
+  confusableWith: ['skill.sm.dynamic.reconfiguration'],
+  prerequisites: [],
+  estimatedMinutes: 10,
+};
 
 function buildState(overrides: Partial<EngineState> = {}): EngineState {
   return {
@@ -195,7 +205,7 @@ describe('layer 1 — direct reset & trap card', () => {
     expect(traps.length).toBe(1);
   });
 
-  it('پاسخ درست فاصلهٔ مرور را بزرگ می‌کند', () => {
+  it('پاسخ درست با FSRS فاصلهٔ مرور می‌سازد (کارت تازه: Good → ۲ روز)', () => {
     const existing: ReviewCard = {
       ...card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv'),
       intervalDays: 10,
@@ -208,8 +218,12 @@ describe('layer 1 — direct reset & trap card', () => {
       { userId: 'user-1', activeTracks: ['common'] },
     );
     const updated = res.cardUpdates.find((c) => c.id === existing.id);
-    expect(updated?.intervalDays).toBe(21); // round(10 × 2.05) = round(20.5) = 21
+    // FSRS: بدون وضعیت قبلی، Good → stability ۳٫۲ → فاصلهٔ ۲ روز
+    expect(updated?.intervalDays).toBe(2);
     expect(updated?.ease).toBeCloseTo(2.05);
+    expect(new Date(updated?.dueAt ?? '').getTime()).toBe(addDays(NOW, 2).getTime());
+    expect(updated?.fsrs?.stability).toBeCloseTo(3.2);
+    expect(new Date(updated?.fsrs?.dueAt ?? '').getTime()).toBe(addDays(NOW, 2).getTime());
   });
 });
 
@@ -303,8 +317,8 @@ describe('layer 2 — sibling shock', () => {
   });
 });
 
-describe('layers 3 & 4 — prerequisite & cross-course ripple', () => {
-  it('خطا در مبحث پیشرفته، تسلط پیش‌نیاز را با ضریب یال کم می‌کند', () => {
+describe('layers 3 & 4 — diagnostic probes (به‌جای کسر فوری)', () => {
+  it('خطا در مبحث پیشرفته، پیش‌نیاز را بدون کسر عددی به بررسی تشخیصی می‌فرستد', () => {
     const state = buildState({
       mastery: new Map([
         ['stats.anova', 80],
@@ -318,10 +332,14 @@ describe('layers 3 & 4 — prerequisite & cross-course ripple', () => {
     );
     expect(res.report.prerequisiteRepairs.length).toBe(1);
     expect(res.report.prerequisiteRepairs[0]?.nodeId).toBe('stats.scales');
-    expect(res.report.prerequisiteRepairs[0]?.to).toBe(78.8); // 90 × (1 − 0.25×0.5)
+    // بدون کسر فوری: from = to — فقط شاهد اولیه است
+    expect(res.report.prerequisiteRepairs[0]?.from).toBe(90);
+    expect(res.report.prerequisiteRepairs[0]?.to).toBe(90);
+    expect(res.report.probeTargets).toContain('stats.scales');
+    expect(state.mastery.get('stats.scales')).toBe(90);
   });
 
-  it('پل بین‌درسی فقط برای گرایش‌های فعال کاربر فعال می‌شود', () => {
+  it('پل بین‌درسی فقط برای گرایش‌های فعال کاربر پیشنهاد تشخیصی می‌شود', () => {
     const state = buildState();
     // کاربر تکنولوژی است؛ نباید به مبحث بازرگانی (brand_equity) سرایت کند
     const res = applyAnswer(
@@ -329,9 +347,12 @@ describe('layers 3 & 4 — prerequisite & cross-course ripple', () => {
       { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a14', selectedOption: 1, answeredAt: NOW.toISOString() },
       { userId: 'user-1', activeTracks: ['common', 'technology'] },
     );
-    const deltas = res.report.masteryDeltas.map((d) => d.nodeId);
-    expect(deltas).toContain('tech.absorptive');
-    expect(deltas).not.toContain('mkt.brand_equity');
+    const deltaNodes = res.report.masteryDeltas.map((d) => d.nodeId);
+    expect(deltaNodes).not.toContain('tech.absorptive'); // دیگر کسر عددی وجود ندارد
+    expect(deltaNodes).not.toContain('mkt.brand_equity');
+    expect(res.report.probeTargets).toContain('tech.absorptive');
+    expect(res.report.probeTargets).not.toContain('mkt.brand_equity');
+    expect(res.masteryUpdates.map((m) => m.nodeId)).toEqual(['sm.rbv']);
   });
 
   it('پاسخ درست هیچ موجی ایجاد نمی‌کند', () => {
@@ -376,7 +397,7 @@ describe('mentor message', () => {
       { userId: 'user-1', activeTracks: ['common', 'business'] },
     );
     const msg = res.report.mentorMessage;
-    expect(msg).toContain('هنوز برات جا نیفتاده');
+    expect(msg).toContain('شاهد اولیه');
     expect(msg).toContain('هم‌خانواده');
   });
 
@@ -412,5 +433,169 @@ describe('input validation', () => {
         { userId: 'u', activeTracks: ['common'] },
       ),
     ).toThrow();
+  });
+});
+
+describe('slip suppression (سرکوب موج در لغزش)', () => {
+  it('خوداظهاری «بی‌دقتی کردم»: بدون کسر تسلط، بدون شوک و بدون probe', () => {
+    const sibling = card(questionCardId('user-1', 'q-rbv-2'), 'sm.rbv', { intervalDays: 20 });
+    const state = buildState({
+      mastery: new Map([['sm.rbv', 80]]),
+      cards: [sibling],
+    });
+    const res = applyAnswer(
+      state,
+      {
+        userId: 'user-1',
+        questionId: 'q-rbv-1',
+        attemptId: 'a18',
+        selectedOption: 1,
+        selfReport: 'slip',
+        answeredAt: NOW.toISOString(),
+      },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.report.errorType).toBe('slip');
+    expect(res.report.topicMastery.after).toBe(80); // بدون کسر
+    expect(res.report.siblingShock).toBeNull();
+    expect(res.report.probeTargets).toEqual([]);
+    expect(res.masteryUpdates).toEqual([]);
+    expect(state.cards.find((c) => c.id === sibling.id)?.intervalDays).toBe(20);
+    expect(res.report.mentorMessage).toContain('عجله');
+  });
+
+  it('لغزشِ خودکار: پاسخ بسیار سریع روی مبحث مسلط بدون خوداظهاری تشخیص داده می‌شود', () => {
+    const state = buildState({ mastery: new Map([['sm.rbv', 80]]) });
+    const res = applyAnswer(
+      state,
+      {
+        userId: 'user-1',
+        questionId: 'q-rbv-1',
+        attemptId: 'a19',
+        selectedOption: 1,
+        responseTimeMs: 2_000, // کمتر از نصف ۶۰ ثانیهٔ موردانتظار
+        answeredAt: NOW.toISOString(),
+      },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.report.errorType).toBe('slip');
+    expect(res.report.topicMastery.after).toBe(80);
+    expect(res.report.siblingShock).toBeNull();
+  });
+});
+
+describe('comparison card (کارت مقایسهٔ مفاهیم متشابه)', () => {
+  it('پاسخ غلطِ مفهومی روی مهارت دارای confusable_with کارت مقایسه می‌سازد (بدون تکرار)', () => {
+    const state = buildState({
+      skills: new Map([[smRbvSkill.id, smRbvSkill]]),
+    });
+    const r1 = applyAnswer(
+      state,
+      {
+        userId: 'user-1',
+        questionId: 'q-rbv-1',
+        attemptId: 'a20',
+        selectedOption: 1,
+        selfReport: 'didnt_know',
+        answeredAt: NOW.toISOString(),
+      },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    const cmp = r1.createdCards.find((c) => c.cardType === 'comparison_card');
+    expect(cmp).toBeDefined();
+    expect(cmp?.comparisonSkills).toEqual(['skill.sm.rbv.vrio', 'skill.sm.dynamic.reconfiguration']);
+    expect(r1.report.actions.some((a) => a.kind === 'create_comparison_card')).toBe(true);
+    expect(r1.report.errorType).toBe('concept_gap');
+
+    const r2 = applyAnswer(
+      state,
+      {
+        userId: 'user-1',
+        questionId: 'q-rbv-1',
+        attemptId: 'a21',
+        selectedOption: 1,
+        selfReport: 'didnt_know',
+        answeredAt: NOW.toISOString(),
+      },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(r2.createdCards.some((c) => c.cardType === 'comparison_card')).toBe(false);
+  });
+});
+
+describe('6D learner state & holdout proof (مدل ۶ بعدی و اثبات)', () => {
+  const prior6D = {
+    proficiencyProbability: 0.8,
+    confidence: 0.5,
+    evidenceCount: 1,
+    memoryRetrievability: 1,
+    fluencySpeedRatio: 1,
+    dominantErrorType: 'unknown' as const,
+    coverageStatus: 'diagnosed' as const,
+  };
+
+  it('آمادگی اثبات: احتمال تسلط ≥ ۰٫۷۵ با شواهد ناکافی → needs_proof + کاندیدای اثبات', () => {
+    const state = buildState({
+      skills: new Map([[smRbvSkill.id, smRbvSkill]]),
+      skillStates: new Map([[smRbvSkill.id, prior6D]]),
+    });
+    const res = applyAnswer(
+      state,
+      {
+        userId: 'user-1',
+        questionId: 'q-rbv-1',
+        attemptId: 'a22',
+        selectedOption: 0,
+        answeredAt: NOW.toISOString(),
+      },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.skillStateUpdate).toBeDefined();
+    expect(res.skillStateUpdate?.skillId).toBe('skill.sm.rbv.vrio');
+    expect(res.skillStateUpdate?.state.proficiencyProbability).toBeGreaterThanOrEqual(0.75);
+    expect(res.skillStateUpdate?.state.coverageStatus).toBe('needs_proof');
+    expect(res.report.proofCandidate).toEqual({ nodeId: 'sm.rbv', skillId: 'skill.sm.rbv.vrio' });
+  });
+
+  it('تلاشِ اثباتِ درست روی کارت Holdout → وضعیت proven', () => {
+    const state = buildState({
+      skills: new Map([[smRbvSkill.id, smRbvSkill]]),
+      skillStates: new Map([[smRbvSkill.id, prior6D]]),
+    });
+    const res = applyAnswer(
+      state,
+      {
+        userId: 'user-1',
+        questionId: 'q-rbv-1',
+        attemptId: 'a23',
+        selectedOption: 0,
+        attemptType: 'proof',
+        answeredAt: NOW.toISOString(),
+      },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.skillStateUpdate?.state.coverageStatus).toBe('proven');
+    expect(res.report.proofCandidate).toBeNull();
+  });
+
+  it('تلاش اثباتِ غلط، مهارت را proven نمی‌کند', () => {
+    const state = buildState({
+      skills: new Map([[smRbvSkill.id, smRbvSkill]]),
+      skillStates: new Map([[smRbvSkill.id, prior6D]]),
+    });
+    const res = applyAnswer(
+      state,
+      {
+        userId: 'user-1',
+        questionId: 'q-rbv-1',
+        attemptId: 'a24',
+        selectedOption: 1,
+        attemptType: 'proof',
+        answeredAt: NOW.toISOString(),
+      },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+    expect(res.skillStateUpdate?.state.coverageStatus).not.toBe('proven');
+    expect(res.skillStateUpdate?.state.coverageStatus).not.toBe('needs_proof');
   });
 });
