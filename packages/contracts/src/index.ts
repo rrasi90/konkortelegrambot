@@ -62,12 +62,98 @@ export type VerificationStatus = 'unverified' | 'verified' | 'quarantined';
 
 export type MasteryStatus = 'weak' | 'unstable' | 'learning' | 'mastered';
 
+export enum UserSkillStatus {
+  UNSEEN = 'unseen',
+  EVIDENCE_GATHERING = 'evidence_gathering',
+  SKILL_GAP = 'skill_gap',
+  IN_REMEDIATION = 'in_remediation',
+  EVIDENCE_SUFFICIENT = 'evidence_sufficient',
+  PROVEN_INDEPENDENT = 'proven_independent',
+}
+
+export interface SkillModel {
+  id: string; // UUID پایدار
+  title: string;
+  course: string;
+  chapter: string | null;
+  topic: string;
+  module: string | null;
+  track: TrackId;
+  dependencies: string[]; // skill IDs (not node IDs) - از node_dependencies استفاده شود
+  confusableWith: string[]; // IDهای مهارتی که به آن شبیه هستند
+  assessmentMap: {
+    diagnosticQuestionIds: string[];
+    verificationQuestionIds: string[];
+    proofQuestionIds: string[];
+  };
+  difficultyEstimate: number; // 0-100, بر اساس تحلیل باکس játékos
+  estimatedStudyHours: number; // برآورد orthodox
+  status: UserSkillStatus;
+  evidenceLevel: 'none' | 'partial' | 'complete' | 'certified';
+  sinceWhen: string; // ISO date when status changed
+}
+
+export interface QuestionModel {
+  id: string; // logical ID (logical_path harvest شده)
+  version: number; // نسخهٔ محتوا (change-tracked)
+  examPackId: string; // بسته所属
+  itemVersion: string; // نسخه‌سازی شده محتوا (semantic version)
+  questionText: string;
+  options: string[];
+  correctOption: number;
+  explanation: string | null;
+  trapNote: string | null;
+  usageType: 'educational' | 'diagnostic' | 'verification' | 'proof';
+  targetSkills: string[]; //skill IDs Aimed
+  difficulty: number; // 0-100, از تحلیل آمار 질문
+  estimatedTime: number; // دقیقه approximate
+  status: 'draft' | 'review' | 'approved' | 'published' | 'retired';
+  holdoutContext: {
+    packId: string;
+    version: string;
+    sinceWhen: string; // ISO date
+  };
+}
+
+/* ---------- Engine Result types moved down ---------- */
+
 export interface UserNodeMastery {
   nodeId: string;
   /** ۰ تا ۱۰۰ */
   mastery: number;
   status: MasteryStatus;
   lastErrorAt?: string;
+}
+
+export interface ReviewCard {
+  /** مثلاً «q:demo-001» برای سؤال یا «trap:demo-001» برای کارت دام */
+  id: string;
+  userId: string;
+  nodeId: string;
+  cardType: CardType;
+  questionId?: string;
+  trapCardId?: string;
+  /** تاریخ سررسید مرور بعدی (ISO) */
+  dueAt: string;
+  intervalDays: number;
+  /** فاصلهٔ قبلی برای بازگرداندن وضعیت پس از ترمیم */
+  previousIntervalDays?: number;
+  /** ضریب سهولت، بین ۱٫۳ و ۲٫۸ */
+  ease: number;
+  /** آیا این کارت برای ترمیم جلو افتاده است؟ */
+  isRepair: boolean;
+  timesSeen: number;
+  timesCorrect: number;
+}
+
+export interface EngineResult {
+  report: RippleReport;
+  /** نقشهٔ به‌روزشدهٔ تسلط گره‌ها */
+  masteryUpdates: UserNodeMastery[];
+  /** کارت‌های به‌روزشده (شامل کارت سؤال پاسخ‌گرفته‌شده) */
+  cardUpdates: ReviewCard[];
+  /** کارت‌های تازه ساخته‌شده */
+  createdCards: ReviewCard[];
 }
 
 export interface ReviewCard {
