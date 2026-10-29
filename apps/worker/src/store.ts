@@ -78,7 +78,7 @@ export interface DataStore {
 
   findAnswerByAttempt(userId: string, attemptId: string): Promise<AnswerEvent | null>;
   insertAnswerEvent(event: AnswerEvent): Promise<void>;
-  createQuestionAttempt(userId: string, questionId: string, attemptId: string, ttlSeconds?: number): Promise<string>;
+  createQuestionAttempt(userId: string, questionId: string, attemptId: string, ttlSeconds?: number, seenBefore?: boolean, itemVersion?: string): Promise<string>;
   commitAnswer(event: AnswerEvent, masteryRows: UserNodeMastery[], cards: ReviewCard[]): Promise<CommitAnswerResult>;
 }
 
@@ -104,7 +104,7 @@ export class SupabaseStore implements DataStore {
         apikey: this.serviceRoleKey,
         Authorization: `Bearer ${this.serviceRoleKey}`,
         'Content-Type': 'application/json',
-        ...(method === 'POST' ? { Prefer: 'resolution=merge-duplicates,return=representation' } : {}),
+        ...(method === 'POST' ? { Prefer: path.startsWith('rpc/') ? 'return=representation' : 'resolution=merge-duplicates,return=representation' } : {}),
       },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
@@ -403,12 +403,14 @@ export class SupabaseStore implements DataStore {
     });
   }
 
-  async createQuestionAttempt(userId: string, questionId: string, attemptId: string, ttlSeconds = 900): Promise<string> {
+  async createQuestionAttempt(userId: string, questionId: string, attemptId: string, ttlSeconds = 900, seenBefore = false, itemVersion = '1'): Promise<string> {
     const result = await this.request('POST', 'rpc/issue_question_attempt', {
       p_user_id: userId,
       p_question_id: questionId,
       p_attempt_id: attemptId,
       p_ttl_seconds: ttlSeconds,
+      p_seen_before: seenBefore,
+      p_item_version: itemVersion,
     });
     if (typeof result !== 'string' || !result) throw new Error('Could not issue a question attempt');
     return result;
