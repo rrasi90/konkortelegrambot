@@ -224,11 +224,13 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       candidates.push({
         id: item.card.id,
         targetId: item.card.id,
-        actionType: item.card.isRepair ? 'remediation' : 'spaced_review',
+        actionType: item.card.cardType === 'question' && item.card.timesSeen === 0
+          ? 'new_material'
+          : item.card.isRepair ? 'remediation' : 'spaced_review',
         examValue: 0.5,
         expectedBenefit: item.card.isRepair ? 0.85 : item.card.cardType === 'trap_note' ? 0.55 : 0.65,
         urgency: Math.min(1, 0.55 + overdueDays / 14),
-        estimatedMinutes: item.card.cardType === 'trap_note' ? 1 : 2,
+        estimatedMinutes: item.card.cardType === 'trap_note' ? 1 : item.card.timesSeen === 0 ? 3 : 2,
         reason: 'مرور سررسیدشده؛ امتیاز رسمی آزمونی برای این مبحث هنوز از بستهٔ تأییدشده دریافت نشده است.',
       });
     }
