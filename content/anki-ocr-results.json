@@ -1,0 +1,331 @@
+{
+  "method": "easyocr_fa_en",
+  "total_images": 65,
+  "results": [
+    {
+      "file": "Screenshot_20260117_205702_com.mobisystems.office.png",
+      "ocr_text": "تعريف محصول | يا خدمت هستندكه به | محصولات شامل هر گونه | وبراى برآورده كردن نيازها وخواستهها طراحى شدهاند. | کالا | مصرا",
+      "confidence_avg": 0.43784782787490756
+    },
+    {
+      "file": "Screenshot_20260117_205711_com.mobisystems.office.png",
+      "ocr_text": "  | تعريف محصول | یا فصل | محصول محل | پیشرفت های | نياز بازار | مشترک پیشرفتهای فناورانه | فناورانه | 9 | بازار | نیاز مندی های | 9 | يان است . | تلاقی | مشتر",
+      "confidence_avg": 0.677134240614754
+    },
+    {
+      "file": "Screenshot_20260117_205721_com.mobisystems.office.png",
+      "ocr_text": "گونهشناسى محصولات | معصولات كشش بازار ) وسايل ورزشى مبلمان ( | )داروه مواد هوشمند ( | محصولات فشار | محصولات پلتفرمی ) سیستم عامل 105( | محصولات دیجیتال ) محتوای دیجیتال , نرمافزارا | محصولات پیچیده صنعتی ) هواپیماء ماهواره  خودروا | فناوری",
+      "confidence_avg": 0.5621449756574487
+    },
+    {
+      "file": "Screenshot_20260117_205731_com.mobisystems.office.png",
+      "ocr_text": "جدید بودن | the Customer | ProJuct | NewIess to | MvlarkEt | Techriology | Mafhet | Technology | K٨٥W-h٥w | مفهوم",
+      "confidence_avg": 0.4164034769682842
+    },
+    {
+      "file": "Screenshot_20260117_205820_com.mobisystems.office.png",
+      "ocr_text": "ددانشگاد | تعریف محصول جديد | براى يك بخش جديد از بازار يا براى يك بازار موجود با | که | محصول جدید به محصولی گفته میشود | می شود. | اتى است که به ایجاد تقاضای جدید | ویژگی های جدید معرفی میشود و شامل | تغییرا | منجر",
+      "confidence_avg": 0.5330182229098266
+    },
+    {
+      "file": "Screenshot_20260117_205831_com.mobisystems.office.png",
+      "ocr_text": "ددانشگام | گون شناسى محصولات جدید | لات جديدى كه به شركت اجازه مى دهند تابه يك بازار موجود براى اولين بار ورود كنند | شرکت هستند. | محصولات جدیدی که مکمل محصولات | جایگزین محصولات | کنند | محصولات تغييريافتهاى كه عملكرد ويا ارزش ادراك شده بهترى را فراهم مى | می شوند . | آن ها ارائه به بازارهاى جديد يا بخش هاى ديگرى از بازار موجود مى باشد. | که هد | یافتهای | محصولات | فر | را با قیمت | محصولات جدیدی که | Cooper  RG (1993), Winning at New Products: Accelerating the Process from Idea to Launch, 2nd ed , Addison  Wesley, | Reading, MA | محصو | محصو | فعلی | فعلی | فگذاری | تغییر | کنند. | کمتر | مشابهی | عملكر | اهم",
+      "confidence_avg": 0.6710354527690774
+    },
+    {
+      "file": "Screenshot_20260117_205853_com.mobisystems.office.png",
+      "ocr_text": "ددانشگاد | تعريف توسعه محصول جديد | جدید به | _مير ٢٠٠٧( توسعه محصول | یت توسعه محصول )گریفین | بنا بر واژه نامه انجمن | تجاری | محصول | ايجاد و ارزيابى برنامه بازاريابى | »فرآیند کلی استراتژی سازماندهی  ایجاد | محصول جدید < تعریف می شود. | سامرد | صورت | مدیر | مفهوم | سازی",
+      "confidence_avg": 0.6890365718323396
+    },
+    {
+      "file": "Screenshot_20260117_205907_com.mobisystems.office.png",
+      "ocr_text": "د]| | عوامل موثربر موفقیت محصولات جدید | اجتناب از بازارهايى كه درآن ها محصولات جديد زيادى معرفى مى شوند. | انتخاب بازارهايى كه رشد واندازه روبه افزايشى دارند. | مشتريان درآنها رضايت بالايى از محصولات دارند. | اجتناب از بازارهايى كه بسيار رقابتى بوده | كه براى شركت ناآشنا هستند. | =ريان وفناورى | اجتناب از محصولات . بازارهاء | محصول بيشتراز رقبا | اجتناب از قیمت | مشتر | هايی | گذاری",
+      "confidence_avg": 0.6848193147445892
+    },
+    {
+      "file": "Screenshot_20260117_210017_com.mobisystems.office.png",
+      "ocr_text": "مشاركت ذىففعان در توسعه محصول | کاربران | پیشرو | اصول | سازماندهى | عموم افراد | نجیر | جامعه | ارزش",
+      "confidence_avg": 0.7634162611480154
+    },
+    {
+      "file": "Screenshot_20260117_210044_com.mobisystems.office.png",
+      "ocr_text": "توسعه محصول جدید | ارزیابی علملكرا | زمان توسعه | یادگیری | تجربه | هزینه توسعه | حاصل از پروژه | شده | بهای | کیفیت محصول | محصول | تمام",
+      "confidence_avg": 0.717197805633455
+    },
+    {
+      "file": "Screenshot_20260117_220503_cn.wps.moffice_i18n.png",
+      "ocr_text": "Cunha (2003) نسلهاى توسعه محصول جديد ازنظر | Sequential مرحله اى | Compression تراكمى | Flexible انعطاف پذير | Integrative يكپارچه | Improvisational بداهه",
+      "confidence_avg": 0.7971498236412266
+    },
+    {
+      "file": "Screenshot_20260117_220553_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددا | مدل های مرحلهای | +     | Modcl | Sequential | Environment | Placid clustered | Assumptions underlying the model | Buffering the process from unnecessary | and | uncertainty | Process characteristics | Explicit | Process | Efficiency predictability incremental | Major raw material | Product innovation principles | Key organizational functions | Introducing discipline and control evaluating each | phast | Fundamental | assumptions about | Certainty equilibrium, stability  predictability | organizing | mechanicism | Shortcomings | Rigid  early lock-in, fitted to | products | vulnerable to | crystallization / centripetal forces, risk | missing the boat | نسل | chane | &0als | change | lon8- | qclc",
+      "confidence_avg": 0.6846133953822741
+    },
+    {
+      "file": "Screenshot_20260117_220559_cn.wps.moffice_i18n.png",
+      "ocr_text": "نسل مدلهای تراکمی | Modcl | Compression | Environment | Placid clustered  high | Assumptions underlying the model | Rationalizing the process as | way of | : adapting | Process characteristics | Explicit | Proccss | Increasing = | while | keeping low levels of | uncertainty incremental innovations Ior | moving markets | Major raw material | Product innovation principles | Key organizational | Rewarding speed emphasizing planning, using | Functions | multi functional teams | Fundamental assumptions about | Certainty cquilibrium stability adaptation, | organizing | mechanicism | Shortcomings | The traps of acceleration: lack of quality  shortcuts | omission Ul impurtant | spetd | &0als",
+      "confidence_avg": 0.639011148384608
+    },
+    {
+      "file": "Screenshot_20260117_220608_cn.wps.moffice_i18n.png",
+      "ocr_text": "نسل مدلهای انعطاف پذیر | Model | Flexible | Disturbed reactive, turbulent | Assumptions underlying the model | Embracing change | uncertainty | Process characteristics | Explicit with tacit elements; | acquired | through iteration | Proccss | Flexibility, responsiveness | Maior raw materials | Product innovation principles time, variety | Key organizational functions | Organic structures  unclear | Fundamental assumptions about | Uncertainty  surprise, adaptation | organizing | Shortcomings | The might as wells' syndrome can provoke serious | delays, due to unfreezing product concept | , absorbing  | varicty | goals",
+      "confidence_avg": 0.6954817523719601
+    },
+    {
+      "file": "Screenshot_20260117_220617_cn.wps.moffice_i18n.png",
+      "ocr_text": "نسل مدلهای یکپار | Modcl | Integrative | Environment | Disturbed reactive  turbulent  complex | Assumptions underlying the model | decisions are structured | Process characteristics | Half tacit and half explicit | Process | Trade uff between | teri and short term | Major rawv Inaterials | Knowledge competencies information | Key | organizational functions | Teanis  | teamwork uniternal and exteral | collaburative networks | Fundamental assumptions about | Uncertainty, surprise, adaptation, emergence | organizIng | Shortcomings | Conflict  time delays if marketers are not included in | the team",
+      "confidence_avg": 0.5572502625697209
+    },
+    {
+      "file": "Screenshot_20260118_101124_cn.wps.moffice_i18n.png",
+      "ocr_text": "مقايسه انواع نسلها | Pruduc | Seuuential | Compression | Flexible | Integrative | Improvisational | innovation | Iodel | Assumptions | Certainty | Certainty | Uncertainty | Uncertainty | Complexity | equilibrium | equilibrium | surprise, | surprise, | emerEencc | stability | stability, | adaptation | adaptation, | predictability | adaptation | emergence | mechanicism | mechanicism | Main goal | To standardize | To optimize the | To adapt to the | To integrate | To manage | innovation | sequential model | nceds | multiple PD | efficiency and | components | flexibility at | the same time | PS structures | Universal: all | Universal: all | Adaptable to | Adaptable to | Dependent on | products; all | products; all | product types | product types  | the particular | organizations; | organizations; | and industries | organizations | all industries | adaptable to | universal: all | and industries | industrics | organizations | project | Projcct",
+      "confidence_avg": 0.7556607600452394
+    },
+    {
+      "file": "Screenshot_20260118_102228_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگار | رويكردهاى سنتى درتوسعه محصول جديد | و بخردانه براى | ابزارهایی | متوالیاند. چنین رویکر | این نسل مدلها فرآیندهای پی درپی | عدم اطمينان ذاتی نوآوری محصولات است. | گیری مدیران توسعه محصول  در جهت | قابل پیش بینی | امروزى و مواجهه با محيط | گفته میشود چنین مدلهایی مناسب سازمانهای | عدم اطمینان زیاد نیست . | منطقی | ردهایی | کاهش | تصمیم | غیر | پیچیده",
+      "confidence_avg": 0.5667314051837428
+    },
+    {
+      "file": "Screenshot_20260118_102258_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگا | ويژكىهاى رويكردهای سنتى درتوسعه محصول جديد | روشن و صریح بودن مشخصهها و ويژگیهای فرآیند | به عنوان کارکردهای سازمانی فرآیند | هر | نظمء كنترل  نظارت وارزيابى | طرح | سازماندهی این فرآیند در سازمان | به عنوان ساختار مناسب دراين نوع فرآیند | ساختار | مطرح | داشتن | مرحله | شدن | مکانیکی | شدن",
+      "confidence_avg": 0.6394621331483442
+    },
+    {
+      "file": "Screenshot_20260118_102639_cn.wps.moffice_i18n.png",
+      "ocr_text": "_ معایب | منطق آبشارى : مزايا | Benefits | Limitations | Needs each phase to be completed before moving | Is not suitable for large, complex projects that have | tO the next | frequent requirement changes | Is suited well for smaller, well defined projects with | Has testing of the product in later phases, | well understood and complete requirements  | increasing risk | Needs minimumn client intervention  | Requires detailed documentation which may be time | consuming. | مزایای مدل | است . | پیگیری آن | شدد | تعریف | بهطور | است | واضحی | ساختار | دارای | مدل | این | نظر | ساختار | کرد  | میتوان بهطور دقیق  برنامهریزی | می شوند | مراحل در ابتدای | تمام نیازمندیها | برنامه ریزی | دارند  مناسب | پیچیدگی | کند | برای پروژههای کوچک | ست . | معایب مدل آبشاری | هزيندبر | سحت | قبلی | مراحل | بازگشت | میانه | مشکلات | بروز | یا | نیازها | انعطاف پذیری : | عذم | اصلاحات نیاز باشد. | بهویژه اگر تغییرات | زمان زيادى ببرد | است | بعدی | شروع | پیش از | زمانبر بودن : تکمیل | بازخورد مداوم دارند  کارایی لازم را ندارد. | بازبینی | متغیر: این مدل برای پروژههایی که نیاز | برای پروژههای پیچیده | آبشاری | آسان | کامل | مشخص : | آنجایی | دقیق : | مشخص | پروژه | کمتری | نهی | تعییر | مناسب | است . | پروژه  | تعییر | صورت | ممکن | مرحله | مرحله | نامناسب",
+      "confidence_avg": 0.6814319528749874
+    },
+    {
+      "file": "Screenshot_20260118_102817_cn.wps.moffice_i18n.png",
+      "ocr_text": "رويكرد در نسلهای توسعه محصول جديد | از مدلهای جهانشمول به مدلهای اقتضایی | از رویههای ثابت به رویههای انعطاف پذیر |  از ریسکگریزی به بهرمبرداری از فرصتها |  از برنامهریزی به يادگیری | به شبکههای فراگیر |  از تیمهای انحصاری درونشر | از ساختار سفت وسخت به بىنظمى ساختاريافته | تغییر | کتی",
+      "confidence_avg": 0.6355904990691641
+    },
+    {
+      "file": "Screenshot_20260118_102829_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگام | رويكردهاى نوين در توسعه محصول جديد | نسل جدید مدلهای توسعه محصول جدید نوعاً برهمزمانی مراحل مختلف پروژه اونه توالی و پیدرپی | بودن مراحل توسعه محصول جديد تمرکز دارند. | موازات يکديگر وهمزمان باهم انجام مىشود. | دراین الگوهاء کاهش چرخه زمان در توسعه محصول جدیدء بیشتر مورد توجه قرار گرفته شده است",
+      "confidence_avg": 0.4189825716400393
+    },
+    {
+      "file": "Screenshot_20260118_102911_cn.wps.moffice_i18n.png",
+      "ocr_text": "م | Lii  | منطق | مورد استفاده در توسعه محصول جدید مدل V مى باشد. | از مدل | عرضه می شود. | محصول در ٤ فاز طراحى وبه بازار | فرآیند مهندسی | م دراین مدل بر | Phase I | Phase II | Phase III | Phase 0 | Feasibility | System | System | Idea | Study | Development | Operation | می گردد. | م درفاز صفر نیازهای سیستم مورد بررسی قرار گرفته | محصول است . | * خروجی در فازیک طراحی | مورد تأیید قرار مى | % درفاز ٢ طراحى ونمونهسازى محصول انجام واز نظر عملكردهاى مختلف | می گردد. | % درفاز ٣ محصول با مشخصات موردنياز | های | اساس | سسيتم | قطعی |  مفهومی | گیرد. | عملیاتی | مشتری",
+      "confidence_avg": 0.6704312863155515
+    },
+    {
+      "file": "Screenshot_20260118_103119_cn.wps.moffice_i18n.png",
+      "ocr_text": "دانشگاه | : مزايا ومعايب | V منطق | مزاياي مدل ٧ | کند. | تفکیک | بهطور | شفافيت وساختار: اين مدل دارى ساختار واضحى است كه مراحل توسعه و | کاهش هزینههای اصلاح را فراهم میکند. | تمركز برتست: آغاز آزمون از مراحل اوليهء امكان شناسايى سريع خطاها | کیفیت | می یابد | آزمون   احتمال بروز مشكلات در محصول نهايی | كيفيت : با وجود مراحل | محصول بهبود میيابد. | معايب مدل ٧ | عدم انعطاف پذیری : این مدل بهطور کلی برای پروژدهایی با نیازهای ثابت مناسب است. در پروژههایی که نیازها در | می کنندء این مدل میتواند چالشهایی ایجاد کند | طول توسعه | در مراحل اولیه تعریف | براى موفقيت اين مدل نياز است كه الزامات ونيازها بهطور | پیش نیازهای | به مشكلات در مراحل بعدى شوا | نسبت به روشهای دیگرافزایش یابد. | ٠٣ هزينهبر بودن: به دليل تمركز بر آزمون واعتبارسنجىء ممكن است هز | مشخص | کاهش | مشخص | تضمین | تعییر | کامل | دقیق | دقیق : | منجر | یندها",
+      "confidence_avg": 0.6234278529105329
+    },
+    {
+      "file": "Screenshot_20260118_103515_cn.wps.moffice_i18n.png",
+      "ocr_text": "هم | ددانشگاه | مرحلهای - درگاهی | What is a stage? | Basically, a stage is a defined work section of the overall product development process , including: | Activities  The work the product team must do according to the project plan. | Integrated analysis  The project leader s and teams integrated analysis of the results of all the | functional activities, derived through cross functional interaction  | Deliverables  The presentation of the results of the integrated analysis | which must be completed by | the team for submission at the | What is a | Basically, | are where key decisions are made on the future of the project, including: | Deliverables  Inputs into the gate review. These are defined in advance and are the results of actions | from the preceding stage | A standard menu of deliverables is specified for each | Criteria  What the project is judged against to make the golkill and prioritization decisions | These | criteria are usually organized into a scoreboard and include both financial and qualitative criteria  | Outputs  Results of the gate review Gates must have clearly articulated outputs, including a decision | (golkillhold recycle) and | forward (approved project plan  date, | deliverables for the next | gate agreed on) | 38 | منطق | gate  | gate | gates | gate  | path | and",
+      "confidence_avg": 0.6761909062526877
+    },
+    {
+      "file": "Screenshot_20260118_103533_cn.wps.moffice_i18n.png",
+      "ocr_text": "مزايا و معايب | Agile منطق | Benelits | Limitations | Scrurn methouology eriables projects whiele Ine | initially less clear or | stakeholoers til be templed to keep demanding new | Fast moving, cuting edge developments can be | functiona iآy | mistake can be easlly | ٤٥٥٨٤٥. | tney are wored ٥ ٥٨uning | sprint and the customer | lighuy convolled mathod nat insisis on frequent | Iust bg availabls to | respond to questions and | ine progress througn time boxed | ١٨٥٧ ٥٢٥٧١٥٤، | wuik Thus, Ihsre | clear visibility of the projects | the project | development an٥ progress. | [0315 | becomes easier to cope W the changes | Dally meetings Iahe | possible | measure indnidual | ol exerienced team menbers who have worked | together and reman ntact ior the Uuration or the | UIOULCUvity | each of the teamn merbers | Issues are before | becoming larger problems | novices, tne prolecr may not be complered | scrum masier trusts the team beng | Scrurn has bgen succgssfully applied to software | hardware, and mixed products. The overhead cost in | It can be extremely frustrating | ters of procoss and management | thus | ٥٧٥٨٤٢ | expenswe results. | Poject quality Iaragemeni | able to oonduct",
+      "confidence_avg": 0.345193629524563
+    },
+    {
+      "file": "Screenshot_20260118_103634_cn.wps.moffice_i18n.png",
+      "ocr_text": "فرآيند توسعه محصول | ارزیابی دقیق | ارزیابی دقیق | ارزیابی پروژه | آیده قبل از | ایده قبل از | غربال اولیه ایده | ايده يابی | تولید آزمایشی | تولید | برنامه هاى هر فرايند | آزمون بازار و | جمع بندی ایده | تجاری سازی | صح گذاری | توسعه ایده |  بهترین ایده | ایده ها | اجرای برنامه | برنامه دقيق | بازاریابی منظم | تنظیم جزئيات | =اده برنامه مناسب | برای تعدیل برنامه | بازاريابی با | برنامه ها شامل | برنامه  ارائه | آزمونر | ارزیابی و | هاى قبلى واجراى | های | برنامه بازاريابى , | برنامه مدیریتی , | تجزيه وتحليل | جمع آوری و | برنامه های | مناسب جمع بندى | جزئيات برنامه | برنامه توليد و | مالی : و | _٥ سازى ايده | در | تجزيه وتحليل | تولید مالی و | جلسات منظم بررسی | ارزیابی | پیش بینی | مالی | مقدماتی ایده | طول دوره | هاى آتی برای | آمادگی برای | و گزارش دهی تیم | در بازار | محصول توسط | تولید | توسعه محصول | محصول در بازار | توسعه | جدید | تایید |  نهایی و | مفهوم | دهی | انتخاب | آمیخته | فنی | ذخیرا | اقتضایی | مناسب | عمر",
+      "confidence_avg": 0.6782666172518766
+    },
+    {
+      "file": "Screenshot_20260118_103651_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگاه | (FFI) م طرح ريزى محصول جديد: فضاى فازى ابتداى فرآيند توسعه محصول | فرصت یابی | برنامهریزى محصول | نیازسنجی | تعیین ویژگیهای محصول | مفهو",
+      "confidence_avg": 0.6489238633604136
+    },
+    {
+      "file": "Screenshot_20260118_103703_cn.wps.moffice_i18n.png",
+      "ocr_text": "٤ | ددانشگاه | فرصت بازار | فرآيند | انتخاب | توسعه | خلق و شناسايى | غربالگری | تعریف مرزهای | فرصتهای | فرصتهای | فرصتهای | فرصتها | نوآودی | کننده | امیدوار | متعدد | شناسایی | استثنایی",
+      "confidence_avg": 0.7386888584478041
+    },
+    {
+      "file": "Screenshot_20260118_103736_cn.wps.moffice_i18n.png",
+      "ocr_text": "كشف فرصتها | Explorution Into | ٨٤٧ | 5٤٢٧٥٤ | Existing | AdJocenl | ٤١«٨٥٢ ٨٤٤٥ | growth | that | Eploruton | DrouuciS Und services | 5٤٢٧٤ | Exfsting | Existing | solution that | soluIion that | 50١٧t٥٨ | Knowledge of Solution eg , method process technologyl | قلمرو | | | |",
+      "confidence_avg": 0.3333209049962326
+    },
+    {
+      "file": "Screenshot_20260118_103900_cn.wps.moffice_i18n.png",
+      "ocr_text": "٢ | ردانشكام | فرآیند برنامه ریز محصول | Multiple Projects | Identify | Evaluate and | Allocate | Complete | Product | Prioritize | Resources and | Pre Project | Development | Opportunities | Projects | Portfolio of | Plan Timing | Product | Planning | Missi0n | Process | Projects | Plan | Statements",
+      "confidence_avg": 0.8317900446417732
+    },
+    {
+      "file": "Screenshot_20260118_103928_cn.wps.moffice_i18n.png",
+      "ocr_text": "پلتفرمی و سبدمحور | محصول : رویکر | بر | New pruduct | platforms | انواع | Derivarives uf | FunameIalli | پروژههای | plarfor Ilis | محصول جدید | existing | pruducts | رنامه ریزی",
+      "confidence_avg": 0.5054377755097396
+    },
+    {
+      "file": "Screenshot_20260118_103957_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشکاه | مشابه | نياز مشترى : تعريف نياز ومفا | به مشکلات جدی منجر شود. برای مثال | آنها | عدم | هستند | نيازها )Need  اساساً ضرورى | هستند | نیازهای اصلی انسانی | مسکن از | نياز به آب  غذا | میشوندء اما ضروری نیستند. خواستهها | که از نیازها | هستند | یا | خواستها ) Want( ترجيحات | که نیاز به غذا دارد | شرایط فردی قرار گیرند. به عنوان | فرهنگ   جامعه | ممکن است تحت | يا سوشى بخورد. | که | است بخواهد | خواستهها و نيازها مرتبط | تمايلات عاطفى واجتماعى افراد اشاره دارد که ممکن است | Desire ) تمايل | می گیرد. | جنبههای بیشتری مانند سبک زندگی و ارزشها را | باشد اما | Demand) تقاضا | بازار وجود دارد. | که | الست | عبارت ديگر  تقاضا نشاندهنده خواستههای واقعی | 30 | شناسایی | هیم | تأمین | می تواند | جمله | تمایلاتی | ناشى | تأثیر | شخصی | مثال . | پیتزا  | ممکن | دربر",
+      "confidence_avg": 0.6757152998784182
+    },
+    {
+      "file": "Screenshot_20260118_104503_cn.wps.moffice_i18n.png",
+      "ocr_text": "؟٢ | فرآيند شناسايى نيازهاى مشترى | اهمیت | نظام نيازمندیها | داده | داد٥ | گردآوری | امتیازدهی | مقولهبندی | تبدیل صدای | مصاحبه | اولویت بندی | حذف موارد | به | گروه تمرکز | مترادف | نیاز | مشاهده | تعیین | تفسیر | مشتری | مشتری",
+      "confidence_avg": 0.7219832878172945
+    },
+    {
+      "file": "Screenshot_20260118_105457_cn.wps.moffice_i18n.png",
+      "ocr_text": "دانشکا | و قفسير نظرات | شناسایی نیازهای مشتری : | Customer | Needs | Needs | Guldellne | Statement | Statement - Rlght | Statement - Wrong | What  not \"How | would like my iPhone to | The thermostat can be | The thermostat is | adjust Iny tnermostat | controlled remotely without | accompanied by | requiring | special device | downloadable iPhone app | Specificity | have different heating | The thermnostat can conitrol | The thermostat is versatile | 3٨٥ | cooling systems | separate | heating and | cooling systems | Positive not negative | get tired of standing in | The thermostat can be | The thermostat does not | front of my thermostat to | programmed from | require me to stand in front | program It | comfortable position | Of It for programming, | An attribute of the product | have to manually override | The thermostat | An occupants presence | the program if Im home | automatically responds [o | triggers the thermostat | when | shouldn t be | an occupant s presence | to automatically change | modes | Avoid | and \"should\" | Im worried about how | thermostat controls | thermostat must be | secure Iy thermostat | are secure fromn | secure from unauthorized | would be if it were | ٥٥٥٤55 | accessible online | مشتری |  تعبر | The | Ihe ",
+      "confidence_avg": 0.7398098923224811
+    },
+    {
+      "file": "Screenshot_20260118_105512_cn.wps.moffice_i18n.png",
+      "ocr_text": "له | ددانشگاه ` | ویژگی های محصول | فرآیند | مقادیر ایدهآل | جمع آوری اطلاعات | تهیه فهرست | و حداقل قابل قبول | مقایسدای رقابتی | ویژگی ها | تعیین",
+      "confidence_avg": 0.5938109887711478
+    },
+    {
+      "file": "Screenshot_20260118_131002_cn.wps.moffice_i18n.png",
+      "ocr_text": "طرح مفهومی محصول | محصول يا Product Concept ايدهاى اوليه است كه ويژگىها | طرح | کند | ارزشهای پیشنهادی اصلی يک محصول را توصیف | مزایا | از محصول و بازار هدف | مفهوم اغلب به عنوان يك توصيف خلاصه يا نماى | مایه گذاران  | آن تهیه میشود تا بتواند ایده اصلی محصول را بهدرستی به | منتقل کند. | مشتریان | و توسعه | طراحی | شکل محصول است. | از تکنولوژی  اصول کار | محصول . توصیفی | مفهومی | می | کلی | این | احتمالی | تقریبی | مفهوم",
+      "confidence_avg": 0.6570427809416364
+    },
+    {
+      "file": "Screenshot_20260118_131101_cn.wps.moffice_i18n.png",
+      "ocr_text": "فرآيند توسعه محصول جديد | تولید | 2 | انتخاب | آزمایش | فاز | فاز | فاز ٢ | فاز ٣ | فاز ٤ | فاز ٥ | ریزی | سعه | تو | طراحی | طراحی جزئیات | بهبود | تست | افزایش تولید | سیستم | 1. | صت یابی | 2. | نیازسنجی | 3 | برنامه ریزی محصول | تعيين اوليه مشخصات محصول | مفهوم | مفهوم | مفهوم | مفهوم | طرح",
+      "confidence_avg": 0.8350910155203011
+    },
+    {
+      "file": "Screenshot_20260118_131109_cn.wps.moffice_i18n.png",
+      "ocr_text": "٢ | می محصول | توسعه طرح | خلق مفهوم | انتخاب | آزمون مفهوم |  مفهو | مفهوم",
+      "confidence_avg": 0.731277663704372
+    },
+    {
+      "file": "Screenshot_20260118_131126_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشکاه | فرآيند خلق مفهوم | نتیجه آن | می شود | مجموعهای از ویژگیهای اولیه | ب | فرایند تولید | آنها | توسعه بايد انتخاب نهايی رااز | محصول است که | مجموعهای از مفا | دهد | انجام | مراحل فرآیند توسعه | می توان آن را به نسبت | توليد مفهوم نسبتا ارزان | سریع انجام داد. | ٥ تا ٢٠ | که | کند | خلق می | در بسیاری از موارد يک تیم توسعه کارا صدها | است | مورد ازآنها شايسته بررسى جدى درطول فعاليت انتخاب مفهوم | آغاز | مفهوم  | میان | تیم | هیم | است | سایر | مفهوم",
+      "confidence_avg": 0.7062409881778909
+    },
+    {
+      "file": "Screenshot_20260118_131147_cn.wps.moffice_i18n.png",
+      "ocr_text": "ه | ددانشگاه | فرآيند خلق مفهوم | در صورت | سپس | کلى از مسئله و | مسئله شامل ایجاد | تعريف مسأله : | آن به زیرمسألهها می باشد. | است . | زیرمسائل | به | مسئله | تقسیم یک | تجزیه مسئله: تجزیه به | كه بتوان آنها | هستند | بهتر است که آنها را به چند زیرمسأله سادهتر | 9 | یک مسأله واحد حل کرد | نمود . | مدیریت دانشگاه تهران ( |  دانشكدگان | مدرس : اسماعیل جعفرپناه ) عضو هیأت | »توسعه محصول جدید « | ددانشگام | فرآيند خلق | زیرمسائل شناسایی | کلی | مسئله | زهای موجود | راه کاره | جستجوی خارجی : | صورت | توسعه به | در طول گام تبیین مسئله است  این گام در طول فرآیند | شده | تنها شامل ارزیابی مفصل محصولات | نه | انجام می شود. جستجوی | محصولاتی | در | شد | استفاده | بلکه ارزیابی | است  | ابتدا با جمع | کارکردهای فرعی مرتبط رانیز در برمی گیرد. در جستجوی | سپس آن را با | داده و | جستجو را | مرتبط محدوده | ده اطلاعات | آوری | می | بررسی مفصل ترمسیرهای محتمل همگرا | دانشكدگان مدیریت دانشگاه تهران ( | مدرس : اسماعیل جعفرپناه ) عضو هیأت | »ذوسعه محصول جديد « | ردانشگام | فرآيند خلق مفهوم | جهت | استفاده از | به | جستجوی | خلاقانه ترین فعالیت در | تواند نامحدودترین | تولید مفاهیم است. این فعالیت | صورت فردی | به | تواند | می | توسعه محصول جديد باشد فرآيند جستجوى داخلى | وهم به صورت گروهی انجام شود. | ترکیب | سازمان | که | است | بررسی | امکان پذیری را | فهمی | تبیین | شکستن | لزوم | معنای | را در | قالب | تقسیم | علمی | مفهوم | يافتن | خارجی | مستمر | فناوری | رقابتی | های | مستقیم | خارجی | گسترا | بسط | کنیم  | علمی | خلاقیت | داخلی : | شخصی | دانش | معنای | تیمی | می | هم | تکههای | دادن | کاوش | کنیم ",
+      "confidence_avg": 0.7237657694492092
+    },
+    {
+      "file": "Screenshot_20260118_131209_cn.wps.moffice_i18n.png",
+      "ocr_text": "٢ | ردانشگام | چهار راهنمای سودمند براى جستجوی داخلی | ١. قضاوت رابه تعويق بيندازيد | گیری | بر خلاف تصمیمات روزمره در تولید | جایز نیست | بر مفاهیم | هیچ | طول جلسات تولید | ٢. تعداد زيادى ایده توليد |  ايده هايى كه ممكن است به نظر غيرممكن باشندء استقبال | شود تیم محدودیت | باعث | می کند | هرچه یک ایده غیرممکن ترباشد مرزهای فضای راه حل را گسترده تر | های امکان پذیری را در نظر بگیرد | هستند | فیزیکی | ذاتی ابزارهای ناکارآمدی برای تولید ماهیت | به | متن و زبان | کنیم  | تصمیم | مفهوم | انتقادی | گروهی | مفهوم | کنید. | ٣، از | کنید | کنید. | شفاهی | های | طور",
+      "confidence_avg": 0.6746898861695442
+    },
+    {
+      "file": "Screenshot_20260118_131223_cn.wps.moffice_i18n.png",
+      "ocr_text": "]) | روشهای جستجوی خارجی / برون شر | Interview Lead Users | Consult Experts | Search Patents | Search Published Literature | Benchmark Related Products",
+      "confidence_avg": 0.7572833311941636
+    },
+    {
+      "file": "Screenshot_20260118_131633_cn.wps.moffice_i18n.png",
+      "ocr_text": "ردانشگاه | اشتباهات رايج درحين خلق مفهوم | پرادعاترین | سوی | معمولا از | که | آلترناتیو | دو | یا | در نظر گرفتن یک | پیشنهاد شدهاند | پای بند نبودن | مشاركت تنها يك يا دو نفر دردر فرآيندكه موجب عدم | تیم می شود. | مرتیط یا | که توسط دیگر بنگامها در | کاربرد | عدم بررسی | غیرمرتبط استفاده شده است. | بررسی همه گرودهای رادکارها | اعضای | تیم | اطمینان | اعضای | سایر | محصولات | مفاهیمی | دقیق | عدم",
+      "confidence_avg": 0.6680621609905727
+    },
+    {
+      "file": "Screenshot_20260118_131711_cn.wps.moffice_i18n.png",
+      "ocr_text": "٢ | ددانشگام | انتخاب مفهوم : سوالات پیش رو | سوال های زیادی را به وجود می | از ميان تعداد زیادى | الزام انتخاب يک | چطور می تواند بهترین | هستند | با توجه به این که طراحی ها هنوز بسيار انتزاعی | انتخاب کند؟ | تیم مورد پذیرش واقع شود؟ | گرفت که از سوی همه | چگونه می توان | نمود ؟ | ضعیف | چگونه می توان صفات مطلوب | گیری مستند می گردد؟ | چگونه فرآیند | دانشكدگان مدیریت دانشگاه تهران ( | مدرس : اسماعیل جعفرپناه ) عضو هیأت | »توسعه محصول جدید « | تهلا | انتخاب مفهوم : يك فرآيند چندلايه وتكرارشونده | يک فرآیند همگراست ولی معمولا تکرارپذیر است و ممکن | اگر چه انتخاب | به | است بلافاصله يک مفهوم عالى تولید نکنده در ابتدا مجموعه بزرگی از | ترکیب | شود  البته ممکن است این | می | مجموعه کوچک تر غربال | عالی انتخاب | شوند. در طول چندین تکرار  در نهایت یک | آورد : | مفهوم | مفهوم | تیم | مفهوم | اعضای | تصمیمی | شناسایی | مفاهیم | تصمیم | علمی | مفهوم | مفاهیم | بعدها | مفاهیم | مفهوم | شود. | می",
+      "confidence_avg": 0.6577875911291043
+    },
+    {
+      "file": "Screenshot_20260118_131735_cn.wps.moffice_i18n.png",
+      "ocr_text": "تعريف انتخاب مفهو | با توجه به نیازهای | فرآیند ارزیابی | قوت | 9 | مقایسه نقاط ضعف | دیگر معیارهاء | 9 | بیشتری از | انتخاب يک يا تعداد | باشد. | و يا توسعه | براى بررسى بيشترء تست كردن | مشتری | مفاهیم | نسبی | مفاهیم | مفاهیم | می",
+      "confidence_avg": 0.6788562645697619
+    },
+    {
+      "file": "Screenshot_20260118_131749_cn.wps.moffice_i18n.png",
+      "ocr_text": "روش های انتخاب | 0 تصمیم خارجی | شوند. | ارباب رجوع ویا ماهیت بیرونی دیگری ارائه | برای انتخاب به | مفاد | مان محصول | يكی از اعضای تاثیرگذار تیم توسعه محصول يک مفهوم را بر پایهی ترجیحات | کند. | خود انتخاب | شهودی | کند  انتخاب | که منتقل | یا | كه بهتربه نظر برسدء انتخاب مى شو | رود. هر | دانشکدگان مدیریت دانشگاه تهران ( | مدرس : اسماعیل جعفرپناه ) عضو هیأت | »دوسعه معصول جديد « | ددانشگ٥ | روش های انتخاب | أيی | با بيشترين راى انتخاب | دهد. | رای | به برخی | هر عضو | انتخاب | ست می | ضعف هر مفهوم را فهر | تیم نقاط قوت | شود. | تست | 0ساختن نمونه اولیه | آزمایش  | با استفاده از داده | می | سازمان نمونه های اولیهی هر مفهوم را می سازد و آزمایش | انتخاب انجام می شود. | گیری | يس هاى | است قابل وزن | را با استفاده از معیارهای انتخاب از پیش تعیین شدهء که | تیم هر | کند . | باشندء ارزیابی |  مفهوم | مشتری  | هیم | می | 0قهر | شخصی | می | 0درک | مفهوم | نمی | حسی | می | مفهومی | علمی | مفهوم | 0چند | مفاهیم | شود. | مفهوم | تیم | 0 مزایا | معایب | مفاهیم | های | کند | 0 ماتر | تصمیم | ممکن | مفهوم | دهی",
+      "confidence_avg": 0.7046314457307192
+    },
+    {
+      "file": "Screenshot_20260118_131818_cn.wps.moffice_i18n.png",
+      "ocr_text": "فرآيند انتخاب | صورت می پذیرد: | انتخاب در دو | مرحلهی اول . گزینش ا غربال | تعداد | که | این هدف | با | است | ارزیابی سریع | گزینهی مناسب تولید گردد . | مرحلهی دوم . امتیازدهی | برای | کم | نسبتا | تعداد | از این | تر | تحلیلی است | واحد که احتمال موفقیت محصول در | آن بیشتر است. | مدیریت دانشگاه تهران ( |  دانشكدگان , | - مدرس : اسماعیل جعفرپناه ) عضو هیأت | »ذوسعه محصول جدید « | فرآيند انتخاب | متوالی مراحل گزینش و امتیازدهی | گام | گام ١. آماده کردن ماتر | دهی | گام | بندی مفا | گام ٠٣ رتبه | بهبود | گام ٤. ترکیب | چند | يک یا | انتخاب | گام | فرآیند | کردن نتایج | گام | مفهو | مرحله | مفهوم | کمی | تقریبی | مفهوم | مفاهیم | دقیق | انتخاب | مفهوم | علمی  | مفهوم | های | انتخاب | يس | مفاهیم | ٢. نمره | هیم | مفاهیم | مفهوم | منعکس",
+      "confidence_avg": 0.6869679940557898
+    },
+    {
+      "file": "Screenshot_20260118_131933_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانن | گزینش / غربال | ها | گام ٠٤ تركيب مفاهيم وبهبود آن | می | دو موضوع مورد بررسی قرار | دراین | بدا رتبه | آيا مفهومى وجود دارد که درکل خوب باشدء ولى | کوچک  می تواند مفهوم کلی را طوری بهبود | اش پایین آمده باشد؟ آیا یک | باشد ؟ | بخشد که هنوزاز ديگر | تا | بتوان آن ها را باهم تركيب نمود | که | آيا دو مفهوم وجود دارند | خصوصیات »بدتر « ازبین | »بهتر « حفظ شوند | دانشكدگان مدیریت دانشگاه تهران ( | مدرس : اسماعیل جعفرپناه ) عضو هیأت | »توسعه محصول جدید « | ته | ددانن | گزینش / غربال | یک یا چند | گام ٥. انتخاب | که | پایهی گام های | يک از مفاهيم محتمل ترهستند بدست مى آورد. | که | کند | نهايی تیم باید | قبل از | بايد بیشتر بررسى شوند. | دانشكدگان مدیریت دانشگاه تهران ( | مدرس : اسماعیل جعفرپناه ) عضو هیأت | »ذوسعه محصول جديد « | دانز | گزینش / غربال | فرآیند | کردن | گام | بدست آمده  موافق باشند | همهی اعضای تیم باید با | ماتر | در | شاید | موافق   نیست | با | فردی | اگر | شاید | یا چند معیار مهم از قلم افتاده اند يا | ايراد دارد ويا حداقل واضح نيست | همه | مورد قبول | بررسی مفصل در مورد این که آیا | احتمال | دهد | است یا نه احتمال اشتباه را | فعاليت هاى بعدى توسعه را افزایش | همهی اعضا به | پایدار | دهل | مفهوم | گیرد: | مرحله | توسط | خصود | صیت | تغییر | متفاوت | مفاهیم | خصود | بروند ؟ | علمی | مفهوم | مفهوم | قبلی  | _ اين | کدام | موضوعات | کدام | انتخاب | تعیین |  علمی | مفهوم | نتایج و | منعکس | خروجی | تصمیم | تیم | یس | خاص  | نمره | دهی | نتایج | کاهش | تعهد | می",
+      "confidence_avg": 0.6658244087819871
+    },
+    {
+      "file": "Screenshot_20260118_132019_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگاد | امتيازدهى مفا | یک یا چند | گام ٥. انتخاب | کند  | بالاترين رتبه را كسب | پس از اولین بار انجام فرآب | انتخاب نهايى  فقط انتخاب | تواند وزن ها و نمره ها را | باشد; بلکه تیم | بالاتر را رانتخاب کند  این | که دو یا چند | الست | پایهی ماتریس انتخاب تیم | تست شوند تا فیدبک | يافته ازآن ها نمونهی اوليه ساخته شود يا | شايد بیشتر تو | حاصل شود. | دربخش هاى مختلف بازار با اولويت هاى متفاوت | است براى بدست آوردن رتبه بندى | مشتری. دویا چند ماتریس امتیازدهی با وزن دهی های متفاوت ایجاد نماید. | دانشكدگان مدیریت دانشگاه تهران ( | مدرس : اسماعیل جعفرپناه ) عضو هیأت | »توسعه محصول جدید « | ددانشگاد | امتيازدهى مفا | و فرآيند | کردن | گام ٦. | مفهوم است | فرایند توسعهی | بدون بازگشت « | در مورد تمام موضوعات مرتبط | باشند که | همهی افراد تیم باید | دارای بیشترین پتانسیل برای | شده | انتخاب | است | شده | بحث | است | راضی کردن مشتریان و موفقیت | اهيم | مفهوم | مفمومی | نمی | تغییر | بگیرد | ممکن | مفهوم | تصمیم | مشتری | مفاهیم | سعه | ممکن | مفهوم | علمی | هیم | نتایج | منعکس | »نقطهی | مرحله | این | مطمئن | مفهوم | اقتصادی",
+      "confidence_avg": 0.6444022614774226
+    },
+    {
+      "file": "Screenshot_20260118_132030_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگا | فرآیند | مفهوم را به | جامعه | هدف از آزمون | نتایج را | نظر مشتریان | اشتراک | پیمایش را | پیمایش را | مفهوم را | كنيد | را بسنجید | انتخاب کنید | انتخاب کنید | تعریف | آزمون | مفهوم | قالب | تفسیر | بگذارید | کنید",
+      "confidence_avg": 0.6969361585402527
+    },
+    {
+      "file": "Screenshot_20260118_132113_cn.wps.moffice_i18n.png",
+      "ocr_text": "در پیمایش های | حجم جامعه | تست | ٦٨٢ | Factors Favoring a Smaller | Factors Favoring a Larger | Sample Slze | Sample Slze | Test occurs early in concept development | Test occurs later in concept development | process  | process- | Test is primarily intended to gather | Test is primarily intended to assess | qualitative data. | demand quantitatively | Surveying potential customers is relatively | Surveying customers is relatively fast and | costly in time or money | inexpensive | Required investment to develop and launch | Required investment to develop and | the product is relatively small | launch the product is relatively high. | relatively large fraction of the target | A relatively small fraction of the target | market is expected to value the product | market is expected to value the product (i e , | (i e , many positively inclined respondents | many people have to be sampled to reliably | can be found without a large samplel | estimate the fraction that values the productl | مخاطب | مشتری |  مفهوم",
+      "confidence_avg": 0.6385599834006583
+    },
+    {
+      "file": "Screenshot_20260118_132122_cn.wps.moffice_i18n.png",
+      "ocr_text": "نوع پیمایش مشتری | م | تست | Fac2-t0- | interaetion | Sucial | Media | Telephone | نوع پیمایش | Electrunic | Pustal mail | مفهو | مشتری",
+      "confidence_avg": 0.6650358658196477
+    },
+    {
+      "file": "Screenshot_20260118_132133_cn.wps.moffice_i18n.png",
+      "ocr_text": "ه نمایش مفهوم در پیمایش مشتر | قست مفهوم | Verhal | descriptioni | Working | Sketchi | prototypes | Plysical | appearance | نحو نمایش | renteringd | Ilodels | Simulation | Storyhoard | Social | Video | Media | - نحو | مفهوم",
+      "confidence_avg": 0.701217844926346
+    },
+    {
+      "file": "Screenshot_20260118_132214_cn.wps.moffice_i18n.png",
+      "ocr_text": "- سنجش دیدگاه | تست | حتما | م احتمالا | می | نه | ممكنه بخرم يا | خرم | احتمالا | خرم | قطعا | مشتری | مفهوم | میخرم | خرم | نمی | نمی",
+      "confidence_avg": 0.8601634809347326
+    },
+    {
+      "file": "Screenshot_20260119_162500_cn.wps.moffice_i18n.png",
+      "ocr_text": "تعریف خلاقیت | کشف روابط | در روابط موجود | جدید از طریق | خلق | قدرت | جدید ميان پدیدهها | دیگران نمی بینند | دیدن | نمیاندیشند. خلاقیت يعنى متفاوت نگریستن و متفاوت فکر کردن . | کند. | ويک ارتباط ميان آنها ايجاد | هم | مختلف را گرد | مدرس : اسماعیل جعفرپناه ) عضو هیأت علمی دانشکدگان مدیریت دانشگاه تهران | »مديريت فناورى ونوآورى « | ددانشگاه | خیال پردازی : پایه خلاقیت | ٦٨٢ | از چیزهایی که در حال | تصاویری | خیال پردازی یعنی توانایی | رخ ندهند. | است | حاضر وجود ندارند رخ ندادداند يا | رود 9 | فرايند ذهنى به فرد اجازه مىدهد از محدوديتهاى واقعى فراتر | کند . | غیرممكن را | ايددهايى نوء غیرمنتظره يا | یا | بهصورت یک | هر ايدهى خلاقانه ابتدا در | شکل میگیردء پیش ازآنکه به واقعیت تبدیل | محدود است اما تخیّل همهچیز را | تخیّل از دانش مهم تر است  چون | دربر می گیرد. |  مدرس : اسماعیل جعفرپناه ) عضو هیأت علمی دانشکدگان مدیریت دانشگاه تهران ( | »مديريت فناورى ونوآورى « | خلاقیت يعنى به چالش کشیدن مفروضات پذیرفته شده | چرا ماشینها باید با چرخ روی زمین حرکت کنند؟ چرا مثل قورباغه نپرند | یا روی هوا | خودش را | باشند؟ چرا نباید هرکس | در یک | همه | چرا باید | داشته باشد ؟ | رفته است ؟ اگر میشد به گذشته سفر | گذشته | چرا آینده هنوز نیامده | می کرد ؟ | کرد یا آینده را دید چه | مفاهیم | ذهنی | تغییر | آنچه | آورده | می | ذهنی | خلق | هیچ گاه | این | ممکن | تصور | حتی | خیالی | ذهن | سناریوی | تصویر | شود. | دانش | شناور | کلاس | کلاس | تغییری",
+      "confidence_avg": 0.6712908908713432
+    },
+    {
+      "file": "Screenshot_20260119_162615_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشکا | »خانه < | روان بودن : توان توليد تعداد زیادی ایده درآن واحد ) تمرین: سریعا تمام واژمهایی که در آنها | کنید ( | ست | به کار رفته است را فهر | و قبول ایددهای جدید ) تمرین : | ٥های تفکر و ایده پردازی | انعطاف پذیری : توان کنار | از مداد برای نوشتن استفاده کندء تو چه استفادههایی ازآن میکنی ؟( | اگر دیگر قرار نباشد هیچ | طراحی | نرسیده است | که تا | بدیع بودن : طرح ایدههایی | تمیز کند ( | که بتواند كل اتاق شما | يک ایده كلی با جزئیات . | درش : توانایی | دیگران مطلع بشوند. | و درک کردن مسائل قبل از | حساسیت : توانایی متوجه | شود. | دیگران | باید | شفافيت : ايده نبايد مبهم باشد | 5 | گذاشتن | قدیمی | شیود | کس | کنید | ماشینی | ) تمرین : | ذهن | کنون | کس | هیچ | گسترا | بسط | اینکه | شدن | درک | توسط",
+      "confidence_avg": 0.6186142107716898
+    },
+    {
+      "file": "Screenshot_20260119_162626_cn.wps.moffice_i18n.png",
+      "ocr_text": "انواع خلاقیت | انواع | تحول آفرین | خلاقیت | اکتشاف | تقلیدی",
+      "confidence_avg": 0.7656736327402368
+    },
+    {
+      "file": "Screenshot_20260119_162640_cn.wps.moffice_i18n.png",
+      "ocr_text": "انواع خلاقیت | اين نوع خلاقيت شامل بهبودء بازطراحى يا تغييرات جزئى | خلاقیت | دریک ایدهء محصول یا روش موجود است. در واقع  نوآوری بزرگی رخ نمیدهدء اما | صورت می گیرد. | از ایدههای | 9 | استفادهی هوشمندانه | با طراحی | اما | یک | شبیه | یک انیمیشن با | ساخت | گرافیکی جدید. | و ضدآب . | طراحی کیف مدرسهای مشابه مدلهای رایج اما با زیپ | تقلیدی | قبلی | کاربردی | قدیمی | كارتون | داستانی | مخفی",
+      "confidence_avg": 0.6988572096123484
+    },
+    {
+      "file": "Screenshot_20260119_162649_cn.wps.moffice_i18n.png",
+      "ocr_text": "انواع خلاقیت | یا ایدههایی از حوزههای مختلف | در خلاقیت ترکیبی | در پیوند غیرمعمول | ارزش | ترکیب میشوند تا چیز جدیدی خلق | موجود است . | و نوآورانه بين | طراحی تختخوابی که به راحتی به میز مطالعه تبدیل میشود. | ظرف شویی . | 9 | ترکیب | عناصر | هم | افزوده | شود. | عناصر | لباس شویی | ماشین | ماشین",
+      "confidence_avg": 0.6699667873459408
+    },
+    {
+      "file": "Screenshot_20260119_162658_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگاه | انواع خلاقیت | کند اما | فرد در چارچوبهای موجود جستوجو | اکتشافی ء | در | در | ساختارهای جدیدء کاربردهای پنهان یا الگوهای نو را کشف مینماید. | می کند. | حالت بهصورت عمیق در قلمروهای شناختهشده کاوش | به عنوان سوخت . | روشهای جدید برای استفاده از ضایعات | ریاضی که باعث درک بهتر کودکان میشود. | کشف يک روش جدید | خلاقیت | می | ذهن | این | کشاورزی | يافتن | تدریس",
+      "confidence_avg": 0.6075066257373566
+    },
+    {
+      "file": "Screenshot_20260119_162705_cn.wps.moffice_i18n.png",
+      "ocr_text": "انواع خلاقیت | میرود و به | در خلاقیت تحولآفرین  فراتر از مرزهای فكری رایج | قواعد | داد . | موسیقی الکترونیک که قواعد سنتی موسیقی را | درس فیزیکی . | معرفی مدل مدرسه بدون | 20 | تغییر | اساسی | شکستن | خلق | تغییر | کلاس",
+      "confidence_avg": 0.6422418074287148
+    },
+    {
+      "file": "Screenshot_20260119_162820_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگاه | پشت آن نهفته است . | است که هدف يا مقصود | ایده یک فکریا | هستند. | تلاش های نوآوری | ایددها نقطه | منظور تغذیه فرآيند نوآوری نیازمند خلق جریان مستمری از ایدهها | به | سازمانها | GENERATINC IDEAS | دازی است . | و ایجاد ارتباط | فرآیند | زدازى | خاصی | تصور | آغاز | میان | شکل دهی | ایده پر",
+      "confidence_avg": 0.5914338834133209
+    },
+    {
+      "file": "Screenshot_20260119_162857_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگام | خلاق | تکنیک | از توقف عمدی اشاره دارد که درآن فرد | به | Creative Pause ) | به اندیشههای خلاقانه | تا | طور آگاهانه فعالیتهای روزمره خود را متوقف میکند | به | پیچیده | حل | 9 | نوآورانه بپردازد این لحظات مىتوانند به پرورش ایدههای جدید | کمک کنند. | * پیاددروی در طبیعت | مدیتیشن | * مراقبه | یادداشت برداری آزاد | وقت با هنر | گذراندن | استراحت کوتاه در محل کار | نشست های |  درنگ | لحظاتی | درنگ | خلاق | مسائل | غیررا | سمی",
+      "confidence_avg": 0.7451874427687782
+    },
+    {
+      "file": "Screenshot_20260119_162907_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشگام | تكنيك وارونهسازی | دهنده | الگوساز خود سازمان | از آنجا که | به | با ورود اطلاعات | است سعى مىكند در کمترین زمان اطلاعات ورودی را در نزدیکترین شبیه ترین | دهد . | قرار | ین قالب | جریان های | قالب های ذهز | را حتی | جسمی | عادات | براى مدت کوتاهی به شكل معکوس يا متفاوت با | گذشته انجام دهید. | مثال : درهم كردن دستها | \"سیستم | ذهن | ذهن | آشناتر | ذهنی | فکری | تمرین",
+      "confidence_avg": 0.6903566733082382
+    },
+    {
+      "file": "Screenshot_20260119_163933_cn.wps.moffice_i18n.png",
+      "ocr_text": "ددانشکام | تکنیک ٦-٣-٥ | ٦٨ | است | از تکنیکهای خلاقیت | Brainwriting 6-3-5 روش | انجام | 9 | طوفان فكرى Brainstorming داردء اما ساختاريافتهتر | ب | شباهت هایی | Bernd Rohrbach معرفى شد | روش در سال ١٩٦٨ | می شود. | نام گذاری | ساختار | تعداد شرکت کنندگان )٦ نفرا | ٦ | ٣ = تعداد ايددهايى كه هرفرد بايد بنويسد )٣ ايده  | داده میشود )٥ دقیقه ( | مدت زمانی که برای نوشتن هر سری ایدهها | دانشكدگان مدیریت دانشگاه تهران ( | مدرس : اسماعیل جعفرپناه ) عضو هیأت | »مديريت فناورى ونوآورى « | تها | تکنیک ٦-٣-٥ | يك تيم ٦ نفره دور ميز مىنشينند ) درصورت كمتريا بيشتر بودن اعضاء روش قابا | تطبیق است . | موضوعی که نیاز به رامحل داردء بهصورت روشن | تعريف مسأله: مسأله يا | جلسه بیان میشود. | توسط مدیر | يادداشت می کند. | نوشتن ايددها: هرفرد در ٥ دقيقه اولء ٣ ايده در | به نفر کناری داده میشود. شرکت کنند | ٥ دقیقه  هر | بعد از | چرخش | جديدء ايدههاى نوشتهشده را مىخواند وباالهام گرفتن از آنهاء ٣ ايده تازه يا بهبود | یافته اضافه می کند. | برگهها یک دور کامل بین | همه | که | تا زمانی ادامه مییابد | تکرار فرایند: این | اعضا بگردد ) معمولا ٦ بارا . | حدود ١٠٨ ايده )٦ نفر x ٣ ايده x ٦ دورا توليد | تحلیل : در | جمع اوری | و تحلیل کند. | آنها را دستهبندی غربالگری | میشود که تیم | گروهی | ردازی | ایده پر | مکتوب | توسط | اختصاص |  علمی | برگه | مخصوص | برگهها : | برگه | چرخه | پایان | می تواند",
+      "confidence_avg": 0.6459564532671552
+    }
+  ]
+}
