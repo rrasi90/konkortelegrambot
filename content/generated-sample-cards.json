@@ -1,0 +1,46 @@
+{
+  "generatedFrom": "content-analysis-script",
+  "date": "2026-10-30",
+  "cards": [
+    {
+      "id": "gen-q-sm.rbv.vrio",
+      "type": "question",
+      "nodeId": "sm.rbv",
+      "skillId": "skill.sm.rbv.vrio",
+      "bloomLevel": 5,
+      "cognitive": "Evaluation",
+      "difficulty": 80,
+      "examYear": 1403,
+      "text": "در چارچوب VRIO، کدام مکانیسم انزوا (Isolating Mechanism) باعث می‌شود مزیت رقابتی یک منبع پایدار باشد؟",
+      "options": ["رقابت مستقیم در بازار", "تقلید سریع توسط رقبا", "ابهام علّی و پیچیدگی اجتماعی", "دسترسی آسان به منابع"],
+      "correctOption": 2,
+      "explanation": "مکانیسم‌های انزوا شامل مسیر وابستگی، ابهام علّی، پیچیدگی اجتماعی و... هستند که تقلید را پرهزینه می‌کنند.",
+      "trapNote": "دام طراح: گاهی دانشجویان «کمیابی» را با «تقلیدناپذیری» اشتباه می‌گیرند. منابع کمیاب بدون مکانیسم انزوا فقط مزیت موقت دارند."
+    },
+    {
+      "id": "gen-trap-sm.rbv",
+      "type": "trap_note",
+      "nodeId": "sm.rbv",
+      "skillId": "skill.sm.rbv.vrio",
+      "bloomLevel": 4,
+      "difficulty": 65,
+      "text": "نکته دام: منبع فقط ارزشمند و کمیاب است → مزیت موقت است، نه پایدار.",
+      "options": ["درست — این دام است", "اشتباه — مزیت پایدار است"],
+      "correctOption": 0,
+      "explanation": "برای مزیت پایدار باید از چارچوب VRIO عبور کند: ارزش، کمیابی، تقلیدناپذیری و سازمان‌یافتگی."
+    },
+    {
+      "id": "gen-cmp-sm.rbv-sm.core_competencies",
+      "type": "comparison_card",
+      "nodeId": "sm.rbv",
+      "skillId": "skill.sm.rbv.vrio",
+      "comparisonSkills": ["skill.sm.rbv.vrio", "skill.sm.core_competencies.prahalad"],
+      "bloomLevel": 4,
+      "difficulty": 70,
+      "text": "تفاوت مفهومی بین «منبع» (RBV) و «شایستگی محوری» (Core Competency) چیست؟",
+      "options": ["منبع دارایی است، شایستگی یادگیری جمعی است", "هر دو یک مفهوم هستند", "منبع فقط مالی است", "شایستگی فقط فنی است"],
+      "correctOption": 0,
+      "explanation": "RBV روی دارایی‌ها تمرکز دارد (منبع)، در حالی که شایستگی محوری (Prahalad) بر یادگیری جمعی و هماهنگ‌سازی دارایی‌ها تمرکز دارد."
+    }
+  ]
+}

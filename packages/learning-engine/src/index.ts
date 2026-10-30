@@ -69,6 +69,9 @@ export interface EngineConfig {
   rippleCapacity: number; // 6
 }
 
+/** Safe default for repair restoration: avoids undefined intervals */
+export const DEFAULT_PREVIOUS_INTERVAL_DAYS = 1;
+
 export const DEFAULT_ENGINE_CONFIG: EngineConfig = {
   masteryGain: 0.15,
   masteryPenalty: 0.75,
@@ -311,8 +314,9 @@ export function applyAnswer(
     qCard.dueAt = nextFsrs.dueAt;
     // اگر کارتِ ترمیمی درست جواب داده شد، فاصلهٔ قبلی را به‌جای رشد تازه برمی‌گردانیم
     if (wasRepair) {
-      qCard.intervalDays = qCard.previousIntervalDays ?? qCard.intervalDays;
-      qCard.dueAt = addDays(now, qCard.intervalDays).toISOString();
+      const restoredInterval = qCard.previousIntervalDays ?? DEFAULT_PREVIOUS_INTERVAL_DAYS;
+      qCard.intervalDays = restoredInterval;
+      qCard.dueAt = addDays(now, restoredInterval).toISOString();
       qCard.isRepair = false;
       qCard.previousIntervalDays = undefined;
     }
@@ -608,28 +612,61 @@ function buildMentorMessage(args: {
   if (errorType === 'slip') {
     return `حله! احتمالاً عجله داشتی و دقت لازم را نکردی. مبحث «${node.topic}» مشکلی ندارد؛ فردا یک مرور سریع برای اطمینان برات گذاشتیم.`;
   }
-  const parts: string[] = [
-    `این پاسخ یک شاهد اولیه است؛ احتمالاً مبحث «${node.topic}» هنوز کامل جا نیفتاده. تسلط فصل از ${topicDelta.before.toFixed(0)}٪ به ${topicDelta.after.toFixed(0)}٪ رسید تا با سؤال‌های بعدی دقیق‌تر بسنجیمش.`,
-  ];
+  const parts: string[] = [];
   const bits: string[] = [];
-  if (siblingShock && siblingShock.applied > 0) {
-    bits.push(`${siblingShock.applied} تست هم‌خانواده از همین فصل جلو افتاد`);
+  
+  // تحلیل عمیق‌تر بر اساس نوع خطا
+  if (errorType === 'concept_gap') {
+    const gapLevel = topicDelta.before < 40 ? 'عمیق' : topicDelta.before < 60 ? 'متوسط' : 'سطوح'; 
+    bits.push(`یک شکاف مفهومی ${gapLevel} در مبحث «${node.topic}» تشخیص داده شد`);
+    if (node.track === 'common') {
+      bits.push('برای تثبیت درس مشترک، تمرکز بیشتری لازم است');
+    }
+  } else if (errorType === 'prerequisite_failure') {
+    const prereqNodes = prerequisites.map(p => nodes.get(p.nodeId)?.topic).filter(Boolean);
+    bits.push(`پیش‌نیاز${prereqNodes.length > 1 ? 'های' : ''}: «${prereqNodes.join('، ')}» نیاز به بررسی تشخیصی دارد`);
+    if (prereqNodes.some(n => !['common', 'business', 'technology', 'strategy'].includes(n as string))) {
+      bits.push('پیش‌نیاز درسی عمیق‌تر نیاز به بازبینی برنامه دارد');
+    }
+  } else if (errorType === 'misread') {
+    bits.push('احتمالاً یک دام فریب‌دهنده با اعتماد به نفس بالا پاسخ داده‌اید');
+    bits.push('نتیجهٔ پاسخ غلط به پایان رسید؛ برای مطمئن شدن مرور کنید');
   }
+  
+  if (siblingShock && siblingShock.applied > 0) {
+    const shockType = siblingShock.applied === 1 ? 'یک سؤال هم‌خانواده جلو افتاد' : `${siblingShock.applied} سؤال هم‌خانواده جلو افتاد`;
+    bits.push(shockType);
+  }
+  
   for (const p of prerequisites) {
     const n = nodes.get(p.nodeId);
-    if (n) bits.push(`یک سؤال تشخیصی از پیش‌نیاز «${n.topic}» در صف قرار گرفت`);
+    if (n) {
+      const prereqTrack = n.track === 'common' ? 'مسیر استاندارد' : `مسیر ${n.track}`;
+      bits.push(`یک سؤال تشخیصی از پیش‌نیاز «${n.topic}» در ${prereqTrack} در صف قرار گرفت`);
+    }
   }
+  
   for (const b of bridges) {
     const n = nodes.get(b.nodeId);
-    if (n) bits.push(`یک بررسی تشخیصی از درس «${n.course}» پیشنهاد شد`);
+    if (n) {
+      const crossCourse = n.course ? `درس ${n.course}` : 'مبحث هم‌ارز';
+      bits.push(`یک بررسی تشخیصی از ${crossCourse} پیشنهاد شد`);
+    }
   }
+  
   if (comparisonCardCreated) {
     bits.push('یک جدول مقایسهٔ مفاهیم متشابه اضافه شد');
   }
+  
   if (proofCandidate) {
     bits.push('🎯 یک سؤال اثبات تسلط (دیده‌نشده) در صف توست');
   }
-  if (bits.length > 0) parts.push(`برای ادامه: ${bits.join('، ')}.`);
+  
+  if (bits.length > 0) {
+    parts.push(`برای ادامه: ${bits.join('، ')}.`);
+  }
+  
+  parts.push(`تسلط فصل از ${topicDelta.before.toFixed(0)}٪ به ${topicDelta.after.toFixed(0)}٪ رسید. بازبینی تمرکزی فردا پیشنهاد می‌شود!`);
   parts.push('تا با شواهد بیشتر ببندیمش!');
   return parts.join(' ');
 }

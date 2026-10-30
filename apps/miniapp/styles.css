@@ -1,22 +1,47 @@
 /* مسیر دکتری — طراحی راست‌به‌چپ فارسی
    پالت: سرمه‌ای عمیق + فیروزه‌ای مطالعه + کهربایی هشدار */
 :root {
-  --bg: #f4f6f9;
-  --surface: #ffffff;
-  --ink: #16233b;
-  --ink-soft: #5b6a80;
-  --line: #e3e8ef;
-  --primary: #155e8a;
-  --primary-soft: #e3f0f8;
+  --bg: #f2f3f7;
+  --surface: rgba(255,255,255,0.92);
+  --ink: #0f172a;
+  --ink-soft: #475569;
+  --line: #e2e6f0;
+  --primary: #1e40af;
+  --primary-soft: #dbeafe;
+  --primary-glow: rgba(30, 64, 175, 0.15);
+  --primary-deep: #1e3a8a;
   --ok: #1c7a4a;
-  --ok-soft: #e2f4ea;
-  --warn: #9a5b00;
-  --warn-soft: #fdf0dc;
-  --bad: #b3261e;
-  --bad-soft: #fbe7e5;
-  --radius: 14px;
-  --shadow: 0 6px 24px rgba(22, 35, 59, 0.08);
+  --ok-soft: #e6f6ed;
+  --warn: #b26b00;
+  --warn-soft: #fef3c7;
+  --bad: #c22d2d;
+  --bad-soft: #fee2e2;
+  --proof: linear-gradient(135deg, #f59e0b, #c2410c);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  --shadow-card: 0 6px 24px rgba(15, 23, 42, 0.06);
+  --shadow-glass: 0 8px 32px rgba(15, 23, 42, 0.1);
   --font: 'Vazirmatn', 'IRANSans', 'Segoe UI', system-ui, sans-serif;
+  --glass: rgba(255,255,255,0.75);
+}
+
+/* Dark mode — تجربهٔ شبانه با Material 3 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1220;
+    --surface: rgba(22, 24, 35, 0.88);
+    --ink: #e8ecf1;
+    --ink-soft: #8b95a8;
+    --line: #232636;
+    --primary: #6aa2f8;
+    --primary-soft: rgba(106, 162, 248, 0.12);
+    --primary-glow: rgba(106, 162, 248, 0.18);
+    --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    --shadow-card: 0 6px 24px rgba(0,0,0,0.3);
+    --shadow-glass: 0 8px 32px rgba(0,0,0,0.4);
+    --glass: rgba(22, 24, 35, 0.75);
+  }
 }
 
 * { box-sizing: border-box; }

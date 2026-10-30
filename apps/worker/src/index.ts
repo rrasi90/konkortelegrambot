@@ -143,6 +143,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         lastStudyDate: null,
         dayNumber: 0,
         examDate: null,
+        streakFreezeUsed: 0,
       }
     );
   }
@@ -870,6 +871,19 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         topic: nodeMap.get(q.nodeId)?.topic,
       }));
     return c.json({ items });
+  });
+
+  /* ---------- قفل کردن روز پیوسته (Streak Freeze) ---------- */
+  app.post('/api/streak/freeze', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const stats = await ensureStats(user.id);
+    // محدودیت: حداکثر ۲ بار در ماه، فقط اگر streak >= 3 باشد
+    if (stats.streakDays < 3) return c.json({ error: 'حداقل ۳ روز پیوسته برای قفل لازم است' }, 400);
+    if (stats.streakFreezeUsed >= 2) return c.json({ error: 'حداکثر ۲ بار در ماه مجاز است', used: stats.streakFreezeUsed }, 400);
+    stats.streakFreezeUsed += 1;
+    await store.upsertStats(stats);
+    return c.json({ ok: true, streakFreezeUsed: stats.streakFreezeUsed, streakDays: stats.streakDays, message: 'روز پیوسته قفل شد؛ اگر امروز مطالعه نکنی، زنجیره حفظ می‌شود' });
   });
 
   /* ---------- تنظیمات: تاریخ کنکور ---------- */
