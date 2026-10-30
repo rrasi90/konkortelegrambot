@@ -31,6 +31,8 @@ export interface UserStats {
   dayNumber: number;
   /** YYYY-MM-DD — تاریخ کنکور داوطلب */
   examDate: string | null;
+  /** تعداد روزهای قفل شده (freeze) برای حفظ زنجیره */
+  streakFreezeUsed: number;
 }
 
 export interface AnswerEvent {
@@ -186,7 +188,7 @@ export class SupabaseStore implements DataStore {
       'GET',
       'app_users',
       undefined,
-      `?id=eq.${userId}&select=coins,streak_days,last_study_date,day_number,exam_date`,
+      `?id=eq.${userId}&select=coins,streak_days,last_study_date,day_number,exam_date,streak_freeze_used`,
     )) as Record<string, unknown>[] | null;
     const row = rows?.[0];
     if (!row) return null;
@@ -197,6 +199,7 @@ export class SupabaseStore implements DataStore {
       lastStudyDate: row.last_study_date ? String(row.last_study_date) : null,
       dayNumber: Number(row.day_number ?? 0),
       examDate: row.exam_date ? String(row.exam_date) : null,
+      streakFreezeUsed: Number(row.streak_freeze_used ?? 0),
     };
   }
 
@@ -207,6 +210,7 @@ export class SupabaseStore implements DataStore {
       last_study_date: stats.lastStudyDate,
       day_number: stats.dayNumber,
       exam_date: stats.examDate,
+      streak_freeze_used: stats.streakFreezeUsed,
     });
   }
 

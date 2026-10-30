@@ -67,6 +67,7 @@ export class MemoryStore implements DataStore {
       lastStudyDate: null,
       dayNumber: 0,
       examDate: null,
+      streakFreezeUsed: 0,
     });
     return user;
   }
