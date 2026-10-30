@@ -1,0 +1,279 @@
+{
+  "extraction_method": "sqlite_notes_cards",
+  "source_db": "C:\\Users\\rrasi_oorj8fq\\AppData\\Roaming\\Anki2\\User 1\\collection.anki2",
+  "cards_extracted": 22462,
+  "cards": [
+    {
+      "card_anki_id": 1341853548391,
+      "note_anki_id": 1341853548375,
+      "front_text": "cue",
+      "back_text": "سرنخ - سرنخ دادن",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1341853576757,
+      "note_anki_id": 1341853576740,
+      "front_text": "express",
+      "back_text": "بیان کردن - سریع",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1341853641127,
+      "note_anki_id": 1341853641113,
+      "front_text": "crop",
+      "back_text": "محصول",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1341853701322,
+      "note_anki_id": 1341853701308,
+      "front_text": "context",
+      "back_text": "مفهوم - محتوا",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1341853759234,
+      "note_anki_id": 1341853759221,
+      "front_text": "controversy",
+      "back_text": "بحث - مجادله -&nbsp;&nbsp;debate",
+      "extra_fields": [],
+      "anki_type": 3,
+      "queue_status": 1
+    },
+    {
+      "card_anki_id": 1342213332422,
+      "note_anki_id": 1342213332234,
+      "front_text": "heredity",
+      "back_text": "وراثت",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342213362996,
+      "note_anki_id": 1342213362976,
+      "front_text": "infant",
+      "back_text": "نوزاد",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342213388782,
+      "note_anki_id": 1342213388767,
+      "front_text": "infancy",
+      "back_text": "دوران نوزادی",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342213443724,
+      "note_anki_id": 1342213443701,
+      "front_text": "substantial",
+      "back_text": "زیاد - considerable",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342213773369,
+      "note_anki_id": 1342213773310,
+      "front_text": "revive",
+      "back_text": "احیا کردن - جان دوباره دادن",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342213843239,
+      "note_anki_id": 1342213843216,
+      "front_text": "attribute",
+      "back_text": "نسبت دادن - ویژگی",
+      "extra_fields": [],
+      "anki_type": 3,
+      "queue_status": 1
+    },
+    {
+      "card_anki_id": 1342213878846,
+      "note_anki_id": 1342213878660,
+      "front_text": "yield",
+      "back_text": "تولید کردن - ثمر دادن - تسلیم شدن",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214137006,
+      "note_anki_id": 1342214136879,
+      "front_text": "overwhelm",
+      "back_text": "غرق شدن - غرق کردن",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214181069,
+      "note_anki_id": 1342214180951,
+      "front_text": "cite",
+      "back_text": "نقل قول کردن - استناد کردن",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214232546,
+      "note_anki_id": 1342214232382,
+      "front_text": "comprehend",
+      "back_text": "درک کردن - فهمیدن",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214281295,
+      "note_anki_id": 1342214281277,
+      "front_text": "attitude",
+      "back_text": "گرایش - رویکرد",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214326523,
+      "note_anki_id": 1342214326448,
+      "front_text": "mimic",
+      "back_text": "تقلید کردن - imitate",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214346769,
+      "note_anki_id": 1342214346748,
+      "front_text": "mimicry",
+      "back_text": "تقلید",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214400259,
+      "note_anki_id": 1342214400193,
+      "front_text": "sting",
+      "back_text": "نیش - نیش زدن - ایجاد سوزش کردن",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214481068,
+      "note_anki_id": 1342214481005,
+      "front_text": "associate",
+      "back_text": "ربط دادن (چیزی) به - به هم پیوستن - همراه شدن",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214508340,
+      "note_anki_id": 1342214508177,
+      "front_text": "trait",
+      "back_text": "خصلت",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214540815,
+      "note_anki_id": 1342214540801,
+      "front_text": "zoology",
+      "back_text": "جانور شناسی",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214572967,
+      "note_anki_id": 1342214572895,
+      "front_text": "alike",
+      "back_text": "خیلی شبیه - همانند",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342214619562,
+      "note_anki_id": 1342214619410,
+      "front_text": "resemble",
+      "back_text": "شبیه بودن به - look like",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342452796254,
+      "note_anki_id": 1342452796200,
+      "front_text": "butterfly",
+      "back_text": "پروانه",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342452869717,
+      "note_anki_id": 1342452869695,
+      "front_text": "wasp",
+      "back_text": "زنبور زرد",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342452894118,
+      "note_anki_id": 1342452894100,
+      "front_text": "moth",
+      "back_text": "شب پره",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342452921106,
+      "note_anki_id": 1342452921089,
+      "front_text": "mouth",
+      "back_text": "دهان",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342452940318,
+      "note_anki_id": 1342452940295,
+      "front_text": "mouse",
+      "back_text": "موش",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    },
+    {
+      "card_anki_id": 1342452973369,
+      "note_anki_id": 1342452973347,
+      "front_text": "species",
+      "back_text": "گونه",
+      "extra_fields": [],
+      "anki_type": 2,
+      "queue_status": 2
+    }
+  ],
+  "all_notes_count": 22462,
+  "media_files": 65
+}
