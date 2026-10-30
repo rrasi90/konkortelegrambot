@@ -3,15 +3,24 @@
     "book_id": "book-robinson-org-theory",
     "title_fa": "تئوری سازمان: ساختار و طرح سازمانی",
     "title_en": "Organization Theory: Structure, Design, and Applications",
-    "authors": ["استفن پی. رابینز (Stephen P. Robbins)"],
-    "translators": ["دکتر سید مهدی الوانی", "دکتر حسن دانایی‌فرد"],
+    "authors": [
+      "استفن پی. رابینز (Stephen P. Robbins)"
+    ],
+    "translators": [
+      "دکتر سید مهدی الوانی",
+      "دکتر حسن دانایی‌فرد"
+    ],
     "publisher": "انتشارات صفار / اشراقی",
     "edition": "ویرایش ۳ (چاپ مکرر)",
     "isbn": "978-964-5980-62-6",
     "language": "fa",
     "course_id": "course-org-theory",
     "course_name": "مبانی سازمان و مدیریت",
-    "track_ids": ["common", "business", "technology"],
+    "track_ids": [
+      "common",
+      "business",
+      "technology"
+    ],
     "relevant_chapters": [
       "فصل ۱: کلیات تئوری سازمان و اثربخشی سازمانی",
       "فصل ۲: ابعاد ساختار سازمانی (پیچیدگی، رسمیت، تمرکز)",
@@ -32,7 +41,9 @@
     "book_id": "book-alvani-general-management",
     "title_fa": "مدیریت عمومی",
     "title_en": "General Management",
-    "authors": ["دکتر سید مهدی الوانی"],
+    "authors": [
+      "دکتر سید مهدی الوانی"
+    ],
     "translators": [],
     "publisher": "نشر نی",
     "edition": "ویرایش تجدیدنظرشده (چاپ ۶۰+)",
@@ -40,7 +51,11 @@
     "language": "fa",
     "course_id": "course-org-theory",
     "course_name": "مبانی سازمان و مدیریت",
-    "track_ids": ["common", "business", "technology"],
+    "track_ids": [
+      "common",
+      "business",
+      "technology"
+    ],
     "relevant_chapters": [
       "فصل ۱: مفاهیم و تعاریف مدیریت و سازمان",
       "فصل ۲: سیر تحول اندیشه‌های مدیریت (کلاسیک، نئوکلاسیک، سیستم‌ها، اقتضا)",
@@ -59,7 +74,9 @@
     "book_id": "book-rezaeian-ob",
     "title_fa": "مبانی مدیریت رفتار سازمانی",
     "title_en": "Fundamentals of Organizational Behavior",
-    "authors": ["دکتر علی رضائیان"],
+    "authors": [
+      "دکتر علی رضائیان"
+    ],
     "translators": [],
     "publisher": "انتشارات سمت",
     "edition": "چاپ هفدهم",
@@ -67,7 +84,11 @@
     "language": "fa",
     "course_id": "course-org-theory",
     "course_name": "مبانی سازمان و مدیریت (رفتار سازمانی)",
-    "track_ids": ["common", "business", "technology"],
+    "track_ids": [
+      "common",
+      "business",
+      "technology"
+    ],
     "relevant_chapters": [
       "فصل ۱: ادراک و نظریه‌های انتساب",
       "فصل ۲: انگیزش (نظریه‌های محتوایی و فرایندی: مازلو، هرزبرگ، آلدرفر، وروم، آدامز)",
@@ -86,7 +107,10 @@
     "book_id": "book-azar-momeni-stats-1-2",
     "title_fa": "آمار و کاربرد آن در مدیریت (جلدهای ۱ و ۲)",
     "title_en": "Statistics and Its Applications in Management (Vols 1 & 2)",
-    "authors": ["دکتر عادل آذر", "دکتر منصور مؤمنی"],
+    "authors": [
+      "دکتر عادل آذر",
+      "دکتر منصور مؤمنی"
+    ],
     "translators": [],
     "publisher": "انتشارات سمت",
     "edition": "چاپ متوالی ویرایش جدید",
@@ -94,7 +118,11 @@
     "language": "fa",
     "course_id": "course-stats",
     "course_name": "آمار و کاربرد آن در مدیریت",
-    "track_ids": ["common", "business", "technology"],
+    "track_ids": [
+      "common",
+      "business",
+      "technology"
+    ],
     "relevant_chapters": [
       "جلد ۱ - آمار توصیفی، مبانی اندازه‌گیری، شاخص‌های پراکندگی و احتمال",
       "جلد ۲ - توزیع‌های نمونه‌گیری، برآورد فاصله‌ای و نقطه‌ای",
@@ -112,7 +140,9 @@
     "book_id": "book-pourezzat-islamic-mgmt",
     "title_fa": "مدیریت ما: مبانی و ریشه‌های مدیریت اسلامی",
     "title_en": "Our Management: Fundamentals of Islamic Management",
-    "authors": ["دکتر علی‌اصغر پورعزت"],
+    "authors": [
+      "دکتر علی‌اصغر پورعزت"
+    ],
     "translators": [],
     "publisher": "انتشارات دانشگاه تهران",
     "edition": "چاپ هفتم",
@@ -120,7 +150,11 @@
     "language": "fa",
     "course_id": "course-islamic-mgmt",
     "course_name": "اصول و مبانی مدیریت از دیدگاه اسلام",
-    "track_ids": ["common", "business", "technology"],
+    "track_ids": [
+      "common",
+      "business",
+      "technology"
+    ],
     "relevant_chapters": [
       "فصل ۱: جهان‌بینی توحیدی و نظام ارزشی در اداره امور",
       "فصل ۲: اصول هدایت، مشورت و شورا در سیره نبوی و علوی",
@@ -138,15 +172,23 @@
     "book_id": "book-kotler-keller-marketing",
     "title_fa": "مدیریت بازاریابی",
     "title_en": "Marketing Management (15th/16th Edition)",
-    "authors": ["فیلیپ کاتلر (Philip Kotler)", "کوین لین کلر (Kevin Lane Keller)"],
-    "translators": ["دکتر مهدی زارع", "دکتر احمد فروزنده"],
+    "authors": [
+      "فیلیپ کاتلر (Philip Kotler)",
+      "کوین لین کلر (Kevin Lane Keller)"
+    ],
+    "translators": [
+      "دکتر مهدی زارع",
+      "دکتر احمد فروزنده"
+    ],
     "publisher": "انتشارات نص / نگاه دانش",
     "edition": "ویرایش ۱۵ و ۱۶ جهانی",
     "isbn": "978-600-6086-43-9",
     "language": "fa",
     "course_id": "course-marketing",
     "course_name": "بازاریابی و مدیریت بازار پیشرفته",
-    "track_ids": ["business"],
+    "track_ids": [
+      "business"
+    ],
     "relevant_chapters": [
       "فصل ۱: درک مدیریت بازاریابی در قرن ۲۱ و ارزش‌آفرینی",
       "فصل ۲: برنامه‌ریزی استراتژیک بازاریابی",
@@ -166,15 +208,24 @@
     "book_id": "book-david-strategic-mgmt",
     "title_fa": "مدیریت استراتژیک",
     "title_en": "Strategic Management: Concepts and Cases",
-    "authors": ["فرد آر. دیوید (Fred R. David)"],
-    "translators": ["دکتر علی پارسائیان", "دکتر سید محمد اعرابی"],
+    "authors": [
+      "فرد آر. دیوید (Fred R. David)"
+    ],
+    "translators": [
+      "دکتر علی پارسائیان",
+      "دکتر سید محمد اعرابی"
+    ],
     "publisher": "دفتر پژوهش‌های فرهنگی",
     "edition": "چاپ متوالی",
     "isbn": "978-964-6269-16-4",
     "language": "fa",
     "course_id": "course-strategic-mgmt",
     "course_name": "مدیریت استراتژیک پیشرفته",
-    "track_ids": ["common", "business", "technology"],
+    "track_ids": [
+      "common",
+      "business",
+      "technology"
+    ],
     "relevant_chapters": [
       "فصل ۱: ماهیت مدیریت استراتژیک و فرآیند جامع",
       "فصل ۲: بیانیه مأموریت، چشم‌انداز و ارزش‌ها",
@@ -194,15 +245,23 @@
     "book_id": "book-barney-rbv-strategy",
     "title_fa": "کسب و حفظ مزیت رقابتی (رویکرد مبتنی بر منابع)",
     "title_en": "Gaining and Sustaining Competitive Advantage",
-    "authors": ["جی. بی. بارنی (Jay B. Barney)"],
-    "translators": ["دکتر مسعود سلطانی"],
+    "authors": [
+      "جی. بی. بارنی (Jay B. Barney)"
+    ],
+    "translators": [
+      "دکتر مسعود سلطانی"
+    ],
     "publisher": "انتشارات آریانا قلم",
     "edition": "چاپ سوم",
     "isbn": "978-600-6786-12-4",
     "language": "fa",
     "course_id": "course-strategic-mgmt",
     "course_name": "مدیریت استراتژیک پیشرفته",
-    "track_ids": ["common", "business", "technology"],
+    "track_ids": [
+      "common",
+      "business",
+      "technology"
+    ],
     "relevant_chapters": [
       "فصل ۱: دیدگاه مبتنی بر منابع (RBV) در برابر تحلیل صنعت",
       "فصل ۲: چارچوب VRIO (ارزش، کمیابی، تقلیدناپذیری، سازماندهی)",
@@ -220,15 +279,22 @@
     "book_id": "book-schilling-tech-innovation",
     "title_fa": "مدیریت استراتژیک نوآوری فناورانه",
     "title_en": "Strategic Management of Technological Innovation",
-    "authors": ["ملیسا شیلینگ (Melissa A. Schilling)"],
-    "translators": ["دکتر سید محمد اعرابی", "مهندس هاشم آقازاده"],
+    "authors": [
+      "ملیسا شیلینگ (Melissa A. Schilling)"
+    ],
+    "translators": [
+      "دکتر سید محمد اعرابی",
+      "مهندس هاشم آقازاده"
+    ],
     "publisher": "دفتر پژوهش‌های فرهنگی",
     "edition": "ویرایش پنجم و ششم جهانی",
     "isbn": "978-964-379-112-4",
     "language": "fa",
     "course_id": "course-innovation-mgmt",
     "course_name": "تئوری‌های نوآوری و مدیریت فناوری",
-    "track_ids": ["technology"],
+    "track_ids": [
+      "technology"
+    ],
     "relevant_chapters": [
       "فصل ۱: منابع نوآوری (خلاقیت، R&D، شبکه‌های نوآوری)",
       "فصل ۲: انواع و الگوهای نوآوری (منحنی S فناوری فاستر، نوآوری‌های تدریجی و رادیکال)",
@@ -242,5 +308,212 @@
     "rights_status": "licensed",
     "legal_acquisition_url": "https://farhangbook.ir",
     "justification": "اصلی‌ترین مرجع سؤالات تخصصی گرایش مدیریت تکنولوژی و نوآوری در آزمون دکتری."
+  },
+  {
+    "book_id": "book-chernev-marketing-strategy",
+    "title_fa": "مدیریت استراتژیک بازاریابی",
+    "title_en": "Strategic Marketing Management",
+    "authors": [
+      "الکساندر چرنوف (Alexander Chernev)"
+    ],
+    "translators": [
+      "کامبیز حیدرزاده",
+      "نیما شجاعی"
+    ],
+    "publisher": "شرکت چاپ و نشر بازرگانی (وابسته به وزارت صمت)",
+    "edition": "چاپ‌های مکرر از ویرایش‌های میانهٔ دهه",
+    "isbn": null,
+    "language": "fa",
+    "course_id": "course-marketing",
+    "course_name": "بازاریابی پیشرفته",
+    "track_ids": [
+      "common",
+      "business",
+      "strategy"
+    ],
+    "relevant_chapters": [],
+    "exam_years": [
+      1398,
+      1399,
+      1400,
+      1401,
+      1402,
+      1403,
+      1404
+    ],
+    "recommendation_type": "core_reference",
+    "rights_status": "licensed",
+    "confidence_level": "high",
+    "evidence_basis": "فهرست منابع آزمون ۱۴۰۴ (جستجوی وب؛ چند منبع آموزشی مستقل). نیازمند تطبیق با اطلاعیهٔ رسمی سنجش.",
+    "legal_acquisition_url": "https://ketab.ir"
+  },
+  {
+    "book_id": "book-daft-org-theory-design",
+    "title_fa": "تئوری سازمان: طراحی سازمان‌ها (دفت)",
+    "title_en": "Organization Theory and Design (Richard L. Daft)",
+    "authors": [
+      "ریچارد ال. دفت (Richard L. Daft)"
+    ],
+    "translators": [
+      "مهدی پارساییان",
+      "سید محمد اعرابی"
+    ],
+    "publisher": "انتشارات نگاه دانش (ترجمه فارسی)",
+    "edition": "ویرایش‌های ۱۱ تا ۱۳ در چاپ‌های فارسی",
+    "isbn": null,
+    "language": "fa",
+    "course_id": "course-org-theory",
+    "course_name": "تئوری‌های سازمان",
+    "track_ids": [
+      "common",
+      "business",
+      "technology",
+      "strategy"
+    ],
+    "relevant_chapters": [],
+    "exam_years": [
+      1398,
+      1399,
+      1400,
+      1401,
+      1402,
+      1403,
+      1404
+    ],
+    "recommendation_type": "core_reference",
+    "rights_status": "licensed",
+    "confidence_level": "medium",
+    "evidence_basis": "منابع آموزشی متعدد؛ عنوان دقیق ترجمهٔ فارسی نیازمند تطبیق کتاب‌شناختی.",
+    "legal_acquisition_url": "https://ketab.ir"
+  },
+  {
+    "book_id": "book-hatch-org-theories",
+    "title_fa": "تئوری‌های سازمان: مدرن، نمادین-تفسیری و پست‌مدرن (هچ)",
+    "title_en": "Organization Theory: Modern, Symbolic, and Postmodern Perspectives (Mary Jo Hatch)",
+    "authors": [
+      "مری جو هچ (Mary Jo Hatch)"
+    ],
+    "translators": [
+      "حسن دانایی‌فرد و همکاران"
+    ],
+    "publisher": "انتشارات ترمه / مرکز آموزش مدیریت دولتی",
+    "edition": "چاپ‌های مکرر",
+    "isbn": null,
+    "language": "fa",
+    "course_id": "course-org-theory",
+    "course_name": "تئوری‌های سازمان",
+    "track_ids": [
+      "common",
+      "strategy"
+    ],
+    "relevant_chapters": [],
+    "exam_years": [
+      1400,
+      1401,
+      1402,
+      1403,
+      1404
+    ],
+    "recommendation_type": "supplementary_reference",
+    "rights_status": "licensed",
+    "confidence_level": "medium",
+    "evidence_basis": "منابع آموزشی؛ ناشر دقیق ویرایش فارسی نیازمند تطبیق.",
+    "legal_acquisition_url": "https://ketab.ir"
+  },
+  {
+    "book_id": "book-ahmadi-strategic-management",
+    "title_fa": "راهبرد مدیریت استراتژیک",
+    "title_en": "The Craft of Strategic Management",
+    "authors": [
+      "علی احمدی"
+    ],
+    "translators": [],
+    "publisher": "انتشارات سمت",
+    "edition": "چاپ‌های مکرر",
+    "isbn": null,
+    "language": "fa",
+    "course_id": "course-strategy",
+    "course_name": "مدیریت استراتژیک پیشرفته",
+    "track_ids": [
+      "common",
+      "business",
+      "strategy"
+    ],
+    "relevant_chapters": [],
+    "exam_years": [
+      1402,
+      1403,
+      1404
+    ],
+    "recommendation_type": "core_reference",
+    "rights_status": "licensed",
+    "confidence_level": "high",
+    "evidence_basis": "منابع آموزشی متعدد و هم‌نوا؛ کتاب مؤلف مرجع استراتژی سمت.",
+    "legal_acquisition_url": "https://samt.ac.ir"
+  },
+  {
+    "book_id": "book-jandaghi-strategic-management",
+    "title_fa": "مدیریت استراتژیک",
+    "title_en": "Strategic Management (Reza Jandaghi)",
+    "authors": [
+      "رضا جندقی"
+    ],
+    "translators": [],
+    "publisher": "انتشارات سمت",
+    "edition": "چاپ‌های مکرر",
+    "isbn": null,
+    "language": "fa",
+    "course_id": "course-strategy",
+    "course_name": "مدیریت استراتژیک پیشرفته",
+    "track_ids": [
+      "common",
+      "business",
+      "strategy"
+    ],
+    "relevant_chapters": [],
+    "exam_years": [
+      1402,
+      1403,
+      1404
+    ],
+    "recommendation_type": "supplementary_reference",
+    "rights_status": "licensed",
+    "confidence_level": "medium",
+    "evidence_basis": "منابع آموزشی؛ جایگاه دقیق نسبت به احمدی/دیوید نیازمند تطبیق اطلاعیهٔ رسمی.",
+    "legal_acquisition_url": "https://samt.ac.ir"
+  },
+  {
+    "book_id": "book-zare-research-methods",
+    "title_fa": "روش تحقیق در مدیریت",
+    "title_en": "Research Methods in Management (Habibollah Zare)",
+    "authors": [
+      "حبیب‌الله زارع"
+    ],
+    "translators": [],
+    "publisher": "انتشارات کتاب مهربان",
+    "edition": "چاپ‌های مکرر",
+    "isbn": null,
+    "language": "fa",
+    "course_id": "course-research-methods",
+    "course_name": "روش تحقیق و آمار",
+    "track_ids": [
+      "common",
+      "business",
+      "technology",
+      "strategy"
+    ],
+    "relevant_chapters": [],
+    "exam_years": [
+      1400,
+      1401,
+      1402,
+      1403,
+      1404
+    ],
+    "recommendation_type": "supplementary_reference",
+    "rights_status": "licensed",
+    "confidence_level": "medium",
+    "evidence_basis": "منابع آموزشی؛ سهم سؤال‌های روش تحقیق سال‌به‌سال متغیر است.",
+    "legal_acquisition_url": "https://ketab.ir"
   }
 ]
