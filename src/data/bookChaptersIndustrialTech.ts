@@ -1,6 +1,10 @@
 import type { BookChapter } from './bookChaptersTypes';
 
-/** ده فصل کلیدی هر کتاب مرجع گرایش صنعتی و مدیریت فناوری */
+/**
+ * ده فصل منتخب هر کتاب مرجع صنعتی و مدیریت فناوری.
+ * examCount مقادیر تاریخیِ قدیمی و فاقد ممیزی سطح آزمون/کد ترکیب هستند؛
+ * برای اولویت‌بندی کنکور دکتری یا ادعای بودجه‌بندی رسمی استفاده نشوند.
+ */
 export const INDUSTRIAL_TECH_BOOK_CHAPTERS: Record<string, BookChapter[]> = {
   'book.ind.or_mehregan_fadavi': [
     {
