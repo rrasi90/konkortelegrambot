@@ -1,0 +1,215 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Vazirmatn FD', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'Vazirmatn FD', 'Vazirmatn', ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --tg-viewport-height: 100vh;
+  --tg-viewport-stable-height: 100vh;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  font-family: 'Vazirmatn FD', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+@layer base {
+  html,
+  body,
+  button,
+  input,
+  select,
+  textarea,
+  svg text {
+    font-family: 'Vazirmatn FD', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-feature-settings: "ss01";
+    font-variant-numeric: tabular-nums;
+  }
+
+  html,
+  body {
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+    touch-action: manipulation;
+    scroll-behavior: smooth;
+  }
+
+  button,
+  a {
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.75);
+    outline-offset: 2px;
+  }
+}
+
+.katex {
+  direction: ltr;
+  display: inline-block;
+  font-size: 1.05em;
+}
+
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0.75rem));
+}
+
+/* ==========================================================================
+   Bento Grid & Glassmorphism Design System (Minimal & Modern UI)
+   ========================================================================== */
+
+.ambient-bento-bg {
+  background-color: #f8fafc;
+  background-image:
+    radial-gradient(at 12% 8%, rgba(59, 130, 246, 0.08) 0px, transparent 48%),
+    radial-gradient(at 88% 14%, rgba(16, 185, 129, 0.06) 0px, transparent 45%),
+    radial-gradient(at 52% 88%, rgba(99, 102, 241, 0.06) 0px, transparent 50%);
+}
+
+.dark .ambient-bento-bg {
+  background-color: #080c16;
+  background-image:
+    radial-gradient(at 12% 8%, rgba(37, 99, 235, 0.14) 0px, transparent 50%),
+    radial-gradient(at 88% 14%, rgba(16, 185, 129, 0.09) 0px, transparent 46%),
+    radial-gradient(at 50% 90%, rgba(139, 92, 246, 0.09) 0px, transparent 52%);
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .bento-span-12 {
+    grid-column: span 12 / span 12;
+  }
+  .bento-span-8 {
+    grid-column: span 8 / span 8;
+  }
+  .bento-span-7 {
+    grid-column: span 7 / span 7;
+  }
+  .bento-span-6 {
+    grid-column: span 6 / span 6;
+  }
+  .bento-span-5 {
+    grid-column: span 5 / span 5;
+  }
+  .bento-span-4 {
+    grid-column: span 4 / span 4;
+  }
+  .bento-span-3 {
+    grid-column: span 3 / span 3;
+  }
+}
+
+.glass-panel,
+.bento-card {
+  background: rgba(255, 255, 255, 0.76);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow:
+    0 4px 24px -4px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.65);
+  border-radius: 1.25rem;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dark .glass-panel,
+.dark .bento-card {
+  background: rgba(15, 23, 42, 0.68);
+  border: 1px solid rgba(51, 65, 85, 0.55);
+  box-shadow:
+    0 8px 32px -6px rgba(2, 6, 23, 0.45),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+.bento-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow:
+    0 12px 30px -8px rgba(37, 99, 235, 0.12),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.glass-card-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.94) 0%,
+    rgba(23, 37, 84, 0.9) 55%,
+    rgba(15, 23, 42, 0.95) 100%
+  );
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border: 1px solid rgba(96, 165, 250, 0.28);
+  box-shadow:
+    0 14px 36px -8px rgba(15, 23, 42, 0.35),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
+  border-radius: 1.25rem;
+}
+
+.glass-subcard {
+  background: rgba(248, 250, 252, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 0.875rem;
+  transition: all 0.18s ease;
+}
+
+.dark .glass-subcard {
+  background: rgba(30, 41, 59, 0.48);
+  border: 1px solid rgba(51, 65, 85, 0.55);
+}
+
+.glass-subcard:hover {
+  border-color: rgba(59, 130, 246, 0.45);
+}
+
+.glass-header {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.dark .glass-header {
+  background: rgba(8, 12, 22, 0.78);
+  border-bottom: 1px solid rgba(30, 41, 59, 0.85);
+}
+
+@keyframes pulseSubtle {
+  0%, 100% { transform: scale(1); opacity: 0.92; }
+  50% { transform: scale(1.04); opacity: 1; }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* UI/UX Pro Max: Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
