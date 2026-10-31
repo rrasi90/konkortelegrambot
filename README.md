@@ -34,3 +34,13 @@ npm run extract:konkor
 # ساخت نسخه نهایی (Production Build)
 npm run build
 ```
+
+## راهنمای عملیاتی ایجنت‌ها و استقرار کلودفلر
+
+برای مشاهدهٔ راهنمای کامل عملیاتی ایجنت‌های هوش مصنوعی، نحوه اجرای تمام ۶۵ تست خودکار، اتصال و سینک با گیت‌هاب و استقرار زنده در کلودفلر ورکرز، به سند زیر مراجعه کنید:
+👉 [راهنمای جامع عملیاتی ایجنت‌ها (AGENT_INSTRUCTIONS.md)](./AGENT_INSTRUCTIONS.md)
+
+* **آدرس استقرار زنده:** `https://adaptive-exam-worker.ael-worker.workers.dev`
+* **آزمون‌های خودکار:** `npm test` (۶۵ تست پاس‌شده)
+* **استقرار در کلودفلر:** `npx wrangler deploy --cwd apps/worker`
+
