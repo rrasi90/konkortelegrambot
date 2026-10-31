@@ -21,6 +21,6 @@ for f in $SEEDS; do
 done
 
 echo "== تست‌های یکپارچگی =="
-psql "$DATABASE_URL" -f "$(dirname "$0")/integrity.test.sql"
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f "$(dirname "$0")/integrity.test.sql"
 
 echo "== همهٔ تست‌های دیتابیس سبز شد =="
