@@ -22,6 +22,12 @@ import type { ReviewCard, TrackId, Question, PublicQuestion } from '@ael/contrac
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
 import type { AppUser, DataStore, UserStats } from './store';
 import { MemoryStore } from './memory-store';
+
+// Module-scoped so rate-limit counters survive createApp() calls within a warm Worker isolate.
+const RATE_LIMITS = new Map<string, { count: number; resetAt: number }>();
+const RATE_WINDOW_MS = 60_000;
+const RATE_MAX = 30;
+
 import { SupabaseStore } from './store';
 import { skillMetaMap, estimatedMinutesForNode, skillForNode, skillTitle, nodeForSkill } from './skills-data';
 import {
@@ -240,10 +246,6 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   app.get('/api/health', (c) => c.json({ ok: true }));
 
-  const rateLimits = new Map<string, { count: number; resetAt: number }>();
-  const RATE_WINDOW_MS = 60_000;
-  const RATE_MAX = 30;
-
   // Best-effort per-isolate throttling for sensitive write/auth routes.
   // Production-wide protection should additionally use Cloudflare Rate Limiting rules.
   async function rateLimit(c: AppContext, next: Next): Promise<void | Response> {
@@ -254,10 +256,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       'anonymous';
     const key = `${c.req.path}:${clientKey}`;
     const now = Date.now();
-    const entry = rateLimits.get(key);
+    const entry = RATE_LIMITS.get(key);
 
     if (!entry || now >= entry.resetAt) {
-      rateLimits.set(key, { count: 1, resetAt: now + RATE_WINDOW_MS });
+      RATE_LIMITS.set(key, { count: 1, resetAt: now + RATE_WINDOW_MS });
     } else if (entry.count >= RATE_MAX) {
       return c.json({ error: 'درخواست بیش از حد مجاز؛ کمی بعد دوباره تلاش کنید.' }, 429);
     } else {
@@ -265,9 +267,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
 
     // Bound memory in long-lived isolates.
-    if (rateLimits.size > 5_000) {
-      for (const [entryKey, value] of rateLimits) {
-        if (now >= value.resetAt) rateLimits.delete(entryKey);
+    if (RATE_LIMITS.size > 5_000) {
+      for (const [entryKey, value] of RATE_LIMITS) {
+        if (now >= value.resetAt) RATE_LIMITS.delete(entryKey);
       }
     }
     await next();
