@@ -4,7 +4,7 @@
  */
 
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '8875977365:AAGEDS3Z6tvJJhggaNA571yB9q-DaFns89I';
-const APP_URL = process.env.APP_URL || 'https://adaptive-exam-worker.crystalline-jingle.workers.dev';
+const APP_URL = process.env.APP_URL || 'https://rrasi90.github.io/konkortelegrambot/';
 const API_BASE = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
 async function tg(method, body = {}) {
