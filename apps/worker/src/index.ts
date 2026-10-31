@@ -240,6 +240,18 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   app.get('/api/health', (c) => c.json({ ok: true }));
 
+  const rateLimits = new Map<string,{count:number;resetAt:number}>();
+  const RATE_WINDOW_MS = 60_000;
+  const RATE_MAX = 30;
+  function rateLimit(c:any,next:()=>void){
+    const key = (c.req.header('authorization')||c.req.header('x-forwarded-for')||'anon') as string;
+    const now = Date.now();
+    const entry = rateLimits.get(key);
+    if(!entry || now>entry.resetAt){ rateLimits.set(key,{count:1,resetAt:now+RATE_WINDOW_MS}); return next(); }
+    if(entry.count>=RATE_MAX) return c.json({error:'درخواست بیش از حد مجاز'},429);
+    entry.count++; return next();
+  }
+
   app.get('/api/lessons', (c) => c.json({ courses: COURSES_LESSONS }));
 
   app.post('/api/telegram/webhook', async (c) => {
