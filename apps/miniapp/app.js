@@ -829,8 +829,7 @@
     });
   }
 
-  var btnSaveExam = el('btn-save-exam');
-  if (btnSaveExam) {
+  var btnSaveExam = el('btn-save-exam');  if (btnSaveExam) {
     btnSaveExam.addEventListener('click', function () {
       var value = el('input-exam-date').value || null;
       btnSaveExam.disabled = true;
@@ -850,6 +849,20 @@
   }
 
   var btnLogout = el('btn-logout');
+  function freezeStreak() {
+    var btn = el('btn-freeze-streak');
+    if (!btn) return;
+    btn.disabled = true;
+    API.post('/api/streak/freeze', {}).then(function (res) {
+      btn.disabled = false;
+      var info = el('freeze-info');
+      if (info) info.textContent = (res && res.ok ? 'قفل شد (ماه: ' + (res.month || '') + ')' : '') + ' — ' + (state.home && state.home.stats ? state.home.stats.streakDays + ' روز' : '');
+      loadHome();
+    }).catch(function (err) {
+      btn.disabled = false;
+      alert('خطا در قفل زنجیره: ' + err.message);
+    });
+  }
   if (btnLogout) {
     btnLogout.addEventListener('click', function () {
       localStorage.removeItem('session_token');
