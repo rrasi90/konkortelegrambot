@@ -46,14 +46,16 @@ async function json(res: Response): Promise<any> {
 
 describe('worker API — حلقهٔ کامل یادگیری', () => {
   it('برای مسیرهای حساس محدودکننده نرخ درخواست فعال است', async () => {
-    const limitedApp = createApp(ENV, { store: new MemoryStore() });
+    const limitedStore = new MemoryStore();
     const headers = {
       'Content-Type': 'application/json',
       'x-forwarded-for': '203.0.113.45',
     };
     let last: Response | undefined;
     for (let i = 0; i < 31; i += 1) {
-      last = await limitedApp.request('/api/auth/demo', {
+      // The Cloudflare entrypoint creates a new Hono app for each request.
+      const requestApp = createApp(ENV, { store: limitedStore });
+      last = await requestApp.request('/api/auth/demo', {
         method: 'POST',
         headers,
         body: JSON.stringify({ displayName: 'rate-limit-test' }),
