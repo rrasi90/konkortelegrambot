@@ -20,7 +20,7 @@ import {
 import type { EngineState, QueueItem } from '@ael/engine';
 import type { ReviewCard, TrackId, Question, PublicQuestion } from '@ael/contracts';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
-import type { AppUser, DataStore, UserStats } from './store';
+import type { AppUser, AttemptTicket, DataStore, UserStats } from './store';
 import { MemoryStore } from './memory-store';
 
 // Module-scoped so rate-limit counters survive createApp() calls within a warm Worker isolate.
@@ -718,7 +718,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
 
     // The issued ticket, not a client-supplied field, defines the attempt type.
-    let ticket;
+    let ticket: AttemptTicket | null;
     try {
       ticket = await store.getAttemptTicket(user.id, body.attemptId, body.questionId);
     } catch (error) {
