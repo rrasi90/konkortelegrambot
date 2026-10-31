@@ -1,0 +1,6 @@
+{
+  "name": "سامانه یادگیری تطبیقی کنکور دکتری (AEL)",
+  "description": "مربی هوشمند یادگیری تطبیقی کنکور دکتری مدیریت مبتنی بر شواهد، گراف دانش، موج خطای ۴لایه، حافظه FSRS و بودجه‌بندی ROI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
