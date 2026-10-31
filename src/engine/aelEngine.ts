@@ -550,8 +550,10 @@ export function applyLessonUnderstandingRating(params: {
   st.lastLessonSelfRating = rating;
 
   if (rating >= 3) {
-    const remedialIndex = nextCards.findIndex((card) => card.id === `card.remedial.${node.id}`);
-    if (remedialIndex !== -1) nextCards.splice(remedialIndex, 1);
+    // Keep an existing remediation task until performance evidence resolves it;
+    // confidence may lower its priority but must not erase the diagnosed gap.
+    const remedialCard = nextCards.find((card) => card.id === `card.remedial.${node.id}`);
+    if (remedialCard) remedialCard.priorityScore = Math.min(remedialCard.priorityScore, 40);
   }
 
   let scheduleSummary = '';
