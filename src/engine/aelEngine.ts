@@ -516,14 +516,16 @@ export function applyLessonUnderstandingRating(params: {
   delta: MasteryDeltaWithTitle;
 } {
   const { nodeId, rating, nodes, dependencies, questions } = params;
+  const node = nodes.find((n) => n.id === nodeId);
+  if (!node) throw new Error(`مبحث ${nodeId} در نقشه دانش پیدا نشد.`);
+
   const now = new Date();
-  let nextNodeStates: Record<string, LearnerSixDState> = JSON.parse(
+  const nextNodeStates: Record<string, LearnerSixDState> = JSON.parse(
     JSON.stringify(params.nodeStates)
   );
   const nextCards: ReviewCard[] = JSON.parse(JSON.stringify(params.cards));
   const nextStats: UserStats = JSON.parse(JSON.stringify(params.stats));
 
-  const node = nodes.find((n) => n.id === nodeId) ?? nodes[0];
   if (!nextNodeStates[node.id]) {
     nextNodeStates[node.id] = {
       nodeId: node.id,
@@ -534,7 +536,7 @@ export function applyLessonUnderstandingRating(params: {
       speedFluency: 0,
       coverageStatus: 'unseen',
       evidenceCount: 0,
-      isUnlockedInFrontier: true,
+      isUnlockedInFrontier: node.graphPos.layer === 0,
       hasLeechCard: false,
       rippleAlert: null,
     };
@@ -542,60 +544,50 @@ export function applyLessonUnderstandingRating(params: {
   const st = nextNodeStates[node.id];
   const before = st.masteryScore;
 
-  // حذف کارت درسنامه فعلی اگر در صف بود
-  const remCardId = `card.remedial.${node.id}`;
-  const remIdx = nextCards.findIndex((c) => c.id === remCardId);
-  if (remIdx !== -1 && rating >= 3) {
-    nextCards.splice(remIdx, 1);
+  // Self-rating is learner sentiment, not performance evidence. It must not
+  // change mastery, Bayesian confidence, memory stability, evidence count,
+  // coverage status, the knowledge frontier, or unlock a holdout question.
+  st.lastLessonSelfRating = rating;
+
+  if (rating >= 3) {
+    const remedialIndex = nextCards.findIndex((card) => card.id === `card.remedial.${node.id}`);
+    if (remedialIndex !== -1) nextCards.splice(remedialIndex, 1);
   }
 
-  let targetScore = before;
-  let intervalDays = 1;
   let scheduleSummary = '';
 
   if (rating === 1) {
-    // امتیاز ۱: اصلاً متوجه نشدم -> فعال‌سازی پیش‌نیاز + نگه داشتن درسنامه در صدر صف امروز
-    targetScore = Math.max(15, Math.min(25, before + 10));
-    intervalDays = 0;
-    st.coverageStatus = 'weak';
+    // Low self-reported understanding changes the recommended learning path only.
     st.rippleAlert = 'probe_queued';
-
-    // جلو انداختن پیش‌نیازهای این درس
-    const prereqs = dependencies.filter((d) => d.source === node.id);
+    const prereqs = dependencies.filter((edge) => edge.source === node.id && edge.relation === 'prerequisite');
     for (const edge of prereqs) {
-      const pNode = nodes.find((n) => n.id === edge.target);
-      if (pNode) {
-        const probeId = `card.remedial.${pNode.id}`;
-        if (!nextCards.some((c) => c.id === probeId)) {
-          nextCards.unshift({
-            id: probeId,
-            nodeId: pNode.id,
-            cardType: 'remedial_lesson',
-            dueAt: now.toISOString(),
-            priorityScore: 99,
-            attemptType: 'diagnostic',
-            fsrs: initFSRS(now),
-          });
-        }
+      const prerequisite = nodes.find((candidate) => candidate.id === edge.target);
+      if (!prerequisite) continue;
+      const probeId = `card.remedial.${prerequisite.id}`;
+      if (!nextCards.some((card) => card.id === probeId)) {
+        nextCards.unshift({
+          id: probeId,
+          nodeId: prerequisite.id,
+          cardType: 'remedial_lesson',
+          dueAt: now.toISOString(),
+          priorityScore: 99,
+          attemptType: 'diagnostic',
+          fsrs: initFSRS(now),
+        });
       }
     }
-    scheduleSummary = `امتیاز ۱ ثبت شد: تست‌های سخت «${node.topic}» فعلاً متوقف شدند و درسنامه پیش‌نیاز مستقیم آن در اولویت اول برنامه امروز قرار گرفت.`;
+    scheduleSummary = `ثبت شد: درک این مبحث هنوز دشوار است؛ مرور پیش‌نیازها در اولویت قرار گرفت. امتیاز تسلط تا زمان ارزیابی با سؤال تغییری نمی‌کند.`;
   } else if (rating === 2) {
-    // امتیاز ۲: ابهام دارم -> افزودن کارت مقایسه و کارت دام طراح قبل از تست چهارگزینه‌ای
-    targetScore = Math.max(30, before + 15);
-    intervalDays = 1;
-    st.coverageStatus = 'weak';
     st.rippleAlert = 'needs_remediation';
-
-    const comp = COMPARISON_TABLES[node.id];
-    if (comp) {
-      const compId = `card.comp.${comp.id}`;
-      if (!nextCards.some((c) => c.id === compId)) {
+    const comparison = COMPARISON_TABLES[node.id];
+    if (comparison) {
+      const comparisonCardId = `card.comp.${comparison.id}`;
+      if (!nextCards.some((card) => card.id === comparisonCardId)) {
         nextCards.unshift({
-          id: compId,
+          id: comparisonCardId,
           nodeId: node.id,
           cardType: 'comparison_card',
-          comparisonId: comp.id,
+          comparisonId: comparison.id,
           dueAt: now.toISOString(),
           priorityScore: 97,
           attemptType: 'diagnostic',
@@ -603,27 +595,23 @@ export function applyLessonUnderstandingRating(params: {
         });
       }
     }
-    scheduleSummary = `امتیاز ۲ ثبت شد: تسلط به ${targetScore}٪ رسید و «جدول مقایسه مفاهیم متشابه» برای رفع ابهام به ابتدای برنامه امروز اضافه شد.`;
-  } else if (rating === 3) {
-    // امتیاز ۳: درک متوسط -> باز شدن تست‌های استاندارد با فاصله مرور ۲ روزه
-    targetScore = Math.max(50, before + 25);
-    intervalDays = 2;
-    st.coverageStatus = 'learning';
-    st.rippleAlert = null;
-    st.hasLeechCard = false;
-
-    const nodeQs = questions.filter((q) => q.nodeId === node.id && !q.isQuarantinedProof);
-    for (const q of nodeQs) {
-      const qCardIdx = nextCards.findIndex((c) => c.questionId === q.id);
-      if (qCardIdx !== -1) {
-        nextCards[qCardIdx].priorityScore = 93;
-        nextCards[qCardIdx].isLeech = false;
+    scheduleSummary = `ثبت شد: برای رفع ابهام، مرور مقایسه‌ای پیشنهاد شد. تسلط فقط پس از پاسخ‌گویی به سؤال‌های ارزیابی به‌روزرسانی می‌شود.`;
+  } else {
+    // A learner who feels ready receives ordinary practice, never a holdout proof.
+    const practiceQuestions = questions.filter(
+      (question) => question.nodeId === node.id && !question.isQuarantinedProof
+    );
+    for (const question of practiceQuestions) {
+      const existingIndex = nextCards.findIndex((card) => card.questionId === question.id);
+      if (existingIndex !== -1) {
+        nextCards[existingIndex].priorityScore = Math.max(93, nextCards[existingIndex].priorityScore);
+        nextCards[existingIndex].isLeech = false;
       } else {
         nextCards.unshift({
-          id: `card.q.${q.id}`,
+          id: `card.q.${question.id}`,
           nodeId: node.id,
           cardType: 'question',
-          questionId: q.id,
+          questionId: question.id,
           dueAt: now.toISOString(),
           priorityScore: 93,
           attemptType: 'practice',
@@ -631,67 +619,25 @@ export function applyLessonUnderstandingRating(params: {
         });
       }
     }
-    scheduleSummary = `امتیاز ۳ ثبت شد: تسلط «${node.topic}» به ${targetScore}٪ رسید و تست‌های استاندارد آن در صف امروز فعال شدند.`;
-  } else if (rating === 4) {
-    // امتیاز ۴: یادگیری خوب -> تسلط ۶۸٪، باز شدن لایه بعدی درخت دانش و فاصله ۴ روزه
-    targetScore = Math.max(68, before + 35);
-    intervalDays = 4;
-    st.coverageStatus = 'learning';
-    st.rippleAlert = null;
-    st.hasLeechCard = false;
-    scheduleSummary = `امتیاز ۴ ثبت شد: تسلط به ${targetScore}٪ ارتقا یافت، پایداری حافظه روی ۴ روز تنظیم شد و مباحث وابسته در درخت مهارت بازگشایی شدند.`;
-  } else {
-    // امتیاز ۵: تسلط کامل -> تسلط ۷۶٪ و باز شدن مستقیم تست قرنطینه کنکور ۱۴۰۴ برای اثبات!
-    targetScore = Math.max(76, before + 45);
-    intervalDays = 7;
-    st.coverageStatus = 'needs_proof';
-    st.rippleAlert = null;
-    st.hasLeechCard = false;
-
-    const proofQ = questions.find((q) => q.nodeId === node.id && q.isQuarantinedProof);
-    if (proofQ) {
-      const proofCardId = `card.proof.${proofQ.id}`;
-      if (!nextCards.some((c) => c.id === proofCardId)) {
-        nextCards.unshift({
-          id: proofCardId,
-          nodeId: node.id,
-          cardType: 'proof_1404',
-          questionId: proofQ.id,
-          dueAt: now.toISOString(),
-          priorityScore: 99,
-          attemptType: 'proof',
-          fsrs: initFSRS(now),
-        });
-      }
-    }
-    scheduleSummary = `امتیاز ۵ (تسلط کامل) ثبت شد! تسلط به ${targetScore}٪ رسید و قفل «تست قرنطینه کنکور ۱۴۰۴» برای اثبات نهایی تسلط در صدر صف امروز باز شد.`;
+    const confidenceLabel = rating === 3 ? 'درک متوسط' : rating === 4 ? 'درک خوب' : 'اعتمادبه‌نفس بالا';
+    scheduleSummary = `ثبت شد: ${confidenceLabel}. سؤال‌های تمرینی مستقل در برنامه قرار گرفتند؛ این امتیاز به‌تنهایی تسلط را اثبات نمی‌کند.`;
   }
 
-  st.masteryScore = Math.min(100, targetScore);
-  st.proficiencyProbability = Number((st.masteryScore / 100).toFixed(2));
-  st.memoryStability = intervalDays || 0.8;
-  st.retrievability = rating >= 3 ? 0.94 : 0.72;
-  st.lastLessonSelfRating = rating;
-  st.evidenceCount += 1;
-
-  // بروزرسانی مرز دانش (Knowledge Frontier)
-  nextNodeStates = recomputeKnowledgeFrontier(nextNodeStates, nodes, dependencies);
-
-  // آپدیت آمار کاربر و مأموریت روزانه
+  // Reward completion of the reflection, not learning mastery.
   nextStats.isZeroStateNewUser = false;
   nextStats.lessonsRatedCount += 1;
-  nextStats.xp += 25;
-  nextStats.coins += 8;
+  nextStats.xp += 5;
+  nextStats.coins += 2;
   if (nextStats.streakDays === 0) nextStats.streakDays = 1;
 
-  nextStats.dailyQuests = nextStats.dailyQuests.map((q) => {
-    if (q.id === 'quest.lesson_rate' && !q.completed) {
-      const nextCurr = q.current + 1;
-      const done = nextCurr >= q.target;
-      if (done) nextStats.xp += q.xpReward;
-      return { ...q, current: nextCurr, completed: done };
+  nextStats.dailyQuests = nextStats.dailyQuests.map((quest) => {
+    if (quest.id === 'quest.lesson_rate' && !quest.completed) {
+      const nextCurrent = quest.current + 1;
+      const completed = nextCurrent >= quest.target;
+      if (completed) nextStats.xp += quest.xpReward;
+      return { ...quest, current: nextCurrent, completed };
     }
-    return q;
+    return quest;
   });
 
   return {
@@ -704,8 +650,8 @@ export function applyLessonUnderstandingRating(params: {
       topicTitle: node.topic,
       courseTitle: node.course,
       before,
-      after: st.masteryScore,
-      delta: st.masteryScore - before,
+      after: before,
+      delta: 0,
       reason: 'lesson_self_rating',
     },
   };
