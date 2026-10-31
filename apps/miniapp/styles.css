@@ -737,6 +737,83 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
   border-radius: 6px;
   margin-bottom: 8px;
 }
+
+/* ---------- نقشهٔ تسلط (تب مسیر) ---------- */
+.map-course {
+  margin-bottom: 18px;
+}
+.map-course-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0 0 10px;
+  padding-right: 10px;
+  border-right: 4px solid var(--primary);
+  line-height: 1.4;
+}
+.map-chapter {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-card);
+}
+.map-chapter-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+.map-grid {
+  display: grid;
+  gap: 10px;
+}
+.map-node {
+  display: grid;
+  gap: 6px;
+}
+.map-node .node-topic {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.map-node .node-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg);
+  overflow: hidden;
+}
+.map-node .node-bar .fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary);
+  transition: width 0.25s ease;
+}
+.map-node.bad .node-bar .fill { background: var(--bad); }
+.map-node.warn .node-bar .fill { background: var(--warn); }
+.map-node.ok .node-bar .fill { background: var(--ok); }
+.map-node.unseen .node-bar { background: transparent; border: 1px dashed var(--line); }
+.map-node.unseen .node-bar .fill { background: transparent; }
+.map-node .node-pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.map-node.bad .node-pct { color: var(--bad); }
+.map-node.warn .node-pct { color: var(--warn); }
+.map-node.ok .node-pct { color: var(--ok); }
+.map-node.unseen .node-pct { color: var(--ink-soft); font-weight: 500; }
+
+/* دکمهٔ کوچک درون‌خطی */
+.btn.small {
+  display: inline-block;
+  width: auto;
+  padding: 8px 14px;
+  font-size: 13px;
+  margin-top: 0;
+}
 .topic-summary {
   font-size: 12.5px;
   color: var(--ink);

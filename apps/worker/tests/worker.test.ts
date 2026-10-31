@@ -13,9 +13,9 @@ let app: ReturnType<typeof createApp>;
 
 beforeEach(async () => {
   store = new MemoryStore();
-  store.nodes = pack.nodes.map((n) => ({ ...n }));
-  store.dependencies = pack.dependencies.map((d) => ({ ...d }));
-  store.questions = pack.questions.map((q) => ({ ...q }));
+  store.nodes = pack.nodes.map((n) => ({ ...n })) as typeof store.nodes;
+  store.dependencies = pack.dependencies.map((d) => ({ ...d })) as typeof store.dependencies;
+  store.questions = pack.questions.map((q) => ({ ...q })) as typeof store.questions;
   app = createApp(ENV, { store });
 });
 
@@ -462,6 +462,146 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
     // وضعیت مهارت در store به proven به‌روزرسانی شده
     const st = store.skillStates.get(`${userId}:skill.sm.rbv.vrio`);
     expect(st?.coverageStatus).toBe('proven');
+  });
+
+  it('پاسخ تازه: wasCorrect/آمار/درس‌نامه در ریشهٔ پاسخ و مسیر replay همان قرارداد را دارد', async () => {
+    const token = await login();
+    const question = store.questions.find((q) => q.nodeId === 'sm.rbv')!;
+
+    const first = await json(
+      await app.request(
+        '/api/answers',
+        authed(token, {
+          method: 'POST',
+          body: JSON.stringify({
+            attemptId: 'att-contract-1',
+            questionId: question.id,
+            selectedOption: question.correctOption,
+          }),
+        }),
+      ),
+    );
+    expect(first.replay).toBe(false);
+    expect(first.wasCorrect).toBe(true);
+    expect(first.stats).toEqual({ coins: 2, streakDays: 1, dayNumber: 1 });
+    expect(first.lesson).toBeTruthy();
+    expect(first.lesson.id).toBe('sm.rbv');
+    // عنوان‌های فارسی در دلتاهای تسلط برای نمایش کلاینت
+    const delta = first.report.masteryDeltas[0];
+    expect(delta.topic).toBeTruthy();
+    expect(delta.course).toBeTruthy();
+
+    const replay = await json(
+      await app.request(
+        '/api/answers',
+        authed(token, {
+          method: 'POST',
+          body: JSON.stringify({
+            attemptId: 'att-contract-1',
+            questionId: question.id,
+            selectedOption: question.correctOption,
+          }),
+        }),
+      ),
+    );
+    expect(replay.replay).toBe(true);
+    expect(replay.wasCorrect).toBe(true);
+    expect(replay.stats).toEqual(first.stats);
+    expect(replay.lesson?.id).toBe('sm.rbv');
+  });
+
+  it('کوییز شبانه: بلیت تلاش صادر می‌شود و با همان attemptId قابل پاسخ است', async () => {
+    const token = await login();
+    const queue = await json(await app.request('/api/queue?limit=1', authed(token)));
+    const item = queue.items[0];
+    const question = store.questions.find((q) => q.id === item.question.id)!;
+    const wrongOption = (question.correctOption + 1) % question.options.length;
+
+    await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({
+          attemptId: item.attemptId,
+          questionId: question.id,
+          selectedOption: wrongOption,
+        }),
+      }),
+    );
+
+    const night = await json(await app.request('/api/night-quiz', authed(token)));
+    expect(night.items.length).toBe(1);
+    const nightItem = night.items[0];
+    expect(nightItem.attemptType).toBe('verification');
+    expect(typeof nightItem.attemptId).toBe('string');
+    expect(nightItem.attemptId.startsWith('att-')).toBe(true);
+
+    const answered = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({
+          attemptId: nightItem.attemptId,
+          questionId: nightItem.card.questionId,
+          selectedOption: question.correctOption,
+          attemptType: 'verification',
+        }),
+      }),
+    );
+    expect(answered.status).toBe(200);
+    const body = await json(answered);
+    expect(body.wasCorrect).toBe(true);
+  });
+
+  it('نقشهٔ تسلط: آرایهٔ مسطح nodes و شیء mastery با ساختار گروهی سازگار است', async () => {
+    const token = await login();
+    const map = await json(await app.request('/api/map', authed(token)));
+    expect(Array.isArray(map.nodes)).toBe(true);
+    expect(map.nodes.length).toBeGreaterThan(0);
+    expect(map.mastery).toBeTypeOf('object');
+
+    const grouped = map.courses.flatMap((c: any) => c.chapters.flatMap((ch: any) => ch.nodes));
+    expect(map.nodes.map((n: any) => n.id).sort()).toEqual(grouped.map((n: any) => n.id).sort());
+    const first = grouped[0];
+    expect(map.mastery[first.id].mastery).toBe(first.mastery);
+    expect(map.mastery[first.id].status).toBe(first.status);
+  });
+
+  it('محدودیت صف: مقادیر منفی و غیرعددی سرور را از کار نمی‌اندازند و در بازهٔ ۱ تا ۵۰ مهار می‌شوند', async () => {
+    const token = await login();
+    for (const query of ['limit=-5', 'limit=abc', 'limit=1000', 'limit=0']) {
+      const res = await app.request(`/api/queue?${query}`, authed(token));
+      expect(res.status).toBe(200);
+      const body = await json(res);
+      expect(Array.isArray(body.items)).toBe(true);
+      expect(body.items.length).toBeGreaterThanOrEqual(1);
+      expect(body.items.length).toBeLessThanOrEqual(50);
+    }
+  });
+
+  it('خوداظهاری برای پاسخ درست رد می‌شود (۴۰۰)', async () => {
+    const token = await login();
+    const question = store.questions.find((q) => q.nodeId === 'sm.rbv')!;
+    const attemptId = 'att-self-report-correct';
+    await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({
+          attemptId,
+          questionId: question.id,
+          selectedOption: question.correctOption,
+        }),
+      }),
+    );
+    const res = await app.request(
+      '/api/self-report',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId, questionId: question.id, selfReport: 'slip' }),
+      }),
+    );
+    expect(res.status).toBe(400);
   });
 
   it('خوداظهاری بی‌دقتی: بدون کسر تسلط و بدون موج', async () => {

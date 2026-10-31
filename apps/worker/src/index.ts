@@ -100,14 +100,40 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!auth?.startsWith('Bearer ')) return null;
     const userId = await verifySessionToken(auth.slice(7), secret);
     if (!userId) return null;
-    let user = await store.getUser(userId);
-    if (!user && !env.SUPABASE_URL) {
-      user = { id: userId, displayName: 'داوطلب', activeTracks: ['common', 'business'] };
-      if ('users' in (store as any)) {
-        (store as any).users.set(userId, user);
-      }
-    }
-    return user;
+    // اگر کاربر در لایهٔ داده نباشد (مثلاً ری‌استارت حافظهٔ موقت) نشست باطل است؛
+    // کلاینت با ورود خودکار مجدد پروفایل تازه می‌سازد. ساختن پروفایل جعلی اینجا ممنوع است.
+    return store.getUser(userId);
+  }
+
+  /** پاسخ استاندارد درس‌نامه — بدون تکرار در چند مسیر */
+  function lessonPayload(nodeId: string) {
+    const lesson = findLessonForNode(nodeId);
+    if (!lesson) return null;
+    return {
+      id: lesson.id,
+      topic: lesson.topic,
+      chapter: lesson.chapter,
+      course: lesson.course,
+      konkoorWeight: lesson.konkoorWeight,
+      summary: lesson.summary,
+      konkoorTips: lesson.konkoorTips,
+      keyTerms: lesson.keyTerms,
+    };
+  }
+
+  /** افزودن عنوان فارسی گره‌ها به دلتاهای تسلط برای نمایش در کلاینت */
+  function enrichMasteryDeltas(
+    report: { masteryDeltas?: { nodeId: string }[] } | null | undefined,
+    nodes: Map<string, { topic: string; course: string; chapter: string }>,
+  ) {
+    if (!report?.masteryDeltas) return report;
+    return {
+      ...report,
+      masteryDeltas: report.masteryDeltas.map((d) => {
+        const n = nodes.get(d.nodeId);
+        return { ...d, topic: n?.topic ?? d.nodeId, course: n?.course, chapter: n?.chapter };
+      }),
+    };
   }
 
   function authError(c: AppContext) {
@@ -350,9 +376,14 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.get('/api/queue', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
-    const limit = Math.min(Number(c.req.query('limit') ?? 10), 50);
+    const requestedLimit = Number(c.req.query('limit') ?? 10);
+    // محدودهٔ امن: مقدار نامعتبر/منفی/کسر اعشار نباید صف را بشکند
+    const limit = Number.isFinite(requestedLimit)
+      ? Math.max(1, Math.min(50, Math.floor(requestedLimit)))
+      : 10;
     const mode = c.req.query('mode') === 'commute' ? 'commute' : 'desk';
-    const budgetMinutes = Number(c.req.query('budgetMinutes') ?? 0) || undefined;
+    const requestedBudget = Number(c.req.query('budgetMinutes') ?? 0);
+    const budgetMinutes = Number.isFinite(requestedBudget) && requestedBudget > 0 ? requestedBudget : undefined;
     const state = await loadEngineState(user.id);
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
     const stats = await ensureStats(user.id);
@@ -525,6 +556,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         course: node?.course,
         chapter: node?.chapter,
         topic: node?.topic,
+        // نام‌های سازگار با مینی‌اپ (نسخه‌های قبلی از این کلیدها استفاده می‌کنند)
+        courseTitle: node?.course,
+        chapterTitle: node?.chapter,
         attemptId: attemptIdByCard.get(s.item.card.id),
         attemptType: s.isProof ? ('proof' as const) : ('practice' as const),
         estimatedMinutes: s.minutes,
@@ -592,23 +626,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       }
       const state = await loadEngineState(user.id);
       const q = state.questions.get(existing.questionId);
-      const lesson = q ? findLessonForNode(q.nodeId) : null;
+      const stats = await ensureStats(user.id);
+      const report = enrichMasteryDeltas(
+        existing.rippleReport as { masteryDeltas?: { nodeId: string }[] } | undefined,
+        state.nodes,
+      );
       return c.json({
-        report: existing.rippleReport,
+        report,
+        wasCorrect: existing.isCorrect,
         correctOption: q?.correctOption,
         explanation: q?.explanation,
         trapNote: q?.trapNote,
-        lesson: lesson ? {
-          id: lesson.id,
-          topic: lesson.topic,
-          chapter: lesson.chapter,
-          course: lesson.course,
-          konkoorWeight: lesson.konkoorWeight,
-          summary: lesson.summary,
-          konkoorTips: lesson.konkoorTips,
-          keyTerms: lesson.keyTerms,
-        } : null,
+        lesson: q ? lessonPayload(q.nodeId) : null,
         replay: true,
+        stats: { coins: stats.coins, streakDays: stats.streakDays, dayNumber: stats.dayNumber },
       });
     }
 
@@ -671,7 +702,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     // محتوای مقایسه برای کارت مفاهیم متشابه
     const comparison = result.createdCards.find((card) => card.cardType === 'comparison_card');
     return c.json({
-      report: result.report,
+      // کلید صریح درست/غلط در ریشهٔ پاسخ (کلاینت مینی‌اپ به آن نیاز دارد)
+      wasCorrect,
+      report: enrichMasteryDeltas(result.report, state.nodes),
       correctOption: question.correctOption,
       explanation: question.explanation,
       trapNote: question.trapNote,
@@ -682,16 +715,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
           }
         : undefined,
       proofReady: result.report.proofCandidate ?? undefined,
-      lesson: lesson ? {
-        id: lesson.id,
-        topic: lesson.topic,
-        chapter: lesson.chapter,
-        course: lesson.course,
-        konkoorWeight: lesson.konkoorWeight,
-        summary: lesson.summary,
-        konkoorTips: lesson.konkoorTips,
-        keyTerms: lesson.keyTerms,
-      } : null,
+      lesson: lessonPayload(question.nodeId),
       replay: false,
       stats: { coins: stats.coins, streakDays: stats.streakDays, dayNumber: stats.dayNumber },
     });
@@ -736,6 +760,16 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         >;
       }
     >();
+    /** نمای تخت سازگار با کلاینت‌های قدیمی (nodes + mastery) */
+    const flatNodes: {
+      id: string;
+      course: string;
+      chapter: string;
+      topic: string;
+      mastery: number | null;
+      status: string;
+      coverageStatus?: string;
+    }[] = [];
     for (const n of visible) {
       const row = masteryByNode.get(n.id);
       const coverage = coverageByNode.get(n.id);
@@ -754,12 +788,25 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         evidenceCount: coverage?.evidenceCount,
         proficiency: coverage ? Math.round(coverage.proficiencyProbability * 100) : undefined,
       });
+      flatNodes.push({
+        id: n.id,
+        course: n.course,
+        chapter: n.chapter,
+        topic: n.topic,
+        mastery,
+        status,
+        coverageStatus: coverage?.coverageStatus,
+      });
     }
     return c.json({
       courses: [...courses.values()].map((c) => ({
         course: c.course,
         chapters: [...c.chapters.values()],
       })),
+      nodes: flatNodes,
+      mastery: Object.fromEntries(
+        flatNodes.map((n) => [n.id, { mastery: n.mastery, status: n.status, coverageStatus: n.coverageStatus }]),
+      ),
     });
   });
 
@@ -800,7 +847,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       progress: { overall: Math.round(overall), nodes: visible.length },
       today: { answered: todayAnswers.length, correct: todayAnswers.length - wrongToday.length },
       reviewDue,
-      nightQuiz: { available: wrongToday.length > 0, wrongCount: wrongToday.length },
+      nightQuiz: {
+        available: wrongToday.length > 0,
+        wrongCount: wrongToday.length,
+        // نام سازگار با نسخه‌های قبلی مینی‌اپ
+        wrongAnswersCount: wrongToday.length,
+      },
       mentorMessage: mentorMessageFor(stats, overall, todayAnswers.length),
     });
   });
@@ -825,6 +877,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!event || event.questionId !== body.questionId) {
       return c.json({ error: 'تلاش یافت نشد' }, 404);
     }
+    // خوداظهاری فقط برای پاسخ غلط معنا دارد؛ پاسخ درست نباید نوع خطا ثبت کند
+    if (event.isCorrect) {
+      return c.json({ error: 'این تلاش درست بوده و نیاز به خوداظهاری خطا ندارد' }, 400);
+    }
     const state = await loadEngineState(user.id);
     const question = state.questions.get(body.questionId);
     const skill = question ? skillForNode(question.nodeId) : undefined;
@@ -844,7 +900,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
             memoryRetrievability: current?.memoryRetrievability ?? 1,
             fluencySpeedRatio: current?.fluencySpeedRatio ?? 1,
             dominantErrorType: dominant,
-            coverageStatus: current?.coverageStatus ?? 'diagnosed',
+            coverageStatus:
+              body.selfReport === 'slip'
+                ? (current?.coverageStatus ?? 'diagnosed')
+                : 'remediated',
           },
         })
         .catch(() => undefined);
@@ -870,17 +929,33 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const nodeMap = new Map((await store.listNodes()).map((n) => [n.id, n]));
     const wrongIds = [...new Set(todayAnswers.filter((a) => !a.isCorrect).map((a) => a.questionId))];
     // ترتیب سؤال‌ها را می‌شکنیم؛ ترتیب گزینه‌ها ثابت می‌ماند (شناسهٔ گزینه کلید ثبت پاسخ است)
-    const items = wrongIds
+    const picked = wrongIds
       .map((id) => questionMap.get(id))
       .filter((q): q is NonNullable<typeof q> => !!q)
-      .sort(() => Math.random() - 0.5)
-      .map((q) => ({
+      .sort(() => Math.random() - 0.5);
+
+    // برای هر آیتم کوییز شبانه بلیت تلاش صادر می‌کنیم؛ بدون آن ثبت پاسخ ممکن نیست
+    const tickets = picked.map((q) => ({
+      attemptId: `att-${crypto.randomUUID()}`,
+      questionId: q.id,
+      attemptType: 'verification' as const,
+    }));
+    await store.issueAttemptTickets(user.id, tickets).catch(() => undefined);
+
+    const items = picked.map((q, i) => {
+      const node = nodeMap.get(q.nodeId);
+      return {
         card: { questionId: q.id, nodeId: q.nodeId, cardType: 'question' as const },
         question: toPublicQuestion(q),
-        course: nodeMap.get(q.nodeId)?.course,
-        chapter: nodeMap.get(q.nodeId)?.chapter,
-        topic: nodeMap.get(q.nodeId)?.topic,
-      }));
+        course: node?.course,
+        chapter: node?.chapter,
+        topic: node?.topic,
+        courseTitle: node?.course,
+        chapterTitle: node?.chapter,
+        attemptId: tickets[i]?.attemptId,
+        attemptType: 'verification' as const,
+      };
+    });
     return c.json({ items });
   });
 
@@ -911,6 +986,19 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     await store.upsertStats(stats);
     return c.json({ ok: true, examDate: stats.examDate });
   });
+
+  /* ---------- خطاها و مسیرهای ناشناخته ---------- */
+  app.onError((err, c) => {
+    // پیام داخلی به کلاینت نشت نمی‌کند؛ جزئیات فقط در لاگ ورکر
+    console.error('[worker] unhandled error:', err instanceof Error ? err.stack : err);
+    return c.json({ error: 'خطای داخلی سرور؛ لطفاً دوباره تلاش کنید' }, 500);
+  });
+
+  app.notFound((c) =>
+    c.req.path.startsWith('/api/')
+      ? c.json({ error: 'مسیر API یافت نشد' }, 404)
+      : c.text('Not Found', 404),
+  );
 
   return app;
 }
