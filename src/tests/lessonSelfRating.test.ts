@@ -67,6 +67,9 @@ describe('lesson self-rating is not proof of mastery', () => {
     expect(result.delta.after).toBe(0);
     expect(result.nextCards.some((card) => card.questionId === 'q-test-holdout')).toBe(false);
     expect(result.nextCards.some((card) => card.questionId === 'q-test-practice')).toBe(true);
+    const remediationCard = result.nextCards.find((card) => card.id === `card.remedial.${node.id}`);
+    expect(remediationCard).toBeDefined();
+    expect(remediationCard?.priorityScore).toBe(40);
   });
 
   it('records low self-reported understanding without manufacturing mastery evidence', () => {
