@@ -62,7 +62,8 @@ export interface FSRSConfig {
 export function calculateRetrievability(stability: number, daysElapsed: number): number {
   if (stability <= 0) return 0;
   if (daysElapsed <= 0) return 1.0;
-  return Math.max(0, Math.min(1.0, 1 / (1 + FSRS_FACTOR * (daysElapsed / stability))));
+  // The 19/81 factor is calibrated for the power-law curve R(S, S) = 0.90.
+  return Math.max(0, Math.min(1.0, Math.pow(1 + FSRS_FACTOR * (daysElapsed / stability), -0.5)));
 }
 
 /** Calculate interval in days for a given stability and target retention */
@@ -72,7 +73,8 @@ export function calculateNextInterval(
   maximumInterval = 365
 ): number {
   const target = Math.max(0.70, Math.min(0.98, requestedRetention));
-  const rawInterval = (stability / FSRS_FACTOR) * (1 / target - 1);
+  // Invert R(t, S) = (1 + FACTOR * t / S)^(-1/2) for the target retention.
+  const rawInterval = stability * (1 / (target * target) - 1) / FSRS_FACTOR;
   return Math.max(1, Math.min(maximumInterval, Math.round(rawInterval)));
 }
 
