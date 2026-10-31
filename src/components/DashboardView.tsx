@@ -59,7 +59,9 @@ interface DashboardViewProps {
   onStartPracticeNode: (nodeId: string, mode: 'practice' | 'proof' | 'remedial') => void;
   onOpenLessonNode: (nodeId: string) => void;
   onOpenYearlyExam: (year?: number) => void;
-  onNavigateTab: (tab: 'study' | 'exams' | 'map' | 'lessons' | 'ingest' | 'patches') => void;
+  onNavigateTab: (
+    tab: 'study' | 'exams' | 'map' | 'lessons' | 'notebook' | 'ingest' | 'patches'
+  ) => void;
   onResetToZeroState: () => void;
 }
 
@@ -183,35 +185,40 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     <div className="space-y-4">
       {/* نوار تب‌بندی تمیز میز کار (جلوگیری از شلوغی صفحه اول) */}
       <div className="bento-card glass-panel p-3.5 sm:px-5 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="بخش‌های میز کار">
+        <div className="tab-strip" role="tablist" aria-label="بخش‌های میز کار">
           {[
             {
               id: 'today' as DashboardSubTab,
-              label: 'برنامه و مرور امروز',
+              label: 'برنامهٔ امروز',
+              short: 'امروز',
               icon: Sparkles,
               badge: `${queue.length} گام`,
             },
             {
               id: 'simulator' as DashboardSubTab,
-              label: 'شبیه‌ساز نمره و رتبه کنکور',
+              label: 'شبیه‌ساز رتبه',
+              short: 'شبیه‌ساز',
               icon: Calculator,
               badge: `تراز ${simulatedKonkorTaraz.toLocaleString('en-US')}`,
             },
             {
               id: 'velocity' as DashboardSubTab,
-              label: 'روند ۳۰ روزه و سرعت یادگیری',
+              label: 'روند و سرعت',
+              short: 'روند',
               icon: Activity,
               badge: `${overallMastery}٪ تسلط`,
             },
             {
               id: 'priorities' as DashboardSubTab,
-              label: 'اولویت‌ها و فصول پرتکرار کنکور',
+              label: 'اولویت‌ها',
+              short: 'اولویت',
               icon: TrendingUp,
               badge: `${roiRankings.length} مبحث`,
             },
             {
               id: 'settings' as DashboardSubTab,
-              label: 'تنظیمات مسیر مطالعه و ابزارها',
+              label: 'تنظیمات',
+              short: 'تنظیمات',
               icon: SlidersHorizontal,
               badge: BRANCH_LABELS[activeBranch].replace('مدیریت ', ''),
             },
@@ -235,9 +242,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 }`}
               >
                 <Icon className="w-3.5 h-3.5 shrink-0" />
-                <span>{tab.label}</span>
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden">{tab.short}</span>
                 <span
-                  className={`px-1.5 py-0.5 rounded-md text-[10px] tabular-nums ${
+                  className={`hidden sm:inline-flex px-1.5 py-0.5 rounded-md text-[10px] tabular-nums ${
                     isActive
                       ? 'bg-white/20 text-white'
                       : 'bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400'

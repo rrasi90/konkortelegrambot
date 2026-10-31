@@ -51,7 +51,18 @@ import { ContentIngestionStudio } from './components/ContentIngestionStudio';
 import { CodePatchesView } from './components/CodePatchesView';
 import { TelegramBotSimulatorModal } from './components/TelegramBotSimulatorModal';
 import { YearlyKonkorExamView } from './components/YearlyKonkorExamView';
+import { MistakeNotebookView } from './components/MistakeNotebookView';
 import { YEARLY_KONKOR_QUESTIONS } from './data/yearlyKonkorExams';
+import {
+  MistakeEntry,
+  MistakeErrorType,
+  loadMistakeNotebook,
+  saveMistakeNotebook,
+  upsertMistake,
+  markMistakeResolved,
+  removeMistake,
+  clearResolvedMistakes,
+} from './utils/mistakeNotebook';
 import {
   Sun,
   Moon,
@@ -66,9 +77,20 @@ import {
   Layers,
   Target,
   Award,
+  BookMarked,
+  MoreHorizontal,
+  X,
 } from 'lucide-react';
 
-type ActiveTab = 'home' | 'study' | 'exams' | 'map' | 'lessons' | 'ingest' | 'patches';
+type ActiveTab =
+  | 'home'
+  | 'study'
+  | 'exams'
+  | 'map'
+  | 'lessons'
+  | 'notebook'
+  | 'ingest'
+  | 'patches';
 
 export default function App() {
   // بانک داده‌های پویا (قابلیت افزودن زنده مباحث جدید توسط کاربر یا ایجنت هوش مصنوعی)
@@ -98,11 +120,20 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
   const [selectedExamYear, setSelectedExamYear] = useState<number>(1405);
-  const [isDark, setIsDark] = useState<boolean>(true);
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    const saved = window.localStorage.getItem('ael.theme');
+    return saved ? saved === 'dark' : true;
+  });
+  const [isMoreMenuOpen, setIsMoreMenuOpen] = useState<boolean>(false);
   const [isPlacementOpen, setIsPlacementOpen] = useState<boolean>(false);
   const [isBotSimulatorOpen, setIsBotSimulatorOpen] = useState<boolean>(false);
   const [isTmaMobileFrame, setIsTmaMobileFrame] = useState<boolean>(false);
   const [isNightQuizMode, setIsNightQuizMode] = useState<boolean>(false);
+  const [mistakeEntries, setMistakeEntries] = useState<MistakeEntry[]>(() =>
+    loadMistakeNotebook()
+  );
+  const [sessionKey, setSessionKey] = useState<number>(0);
   const [customSessionQueue, setCustomSessionQueue] = useState<ReviewCard[] | null>(
     null
   );
@@ -118,6 +149,11 @@ export default function App() {
     } else {
       root.classList.remove('dark');
     }
+    try {
+      window.localStorage.setItem('ael.theme', isDark ? 'dark' : 'light');
+    } catch {
+      // ذخیرهٔ تم نباید تجربه را بشکند
+    }
     initTelegramMiniApp(isDark);
   }, [isDark]);
 
@@ -131,7 +167,12 @@ export default function App() {
     });
   }, [nodeStates, cards, stats]);
 
-  // ۳. همگام‌سازی دکمه بازگشت بومی تلگرام (BackButton) و هشدار خروج در جلسه تست
+  // ۳. ذخیره‌سازی دفتر خطا در حافظه محلی تا پس از بستن برنامه هم باقی بماند
+  useEffect(() => {
+    saveMistakeNotebook(mistakeEntries);
+  }, [mistakeEntries]);
+
+  // ۴. همگام‌سازی دکمه بازگشت بومی تلگرام (BackButton) و هشدار خروج در جلسه تست
   useEffect(() => {
     const shouldShowBack =
       activeTab !== 'home' || isPlacementOpen || isBotSimulatorOpen;
@@ -239,6 +280,67 @@ export default function App() {
     setCards(res.nextCards);
     setStats(res.nextStats);
     return res.scheduleSummary;
+  };
+
+  // ثبت یک پاسخ غلط در دفتر خطا (یا حل‌شدن آن در صورت پاسخ صحیح بعدی)
+  const recordAnswerInNotebook = (
+    question: QuestionItem | undefined,
+    selectedOption: number | null,
+    wasCorrect: boolean,
+    errorType: MistakeErrorType
+  ) => {
+    if (!question) return;
+    if (wasCorrect) {
+      setMistakeEntries((prev) => markMistakeResolved(prev, question.id, true));
+      return;
+    }
+    const node = nodes.find((n) => n.id === question.nodeId);
+    if (!node) return;
+    setMistakeEntries((prev) =>
+      upsertMistake(prev, {
+        questionId: question.id,
+        nodeId: node.id,
+        course: node.course,
+        chapter: node.chapter,
+        topic: node.topic,
+        questionText: question.text,
+        options: question.options,
+        correctOption: question.correctOption,
+        selectedOption,
+        explanation: question.explanation,
+        trapNote: question.trapNote,
+        source:
+          question.sourceReference ||
+          question.designedFromTextbook ||
+          node.sourceBookCitation,
+        examYear: question.examYear,
+        errorType,
+      })
+    );
+  };
+
+  // شروع جلسهٔ مرور از روی دفتر خطا یا سؤالات غلط یک جلسهٔ تازه
+  const handleStartMistakeSession = (questionIds: string[]) => {
+    const now = new Date();
+    const queue: ReviewCard[] = questionIds
+      .map((id) => questions.find((q) => q.id === id))
+      .filter((q): q is QuestionItem => !!q)
+      .map((q) => ({
+        id: `mistake.${q.id}`,
+        nodeId: q.nodeId,
+        cardType: q.isQuarantinedProof ? 'proof_1404' : 'question',
+        questionId: q.id,
+        dueAt: now.toISOString(),
+        priorityScore: 100,
+        attemptType: 'practice' as const,
+        fsrs: initFSRS(now),
+      }));
+
+    if (queue.length === 0) return;
+    setIsNightQuizMode(false);
+    setCustomSessionQueue(queue);
+    setSessionKey((prev) => prev + 1);
+    setActiveTab('study');
   };
 
   // هندلر ورود بسته محتوای جدید توسط ایجنت یا کاربر (با جلوگیری از ایجاد گره/سؤال تکراری)
@@ -373,7 +475,10 @@ export default function App() {
   const handleStartDailySession = () => {
     tmaHaptic.impact('medium');
     setIsNightQuizMode(false);
-    setCustomSessionQueue(null);
+    // صف جلسه را در لحظه شروع «قفل» می‌کنیم؛ وگرنه با هر پاسخ،
+    // اولویت‌ها دوباره محاسبه می‌شوند و کارت زیر دست کاربر عوض می‌شود.
+    setCustomSessionQueue(dailyQueue);
+    setSessionKey((prev) => prev + 1);
     setActiveTab('study');
   };
 
@@ -402,6 +507,7 @@ export default function App() {
 
     setIsNightQuizMode(true);
     setCustomSessionQueue(nightCards);
+    setSessionKey((prev) => prev + 1);
     setActiveTab('study');
   };
 
@@ -435,6 +541,7 @@ export default function App() {
         }));
       setIsNightQuizMode(false);
       setCustomSessionQueue([remCard, ...nodeQuestions]);
+      setSessionKey((prev) => prev + 1);
       setActiveTab('study');
       return;
     }
@@ -457,6 +564,7 @@ export default function App() {
             fsrs: initFSRS(now),
           },
         ]);
+        setSessionKey((prev) => prev + 1);
         setActiveTab('study');
       }
       return;
@@ -482,6 +590,7 @@ export default function App() {
     if (nodeQuestions.length > 0) {
       setIsNightQuizMode(false);
       setCustomSessionQueue(nodeQuestions);
+      setSessionKey((prev) => prev + 1);
       setActiveTab('study');
     }
   };
@@ -519,9 +628,12 @@ export default function App() {
               tmaHaptic.impact('light');
               setActiveTab('home');
             }}
-            className="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-white whitespace-nowrap shrink-0"
+            className="flex items-center gap-2 text-sm sm:text-base font-bold text-slate-900 dark:text-white whitespace-nowrap shrink-0"
           >
-            سامانه جامع کنکور مدیریت (AEL)
+            <span className="w-7 h-7 rounded-md bg-blue-700 text-white text-[13px] font-bold flex items-center justify-center shrink-0">
+              م
+            </span>
+            <span>سامانه جامع کنکور مدیریت</span>
           </a>
 
           {/* لینک‌های ناوبری اصلی */}
@@ -532,6 +644,7 @@ export default function App() {
               { id: 'exams', label: 'کنکورهای ۱۳۹۱ تا ۱۴۰۵' },
               { id: 'map', label: 'درخت مهارت' },
               { id: 'lessons', label: 'درسنامه‌ها و منابع' },
+              { id: 'notebook', label: 'دفتر خطا' },
               { id: 'ingest', label: 'افزودن محتوا' },
             ].map((item) => (
               <a
@@ -540,9 +653,6 @@ export default function App() {
                 onClick={(e) => {
                   e.preventDefault();
                   tmaHaptic.selection();
-                  if (item.id === 'study') {
-                    setCustomSessionQueue(null);
-                  }
                   setActiveTab(item.id as ActiveTab);
                 }}
                 className={`transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 ${
@@ -625,7 +735,7 @@ export default function App() {
       <main
         className={`flex-1 w-full mx-auto transition-all duration-300 ${
           isTmaMobileFrame
-            ? 'max-w-[440px] my-4 border-4 border-slate-800 dark:border-slate-700 rounded-[32px] shadow-2xl overflow-hidden bg-slate-50 dark:bg-[#0b0f19] px-3.5 py-4'
+            ? 'max-w-[440px] my-4 border-4 border-slate-800 dark:border-slate-700 rounded-[24px] shadow-2xl overflow-hidden bg-slate-50 dark:bg-[#12100d] px-3.5 py-4'
             : 'max-w-[1240px] px-4 sm:px-8 py-6'
         }`}
       >
@@ -715,6 +825,7 @@ export default function App() {
 
         {activeTab === 'study' && (
           <StudySessionView
+            key={sessionKey}
             nodes={nodes}
             lessons={lessons}
             questions={questions}
@@ -746,6 +857,17 @@ export default function App() {
               setCards(result.nextCards);
               setStats(result.nextStats);
 
+              // ثبت پاسخ در دفتر خطا (پاسخ صحیح، خطای قبلی همان سؤال را حل‌شده می‌کند)
+              const answeredQuestion = card.questionId
+                ? questions.find((q) => q.id === card.questionId)
+                : undefined;
+              recordAnswerInNotebook(
+                answeredQuestion,
+                selectedOption,
+                result.report.wasCorrect,
+                result.report.errorType as MistakeErrorType
+              );
+
               if (customSessionQueue && result.report.spawnedCards.length > 0) {
                 const newReviewCards = result.nextCards.filter((nc) =>
                   result.report.spawnedCards.some((sc) => sc.id === nc.id)
@@ -762,6 +884,13 @@ export default function App() {
               setNodeStates(restored.restoredNodeStates);
               setCards(restored.restoredCards);
               setStats(restored.restoredStats);
+              setMistakeEntries((prev) =>
+                prev.map((entry) =>
+                  entry.questionId === report.questionId
+                    ? { ...entry, errorType: 'slip' as MistakeErrorType }
+                    : entry
+                )
+              );
               return restored.updatedReport;
             }}
             onRateLessonInSession={handleRateLessonUnderstanding}
@@ -791,6 +920,35 @@ export default function App() {
               setCustomSessionQueue(null);
               setActiveTab('home');
             }}
+            onOpenLessonNode={(nodeId) => {
+              setSelectedLessonNodeId(nodeId);
+              setActiveTab('lessons');
+            }}
+            onOpenMistakeNotebook={() => setActiveTab('notebook')}
+            onRestartMistakes={handleStartMistakeSession}
+          />
+        )}
+
+        {activeTab === 'notebook' && (
+          <MistakeNotebookView
+            entries={mistakeEntries}
+            nodes={nodes}
+            onStartMistakeSession={handleStartMistakeSession}
+            onOpenLessonNode={(nodeId) => {
+              setSelectedLessonNodeId(nodeId);
+              setActiveTab('lessons');
+            }}
+            onToggleResolved={(questionId, resolved) =>
+              setMistakeEntries((prev) =>
+                markMistakeResolved(prev, questionId, resolved)
+              )
+            }
+            onRemove={(questionId) =>
+              setMistakeEntries((prev) => removeMistake(prev, questionId))
+            }
+            onClearResolved={() =>
+              setMistakeEntries((prev) => clearResolvedMistakes(prev))
+            }
           />
         )}
 
@@ -867,6 +1025,12 @@ export default function App() {
               setNodeStates(result.nextNodeStates);
               setCards(result.nextCards);
               setStats(result.nextStats);
+              recordAnswerInNotebook(
+                question,
+                selectedOption,
+                result.report.wasCorrect,
+                result.report.errorType as MistakeErrorType
+              );
             }}
             onStartYearAdaptiveSession={(year, sectionId) => {
               const now = new Date();
@@ -890,6 +1054,7 @@ export default function App() {
               if (yearQueue.length > 0) {
                 setIsNightQuizMode(false);
                 setCustomSessionQueue(yearQueue);
+                setSessionKey((prev) => prev + 1);
                 setActiveTab('study');
               }
             }}
@@ -912,22 +1077,20 @@ export default function App() {
         {activeTab === 'patches' && <CodePatchesView />}
       </main>
 
-      {/* نوار ناوبری پایین صفحه ویژه موبایل و مینی‌اپ تلگرام (Thumb-Friendly Bottom Bar) */}
+      {/* نوار ناوبری پایین موبایل — حداکثر ۵ مقصد اصلی (رهنمود ناوبری موبایل) */}
       <nav
         className={`${
           isTmaMobileFrame
-            ? 'sticky bottom-0 max-w-[440px] mx-auto w-full rounded-b-[28px]'
+            ? 'sticky bottom-0 max-w-[440px] mx-auto w-full rounded-b-[20px]'
             : 'fixed bottom-0 inset-x-0 md:hidden'
-        } z-40 bg-white/95 dark:bg-[#0f1626]/95 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800/90 px-2 py-1.5 pb-safe`}
+        } z-40 bg-[#fffdf8]/96 dark:bg-[#171512]/96 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800/90 px-2 py-1.5 pb-safe`}
       >
-        <div className="grid grid-cols-6 gap-1">
+        <div className="grid grid-cols-5 gap-1">
           {[
             { id: 'home', label: 'میز کار', icon: Home },
             { id: 'study', label: 'جلسه تست', icon: Target },
             { id: 'exams', label: 'کنکورها', icon: Award },
-            { id: 'map', label: 'درخت مهارت', icon: Layers },
-            { id: 'lessons', label: 'درسنامه‌ها', icon: BookOpen },
-            { id: 'ingest', label: 'افزودن', icon: FilePlus2 },
+            { id: 'lessons', label: 'درسنامه', icon: BookOpen },
           ].map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
@@ -937,12 +1100,12 @@ export default function App() {
                 type="button"
                 onClick={() => {
                   tmaHaptic.selection();
-                  if (item.id === 'study') setCustomSessionQueue(null);
+                  setIsMoreMenuOpen(false);
                   setActiveTab(item.id as ActiveTab);
                 }}
-                className={`flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition-all active:scale-95 cursor-pointer ${
+                className={`flex flex-col items-center justify-center py-1.5 rounded-lg text-[10px] font-medium transition-all active:scale-95 cursor-pointer ${
                   isActive
-                    ? 'text-blue-600 dark:text-blue-400 font-bold bg-blue-500/10'
+                    ? 'text-blue-700 dark:text-blue-300 font-bold bg-blue-500/10'
                     : 'text-slate-500 dark:text-slate-400'
                 }`}
               >
@@ -951,8 +1114,71 @@ export default function App() {
               </button>
             );
           })}
+          <button
+            type="button"
+            onClick={() => {
+              tmaHaptic.selection();
+              setIsMoreMenuOpen((prev) => !prev);
+            }}
+            aria-expanded={isMoreMenuOpen}
+            aria-haspopup="menu"
+            className={`flex flex-col items-center justify-center py-1.5 rounded-lg text-[10px] font-medium transition-all active:scale-95 cursor-pointer ${
+              ['map', 'notebook', 'ingest', 'patches'].includes(activeTab)
+                ? 'text-blue-700 dark:text-blue-300 font-bold bg-blue-500/10'
+                : 'text-slate-500 dark:text-slate-400'
+            }`}
+          >
+            <MoreHorizontal className="w-4 h-4 mb-0.5" />
+            <span>بیشتر</span>
+          </button>
         </div>
       </nav>
+
+      {/* ورقهٔ «بیشتر» برای مقاصد فرعی موبایل */}
+      {isMoreMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="مقاصد بیشتر">
+          <button
+            type="button"
+            aria-label="بستن منو"
+            onClick={() => setIsMoreMenuOpen(false)}
+            className="absolute inset-0 bg-slate-950/45"
+          />
+          <div className="absolute bottom-0 inset-x-0 bg-[#fffdf8] dark:bg-[#1a1815] border-t border-slate-200 dark:border-slate-800 rounded-t-2xl p-4 pb-safe space-y-1.5">
+            <div className="flex items-center justify-between pb-2">
+              <span className="text-xs font-bold text-slate-900 dark:text-white">مقاصد بیشتر</span>
+              <button
+                type="button"
+                onClick={() => setIsMoreMenuOpen(false)}
+                aria-label="بستن"
+                className="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            {[
+              { id: 'map' as ActiveTab, label: 'درخت مهارت و نقشه تسلط', icon: Layers },
+              { id: 'notebook' as ActiveTab, label: 'دفتر خطا و مرور اشتباه‌ها', icon: BookMarked },
+              { id: 'ingest' as ActiveTab, label: 'افزودن بستهٔ محتوا', icon: FilePlus2 },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setIsMoreMenuOpen(false);
+                    setActiveTab(item.id);
+                  }}
+                  className="w-full flex items-center gap-3 p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 text-right text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer"
+                >
+                  <Icon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* مودال شبیه‌ساز ربات تلگرام و کیبوردهای شیشه‌ای (@KonkorAELBot) */}
       {isBotSimulatorOpen && (
@@ -1014,7 +1240,7 @@ export default function App() {
       <footer className="hidden md:block border-t border-slate-200/70 dark:border-slate-800/80 py-4 px-4 sm:px-8 mt-12 text-xs text-slate-500 dark:text-slate-400">
         <div className="max-w-[1240px] mx-auto flex flex-wrap items-center justify-between gap-4">
           <span>
-            سامانه جامع کنکور ارشد و دکتری مدیریت (بازرگانی، صنعتی، فناوری) — منطبق بر مینی‌اپ تلگرام
+            سامانه یادگیری کنکور ارشد و دکتری مدیریت — بازرگانی، صنعتی، فناوری
           </span>
           <div className="flex items-center gap-4">
             <button

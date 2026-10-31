@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   KnowledgeNode,
   InteractiveLesson,
@@ -21,6 +21,10 @@ import {
   MultiYearFrequencyInsight,
 } from '../engine/aelEngine';
 import { MathText } from './MathText';
+import { LessonDeepDivePanel } from './LessonDeepDivePanel';
+import { getLessonDeepDive, getDeepDiveWordCount } from '../data/lessonDeepDives';
+import { getBookForNode } from '../data/bookChaptersRepo';
+import { BookLibraryView } from './BookLibraryView';
 import {
   BookOpen,
   Scale,
@@ -103,8 +107,10 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
   onStartPracticeNode,
 }) => {
   const [librarySection, setLibrarySection] = useState<
-    'interactive_lessons' | 'reference_books' | 'compendium_100p' | 'coefficients_table'
-  >('interactive_lessons');
+    'books' | 'interactive_lessons' | 'reference_books' | 'compendium_100p' | 'coefficients_table'
+  >('books');
+  const [bookPresetId, setBookPresetId] = useState<string | null>(null);
+  const lastRequestedLesson = useRef<string | null>(initialSelectedNodeId ?? null);
   const [selectedBranch, setSelectedBranch] = useState<ManagementBranchId>('business');
   const [degreeFilter, setDegreeFilter] = useState<'all' | 'master' | 'phd'>('all');
   const [selectedBookId, setSelectedBookId] = useState<string>('book.bus.kotler_jalilian');
@@ -135,12 +141,16 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
   const [revealedCards, setRevealedCards] = useState<Record<number, boolean>>({});
   const [conceptChoice, setConceptChoice] = useState<number | null>(null);
   const [ratingFeedback, setRatingFeedback] = useState<string | null>(null);
+  const [mobileListOpen, setMobileListOpen] = useState(false);
 
   useEffect(() => {
-    if (initialSelectedNodeId) {
+    // فقط وقتی درخواست تازه‌ای از بیرون می‌رسد به درس‌نامه بپر؛ ورود عادی به کتابخانه،
+    // صفحهٔ «کتاب‌ها» را نشان می‌دهد.
+    if (initialSelectedNodeId && initialSelectedNodeId !== lastRequestedLesson.current) {
       setActiveNodeId(initialSelectedNodeId);
       setLibrarySection('interactive_lessons');
     }
+    lastRequestedLesson.current = initialSelectedNodeId ?? null;
   }, [initialSelectedNodeId]);
 
   useEffect(() => {
@@ -200,11 +210,20 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
     filteredNodes[0] ??
     nodes[0];
   const activeLesson = lessons[activeNode.id];
+  const activeDive = getLessonDeepDive(activeNode.id);
+  const activeDiveWords = getDeepDiveWordCount(activeDive);
   const activeState = nodeStates[activeNode.id];
   const freqInsight = examFrequencyMap[activeNode.id];
   const relatedComparison =
     COMPARISON_TABLES[activeNode.id] ||
     Object.values(COMPARISON_TABLES).find((c) => c.nodeB === activeNode.id);
+
+  const activeIndex = filteredNodes.findIndex((n) => n.id === activeNode.id);
+  const prevNode = activeIndex > 0 ? filteredNodes[activeIndex - 1] : null;
+  const nextNode =
+    activeIndex >= 0 && activeIndex < filteredNodes.length - 1
+      ? filteredNodes[activeIndex + 1]
+      : null;
 
   const handleRatingClick = (rating: 1 | 2 | 3 | 4 | 5) => {
     const summaryMsg = onRateLessonUnderstanding(activeNode.id, rating);
@@ -215,26 +234,31 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
     <div className="space-y-5">
       {/* نوار ۴ تبی بخش‌بندی تمیز کتابخانه و منابع */}
       <div className="bento-card glass-panel p-3.5 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-1.5" role="tablist" aria-label="بخش‌های درسنامه‌ها و منابع">
+        <div className="tab-strip" role="tablist" aria-label="بخش‌های درسنامه‌ها و منابع">
           {[
             {
+              id: 'books' as const,
+              label: 'کتاب‌ها و فصل‌ها',
+              icon: Library,
+            },
+            {
               id: 'interactive_lessons' as const,
-              label: `درسنامه‌های تعاملی گام‌به‌گام (${nodes.length} مبحث)`,
+              label: `درس‌نامه‌ها (${nodes.length.toLocaleString('fa-IR')})`,
               icon: BookOpen,
             },
             {
               id: 'reference_books' as const,
-              label: 'بانک کتب مرجع و خلاصه فصول',
+              label: 'کتب مرجع',
               icon: Library,
             },
             {
               id: 'compendium_100p' as const,
-              label: 'مجلدات ۱۰۰ صفحه‌ای دروس',
+              label: 'مجلدات ۱۰۰ص',
               icon: Layers,
             },
             {
               id: 'coefficients_table' as const,
-              label: 'جدول ضرایب و منابع کد ۱۱۴۲',
+              label: 'ضرایب ۱۱۴۲',
               icon: Scale,
             },
           ].map((tab) => {
@@ -300,6 +324,19 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
           </div>
         )}
       </div>
+
+      {/* تب کتاب‌محور: کتاب ← فصل ← آموزش ← تست */}
+      {librarySection === 'books' && (
+        <BookLibraryView
+          questions={questions}
+          initialBookId={bookPresetId}
+          onOpenLesson={(nodeId) => {
+            setActiveNodeId(nodeId);
+            setLibrarySection('interactive_lessons');
+          }}
+          onStartPracticeNode={onStartPracticeNode}
+        />
+      )}
 
       {/* تب ۴: جدول رسمی مقایسه ضرایب دروس کنکور کارشناسی ارشد مجموعه مدیریت (کد ۱۱۴۲) */}
       {librarySection === 'coefficients_table' && (
@@ -986,9 +1023,32 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
 
       {/* تب ۱: درسنامه‌های تعاملی گام‌به‌گام + امتیازدهی ۱ تا ۵ */}
       {librarySection === 'interactive_lessons' && (
+        <div className="space-y-4">
+          <button
+            type="button"
+            onClick={() => setMobileListOpen((prev) => !prev)}
+            aria-expanded={mobileListOpen}
+            className="lg:hidden w-full flex items-center justify-between gap-2 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-right cursor-pointer"
+          >
+            <span className="flex items-center gap-2 min-w-0">
+              <BookOpen className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+              <span className="min-w-0">
+                <span className="block text-[10px] text-slate-500 dark:text-slate-400">
+                  {mobileListOpen ? 'بستن فهرست' : `فهرست ${filteredNodes.length} درسنامه`}
+                </span>
+                <span className="block text-xs font-bold text-slate-900 dark:text-white truncate">
+                  {activeLesson?.topic ?? 'انتخاب مبحث'}
+                </span>
+              </span>
+            </span>
+            <span className="text-[11px] font-bold text-blue-600 dark:text-blue-400 shrink-0">
+              {mobileListOpen ? 'بستن' : 'تغییر'}
+            </span>
+          </button>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* سایدبار فهرست درسنامه‌ها با نشانگر سال‌های تکرار در کنکور (4 ستون) */}
-          <div className="lg:col-span-4 bg-white/90 dark:bg-slate-900/85 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 shadow-xs space-y-4">
+          <div className={`${mobileListOpen ? 'block' : 'hidden'} lg:block lg:col-span-4 bg-white/90 dark:bg-slate-900/85 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 shadow-xs space-y-4`}>
             <div>
               <h2 className="text-base font-bold text-slate-900 dark:text-white">
                 درسنامه‌های گام‌به‌گام و دقیق کنکور
@@ -1045,7 +1105,13 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                   <button
                     key={node.id}
                     type="button"
-                    onClick={() => setActiveNodeId(node.id)}
+                    onClick={() => {
+                      setActiveNodeId(node.id);
+                      setMobileListOpen(false);
+                      requestAnimationFrame(() => {
+                        document.getElementById('lesson-reader')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      });
+                    }}
                     className={`w-full text-right p-3 rounded-xl border transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-blue-50/90 dark:bg-blue-950/60 border-blue-500 dark:border-blue-400'
@@ -1069,6 +1135,9 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                             : 'text-slate-500 dark:text-slate-400'
                         }
                       >
+                        {getLessonDeepDive(node.id) && (
+                          <span className="text-emerald-600 dark:text-emerald-400">آموزش کامل · </span>
+                        )}
                         {freq?.importanceBadge}
                       </span>
                       {st?.lastLessonSelfRating && (
@@ -1084,7 +1153,7 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
           </div>
 
           {/* محتوای درسنامه انتخاب‌شده (8 ستون) */}
-          <div className="lg:col-span-8 bg-white/90 dark:bg-slate-900/85 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 shadow-xs space-y-6">
+          <div id="lesson-reader" className="lg:col-span-8 bg-white/90 dark:bg-slate-900/85 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-6 shadow-xs space-y-6 scroll-mt-20">
             {activeLesson ? (
               <>
                 {/* هدر درسنامه + رادار تکرار چندساله در کنکور و منبع دقیق */}
@@ -1100,9 +1169,21 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                           {activeLesson.konkoorWeightLabel}
                         </span>
                       </div>
-                      <h1 className="text-xl font-bold text-slate-900 dark:text-white mt-1.5">
+                      <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1.5 leading-snug">
                         {activeLesson.topic}
                       </h1>
+                      {activeDive && (
+                        <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-slate-500 dark:text-slate-400">
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-500/12 text-emerald-700 dark:text-emerald-300 font-bold">
+                            درس‌نامهٔ کامل
+                          </span>
+                          <span className="tabular-nums">
+                            {activeDiveWords.toLocaleString('fa-IR')} واژه ·{' '}
+                            {activeDive.sections.length.toLocaleString('fa-IR')} بخش · مجموعاً حدود{' '}
+                            {Math.max(3, Math.round(activeDiveWords / 120)).toLocaleString('fa-IR')} دقیقه مطالعه
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -1126,7 +1207,7 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                   </div>
 
                   {/* باکس منبع رسمی کتاب و سال‌های تکرار در کنکور */}
-                  <div className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/60 space-y-2">
+                  <div className="p-3 rounded-xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/70 dark:border-amber-900/50 space-y-1.5">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-300">
                         <Flame className="w-4 h-4 text-amber-600 dark:text-amber-400" />
@@ -1137,17 +1218,17 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                         {activeLesson.examYearsAppeared.map((yr) => (
                           <span
                             key={yr}
-                            className="px-2 py-0.5 rounded-md text-[11px] font-mono font-bold bg-amber-200/70 dark:bg-amber-900/60 text-amber-950 dark:text-amber-200 tabular-nums"
+                            className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-200/60 dark:bg-amber-900/50 text-amber-950 dark:text-amber-200 tabular-nums"
                           >
                             {yr}
                           </span>
                         ))}
                       </div>
                     </div>
-                    <p className="text-xs text-amber-800 dark:text-amber-200/90 leading-relaxed">
+                    <p className="text-[11px] text-amber-800/90 dark:text-amber-200/80 leading-6">
                       این مبحث در {freqInsight?.appearanceCount ?? activeLesson.examYearsAppeared.length} دوره کنکور تکرار شده و حدود {freqInsight?.shareOfExamPercent ?? 8}٪ از بودجه‌بندی آزمون را به خود اختصاص می‌دهد.
                     </p>
-                    <div className="text-[11px] text-slate-600 dark:text-slate-400 pt-1 border-t border-amber-200/50 dark:border-amber-800/40">
+                    <div className="text-[10px] text-slate-600 dark:text-slate-400 pt-1.5 border-t border-amber-200/50 dark:border-amber-800/40 leading-5">
                       <span className="font-semibold text-slate-800 dark:text-slate-200">
                         منبع دقیق کتاب مرجع:{' '}
                       </span>
@@ -1167,6 +1248,15 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                     className="text-sm text-slate-800 dark:text-slate-200 leading-relaxed"
                   />
                 </div>
+
+                {/* درس‌نامهٔ کامل: اهداف، آموزش عمیق، مثال حل‌شده، بدفهمی‌ها و جمع‌بندی */}
+                {activeDive ? (
+                  <LessonDeepDivePanel dive={activeDive} wordCount={activeDiveWords} />
+                ) : (
+                  <div className="p-4 rounded-xl bg-amber-50/60 dark:bg-amber-950/25 border border-amber-200/70 dark:border-amber-900/50 text-xs text-amber-900 dark:text-amber-200 leading-6">
+                    درس‌نامهٔ عمیق این مبحث در حال تکمیل است؛ فعلاً از گام‌های آموزشی زیر و بانک تست همین صفحه استفاده کنید.
+                  </div>
+                )}
 
                 {/* گام‌های خردشده آموزشی (سبک Brilliant Micro-Steps) */}
                 <div className="space-y-3">
@@ -1397,118 +1487,79 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                   )}
                 </div>
 
-                {/* بانک سؤالات شناسنامه‌دار کنکور این مبحث (۱۳۹۱ تا ۱۴۰۵) */}
-                {questions.filter((q) => q.nodeId === activeNode.id).length > 0 && (
-                  <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <HelpCircle className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                        <span>
-                          سؤالات شناسنامه‌دار کنکور این مبحث (
-                          {questions.filter((q) => q.nodeId === activeNode.id).length} تست ثبت‌شده با پاسخ تشریحی)
-                        </span>
-                      </h3>
-                      <button
-                        type="button"
-                        onClick={() => onStartPracticeNode(activeNode.id, 'practice')}
-                        className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                      >
-                        باز کردن در جلسه تست تطبیقی ←
-                      </button>
-                    </div>
-
-                    <div className="space-y-3">
-                      {questions
-                        .filter((q) => q.nodeId === activeNode.id)
-                        .sort((a, b) => b.examYear - a.examYear)
-                        .map((q) => {
-                          const chosen = selectedQuestionAnswers[q.id];
-                          return (
-                            <div
-                              key={q.id}
-                              className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 space-y-3 text-xs"
-                            >
-                              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 dark:text-slate-400 pb-2 border-b border-slate-200/60 dark:border-slate-700/60">
-                                <span>
-                                  <strong className="text-slate-800 dark:text-slate-200">
-                                    کنکور سراسری {q.examYear}
-                                  </strong>
-                                  {q.bookletQuestionNumber
-                                    ? ` · سؤال شماره ${q.bookletQuestionNumber} دفترچه`
-                                    : ''}
-                                  {q.courseSectionTitle ? ` (${q.courseSectionTitle})` : ''}
-                                </span>
-                                <span>
-                                  منبع طراحی:{' '}
-                                  <strong className="text-slate-700 dark:text-slate-300">
-                                    {q.designedFromTextbook || q.sourceReference || activeNode.sourceBookCitation}
-                                  </strong>
-                                </span>
-                              </div>
-
-                              <div className="text-sm font-medium text-slate-900 dark:text-white leading-7">
-                                <MathText text={q.text} />
-                              </div>
-
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {q.options.map((opt, oIdx) => {
-                                  const isPicked = chosen === oIdx;
-                                  const isCorrect = q.correctOption === oIdx;
-                                  let style =
-                                    'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-400';
-                                  if (chosen !== undefined) {
-                                    if (isCorrect) {
-                                      style =
-                                        'bg-emerald-500/15 border-emerald-500 text-emerald-950 dark:text-emerald-100 font-bold';
-                                    } else if (isPicked) {
-                                      style =
-                                        'bg-rose-500/15 border-rose-500 text-rose-950 dark:text-rose-100';
-                                    }
-                                  }
-                                  return (
-                                    <button
-                                      key={oIdx}
-                                      type="button"
-                                      onClick={() =>
-                                        setSelectedQuestionAnswers((prev) => ({
-                                          ...prev,
-                                          [q.id]: oIdx,
-                                        }))
-                                      }
-                                      className={`text-right p-2.5 rounded-lg border transition-colors cursor-pointer ${style}`}
-                                    >
-                                      <span className="font-bold ml-1.5 tabular-nums">
-                                        {oIdx + 1})
-                                      </span>
-                                      <MathText text={opt} />
-                                    </button>
-                                  );
-                                })}
-                              </div>
-
-                              <div className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 space-y-1.5">
-                                <div className="font-bold text-emerald-700 dark:text-emerald-400">
-                                  پاسخ تشریحی کامل (گزینه صحیح: گزینه {q.correctOption + 1}):
-                                </div>
-                                <div className="text-slate-700 dark:text-slate-300 leading-6 whitespace-pre-line">
-                                  <MathText text={q.explanation} />
-                                </div>
-                                {q.trapNote && (
-                                  <div className="text-amber-700 dark:text-amber-400 pt-1 border-t border-slate-100 dark:border-slate-800">
-                                    <strong>دام طراح کنکور: </strong>
-                                    <MathText text={q.trapNote} />
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                    </div>
+                {/* تست‌های این مبحث در کتابخانهٔ کتاب: تست‌ها اینجا پراکنده نمی‌شوند */}
+                <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-xs text-slate-600 dark:text-slate-300 leading-6">
+                    <strong className="text-slate-900 dark:text-white">
+                      {questions.filter((q) => q.nodeId === activeNode.id).length.toLocaleString('fa-IR')} تست
+                      شناسنامه‌دار
+                    </strong>{' '}
+                    برای این مبحث در بانک سامانه ثبت شده است؛ تست‌ها همراه با آموزش، داخل صفحهٔ کتاب
+                    مرجع همین درس دسته‌بندی شده‌اند.
                   </div>
-                )}
+                  <div className="flex flex-wrap items-center gap-2">
+                    {(() => {
+                      const book = getBookForNode(activeNode.id);
+                      return book ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setBookPresetId(book.id);
+                            setLibrarySection('books');
+                          }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-[11px] font-bold cursor-pointer"
+                        >
+                          <Library className="w-3.5 h-3.5" />
+                          آموزش و تست‌های کتاب این درس
+                        </button>
+                      ) : null;
+                    })()}
+                    <button
+                      type="button"
+                      onClick={() => onStartPracticeNode(activeNode.id, 'practice')}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold cursor-pointer"
+                    >
+                      <Play className="w-3.5 h-3.5" />
+                      شروع جلسهٔ تست تطبیقی
+                    </button>
+                  </div>
+                </div>
+
+                {/* حرکت بین درس‌ها بدون برگشت به فهرست */}
+                <div className="pt-4 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 gap-3">
+                  {prevNode ? (
+                    <button
+                      type="button"
+                      onClick={() => setActiveNodeId(prevNode.id)}
+                      className="text-right p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-blue-400 transition-colors cursor-pointer"
+                    >
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mb-0.5">درس قبلی</div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        {prevNode.topic}
+                      </div>
+                    </button>
+                  ) : (
+                    <div />
+                  )}
+                  {nextNode ? (
+                    <button
+                      type="button"
+                      onClick={() => setActiveNodeId(nextNode.id)}
+                      className="text-left p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-blue-400 transition-colors cursor-pointer"
+                    >
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 mb-0.5">درس بعدی</div>
+                      <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                        {nextNode.topic}
+                      </div>
+                    </button>
+                  ) : (
+                    <div />
+                  )}
+                </div>
               </>
             ) : null}
           </div>
+        </div>
         </div>
       )}
     </div>

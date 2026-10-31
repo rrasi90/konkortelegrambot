@@ -129,6 +129,15 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
     }).sort((a, b) => a.bookletQuestionNumber - b.bookletQuestionNumber);
   }, [selectedYear, selectedSection]);
 
+  // تعداد سؤالات موجود در بانک تشریحی برای هر سال (برای نمایش صادقانه پوشش بانک)
+  const questionsPerYear = useMemo(() => {
+    const map: Record<number, number> = {};
+    for (const q of YEARLY_KONKOR_QUESTIONS) {
+      map[q.examYear] = (map[q.examYear] ?? 0) + 1;
+    }
+    return map;
+  }, []);
+
   // تمام سؤالات سال انتخابی (بدون فیلتر درس) برای محاسبه کارنامه جامع سال
   const allQuestionsOfSelectedYear = useMemo(() => {
     return YEARLY_KONKOR_QUESTIONS.filter((q) => q.examYear === selectedYear).sort(
@@ -413,6 +422,16 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {currentBooklet.examDateLabel} · {currentBooklet.totalQuestionsInBooklet} سؤال در دفترچه اصلی
             </p>
+            <div className="flex flex-wrap items-center gap-1.5 mt-1.5 text-[11px]">
+              <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/25 font-bold tabular-nums">
+                بانک تشریحی این سال: {allQuestionsOfSelectedYear.length} سؤال
+              </span>
+              {allQuestionsOfSelectedYear.length < currentBooklet.totalQuestionsInBooklet && (
+                <span className="px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/25">
+                  بانک در حال تکمیل است؛ تعداد بالا فقط پوشش فعلی است
+                </span>
+              )}
+            </div>
           </div>
 
           {/* انتخاب گرایش برای ضرایب کارنامه */}
@@ -463,6 +482,13 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
                   }`}
                 >
                   {b.bookletCode}
+                </div>
+                <div
+                  className={`text-[9px] tabular-nums ${
+                    isSelected ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'
+                  }`}
+                >
+                  {questionsPerYear[b.year] ?? 0} سؤال
                 </div>
               </button>
             );
