@@ -115,6 +115,10 @@ export class SupabaseStore implements DataStore {
     private readonly serviceRoleKey: string,
   ) {}
 
+  // کشک isotopes برای محتوای استاتیک که در هر درخواست دوباره بارگذاری می‌شود
+  private _nodesCache: KnowledgeNode[] | null = null;
+  private _questionsCache: Question[] | null = null;
+
   private async request(
     method: string,
     path: string,
@@ -282,7 +286,10 @@ export class SupabaseStore implements DataStore {
   }
 
   async listNodes(): Promise<KnowledgeNode[]> {
-    return (await this.request('GET', 'knowledge_nodes', undefined, '?select=*')) as KnowledgeNode[];
+    if (this._nodesCache) return this._nodesCache;
+    const nodes = (await this.request('GET', 'knowledge_nodes', undefined, '?select=*')) as KnowledgeNode[];
+    this._nodesCache = nodes;
+    return nodes;
   }
 
   async listDependencies(): Promise<NodeDependency[]> {
@@ -306,6 +313,7 @@ export class SupabaseStore implements DataStore {
   }
 
   async listQuestions(): Promise<Question[]> {
+    if (this._questionsCache) return this._questionsCache;
     const rows = (await this.request(
       'GET',
       'questions',
@@ -321,7 +329,7 @@ export class SupabaseStore implements DataStore {
       explanation: string | null;
       trap_note: string | null;
     }[];
-    return rows.map((r) => ({
+    const questions = rows.map((r) => ({
       id: r.id,
       nodeId: r.node_id,
       examYear: r.exam_year ?? undefined,
@@ -331,6 +339,8 @@ export class SupabaseStore implements DataStore {
       explanation: r.explanation ?? undefined,
       trapNote: r.trap_note ?? undefined,
     }));
+    this._questionsCache = questions;
+    return questions;
   }
 
   async listMastery(userId: string): Promise<UserNodeMastery[]> {
