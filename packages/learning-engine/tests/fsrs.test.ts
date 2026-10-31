@@ -18,9 +18,14 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
     it('returns exactly 0.90 at elapsed time equal to stability (R(S, S) = 0.90)', () => {
       const stability = 10.0;
       const r = calculateRetrievability(stability, stability);
-      // 1 / (1 + (19/81) * 1) = 81 / 100 = 0.81 in power law vs (1 + (19/81))^-1
-      // 1 / (1 + 19/81) = 81 / 100 = 0.81
-      expect(r).toBeCloseTo(0.81, 2);
+      expect(r).toBeCloseTo(0.90, 10);
+    });
+
+    it('matches the power-law curve at multiple elapsed times', () => {
+      const stability = 10;
+      expect(calculateRetrievability(stability, 0)).toBeCloseTo(1, 10);
+      expect(calculateRetrievability(stability, stability)).toBeCloseTo(0.9, 10);
+      expect(calculateRetrievability(stability, stability * 3)).toBeCloseTo(0.75, 2);
     });
 
     it('monotonically decays as time passes', () => {
@@ -41,6 +46,21 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
 
       expect(iLarge).toBeGreaterThan(iSmall);
       expect(iSmall).toBeGreaterThanOrEqual(1);
+    });
+
+    it('uses the inverse of the same retrieval curve for requested retention', () => {
+      const stability = 10;
+      for (const targetRetention of [0.8, 0.85, 0.9, 0.95]) {
+        const interval = calculateNextInterval(stability, targetRetention, 1000);
+        const actualRetention = calculateRetrievability(stability, interval);
+        expect(actualRetention).toBeLessThanOrEqual(targetRetention + 0.01);
+        expect(actualRetention).toBeGreaterThan(targetRetention - 0.02);
+      }
+    });
+
+    it('returns one day minimum for invalid or very high retention targets', () => {
+      expect(calculateNextInterval(0.1, 0.98)).toBe(1);
+      expect(calculateNextInterval(0.1, 1)).toBe(1);
     });
   });
 
