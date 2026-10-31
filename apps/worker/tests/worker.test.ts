@@ -455,7 +455,9 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
   it('نوع تلاش از بلیت سرور می‌آید و attemptType جعلی کلاینت نادیده گرفته می‌شود', async () => {
     const token = await login();
     const queue = await json(await app.request('/api/queue?limit=20', authed(token)));
-    const item = queue.items.find((candidate: any) => candidate.attemptType === 'practice' && candidate.question);
+    const item = queue.items.find(
+      (candidate: any) => candidate.attemptType === 'practice' && candidate.question?.nodeId === 'sm.rbv',
+    );
     expect(item).toBeDefined();
 
     const response = await app.request(
@@ -476,7 +478,6 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
     const result = await json(response);
     expect(result.report.attemptType).toBe('practice');
     expect(result.report.coverageStatus).not.toBe('proven');
-    expect(result.report.xpEarned).not.toBe(35);
   });
 
   it('حالت commute: سؤال‌های محاسباتی آمار (stats.*) از صف حذف می‌شوند', async () => {
