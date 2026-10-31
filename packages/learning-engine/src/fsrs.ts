@@ -58,7 +58,7 @@ export interface FSRSConfig {
   maximumInterval?: number;    // Interval cap in days (default: 365)
 }
 
-/** Compute retrievability R(t, S) = (1 + FACTOR * (t / S))^(-1) */
+/** FSRS-4.5 retrievability: R(t, S) = (1 + FACTOR * t / S)^(-0.5) */
 export function calculateRetrievability(stability: number, daysElapsed: number): number {
   if (stability <= 0) return 0;
   if (daysElapsed <= 0) return 1.0;
