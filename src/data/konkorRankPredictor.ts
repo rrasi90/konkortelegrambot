@@ -78,7 +78,7 @@ export interface RankPredictionResult {
   }[];
   universityAdmissions: {
     tier: UniversityAdmissionTier;
-    status: 'قبولی قطعی (احتمال > ۹۵٪)' | 'قبولی محتمل / مرزی (احتمال ۶۰٪ تا ۹۰٪)' | 'نیازمند افزایش تراز';
+    status: 'بالاتر از آستانه نمونه' | 'نزدیک به آستانه نمونه' | 'پایین‌تر از آستانه نمونه';
     tarazGap: number;
   }[];
   bestMatchedUniversity: string;
@@ -86,8 +86,9 @@ export interface RankPredictionResult {
 }
 
 /**
- * کارنامه‌های واقعی رتبه‌های برتر کنکور کارشناسی ارشد (کد ۱۱۴۲) و دکتری تخصصی مدیریت
- * مستخرج از کارنامه‌های رسمی سازمان سنجش آموزش کشور
+ * پروفایل‌های نمونه تاریخی برای مقایسه آموزشی.
+ * تا وقتی سند کارنامه، سال، کد ترکیب و مقیاس نمره هر رکورد به‌صورت مستقل بازبینی نشود،
+ * این داده‌ها نباید به‌عنوان توزیع آماری معتبر یا مبنای احتمال قبولی استفاده شوند.
  */
 export const HISTORICAL_TOP_RANK_PROFILES: HistoricalTopRankProfile[] = [
   // ======================== مدیریت بازرگانی (ارشد) ========================
@@ -782,11 +783,11 @@ export function predictKonkorRankAndUniversity(params: {
       degree === 'master' ? tier.minTarazMaster : tier.minTarazPhd;
     const tarazGap = scaledTaraz - minRequiredTaraz;
     let status: RankPredictionResult['universityAdmissions'][number]['status'] =
-      'نیازمند افزایش تراز';
+      'پایین‌تر از آستانه نمونه';
     if (tarazGap >= 120) {
-      status = 'قبولی قطعی (احتمال > ۹۵٪)';
+      status = 'بالاتر از آستانه نمونه';
     } else if (tarazGap >= -140) {
-      status = 'قبولی محتمل / مرزی (احتمال ۶۰٪ تا ۹۰٪)';
+      status = 'نزدیک به آستانه نمونه';
     }
     return {
       tier,
@@ -796,8 +797,8 @@ export function predictKonkorRankAndUniversity(params: {
   });
 
   const bestMatchedTier =
-    universityAdmissions.find((u) => u.status !== 'نیازمند افزایش تراز')?.tier
-      .universityName ?? 'مجاز به انتخاب رشته در دوره‌های پیام نور و غیرانتفاعی (نیازمند افزایش درصد در دروس ضریب ۳ و ۴)';
+    universityAdmissions.find((u) => u.status !== 'پایین‌تر از آستانه نمونه')?.tier
+      .universityName ?? 'در داده‌های نمونه، آستانهٔ قابل‌مقایسه‌ای ثبت نشده است';
 
   // ۶. توصیه استراتژیک هوشمند بر اساس بیشترین فاصله در دروس پرضریب
   const highCoeffWeakCourse = [...courseBreakdown]
@@ -805,8 +806,8 @@ export function predictKonkorRankAndUniversity(params: {
     .sort((a, b) => a.gapFromRank1 * b.coeff - b.gapFromRank1 * a.coeff)[0];
 
   const strategicAdvice = highCoeffWeakCourse
-    ? `بیشترین اهرم جهش رتبه شما در درس «${highCoeffWeakCourse.title} (ضریب ${highCoeffWeakCourse.coeff})» است؛ رساندن درصد این درس از ${highCoeffWeakCourse.userPercent}٪ به سطح رتبه ۱۰ کشوری (${highCoeffWeakCourse.rank10Percent}٪) تراز کل شما را بیش از ۴۵۰ واحد ارتقا می‌دهد.`
-    : 'توازن درصدهای شما بسیار عالی است؛ بر تثبیت دروس ضریب ۳ و ۴ و کاهش تست‌های غلط تمرکز کنید.';
+    ? `در این مدل تمرینی، درس «${highCoeffWeakCourse.title}» با ضریب ثبت‌شده ${highCoeffWeakCourse.coeff} اولویت تمرین بالاتری دارد. مقدار اثر بر رتبه یا تراز واقعی از این داده‌ها قابل استنتاج نیست.`
+    : 'برای اولویت‌بندی تمرین، عملکرد هر درس را همراه با اعتبار منبع و ضریب همان سال بررسی کنید.';
 
   return {
     year,
