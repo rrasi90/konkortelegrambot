@@ -133,8 +133,8 @@ begin
   insert into app_users (id, display_name) values ('33333333-3333-3333-3333-333333333333', 'تست ۳') on conflict do nothing;
   select id into v_qid from questions limit 1;
 
-  insert into attempt_tickets (attempt_id, user_id, question_id, expires_at)
-  values ('ticket-test-1', '33333333-3333-3333-3333-333333333333', v_qid, now() + interval '1 hour');
+  insert into attempt_tickets (attempt_id, user_id, question_id, attempt_type, expires_at)
+  values ('ticket-test-1', '33333333-3333-3333-3333-333333333333', v_qid, 'verification', now() + interval '1 hour');
 
   v_res := submit_answer_secure(
     '33333333-3333-3333-3333-333333333333',
@@ -146,6 +146,9 @@ begin
   if not exists (select 1 from attempt_tickets where attempt_id = 'ticket-test-1' and consumed_at is not null) then
     raise exception 'بلیت تلاش باید پس از ثبت پاسخ مصرف شده باشد';
   end if;
+  if not exists (select 1 from answer_events where attempt_id = 'ticket-test-1' and attempt_type = 'verification') then
+    raise exception 'نوع تلاش باید از بلیت سرور در answer_events ثبت شود';
+  end if;
 
   begin
     perform submit_answer_secure(
@@ -155,9 +158,26 @@ begin
       0
     );
     raise exception 'تلاش با سوال متفاوت روی attempt_id یکسان باید رد شود';
-  exception when others then
-    -- انتظار خطا داریم: تایید شد
+  exception when sqlstate '45002' then
+    -- شناسه تلاش قبلاً برای سؤال دیگری ثبت شده است.
+    null;
   end;
+
+  -- A valid user/question pair must still be rejected without a server-issued ticket.
+  begin
+    perform submit_answer_secure(
+      '33333333-3333-3333-3333-333333333333',
+      'ticket-missing-test',
+      v_qid,
+      0
+    );
+    raise exception 'پاسخ بدون بلیت سرور نباید پذیرفته شود';
+  exception when sqlstate '45007' then
+    null;
+  end;
+  if exists (select 1 from answer_events where attempt_id = 'ticket-missing-test') then
+    raise exception 'نباید برای پاسخ فاقد بلیت رویداد ثبت شود';
+  end if;
 
   delete from answer_events where user_id = '33333333-3333-3333-3333-333333333333';
   delete from attempt_tickets where user_id = '33333333-3333-3333-3333-333333333333';
@@ -165,6 +185,23 @@ begin
   delete from app_users where id = '33333333-3333-3333-3333-333333333333';
 end
 $$;
+
+-- ۱۱) RPC ثبت پاسخ فقط از سمت Worker با service_role قابل فراخوانی باشد
+do $
+declare
+  v_signature text := 'public.submit_answer_secure(uuid,text,text,integer,jsonb,jsonb,jsonb,jsonb)';
+begin
+  if has_function_privilege('authenticated', v_signature, 'EXECUTE') then
+    raise exception 'authenticated نباید بتواند RPC ثبت پاسخ را مستقیماً فراخوانی کند';
+  end if;
+  if has_function_privilege('anon', v_signature, 'EXECUTE') then
+    raise exception 'anon نباید بتواند RPC ثبت پاسخ را فراخوانی کند';
+  end if;
+  if not has_function_privilege('service_role', v_signature, 'EXECUTE') then
+    raise exception 'service_role باید مجاز به فراخوانی RPC ثبت پاسخ باشد';
+  end if;
+end
+$;
 
 -- پاک‌سازی دادهٔ تست
 delete from answer_events where attempt_id in ('test-attempt-1', 'test-rls-1');
