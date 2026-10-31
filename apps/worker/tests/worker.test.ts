@@ -456,7 +456,7 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
     const token = await login();
     const queue = await json(await app.request('/api/queue?limit=20', authed(token)));
     const item = queue.items.find(
-      (candidate: any) => candidate.attemptType === 'practice' && candidate.question?.nodeId === 'sm.rbv',
+      (candidate: any) => candidate.attemptType === 'practice' && candidate.card?.nodeId === 'sm.rbv',
     );
     expect(item).toBeDefined();
 
