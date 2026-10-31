@@ -13,10 +13,14 @@ export const BOOK_CHAPTERS: Record<string, BookChapter[]> = {
   ...INDUSTRIAL_TECH_BOOK_CHAPTERS,
 };
 
-/** فصل‌های یک کتاب، مرتب‌شده بر پایهٔ تعداد سؤال طرح‌شده در ادوار */
+/** فصل‌ها با ترتیب منبع/کاتالوگ نمایش داده می‌شوند؛ اعداد تاریخی قدیمی معیار رتبه‌بندی دکتری نیستند. */
 export const getBookChapters = (bookId: string): BookChapter[] =>
-  [...(BOOK_CHAPTERS[bookId] ?? [])].sort((a, b) => b.examCount - a.examCount);
+  [...(BOOK_CHAPTERS[bookId] ?? [])];
 
+/**
+ * @deprecated جمع این اعداد، تعداد سؤال‌های رسمی دکتری نیست. فقط برای سازگاری با
+ * مصرف‌کنندگان قدیمی حفظ شده است؛ در UI و برنامه‌ریز آزمون استفاده نشود.
+ */
 export const getBookExamQuestionTotal = (bookId: string): number =>
   getBookChapters(bookId).reduce((sum, ch) => sum + ch.examCount, 0);
 
@@ -46,40 +50,49 @@ export interface ChapterQuestionGroup {
 }
 
 /**
- * توزیع تست‌های بانک روی فصل‌ها: هر گره فقط به نخستین فصلی که آن را پوشش می‌دهد
- * نسبت داده می‌شود تا هیچ تستی دو بار در صفحهٔ کتاب تکرار نشود.
+ * نگاشت تست به فصل:
+ * ۱) اگر referenceChapterId تعیین شده باشد، همان پیوند دقیق استفاده می‌شود.
+ * ۲) اگر تنها یک فصل گره را پوشش دهد، اتصال خودکار بی‌ابهام است.
+ * ۳) اگر چند فصل یک nodeId مشترک داشته باشند، سؤال تا زمان بازبینی انسانی در «فصل‌بندی‌نشده» می‌ماند.
+ * این سیاست از نسبت‌دادن دلخواه یک تست به فصل اشتباه جلوگیری می‌کند.
  */
 export const groupBookQuestionsByChapter = (
   bookId: string,
   questions: QuestionItem[]
 ): ChapterQuestionGroup[] => {
   const chapters = getBookChapters(bookId);
-  // هر گره به «مشخص‌ترین» فصلی نسبت داده می‌شود که آن را پوشش می‌دهد
-  // (فصلی که گره‌های کمتری دارد، در صورت تساوی فصل با سؤال بیشتر).
-  const nodeOwner = new Map<string, string>();
-  const nodeOwnerScore = new Map<string, number>();
-  chapters.forEach((ch) => {
-    ch.nodes.forEach((nodeId) => {
-      const score = ch.nodes.length * 1000 - ch.examCount;
-      const current = nodeOwnerScore.get(nodeId);
-      if (current === undefined || score < current) {
-        nodeOwner.set(nodeId, ch.id);
-        nodeOwnerScore.set(nodeId, score);
-      }
+  const chapterById = new Map(chapters.map((chapter) => [chapter.id, chapter]));
+  const chaptersByNode = new Map<string, BookChapter[]>();
+
+  chapters.forEach((chapter) => {
+    chapter.nodes.forEach((nodeId) => {
+      const matches = chaptersByNode.get(nodeId) ?? [];
+      matches.push(chapter);
+      chaptersByNode.set(nodeId, matches);
     });
   });
 
   const groups: ChapterQuestionGroup[] = chapters.map((chapter) => ({ chapter, questions: [] }));
   const rest: ChapterQuestionGroup = { chapter: null, questions: [] };
 
-  questions.forEach((q) => {
-    const ownerId = nodeOwner.get(q.nodeId);
-    const group = ownerId ? groups.find((g) => g.chapter?.id === ownerId) : undefined;
-    if (group) group.questions.push(q);
-    else rest.questions.push(q); // گره‌های بدون فصل منتسب → سبد «سایر مباحث»
+  questions.forEach((question) => {
+    let owner: BookChapter | undefined;
+
+    if (question.referenceChapterId) {
+      owner = chapterById.get(question.referenceChapterId);
+      // Explicit mappings must belong to this book and cover the question's node.
+      if (!owner || !owner.nodes.includes(question.nodeId)) owner = undefined;
+    } else {
+      const candidates = chaptersByNode.get(question.nodeId) ?? [];
+      if (candidates.length === 1) owner = candidates[0];
+    }
+
+    const group = owner ? groups.find((candidate) => candidate.chapter?.id === owner!.id) : undefined;
+    if (group) group.questions.push(question);
+    else rest.questions.push(question);
   });
 
-  return [...groups.filter((g) => g.questions.length > 0), ...(rest.questions.length ? [rest] : [])];
+  return [...groups.filter((group) => group.questions.length > 0), ...(rest.questions.length ? [rest] : [])];
 };
 
 /** متن مطالعهٔ کامل کتاب برای نمایش/دانلود */
@@ -96,13 +109,13 @@ export const buildFullBookMarkdown = (
   const chapters = getBookChapters(book.id);
   lines.push(`## فهرست فصل‌های کلیدی (${chapters.length} فصل)\n`);
   chapters.forEach((ch, i) => {
-    lines.push(`${i + 1}. ${ch.title} — ${ch.examCount} سؤال در ادوار`);
+    lines.push(`${i + 1}. ${ch.title} — برآورد تاریخی ثبت‌شده: ${ch.examCount} (بدون تفکیک سطح آزمون؛ برای بودجه‌بندی دکتری معتبر نیست)`);
   });
   lines.push('');
 
   chapters.forEach((ch, i) => {
     lines.push(`\n---\n\n## ${i + 1}. ${ch.title}`);
-    lines.push(`> تکرار در ادوار: ${ch.examCount} سؤال`);
+    lines.push(`> برآورد تاریخی قدیمی: ${ch.examCount} (سطح آزمون در داده فعلی تفکیک نشده است)`);
     ch.points.forEach((p) => lines.push(`- ${p}`));
     if (ch.formulas?.length) {
       lines.push('\n**فرمول‌ها و مدل‌ها:**');
