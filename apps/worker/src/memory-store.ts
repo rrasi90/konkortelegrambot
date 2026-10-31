@@ -142,19 +142,35 @@ export class MemoryStore implements DataStore {
     cardUpserts: ReviewCard[];
     cardInserts: ReviewCard[];
   }): Promise<{ correctOption?: number; replay?: boolean } | null> {
+    const ticket = this.tickets.get(input.attemptId);
+    if (!ticket) throw new Error('Attempt ticket not found');
+    if (ticket.userId !== input.userId) throw new Error('Attempt ticket belongs to another user');
+    if (ticket.questionId !== input.questionId) throw new Error('Attempt ticket question mismatch');
+    if (ticket.consumedAt) throw new Error('Attempt ticket already consumed');
+    if (ticket.expiresAt <= Date.now()) throw new Error('Attempt ticket expired');
+
+    const question = this.questions.find((candidate) => candidate.id === input.questionId);
+    if (!question) throw new Error('Question not found');
+    if (!Number.isInteger(input.selectedOption) || input.selectedOption < 0 || input.selectedOption >= question.options.length) {
+      throw new Error('Selected option is out of range');
+    }
+
+    // Match the production RPC: the server-side answer key is authoritative.
+    ticket.consumedAt = new Date().toISOString();
+    const wasCorrect = input.selectedOption === question.correctOption;
     await this.insertAnswerEvent({
       id: crypto.randomUUID(),
       userId: input.userId,
       questionId: input.questionId,
       selectedOption: input.selectedOption,
-      isCorrect: input.wasCorrect,
+      isCorrect: wasCorrect,
       attemptId: input.attemptId,
       answeredAt: new Date().toISOString(),
       rippleReport: input.rippleReport,
     });
     await this.upsertMastery(input.userId, input.masteryUpdates);
     await this.upsertCards([...input.cardUpserts, ...input.cardInserts]);
-    return null;
+    return { correctOption: question.correctOption, replay: false };
   }
 
   async issueAttemptTickets(
@@ -162,11 +178,23 @@ export class MemoryStore implements DataStore {
     tickets: { attemptId: string; questionId: string; attemptType: string; itemVersion?: string }[],
   ): Promise<void> {
     for (const t of tickets) {
-      this.tickets.set(t.attemptId, { userId, questionId: t.questionId, attemptType: t.attemptType });
+      if (this.tickets.has(t.attemptId)) throw new Error('Attempt ticket already exists');
+      this.tickets.set(t.attemptId, {
+        userId,
+        questionId: t.questionId,
+        attemptType: t.attemptType,
+        expiresAt: Date.now() + 2 * 60 * 60 * 1000,
+      });
     }
   }
 
-  tickets = new Map<string, { userId: string; questionId: string; attemptType: string }>();
+  tickets = new Map<string, {
+    userId: string;
+    questionId: string;
+    attemptType: string;
+    consumedAt?: string;
+    expiresAt: number;
+  }>();
 
   skillStates = new Map<string, LearnerSkillState & { userId: string }>(); // key: userId:skillId
 
