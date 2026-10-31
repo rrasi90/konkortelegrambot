@@ -669,6 +669,7 @@
       html += '<div class="course-accordion' + (isOpen ? ' open' : '') + '" data-course-id="' + escapeHtml(course.courseId) + '">';
       html += '<div class="course-accordion-header">';
       html += '<div><strong>' + escapeHtml(course.courseTitle) + '</strong> <span style="font-size:11.5px;color:var(--ink-soft);font-weight:400;margin-right:6px;">(' + filteredTopics.length + ' مبحث کلیدی)</span></div>';
+      html += '<button class="btn small" onclick="renderFullBook(\'' + escapeHtml(course.courseId) + '\')" style="margin-right:8px;">📖 مطالعه کامل</button>';
       html += '<span class="accordion-arrow" style="font-size:12px;color:var(--ink-soft);">' + (isOpen ? '▲' : '▼') + '</span>';
       html += '</div>';
 
@@ -730,6 +731,32 @@
       });
     });
   }
+
+  /* ---------- مطالعه کامل یک کتاب ---------- */
+  window.renderFullBook = function (courseId) {
+    var container = el('lessons-container');
+    if (!container) return;
+    var course = cachedLessons ? cachedLessons.find(function(c){ return c.courseId === courseId; }) : null;
+    if (!course) { container.innerHTML = '<div class="empty-state"><p>کتاب یافت نشد.</p></div>'; return; }
+    var html = '<div style="padding:8px 0;"><button onclick="loadLessons()" class="btn ghost small">← بازگشت به لیست کتاب‌ها</button></div>';
+    html += '<h2 style="font-size:18px;font-weight:800;color:var(--ink);margin:8px 0 14px;border-right:4px solid var(--primary);padding-right:10px;">📘 ' + escapeHtml(course.courseTitle) + '</h2>';
+    if (course.description) html += '<p style="font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:14px;">' + escapeHtml(course.description) + '</p>';
+    (course.topics || []).forEach(function(t) {
+      html += '<div class="topic-card" style="margin-bottom:14px;border-right:3px solid var(--primary);">';
+      html += '<div class="topic-title" style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px;">' + escapeHtml(t.topic) + '</div>';
+      if (t.chapter) html += '<div style="font-size:11.5px;color:var(--ink-soft);margin-bottom:4px;">فصل: ' + escapeHtml(t.chapter) + '</div>';
+      if (t.summary) html += '<div class="topic-summary">' + escapeHtml(t.summary) + '</div>';
+      if (t.konkoorTips && t.konkoorTips.length) {
+        html += '<div class="topic-tips"><strong>💡 نکات طلایی:</strong><ul style="margin:4px 0 0;padding-right:18px;">' + t.konkoorTips.map(function(tip){ return '<li>'+escapeHtml(tip)+'</li>'; }).join('') + '</ul></div>';
+      }
+      if (t.keyTerms && t.keyTerms.length) {
+        html += '<div class="topic-terms">' + t.keyTerms.map(function(term){ return '<span class="lesson-term-badge">'+escapeHtml(term)+'</span>'; }).join('') + '</div>';
+      }
+      html += '</div>';
+    });
+    container.innerHTML = html;
+    window.scrollTo(0,0);
+  };
 
   /* ---------- تب مسیر (Knowledge Map) ---------- */
   function loadMap() {
