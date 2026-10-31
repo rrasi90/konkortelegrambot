@@ -310,9 +310,13 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
 
     // حالت ۲: ورود امن و خودکار بر پایه توکن دستگاه کاربر در وب (عدم امکان جعل هویت دیگران)
-    if (body.deviceToken) {
-      const cleanToken = body.deviceToken.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 48);
-      const devUsername = 'dev_' + cleanToken;
+    if (typeof body.deviceToken === 'string') {
+      const cleanToken = body.deviceToken.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
+      // توکن کوتاه/خالی به حساب مشترک «dev_» منتهی می‌شود و مرز امنیتی است.
+      if (cleanToken.replace(/^dev_/, '').length < 16) {
+        return c.json({ error: 'توکن دستگاه نامعتبر است' }, 400);
+      }
+      const devUsername = 'dev_' + cleanToken.replace(/^dev_/, '');
       let user = (await store.getUserByTelegramUsername?.(devUsername)) ?? null;
       if (!user) {
         user = await store.createUser({
@@ -323,14 +327,25 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
-    // حالت ۳: نام کاربری یا تولید خودکار شناسه امن داوطلب بدون بازگرداندن خطای ۴۰۰
+    // حالت ۳: ورود با نام کاربری فقط در محیط دمو مجاز است.
+    // در پروداکشن، نام کاربری تلگرام بدون امضای initData قابل جعل است و
+    // امکان تصاحب حساب دیگران را می‌دهد؛ بنابراین کاملاً بسته است.
+    if (!allowDemoAuth) {
+      return c.json({ error: 'ورود معتبر تلگرام یا توکن دستگاه لازم است' }, 401);
+    }
     const rawUsername = (body.telegramUsername || body.displayName || '').trim();
-    const finalUsername = rawUsername ? rawUsername.replace(/^@/, '').trim() : ('dev_auto_' + Math.random().toString(36).slice(2, 10));
+    const finalUsername = rawUsername
+      ? rawUsername.replace(/^@/, '').trim()
+      : 'dev_auto_' + Math.random().toString(36).slice(2, 10);
     let user = (await store.getUserByTelegramUsername?.(finalUsername)) ?? null;
     if (!user) {
       user = await store.createUser({
         telegramUsername: finalUsername,
-        displayName: rawUsername ? (rawUsername.startsWith('@') ? rawUsername : ('@' + finalUsername)) : 'داوطلب کنکور',
+        displayName: rawUsername
+          ? rawUsername.startsWith('@')
+            ? rawUsername
+            : '@' + finalUsername
+          : 'داوطلب کنکور',
       });
     }
 

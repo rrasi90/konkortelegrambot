@@ -162,6 +162,46 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(res.status).toBe(401);
   });
 
+  it('ورود تکراری با یک نام کاربری، همان حساب را برمی‌گرداند (نه حساب جدید)', async () => {
+    const login = async (username: string) => {
+      const res = await app.request('/api/auth/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegramUsername: username }),
+      });
+      expect(res.status).toBe(200);
+      return (await json(res)) as { user: { id: string } };
+    };
+    const first = await login('@Ali_Reza');
+    const second = await login('ali_reza');
+    expect(second.user.id).toBe(first.user.id);
+    expect(store.users.size).toBe(1);
+  });
+
+  it('ورود با نام کاربری بدون امضای تلگرام در محیط واقعی بسته است', async () => {
+    const closed = createApp({ ...ENV, ALLOW_DEMO_AUTH: 'false' }, { store });
+    const res = await closed.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramUsername: 'someone_else' }),
+    });
+    expect(res.status).toBe(401);
+  });
+
+  it('توکن دستگاه کوتاه/خالی حساب مشترک نمی‌سازد و رد می‌شود', async () => {
+    for (const deviceToken of ['', 'dev_', 'short', 'dev_123']) {
+      const res = await app.request('/api/auth/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deviceToken }),
+      });
+      expect(res.status).toBe(400);
+    }
+    const users = [...store.users.values()];
+    expect(users.length).toBe(0);
+    expect(users.some((u) => u.telegramUsername === 'dev_')).toBe(false);
+  });
+
   it('ورود دمو وقتی غیرفعال است رد می‌شود', async () => {
     const app = createApp({ ...ENV, ALLOW_DEMO_AUTH: 'false' });
     const res = await app.request('/api/auth/demo', {

@@ -140,7 +140,14 @@ export class SupabaseStore implements DataStore {
   private toUser(row: Record<string, unknown>): AppUser {
     return {
       id: String(row.id),
-      telegramUserId: row.telegram_user_id === null ? undefined : Number(row.telegram_user_id),
+      telegramUserId:
+        row.telegram_user_id === null || row.telegram_user_id === undefined
+          ? undefined
+          : Number(row.telegram_user_id),
+      telegramUsername:
+        row.telegram_username === null || row.telegram_username === undefined
+          ? undefined
+          : String(row.telegram_username),
       displayName: row.display_name === null ? undefined : String(row.display_name),
       activeTracks: (row.active_tracks as TrackId[]) ?? ['common'],
     };
@@ -165,14 +172,51 @@ export class SupabaseStore implements DataStore {
     return row ? this.toUser(row) : null;
   }
 
-  async createUser(input: { telegramUserId?: number; displayName?: string }): Promise<AppUser> {
-    const rows = (await this.request('POST', 'app_users', [
-      {
-        telegram_user_id: input.telegramUserId ?? null,
-        display_name: input.displayName ?? null,
-      },
-    ])) as Record<string, unknown>[];
-    return this.toUser(rows[0] ?? {});
+  async getUserByTelegramUsername(username: string): Promise<AppUser | null> {
+    const clean = username.replace(/^@/, '').trim().toLowerCase();
+    if (!clean) return null;
+    const rows = (await this.request(
+      'GET',
+      'app_users',
+      undefined,
+      `?telegram_username=eq.${encodeURIComponent(clean)}&select=*`,
+    )) as Record<string, unknown>[] | null;
+    const row = rows?.[0];
+    return row ? this.toUser(row) : null;
+  }
+
+  async createUser(input: {
+    telegramUserId?: number;
+    telegramUsername?: string;
+    displayName?: string;
+  }): Promise<AppUser> {
+    const username = input.telegramUsername
+      ? input.telegramUsername.replace(/^@/, '').trim().toLowerCase() || null
+      : null;
+    try {
+      const rows = (await this.request('POST', 'app_users', [
+        {
+          telegram_user_id: input.telegramUserId ?? null,
+          telegram_username: username,
+          display_name: input.displayName ?? null,
+        },
+      ])) as Record<string, unknown>[];
+      const row = rows?.[0];
+      if (!row) throw new Error('Supabase createUser: empty response');
+      return this.toUser(row);
+    } catch (err) {
+      // دو ورود هم‌زمان می‌توانند هر دو «کاربر جدید» ببینند؛ در این حالت
+      // رکورد ساخته‌شده توسط درخواست موازی را برمی‌گردانیم تا حساب تکرار نشود.
+      if (input.telegramUserId) {
+        const byId = await this.getUserByTelegramId(input.telegramUserId).catch(() => null);
+        if (byId) return byId;
+      }
+      if (username) {
+        const byName = await this.getUserByTelegramUsername(username).catch(() => null);
+        if (byName) return byName;
+      }
+      throw err;
+    }
   }
 
   async setActiveTracks(userId: string, tracks: TrackId[]): Promise<void> {
@@ -452,6 +496,8 @@ export class SupabaseStore implements DataStore {
       timesSeen: c.timesSeen,
       timesCorrect: c.timesCorrect,
       fsrsState: c.fsrs ?? null,
+      isProof: c.isProof ?? false,
+      comparisonSkills: c.comparisonSkills ?? null,
     }));
     const cardInsertsJson = input.cardInserts.map((c) => ({
       id: c.id,
@@ -468,6 +514,8 @@ export class SupabaseStore implements DataStore {
       timesSeen: c.timesSeen,
       timesCorrect: c.timesCorrect,
       fsrsState: c.fsrs ?? null,
+      isProof: c.isProof ?? false,
+      comparisonSkills: c.comparisonSkills ?? null,
     }));
 
     // RPC امن: کلید صحیح سمت سرور تعیین و بلیت تلاش مصرف می‌شود

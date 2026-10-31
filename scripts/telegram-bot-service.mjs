@@ -3,7 +3,14 @@
  * Long-polling مقاوم در برابر قطعی و بدون نیاز به وب‌هوک
  */
 
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '8875977365:AAGEDS3Z6tvJJhggaNA571yB9q-DaFns89I';
+const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+if (!BOT_TOKEN) {
+  console.error(
+    'CRITICAL: TELEGRAM_BOT_TOKEN environment variable is required. ' +
+      'Set it in your shell or .env file before starting the bot service.',
+  );
+  process.exit(1);
+}
 const APP_URL = process.env.APP_URL || 'https://rrasi90.github.io/konkortelegrambot/';
 const API_BASE = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
@@ -39,12 +46,9 @@ async function startPolling() {
 
           const chatId = msg.chat.id;
           const userFirstName = msg.from?.first_name || 'داوطلب';
-          const username = msg.from?.username ? `@${msg.from.username}` : userFirstName;
           const text = (msg.text || '').trim();
 
           console.log(`[Telegram Service] Message from ${userFirstName} (${chatId}): ${text}`);
-
-          const userLink = `${APP_URL}?tg=${encodeURIComponent(username)}`;
 
           if (text.startsWith('/start')) {
             await tg('sendMessage', {
@@ -56,12 +60,6 @@ async function startPolling() {
                     {
                       text: '🚀 باز کردن آموزش کنکور',
                       web_app: { url: APP_URL },
-                    },
-                  ],
-                  [
-                    {
-                      text: '🌐 ورود مستقیم در مرورگر',
-                      url: userLink,
                     },
                   ],
                 ],
@@ -77,12 +75,6 @@ async function startPolling() {
                     {
                       text: '🚀 باز کردن آموزش کنکور',
                       web_app: { url: APP_URL },
-                    },
-                  ],
-                  [
-                    {
-                      text: '🌐 ورود مستقیم در مرورگر',
-                      url: userLink,
                     },
                   ],
                 ],
