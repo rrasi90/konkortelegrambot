@@ -20,7 +20,6 @@ import {
   ChevronDown,
   Download,
   FileText,
-  Flame,
   Layers,
   ListChecks,
   Play,
@@ -378,7 +377,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
         <div className="tab-strip" role="tablist" aria-label="بخش‌های کتاب">
           {[
             { id: 'chapters' as const, label: `فصل‌های مهم (${fa(chapters.length)})`, icon: ListChecks },
-            { id: 'full' as const, label: 'مطالعهٔ کامل کتاب', icon: FileText },
+            { id: 'full' as const, label: 'جزوهٔ آموزشی فصل‌ها', icon: FileText },
             { id: 'tests' as const, label: `تست‌های این درس (${fa(bookQuestionCount)})`, icon: HelpCircle },
           ].map((t) => {
             const Icon = t.icon;
@@ -408,7 +407,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer"
         >
           <Download className="w-3.5 h-3.5" />
-          دانلود کتاب کامل (.md)
+          دانلود جزوهٔ آموزشی (.md)
         </button>
       </div>
 
@@ -521,13 +520,13 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
         </div>
       )}
 
-      {/* مطالعهٔ کامل کتاب */}
+      {/* جزوهٔ آموزشی فصل‌ها */}
       {tab === 'full' && (
         <div className="space-y-4">
           <div className="bento-card p-4 flex flex-wrap items-center justify-between gap-2">
             <div className="text-xs text-slate-600 dark:text-slate-300 leading-6">
-              <strong className="text-slate-900 dark:text-white">مطالعهٔ کامل کتاب:</strong>{' '}
-              همهٔ {fa(chapters.length)} فصل کلیدی به‌ترتیب، در یک صفحه؛ مناسب مرور پیش از آزمون.
+              <strong className="text-slate-900 dark:text-white">جزوهٔ آموزشی فصل‌ها:</strong>{' '}
+              خلاصه‌ها، نکات و فرمول‌های فصل‌های منتخب در یک صفحه؛ این خروجی متن کامل کتاب مرجع نیست.
             </div>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">
               {fa(chapters.reduce((s, c) => s + c.points.length, 0))} نکتهٔ آموزشی
@@ -667,7 +666,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
             <div className="bento-card p-6 text-center space-y-3">
               <p className="text-sm text-slate-600 dark:text-slate-300">
                 هنوز تستی از این درس در بانک سامانه ثبت نشده است. نکات و آموزش فصل‌ها در
-                «مطالعهٔ کامل کتاب» و درس‌نامه‌های تعاملی در دسترس است.
+                «جزوهٔ آموزشی فصل‌ها» و درس‌نامه‌های تعاملی در دسترس است.
               </p>
               {activeBook.linkedNodeId && (
                 <button
