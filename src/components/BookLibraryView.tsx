@@ -376,7 +376,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
       <div className="bento-card glass-panel p-3.5 flex flex-wrap items-center justify-between gap-3">
         <div className="tab-strip" role="tablist" aria-label="بخش‌های کتاب">
           {[
-            { id: 'chapters' as const, label: `فصل‌های مهم (${fa(chapters.length)})`, icon: ListChecks },
+            { id: 'chapters' as const, label: `فصل‌های منتخب (${fa(chapters.length)})`, icon: ListChecks },
             { id: 'full' as const, label: 'جزوهٔ آموزشی فصل‌ها', icon: FileText },
             { id: 'tests' as const, label: `تست‌های این درس (${fa(bookQuestionCount)})`, icon: HelpCircle },
           ].map((t) => {
