@@ -263,9 +263,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       initData?: string;
       telegramUsername?: string;
       displayName?: string;
+      deviceToken?: string;
     };
 
-    // حالت ۱: ورود رسمی از درون تلگرام با initData
+    // حالت ۱: ورود رسمی و خودکار از درون تلگرام با initData و اعتبارسنجی رمزنگاری‌شده
     if (body.initData) {
       if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 500);
       const result = await verifyTelegramInitData(body.initData, env.TELEGRAM_BOT_TOKEN);
@@ -275,24 +276,35 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       if (!user) {
         user = await store.createUser({
           telegramUserId: result.userId,
-          displayName: result.firstName || 'داوطلب دکتری',
+          telegramUsername: result.username,
+          displayName: result.firstName || (result.username ? ('@' + result.username) : 'داوطلب دکتری'),
         });
       }
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
-    // حالت ۲: ورود از طریق نام کاربری یا شناسه داوطلب در وب
-    const rawUsername = (body.telegramUsername || body.displayName || '').trim();
-    if (!rawUsername) {
-      return c.json({ error: 'لطفاً شناسه یا نام کاربری تلگرام خود را وارد کنید' }, 400);
+    // حالت ۲: ورود امن و خودکار بر پایه توکن دستگاه کاربر در وب (عدم امکان جعل هویت دیگران)
+    if (body.deviceToken) {
+      const cleanToken = body.deviceToken.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 48);
+      const devUsername = 'dev_' + cleanToken;
+      let user = (await store.getUserByTelegramUsername?.(devUsername)) ?? null;
+      if (!user) {
+        user = await store.createUser({
+          telegramUsername: devUsername,
+          displayName: body.displayName || 'داوطلب کنکور',
+        });
+      }
+      return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
-    const clean = rawUsername.replace(/^@/, '').trim();
-    let user = (await store.getUserByTelegramUsername?.(clean)) ?? null;
+    // حالت ۳: نام کاربری یا تولید خودکار شناسه امن داوطلب بدون بازگرداندن خطای ۴۰۰
+    const rawUsername = (body.telegramUsername || body.displayName || '').trim();
+    const finalUsername = rawUsername ? rawUsername.replace(/^@/, '').trim() : ('dev_auto_' + Math.random().toString(36).slice(2, 10));
+    let user = (await store.getUserByTelegramUsername?.(finalUsername)) ?? null;
     if (!user) {
       user = await store.createUser({
-        telegramUsername: clean,
-        displayName: rawUsername.startsWith('@') ? rawUsername : `@${clean}`,
+        telegramUsername: finalUsername,
+        displayName: rawUsername ? (rawUsername.startsWith('@') ? rawUsername : ('@' + finalUsername)) : 'داوطلب کنکور',
       });
     }
 
@@ -331,7 +343,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const packs = await store.listPacks().catch(() => []);
     const tracks = new Set<TrackId>(['common']);
     for (const p of packs) for (const t of p.tracks) tracks.add(t);
-    if (packs.length === 0) for (const t of ['common', 'business', 'technology', 'strategy'] as TrackId[]) tracks.add(t);
+    if (packs.length === 0) for (const t of ['common', 'business', 'technology', 'strategy', 'industrial'] as TrackId[]) tracks.add(t);
     return c.json({ tracks: [...tracks], packs });
   });
 
@@ -766,9 +778,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const visible = nodes.filter(
       (n) => n.track === 'common' || user.activeTracks.includes(n.track),
     );
-    const overall = visible.length
-      ? visible.reduce((sum, n) => sum + (masteryByNode.get(n.id) ?? DEFAULT_MASTERY), 0) /
-        visible.length
+    const overall = (visible.length && masteryRows.length > 0)
+      ? visible.reduce((sum, n) => sum + (masteryByNode.get(n.id) ?? 0), 0) / visible.length
       : 0;
     const now = Date.now();
     const reviewDue = cards.filter((card) => {

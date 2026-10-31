@@ -5,7 +5,7 @@
 
 /* ---------- Track & Knowledge Graph ---------- */
 
-export const TRACK_IDS = ['common', 'business', 'technology', 'strategy'] as const;
+export const TRACK_IDS = ['common', 'business', 'technology', 'strategy', 'industrial'] as const;
 export type TrackId = (typeof TRACK_IDS)[number];
 
 /** گرهٔ دانش: یک مبحث مشخص در یک فصل از یک درس */
