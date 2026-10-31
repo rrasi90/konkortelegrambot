@@ -69,7 +69,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       : (globalMemoryStore ??= new MemoryStore()));
   const isProduction =
     env.ENVIRONMENT === 'production' ||
-    (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production');
+    (typeof (globalThis as any).process !== 'undefined' && (globalThis as any).process.env?.NODE_ENV === 'production');
 
   if (isProduction) {
     if (!env.SESSION_SECRET || env.SESSION_SECRET === 'dev-secret' || env.SESSION_SECRET.length < 16) {
