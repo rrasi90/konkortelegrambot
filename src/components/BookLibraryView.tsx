@@ -7,11 +7,8 @@ import {
 } from '../data/referenceBooksRepo';
 import {
   getBookChapters,
-  getBookExamQuestionTotal,
   groupBookQuestionsByChapter,
   buildFullBookMarkdown,
-  getChapterImportance,
-  CHAPTER_IMPORTANCE_LABEL,
 } from '../data/bookChaptersRepo';
 import type { BookChapter } from '../data/bookChaptersTypes';
 import type { QuestionItem } from '../data/konkorData';
@@ -48,7 +45,6 @@ const branchOf = (book: ReferenceBookItem): ManagementBranchId => book.branch;
 
 const BookCard: React.FC<{ book: ReferenceBookItem; onOpen: () => void }> = ({ book, onOpen }) => {
   const chapters = getBookChapters(book.id);
-  const totalExam = getBookExamQuestionTotal(book.id);
   return (
     <button
       type="button"
@@ -78,10 +74,7 @@ const BookCard: React.FC<{ book: ReferenceBookItem; onOpen: () => void }> = ({ b
       </div>
 
       <div className="mt-auto pt-2.5 border-t border-slate-200/70 dark:border-slate-800 flex items-center justify-between gap-2 text-[10px]">
-        <span className="font-bold text-amber-700 dark:text-amber-400 inline-flex items-center gap-1">
-          <Flame className="w-3 h-3" />
-          {fa(totalExam)} سؤال در ادوار
-        </span>
+        <span className="font-bold text-slate-600 dark:text-slate-300">{fa(chapters.length)} فصل در کاتالوگ</span>
         <span className="text-slate-500 dark:text-slate-400">مشاهدهٔ فصل‌ها، آموزش و تست ←</span>
       </div>
     </button>
@@ -254,9 +247,9 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                 کتابخانهٔ کتاب‌محور: از کتاب به فصل، از فصل به آموزش و تست
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-6 max-w-2xl">
-                هر کتاب، ده فصل کلیدی دارد که بر پایهٔ تعداد سؤال طرح‌شده در ادوار مرتب شده‌اند. با
-                باز کردن هر کتاب، جزوهٔ آموزشی فصل‌ها، مطالعهٔ کامل کتاب و تست‌های همان درس را
-                یک‌جا می‌بینید.
+                فصل‌ها با ترتیب فهرست محتوایی کتاب نمایش داده می‌شوند. اعداد فراوانی تاریخی
+                موجود هنوز از نظر سطح آزمون و ترکیب دکتری اعتبارسنجی نشده‌اند و برای اولویت‌بندی
+                کنکور دکتری استفاده نمی‌شوند.
               </p>
             </div>
             <span className="px-2.5 py-1 rounded-lg bg-emerald-500/12 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold whitespace-nowrap">
@@ -321,10 +314,12 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
   }
 
   /* ------------------------------ صفحهٔ یک کتاب ------------------------------ */
-  const totalExam = getBookExamQuestionTotal(activeBook.id);
 
   return (
     <div className="space-y-4">
+      <div className="rounded-xl border border-amber-300/70 dark:border-amber-800/60 bg-amber-50/70 dark:bg-amber-950/20 p-3 text-[11px] leading-6 text-amber-900 dark:text-amber-200">
+        اعداد فراوانی تاریخیِ قدیمی، در بعضی کتاب‌ها از آزمون کارشناسی ارشد کد ۱۱۴۲ آمده‌اند و سطح آزمون را تفکیک نمی‌کنند؛ بنابراین در این نسخه برای رتبه‌بندی یا پیش‌بینی اهمیت فصل‌های دکتری استفاده نمی‌شوند.
+      </div>
       <button
         type="button"
         onClick={() => setOpenBookId(null)}
@@ -354,8 +349,8 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
           <div className="grid grid-cols-3 gap-2 text-center shrink-0">
             {[
               { label: 'فصل کلیدی', value: fa(chapters.length) },
-              { label: 'سؤال در ادوار', value: fa(totalExam) },
-              { label: 'تست در سامانه', value: fa(bookQuestionCount) },
+              { label: 'تست نگاشت‌شده به فصل', value: fa(bookQuestionCount) },
+              { label: 'سطح منبع', value: activeBook.targetLevel },
             ].map((s) => (
               <div key={s.label} className="px-2.5 py-1.5 rounded-lg glass-subcard">
                 <div className="text-sm font-bold text-slate-900 dark:text-white tabular-nums">
@@ -417,24 +412,17 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
         </button>
       </div>
 
-      {/* فصل‌های مهم: مرتب بر پایهٔ تعداد سؤال */}
+      {/* فصل‌ها با ترتیب محتوایی کتاب؛ بدون رتبه‌بندی تاریخی دکتری تأییدنشده */}
       {tab === 'chapters' && (
         <div className="space-y-2.5">
           <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 px-1">
-            <span>مرتب‌شده بر پایهٔ تعداد سؤال طرح‌شده در ادوار کنکور</span>
+            <span>ترتیب فصل‌ها مطابق کاتالوگ کتاب است؛ برچسب پرتکرار دکتری فعلاً ارائه نمی‌شود.</span>
             <span>برای دیدن آموزش و تست هر فصل، روی آن بزنید</span>
           </div>
 
           {chapters.map((ch, idx) => {
-            const importance = getChapterImportance(ch.examCount);
             const isOpen = openChapterId === ch.id;
             const chapterQuestions = questionsForChapter(ch);
-            const badgeStyle =
-              importance === 'critical'
-                ? 'bg-rose-500/15 text-rose-700 dark:text-rose-300'
-                : importance === 'important'
-                  ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300'
-                  : 'bg-slate-500/12 text-slate-600 dark:text-slate-400';
 
             return (
               <div key={ch.id} className="bento-card overflow-hidden">
@@ -452,16 +440,9 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                       <span className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
                         {ch.title}
                       </span>
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${badgeStyle}`}>
-                        {CHAPTER_IMPORTANCE_LABEL[importance]}
-                      </span>
                     </span>
                     <span className="flex flex-wrap items-center gap-3 mt-1.5 text-[10px] text-slate-500 dark:text-slate-400">
                       <span className="tabular-nums">فصل {ch.number}</span>
-                      <span className="tabular-nums inline-flex items-center gap-1 text-amber-700 dark:text-amber-400 font-bold">
-                        <Flame className="w-3 h-3" />
-                        {fa(ch.examCount)} سؤال
-                      </span>
                       <span className="tabular-nums">{fa(chapterQuestions.length)} تست در سامانه</span>
                     </span>
                   </span>
@@ -593,7 +574,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                 </div>
                 <div className="reading-surface">
                   <p className="text-[11px] text-amber-700 dark:text-amber-400 font-bold mb-1">
-                    {fa(ch.examCount)} سؤال از این فصل در ادوار · {CHAPTER_IMPORTANCE_LABEL[getChapterImportance(ch.examCount)]}
+                    فصل منتخب منبع؛ برای تعداد تست‌های دارای نگاشت دقیق، بخش تست‌های این فصل را ببینید.
                   </p>
                   <ul className="lesson-prose list-disc pr-5 space-y-1">
                     {ch.points.map((p, pi) => (
