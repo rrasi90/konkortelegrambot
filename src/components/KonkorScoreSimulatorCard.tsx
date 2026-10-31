@@ -225,7 +225,7 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
     });
   }, [nodes, nodeStates, activeBranch, whatIfBoostByCourse, carelessnessRiskMode]);
 
-  // ۲. فراخوانی موتور کالیبره‌شده سازمان سنجش برای محاسبه تراز، رتبه کشوری و دانشگاه قبولی
+  // ۲. مدل تمرینی داخلی؛ داده‌های نمونه تا زمان بازبینی برای پیش‌بینی واقعی اعتبار ندارند
   const rankPrediction = useMemo(() => {
     const courseInputs: CourseScoreInput[] = simulatedCourses.map((c) => ({
       sectionId: c.sectionId,
@@ -331,7 +331,7 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
             {degreeMode === 'phd'
               ? 'نمایش پیشرفت یادگیری مباحث مدیریت؛ بدون پیش‌بینی رتبه یا قبولی'
-              : 'سناریوی تمرینی درصد و تراز بر اساس گراف دانش؛ نه پیش‌بینی رسمی سازمان سنجش'}
+              : 'سناریوی آموزشی درصد و تراز؛ نه پیش‌بینی رسمی یا تضمین پذیرش'}
           </h2>
         </div>
 
@@ -424,6 +424,11 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
         )}
       </div>
 
+      {degreeMode !== 'phd' && (
+        <div className="rounded-xl border border-amber-300/70 dark:border-amber-800/60 bg-amber-50/70 dark:bg-amber-950/20 p-3 text-[11px] leading-6 text-amber-900 dark:text-amber-200">
+          خروجی رتبه، تراز و مقایسه دانشگاهی این بخش از داده‌ها و آستانه‌های نمونهٔ ثابت مدل ساخته می‌شود و با کارنامه‌های کافیِ داوطلبان در سال‌های مستقل کالیبره نشده است؛ آن را پیش‌بینی رسمی، احتمال قبولی یا تضمین پذیرش تلقی نکنید.
+        </div>
+      )}
       {/* شاخص‌های خروجی */}
       {degreeMode === 'phd' ? (
         <div className="space-y-3">
@@ -454,7 +459,7 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
             </span>
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400 tabular-nums">
-            میانگین رتبه ۱۰ کشوری:{' '}
+            درصد پروفایل نمونه رتبه ۱۰:{' '}
             <strong className="text-slate-800 dark:text-slate-200">
               {rankPrediction.top10RankComparison.weightedAveragePercent}٪
             </strong>
@@ -463,7 +468,7 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
 
         <div className="glass-subcard p-4 space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-            <span>تراز کل تخمینی سازمان سنجش</span>
+            <span>تراز محاسباتی مدل تمرینی</span>
             <Calculator className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400 font-mono tabular-nums">
@@ -473,7 +478,7 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
             </span>
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400 tabular-nums">
-            تراز رتبه ۱ کشوری:{' '}
+            تراز پروفایل نمونه رتبه ۱:{' '}
             <strong className="text-slate-800 dark:text-slate-200">
               {rankPrediction.top1RankComparison.totalTaraz.toLocaleString('en-US')}
             </strong>
@@ -482,28 +487,28 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
 
         <div className="glass-subcard p-4 space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-            <span>رتبه کشوری تخمینی در گرایش</span>
+            <span>رتبه فرضی در مدل تمرینی</span>
             <Award className="w-4 h-4 text-amber-500" />
           </div>
           <div className="text-xl font-bold text-amber-600 dark:text-amber-400 font-mono tabular-nums">
             رتبه {rankPrediction.estimatedRank.toLocaleString('en-US')}
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400 tabular-nums">
-            بازه اطمینان: {rankPrediction.rankRangeMin} تا {rankPrediction.rankRangeMax} (صدک{' '}
+            بازه سناریویی مدل: {rankPrediction.rankRangeMin} تا {rankPrediction.rankRangeMax} (صدک{' '}
             {rankPrediction.percentile}٪)
           </div>
         </div>
 
         <div className="glass-subcard p-4 space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-            <span>دانشگاه و دوره محل قبولی</span>
+            <span>نزدیک‌ترین آستانه دانشگاهی نمونه</span>
             <GraduationCap className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="text-xs font-bold text-slate-900 dark:text-white leading-5 line-clamp-2">
             {rankPrediction.bestMatchedUniversity}
           </div>
           <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-            {hasAnyWhatIf ? 'در سناریوی شبیه‌سازی (What-If)' : 'بر اساس وضعیت فعلی شما'}
+            {hasAnyWhatIf ? 'در سناریوی شبیه‌سازی (What-If)' : 'مقایسه با نمونه‌های ثابت مدل'}
           </div>
         </div>
 
@@ -701,7 +706,7 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
             <div className="space-y-1.5">
               <div className="text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>تحلیل اهرم ضرایب و توصیه استراتژیک افزایش تراز:</span>
+                <span>اولویت تمرین بر اساس ضرایب ثبت‌شده در مدل:</span>
               </div>
               <p className="text-xs text-slate-700 dark:text-slate-300 leading-6">
                 {rankPrediction.strategicAdvice}
@@ -728,12 +733,12 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
   
           <div className="lg:col-span-5 glass-subcard p-4 space-y-2">
             <div className="text-xs font-bold text-slate-900 dark:text-white">
-              وضعیت شانس قبولی در رده‌های دانشگاهی کشور:
+              فاصله با آستانه‌های نمونه دانشگاهی (غیرکالیبره):
             </div>
             <div className="space-y-1.5 text-xs">
               {rankPrediction.universityAdmissions.slice(0, 4).map((adm) => {
-                const isGuaranteed = adm.status.startsWith('قبولی قطعی');
-                const isBorderline = adm.status.startsWith('قبولی محتمل');
+                const isAboveSample = adm.status.startsWith('بالاتر از آستانه');
+                const isNearSample = adm.status.startsWith('نزدیک به آستانه');
                 return (
                   <div
                     key={adm.tier.id}
@@ -742,9 +747,9 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
                     <div className="flex items-center gap-1.5 min-w-0">
                       <CheckCircle2
                         className={`w-3.5 h-3.5 shrink-0 ${
-                          isGuaranteed
+                          isAboveSample
                             ? 'text-emerald-500'
-                            : isBorderline
+                            : isNearSample
                             ? 'text-amber-500'
                             : 'text-slate-300 dark:text-slate-600'
                         }`}
@@ -755,9 +760,9 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
                     </div>
                     <span
                       className={`shrink-0 font-mono text-[11px] tabular-nums font-bold ${
-                        isGuaranteed
+                        isAboveSample
                           ? 'text-emerald-600 dark:text-emerald-400'
-                          : isBorderline
+                          : isNearSample
                           ? 'text-amber-600 dark:text-amber-400'
                           : 'text-slate-400'
                       }`}
