@@ -45,6 +45,23 @@ async function json(res: Response): Promise<any> {
 }
 
 describe('worker API — حلقهٔ کامل یادگیری', () => {
+  it('برای مسیرهای حساس محدودکننده نرخ درخواست فعال است', async () => {
+    const limitedApp = createApp(ENV, { store: new MemoryStore() });
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-forwarded-for': '203.0.113.45',
+    };
+    let last: Response | undefined;
+    for (let i = 0; i < 31; i += 1) {
+      last = await limitedApp.request('/api/auth/demo', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ displayName: 'rate-limit-test' }),
+      });
+    }
+    expect(last?.status).toBe(429);
+  });
+
   it('سلامت سیستم', async () => {
     const app = createApp(ENV);
     const res = await app.request('/api/health');
@@ -81,7 +98,7 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 't1', questionId: target.question.id, selectedOption: 3 }),
+        body: JSON.stringify({ attemptId: target.attemptId, questionId: target.question.id, selectedOption: 3 }),
       }),
     );
     expect(answerRes.status).toBe(200);
@@ -136,7 +153,7 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 'c1', questionId: q.id, selectedOption: q.correctOption }),
+        body: JSON.stringify({ attemptId: item.attemptId, questionId: q.id, selectedOption: q.correctOption }),
       }),
     );
     const mapRes = await app.request('/api/map', authed(token));
@@ -255,7 +272,7 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
         '/api/answers',
         authed(token, {
           method: 'POST',
-          body: JSON.stringify({ attemptId: 'home-t1', questionId: question.id, selectedOption: wrongOption }),
+          body: JSON.stringify({ attemptId: target.attemptId, questionId: question.id, selectedOption: wrongOption }),
         }),
       ),
     );
@@ -283,7 +300,7 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
         '/api/answers',
         authed(token, {
           method: 'POST',
-          body: JSON.stringify({ attemptId: 'home-t2', questionId: question.id, selectedOption: question.correctOption }),
+          body: JSON.stringify({ attemptId: night.items[0].attemptId, questionId: question.id, selectedOption: question.correctOption }),
         }),
       ),
     );
@@ -353,7 +370,7 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 'att-security-test', questionId: q1, selectedOption: 0 }),
+        body: JSON.stringify({ attemptId: queue.items[0].attemptId, questionId: q1, selectedOption: 0 }),
       }),
     );
     expect(ans1.status).toBe(200);
@@ -363,7 +380,7 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 'att-security-test', questionId: q2, selectedOption: 0 }),
+        body: JSON.stringify({ attemptId: queue.items[0].attemptId, questionId: q2, selectedOption: 0 }),
       }),
     );
     expect(badReplay.status).toBe(400);
@@ -507,6 +524,9 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
   it('پاسخ تازه: wasCorrect/آمار/درس‌نامه در ریشهٔ پاسخ و مسیر replay همان قرارداد را دارد', async () => {
     const token = await login();
     const question = store.questions.find((q) => q.nodeId === 'sm.rbv')!;
+    const queue = await json(await app.request('/api/queue?limit=50', authed(token)));
+    const queueItem = queue.items.find((item: any) => item.question?.id === question.id);
+    expect(queueItem?.attemptId).toBeTruthy();
 
     const first = await json(
       await app.request(
@@ -514,7 +534,7 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
         authed(token, {
           method: 'POST',
           body: JSON.stringify({
-            attemptId: 'att-contract-1',
+            attemptId: queueItem.attemptId,
             questionId: question.id,
             selectedOption: question.correctOption,
           }),
@@ -622,7 +642,9 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
   it('خوداظهاری برای پاسخ درست رد می‌شود (۴۰۰)', async () => {
     const token = await login();
     const question = store.questions.find((q) => q.nodeId === 'sm.rbv')!;
-    const attemptId = 'att-self-report-correct';
+    const queue = await json(await app.request('/api/queue?limit=50', authed(token)));
+    const queueItem = queue.items.find((item: any) => item.question?.id === question.id);
+    const attemptId = queueItem.attemptId;
     await app.request(
       '/api/answers',
       authed(token, {
@@ -653,15 +675,13 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
       authed(token, {
         method: 'POST',
         body: JSON.stringify({
-          attemptId: 'att-slip-test',
+          attemptId: item.attemptId,
           questionId: item.question.id,
-          selectedOption: (item.question.options?.length ?? 4) > 1 ? 99 : 0,
+          selectedOption: (item.question.correctOption + 1) % item.question.options.length,
         }),
       }),
     );
-    // گزینهٔ نامعتبر ۴۰۰ می‌دهد؛ پس گزینهٔ غلط واقعی می‌زنیم
-    expect([200, 400]).toContain(ansRes.status);
-    if (ansRes.status === 400) return;
+    expect(ansRes.status).toBe(200);
     const ans = await json(ansRes);
     expect(ans.report.wasCorrect).toBe(false);
   });
