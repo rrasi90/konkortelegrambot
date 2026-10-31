@@ -55,6 +55,7 @@
 
   var TABS = ['home', 'today', 'lessons', 'map', 'settings'];
   function showTab(tab) {
+    if (tab !== 'today') state.nightMode = false;
     TABS.forEach(function (t) {
       var panel = el('tab-' + t);
       if (panel) panel.hidden = t !== tab;
@@ -220,6 +221,11 @@
       state.home = data;
       renderHeader();
       renderHome(data);
+    }).catch(function (err) {
+      var container = el('home-container');
+      if (container) {
+        container.innerHTML = '<div class="dash-card"><p class="error">خطا در بارگذاری داشبورد: ' + escapeHtml(err.message) + '</p></div>';
+      }
     });
   }
 
@@ -279,11 +285,12 @@
       '</section>';
 
     // کارت کوییز شبانه (سؤالات غلط امروز)
-    if (h.nightQuiz) {
+    if (h.nightQuiz && h.nightQuiz.available) {
+      var wrongCount = h.nightQuiz.wrongCount || h.nightQuiz.wrongAnswersCount || 0;
       html +=
         '<section class="dash-card night-card">' +
         '<div class="night-badge">🌙 کوییز شبانه</div>' +
-        '<div class="night-title">تثبیت پاسخ‌های غلط امروز (' + h.nightQuiz.wrongAnswersCount + ' سؤال)</div>' +
+        '<div class="night-title">تثبیت پاسخ‌های غلط امروز (' + wrongCount + ' سؤال)</div>' +
         '<p class="night-sub">مرور دوباره قبل از خواب باعث تثبیت عصبی مفاهیم در حافظه بلندمدت می‌شود.</p>' +
         '<button id="btn-start-night" class="btn secondary full">شروع کوییز شبانه</button>' +
         '</section>';
@@ -306,11 +313,19 @@
   /* ---------- تب امروز (کوییز تطبیقی) ---------- */
   function loadQueue() {
     var commuteMode = localStorage.getItem('study_mode') === 'commute';
-    var path = '/api/queue' + (commuteMode ? '?mode=commute' : '');
+    var path = state.nightMode ? '/api/night-quiz' : ('/api/queue' + (commuteMode ? '?mode=commute' : ''));
     API.get(path).then(function (data) {
       state.queue = data.items || [];
       state.currentIndex = 0;
       renderCurrent();
+    }).catch(function (err) {
+      var emptyEl = el('queue-empty');
+      var cardEl = el('quiz-card');
+      if (cardEl) cardEl.hidden = true;
+      if (emptyEl) {
+        emptyEl.hidden = false;
+        emptyEl.innerHTML = '<p class="error">خطا در دریافت صف تمرین: ' + escapeHtml(err.message) + '</p>';
+      }
     });
   }
 
@@ -323,7 +338,18 @@
       if (cardEl) cardEl.hidden = true;
       if (emptyEl) {
         emptyEl.hidden = false;
-        emptyEl.innerHTML = '<p>🎉 تمام سؤالات و کارت‌های امروز با موفقیت کامل شد. خسته نباشید!</p>';
+        emptyEl.innerHTML = state.nightMode
+          ? '<p>🎉 کوییز شبانه تمام شد. فردا با حافظه‌ای تثبیت‌شده برگرد!</p>' +
+            '<button id="btn-night-done" class="btn primary" style="margin-top:12px;">بازگشت به خانه</button>'
+          : '<p>🎉 تمام سؤالات و کارت‌های امروز با موفقیت کامل شد. خسته نباشید!</p>' +
+            '<button id="btn-queue-done" class="btn ghost" style="margin-top:12px;">تازه‌سازی برنامه</button>';
+        var doneBtn = el(state.nightMode ? 'btn-night-done' : 'btn-queue-done');
+        if (doneBtn) {
+          doneBtn.onclick = function () {
+            state.nightMode = false;
+            showTab('home');
+          };
+        }
       }
       return;
     }
@@ -339,8 +365,8 @@
     var qText = question ? question.text : (card.trapNote || 'مرور این مفهوم در برنامه است.');
     el('q-text').textContent = qText;
 
-    el('q-course').textContent = item.courseTitle || (card.cardType === 'concept_comparison' ? 'مقایسهٔ مفاهیم' : 'کنکور دکتری');
-    el('q-chapter').textContent = item.chapterTitle || (card.isRepair ? 'کارت ترمیمی' : '');
+    el('q-course').textContent = item.courseTitle || item.course || (card.cardType === 'comparison_card' ? 'مقایسهٔ مفاهیم' : 'کنکور دکتری');
+    el('q-chapter').textContent = item.chapterTitle || item.chapter || (card.isRepair ? 'کارت ترمیمی' : '');
 
     var vChip = el('q-verification');
     if (vChip) {
@@ -359,14 +385,19 @@
     }
 
     var typeChip = el('q-card-type');
-    if (card.cardType === 'trap') {
-      typeChip.hidden = false;
-      typeChip.textContent = '⚠️ تلهٔ تستی طراح';
-    } else if (card.cardType === 'concept_comparison') {
-      typeChip.hidden = false;
-      typeChip.textContent = '⚖️ مقایسهٔ مفاهیم مشابه';
-    } else {
-      typeChip.hidden = true;
+    if (typeChip) {
+      if (card.cardType === 'trap_note') {
+        typeChip.hidden = false;
+        typeChip.textContent = '⚠️ تلهٔ تستی طراح';
+      } else if (card.cardType === 'comparison_card') {
+        typeChip.hidden = false;
+        typeChip.textContent = '⚖️ مقایسهٔ مفاهیم مشابه';
+      } else if (state.nightMode) {
+        typeChip.hidden = false;
+        typeChip.textContent = '🌙 مرور شبانه';
+      } else {
+        typeChip.hidden = true;
+      }
     }
 
     // گزینه‌ها
@@ -384,7 +415,13 @@
       optsContainer.appendChild(btn);
     });
 
-    el('answer-feedback').hidden = true;
+    // پاک‌سازی بازخورد سؤال قبلی
+    var feedback = el('answer-feedback');
+    if (feedback) feedback.hidden = true;
+    ['feedback-comparison', 'feedback-self-report', 'feedback-proof-ready'].forEach(function (id) {
+      var node = el(id);
+      if (node) { node.hidden = true; node.innerHTML = ''; }
+    });
   }
 
   function submitAnswer(item, selectedIdx) {
@@ -401,7 +438,7 @@
     var optionBtns = document.querySelectorAll('.option-btn');
     optionBtns.forEach(function (b) { b.disabled = true; });
 
-    API.post('/api/queue/answer', body).then(function (res) {
+    API.post('/api/answers', body).then(function (res) {
       showFeedback(item, res, selectedIdx);
       if (res.stats) updateStatsChips(res.stats);
     }).catch(function (err) {
@@ -414,9 +451,11 @@
     var feedbackBox = el('answer-feedback');
     feedbackBox.hidden = false;
 
-    var wasCorrect = res.wasCorrect;
-    var correctOption = res.correctOption;
     var report = res.report || {};
+    var wasCorrect = typeof res.wasCorrect === 'boolean'
+      ? res.wasCorrect
+      : report.wasCorrect === true;
+    var correctOption = res.correctOption;
     var lesson = res.lesson;
 
     // استایل گزینه‌ها
@@ -444,6 +483,65 @@
     // پیام منتور
     var mentorEl = el('feedback-mentor');
     if (mentorEl) mentorEl.textContent = report.mentorMessage || '';
+
+    // کارت مقایسهٔ مفاهیم متشابه (در صورت تولید توسط موتور)
+    var cmpEl = el('feedback-comparison');
+    if (cmpEl) {
+      var titles = (res.comparison && res.comparison.titles) || [];
+      if (titles.length > 0) {
+        cmpEl.hidden = false;
+        cmpEl.innerHTML =
+          '<strong>⚖️ جدول مقایسهٔ مفاهیم قابل‌خلط:</strong>' +
+          '<div style="margin-top:6px;line-height:1.9;">' +
+          titles.map(function (t) { return '• ' + escapeHtml(t); }).join('<br>') +
+          '</div>';
+      } else {
+        cmpEl.hidden = true;
+      }
+    }
+
+    // آمادگی آزمون اثبات تسلط
+    var proofEl = el('feedback-proof-ready');
+    if (proofEl) {
+      if (res.proofReady && res.proofReady.skillId) {
+        proofEl.hidden = false;
+        proofEl.textContent = '🎯 به آستانهٔ تسلط رسیدی؛ یک سؤال دیده‌نشده برای اثبات در برنامه ثبت شد.';
+      } else {
+        proofEl.hidden = true;
+      }
+    }
+
+    // خوداظهاری نوع خطا (فقط پس از پاسخ غلط)
+    var selfEl = el('feedback-self-report');
+    if (selfEl) {
+      if (!wasCorrect && item.attemptId) {
+        selfEl.hidden = false;
+        selfEl.innerHTML =
+          '<strong>این خطا از چه نوعی بود؟</strong>' +
+          '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">' +
+          '<button type="button" class="btn ghost small" data-report="slip">بی‌دقتی بود</button>' +
+          '<button type="button" class="btn ghost small" data-report="didnt_know">مفهوم را نمی‌دانستم</button>' +
+          '</div>';
+        selfEl.querySelectorAll('button[data-report]').forEach(function (btn) {
+          btn.onclick = function () {
+            var kind = btn.getAttribute('data-report');
+            btn.disabled = true;
+            API.post('/api/self-report', {
+              attemptId: item.attemptId,
+              questionId: item.question ? item.question.id : item.card.questionId,
+              selfReport: kind,
+            }).then(function (out) {
+              selfEl.innerHTML = '<p class="hint">' + escapeHtml(out.note || 'ثبت شد.') + '</p>';
+            }).catch(function (err) {
+              btn.disabled = false;
+              selfEl.innerHTML = '<p class="error">' + escapeHtml(err.message) + '</p>';
+            });
+          };
+        });
+      } else {
+        selfEl.hidden = true;
+      }
+    }
 
     // نمایش موج تسلط
     renderRipple(report);
@@ -635,25 +733,42 @@
 
   /* ---------- تب مسیر (Knowledge Map) ---------- */
   function loadMap() {
+    var container = el('map-container');
+    if (container) {
+      container.innerHTML = '<div style="text-align:center;padding:28px;color:var(--ink-soft);font-size:13px;">در حال ساخت نقشهٔ تسلط...</div>';
+    }
     API.get('/api/map').then(function (data) {
-      var container = el('map-container');
       if (!container) return;
-      var nodes = data.nodes || [];
-      var mastery = data.mastery || {};
-      var html = '<div class="map-grid">';
-      nodes.forEach(function (n) {
-        var m = mastery[n.id] ? Math.round(mastery[n.id].mastery) : 0;
-        var cls = m < 40 ? 'bad' : m < 60 ? 'warn' : m < 85 ? '' : 'ok';
-        html +=
-          '<div class="map-node ' + cls + '">' +
-          '<span class="node-topic">' + escapeHtml(n.topic) + '</span>' +
-          '<span class="node-course">' + escapeHtml(n.course) + '</span>' +
-          '<div class="node-bar"><div class="fill" style="width:' + m + '%"></div></div>' +
-          '<span class="node-pct">' + m + '٪</span>' +
-          '</div>';
+      var courses = data.courses || [];
+      if (courses.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>هنوز گره‌ای برای گرایش‌های فعال شما ثبت نشده است.</p></div>';
+        return;
+      }
+      var html = '';
+      courses.forEach(function (course) {
+        html += '<section class="map-course"><h3 class="map-course-title">' + escapeHtml(course.course) + '</h3>';
+        (course.chapters || []).forEach(function (chapter) {
+          html += '<div class="map-chapter"><div class="map-chapter-title">' + escapeHtml(chapter.chapter) + '</div><div class="map-grid">';
+          (chapter.nodes || []).forEach(function (n) {
+            var isAssessed = typeof n.mastery === 'number';
+            var m = isAssessed ? Math.round(n.mastery) : null;
+            var cls = !isAssessed ? 'unseen' : (m < 40 ? 'bad' : m < 60 ? 'warn' : m < 85 ? '' : 'ok');
+            html +=
+              '<div class="map-node ' + cls + '">' +
+              '<span class="node-topic">' + escapeHtml(n.topic) + '</span>' +
+              '<div class="node-bar"><div class="fill" style="width:' + (isAssessed ? m : 0) + '%"></div></div>' +
+              '<span class="node-pct">' + (isAssessed ? m + '٪' : 'سنجیده‌نشده') + '</span>' +
+              '</div>';
+          });
+          html += '</div></div>';
+        });
+        html += '</section>';
       });
-      html += '</div>';
       container.innerHTML = html;
+    }).catch(function (err) {
+      if (container) {
+        container.innerHTML = '<div class="error" style="text-align:center;padding:16px;">خطا در دریافت نقشهٔ تسلط: ' + escapeHtml(err.message) + '</div>';
+      }
     });
   }
 
@@ -670,11 +785,22 @@
           state.tracks.splice(idx, 1);
         }
         var activeOnly = state.tracks.filter(function (x) { return x !== 'common'; });
-        API.put('/api/tracks', { tracks: activeOnly }).then(function () {
+        btn.disabled = true;
+        API.put('/api/tracks', { tracks: activeOnly }).then(function (res) {
+          state.tracks = (res && res.tracks) || ['common'].concat(activeOnly);
+          btn.disabled = false;
           renderSettings();
+        }).catch(function (err) {
+          btn.disabled = false;
+          alert('خطا در ذخیرهٔ گرایش‌ها: ' + err.message);
         });
       };
     });
+
+    var examInput = el('input-exam-date');
+    if (examInput && state.home && state.home.stats && state.home.stats.examDate) {
+      examInput.value = state.home.stats.examDate;
+    }
 
     renderStudyMode();
   }
@@ -707,12 +833,18 @@
   if (btnSaveExam) {
     btnSaveExam.addEventListener('click', function () {
       var value = el('input-exam-date').value || null;
+      btnSaveExam.disabled = true;
       API.put('/api/settings', { examDate: value }).then(function () {
+        btnSaveExam.disabled = false;
         var savedMsg = el('settings-saved');
         if (savedMsg) {
           savedMsg.hidden = false;
           setTimeout(function () { savedMsg.hidden = true; }, 2000);
         }
+        loadHome();
+      }).catch(function (err) {
+        btnSaveExam.disabled = false;
+        alert('خطا در ذخیرهٔ تاریخ کنکور: ' + err.message);
       });
     });
   }
