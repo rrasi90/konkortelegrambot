@@ -4,12 +4,60 @@
 @theme {
   --font-sans: 'Vazirmatn FD', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'Vazirmatn FD', 'Vazirmatn', ui-monospace, SFMono-Regular, monospace;
+
+  /* Primary: deep petrol/teal — the ink of a working notebook, not SaaS blue */
+  --color-blue-50: #eaf6f3;
+  --color-blue-100: #d0ebe5;
+  --color-blue-200: #a6d8ce;
+  --color-blue-300: #74bcaf;
+  --color-blue-400: #479e90;
+  --color-blue-500: #2b8577;
+  --color-blue-600: #116b5f;
+  --color-blue-700: #0d564c;
+  --color-blue-800: #0b463e;
+  --color-blue-900: #093a34;
+  --color-blue-950: #04221e;
+
+  /* Neutral: warm ink and paper instead of cold slate */
+  --color-slate-50: #f8f5ee;
+  --color-slate-100: #f0ebe1;
+  --color-slate-200: #e0d8c9;
+  --color-slate-300: #c9beab;
+  --color-slate-400: #a29681;
+  --color-slate-500: #7b7160;
+  --color-slate-600: #5d5548;
+  --color-slate-700: #454038;
+  --color-slate-800: #2e2b26;
+  --color-slate-900: #1e1c19;
+  --color-slate-950: #14120f;
+
+  /* Accent: highlighter amber for exam-critical notes */
+  --color-amber-400: #e0a93f;
+  --color-amber-500: #c98e2a;
+  --color-amber-600: #a9741f;
+  --color-amber-700: #8a5d18;
+
+  /* Indigo appears in the existing lesson cards; keep it in the same family */
+  --color-indigo-50: #e9f2f0;
+  --color-indigo-100: #d3e7e3;
+  --color-indigo-500: #2f6f68;
+  --color-indigo-600: #245b55;
+  --color-indigo-700: #1c4a45;
+  --color-indigo-900: #0c2b28;
+  --color-indigo-950: #061b19;
 }
 
 :root {
   --tg-viewport-height: 100vh;
   --tg-viewport-stable-height: 100vh;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --paper: #f6f2e9;
+  --paper-raised: #fffdf8;
+  --paper-line: #e2dacb;
+  --ink: #1e1c19;
+  --ink-soft: #5d5548;
+  --brand: #116b5f;
+  --highlight: #c98e2a;
   font-family: 'Vazirmatn FD', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -45,8 +93,13 @@
   a:focus-visible,
   input:focus-visible,
   textarea:focus-visible {
-    outline: 2px solid rgba(59, 130, 246, 0.75);
+    outline: 2px solid rgba(17, 107, 95, 0.7);
     outline-offset: 2px;
+  }
+
+  ::selection {
+    background: rgba(201, 142, 42, 0.28);
+    color: inherit;
   }
 }
 
@@ -61,137 +114,293 @@
 }
 
 /* ==========================================================================
-   Bento Grid & Glassmorphism Design System (Minimal & Modern UI)
+   Paper & Ink surfaces
    ========================================================================== */
 
 .ambient-bento-bg {
-  background-color: #f8fafc;
+  background-color: var(--paper);
   background-image:
-    radial-gradient(at 12% 8%, rgba(59, 130, 246, 0.08) 0px, transparent 48%),
-    radial-gradient(at 88% 14%, rgba(16, 185, 129, 0.06) 0px, transparent 45%),
-    radial-gradient(at 52% 88%, rgba(99, 102, 241, 0.06) 0px, transparent 50%);
+    linear-gradient(rgba(30, 28, 25, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 28, 25, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 .dark .ambient-bento-bg {
-  background-color: #080c16;
+  background-color: #100f0d;
   background-image:
-    radial-gradient(at 12% 8%, rgba(37, 99, 235, 0.14) 0px, transparent 50%),
-    radial-gradient(at 88% 14%, rgba(16, 185, 129, 0.09) 0px, transparent 46%),
-    radial-gradient(at 50% 90%, rgba(139, 92, 246, 0.09) 0px, transparent 52%);
+    linear-gradient(rgba(240, 235, 225, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240, 235, 225, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 @media (min-width: 1024px) {
   .bento-grid {
     grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 1.25rem;
+    gap: 1rem;
   }
-  .bento-span-12 {
-    grid-column: span 12 / span 12;
-  }
-  .bento-span-8 {
-    grid-column: span 8 / span 8;
-  }
-  .bento-span-7 {
-    grid-column: span 7 / span 7;
-  }
-  .bento-span-6 {
-    grid-column: span 6 / span 6;
-  }
-  .bento-span-5 {
-    grid-column: span 5 / span 5;
-  }
-  .bento-span-4 {
-    grid-column: span 4 / span 4;
-  }
-  .bento-span-3 {
-    grid-column: span 3 / span 3;
-  }
+  .bento-span-12 { grid-column: span 12 / span 12; }
+  .bento-span-8 { grid-column: span 8 / span 8; }
+  .bento-span-7 { grid-column: span 7 / span 7; }
+  .bento-span-6 { grid-column: span 6 / span 6; }
+  .bento-span-5 { grid-column: span 5 / span 5; }
+  .bento-span-4 { grid-column: span 4 / span 4; }
+  .bento-span-3 { grid-column: span 3 / span 3; }
 }
 
 .glass-panel,
 .bento-card {
-  background: rgba(255, 255, 255, 0.76);
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  box-shadow:
-    0 4px 24px -4px rgba(15, 23, 42, 0.04),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.65);
-  border-radius: 1.25rem;
-  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  background: var(--paper-raised);
+  border: 1px solid var(--paper-line);
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 2px rgba(30, 28, 25, 0.04);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
 }
 
 .dark .glass-panel,
 .dark .bento-card {
-  background: rgba(15, 23, 42, 0.68);
-  border: 1px solid rgba(51, 65, 85, 0.55);
-  box-shadow:
-    0 8px 32px -6px rgba(2, 6, 23, 0.45),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  background: #1a1815;
+  border: 1px solid #2e2b26;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 .bento-card-interactive:hover {
-  transform: translateY(-2px);
-  border-color: rgba(59, 130, 246, 0.45);
-  box-shadow:
-    0 12px 30px -8px rgba(37, 99, 235, 0.12),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  border-color: var(--brand);
+  box-shadow: 0 6px 18px -10px rgba(17, 107, 95, 0.35);
 }
 
 .glass-card-hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(
-    135deg,
-    rgba(15, 23, 42, 0.94) 0%,
-    rgba(23, 37, 84, 0.9) 55%,
-    rgba(15, 23, 42, 0.95) 100%
-  );
-  backdrop-filter: blur(20px) saturate(190%);
-  -webkit-backdrop-filter: blur(20px) saturate(190%);
-  border: 1px solid rgba(96, 165, 250, 0.28);
-  box-shadow:
-    0 14px 36px -8px rgba(15, 23, 42, 0.35),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
-  border-radius: 1.25rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 42%),
+    #0b2b27;
+  border: 1px solid #16463f;
+  border-radius: 0.875rem;
+  box-shadow: 0 10px 26px -18px rgba(4, 34, 30, 0.7);
+}
+
+.glass-card-hero::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--highlight), transparent);
+  opacity: 0.85;
 }
 
 .glass-subcard {
-  background: rgba(248, 250, 252, 0.72);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-  border-radius: 0.875rem;
-  transition: all 0.18s ease;
+  background: #f8f5ee;
+  border: 1px solid #e2dacb;
+  border-radius: 0.625rem;
+  transition: border-color 0.18s ease;
 }
 
 .dark .glass-subcard {
-  background: rgba(30, 41, 59, 0.48);
-  border: 1px solid rgba(51, 65, 85, 0.55);
+  background: #201d19;
+  border: 1px solid #322e28;
 }
 
 .glass-subcard:hover {
-  border-color: rgba(59, 130, 246, 0.45);
+  border-color: #74bcaf;
 }
 
 .glass-header {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(246, 242, 233, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--paper-line);
 }
 
 .dark .glass-header {
-  background: rgba(8, 12, 22, 0.78);
-  border-bottom: 1px solid rgba(30, 41, 59, 0.85);
+  background: rgba(16, 15, 13, 0.92);
+  border-bottom: 1px solid #2e2b26;
+}
+
+/* ==========================================================================
+   Reading surfaces (lesson pages)
+   ========================================================================== */
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* نوار تب افقی با محو شدن لبه‌ها در موبایل */
+.tab-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x proximity;
+  padding-bottom: 2px;
+}
+
+.tab-strip::-webkit-scrollbar {
+  display: none;
+}
+
+/* محو شدن لبهٔ چپ نوار تب تا کاربر بفهمد تب دیگری هم وجود دارد */
+@media (max-width: 640px) {
+  .tab-strip {
+    mask-image: linear-gradient(to left, #000 calc(100% - 20px), transparent);
+    -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 20px), transparent);
+    padding-inline-end: 1.25rem;
+  }
+}
+
+.tab-strip > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.reading-surface {
+  /* ch در فونت فارسی بسیار باریک است؛ اندازهٔ ثابت خوانا انتخاب می‌شود */
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.lesson-prose {
+  color: var(--ink);
+  font-size: 0.9375rem;
+  line-height: 2.05;
+}
+
+.dark .lesson-prose {
+  color: #ece6da;
+}
+
+.lesson-prose p {
+  margin-block: 0.75rem;
+}
+
+.lesson-prose strong {
+  font-weight: 700;
+  color: var(--brand);
+}
+
+.dark .lesson-prose strong {
+  color: #8fc9bd;
+}
+
+.lesson-prose ul,
+.lesson-prose ol {
+  margin-block: 0.65rem;
+  padding-inline-start: 1.25rem;
+  list-style: disc;
+}
+
+.lesson-prose li {
+  margin-block: 0.3rem;
+}
+
+.lesson-prose code {
+  font-size: 0.85em;
+  padding: 0.1em 0.35em;
+  border-radius: 0.3rem;
+  background: rgba(17, 107, 95, 0.08);
+}
+
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--brand);
+}
+
+.rule-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.rule-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--paper-line);
+}
+
+.dark .rule-label {
+  color: #ece6da;
+}
+
+.dark .rule-label::after {
+  background: #322e28;
+}
+
+.paper-callout {
+  background: #fbf7ee;
+  border: 1px solid #e6ddca;
+  border-inline-start: 3px solid var(--highlight);
+  border-radius: 0.5rem;
+}
+
+.dark .paper-callout {
+  background: #201d19;
+  border-color: #322e28;
+  border-inline-start-color: var(--highlight);
+}
+
+/* فهرست داخل درس به صورت چیپ‌های افقی، تا ستون متن باریک نشود */
+.toc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  max-width: 100%;
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--paper-line);
+  background: #fffdf8;
+  color: var(--ink-soft);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: right;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  cursor: pointer;
+}
+
+.toc-chip:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+  background: rgba(17, 107, 95, 0.06);
+}
+
+.dark .toc-chip {
+  background: #201d19;
+  border-color: #322e28;
+  color: #a9a193;
+}
+
+.dark .toc-chip:hover {
+  color: #74bcaf;
+  border-color: #74bcaf;
+  background: rgba(116, 188, 175, 0.1);
+}
+
+.toc-chip > span:last-child {
+  text-wrap: pretty;
 }
 
 @keyframes pulseSubtle {
@@ -203,7 +412,6 @@
   animation: pulseSubtle 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* UI/UX Pro Max: Respect user's reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
@@ -212,4 +420,3 @@
     scroll-behavior: auto !important;
   }
 }
-

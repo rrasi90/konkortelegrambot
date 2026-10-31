@@ -14,6 +14,7 @@ import {
   MultiYearFrequencyInsight,
 } from '../engine/aelEngine';
 import { MathText } from './MathText';
+import { SessionReport } from './SessionReportView';
 import {
   Clock,
   CheckCircle2,
@@ -51,7 +52,23 @@ interface StudySessionViewProps {
   onRateLessonInSession: (nodeId: string, rating: 1 | 2 | 3 | 4 | 5) => string;
   onDismissNonQuestionCard: (cardId: string, nodeId: string, bonusScore?: number) => void;
   onExitSession: () => void;
+  onOpenLessonNode: (nodeId: string) => void;
+  onOpenMistakeNotebook: () => void;
+  onRestartMistakes: (questionIds: string[]) => void;
 }
+
+interface SessionAnswerResult {
+  cardId: string;
+  nodeId: string;
+  course: string;
+  topic: string;
+  questionId: string;
+  wasCorrect: boolean;
+  wasSkipped: boolean;
+  errorType: string;
+  seconds: number;
+}
+
 
 export const StudySessionView: React.FC<StudySessionViewProps> = ({
   queue,
@@ -65,8 +82,13 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
   onRateLessonInSession,
   onDismissNonQuestionCard,
   onExitSession,
+  onOpenLessonNode,
+  onOpenMistakeNotebook,
+  onRestartMistakes,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [sessionResults, setSessionResults] = useState<SessionAnswerResult[]>([]);
+  const [isFinished, setIsFinished] = useState(false);
   const [confidence, setConfidence] = useState<'high' | 'low'>('high');
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [activeReport, setActiveReport] = useState<RippleReport | null>(null);
@@ -98,6 +120,20 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
     return () => clearInterval(timer);
   }, [activeReport, currentCard]);
 
+  if (isFinished) {
+    return (
+      <SessionReport
+        results={sessionResults}
+        totalCards={queue.length}
+        nodes={nodes}
+        onOpenLessonNode={onOpenLessonNode}
+        onOpenMistakeNotebook={onOpenMistakeNotebook}
+        onRestartMistakes={onRestartMistakes}
+        onExitSession={onExitSession}
+      />
+    );
+  }
+
   if (!currentCard || currentIndex >= queue.length) {
     return (
       <div className="max-w-xl mx-auto bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-8 text-center shadow-xs my-8">
@@ -110,7 +146,14 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
         <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
           نتایج پاسخ‌های شما و زمان‌بندی مرورهای بعدی در پروفایل تسلط ثبت شد.
         </p>
-        <div className="mt-6 flex items-center justify-center">
+        <div className="mt-6 flex items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={onOpenMistakeNotebook}
+            className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-sm font-bold transition-colors cursor-pointer"
+          >
+            مرور دفتر خطا
+          </button>
           <button
             type="button"
             onClick={onExitSession}
@@ -150,6 +193,27 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
     setActiveReport(report);
     setActiveSnapshot(snapshot);
 
+    if (
+      currentCard.cardType === 'question' ||
+      currentCard.cardType === 'diagnostic_probe' ||
+      currentCard.cardType === 'proof_1404'
+    ) {
+      setSessionResults((prev) => [
+        ...prev,
+        {
+          cardId: currentCard.id,
+          nodeId: node.id,
+          course: node.course,
+          topic: node.topic,
+          questionId: report.questionId,
+          wasCorrect: report.wasCorrect,
+          wasSkipped: report.wasSkipped,
+          errorType: report.errorType,
+          seconds: elapsedSeconds,
+        },
+      ]);
+    }
+
     const tg = (window as any).Telegram?.WebApp;
     if (tg?.HapticFeedback) {
       tg.HapticFeedback.notificationOccurred(report.wasCorrect ? 'success' : 'error');
@@ -177,13 +241,20 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
     if (!activeSnapshot || !activeReport || !activeReport.canRollbackAsSlip) return;
     const restoredReport = onRollbackSlip(activeSnapshot, activeReport);
     setActiveReport(restoredReport);
+    setSessionResults((prev) =>
+      prev.map((r) =>
+        r.questionId === restoredReport.questionId
+          ? { ...r, errorType: 'slip', wasCorrect: false }
+          : r
+      )
+    );
   };
 
   const handleNextCard = () => {
     if (currentIndex + 1 < queue.length) {
       setCurrentIndex((prev) => prev + 1);
     } else {
-      onExitSession();
+      setIsFinished(true);
     }
   };
 
