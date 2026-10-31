@@ -48,6 +48,17 @@ export interface AnswerEvent {
   rippleReport: unknown;
 }
 
+export type IssuedAttemptType = 'practice' | 'diagnostic' | 'verification' | 'proof' | 'holdout' | 'exam_simulation';
+
+export interface AttemptTicket {
+  attemptId: string;
+  userId: string;
+  questionId: string;
+  attemptType: IssuedAttemptType;
+  consumedAt: string | null;
+  expiresAt: string;
+}
+
 export interface DataStore {
   getUser(userId: string): Promise<AppUser | null>;
   getUserByTelegramId(telegramUserId: number): Promise<AppUser | null>;
@@ -72,6 +83,8 @@ export interface DataStore {
 
   findAnswerByAttempt(userId: string, attemptId: string): Promise<AnswerEvent | null>;
   insertAnswerEvent(event: AnswerEvent): Promise<void>;
+  /** خواندن بلیت صادرشده فقط برای تعیین نوع تلاش معتبر سمت سرور */
+  getAttemptTicket(userId: string, attemptId: string, questionId: string): Promise<AttemptTicket | null>;
 
   /** ثبت اتمی و امن پاسخ، تسلط و کارت‌ها (RPC امن مهاجرت 0006) */
   submitAnswerAtomic(input: {
@@ -479,6 +492,25 @@ export class SupabaseStore implements DataStore {
       answered_at: event.answeredAt,
       ripple_report: event.rippleReport,
     });
+  }
+
+  async getAttemptTicket(userId: string, attemptId: string, questionId: string): Promise<AttemptTicket | null> {
+    const rows = (await this.request(
+      'GET',
+      'attempt_tickets',
+      undefined,
+      `?attempt_id=eq.${encodeURIComponent(attemptId)}&user_id=eq.${encodeURIComponent(userId)}&question_id=eq.${encodeURIComponent(questionId)}&select=attempt_id,user_id,question_id,attempt_type,consumed_at,expires_at`,
+    )) as Record<string, unknown>[] | null;
+    const row = rows?.[0];
+    if (!row) return null;
+    return {
+      attemptId: String(row.attempt_id),
+      userId: String(row.user_id),
+      questionId: String(row.question_id),
+      attemptType: String(row.attempt_type) as IssuedAttemptType,
+      consumedAt: row.consumed_at == null ? null : String(row.consumed_at),
+      expiresAt: String(row.expires_at),
+    };
   }
 
   async submitAnswerAtomic(input: {
