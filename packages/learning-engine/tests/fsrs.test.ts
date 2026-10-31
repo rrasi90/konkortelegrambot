@@ -25,7 +25,8 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
       const stability = 10;
       expect(calculateRetrievability(stability, 0)).toBeCloseTo(1, 10);
       expect(calculateRetrievability(stability, stability)).toBeCloseTo(0.9, 10);
-      expect(calculateRetrievability(stability, stability * 3)).toBeCloseTo(0.75, 2);
+      const expected = Math.pow(1 + (19 / 81) * 3, -0.5);
+      expect(calculateRetrievability(stability, stability * 3)).toBeCloseTo(expected, 10);
     });
 
     it('monotonically decays as time passes', () => {
