@@ -95,7 +95,7 @@ export const groupBookQuestionsByChapter = (
   return [...groups.filter((group) => group.questions.length > 0), ...(rest.questions.length ? [rest] : [])];
 };
 
-/** متن مطالعهٔ کامل کتاب برای نمایش/دانلود */
+/** ساخت جزوهٔ تألیفی از فصل‌های منتخب؛ خروجی متن کامل کتاب مرجع نیست. */
 export const buildFullBookMarkdown = (
   book: ReferenceBookItem,
   answers: { chapter: BookChapter; questions: QuestionItem[] }[]
