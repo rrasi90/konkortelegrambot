@@ -182,26 +182,18 @@ begin
   delete from answer_events where user_id = '33333333-3333-3333-3333-333333333333';
   delete from attempt_tickets where user_id = '33333333-3333-3333-3333-333333333333';
   delete from learner_skill_states where user_id = '33333333-3333-3333-3333-333333333333';
+  if has_function_privilege('authenticated', 'public.submit_answer_secure(uuid,text,text,integer,jsonb,jsonb,jsonb,jsonb)', 'EXECUTE') then
+    raise exception 'authenticated نباید بتواند RPC ثبت پاسخ را مستقیماً فراخوانی کند';
+  end if;
+  if has_function_privilege('anon', 'public.submit_answer_secure(uuid,text,text,integer,jsonb,jsonb,jsonb,jsonb)', 'EXECUTE') then
+    raise exception 'anon نباید بتواند RPC ثبت پاسخ را فراخوانی کند';
+  end if;
+  if not has_function_privilege('service_role', 'public.submit_answer_secure(uuid,text,text,integer,jsonb,jsonb,jsonb,jsonb)', 'EXECUTE') then
+    raise exception 'service_role باید مجاز به فراخوانی RPC ثبت پاسخ باشد';
+  end if;
   delete from app_users where id = '33333333-3333-3333-3333-333333333333';
 end
 $$;
-
--- ۱۱) RPC ثبت پاسخ فقط از سمت Worker با service_role قابل فراخوانی باشد
-do $
-declare
-  v_signature text := 'public.submit_answer_secure(uuid,text,text,integer,jsonb,jsonb,jsonb,jsonb)';
-begin
-  if has_function_privilege('authenticated', v_signature, 'EXECUTE') then
-    raise exception 'authenticated نباید بتواند RPC ثبت پاسخ را مستقیماً فراخوانی کند';
-  end if;
-  if has_function_privilege('anon', v_signature, 'EXECUTE') then
-    raise exception 'anon نباید بتواند RPC ثبت پاسخ را فراخوانی کند';
-  end if;
-  if not has_function_privilege('service_role', v_signature, 'EXECUTE') then
-    raise exception 'service_role باید مجاز به فراخوانی RPC ثبت پاسخ باشد';
-  end if;
-end
-$;
 
 -- پاک‌سازی دادهٔ تست
 delete from answer_events where attempt_id in ('test-attempt-1', 'test-rls-1');
