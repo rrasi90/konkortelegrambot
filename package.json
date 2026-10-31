@@ -13,9 +13,11 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "extract:konkor": "tsx scripts/extractAndSyncKonkorSources.ts",
     "bot": "node scripts/telegram-bot-service.mjs",
     "build:worker": "npm run --prefix apps/worker build",
+    "validate:content": "node scripts/validate-content.mjs --all",
     "test": "vitest run"
   },
   "dependencies": {

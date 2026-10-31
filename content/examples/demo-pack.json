@@ -226,7 +226,7 @@
       "source": "ind.supply_chain",
       "target": "ind.production_inv",
       "relation": "prerequisite",
-      "weight": 0.7
+      "weight": 0.6
     },
     {
       "source": "ind.supply_chain",

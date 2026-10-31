@@ -170,8 +170,17 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         dayNumber: 0,
         examDate: null,
         streakFreezeUsed: 0,
+        streakFreezeMonth: null,
       }
     );
+  }
+
+  /** سهمیهٔ قفل زنجیره: ۲ بار در هر ماه شمسی/میلادیِ جاری (بر اساس تاریخ تهران) */
+  const FREEZE_MONTHLY_LIMIT = 2;
+  function freezeUsage(stats: UserStats) {
+    const month = tehranDateStr().slice(0, 7);
+    const used = stats.streakFreezeMonth === month ? stats.streakFreezeUsed : 0;
+    return { used, remaining: Math.max(0, FREEZE_MONTHLY_LIMIT - used), limit: FREEZE_MONTHLY_LIMIT };
   }
 
   /** سکه و روز پیوسته را پس از اولین پاسخ روز به‌روز می‌کند */
@@ -979,12 +988,16 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const user = await currentUser(c);
     if (!user) return authError(c);
     const stats = await ensureStats(user.id);
-    // محدودیت: حداکثر ۲ بار در ماه، فقط اگر streak >= 3 باشد
     if (stats.streakDays < 3) return c.json({ error: 'حداقل ۳ روز پیوسته برای قفل لازم است' }, 400);
+    const month = tehranDateStr().slice(0, 7);
+    if (stats.streakFreezeMonth !== month) {
+      stats.streakFreezeUsed = 0;
+      stats.streakFreezeMonth = month;
+    }
     if (stats.streakFreezeUsed >= 2) return c.json({ error: 'حداکثر ۲ بار در ماه مجاز است', used: stats.streakFreezeUsed }, 400);
     stats.streakFreezeUsed += 1;
     await store.upsertStats(stats);
-    return c.json({ ok: true, streakFreezeUsed: stats.streakFreezeUsed, streakDays: stats.streakDays, message: 'روز پیوسته قفل شد؛ اگر امروز مطالعه نکنی، زنجیره حفظ می‌شود' });
+    return c.json({ ok: true, streakFreezeUsed: stats.streakFreezeUsed, streakDays: stats.streakDays, month, message: 'روز پیوسته قفل شد؛ اگر امروز مطالعه نکنی، زنجیره حفظ می‌شود' });
   });
 
   /* ---------- تنظیمات: تاریخ کنکور ---------- */

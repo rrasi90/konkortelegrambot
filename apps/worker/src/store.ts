@@ -33,6 +33,8 @@ export interface UserStats {
   examDate: string | null;
   /** تعداد روزهای قفل شده (freeze) برای حفظ زنجیره */
   streakFreezeUsed: number;
+  /** ماه مصرف شمارندهٔ قفل (YYYY-MM)؛ با تغییر ماه، سهمیه بازنشانی می‌شود */
+  streakFreezeMonth: string | null;
 }
 
 export interface AnswerEvent {
@@ -232,7 +234,7 @@ export class SupabaseStore implements DataStore {
       'GET',
       'app_users',
       undefined,
-      `?id=eq.${userId}&select=coins,streak_days,last_study_date,day_number,exam_date,streak_freeze_used`,
+      `?id=eq.${userId}&select=coins,streak_days,last_study_date,day_number,exam_date,streak_freeze_used,streak_freeze_month`,
     )) as Record<string, unknown>[] | null;
     const row = rows?.[0];
     if (!row) return null;
@@ -244,6 +246,7 @@ export class SupabaseStore implements DataStore {
       dayNumber: Number(row.day_number ?? 0),
       examDate: row.exam_date ? String(row.exam_date) : null,
       streakFreezeUsed: Number(row.streak_freeze_used ?? 0),
+      streakFreezeMonth: row.streak_freeze_month ? String(row.streak_freeze_month) : null,
     };
   }
 
@@ -255,6 +258,7 @@ export class SupabaseStore implements DataStore {
       day_number: stats.dayNumber,
       exam_date: stats.examDate,
       streak_freeze_used: stats.streakFreezeUsed,
+      streak_freeze_month: stats.streakFreezeMonth,
     });
   }
 

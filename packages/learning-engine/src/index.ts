@@ -255,6 +255,8 @@ export function applyAnswer(
   const nextFsrs = qCard.fsrs
     ? scheduleNextFSRS(qCard.fsrs, fsrsRating, now)
     : initializeFSRSState(fsrsRating, now);
+  // وضعیت ترمیم پیش از شاخهٔ پاسخ درست (که پرچم را پاک می‌کند) نگه داشته می‌شود
+  const wasRepairCard = qCard.isRepair;
 
   let trapCardCreated = false;
   if (!wasCorrect) {
@@ -307,7 +309,7 @@ export function applyAnswer(
     }
   } else {
     // رشد فاصلهٔ مرور با FSRS
-    const wasRepair = qCard.isRepair;
+    const wasRepair = wasRepairCard;
     const prevInterval = qCard.intervalDays;
     qCard.ease = Math.min(cfg.easeMax, qCard.ease + cfg.easeGain);
     qCard.intervalDays = nextFsrs.intervalDays;
@@ -333,7 +335,8 @@ export function applyAnswer(
       },
     });
   }
-  qCard.fsrs = { ...nextFsrs, ...(qCard.isRepair ? { dueAt: qCard.dueAt, intervalDays: qCard.intervalDays } : {}) };
+  // در کارت ترمیمی، موعد و فاصلهٔ بازگردانده‌شده باید در وضعیت FSRS هم منعکس شود
+  qCard.fsrs = { ...nextFsrs, ...(wasRepairCard ? { dueAt: qCard.dueAt, intervalDays: qCard.intervalDays } : {}) };
 
   /* ---------- لایهٔ ۲: تسلط فصل + شوک هم‌خانواده‌ها (لغزش معاف است) ---------- */
   const before = masteryOf(state, question.nodeId);
@@ -623,10 +626,15 @@ function buildMentorMessage(args: {
       bits.push('برای تثبیت درس مشترک، تمرکز بیشتری لازم است');
     }
   } else if (errorType === 'prerequisite_failure') {
-    const prereqNodes = prerequisites.map(p => nodes.get(p.nodeId)?.topic).filter(Boolean);
-    bits.push(`پیش‌نیاز${prereqNodes.length > 1 ? 'های' : ''}: «${prereqNodes.join('، ')}» نیاز به بررسی تشخیصی دارد`);
-    if (prereqNodes.some(n => !['common', 'business', 'technology', 'strategy'].includes(n as string))) {
-      bits.push('پیش‌نیاز درسی عمیق‌تر نیاز به بازبینی برنامه دارد');
+    const prereqNodes = prerequisites
+      .map((p) => nodes.get(p.nodeId))
+      .filter((n): n is NonNullable<typeof n> => Boolean(n));
+    bits.push(
+      `پیش‌نیاز${prereqNodes.length > 1 ? 'های' : ''}: «${prereqNodes.map((n) => n.topic).join('، ')}» نیاز به بررسی تشخیصی دارد`,
+    );
+    // اگر پیش‌نیاز به گرایش/مسیر دیگری تعلق دارد، بازبینی برنامه لازم است
+    if (prereqNodes.some((n) => n.track !== node.track)) {
+      bits.push('پیش‌نیاز درسی در مسیر دیگری قرار دارد و نیاز به بازبینی برنامه دارد');
     }
   } else if (errorType === 'misread') {
     bits.push('احتمالاً یک دام فریب‌دهنده با اعتماد به نفس بالا پاسخ داده‌اید');
