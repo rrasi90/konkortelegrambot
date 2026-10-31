@@ -12,7 +12,7 @@ export const Rating = {
 
 export type Rating = (typeof Rating)[keyof typeof Rating];
 
-/** Standard FSRS default parameter weights (calibrated for academic multiple-choice) */
+/** Project-selected FSRS-4.5 weights; not yet fitted or validated on production learner histories. */
 export const DEFAULT_FSRS_WEIGHTS = [
   0.4,  // w[0]: initial stability for Rating.Again
   1.2,  // w[1]: initial stability for Rating.Hard
