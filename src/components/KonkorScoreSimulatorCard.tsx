@@ -248,15 +248,34 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
 
   // ۳. محاسبه میانگین وزنی تسلط گره‌های گرایش داوطلب
   const weightedMasterySummary = useMemo(() => {
+    if (degreeMode === 'phd') {
+      // No official combination-specific PhD coefficient map is validated here.
+      // Show a simple topic-mastery average instead of inventing exam weights.
+      const mappedNodes = nodes.filter((node) =>
+        KONKOR_SECTIONS_CONFIG.some((section) => section.matchNode(node)),
+      );
+      const uniqueScores = new Map(
+        mappedNodes.map((node) => [node.id, nodeStates[node.id]?.masteryScore ?? 0]),
+      );
+      const scores = [...uniqueScores.values()];
+      return {
+        weightedMasteryPercent: scores.length
+          ? Math.round((scores.reduce((sum, score) => sum + score, 0) / scores.length) * 10) / 10
+          : 0,
+        totalCoeffs: 0,
+        activeBranchNodesCount: scores.length,
+      };
+    }
+
     let sumWeightedMastery = 0;
     let sumCoeffs = 0;
     let activeBranchNodesCount = 0;
 
-    for (const c of simulatedCourses) {
-      if (c.coeff > 0) {
-        sumWeightedMastery += c.effectiveMastery * c.coeff;
-        sumCoeffs += c.coeff;
-        activeBranchNodesCount += c.matchedNodes.length;
+    for (const course of simulatedCourses) {
+      if (course.coeff > 0) {
+        sumWeightedMastery += course.effectiveMastery * course.coeff;
+        sumCoeffs += course.coeff;
+        activeBranchNodesCount += course.matchedNodes.length;
       }
     }
 
@@ -266,7 +285,7 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
       totalCoeffs: sumCoeffs,
       activeBranchNodesCount,
     };
-  }, [simulatedCourses]);
+  }, [simulatedCourses, degreeMode, nodes, nodeStates]);
 
   const handleAdjustBoost = (sectionId: KonkorCourseSectionId, delta: number) => {
     setWhatIfBoostByCourse((prev) => {
@@ -297,7 +316,7 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
           <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
             <span className="font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
               <Calculator className="w-3.5 h-3.5" />
-              <span>شبیه‌ساز هوشمند نمره، تراز و رتبه کنکور (مبتنی بر ضرایب دروس)</span>
+              <span>{degreeMode === 'phd' ? 'نمای کلی تسلط موضوعی دکتری مدیریت' : 'شبیه‌ساز تمرینی درصد و تراز ارشد مدیریت'}</span>
             </span>
             <span aria-hidden="true">·</span>
             <span className="tabular-nums">
@@ -305,17 +324,20 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
             </span>
             <span aria-hidden="true">·</span>
             <span className="tabular-nums">
-              مجموع ضرایب مؤثر: {weightedMasterySummary.totalCoeffs}
+              {degreeMode === 'phd' ? 'میانگین ساده مباحث؛ بدون ضرایب آزمون' : `مجموع ضرایب شبیه‌سازی: ${weightedMasterySummary.totalCoeffs}`}
             </span>
           </div>
 
           <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-            تخمین نمره کل، تراز سنجش و دانشگاه قبولی بر اساس تسلط فعلی شما در گراف دانش
+            {degreeMode === 'phd'
+              ? 'نمایش پیشرفت یادگیری مباحث مدیریت؛ بدون پیش‌بینی رتبه یا قبولی'
+              : 'سناریوی تمرینی درصد و تراز بر اساس گراف دانش؛ نه پیش‌بینی رسمی سازمان سنجش'}
           </h2>
         </div>
 
-        {/* انتخاب گرایش و شبیه‌سازی What-If */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* شبیه‌سازی What-If فقط برای مسیر ارشد با ساختار داده‌شده فعال است */}
+        {degreeMode !== 'phd' && (
+          <div className="flex flex-wrap items-center gap-2">
           {!hasAnyWhatIf ? (
             <button
               type="button"
@@ -335,7 +357,8 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
               <span>بازگشت به تسلط واقعی فعلی</span>
             </button>
           )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* نوار انتخاب گرایش و استراتژی ریسک نمره منفی */}
@@ -366,8 +389,9 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
           )}
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-slate-500 dark:text-slate-400 ml-1 flex items-center gap-1">
+        {degreeMode !== 'phd' && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-slate-500 dark:text-slate-400 ml-1 flex items-center gap-1">
             <Sliders className="w-3.5 h-3.5" />
             <span>مدیریت نمره منفی در جلسه:</span>
           </span>
@@ -396,11 +420,28 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
               </button>
             );
           })}
-        </div>
+          </div>
+        )}
       </div>
 
-      {/* ۴ کارت شاخص کلیدی کارنامه شبیه‌سازی‌شده کنکور */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      {/* شاخص‌های خروجی */}
+      {degreeMode === 'phd' ? (
+        <div className="space-y-3">
+          <div className="rounded-xl border border-amber-300/70 dark:border-amber-800/60 bg-amber-50/70 dark:bg-amber-950/20 p-3 text-xs leading-6 text-amber-900 dark:text-amber-200">
+            ضرایب و مواد امتحانی دکتری در این شبیه‌ساز برای همهٔ کدهای ترکیب به‌صورت رسمی و مستقل اعتبارسنجی نشده‌اند؛ بنابراین رتبه، تراز، درصد دفترچه و احتمال قبولی دکتری نمایش داده نمی‌شود. عدد زیر فقط میانگین سادهٔ تسلط روی مباحث نگاشت‌شده است.
+          </div>
+          <div className="glass-subcard p-4 space-y-1 max-w-sm">
+            <div className="text-xs text-slate-500 dark:text-slate-400">میانگین سادهٔ تسلط مباحث نگاشت‌شده</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+              {weightedMasterySummary.weightedMasteryPercent}٪
+            </div>
+            <div className="text-[11px] text-slate-500 dark:text-slate-400">
+              بر پایهٔ {weightedMasterySummary.activeBranchNodesCount} مبحث؛ بدون وزن‌دهی آزمونی
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="glass-subcard p-4 space-y-1">
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
             <span>میانگین وزنی تسلط / درصد خالص</span>
@@ -465,266 +506,273 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
             {hasAnyWhatIf ? 'در سناریوی شبیه‌سازی (What-If)' : 'بر اساس وضعیت فعلی شما'}
           </div>
         </div>
-      </div>
 
-      {/* جدول تحلیلی تک‌تک دروس، ضرایب، تسلط گره‌ها و شبیه‌سازی درصد با نمره منفی */}
-      <div className="glass-subcard overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-200/60 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span className="font-bold text-slate-900 dark:text-white">
-            جدول شبیه‌سازی دروس کنکور بر اساس `masteryScore` گره‌های مرتبط و ضریب گرایش
-          </span>
-          <span className="text-slate-500 dark:text-slate-400">
-            با دکمه‌های «+۱۰٪» اثر افزایش تسلط در هر درس را بر تراز و رتبه کل آزمایش کنید
-          </span>
         </div>
+      )}
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-right text-xs">
-            <thead>
-              <tr className="border-b border-slate-200/60 dark:border-slate-800/80 text-slate-500 dark:text-slate-400 bg-slate-100/50 dark:bg-slate-900/40">
-                <th className="py-2.5 px-3.5 font-bold">نام درس و تعداد گره</th>
-                <th className="py-2.5 px-2.5 font-bold text-center">ضریب گرایش</th>
-                <th className="py-2.5 px-3 font-bold">تسلط گره‌ها (`masteryScore`)</th>
-                <th className="py-2.5 px-3 font-bold text-center">شبیه‌سازی دفترچه (صحیح/غلط)</th>
-                <th className="py-2.5 px-3 font-bold text-center">درصد خالص شما</th>
-                <th className="py-2.5 px-3 font-bold text-center">رتبه ۱۰ کشوری</th>
-                <th className="py-2.5 px-3.5 font-bold text-left">اقدام ارتقای تراز</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200/50 dark:divide-slate-800/60">
-              {simulatedCourses.map((course) => {
-                const isZeroCoeff = course.coeff === 0;
-                const breakdownItem = rankPrediction.courseBreakdown.find(
-                  (b) => b.sectionId === course.sectionId
-                );
-                const rank10Pct = breakdownItem?.rank10Percent ?? 45;
-
-                return (
-                  <tr
-                    key={course.sectionId}
-                    className={`transition-colors ${
-                      isZeroCoeff
-                        ? 'opacity-45 bg-slate-100/30 dark:bg-slate-900/20'
-                        : 'hover:bg-slate-200/30 dark:hover:bg-slate-800/30'
-                    }`}
-                  >
-                    <td className="py-3 px-3.5">
-                      <div className="font-bold text-slate-900 dark:text-white">
-                        {course.title}
-                      </div>
-                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 tabular-nums">
-                        {course.matchedNodes.length} گره دانش · {course.totalQuestions} سؤال در دفترچه
-                      </div>
-                    </td>
-
-                    <td className="py-3 px-2.5 text-center font-mono tabular-nums">
-                      <span
-                        className={`font-bold ${
-                          course.coeff >= 3
-                            ? 'text-blue-600 dark:text-blue-400'
-                            : course.coeff === 0
-                            ? 'text-slate-400'
-                            : 'text-slate-700 dark:text-slate-300'
-                        }`}
-                      >
-                        ضریب {course.coeff}
-                      </span>
-                    </td>
-
-                    <td className="py-3 px-3">
-                      <div className="flex items-center justify-between gap-2 mb-1 tabular-nums">
-                        <span className="font-mono font-bold text-slate-900 dark:text-white">
-                          {course.effectiveMastery}٪
-                          {course.boost > 0 && (
-                            <span className="text-amber-600 dark:text-amber-400 mr-1 text-[10px]">
-                              (+{course.boost}٪ فرضی)
-                            </span>
-                          )}
-                        </span>
-                        {!isZeroCoeff && (
-                          <div className="flex items-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => handleAdjustBoost(course.sectionId, 10)}
-                              className="px-1.5 py-0.5 rounded bg-blue-600/15 hover:bg-blue-600 text-blue-700 dark:text-blue-300 hover:text-white text-[10px] font-mono font-bold transition-colors cursor-pointer"
-                              title="افزایش فرضی ۱۰٪ تسلط برای شبیه‌سازی اثر ضریب"
-                            >
-                              +10%
-                            </button>
-                            {course.boost > 0 && (
-                              <button
-                                type="button"
-                                onClick={() => handleAdjustBoost(course.sectionId, -10)}
-                                className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-mono font-bold cursor-pointer"
-                              >
-                                -10%
-                              </button>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                      <div className="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full transition-all duration-300 ${
-                            course.effectiveMastery >= 70
-                              ? 'bg-emerald-500'
-                              : course.effectiveMastery >= 40
-                              ? 'bg-blue-600'
-                              : 'bg-amber-500'
-                          }`}
-                          style={{ width: `${Math.min(100, course.effectiveMastery)}%` }}
-                        />
-                      </div>
-                    </td>
-
-                    <td className="py-3 px-3 text-center font-mono tabular-nums text-[11px]">
-                      {isZeroCoeff ? (
-                        <span className="text-slate-400">حذف در گرایش</span>
-                      ) : (
-                        <span>
-                          <strong className="text-emerald-600 dark:text-emerald-400">
-                            {course.correct}✓
-                          </strong>{' '}
-                          ·{' '}
-                          <strong className="text-rose-500">{course.wrong}✗</strong> ·{' '}
-                          <span className="text-slate-400">{course.unanswered}○</span>
-                        </span>
-                      )}
-                    </td>
-
-                    <td className="py-3 px-3 text-center font-mono tabular-nums">
-                      {isZeroCoeff ? (
-                        <span className="text-slate-400">—</span>
-                      ) : (
+      {degreeMode !== 'phd' && (
+        <>
+        {/* جدول تحلیلی تک‌تک دروس، ضرایب، تسلط گره‌ها و شبیه‌سازی درصد با نمره منفی */}
+        <div className="glass-subcard overflow-hidden">
+          <div className="px-4 py-3 border-b border-slate-200/60 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <span className="font-bold text-slate-900 dark:text-white">
+              جدول شبیه‌سازی دروس کنکور بر اساس `masteryScore` گره‌های مرتبط و ضریب گرایش
+            </span>
+            <span className="text-slate-500 dark:text-slate-400">
+              با دکمه‌های «+۱۰٪» اثر افزایش تسلط در هر درس را بر تراز و رتبه کل آزمایش کنید
+            </span>
+          </div>
+  
+          <div className="overflow-x-auto">
+            <table className="w-full text-right text-xs">
+              <thead>
+                <tr className="border-b border-slate-200/60 dark:border-slate-800/80 text-slate-500 dark:text-slate-400 bg-slate-100/50 dark:bg-slate-900/40">
+                  <th className="py-2.5 px-3.5 font-bold">نام درس و تعداد گره</th>
+                  <th className="py-2.5 px-2.5 font-bold text-center">ضریب گرایش</th>
+                  <th className="py-2.5 px-3 font-bold">تسلط گره‌ها (`masteryScore`)</th>
+                  <th className="py-2.5 px-3 font-bold text-center">شبیه‌سازی دفترچه (صحیح/غلط)</th>
+                  <th className="py-2.5 px-3 font-bold text-center">درصد خالص شما</th>
+                  <th className="py-2.5 px-3 font-bold text-center">رتبه ۱۰ کشوری</th>
+                  <th className="py-2.5 px-3.5 font-bold text-left">اقدام ارتقای تراز</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200/50 dark:divide-slate-800/60">
+                {simulatedCourses.map((course) => {
+                  const isZeroCoeff = course.coeff === 0;
+                  const breakdownItem = rankPrediction.courseBreakdown.find(
+                    (b) => b.sectionId === course.sectionId
+                  );
+                  const rank10Pct = breakdownItem?.rank10Percent ?? 45;
+  
+                  return (
+                    <tr
+                      key={course.sectionId}
+                      className={`transition-colors ${
+                        isZeroCoeff
+                          ? 'opacity-45 bg-slate-100/30 dark:bg-slate-900/20'
+                          : 'hover:bg-slate-200/30 dark:hover:bg-slate-800/30'
+                      }`}
+                    >
+                      <td className="py-3 px-3.5">
+                        <div className="font-bold text-slate-900 dark:text-white">
+                          {course.title}
+                        </div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 tabular-nums">
+                          {course.matchedNodes.length} گره دانش · {course.totalQuestions} سؤال در دفترچه
+                        </div>
+                      </td>
+  
+                      <td className="py-3 px-2.5 text-center font-mono tabular-nums">
                         <span
                           className={`font-bold ${
-                            course.netPercent >= rank10Pct
-                              ? 'text-emerald-600 dark:text-emerald-400'
-                              : course.netPercent >= 25
+                            course.coeff >= 3
                               ? 'text-blue-600 dark:text-blue-400'
-                              : 'text-slate-800 dark:text-slate-200'
+                              : course.coeff === 0
+                              ? 'text-slate-400'
+                              : 'text-slate-700 dark:text-slate-300'
                           }`}
                         >
-                          {course.netPercent}٪
+                          ضریب {course.coeff}
                         </span>
-                      )}
-                    </td>
-
-                    <td className="py-3 px-3 text-center font-mono tabular-nums text-slate-500 dark:text-slate-400">
-                      {isZeroCoeff ? '—' : `${rank10Pct}٪`}
-                    </td>
-
-                    <td className="py-3 px-3.5 text-left">
-                      {!isZeroCoeff && course.weakestNode ? (
-                        <div className="inline-flex items-center gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => onOpenLessonNode(course.weakestNode!.id)}
-                            className="px-2 py-1 rounded-lg bg-slate-200/70 dark:bg-slate-800 hover:bg-blue-600 text-slate-700 dark:text-slate-300 hover:text-white text-[11px] font-bold transition-colors cursor-pointer"
-                            title={`درسنامه ضعیف‌ترین گره این درس: ${course.weakestNode.topic}`}
-                          >
-                            <BookOpen className="w-3 h-3 inline ml-1" />
-                            <span>درسنامه</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              onStartPracticeNode(course.weakestNode!.id, 'practice')
-                            }
-                            className="px-2 py-1 rounded-lg bg-blue-600/15 hover:bg-blue-600 text-blue-600 dark:text-blue-400 hover:text-white text-[11px] font-bold transition-colors cursor-pointer"
-                            title={`حل تست از مبحث: ${course.weakestNode.topic}`}
-                          >
-                            <Play className="w-3 h-3 inline ml-1" />
-                            <span>تست</span>
-                          </button>
+                      </td>
+  
+                      <td className="py-3 px-3">
+                        <div className="flex items-center justify-between gap-2 mb-1 tabular-nums">
+                          <span className="font-mono font-bold text-slate-900 dark:text-white">
+                            {course.effectiveMastery}٪
+                            {course.boost > 0 && (
+                              <span className="text-amber-600 dark:text-amber-400 mr-1 text-[10px]">
+                                (+{course.boost}٪ فرضی)
+                              </span>
+                            )}
+                          </span>
+                          {!isZeroCoeff && (
+                            <div className="flex items-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => handleAdjustBoost(course.sectionId, 10)}
+                                className="px-1.5 py-0.5 rounded bg-blue-600/15 hover:bg-blue-600 text-blue-700 dark:text-blue-300 hover:text-white text-[10px] font-mono font-bold transition-colors cursor-pointer"
+                                title="افزایش فرضی ۱۰٪ تسلط برای شبیه‌سازی اثر ضریب"
+                              >
+                                +10%
+                              </button>
+                              {course.boost > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleAdjustBoost(course.sectionId, -10)}
+                                  className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-mono font-bold cursor-pointer"
+                                >
+                                  -10%
+                                </button>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      ) : (
-                        <span className="text-[11px] text-slate-400">بدون اثر در گرایش</span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* توصیه استراتژیک موتور تخمین تراز و وضعیت قبولی دانشگاه‌ها */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        <div className="lg:col-span-7 glass-subcard p-4 flex flex-col justify-between gap-3">
-          <div className="space-y-1.5">
-            <div className="text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>تحلیل اهرم ضرایب و توصیه استراتژیک افزایش تراز:</span>
-            </div>
-            <p className="text-xs text-slate-700 dark:text-slate-300 leading-6">
-              {rankPrediction.strategicAdvice}
-            </p>
+                        <div className="w-full h-1.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-300 ${
+                              course.effectiveMastery >= 70
+                                ? 'bg-emerald-500'
+                                : course.effectiveMastery >= 40
+                                ? 'bg-blue-600'
+                                : 'bg-amber-500'
+                            }`}
+                            style={{ width: `${Math.min(100, course.effectiveMastery)}%` }}
+                          />
+                        </div>
+                      </td>
+  
+                      <td className="py-3 px-3 text-center font-mono tabular-nums text-[11px]">
+                        {isZeroCoeff ? (
+                          <span className="text-slate-400">حذف در گرایش</span>
+                        ) : (
+                          <span>
+                            <strong className="text-emerald-600 dark:text-emerald-400">
+                              {course.correct}✓
+                            </strong>{' '}
+                            ·{' '}
+                            <strong className="text-rose-500">{course.wrong}✗</strong> ·{' '}
+                            <span className="text-slate-400">{course.unanswered}○</span>
+                          </span>
+                        )}
+                      </td>
+  
+                      <td className="py-3 px-3 text-center font-mono tabular-nums">
+                        {isZeroCoeff ? (
+                          <span className="text-slate-400">—</span>
+                        ) : (
+                          <span
+                            className={`font-bold ${
+                              course.netPercent >= rank10Pct
+                                ? 'text-emerald-600 dark:text-emerald-400'
+                                : course.netPercent >= 25
+                                ? 'text-blue-600 dark:text-blue-400'
+                                : 'text-slate-800 dark:text-slate-200'
+                            }`}
+                          >
+                            {course.netPercent}٪
+                          </span>
+                        )}
+                      </td>
+  
+                      <td className="py-3 px-3 text-center font-mono tabular-nums text-slate-500 dark:text-slate-400">
+                        {isZeroCoeff ? '—' : `${rank10Pct}٪`}
+                      </td>
+  
+                      <td className="py-3 px-3.5 text-left">
+                        {!isZeroCoeff && course.weakestNode ? (
+                          <div className="inline-flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => onOpenLessonNode(course.weakestNode!.id)}
+                              className="px-2 py-1 rounded-lg bg-slate-200/70 dark:bg-slate-800 hover:bg-blue-600 text-slate-700 dark:text-slate-300 hover:text-white text-[11px] font-bold transition-colors cursor-pointer"
+                              title={`درسنامه ضعیف‌ترین گره این درس: ${course.weakestNode.topic}`}
+                            >
+                              <BookOpen className="w-3 h-3 inline ml-1" />
+                              <span>درسنامه</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                onStartPracticeNode(course.weakestNode!.id, 'practice')
+                              }
+                              className="px-2 py-1 rounded-lg bg-blue-600/15 hover:bg-blue-600 text-blue-600 dark:text-blue-400 hover:text-white text-[11px] font-bold transition-colors cursor-pointer"
+                              title={`حل تست از مبحث: ${course.weakestNode.topic}`}
+                            >
+                              <Play className="w-3 h-3 inline ml-1" />
+                              <span>تست</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="text-[11px] text-slate-400">بدون اثر در گرایش</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-
-          {stats.isZeroStateNewUser && !hasAnyWhatIf && (
-            <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
-              <span className="text-slate-500 dark:text-slate-400">
-                برای کالیبره شدن فوری `masteryScore` گره‌ها و مشاهده رتبه واقعی خود، آزمون تعیین سطح ۵ سؤالی را انجام دهید:
-              </span>
-              {onOpenPlacementModal && (
-                <button
-                  type="button"
-                  onClick={onOpenPlacementModal}
-                  className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold cursor-pointer transition-colors"
-                >
-                  شروع تعیین سطح سریع
-                </button>
-              )}
-            </div>
-          )}
         </div>
-
-        <div className="lg:col-span-5 glass-subcard p-4 space-y-2">
-          <div className="text-xs font-bold text-slate-900 dark:text-white">
-            وضعیت شانس قبولی در رده‌های دانشگاهی کشور:
+  
+        {/* توصیه استراتژیک موتور تخمین تراز و وضعیت قبولی دانشگاه‌ها */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          <div className="lg:col-span-7 glass-subcard p-4 flex flex-col justify-between gap-3">
+            <div className="space-y-1.5">
+              <div className="text-xs font-bold text-blue-600 dark:text-blue-400 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>تحلیل اهرم ضرایب و توصیه استراتژیک افزایش تراز:</span>
+              </div>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-6">
+                {rankPrediction.strategicAdvice}
+              </p>
+            </div>
+  
+            {stats.isZeroStateNewUser && !hasAnyWhatIf && (
+              <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <span className="text-slate-500 dark:text-slate-400">
+                  برای سنجش اولیه و به‌روزرسانی شواهد یادگیری، آزمون تعیین سطح ۵ سؤالی را انجام دهید:
+                </span>
+                {onOpenPlacementModal && (
+                  <button
+                    type="button"
+                    onClick={onOpenPlacementModal}
+                    className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold cursor-pointer transition-colors"
+                  >
+                    شروع تعیین سطح سریع
+                  </button>
+                )}
+              </div>
+            )}
           </div>
-          <div className="space-y-1.5 text-xs">
-            {rankPrediction.universityAdmissions.slice(0, 4).map((adm) => {
-              const isGuaranteed = adm.status.startsWith('قبولی قطعی');
-              const isBorderline = adm.status.startsWith('قبولی محتمل');
-              return (
-                <div
-                  key={adm.tier.id}
-                  className="flex items-center justify-between gap-2 py-1 border-b last:border-b-0 border-slate-200/50 dark:border-slate-800/60"
-                >
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <CheckCircle2
-                      className={`w-3.5 h-3.5 shrink-0 ${
+  
+          <div className="lg:col-span-5 glass-subcard p-4 space-y-2">
+            <div className="text-xs font-bold text-slate-900 dark:text-white">
+              وضعیت شانس قبولی در رده‌های دانشگاهی کشور:
+            </div>
+            <div className="space-y-1.5 text-xs">
+              {rankPrediction.universityAdmissions.slice(0, 4).map((adm) => {
+                const isGuaranteed = adm.status.startsWith('قبولی قطعی');
+                const isBorderline = adm.status.startsWith('قبولی محتمل');
+                return (
+                  <div
+                    key={adm.tier.id}
+                    className="flex items-center justify-between gap-2 py-1 border-b last:border-b-0 border-slate-200/50 dark:border-slate-800/60"
+                  >
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <CheckCircle2
+                        className={`w-3.5 h-3.5 shrink-0 ${
+                          isGuaranteed
+                            ? 'text-emerald-500'
+                            : isBorderline
+                            ? 'text-amber-500'
+                            : 'text-slate-300 dark:text-slate-600'
+                        }`}
+                      />
+                      <span className="truncate text-slate-700 dark:text-slate-300">
+                        {adm.tier.universityName}
+                      </span>
+                    </div>
+                    <span
+                      className={`shrink-0 font-mono text-[11px] tabular-nums font-bold ${
                         isGuaranteed
-                          ? 'text-emerald-500'
+                          ? 'text-emerald-600 dark:text-emerald-400'
                           : isBorderline
-                          ? 'text-amber-500'
-                          : 'text-slate-300 dark:text-slate-600'
+                          ? 'text-amber-600 dark:text-amber-400'
+                          : 'text-slate-400'
                       }`}
-                    />
-                    <span className="truncate text-slate-700 dark:text-slate-300">
-                      {adm.tier.universityName}
+                    >
+                      {adm.tarazGap >= 0 ? `+${adm.tarazGap}` : adm.tarazGap} تراز
                     </span>
                   </div>
-                  <span
-                    className={`shrink-0 font-mono text-[11px] tabular-nums font-bold ${
-                      isGuaranteed
-                        ? 'text-emerald-600 dark:text-emerald-400'
-                        : isBorderline
-                        ? 'text-amber-600 dark:text-amber-400'
-                        : 'text-slate-400'
-                    }`}
-                  >
-                    {adm.tarazGap >= 0 ? `+${adm.tarazGap}` : adm.tarazGap} تراز
-                  </span>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
-      </div>
+        </>
+      )}
+
     </div>
   );
 };
