@@ -121,6 +121,8 @@ export interface QuestionItem {
   bookletQuestionNumber?: number;
   courseSectionId?: string;
   courseSectionTitle?: string;
+  /** فصل دقیق کتاب مرجع؛ بدون این شناسه فقط در صورت یکتایی اتصال گره به فصل، گروه‌بندی می‌شود. */
+  referenceChapterId?: string;
   designedFromTextbook?: string;
   isQuarantinedProof?: boolean;
   isDiagnosticProbe?: boolean;
