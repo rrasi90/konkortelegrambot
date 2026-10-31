@@ -79,19 +79,19 @@ const RATING_OPTIONS: {
   {
     rating: 3,
     label: '۳ — درک متوسط',
-    desc: 'تسلط ۵۰٪ + فعال‌سازی تست‌های آموزشی در صف امروز',
+    desc: 'خودارزیابی؛ سؤال‌های تمرینی مستقل در صف امروز',
     colorClass: 'hover:border-amber-500 data-[active=true]:bg-amber-500 data-[active=true]:text-slate-950',
   },
   {
     rating: 4,
     label: '۴ — خوب یاد گرفتم',
-    desc: 'تسلط ۶۸٪ + باز شدن لایه بعدی درخت مهارت + مرور ۴ روزه',
+    desc: 'خودارزیابی مثبت؛ ارزیابی مستقل با تست ادامه می‌یابد',
     colorClass: 'hover:border-blue-500 data-[active=true]:bg-blue-600 data-[active=true]:text-white',
   },
   {
     rating: 5,
     label: '۵ — کاملاً مسلط شدم',
-    desc: 'تسلط ۷۶٪ + باز شدن فوری تست قرنطینه کنکور ۱۴۰۴',
+    desc: 'اعتمادبه‌نفس بالا؛ هنوز نیازمند پاسخ به سؤال مستقل است',
     colorClass: 'hover:border-emerald-500 data-[active=true]:bg-emerald-600 data-[active=true]:text-white',
   },
 ];
@@ -1434,7 +1434,7 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                         <span>این درسنامه را چقدر خوب یاد گرفتید؟ (امتیاز از ۱ تا ۵)</span>
                       </h3>
                       <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                        با انتخاب هر گزینه، الگوریتم FSRS برنامه مرور، کارت‌های روزانه و قفل مباحث بعدی را بلافاصله تنظیم می‌کند.
+                        این امتیاز فقط میزان اطمینان شما را ثبت می‌کند؛ تسلط و بازشدن مباحث بعدی با پاسخ‌گویی به سؤال‌های مستقل سنجیده می‌شود.
                       </p>
                     </div>
                     {activeState?.lastLessonSelfRating && (
