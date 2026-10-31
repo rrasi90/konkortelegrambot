@@ -1,7 +1,7 @@
 import { defaultSeed } from './default-seed';
 /** پیاده‌سازی درون‌حافظه‌ای لایهٔ داده — برای تست و دمو */
 import type { LearnerSkillState, ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
-import type { AnswerEvent, AppUser, DataStore } from './store';
+import type { AnswerEvent, AppUser, AttemptTicket, DataStore } from './store';
 
 export class MemoryStore implements DataStore {
   users = new Map<string, AppUser>();
@@ -126,6 +126,19 @@ export class MemoryStore implements DataStore {
 
   async findAnswerByAttempt(userId: string, attemptId: string): Promise<AnswerEvent | null> {
     return this.answers.find((a) => a.userId === userId && a.attemptId === attemptId) ?? null;
+  }
+
+  async getAttemptTicket(userId: string, attemptId: string, questionId: string): Promise<AttemptTicket | null> {
+    const ticket = this.tickets.get(attemptId);
+    if (!ticket || ticket.userId !== userId || ticket.questionId !== questionId) return null;
+    return {
+      attemptId,
+      userId: ticket.userId,
+      questionId: ticket.questionId,
+      attemptType: ticket.attemptType as AttemptTicket['attemptType'],
+      consumedAt: ticket.consumedAt ?? null,
+      expiresAt: new Date(ticket.expiresAt).toISOString(),
+    };
   }
 
   async insertAnswerEvent(event: AnswerEvent): Promise<void> {
