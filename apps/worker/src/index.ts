@@ -6,7 +6,7 @@ let globalMemoryStore: DataStore | null = null;
  * همهٔ منطق تصمیم در @ael/engine است؛ این لایه فقط ارکستراسیون و پایدارسازی است.
  */
 import { Hono } from 'hono';
-import type { Context } from 'hono';
+import type { Context, Next } from 'hono';
 import { cors } from 'hono/cors';
 import {
   DEFAULT_ENGINE_CONFIG,
@@ -240,17 +240,42 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   app.get('/api/health', (c) => c.json({ ok: true }));
 
-  const rateLimits = new Map<string,{count:number;resetAt:number}>();
+  const rateLimits = new Map<string, { count: number; resetAt: number }>();
   const RATE_WINDOW_MS = 60_000;
   const RATE_MAX = 30;
-  function rateLimit(c:any,next:()=>void){
-    const key = (c.req.header('authorization')||c.req.header('x-forwarded-for')||'anon') as string;
+
+  // Best-effort per-isolate throttling for sensitive write/auth routes.
+  // Production-wide protection should additionally use Cloudflare Rate Limiting rules.
+  async function rateLimit(c: AppContext, next: Next): Promise<void | Response> {
+    const clientKey =
+      c.req.header('cf-connecting-ip') ??
+      c.req.header('x-forwarded-for') ??
+      c.req.header('authorization') ??
+      'anonymous';
+    const key = `${c.req.path}:${clientKey}`;
     const now = Date.now();
     const entry = rateLimits.get(key);
-    if(!entry || now>entry.resetAt){ rateLimits.set(key,{count:1,resetAt:now+RATE_WINDOW_MS}); return next(); }
-    if(entry.count>=RATE_MAX) return c.json({error:'درخواست بیش از حد مجاز'},429);
-    entry.count++; return next();
+
+    if (!entry || now >= entry.resetAt) {
+      rateLimits.set(key, { count: 1, resetAt: now + RATE_WINDOW_MS });
+    } else if (entry.count >= RATE_MAX) {
+      return c.json({ error: 'درخواست بیش از حد مجاز؛ کمی بعد دوباره تلاش کنید.' }, 429);
+    } else {
+      entry.count += 1;
+    }
+
+    // Bound memory in long-lived isolates.
+    if (rateLimits.size > 5_000) {
+      for (const [entryKey, value] of rateLimits) {
+        if (now >= value.resetAt) rateLimits.delete(entryKey);
+      }
+    }
+    await next();
   }
+
+  app.use('/api/auth/*', rateLimit);
+  app.use('/api/answers', rateLimit);
+  app.use('/api/self-report', rateLimit);
 
   app.get('/api/lessons', (c) => c.json({ courses: COURSES_LESSONS }));
 
@@ -580,7 +605,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       attemptIdByCard.set(s.item.card.id, attemptId);
       tickets.push({ attemptId, questionId: qid, attemptType: s.isProof ? 'proof' : 'practice' });
     }
-    await store.issueAttemptTickets(user.id, tickets).catch(() => undefined);
+    try {
+      await store.issueAttemptTickets(user.id, tickets);
+    } catch (error) {
+      console.error('[worker] failed to issue queue attempt tickets:', error);
+      return c.json({ error: 'صف سؤال‌ها آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
 
     const items = selected.map((s) => {
       const node = state.nodes.get(s.item.card.nodeId);
@@ -682,6 +712,13 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const state = await loadEngineState(user.id);
     const question = state.questions.get(body.questionId);
     if (!question) return c.json({ error: 'سؤال ناشناخته' }, 404);
+    if (
+      !Number.isInteger(body.selectedOption) ||
+      body.selectedOption < 0 ||
+      body.selectedOption >= question.options.length
+    ) {
+      return c.json({ error: 'شماره گزینه معتبر نیست.' }, 400);
+    }
 
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
     let result;
@@ -708,17 +745,23 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const wasCorrect = result.report.wasCorrect;
 
     // ثبت اتمیک و امن در دیتابیس (RPC امن: تعیین کلید سمت سرور + مصرف بلیت تلاش)
-    await store.submitAnswerAtomic({
-      userId: user.id,
-      questionId: body.questionId,
-      selectedOption: body.selectedOption,
-      attemptId: body.attemptId,
-      wasCorrect,
-      rippleReport: result.report,
-      masteryUpdates: result.masteryUpdates,
-      cardUpserts: result.cardUpdates,
-      cardInserts: result.createdCards,
-    });
+    try {
+      await store.submitAnswerAtomic({
+        userId: user.id,
+        questionId: body.questionId,
+        selectedOption: body.selectedOption,
+        attemptId: body.attemptId,
+        wasCorrect,
+        rippleReport: result.report,
+        masteryUpdates: result.masteryUpdates,
+        cardUpserts: result.cardUpdates,
+        cardInserts: result.createdCards,
+      });
+    } catch (error) {
+      // Do not acknowledge a result that was not durably committed.
+      console.error('[worker] atomic answer persistence failed:', error);
+      return c.json({ error: 'پاسخ ذخیره نشد؛ صف را تازه‌سازی کنید و دوباره تلاش کنید.' }, 503);
+    }
 
     // پایدارسازی وضعیت شش‌بعدی مهارت (learner_skill_states)
     if (result.skillStateUpdate) {
@@ -976,7 +1019,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       questionId: q.id,
       attemptType: 'verification' as const,
     }));
-    await store.issueAttemptTickets(user.id, tickets).catch(() => undefined);
+    try {
+      await store.issueAttemptTickets(user.id, tickets);
+    } catch (error) {
+      console.error('[worker] failed to issue night-quiz attempt tickets:', error);
+      return c.json({ error: 'کوییز شبانه آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
 
     const items = picked.map((q, i) => {
       const node = nodeMap.get(q.nodeId);
