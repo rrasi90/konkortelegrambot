@@ -122,7 +122,7 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 't1', questionId: target.question.id, selectedOption: 3 }),
+        body: JSON.stringify({ attemptId: target.attemptId, questionId: target.question.id, selectedOption: 3 }),
       }),
     );
     const replay = await json(replayRes);
@@ -557,7 +557,7 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
         authed(token, {
           method: 'POST',
           body: JSON.stringify({
-            attemptId: 'att-contract-1',
+            attemptId: queueItem.attemptId,
             questionId: question.id,
             selectedOption: question.correctOption,
           }),
