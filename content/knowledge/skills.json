@@ -268,5 +268,62 @@
     ],
     "difficulty_estimate": 75,
     "estimated_study_minutes": 50
+  },
+  {
+    "id": "skill.ind.or_simplex",
+    "node_id": "ind.or_simplex",
+    "title": "تحقیق در عملیات: روش سیمپلکس، دوگان و تحلیل حساسیت",
+    "operational_definition": "توانایی محاسبه و تفسیر قیمت سایه، قضایای دوگانگی و قضایای انطباق مکمل در برنامه‌ریزی خطی",
+    "cognitive_level": "Application",
+    "bloom_level": 3,
+    "prerequisites": [
+      "skill.stats.scales.identify"
+    ],
+    "confusable_with": [],
+    "difficulty_estimate": 75,
+    "estimated_study_minutes": 50
+  },
+  {
+    "id": "skill.ind.mcdm",
+    "node_id": "ind.mcdm",
+    "title": "تصمیم‌گیری چندمعیاره و تئوری بازی‌ها در مدیریت صنعتی",
+    "operational_definition": "توانایی تمایز بین روش‌های MADM شامل TOPSIS و VIKOR و محاسبه بردار ویژه و نرخ ناسازگاری AHP",
+    "cognitive_level": "Analysis",
+    "bloom_level": 4,
+    "prerequisites": [
+      "skill.ind.or_simplex"
+    ],
+    "confusable_with": [],
+    "difficulty_estimate": 70,
+    "estimated_study_minutes": 45
+  },
+  {
+    "id": "skill.ind.production_inv",
+    "node_id": "ind.production_inv",
+    "title": "کنترل موجودی (EOQ)، برنامه‌ریزی احتیاجات (MRP) و تولید ناب (JIT)",
+    "operational_definition": "توانایی محاسبه نقطه بهینه سفارش EOQ، نقطه سفارش مجدد ROP و تحلیل تفاوت سیستم‌های فشاری و کششی",
+    "cognitive_level": "Application",
+    "bloom_level": 3,
+    "prerequisites": [
+      "skill.ind.or_simplex"
+    ],
+    "confusable_with": [],
+    "difficulty_estimate": 65,
+    "estimated_study_minutes": 40
+  },
+  {
+    "id": "skill.ind.supply_chain",
+    "node_id": "ind.supply_chain",
+    "title": "مدیریت زنجیره تأمین، اثر شلاق چرمی و لجستیک",
+    "operational_definition": "توانایی ریشه‌یابی و تحلیل راهکارهای مقابله با اثر شلاق چرمی از طریق POS و VMI در زنجیره ارزش",
+    "cognitive_level": "Analysis",
+    "bloom_level": 4,
+    "prerequisites": [
+      "skill.ind.production_inv",
+      "skill.sm.value_chain.porter"
+    ],
+    "confusable_with": [],
+    "difficulty_estimate": 70,
+    "estimated_study_minutes": 45
   }
 ]

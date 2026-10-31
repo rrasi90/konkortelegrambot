@@ -619,3 +619,152 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
   background: #f3f4f6;
   color: #6b7280;
 }
+
+
+/* چرخش انیمیشن اسپینر */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* چک‌باکس چند انتخابی گرایش‌ها */
+.track-card {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  position: relative !important;
+  text-align: right !important;
+  padding: 12px 14px !important;
+}
+.track-card .track-info {
+  flex: 1 !important;
+}
+.track-card .track-checkbox {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 6px !important;
+  border: 1.5px solid var(--line) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: transparent !important;
+  transition: all 0.15s ease !important;
+  flex-shrink: 0 !important;
+}
+.track-card.selected .track-checkbox {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+}
+
+/* آموزش درس و آکاردئون‌ها */
+.lessons-header {
+  margin-bottom: 16px;
+}
+.lessons-header h2 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.lessons-header .subtitle {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.lesson-search {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 13px;
+  margin-bottom: 14px;
+  box-sizing: border-box;
+}
+.course-accordion {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.course-accordion-header {
+  padding: 14px 16px;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  user-select: none;
+}
+.course-accordion-header:hover {
+  background: var(--primary-soft);
+}
+.course-topics-list {
+  display: none;
+  padding: 0 16px 14px;
+  flex-direction: column;
+  gap: 12px;
+}
+.course-accordion.open .course-topics-list {
+  display: flex;
+}
+.topic-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--bg);
+}
+.topic-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.topic-weight {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.topic-summary {
+  font-size: 12.5px;
+  color: var(--ink);
+  line-height: 1.8;
+  white-space: pre-line;
+  margin-bottom: 10px;
+}
+.topic-tips {
+  background: #fffbeb;
+  border: 1px dashed #d97706;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+.topic-terms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.lesson-term-badge {
+  font-size: 10.5px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+}

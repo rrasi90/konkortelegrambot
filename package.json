@@ -15,7 +15,8 @@
     "lint": "tsc --noEmit",
     "extract:konkor": "tsx scripts/extractAndSyncKonkorSources.ts",
     "bot": "node scripts/telegram-bot-service.mjs",
-    "build:worker": "npm run --prefix apps/worker build"
+    "build:worker": "npm run --prefix apps/worker build",
+    "test": "vitest run"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -46,6 +47,7 @@
     "esbuild": "^0.25.0",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.21.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
   }
 }

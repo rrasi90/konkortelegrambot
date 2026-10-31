@@ -612,7 +612,7 @@ function buildMentorMessage(args: {
   if (errorType === 'slip') {
     return `حله! احتمالاً عجله داشتی و دقت لازم را نکردی. مبحث «${node.topic}» مشکلی ندارد؛ فردا یک مرور سریع برای اطمینان برات گذاشتیم.`;
   }
-  const parts: string[] = [];
+  const parts: string[] = ['این پاسخ یک شاهد اولیه است؛'];
   const bits: string[] = [];
   
   // تحلیل عمیق‌تر بر اساس نوع خطا

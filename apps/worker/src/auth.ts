@@ -49,7 +49,7 @@ export async function verifyTelegramInitData(
   initData: string,
   botToken: string,
   maxAgeSeconds = 86400,
-): Promise<{ ok: true; userId: number; firstName?: string } | { ok: false; error: string }> {
+): Promise<{ ok: true; userId: number; firstName?: string; username?: string } | { ok: false; error: string }> {
   const params = new URLSearchParams(initData);
   const hash = params.get('hash');
   if (!hash) return { ok: false, error: 'hash missing' };
@@ -79,16 +79,18 @@ export async function verifyTelegramInitData(
 
   let userId = 0;
   let firstName: string | undefined;
+  let username: string | undefined;
   try {
     const rawUser = params.get('user');
     if (rawUser) {
-      const parsed = JSON.parse(rawUser) as { id?: number; first_name?: string };
+      const parsed = JSON.parse(rawUser) as { id?: number; first_name?: string; username?: string };
       userId = parsed.id ?? 0;
       firstName = parsed.first_name;
+      username = parsed.username;
     }
   } catch {
     return { ok: false, error: 'invalid user payload' };
   }
   if (!userId) return { ok: false, error: 'user id missing' };
-  return { ok: true, userId, firstName };
+  return { ok: true, userId, firstName, username };
 }

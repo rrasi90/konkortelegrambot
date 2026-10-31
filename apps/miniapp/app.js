@@ -1,4 +1,4 @@
-/* آموزش کنکور — منطق مینی‌اپ (بدون وابستگی) */
+/* آموزش کنکور — منطق مینی‌اپ یادگیری تطبیقی کنکور دکتری مدیریت */
 (function () {
   'use strict';
 
@@ -37,16 +37,19 @@
     tracks: ['common'],
     queue: [],
     currentIndex: 0,
-    selectedTrack: null,
+    selectedTracks: new Set(),
     telegram: null,
     nightMode: false,
     home: null,
+    lastAttemptId: null,
+    startTime: null,
   };
 
-  /* ---------- نمایش ---------- */
+  /* ---------- مدیریت نمایش و صفحات ---------- */
   function showView(id) {
     ['view-login', 'view-tracks', 'view-app'].forEach(function (v) {
-      el(v).hidden = v !== id;
+      var viewEl = el(v);
+      if (viewEl) viewEl.hidden = v !== id;
     });
   }
 
@@ -58,18 +61,22 @@
       var btn = document.querySelector('.nav-btn[data-tab="' + t + '"]');
       if (btn) btn.classList.toggle('active', t === tab);
     });
+    if (tab === 'home') loadHome();
+    if (tab === 'today') loadQueue();
     if (tab === 'lessons') loadLessons();
     if (tab === 'map') loadMap();
-    if (tab === 'home') loadHome();
     if (tab === 'settings') renderSettings();
   }
 
-  /* ---------- سرصفحه: سلام و آمار ---------- */
+  /* ---------- سرصفحه: خوش‌آمدگویی و آمار ---------- */
   function renderHeader() {
     var h = state.home;
     if (!h) return;
-    el('header-greeting').hidden = false;
-    el('header-greeting').textContent = greetingFor() + (h.user.displayName || 'داوطلب');
+    var greetingEl = el('header-greeting');
+    if (greetingEl) {
+      greetingEl.hidden = false;
+      greetingEl.textContent = greetingFor() + (h.user.displayName || 'داوطلب گرامی');
+    }
     el('chip-streak').hidden = false;
     el('chip-coins').hidden = false;
     el('chip-streak-n').textContent = h.stats.streakDays + ' روز پیوسته';
@@ -95,42 +102,59 @@
     el('chip-coins-n').textContent = stats.coins;
   }
 
-  /* ---------- ورود ---------- */
-  function tryTelegramLogin() {
+  /* ---------- شناسایی و ورود خودکار امن (بدون نیاز به آیدی دستی) ---------- */
+  function getOrCreateDeviceToken() {
+    var key = 'ael_device_token';
+    var token = localStorage.getItem(key);
+    if (!token) {
+      token = 'dev_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+      localStorage.setItem(key, token);
+    }
+    return token;
+  }
+
+  function autoAuthenticate() {
+    var statusText = el('auth-status-text');
+    if (statusText) statusText.textContent = 'در حال شناسایی و بارگذاری پروفایل اختصاصی...';
+
+    // ۱. اگر در داخل تلگرام باز شده است: استفاده از دادهٔ معتبر و امضاشدهٔ تلگرام (initData)
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
       state.telegram = window.Telegram.WebApp;
       state.telegram.ready();
+      if (state.telegram.expand) state.telegram.expand();
       return API.post('/api/auth/telegram', { initData: state.telegram.initData })
-        .then(function (data) { onAuthed(data); return true; })
+        .then(function (data) { onAuthed(data); })
         .catch(function (err) {
-          console.warn('Telegram WebApp auth error:', err);
-          return false;
+          console.warn('Telegram initData fallback to deviceToken:', err);
+          return loginWithDevice();
         });
     }
-    return Promise.resolve(false);
+
+    // ۲. اگر در وب یا مرورگر باز شده است: ورود خودکار با توکن اختصاصی و دائمی دستگاه داوطلب
+    return loginWithDevice();
   }
 
-  function loginWithUsername(username) {
-    var err = el('login-error');
-    if (err) err.hidden = true;
-    return API.post('/api/auth/telegram', { telegramUsername: username })
+  function loginWithDevice() {
+    var deviceToken = getOrCreateDeviceToken();
+    return API.post('/api/auth/telegram', { deviceToken: deviceToken, displayName: 'داوطلب دکتری مدیریت' })
       .then(function (data) {
         onAuthed(data);
-        return true;
       })
-      .catch(function (e) {
-        if (err) {
-          err.textContent = e.message || 'خطا در ورود به پروفایل';
-          err.hidden = false;
+      .catch(function (err) {
+        var errEl = el('login-error');
+        if (errEl) {
+          errEl.textContent = 'خطا در اتصال به سرور: ' + (err.message || 'لطفاً دوباره تلاش کنید');
+          errEl.hidden = false;
         }
-        return false;
       });
   }
 
   function onAuthed(data) {
     localStorage.setItem('session_token', data.token);
     state.tracks = (data.user && data.user.activeTracks) || ['common'];
+    // اگر داوطلب هنوز گرایشی انتخاب نکرده (یا فقط common دارد)، صفحهٔ انتخاب چندگانه گرایش نمایش داده می‌شود
     if (state.tracks.length <= 1) {
+      initTracksSelection();
       showView('view-tracks');
     } else {
       enterApp();
@@ -142,73 +166,48 @@
     showTab('home');
   }
 
-  var btnLogin = el('btn-login');
-  if (btnLogin) {
-    btnLogin.addEventListener('click', function () {
-      tryTelegramLogin().then(function (ok) {
-        if (!ok) {
-          var input = el('input-tg-username');
-          var username = input ? (input.value || '').trim() : '';
-          if (username) {
-            loginWithUsername(username);
-          } else {
-            var err = el('login-error');
-            if (err) {
-              err.textContent = 'برای ورود، شناسهٔ تلگرام خود را در کادر زیر وارد کنید یا دکمهٔ باز کردن ربات را لمس کنید.';
-              err.hidden = false;
-            }
-            if (input) input.focus();
-          }
+  /* ---------- انتخاب چندگانهٔ گرایش‌ها ---------- */
+  function initTracksSelection() {
+    state.selectedTracks = new Set(
+      (state.tracks || []).filter(function (t) { return t !== 'common'; })
+    );
+
+    document.querySelectorAll('.track-card').forEach(function (card) {
+      var track = card.dataset.track;
+      card.classList.toggle('selected', state.selectedTracks.has(track));
+      card.onclick = function () {
+        if (state.selectedTracks.has(track)) {
+          state.selectedTracks.delete(track);
+          card.classList.remove('selected');
+        } else {
+          state.selectedTracks.add(track);
+          card.classList.add('selected');
         }
-      });
+        var btnSave = el('btn-tracks-save');
+        if (btnSave) btnSave.disabled = state.selectedTracks.size === 0;
+      };
     });
+
+    var btnSave = el('btn-tracks-save');
+    if (btnSave) {
+      btnSave.disabled = state.selectedTracks.size === 0;
+      btnSave.onclick = function () {
+        if (state.selectedTracks.size === 0) return;
+        var chosenTracks = Array.from(state.selectedTracks);
+        btnSave.disabled = true;
+        btnSave.textContent = 'در حال ذخیره...';
+        API.put('/api/tracks', { tracks: chosenTracks }).then(function () {
+          state.tracks = ['common'].concat(chosenTracks);
+          btnSave.textContent = 'تأیید و شروع یادگیری';
+          enterApp();
+        }).catch(function (err) {
+          btnSave.disabled = false;
+          btnSave.textContent = 'تأیید و شروع یادگیری';
+          alert('خطا در ذخیره گرایش‌ها: ' + err.message);
+        });
+      };
+    }
   }
-
-  var btnWebLogin = el('btn-web-login');
-  if (btnWebLogin) {
-    btnWebLogin.addEventListener('click', function () {
-      var input = el('input-tg-username');
-      var username = input ? (input.value || '').trim() : '';
-      if (!username) {
-        var err = el('login-error');
-        if (err) {
-          err.textContent = 'لطفاً نام یا شناسهٔ تلگرام خود را در کادر بالا وارد کنید.';
-          err.hidden = false;
-        }
-        if (input) input.focus();
-        return;
-      }
-      loginWithUsername(username);
-    });
-  }
-
-  var inputTg = el('input-tg-username');
-  if (inputTg) {
-    inputTg.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        var username = (inputTg.value || '').trim();
-        if (username) loginWithUsername(username);
-      }
-    });
-  }
-
-  /* ---------- انتخاب گرایش ---------- */
-  document.querySelectorAll('.track-card').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.track-card').forEach(function (b) { b.classList.remove('selected'); });
-      btn.classList.add('selected');
-      state.selectedTrack = btn.dataset.track;
-      el('btn-tracks-save').disabled = false;
-    });
-  });
-
-  el('btn-tracks-save').addEventListener('click', function () {
-    if (!state.selectedTrack) return;
-    API.put('/api/tracks', { tracks: [state.selectedTrack] }).then(function () {
-      state.tracks = ['common', state.selectedTrack];
-      enterApp();
-    });
-  });
 
   /* ---------- ناوبری پایین ---------- */
   document.querySelectorAll('.nav-btn').forEach(function (btn) {
@@ -224,15 +223,21 @@
     });
   }
 
+  var TRACK_NAMES = {
+    business: 'مدیریت بازرگانی',
+    industrial: 'مدیریت صنعتی',
+    technology: 'مدیریت تکنولوژی و نوآوری',
+    strategy: 'مدیریت استراتژیک و آینده‌پژوهی',
+  };
+
   function renderHome(h) {
     var container = el('home-container');
-    var trackName = {
-      business: 'مدیریت بازرگانی',
-      technology: 'مدیریت تکنولوژی',
-      strategy: 'استراتژی و آینده‌پژوهی',
-    }[
-      (h.user.activeTracks || []).filter(function (t) { return t !== 'common'; })[0]
-    ] || 'هستهٔ مشترک';
+    if (!container) return;
+
+    var activeTrackTitles = (h.user.activeTracks || [])
+      .filter(function (t) { return t !== 'common'; })
+      .map(function (t) { return TRACK_NAMES[t] || t; });
+    var trackTitle = activeTrackTitles.length > 0 ? activeTrackTitles.join(' + ') : 'هستهٔ مشترک';
 
     var html = '';
 
@@ -247,256 +252,203 @@
       '<circle cx="40" cy="30" r="3" fill="var(--primary)"/>' +
       '<path d="M26 42c2 2 4 3 6 3s4-1 6-3" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>' +
       '</svg></div>' +
-      '<div class="mascot-text"><strong>همراه شما</strong>' +
+      '<div class="mascot-text"><strong>همراه هوشمند شما</strong>' +
       '<p>' + escapeHtml(h.mentorMessage) + '</p></div></section>';
 
-    // کارت هدف: شمارش معکوس + پیشرفت کل مسیر
+    // کارت هدف: شمارش معکوس + پیشرفت کل مسیر (شروع از ۰٪ برای داوطلب تازه)
+    var overallProgress = typeof h.progress.overall === 'number' ? h.progress.overall : 0;
     html += '<section class="dash-card goal-card">';
     if (h.stats.daysLeft !== null && h.stats.daysLeft >= 0) {
       html +=
         '<div class="goal-countdown"><span class="count-num">' + h.stats.daysLeft + '</span>' +
-        '<span class="count-label">روز تا کنکور</span></div>';
+        '<span class="count-label">روز تا آزمون کنکور</span></div>';
     }
     html +=
-      '<div class="goal-title">هدف: ' + escapeHtml(trackName) + '</div>' +
-      '<div class="labels"><span>کل مسیر</span><span>' + h.progress.overall + '٪</span></div>' +
-      '<div class="bar"><div class="fill" style="width:' + h.progress.overall + '%"></div></div>' +
+      '<div class="goal-title">گرایش‌های فعال: ' + escapeHtml(trackTitle) + '</div>' +
+      '<div class="labels"><span>پیشرفت تسلط سرفصل‌ها</span><span>' + overallProgress + '٪</span></div>' +
+      '<div class="bar"><div class="fill" style="width:' + overallProgress + '%"></div></div>' +
       '</section>';
 
-    // کارت درس روز
+    // کارت کوییز امروز
     html +=
       '<section class="dash-card lesson-card">' +
-      '<div class="lesson-head"><span>روز ' + (h.stats.dayNumber + (h.today.answered > 0 ? 0 : 1)) + '</span>' +
-      '<span>' + h.reviewDue + ' کارت برای مرور</span></div>' +
-      '<p class="lesson-sub">امروز ' + h.today.answered + ' پاسخ ثبت کرده‌اید (' + h.today.correct + ' درست)</p>' +
-      '<button id="btn-start-lesson" class="btn primary">شروع درس امروز</button>' +
+      '<div class="lesson-num">برنامهٔ امروز</div>' +
+      '<div class="lesson-title">' + (h.today.answered > 0 ? (h.today.answered + ' پاسخ ثبت‌شده امروز') : 'آغاز جلسه مطالعه') + '</div>' +
+      '<p class="lesson-sub">' + (h.reviewDue > 0 ? (h.reviewDue + ' تست در نوبت مرور فاصله دار') : 'آماده برای تست‌های هدفمند') + '</p>' +
+      '<button id="btn-start-today" class="btn primary full">شروع تمرین امروز</button>' +
       '</section>';
 
-    // کوییز شبانه
-    html += '<section class="dash-card night-card' + (h.nightQuiz.available ? '' : ' off') + '">';
-    if (h.nightQuiz.available) {
+    // کارت کوییز شبانه (سؤالات غلط امروز)
+    if (h.nightQuiz) {
       html +=
-        '<div class="night-head"><span class="night-icon" aria-hidden="true">' +
-        '<svg viewBox="0 0 24 24" width="18" height="18"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" fill="currentColor"/></svg></span>' +
-        '<div><strong>کوییز شبانه</strong>' +
-        '<p>' + h.nightQuiz.wrongCount + ' سؤالِ اشتباه امروز را دوباره می‌سنجیم</p></div></div>' +
-        '<button id="btn-night-quiz" class="btn ghost small">شروع کوییز شبانه</button>';
-    } else {
-      html +=
-        '<div class="night-head"><div><strong>کوییز شبانه</strong>' +
-        '<p>امروز اشتباهی نداشته‌اید؛ شب که شد، گره‌های متزلزل را مرور می‌کنیم.</p></div></div>';
+        '<section class="dash-card night-card">' +
+        '<div class="night-badge">🌙 کوییز شبانه</div>' +
+        '<div class="night-title">تثبیت پاسخ‌های غلط امروز (' + h.nightQuiz.wrongAnswersCount + ' سؤال)</div>' +
+        '<p class="night-sub">مرور دوباره قبل از خواب باعث تثبیت عصبی مفاهیم در حافظه بلندمدت می‌شود.</p>' +
+        '<button id="btn-start-night" class="btn secondary full">شروع کوییز شبانه</button>' +
+        '</section>';
     }
-    html += '</section>';
 
     container.innerHTML = html;
 
-    var startBtn = el('btn-start-lesson');
-    if (startBtn) startBtn.addEventListener('click', function () {
-      state.nightMode = false;
-      showTab('today');
-      loadQueue();
-    });
-    var nightBtn = el('btn-night-quiz');
-    if (nightBtn) nightBtn.addEventListener('click', startNightQuiz);
+    var btnToday = el('btn-start-today');
+    if (btnToday) btnToday.onclick = function () { showTab('today'); };
+
+    var btnNight = el('btn-start-night');
+    if (btnNight) {
+      btnNight.onclick = function () {
+        state.nightMode = true;
+        showTab('today');
+      };
+    }
   }
 
-  function startNightQuiz() {
-    API.get('/api/night-quiz').then(function (data) {
-      if (!data.items || data.items.length === 0) return;
-      state.queue = data.items;
-      state.nightMode = true;
-      state.currentIndex = 0;
-      showTab('today');
-      renderCurrent();
-    });
-  }
-
-  /* ---------- صف امروز ---------- */
-  function studyMode() {
-    return localStorage.getItem('study_mode') === 'commute' ? 'commute' : 'desk';
-  }
-
+  /* ---------- تب امروز (کوییز تطبیقی) ---------- */
   function loadQueue() {
-    API.get('/api/queue?limit=10&mode=' + studyMode() + '&budgetMinutes=30').then(function (data) {
+    var commuteMode = localStorage.getItem('study_mode') === 'commute';
+    var path = '/api/queue' + (commuteMode ? '?mode=commute' : '');
+    API.get(path).then(function (data) {
       state.queue = data.items || [];
-      state.nightMode = false;
       state.currentIndex = 0;
       renderCurrent();
     });
   }
 
   function renderCurrent() {
-    var empty = el('queue-empty');
-    var card = el('quiz-card');
-    if (state.currentIndex >= state.queue.length) {
-      card.hidden = true;
-      empty.hidden = false;
-      empty.querySelector('p').textContent = state.nightMode
-        ? 'کوییز شبانه تمام شد؛ خواب خوبی داشته باشید.'
-        : 'برای امروز برنامه‌ای نمانده است. خسته نباشید!';
+    var item = state.queue[state.currentIndex];
+    var emptyEl = el('queue-empty');
+    var cardEl = el('quiz-card');
+
+    if (!item) {
+      if (cardEl) cardEl.hidden = true;
+      if (emptyEl) {
+        emptyEl.hidden = false;
+        emptyEl.innerHTML = '<p>🎉 تمام سؤالات و کارت‌های امروز با موفقیت کامل شد. خسته نباشید!</p>';
+      }
       return;
     }
-    empty.hidden = true;
-    card.hidden = false;
-    el('answer-feedback').hidden = true;
-    var item = state.queue[state.currentIndex];
-    state.questionShownAt = Date.now(); // مبنای روانی اجرا و تشخیص لغزش
-    el('q-course').textContent = (state.nightMode ? 'کوییز شبانه — ' : '') + (item.course || '');
-    el('q-chapter').textContent = item.chapter || '';
-    var proofChip = el('q-proof-label');
-    if (proofChip) {
-      proofChip.hidden = !item.proofLabel;
-      if (item.proofLabel) proofChip.textContent = item.proofLabel;
-    }
-    var isTrap = item.card.cardType === 'trap_note';
-    el('q-card-type').hidden = !isTrap;
+
+    if (emptyEl) emptyEl.hidden = true;
+    if (cardEl) cardEl.hidden = false;
+
+    var question = item.question;
+    var card = item.card;
+    state.lastAttemptId = item.attemptId || null;
+    state.startTime = Date.now();
+
+    var qText = question ? question.text : (card.trapNote || 'مرور این مفهوم در برنامه است.');
+    el('q-text').textContent = qText;
+
+    el('q-course').textContent = item.courseTitle || (card.cardType === 'concept_comparison' ? 'مقایسهٔ مفاهیم' : 'کنکور دکتری');
+    el('q-chapter').textContent = item.chapterTitle || (card.isRepair ? 'کارت ترمیمی' : '');
+
     var vChip = el('q-verification');
     if (vChip) {
-      vChip.hidden = false;
-      if (item.question && item.question.isVerified) {
-        vChip.className = 'chip success';
-        vChip.textContent = 'سؤال رسمی تأییدشده';
+      vChip.hidden = !(question && question.isVerified);
+      vChip.textContent = 'سؤال تستی آزمون';
+    }
+
+    var proofLabel = el('q-proof-label');
+    if (proofLabel) {
+      if (item.attemptType === 'proof') {
+        proofLabel.hidden = false;
+        proofLabel.textContent = '🎯 سؤال اثبات تسلط (۱۴۰۴)';
       } else {
-        vChip.className = 'chip ghost';
-        vChip.textContent = 'نمونهٔ آموزشی (تأییدنشده)';
+        proofLabel.hidden = true;
       }
     }
 
-    if (isTrap) {
-      el('q-text').textContent = 'نکتهٔ دام: ' + (item.trapNote || item.question && item.question.text);
-      renderTrapOptions(item);
+    var typeChip = el('q-card-type');
+    if (card.cardType === 'trap') {
+      typeChip.hidden = false;
+      typeChip.textContent = '⚠️ تلهٔ تستی طراح';
+    } else if (card.cardType === 'concept_comparison') {
+      typeChip.hidden = false;
+      typeChip.textContent = '⚖️ مقایسهٔ مفاهیم مشابه';
     } else {
-      el('q-text').textContent = item.question.text;
-      renderOptions(item.question.options);
+      typeChip.hidden = true;
     }
-  }
 
-  function renderOptions(options) {
-    var box = el('q-options');
-    box.innerHTML = '';
-    options.forEach(function (opt, i) {
+    // گزینه‌ها
+    var optsContainer = el('q-options');
+    optsContainer.innerHTML = '';
+    var options = (question && question.options) || ['مفهوم را مرور کردم و به حافظه سپردم'];
+
+    options.forEach(function (optText, idx) {
       var btn = document.createElement('button');
-      btn.className = 'option';
-      btn.innerHTML = '<span class="key">' + (i + 1) + '</span><span>' + escapeHtml(opt) + '</span>';
-      btn.addEventListener('click', function () { submitAnswer(i); });
-      box.appendChild(btn);
+      btn.className = 'option-btn';
+      btn.innerHTML = '<span class="opt-num">' + (idx + 1) + '</span><span class="opt-text">' + escapeHtml(optText) + '</span>';
+      btn.onclick = function () {
+        submitAnswer(item, idx);
+      };
+      optsContainer.appendChild(btn);
+    });
+
+    el('answer-feedback').hidden = true;
+  }
+
+  function submitAnswer(item, selectedIdx) {
+    var responseTimeMs = Date.now() - (state.startTime || Date.now());
+    var body = {
+      questionId: item.question ? item.question.id : item.card.questionId,
+      selectedOption: selectedIdx,
+      attemptId: item.attemptId,
+      attemptType: item.attemptType || 'practice',
+      responseTimeMs: responseTimeMs,
+    };
+
+    // غیرفعال کردن گزینه‌ها حین ارسال
+    var optionBtns = document.querySelectorAll('.option-btn');
+    optionBtns.forEach(function (b) { b.disabled = true; });
+
+    API.post('/api/queue/answer', body).then(function (res) {
+      showFeedback(item, res, selectedIdx);
+      if (res.stats) updateStatsChips(res.stats);
+    }).catch(function (err) {
+      optionBtns.forEach(function (b) { b.disabled = false; });
+      alert('خطا در ثبت پاسخ: ' + err.message);
     });
   }
 
-  function renderTrapOptions(item) {
-    var box = el('q-options');
-    box.innerHTML = '';
-    var btn = document.createElement('button');
-    btn.className = 'option';
-    btn.innerHTML = '<span class="key">✓</span><span>خواندم؛ این دام را به خاطر می‌سپارم</span>';
-    btn.addEventListener('click', function () { submitAnswer(0); });
-    box.appendChild(btn);
-  }
+  function showFeedback(item, res, selectedIdx) {
+    var feedbackBox = el('answer-feedback');
+    feedbackBox.hidden = false;
 
-  function submitAnswer(selected) {
-    var item = state.queue[state.currentIndex];
-    var questionId = item.card.questionId;
-    // attemptId سرور (بلیت تلاش)؛ اگر نبود، جایگزین محلی برای سازگاری قدیمی
-    var attemptId = item.attemptId || ('att-' + questionId + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6));
-    state.lastSelfReport = null;
-    document.querySelectorAll('.option').forEach(function (b) { b.disabled = true; });
-    API.post('/api/answers', {
-      attemptId: attemptId,
-      questionId: questionId,
-      selectedOption: selected,
-      responseTimeMs: state.questionShownAt ? Date.now() - state.questionShownAt : undefined,
-      attemptType: item.attemptType === 'proof' ? 'proof' : undefined,
-    }).then(function (data) {
-      if (data.stats) updateStatsChips(data.stats);
-      state.lastAttemptId = attemptId;
-      showFeedback(item, data.report, selected, data.correctOption, data.explanation, data.trapNote, data.lesson, data.comparison, data.proofReady);
-    });
-  }
+    var wasCorrect = res.wasCorrect;
+    var correctOption = res.correctOption;
+    var report = res.report || {};
+    var lesson = res.lesson;
 
-  function showFeedback(item, report, selected, correctOption, explanation, trapNote, lesson, comparison, proofReady) {
-    var box = el('answer-feedback');
-    box.hidden = false;
+    // استایل گزینه‌ها
+    var optionBtns = document.querySelectorAll('.option-btn');
+    if (optionBtns[correctOption]) optionBtns[correctOption].classList.add('correct');
+    if (!wasCorrect && optionBtns[selectedIdx]) optionBtns[selectedIdx].classList.add('wrong');
+
     var head = el('feedback-head');
-    if (report.wasCorrect) {
-      head.textContent = 'پاسخ درست';
-      head.className = 'feedback-head ok';
+    head.className = 'feedback-head ' + (wasCorrect ? 'ok' : 'bad');
+    head.textContent = wasCorrect ? '✓ پاسخ کاملاً صحیح بود' : '✕ پاسخ اشتباه است';
+
+    var expEl = el('feedback-explanation');
+    expEl.textContent = res.explanation || (item.question ? item.question.explanation : '') || '';
+
+    // تلهٔ طراح
+    var trapEl = el('feedback-trap');
+    var trapText = res.trapNote || (item.question && item.question.trapNote);
+    if (trapText) {
+      trapEl.hidden = false;
+      trapEl.textContent = '💡 دام طراح کنکور: ' + trapText;
     } else {
-      head.textContent = 'پاسخ نادرست';
-      head.className = 'feedback-head bad';
-    }
-    var question = item.question;
-    var options = document.querySelectorAll('.option');
-    if (correctOption !== undefined && options[correctOption]) {
-      options[correctOption].classList.add('correct');
-    }
-    if (options[selected] && !report.wasCorrect) options[selected].classList.add('wrong');
-
-    // جدول مقایسهٔ مفاهیم متشابه (confusable_with)
-    var cmpBox = el('feedback-comparison');
-    if (cmpBox) {
-      if (!report.wasCorrect && comparison && comparison.titles && comparison.titles.length >= 2) {
-        cmpBox.hidden = false;
-        cmpBox.innerHTML = '<strong>⚠️ دو مفهوم متشابه که احتمالاً با هم خلط شدند:</strong><ul style="margin:6px 0 0;padding-right:16px;">' +
-          comparison.titles.map(function (t) { return '<li>' + escapeHtml(t) + '</li>'; }).join('') +
-          '</ul>';
-      } else {
-        cmpBox.hidden = true;
-      }
+      trapEl.hidden = true;
     }
 
-    // خوداظهاری پس از پاسخ غلط: بی‌دقتی یا نیاز به مرور مفهوم
-    var srBox = el('feedback-self-report');
-    if (srBox) {
-      if (!report.wasCorrect && state.lastAttemptId && !state.nightMode) {
-        srBox.hidden = false;
-        srBox.innerHTML = '';
-        var mkBtn = function (label, kind, note) {
-          var b = document.createElement('button');
-          b.className = 'self-report-btn';
-          b.textContent = label;
-          b.addEventListener('click', function () {
-            API.post('/api/self-report', {
-              attemptId: state.lastAttemptId,
-              questionId: question ? question.id : item.card.questionId,
-              selfReport: kind,
-            }).then(function (res) {
-              srBox.innerHTML = '<span class="self-report-done">✓ ' + escapeHtml(res.note || note) + '</span>';
-            });
-          });
-          return b;
-        };
-        srBox.appendChild(mkBtn('🤦‍♂️ بی‌دقتی در خواندن سوال', 'slip', 'ثبت شد.'));
-        srBox.appendChild(mkBtn('🧠 نیاز به مرور مفهوم', 'didnt_know', 'ثبت شد.'));
-      } else {
-        srBox.hidden = true;
-      }
-    }
+    // پیام منتور
+    var mentorEl = el('feedback-mentor');
+    if (mentorEl) mentorEl.textContent = report.mentorMessage || '';
 
-    // راهنمای اثبات تسلط
-    var proofBox = el('feedback-proof-ready');
-    if (proofBox) {
-      if (proofReady && report.coverageStatus === 'needs_proof') {
-        proofBox.hidden = false;
-        proofBox.textContent = '🎯 آمادگی اثبات این مهارت را داری؛ سؤال دیده‌نشدهٔ سال ۱۴۰۴ در صف بعدی توست.';
-      } else {
-        proofBox.hidden = true;
-      }
-    }
-
-    var finalExplanation = explanation || (question && question.explanation) || (item.trapNote || '');
-    el('feedback-explanation').textContent = finalExplanation;
-    var finalTrap = trapNote || (question && question.trapNote) || '';
-    var trap = el('feedback-trap');
-    if (finalTrap) {
-      trap.textContent = 'دام طراح: ' + finalTrap;
-      trap.hidden = false;
-    } else {
-      trap.hidden = true;
-    }
-    el('feedback-mentor').textContent = report.mentorMessage || '';
+    // نمایش موج تسلط
     renderRipple(report);
 
-    // آموزش کامل مبحث کنکور زیر هر سؤال
+    // آموزش کامل درس زیر هر سؤال (چه کاربر درست پاسخ دهد چه غلط)
     var lessonBox = el('feedback-lesson-card');
     if (lessonBox) {
       if (lesson) {
@@ -539,158 +491,261 @@
 
   function renderRipple(report) {
     var box = el('feedback-ripple');
+    if (!box) return;
     var deltas = (report.masteryDeltas || []).filter(function (d) { return d.before !== d.after; });
     if (deltas.length === 0) {
       box.innerHTML = '';
       return;
     }
-    var html = '<p class="ripple-title">موج اثر این پاسخ بر نقشهٔ تسلط شما:</p>';
+    var html = '<p class="ripple-title">اثر این پاسخ بر نمودار تسلط سرفصل‌ها:</p>';
     deltas.forEach(function (d) {
       var pct = Math.round(d.after);
       var cls = pct < 40 ? 'bad' : pct < 60 ? 'warn' : pct < 85 ? '' : 'ok';
       html +=
-        '<div class="mastery-row">' +
-        '<div class="labels"><span>' + escapeHtml(d.nodeId) + '</span><span>' +
-        d.before.toFixed(0) + '٪ ← ' + pct + '٪</span></div>' +
-        '<div class="bar"><div class="fill ' + cls + '" style="width:' + pct + '%"></div></div>' +
+        '<div class="ripple-row ' + cls + '">' +
+        '<span>' + escapeHtml(d.topic || d.nodeId) + '</span>' +
+        '<span>' + Math.round(d.before) + '٪ ← <strong>' + pct + '٪</strong></span>' +
         '</div>';
     });
     box.innerHTML = html;
   }
 
-  /* ---------- نقشهٔ مسیر ---------- */
+  /* ---------- تب آموزش درس (۸ درس دکتری مدیریت) ---------- */
+  var cachedLessons = null;
+
+  function loadLessons() {
+    var container = el('lessons-container');
+    if (!container) return;
+    if (cachedLessons) {
+      renderLessonsList(cachedLessons);
+      return;
+    }
+    container.innerHTML = '<div style="text-align:center;padding:28px;color:var(--ink-soft);font-size:13px;">در حال دریافت آموزش‌های سرفصل‌های دکتری...</div>';
+    API.get('/api/lessons').then(function (data) {
+      cachedLessons = data && data.courses ? data.courses : [];
+      renderLessonsList(cachedLessons);
+      initLessonsSearch();
+    }).catch(function (err) {
+      container.innerHTML = '<div class="error" style="text-align:center;padding:16px;">خطا در بارگذاری دروس: ' + escapeHtml(err.message) + '</div>';
+    });
+  }
+
+  function initLessonsSearch() {
+    var searchInput = el('lesson-search-input');
+    if (!searchInput || searchInput._bound) return;
+    searchInput._bound = true;
+    searchInput.addEventListener('input', function () {
+      var query = (searchInput.value || '').trim().toLowerCase();
+      renderLessonsList(cachedLessons, query);
+    });
+  }
+
+  function renderLessonsList(courses, filterQuery) {
+    var container = el('lessons-container');
+    if (!container) return;
+    if (!courses || courses.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>هیچ درسی بارگذاری نشد.</p></div>';
+      return;
+    }
+
+    var html = '';
+    var totalMatches = 0;
+
+    courses.forEach(function (course, cIdx) {
+      var filteredTopics = (course.topics || []).filter(function (t) {
+        if (!filterQuery) return true;
+        var q = filterQuery;
+        var inTitle = (t.topic || '').toLowerCase().includes(q);
+        var inCourse = (t.course || '').toLowerCase().includes(q);
+        var inChapter = (t.chapter || '').toLowerCase().includes(q);
+        var inSummary = (t.summary || '').toLowerCase().includes(q);
+        var inTerms = (t.keyTerms || []).some(function (k) { return k.toLowerCase().includes(q); });
+        return inTitle || inCourse || inChapter || inSummary || inTerms;
+      });
+
+      if (filterQuery && filteredTopics.length === 0) return;
+      totalMatches += filteredTopics.length;
+
+      var isOpen = (!filterQuery && cIdx === 0) || (filterQuery && filteredTopics.length > 0);
+
+      html += '<div class="course-accordion' + (isOpen ? ' open' : '') + '" data-course-id="' + escapeHtml(course.courseId) + '">';
+      html += '<div class="course-accordion-header">';
+      html += '<div><strong>' + escapeHtml(course.courseTitle) + '</strong> <span style="font-size:11.5px;color:var(--ink-soft);font-weight:400;margin-right:6px;">(' + filteredTopics.length + ' مبحث کلیدی)</span></div>';
+      html += '<span class="accordion-arrow" style="font-size:12px;color:var(--ink-soft);">' + (isOpen ? '▲' : '▼') + '</span>';
+      html += '</div>';
+
+      html += '<div class="course-topics-list">';
+      if (course.description && !filterQuery) {
+        html += '<p style="font-size:12px;color:var(--ink-soft);margin:4px 0 10px;line-height:1.6;">' + escapeHtml(course.description) + '</p>';
+      }
+
+      filteredTopics.forEach(function (topic) {
+        html += '<div class="topic-card">';
+        html += '<div class="topic-title">' + escapeHtml(topic.topic) + '</div>';
+        if (topic.chapter) {
+          html += '<div style="font-size:11.5px;color:var(--ink-soft);margin-bottom:6px;">فصل: ' + escapeHtml(topic.chapter) + '</div>';
+        }
+        if (topic.konkoorWeight) {
+          html += '<span class="topic-weight">🎯 ' + escapeHtml(topic.konkoorWeight) + '</span>';
+        }
+        if (topic.frequency) {
+          html += '<span class="topic-weight" style="background:#e0f2fe;color:#0369a1;margin-right:6px;">📊 ' + escapeHtml(topic.frequency) + '</span>';
+        }
+        if (topic.summary) {
+          html += '<div class="topic-summary">' + escapeHtml(topic.summary) + '</div>';
+        }
+        if (topic.konkoorTips && topic.konkoorTips.length > 0) {
+          html += '<div class="topic-tips"><strong>💡 نکات طلایی و تله‌های کنکور دکتری:</strong><ul style="margin:6px 0 0;padding-right:16px;">';
+          topic.konkoorTips.forEach(function (tip) {
+            html += '<li>' + escapeHtml(tip) + '</li>';
+          });
+          html += '</ul></div>';
+        }
+        if (topic.keyTerms && topic.keyTerms.length > 0) {
+          html += '<div class="topic-terms"><span style="font-size:11px;color:var(--ink-soft);margin-left:4px;">واژگان کلیدی:</span>';
+          topic.keyTerms.forEach(function (term) {
+            html += '<span class="lesson-term-badge">' + escapeHtml(term) + '</span>';
+          });
+          html += '</div>';
+        }
+        html += '</div>';
+      });
+
+      html += '</div></div>';
+    });
+
+    if (filterQuery && totalMatches === 0) {
+      container.innerHTML = '<div class="empty-state"><p>هیچ مبحثی مطابق «' + escapeHtml(filterQuery) + '» پیدا نشد.</p></div>';
+      return;
+    }
+
+    container.innerHTML = html;
+
+    // متصل کردن رویداد کلیک باز/بسته شدن آکاردئون
+    container.querySelectorAll('.course-accordion-header').forEach(function (hdr) {
+      hdr.addEventListener('click', function () {
+        var card = hdr.closest('.course-accordion');
+        var wasOpen = card.classList.contains('open');
+        card.classList.toggle('open', !wasOpen);
+        var arrow = card.querySelector('.accordion-arrow');
+        if (arrow) arrow.textContent = !wasOpen ? '▲' : '▼';
+      });
+    });
+  }
+
+  /* ---------- تب مسیر (Knowledge Map) ---------- */
   function loadMap() {
     API.get('/api/map').then(function (data) {
       var container = el('map-container');
-      var html = '';
-      var coverageLabel = {
-        unseen: 'سنجیده‌نشده',
-        diagnosed: 'در حال سنجش',
-        learning: 'در حال یادگیری',
-        remediated: 'ترمیم‌شده',
-        needs_proof: 'نیازمند اثبات',
-        proven: 'اثبات‌شده',
-        mastered: 'تسلط کامل',
-      };
-      (data.courses || []).forEach(function (course) {
-        html += '<section class="course-block"><h3 class="course-title">' + escapeHtml(course.course) + '</h3>';
-        course.chapters.forEach(function (chapter) {
-          html += '<p class="chapter-title">' + escapeHtml(chapter.chapter) + '</p>';
-          chapter.nodes.forEach(function (node) {
-            // مهارت سنجیده‌نشده: بدون درصد — با برچسب وضعیت و شواهد
-            if (node.mastery === null || node.mastery === undefined) {
-              html +=
-                '<div class="node-row"><div class="labels"><span class="node-name">' +
-                escapeHtml(node.topic) + '</span>' +
-                '<span class="status-badge unseen">سنجیده‌نشده</span></div>' +
-                '<div class="bar"><div class="fill" style="width:0%"></div></div></div>';
-              return;
-            }
-            var pct = Math.round(node.mastery);
-            var cls = pct < 40 ? 'bad' : pct < 60 ? 'warn' : pct < 85 ? '' : 'ok';
-            var badge = {
-              weak: 'ضعیف', unstable: 'متزلزل', learning: 'در حال یادگیری', mastered: 'تثبیت‌شده',
-            }[node.status] || node.status;
-            // ترکیب برچسب تسلط با کفایت شواهد (مدل ۶ بعدی)
-            var sub = badge + ' · ' + pct + '٪';
-            if (node.coverageStatus) {
-              var covLabel = coverageLabel[node.coverageStatus] || node.coverageStatus;
-              sub += ' · ' + covLabel;
-              if (typeof node.evidenceCount === 'number' && node.evidenceCount > 0) {
-                sub += ' · شواهد: ' + node.evidenceCount + ' تست';
-              }
-            }
-            html +=
-              '<div class="node-row"><div class="labels"><span class="node-name">' +
-              escapeHtml(node.topic) + '</span>' +
-              '<span class="status-badge ' + node.status + '">' + escapeHtml(sub) + '</span></div>' +
-              '<div class="bar"><div class="fill ' + cls + '" style="width:' + pct + '%"></div></div></div>';
-          });
-        });
-        html += '</section>';
+      if (!container) return;
+      var nodes = data.nodes || [];
+      var mastery = data.mastery || {};
+      var html = '<div class="map-grid">';
+      nodes.forEach(function (n) {
+        var m = mastery[n.id] ? Math.round(mastery[n.id].mastery) : 0;
+        var cls = m < 40 ? 'bad' : m < 60 ? 'warn' : m < 85 ? '' : 'ok';
+        html +=
+          '<div class="map-node ' + cls + '">' +
+          '<span class="node-topic">' + escapeHtml(n.topic) + '</span>' +
+          '<span class="node-course">' + escapeHtml(n.course) + '</span>' +
+          '<div class="node-bar"><div class="fill" style="width:' + m + '%"></div></div>' +
+          '<span class="node-pct">' + m + '٪</span>' +
+          '</div>';
       });
-      container.innerHTML = html || '<div class="empty-state"><p>گرایشی انتخاب نشده است.</p></div>';
+      html += '</div>';
+      container.innerHTML = html;
     });
   }
 
-  /* ---------- تنظیمات / من ---------- */
+  /* ---------- تب تنظیمات (من) ---------- */
   function renderSettings() {
     document.querySelectorAll('.track-toggle .toggle').forEach(function (btn) {
-      btn.classList.toggle('on', state.tracks.indexOf(btn.dataset.track) !== -1);
+      var t = btn.dataset.track;
+      btn.classList.toggle('on', state.tracks.includes(t));
+      btn.onclick = function () {
+        var idx = state.tracks.indexOf(t);
+        if (idx === -1) {
+          state.tracks.push(t);
+        } else {
+          state.tracks.splice(idx, 1);
+        }
+        var activeOnly = state.tracks.filter(function (x) { return x !== 'common'; });
+        API.put('/api/tracks', { tracks: activeOnly }).then(function () {
+          renderSettings();
+        });
+      };
     });
+
     renderStudyMode();
-    if (state.home && state.home.stats.examDate) {
-      el('input-exam-date').value = state.home.stats.examDate;
-    }
   }
 
-  document.querySelectorAll('.track-toggle .toggle').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var t = btn.dataset.track;
-      var idx = state.tracks.indexOf(t);
-      if (idx === -1) state.tracks.push(t); else state.tracks.splice(idx, 1);
-      var tracks = state.tracks.filter(function (x) { return x !== 'common'; });
-      API.put('/api/tracks', { tracks: tracks }).then(function () {
-        renderSettings();
-      });
-    });
-  });
-
-  /* ---------- حالت مطالعه (پشت میز / در مسیر) ---------- */
   function renderStudyMode() {
     var mode = localStorage.getItem('study_mode') === 'commute' ? 'commute' : 'desk';
-    el('mode-desk').classList.toggle('on', mode === 'desk');
-    el('mode-commute').classList.toggle('on', mode === 'commute');
+    var deskBtn = el('mode-desk');
+    var commuteBtn = el('mode-commute');
+    if (deskBtn) deskBtn.classList.toggle('on', mode === 'desk');
+    if (commuteBtn) commuteBtn.classList.toggle('on', mode === 'commute');
   }
-  el('mode-desk').addEventListener('click', function () {
-    localStorage.setItem('study_mode', 'desk');
-    renderStudyMode();
-    loadQueue();
-  });
-  el('mode-commute').addEventListener('click', function () {
-    localStorage.setItem('study_mode', 'commute');
-    renderStudyMode();
-    loadQueue();
-  });
 
-  el('btn-save-exam').addEventListener('click', function () {
-    var value = el('input-exam-date').value || null;
-    API.put('/api/settings', { examDate: value }).then(function () {
-      el('settings-saved').hidden = false;
-      loadHome();
-      setTimeout(function () { el('settings-saved').hidden = true; }, 2000);
+  var modeDesk = el('mode-desk');
+  if (modeDesk) {
+    modeDesk.addEventListener('click', function () {
+      localStorage.setItem('study_mode', 'desk');
+      renderStudyMode();
     });
-  });
+  }
 
-  el('btn-logout').addEventListener('click', function () {
-    localStorage.removeItem('session_token');
-    showView('view-login');
-  });
+  var modeCommute = el('mode-commute');
+  if (modeCommute) {
+    modeCommute.addEventListener('click', function () {
+      localStorage.setItem('study_mode', 'commute');
+      renderStudyMode();
+    });
+  }
 
-  /* ---------- راه‌اندازی ---------- */
+  var btnSaveExam = el('btn-save-exam');
+  if (btnSaveExam) {
+    btnSaveExam.addEventListener('click', function () {
+      var value = el('input-exam-date').value || null;
+      API.put('/api/settings', { examDate: value }).then(function () {
+        var savedMsg = el('settings-saved');
+        if (savedMsg) {
+          savedMsg.hidden = false;
+          setTimeout(function () { savedMsg.hidden = true; }, 2000);
+        }
+      });
+    });
+  }
+
+  var btnLogout = el('btn-logout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', function () {
+      localStorage.removeItem('session_token');
+      showView('view-login');
+      autoAuthenticate();
+    });
+  }
+
   function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&#34;', "'": '&#39;' }[c];
     });
   }
 
+  /* ---------- راه‌اندازی اولیه و ورود خودکار ---------- */
   if (localStorage.getItem('session_token')) {
     API.get('/api/me').then(function (data) {
       state.tracks = (data.user && data.user.activeTracks) || ['common'];
-      if (state.tracks.length <= 1) showView('view-tracks');
-      else enterApp();
-    }).catch(function () { /* 401 → صفحهٔ ورود */ });
-  } else {
-    tryTelegramLogin().then(function (ok) {
-      if (!ok) {
-        var params = new URLSearchParams(window.location.search);
-        var tgParam = params.get('tg') || params.get('user');
-        if (tgParam) {
-          loginWithUsername(tgParam);
-        } else {
-          showView('view-login');
-        }
+      if (state.tracks.length <= 1) {
+        initTracksSelection();
+        showView('view-tracks');
+      } else {
+        enterApp();
       }
+    }).catch(function () {
+      autoAuthenticate();
     });
+  } else {
+    autoAuthenticate();
   }
 })();
