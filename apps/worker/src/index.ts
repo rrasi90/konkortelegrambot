@@ -681,11 +681,6 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         : undefined;
     const selfReport =
       body.selfReport === 'slip' || body.selfReport === 'didnt_know' ? body.selfReport : undefined;
-    const attemptType =
-      body.attemptType === 'proof' || body.attemptType === 'diagnostic' || body.attemptType === 'verification'
-        ? body.attemptType
-        : 'practice';
-
     // idempotency: تلاش تکراری همان نتیجهٔ قبلی را برمی‌گرداند
     const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
     if (existing) {
@@ -720,6 +715,31 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       body.selectedOption >= question.options.length
     ) {
       return c.json({ error: 'شماره گزینه معتبر نیست.' }, 400);
+    }
+
+    // The issued ticket, not a client-supplied field, defines the attempt type.
+    let ticket;
+    try {
+      ticket = await store.getAttemptTicket(user.id, body.attemptId, body.questionId);
+    } catch (error) {
+      console.error('[worker] failed to read attempt ticket:', error);
+      return c.json({ error: 'اعتبار تلاش بررسی نشد؛ صف را تازه‌سازی کنید.' }, 503);
+    }
+    if (!ticket) return c.json({ error: 'بلیت معتبر برای این سؤال پیدا نشد؛ صف را تازه‌سازی کنید.' }, 400);
+    if (ticket.consumedAt || new Date(ticket.expiresAt).getTime() <= Date.now()) {
+      return c.json({ error: 'بلیت این تلاش مصرف‌شده یا منقضی است؛ صف را تازه‌سازی کنید.' }, 409);
+    }
+
+    const attemptType =
+      ticket.attemptType === 'proof' || ticket.attemptType === 'holdout'
+        ? 'proof'
+        : ticket.attemptType === 'practice' ||
+            ticket.attemptType === 'diagnostic' ||
+            ticket.attemptType === 'verification'
+          ? ticket.attemptType
+          : null;
+    if (!attemptType) {
+      return c.json({ error: 'نوع این تلاش هنوز در موتور یادگیری پشتیبانی نمی‌شود.' }, 400);
     }
 
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
