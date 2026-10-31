@@ -5,7 +5,11 @@ export interface BookChapter {
   /** شمارهٔ نمایشی فصل در کتاب (مثلاً «۳») */
   number: string;
   title: string;
-  /** تعداد سؤالی که در ادوار کنکور از این فصل طرح شده (برآورد از دفترچه‌ها) */
+  /**
+   * برآورد تاریخی قدیمی؛ منبع آن در بخشی از کاتالوگ به آزمون ارشد ۱۱۴۲ مربوط است
+   * و برای اولویت‌بندی کنکور دکتری معتبر یا قابل مقایسه نیست.
+   * فقط تا زمان بازبینی داده‌های منبع حفظ شده و نباید به‌عنوان بودجه‌بندی دکتری نمایش داده شود.
+   */
   examCount: number;
   /** گره‌های دانش متناظر برای اتصال به درس‌نامهٔ کامل و بانک تست */
   nodes: string[];
@@ -15,7 +19,7 @@ export interface BookChapter {
   formulas?: string[];
 }
 
-/** اهمیت فصل بر پایهٔ تعداد سؤال طرح‌شده از آن */
+/** @deprecated تا زمان ورود بودجه‌بندی مستند مخصوص دکتری، از این رتبه‌بندی استفاده نشود. */
 export type ChapterImportance = 'critical' | 'important' | 'supporting';
 
 export const getChapterImportance = (examCount: number): ChapterImportance => {
