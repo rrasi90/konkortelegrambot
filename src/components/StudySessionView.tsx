@@ -456,8 +456,11 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
           <div className="p-4 rounded-xl bg-blue-600/10 border border-blue-500/30 space-y-3">
             <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-              <span>میزان تسلط خود بر این درسنامه را ثبت کنید:</span>
+              <span>میزان اطمینان خود از درک این درسنامه را ثبت کنید:</span>
             </h4>
+            <p className="text-[11px] leading-5 text-slate-600 dark:text-slate-400">
+              این امتیاز خوداظهاری است؛ تسلط و بازشدن آزمون اثبات با پاسخ‌گویی مستقل سنجیده می‌شود.
+            </p>
             <div className="grid grid-cols-5 gap-2">
               {([1, 2, 3, 4, 5] as const).map((r) => (
                 <button
@@ -893,8 +896,11 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
 
                       <div className="p-3.5 rounded-xl bg-blue-600/10 border border-blue-500/30 space-y-2">
                         <div className="font-bold text-slate-900 dark:text-white">
-                          تسلط شما بر این درسنامه (۱ تا ۵):
+                          میزان اطمینان شما از درک این درسنامه (۱ تا ۵):
                         </div>
+                        <p className="text-[11px] leading-5 text-slate-600 dark:text-slate-400">
+                          این امتیاز به‌تنهایی شاهد تسلط نیست؛ تسلط با پاسخ به سؤال‌های مستقل ثبت می‌شود.
+                        </p>
                         <div className="grid grid-cols-5 gap-1.5">
                           {([1, 2, 3, 4, 5] as const).map((r) => (
                             <button
