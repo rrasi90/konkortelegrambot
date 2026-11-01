@@ -21,6 +21,7 @@ import {
   MultiYearFrequencyInsight,
 } from '../engine/aelEngine';
 import { MathText } from './MathText';
+import { TopicDiagramVisualizer } from './TopicDiagramVisualizer';
 import { LessonDeepDivePanel } from './LessonDeepDivePanel';
 import { getLessonDeepDive, getDeepDiveWordCount } from '../data/lessonDeepDives';
 import { getBookForNode } from '../data/bookChaptersRepo';
@@ -59,7 +60,6 @@ import {
   Award,
   ArrowLeft,
   GraduationCap,
-  Download,
   Eye,
 } from 'lucide-react';
 
@@ -138,18 +138,6 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
   // ساختار آزمون دکتری بر اساس سال نسخه‌بندی می‌شود؛ پیش‌فرض روی آخرین سال ثبت‌شده است.
   const [examYear, setExamYear] = useState<number>(LATEST_EXAM_YEAR);
   const [structureGroupId, setStructureGroupId] = useState<string>('business');
-
-  const downloadMarkdownFile = (filename: string, content: string) => {
-    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
 
   const [selectedTrack, setSelectedTrack] = useState<'all' | TrackId>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -308,16 +296,11 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={() =>
-                downloadMarkdownFile(
-                  'Konkor-Management-Master-PhD-Full-Handouts-TestBank.md',
-                  generateAllBooksMasterHandoutMarkdown()
-                )
-              }
+              onClick={() => setLibrarySection('compendium_100p')}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs transition-colors cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>دانلود جزوه جامع همه دروس (.md)</span>
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>مطالعه دایره‌المعارف ۱۰۰ صفحه‌ای دروس</span>
             </button>
 
             <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
@@ -691,19 +674,10 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() =>
-                downloadMarkdownFile(
-                  `${selected100PageCourseId}-100page-compendium.md`,
-                  generateCentralized100PageCourseMarkdown(selected100PageCourseId)
-                )
-              }
-              className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>دانلود مجلد ۱۰۰ صفحه‌ای این درس (.md)</span>
-            </button>
+            <div className="px-3 py-1.5 rounded-xl bg-blue-600/10 border border-blue-500/20 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-blue-500" />
+              <span>مطالعه کامل برخط در سامانه</span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
@@ -932,19 +906,10 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                     )}
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        downloadMarkdownFile(
-                          `${activeBook.id.replace(/\./g, '-')}-handout-testbank.md`,
-                          generateBookHandoutMarkdown(activeBook)
-                        )
-                      }
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white transition-colors cursor-pointer"
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      <span>دانلود فایل جزوه، خلاصه و بانک تست تشریحی این درس (.md)</span>
-                    </button>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/60">
+                      <BookOpen className="w-3.5 h-3.5 text-indigo-500" />
+                      <span>مطالعه سرفصل‌ها و تست‌های تشریحی این مرجع</span>
+                    </div>
                     {activeBook.linkedNodeId && (
                       <button
                         type="button"
@@ -1048,6 +1013,22 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                           ))}
                         </div>
                       )}
+
+                      {/* هایلایت طلایی برای مباحث و فصل‌های با ۲ بار یا بیشتر تکرار در ۱۵ سال اخیر */}
+                      {(ch.examImportance.includes('۲') || ch.examImportance.includes('حیاتی') || ch.examImportance.includes('مهم') || ch.examImportance.includes('تکرار')) && (
+                        <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/25 space-y-1 text-xs">
+                          <div className="flex items-center gap-1.5 font-bold text-amber-800 dark:text-amber-300">
+                            <Flame className="w-3.5 h-3.5 text-amber-600 fill-current" />
+                            <span>سرفصل پرتکرار کنکورهای ۱۵ سال اخیر (۲ بار و بیشتر طرح سوال)</span>
+                          </div>
+                          <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-5">
+                            طراحان کنکور ارشد و دکتری در ادوار اخیر به طور مکرر از این سرفصل تست طراحی کرده‌اند. تسلط بر مفاهیم تفکیکی، تعاریف تئوریک و فرمول‌های این بخش اولویت نخست آمادگی آزمون است.
+                          </p>
+                        </div>
+                      )}
+
+                      {/* نمودار مفهومی وکتوری کم‌حجم */}
+                      <TopicDiagramVisualizer topic={`${ch.chapterTitle} ${ch.keyPointsSummary.join(' ')}`} />
                     </div>
                   ))}
                 </div>

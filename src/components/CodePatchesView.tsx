@@ -5,7 +5,6 @@ import {
   Code2,
   Copy,
   Check,
-  Download,
   FileCode,
   Sparkles,
   CheckCircle2,
@@ -292,16 +291,6 @@ export const CodePatchesView: React.FC = () => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleDownload = (filename: string, code: string) => {
-    const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   const gitReplaceMainScript = `# ۱. استخراج بسته فایل‌های جدید در پوشه پروژه و جایگزینی کامل شاخه main در ریپازیتوری شما:
 mkdir -p konkortelegrambot-new && cd konkortelegrambot-new
 tar -xzf ../konkortelegrambot-main-updated.tar.gz
@@ -335,14 +324,14 @@ git push -f origin main`;
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <a
-              href="/assets/konkortelegrambot-main-updated.tar.gz"
-              download="konkortelegrambot-main-updated.tar.gz"
-              className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-2 transition-colors shadow-xs"
+            <button
+              type="button"
+              onClick={() => handleCopy('git_repo_url', 'https://github.com/rrasi90/konkortelegrambot.git')}
+              className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-2 transition-colors shadow-xs cursor-pointer"
             >
-              <Download className="w-4 h-4" />
-              <span>دانلود کل فایل‌های جدید پروژه (tar.gz)</span>
-            </a>
+              <CheckCircle2 className="w-4 h-4" />
+              <span>مخزن گیت‌هاب (مشاهده آنلاین کدها)</span>
+            </button>
             <button
               type="button"
               onClick={() => handleCopy('git_replace_main', gitReplaceMainScript)}
@@ -460,11 +449,11 @@ git push -f origin main`;
 
               <button
                 type="button"
-                onClick={() => handleDownload(activePatch.filename, activePatch.code)}
+                onClick={() => handleCopy(activePatch.id + '_all', activePatch.code)}
                 className="px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
-                <Download className="w-3.5 h-3.5" />
-                <span>دانلود فایل</span>
+                <FileCode className="w-3.5 h-3.5" />
+                <span>کپی کامل متن کد</span>
               </button>
             </div>
           </div>
