@@ -5,10 +5,14 @@
 > (baseline, feature matrix, claim-evidence matrix, branch/PR audit, technical test baseline,
 > remediation register R-001…R-025, risk register). Raw outputs in `evidence/phase-0/`.
 > KPI rows below remain the ground truth until each phase produces evidence.
+> **Phase 1 (Scientific Foundation): PASS_WITH_EVIDENCE — 2026-11-01.** Combination model fixed in
+> code, PR#4 foundation merged into remediation branch, root duplicates deleted, validator extended
+> (placeholder-hash / prerequisite-cycle / combination-bundle checks). External blockers itemized in
+> `docs/phase-1/PHASE_1_ACCEPTANCE_REPORT.md` appendix. Evidence: `evidence/phase-1/`.
 
 | شاخص کلان              | مرحله | وضعیت        | تعریف موفقیت                             |
 | ---------------------- | ----- | ------------ | ---------------------------------------- |
-| Exam Coverage          | ۱ و ۲ | NOT_STARTED  | تمام سرفصل‌های مصوب قابل ردیابی‌اند      |
+| Exam Coverage          | ۱ و ۲ | IN_PROGRESS  | تمام سرفصل‌های مصوب قابل ردیابی‌اند      |
 | Verified Content       | ۲     | NOT_STARTED  | محتوای منتشرشده تأیید علمی دارد          |
 | Question Quality       | ۲ و ۵ | NOT_STARTED  | کیفیت سؤالات بررسی شده است               |
 | Architecture Parity    | ۳     | NOT_STARTED  | یک موتور و یک منبع محتوا                 |

@@ -122,6 +122,20 @@ if (registry) {
   for (const sourceId of spec?.sources ?? []) {
     if (!sourceIds.includes(sourceId)) errors.push(`Unknown source ID in exam specification: ${sourceId}`);
   }
+  // No placeholder hashes or fake file evidence may survive in the registry.
+  const placeholderHits = registryText.match(/"fileHash[a-zA-Z0-9]*"\s*:\s*"[^"]*placeholder[^"]*"|"sha256"\s*:\s*"[^"]*placeholder[^"]*"/gi) ?? [];
+  for (const hit of placeholderHits) errors.push(`Placeholder hash in source registry: ${hit.slice(0, 60)}`);
+  for (const source of registry.sources ?? []) {
+    const hashes = Object.entries(source).filter(([key]) => /sha256|fileHash/i.test(key));
+    for (const [, value] of hashes) {
+      if (typeof value === 'string' && !/^[0-9a-f]{64}$/i.test(value)) {
+        errors.push(`Source ${source.id} has a non-64-hex hash value: ${value.slice(0, 40)}`);
+      }
+    }
+    if (source.accessed !== true && source.type?.includes('official') && (source.contentVerified ?? []).length > 0) {
+      errors.push(`Source ${source.id} claims verified content while accessed=false.`);
+    }
+  }
 }
 
 const combo = parseCsv(comboText, 'EXAM_COMBINATIONS_1405_BASELINE.csv');
@@ -152,6 +166,24 @@ for (const item of combo.rows) {
   assignments.add(key);
 }
 
+// Combination-code consistency: the official definition requires the same
+// subject bundles for every row sharing a combination code. Rows that violate
+// this must be quarantined (verification_status must not claim the plain
+// official_handbook_1405 status).
+const bundlesByCombination = new Map();
+for (const item of combo.rows) {
+  const code = item[c.combination_code];
+  if (!code) continue;
+  const bundleSig = (item[c.course_bundle_numbers_1405] ?? '').split(';').filter(Boolean).sort().join(';');
+  const status = item[c.verification_status];
+  const prev = bundlesByCombination.get(code);
+  if (prev && prev.sig !== bundleSig && status === 'official_handbook_1405') {
+    errors.push(`Combination ${code} row marked official_handbook_1405 diverges from that combination's bundles; quarantine it instead.`);
+  } else if (!prev) {
+    bundlesByCombination.set(code, { sig: bundleSig, status });
+  }
+}
+
 const matrix = parseCsv(matrixText, 'CURRICULUM_COVERAGE_MATRIX.csv');
 const m = getColumnIndexes(
   matrix.header,
@@ -179,6 +211,29 @@ for (const item of matrix.rows) {
       errors.push(`Unknown prerequisite ${prerequisite} referenced by ${topicId}`);
     }
   }
+}
+
+// Prerequisite cycle detection (DFS three-color).
+const prereqEdges = new Map();
+for (const item of matrix.rows) {
+  prereqEdges.set(item[m.topic_id], (item[m.prerequisite_topic_ids] ?? '').split(';').filter((id) => topicSet.has(id)));
+}
+const WHITE = 0, GRAY = 1, BLACK = 2;
+const color = new Map([...topicSet].map((id) => [id, WHITE]));
+function visit(node, stack) {
+  color.set(node, GRAY);
+  for (const next of prereqEdges.get(node) ?? []) {
+    if (color.get(next) === GRAY) {
+      errors.push(`Prerequisite cycle detected: ${[...stack, node, next].join(' -> ')}`);
+      color.set(next, BLACK);
+    } else if (color.get(next) === WHITE) {
+      visit(next, [...stack, node]);
+    }
+  }
+  color.set(node, BLACK);
+}
+for (const topic of topicSet) {
+  if (color.get(topic) === WHITE) visit(topic, []);
 }
 
 if (errors.length) {

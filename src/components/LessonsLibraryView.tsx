@@ -462,10 +462,18 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                   <div className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
                     <span className="font-bold">رشته‌های این زیرمجموعه:</span>{' '}
                     {group?.fields.join(' • ')}
+                    {group && group.combinationCodes.length > 0 && (
+                      <span className="font-bold text-sky-800 dark:text-sky-300">
+                        {' '}
+        — کد(های) ترکیب رسمی ۱۴۰۵:{' '}
+        {group.combinationCodes.map((code) => toPersianDigits(code)).join(' و ')}
+                      </span>
+                    )}
                     {group?.code === null && (
                       <span className="text-amber-700 dark:text-amber-400 font-bold">
                         {' '}
-                        — کد این زیرمجموعه هنوز با دفترچهٔ رسمی تطبیق داده نشده است.
+        — زیرمجموعه‌ها کد رسمی مستقل ندارند (سند نشده بود؛ حذف شد). مواد آزمون با
+        کد ترکیب رسمی و بر اساس دفترچه همان سال تعیین می‌شود.
                       </span>
                     )}
                   </div>

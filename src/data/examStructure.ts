@@ -6,11 +6,13 @@
  *
  * دو اصل که این فایل را از نسخه‌های قبلیِ اسناد پروژه جدا می‌کند:
  *
- * ۱) «مجموعهٔ امتحانی» و «کد ضریب/زیرمجموعه» یکی نیستند.
- *    کد ۲۱۶۲ کد مجموعهٔ امتحانی «مدیریت» است؛ ۲۱۶۲/۲۱۶۳/۲۱۶۴/۲۱۶۵
- *    کدهای زیرمجموعه‌ها (بازرگانی، دولتی، صنعتی، رسانه و اطلاعات) هستند.
- *    در اسناد قبلی کل مجموعه با کد ۲۱۶۴ (که در واقع کد مدیریت صنعتی است)
- *    معرفی شده بود.
+ * ۱) «مجموعهٔ امتحانی»، «کد ترکیب» و «کد زیرمجموعه» یکی نیستند.
+ *    کد ۲۱۶۲ کد مجموعهٔ امتحانی «مدیریت» است. سازوکار رسمیِ تعیین مواد،
+ *    «کد ترکیب» ۱ تا ۷ است که در دفترچهٔ ۱۴۰۵ (صفحات ۲۴–۲۵) به‌صورت
+ *    ردیف‌های جدول استخراج شده است؛ هیچ سند رسمی برای کدهای ۲۱۶۲/۲۱۶۳/
+ *    ۲۱۶۴/۲۱۶۵ به‌عنوان «کد زیرمجموعه» در مخزن وجود ندارد و این کدها
+ *    از مدل حذف شده‌اند (وضعیت: needs_check تا بازبینی دستی کارنامه‌ها).
+ *    ببین: docs/phase-1/EXAM_COMBINATIONS_1405_BASELINE.csv
  *
  * ۲) قواعد آزمون بر اساس سال نسخه‌بندی می‌شود.
  *    حذف «استعداد تحصیلی» و افزایش ضریب دروس تخصصی به ۵ از آزمون
@@ -64,23 +66,112 @@ export const MANAGEMENT_EXAM_SET: ExamSet = {
 };
 
 /* ------------------------------------------------------------------ */
-/* ۲. زیرمجموعه‌ها (کد ضریب / رشته‌های امتحانی)                        */
+/* ۲. ترکیب‌های رسمی (کد ترکیب ۱ تا ۷ — دفترچهٔ ۱۴۰۵، ص۲۴–۲۵)          */
+/* ------------------------------------------------------------------ */
+
+export interface ExamCombination {
+  /** کد ترکیب همانطور که در ستون «کد ترکیب» دفترچه درج شده است */
+  combinationCode: string;
+  /** عنوان رشته‌ها/گرایش‌های این ترکیب در جدول رسمی */
+  titles: string[];
+  /** شمارهٔ بسته‌های درسی علامت‌خورده برای این ترکیب در ۱۴۰۵ */
+  bundleNumbers: string[];
+  verification: ExamVerification;
+  /** محدودیت پذیرش ذکرشده در یادداشت دفترچه */
+  admissionNote?: string;
+}
+
+/**
+ * مدل ترکیب از استخراج بازخوانی‌شدهٔ دفترچهٔ ۱۴۰۵ می‌آید. رکوردهایی که
+ * تطابق بصری‌شان قطعی نشده `needs_check` هستند و نباید مسیر پیش‌فرض بسازند.
+ * منبع: docs/phase-1/EXAM_COMBINATIONS_1405_BASELINE.csv
+ */
+export const MANAGEMENT_EXAM_COMBINATIONS: ExamCombination[] = [
+  {
+    combinationCode: '1',
+    titles: ['مدیریت بازرگانی', 'مدیریت راهبردی'],
+    bundleNumbers: ['1', '2', '3'],
+    verification: 'needs_check',
+    admissionNote:
+      'ردیف‌های بازرگانی قطعی‌اند؛ زیرردیف «مدیریت راهبردی» نیازمند بازخوانی بصری دوباره است.',
+  },
+  {
+    combinationCode: '2',
+    titles: ['مدیریت دولتی', 'مدیریت و برنامه‌ریزی فرهنگی', 'مطالعات مدیریت اسلامی'],
+    bundleNumbers: ['1', '2', '4'],
+    verification: 'needs_check',
+    admissionNote:
+      'ردیف‌های دولتی قطعی‌اند؛ ردیف‌های فرهنگی/اسلامی فقط بستهٔ ۱؛۲ علامت دارند و تا تطبیق با اصلاحیه منتشر نشوند.',
+  },
+  {
+    combinationCode: '3',
+    titles: ['مدیریت صنعتی'],
+    bundleNumbers: ['1', '2', '5'],
+    verification: 'official_verified',
+    admissionNote: 'استراتژی صنعتی: پذیرش فقط دانشگاه آزاد (یادداشت دفترچه).',
+  },
+  {
+    combinationCode: '4',
+    titles: ['مدیریت آماد و پشتیبانی'],
+    bundleNumbers: ['1', '9'],
+    verification: 'official_verified',
+    admissionNote: 'مربوط به دانشگاه‌های نظامی و انتظامی؛ برای داوطلب عمومی پیش‌فرض نشود.',
+  },
+  {
+    combinationCode: '5',
+    titles: ['مدیریت رسانه', 'مدیریت فناوری اطلاعات', 'مدیریت بحران'],
+    bundleNumbers: ['1', '2', '6'],
+    verification: 'needs_check',
+    admissionNote: 'کنترل سازگاری کد ترکیب با تعریف رسمی در حال انجام است.',
+  },
+  {
+    combinationCode: '6',
+    titles: ['کارآفرینی', 'مدیریت فناوری', 'آینده‌پژوهی', 'سیاست‌گذاری علم و فناوری', 'مطالعات نوآوری و توسعه فناوری‌های راهبردی'],
+    bundleNumbers: ['1', '2', '7'],
+    verification: 'official_verified',
+  },
+  {
+    combinationCode: '7',
+    titles: ['مالی (مهندسی مالی، بانکداری، بیمه، حقوق مالی، مالی بین‌المللی)'],
+    bundleNumbers: ['1', '2', '8'],
+    verification: 'official_verified',
+    admissionNote: 'حقوق مالی و مالی بین‌المللی: پذیرش فقط دانشگاه آزاد (یادداشت دفترچه).',
+  },
+];
+
+/** بسته‌های درسی ۱۴۰۵ — عنوان از ستون رسمی همان شماره‌ها. */
+export const MANAGEMENT_COURSE_BUNDLES: Record<string, string[]> = {
+  '1': ['زبان انگلیسی'],
+  '2': ['مجموعه دروس کارشناسی'],
+  '3': ['بازاریابی و مدیریت بازار پیشرفته', 'مدیریت استراتژیک پیشرفته'],
+  '4': ['نظریه‌ها و مبانی مدیریت دولتی', 'نظریه‌ها و مبانی خط‌مشی‌گذاری دولتی'],
+  '5': ['تحقیق در عملیات پیشرفته', 'مدیریت تولید و عملیات پیشرفته'],
+  '6': ['سیستم‌های اطلاعات مدیریت پیشرفته', 'مدیریت دانش'],
+  '7': ['نظریه‌های کارآفرینی', 'تئوری‌های نوآوری', 'مدیریت استراتژیک پیشرفته'],
+  '8': ['ریسک و مدیریت سرمایه‌گذاری', 'بازارها و نهادهای مالی'],
+  '9': ['مدیریت ارتباط و رفتار سازمانی', 'مدیریت استراتژیک'],
+};
+
+/* ------------------------------------------------------------------ */
+/* ۲ب. زیرمجموعه‌های آموزشی (نقشهٔ داخلی محصول — بدون ادعای کد رسمی)   */
 /* ------------------------------------------------------------------ */
 
 export interface ExamSubGroup {
   id: string;
-  /** کد زیرمجموعه در کارنامه؛ در صورت نبودِ سند رسمی null است. */
+  /** کد زیرمجموعه در کارنامه؛ تا وجود سند رسمی همه null است (R-001). */
   code: string | null;
   title: string;
   /** رشته‌ها و گرایش‌های مندرج در جدول رسمی */
   fields: string[];
   verification: ExamVerification;
+  /** کد ترکیب رسمی ۱۴۰۵ که این زیرمجموعه به آن نگاشت می‌شود */
+  combinationCodes: string[];
 }
 
 export const MANAGEMENT_SUB_GROUPS: ExamSubGroup[] = [
   {
     id: 'business',
-    code: '2162',
+    code: null,
     title: 'مدیریت بازرگانی و راهبردی',
     fields: [
       'مدیریت بازاریابی',
@@ -88,11 +179,12 @@ export const MANAGEMENT_SUB_GROUPS: ExamSubGroup[] = [
       'مدیریت سیاست‌گذاری بازرگانی',
       'رفتار سازمانی و منابع انسانی',
     ],
-    verification: 'official_verified',
+    verification: 'needs_check',
+    combinationCodes: ['1'],
   },
   {
     id: 'public',
-    code: '2163',
+    code: null,
     title: 'مدیریت دولتی',
     fields: [
       'تصمیم‌گیری و خط‌مشی‌گذاری عمومی',
@@ -100,11 +192,12 @@ export const MANAGEMENT_SUB_GROUPS: ExamSubGroup[] = [
       'مدیریت رفتار سازمانی',
       'مدیریت منابع انسانی',
     ],
-    verification: 'official_verified',
+    verification: 'needs_check',
+    combinationCodes: ['2'],
   },
   {
     id: 'industrial',
-    code: '2164',
+    code: null,
     title: 'مدیریت صنعتی',
     fields: [
       'تحقیق در عملیات',
@@ -112,14 +205,16 @@ export const MANAGEMENT_SUB_GROUPS: ExamSubGroup[] = [
       'استراتژی صنعتی',
       'مدیریت زنجیره تأمین',
     ],
-    verification: 'official_verified',
+    verification: 'needs_check',
+    combinationCodes: ['3'],
   },
   {
     id: 'media',
-    code: '2165',
+    code: null,
     title: 'مدیریت رسانه و اطلاعات',
     fields: ['کسب‌وکار الکترونیک', 'مدیریت دانش', 'سیستم‌های اطلاعاتی پیشرفته'],
-    verification: 'official_verified',
+    verification: 'needs_check',
+    combinationCodes: ['5'],
   },
   {
     id: 'technology',
@@ -131,6 +226,7 @@ export const MANAGEMENT_SUB_GROUPS: ExamSubGroup[] = [
       'کارآفرینی بین‌الملل و فناورانه',
     ],
     verification: 'needs_check',
+    combinationCodes: ['6'],
   },
   {
     id: 'foresight',
@@ -138,6 +234,7 @@ export const MANAGEMENT_SUB_GROUPS: ExamSubGroup[] = [
     title: 'آینده‌پژوهی',
     fields: ['نظریه‌ها و روش‌های آینده‌پژوهی'],
     verification: 'needs_check',
+    combinationCodes: ['6'],
   },
   {
     id: 'stpolicy',
@@ -145,6 +242,7 @@ export const MANAGEMENT_SUB_GROUPS: ExamSubGroup[] = [
     title: 'سیاست‌گذاری علم و فناوری',
     fields: ['سیاست‌گذاری علم و فناوری', 'مدیریت فناوری'],
     verification: 'needs_check',
+    combinationCodes: ['6'],
   },
 ];
 
@@ -387,4 +485,18 @@ export function getSpecializationSharePercent(year: number, subGroupId: string):
 /** کدهای زیرمجموعه که هنوز سند رسمی ندارند. */
 export function getUnverifiedSubGroupCodes(): ExamSubGroup[] {
   return MANAGEMENT_SUB_GROUPS.filter((g) => g.verification === 'needs_check');
+}
+
+/** ترکیب رسمی ۱۴۰۵ با کدش. */
+export function getCombination(code: string): ExamCombination | undefined {
+  return MANAGEMENT_EXAM_COMBINATIONS.find((k) => k.combinationCode === code);
+}
+
+/** ترکیب‌هایی که یک زیرمجموعهٔ آموزشی به آن‌ها نگاشت می‌شود. */
+export function getCombinationsForSubGroup(subGroupId: string): ExamCombination[] {
+  const group = getSubGroup(subGroupId);
+  if (!group) return [];
+  return group.combinationCodes
+    .map((code) => getCombination(code))
+    .filter((k): k is ExamCombination => k !== undefined);
 }
