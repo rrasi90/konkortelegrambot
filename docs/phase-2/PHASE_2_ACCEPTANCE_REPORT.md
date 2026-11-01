@@ -2,7 +2,7 @@
 
 - **PHASE:** 2 — Scientific content & assessment repository
 - **START_COMMIT:** `a49f3c9` (Phase 1 close)
-- **END_COMMIT:** این کامیت (`fix/mission-remediation-20261101`)
+- **END_COMMIT:** `093fe48` (`fix/mission-remediation-20261101`)
 - **BRANCH:** `fix/mission-remediation-20261101` (بدون merge به main — طبق قاعده، نیازمند تأیید صریح مالک)
 
 ## §1 DELIVERABLES (همه در مخزن، قابل بازرسی)

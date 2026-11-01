@@ -8,6 +8,11 @@
  * ۵. رادار هوشمند تشخیص فصول پرتکرار چندساله کنکور (Multi-Year Exam Frequency Detector)
  * ۶. مأموریت‌های روزانه پویا (Daily Quests - Duolingo) و امتیاز XP
  * ۷. موتور اعتبارسنج سخت‌گیرانه بدون حدس (Zero-Guessing Content Ingestion Validator) ویژه ایجنت‌ها
+ *
+ * @deprecated موتور legacy — طبق تصمیم ARC-01 (docs/phase-3/ARCHITECTURE_DECISION.md)،
+ * موتور رسمی `@ael/engine` است. این فایل فقط migration backlog است (R-009؛ مهاجرت در Phase 4/5).
+ * افزودن منطق محاسباتی جدید به این فایل ممنوع است؛ انحراف‌های آن در
+ * docs/phase-3/ENGINE_PARITY_MATRIX.csv مستند شده‌اند.
  */
 
 import {
