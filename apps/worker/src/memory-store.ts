@@ -1,7 +1,7 @@
 import { defaultSeed } from './default-seed';
 /** پیاده‌سازی درون‌حافظه‌ای لایهٔ داده — برای تست و دمو */
 import type { LearnerSkillState, ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
-import type { AttemptTicket, AnswerEvent, AppUser, AuditEventInput, DailyQueueItemRow, DataStore, ExamSelection } from './store';
+import type { AttemptTicket, AnswerEvent, AppUser, AuditEventInput, DailyQueueItemRow, DataStore, ExamSelection, MasteryHistoryRow } from './store';
 
 export class MemoryStore implements DataStore {
   users = new Map<string, AppUser>();
@@ -309,6 +309,19 @@ export class MemoryStore implements DataStore {
 
   async countMasteryHistoryRows(userId: string): Promise<number> {
     return this.masteryHistory.filter((h) => h.userId === userId).length;
+  }
+
+  async listMasteryHistorySince(userId: string, sinceIso: string): Promise<MasteryHistoryRow[]> {
+    const since = Date.parse(sinceIso);
+    return this.masteryHistory
+      .filter((h) => h.userId === userId && Date.parse(h.recordedAt) >= since)
+      .map((h) => ({
+        nodeId: h.nodeId,
+        previousScore: h.previousScore,
+        newScore: h.newScore,
+        changeReason: h.changeReason,
+        recordedAt: h.recordedAt,
+      }));
   }
 
   /* ---------- §8.7 — جلسهٔ شبیه‌سازی آزمون (in-memory) ---------- */

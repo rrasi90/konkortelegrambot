@@ -48,6 +48,14 @@ export interface AnswerEvent {
   rippleReport: unknown;
 }
 
+export interface MasteryHistoryRow {
+  nodeId: string;
+  previousScore: number | null;
+  newScore: number;
+  changeReason: string;
+  recordedAt: string;
+}
+
 export type IssuedAttemptType = 'practice' | 'diagnostic' | 'verification' | 'proof' | 'holdout' | 'exam_simulation';
 
 export interface AttemptTicket {
@@ -211,6 +219,9 @@ export interface DataStore {
 
   /** ردیف‌های تاریخچهٔ تسلط نوشته‌شده توسط trigger (مخصوص تست/ممیزی) */
   countMasteryHistoryRows(userId: string): Promise<number>;
+
+  /** تغییرات تسلط از یک زمان به بعد — مبنای شاخص سرعت یادگیری (§8.10) */
+  listMasteryHistorySince(userId: string, sinceIso: string): Promise<MasteryHistoryRow[]>;
 
   /* ---------- §8.7 — جلسهٔ شبیه‌سازی آزمون ---------- */
 
@@ -903,6 +914,31 @@ export class SupabaseStore implements DataStore {
     const total = cr ? Number(cr.split('/')[1]) : 0;
     await res.text();
     return Number.isFinite(total) ? total : 0;
+  }
+
+  async listMasteryHistorySince(userId: string, sinceIso: string): Promise<MasteryHistoryRow[]> {
+    const params = new URLSearchParams({
+      user_id: `eq.${userId}`,
+      recorded_at: `gte.${sinceIso}`,
+      select: 'node_id,previous_score,new_score,change_reason,recorded_at',
+      order: 'recorded_at.asc',
+      limit: '5000',
+    });
+    const res = await fetch(`${this.url}/rest/v1/mastery_history?${params.toString()}`, {
+      headers: {
+        apikey: this.serviceRoleKey,
+        Authorization: `Bearer ${this.serviceRoleKey}`,
+      },
+    });
+    if (!res.ok) return [];
+    const rows = (await res.json()) as Record<string, unknown>[];
+    return rows.map((row) => ({
+      nodeId: String(row.node_id),
+      previousScore: row.previous_score == null ? null : Number(row.previous_score),
+      newScore: Number(row.new_score),
+      changeReason: String(row.change_reason),
+      recordedAt: String(row.recorded_at),
+    }));
   }
 
   /* ---------- §8.7 — جلسهٔ شبیه‌سازی آزمون ---------- */

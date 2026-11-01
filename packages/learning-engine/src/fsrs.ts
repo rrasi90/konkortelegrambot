@@ -212,6 +212,20 @@ export type ErrorTypeClassification =
   | 'unknown'              // شواهد برای علت‌یابی کافی نیست (هرگز به‌عنوان ضعف قطعی تفسیر نشود)
   | 'none';                // پاسخ صحیح — خطایی برای طبقه‌بندی نیست
 
+/** ده علت خطای مأموریت — ترتیب پایدار برای گزارش تحلیلی */
+export const ERROR_TYPE_CAUSES = [
+  'slip',
+  'time_pressure',
+  'recall_failure',
+  'theory_confusion',
+  'misconception',
+  'calculation_error',
+  'reading_error',
+  'guessing',
+  'knowledge_gap',
+  'concept_gap',
+] as const satisfies readonly ErrorTypeClassification[];
+
 export interface SkillEvidenceInput {
   wasCorrect: boolean;
   responseTimeMs?: number;

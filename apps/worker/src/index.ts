@@ -10,6 +10,7 @@ import type { Context } from 'hono';
 import { cors } from 'hono/cors';
 import {
   DEFAULT_ENGINE_CONFIG,
+  ERROR_TYPE_CAUSES,
   applyAnswer,
   buildDailyQueue,
   buildExamSessionPlan,
@@ -1047,6 +1048,173 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         note:
           'تاکسونومی ۱۰ مهارت، پیشنهاد برنامهٔ درسی است و جایگاه رسمی سؤال/ضریب از آن استخراج نمی‌شود؛ تا تأیید کارشناس موضوع و افزودن متن/سؤال برچسب‌خورده، شکاف محتوا صریح گزارش می‌شود.',
       },
+    });
+  });
+
+  /* ---------- §8.10 — داشبورد تحلیلی: ۱۳ شاخص واقعی یادگیری ----------
+   * ورود/استریک/XP/سکه شاخص یادگیری نیستند و در این پاسخ هیچ‌جا محاسبه یا بازگردانده نمی‌شوند.
+   * شاخصی که شاهد ندارد null است، نه صفرِ ساختگی. */
+  app.get('/api/analytics/learning', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const state = await loadEngineState(user.id);
+    const now = Date.now();
+    const since30d = new Date(now - 30 * 86_400_000).toISOString();
+    const since7d = new Date(now - 7 * 86_400_000).toISOString();
+
+    const [recentAnswers, history7d] = await Promise.all([
+      store.listAnswersSince(user.id, since30d),
+      store.listMasteryHistorySince(user.id, since7d).catch(() => []),
+    ]);
+
+    const visible = [...state.nodes.values()].filter(
+      (n) => n.track === 'common' || user.activeTracks.includes(n.track),
+    );
+    const visibleIds = new Set(visible.map((n) => n.id));
+    const questionCountByNode = new Map<string, number>();
+    for (const q of state.questions.values()) {
+      if (q.examYear === 1404) continue; // قرنطینه در هیچ شاخص عملیاتی شمرده نمی‌شود
+      questionCountByNode.set(q.nodeId, (questionCountByNode.get(q.nodeId) ?? 0) + 1);
+    }
+    const assessableNodes = visible.filter((n) => (questionCountByNode.get(n.id) ?? 0) > 0);
+    const assessableIds = new Set(assessableNodes.map((n) => n.id));
+    const assessedIds = new Set(
+      [...state.mastery.keys()].filter((nodeId) => assessableIds.has(nodeId)),
+    );
+
+    // ۱۳ شاخص
+    const assessedNodeCount = assessedIds.size;
+    const assessableNodeCount = assessableIds.size;
+    const diagnosticCoverageRatio = assessableNodeCount > 0
+      ? Math.round((assessedNodeCount / assessableNodeCount) * 1000) / 1000
+      : null;
+
+    const masteryDistribution = { weak: 0, unstable: 0, learning: 0, mastered: 0 };
+    const assessedValues: number[] = [];
+    for (const nodeId of assessedIds) {
+      const value = state.mastery.get(nodeId);
+      if (value === undefined) continue;
+      assessedValues.push(value);
+      masteryDistribution[statusFromMastery(value)] += 1;
+    }
+    assessedValues.sort((a, b) => a - b);
+    const meanMasteryAssessed = assessedValues.length > 0
+      ? Math.round((assessedValues.reduce((s, v) => s + v, 0) / assessedValues.length) * 100) / 100
+      : null;
+    const medianMasteryAssessed = assessedValues.length > 0
+      ? (() => {
+          const mid = Math.floor(assessedValues.length / 2);
+          return assessedValues.length % 2 === 1
+            ? assessedValues[mid]!
+            : Math.round(((assessedValues[mid - 1]! + assessedValues[mid]!) / 2) * 100) / 100;
+        })()
+      : null;
+
+    const visibleAnswers = recentAnswers.filter((a) => {
+      const nodeId = state.questions.get(a.questionId)?.nodeId;
+      return !!nodeId && visibleIds.has(nodeId);
+    });
+    const recentEvidenceCount30d = visibleAnswers.length;
+    const recentAccuracy30d = recentEvidenceCount30d > 0
+      ? Math.round((visibleAnswers.filter((a) => a.isCorrect).length / recentEvidenceCount30d) * 1000) / 1000
+      : null;
+
+    const visibleCards = state.cards.filter((card) => visibleIds.has(card.nodeId));
+    const dueReviewCount = visibleCards.filter((card) => Date.parse(card.dueAt) <= now).length;
+
+    const retrievabilities: number[] = [];
+    for (const card of visibleCards) {
+      if (!card.fsrs) continue;
+      const reviewedAt = Date.parse(card.fsrs.lastReviewedAt);
+      if (!Number.isFinite(reviewedAt)) continue;
+      const daysElapsed = Math.max(0, (now - reviewedAt) / 86_400_000);
+      retrievabilities.push(calculateRetrievability(card.fsrs.stability, daysElapsed));
+    }
+    const meanRetrievability = retrievabilities.length > 0
+      ? Math.round((retrievabilities.reduce((s, v) => s + v, 0) / retrievabilities.length) * 1000) / 1000
+      : null;
+
+    const errorTypeDistribution: Record<string, number> = {};
+    for (const cause of ERROR_TYPE_CAUSES) errorTypeDistribution[cause] = 0;
+    errorTypeDistribution['unknown'] = 0;
+    errorTypeDistribution['none'] = 0;
+    let evidenceBackedSkillCount = 0;
+    const skillStates = [...(state.skillStates?.values() ?? [])];
+    for (const skillState of skillStates) {
+      if (skillState.evidenceCount > 0) evidenceBackedSkillCount += 1;
+      const type = skillState.dominantErrorType;
+      if (Object.prototype.hasOwnProperty.call(errorTypeDistribution, type)) {
+        errorTypeDistribution[type] = errorTypeDistribution[type]! + 1;
+      }
+    }
+
+    const allSkillIds = new Set<string>();
+    if (state.skills) for (const skillId of state.skills.keys()) allSkillIds.add(skillId);
+    for (const s of skillStates) allSkillIds.add(s.skillId);
+    const provenOrMasteredSkills = skillStates.filter(
+      (s) => s.coverageStatus === 'proven' || s.coverageStatus === 'mastered',
+    ).length;
+    const totalSkills = allSkillIds.size;
+    const proofCoverage = {
+      provenOrMasteredSkills,
+      totalSkills,
+      ratio: totalSkills > 0 ? Math.round((provenOrMasteredSkills / totalSkills) * 1000) / 1000 : null,
+    };
+
+    let masteryDelta = 0;
+    const changedNodes = new Set<string>();
+    let transitionRows = 0;
+    for (const row of history7d) {
+      if (row.previousScore === null || !Number.isFinite(row.previousScore) || !Number.isFinite(row.newScore)) continue;
+      masteryDelta += row.newScore - row.previousScore;
+      changedNodes.add(row.nodeId);
+      transitionRows += 1;
+    }
+    const learningVelocity7d = {
+      masteryDelta: Math.round(masteryDelta * 100) / 100,
+      changedNodeCount: changedNodes.size,
+      historyRowCount: history7d.length,
+      transitionRowCount: transitionRows,
+    };
+
+    return c.json({
+      generatedAt: new Date(now).toISOString(),
+      metrics: {
+        assessedNodeCount,
+        assessableNodeCount,
+        diagnosticCoverageRatio,
+        masteryDistribution,
+        meanMasteryAssessed,
+        medianMasteryAssessed,
+        recentAccuracy30d,
+        recentEvidenceCount30d,
+        dueReviewCount,
+        meanRetrievability,
+        errorTypeDistribution,
+        proofCoverage,
+        learningVelocity7d,
+      },
+      metricCatalog: [
+        { key: 'assessedNodeCount', label: 'گره‌های سنجیده‌شده', unit: 'count', source: 'user_node_mastery ∩ گره‌های دارای سؤال (بدون ۱۴۰۴)', definition: 'گره‌هایی که شاهد پاسخ واقعی دارند؛ مقدار پیش‌فرض ۵۰ به‌عنوان سنجش شمرده نمی‌شود.' },
+        { key: 'assessableNodeCount', label: 'گره‌های قابل‌سنجش', unit: 'count', source: 'knowledge_nodes + questions (examYear ≠ 1404)', definition: 'گره‌های دیدنی گرایش‌های فعال که دست‌کم یک سؤال غیرقرنطینه دارند.' },
+        { key: 'diagnosticCoverageRatio', label: 'پوشش تشخیصی', unit: 'ratio', source: 'assessedNodeCount / assessableNodeCount', definition: 'سهم گره‌های قابل‌سنجش که واقعاً سنجیده شده‌اند؛ بدون گره قابل‌سنجش null.' },
+        { key: 'masteryDistribution', label: 'توزیع تسلط', unit: 'count', source: 'mastery فقط برای گره‌های سنجیده‌شده', definition: 'weak<40، unstable<60، learning<85، mastered≥85 — فقط روی گره‌های سنجیده.' },
+        { key: 'meanMasteryAssessed', label: 'میانگین تسلط سنجیده', unit: 'score', source: 'میانگین mastery گره‌های سنجیده', definition: 'گره‌های ناسنجیده در مخرج نیستند؛ بدون شاهد null.' },
+        { key: 'medianMasteryAssessed', label: 'میانهٔ تسلط سنجیده', unit: 'score', source: 'میانهٔ mastery گره‌های سنجیده', definition: 'مقاوم‌تر از میانگین در برابر چند گرهٔ پرت.' },
+        { key: 'recentAccuracy30d', label: 'دقت ۳۰ روز', unit: 'ratio', source: 'answer_events ۳۰ روز اخیر، گره‌های دیدنی', definition: 'پاسخ صحیح / کل پاسخ؛ تلاش شبیه‌سازی آزمون در answer_events نیست.' },
+        { key: 'recentEvidenceCount30d', label: 'حجم شاهد ۳۰ روز', unit: 'count', source: 'answer_events ۳۰ روز اخیر', definition: 'تعداد پاسخ‌های واقعی ثبت‌شده؛ اعتبار آماری شاخص‌های نرخ به آن وابسته است.' },
+        { key: 'dueReviewCount', label: 'مرور سررسید', unit: 'count', source: 'review cards با dueAt ≤ اکنون', definition: 'فقط کارت‌های گره‌های دیدنی؛ بار واقعی مرور امروز.' },
+        { key: 'meanRetrievability', label: 'میانگین بازیابی حافظه', unit: 'ratio', source: 'FSRS: calculateRetrievability(stability, elapsed)', definition: 'میانگین R کارت‌های دارای وضعیت FSRS؛ بدون وضعیت null.' },
+        { key: 'errorTypeDistribution', label: 'توزیع علت خطا', unit: 'count', source: 'learner_skill_states.dominantErrorType', definition: '۱۰ علت مأموریت + unknown + none؛ unknown ضعف قطعی نیست.' },
+        { key: 'proofCoverage', label: 'پوشش اثبات/holdout', unit: 'ratio', source: 'learner_skill_states.coverageStatus ∈ {proven, mastered}', definition: 'سهم مهارت‌های رسیده به اثبات؛ تسلط خوداظهاری این‌جا شمرده نمی‌شود.' },
+        { key: 'learningVelocity7d', label: 'سرعت یادگیری ۷ روز', unit: 'score-delta', source: 'mastery_history ۷ روز اخیر', definition: 'مجموع تغییر تسلط ردیف‌های دارای مقدار قبلی؛ ردیف backfill فاقد previous_score حذف می‌شود.' },
+      ],
+      excludedVanityMetrics: ['login_count', 'streak_days', 'xp', 'coins', 'session_count'],
+      notes: [
+        'شاخص‌های بدون شاهد null هستند و هرگز با صفر یا ۵۰ پیش‌فرض پر نمی‌شوند.',
+        'unknown در توزیع خطا یعنی شواهد کافی نیست؛ به‌عنوان ضعف فصل تفسیر نمی‌شود.',
+        'ورود، استریک، XP و سکه شاخص یادگیری نیستند و در این پاسخ وجود ندارند.',
+      ],
     });
   });
 
