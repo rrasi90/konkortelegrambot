@@ -9,12 +9,18 @@
 > code, PR#4 foundation merged into remediation branch, root duplicates deleted, validator extended
 > (placeholder-hash / prerequisite-cycle / combination-bundle checks). External blockers itemized in
 > `docs/phase-1/PHASE_1_ACCEPTANCE_REPORT.md` appendix. Evidence: `evidence/phase-1/`.
+> **Phase 2 (Scientific Content & Assessment Repository): PASS_WITH_EVIDENCE (scoped) — 2026-11-01.**
+> Standardized tiered bank built and contract-tested: 156 unique traced items (38 PhD `transcribed_pending_key_review`
+> / 101 arshad / 17 quarantine), 96 duplicate IDs merged by content comparison with 0 conflicts, placeholder items
+> excluded and their absence asserted. Structural quality verified; **scientific validation of keys/difficulty remains
+> BLOCKED** (no official answer-key PDF — 403; no human SME; no response data for CTT/IRT — zero invented parameters).
+> Details + honest scope in `docs/phase-2/PHASE_2_ACCEPTANCE_REPORT.md`. Evidence: `evidence/phase-2/`.
 
 | شاخص کلان              | مرحله | وضعیت        | تعریف موفقیت                             |
 | ---------------------- | ----- | ------------ | ---------------------------------------- |
 | Exam Coverage          | ۱ و ۲ | IN_PROGRESS  | تمام سرفصل‌های مصوب قابل ردیابی‌اند      |
-| Verified Content       | ۲     | NOT_STARTED  | محتوای منتشرشده تأیید علمی دارد          |
-| Question Quality       | ۲ و ۵ | NOT_STARTED  | کیفیت سؤالات بررسی شده است               |
+| Verified Content       | ۲     | IMPLEMENTED_UNVERIFIED | بانک ساختاری آماده؛ تأیید علمی (SME/کلید رسمی) BLOCKED |
+| Question Quality       | ۲ و ۵ | IN_PROGRESS  | قواعد ساختاری تست‌شده؛ CTT/IRT بدون داده پاسخ BLOCKED |
 | Architecture Parity    | ۳     | NOT_STARTED  | یک موتور و یک منبع محتوا                 |
 | Learning Effectiveness | ۴ و ۵ | NOT_STARTED  | بهبود واقعی یادگیری اندازه‌گیری می‌شود   |
 | Exam Readiness         | ۴ و ۵ | NOT_STARTED  | عملکرد در آزمون جامع سنجیده می‌شود       |

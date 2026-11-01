@@ -1,0 +1,10 @@
+course_section_id,course_id,phd_traced,arshad_traced,quarantined,distinct_years,coverage_status
+economics,,0,14,0,13,usable
+english,english.language,0,4,0,4,thin
+islamic,,0,6,0,6,usable
+management_theories,,2,22,0,15,usable
+marketing,,2,11,0,11,usable
+math_stats,statistics.management,3,12,0,11,usable
+operations_research,,2,5,0,7,usable
+production,,2,11,0,11,usable
+unmapped,,27,16,17,4,usable

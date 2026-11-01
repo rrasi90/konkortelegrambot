@@ -1,5 +1,10 @@
 # ITEM ANALYSIS REPORT
 
+> **STATUS CORRECTION (۱۴۰۵-۰۸-۱۰ / R-008):** این سند یک **چارچوب روش‌شناختی** است، نه گزارش تحلیل اجراشده.
+> هیچ‌کدام از آمارهای زیر روی دادهٔ واقعی محاسبه نشده‌اند؛ پاسخ‌های دانش‌آموزان در مقیاس لازم جمع‌آوری نشده است (حداقل ۱۰۰ پاسخ به‌ازای آیتم).
+> جدول نمونهٔ §8 «تصویری/فرضی» است و اعداد آن اندازه‌گیری‌شده نیستند. آیتم‌های `phd-1405-001..003` placeholder بودند و از بانک استاندارد خارج شده‌اند.
+> نسخهٔ موردی‌به‌موردی و وضعیت واقعی: `docs/phase-2/ITEM_ANALYSIS_REPORT.md`.
+
 ## Overview
  psychometric analysis of question quality using Classical Test Theory and IRT models.
 
@@ -118,11 +123,11 @@
 
 ### 8. Reporting Templates
 
-#### Item Statistics Table Template
+#### Item Statistics Table Template — **fully illustrative; every value below is invented for layout purposes, NOT measured**
 | Item ID | p-value | Point-Biserial | Distractor A % | Distractor B % | Distractor C % | Distractor D % | MNSQ Infit | MNSQ Outfit | Decision |
 | ------- | ------- | -------------- | -------------- | -------------- | -------------- | -------------- | ---------- | ---------- | -------- |
-| phd-1405-001 | 0.65 | 0.42 | 15% | 25% | 35% (KEY) | 25% | 1.05 | 1.02 | Keep |
-| phd-1405-002 | 0.48 | 0.18 | 20% | 30% | 25% | 25% (KEY) | 1.45 | 1.48 | Review |
+| (fictitious demo id) phd-1405-001 | 0.65 | 0.42 | 15% | 25% | 35% (KEY) | 25% | 1.05 | 1.02 | Keep |
+| (fictitious demo id) phd-1405-002 | 0.48 | 0.18 | 20% | 30% | 25% | 25% (KEY) | 1.45 | 1.48 | Review |
 
 #### Flagged Items Summary
 | Issue | Count | Items |
