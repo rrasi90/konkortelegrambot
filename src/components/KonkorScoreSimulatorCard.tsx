@@ -4,6 +4,8 @@ import { LearnerSixDState, MajorExamBranch, UserStats } from '../engine/aelEngin
 import { KonkorCourseSectionId } from '../data/yearlyKonkorExams';
 import {
   predictKonkorRankAndUniversity,
+  RANK_MODEL_LIMITATIONS,
+  RANK_PREDICTION_DISCLAIMER,
   CourseScoreInput,
   ExamDegreeMode,
 } from '../data/konkorRankPredictor';
@@ -683,12 +685,25 @@ export const KonkorScoreSimulatorCard: React.FC<KonkorScoreSimulatorCardProps> =
 
         <div className="lg:col-span-5 glass-subcard p-4 space-y-2">
           <div className="text-xs font-bold text-slate-900 dark:text-white">
-            وضعیت شانس قبولی در رده‌های دانشگاهی کشور:
+            هم‌خوانی تراز شما با آستانهٔ رده‌های دانشگاهی (شبیه‌سازی)
           </div>
+          <p className="text-[10px] leading-5 text-amber-800 dark:text-amber-300 bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/50 rounded-lg px-2.5 py-2">
+            {RANK_PREDICTION_DISCLAIMER}
+          </p>
+          <details className="text-[10px] text-slate-500 dark:text-slate-400">
+            <summary className="cursor-pointer font-bold">
+              محدودیت‌های این مدل ({RANK_MODEL_LIMITATIONS.length} مورد)
+            </summary>
+            <ul className="mt-1.5 pr-4 list-disc space-y-1 leading-5">
+              {rankPrediction.modelLimitations.map((limit) => (
+                <li key={limit}>{limit}</li>
+              ))}
+            </ul>
+          </details>
           <div className="space-y-1.5 text-xs">
             {rankPrediction.universityAdmissions.slice(0, 4).map((adm) => {
-              const isGuaranteed = adm.status.startsWith('قبولی قطعی');
-              const isBorderline = adm.status.startsWith('قبولی محتمل');
+              const isGuaranteed = adm.status.startsWith('بسیار هم‌خوان');
+              const isBorderline = adm.status.startsWith('مرزی');
               return (
                 <div
                   key={adm.tier.id}

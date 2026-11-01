@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   Rating,
+  FSRS_DECAY,
+  FSRS_FACTOR,
   calculateRetrievability,
   calculateNextInterval,
   initializeFSRSState,
@@ -16,11 +18,20 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
     });
 
     it('returns exactly 0.90 at elapsed time equal to stability (R(S, S) = 0.90)', () => {
+      // This is the definition of stability in FSRS: the interval at which recall
+      // probability decays to 90%. (1 + 19/81)^(-0.5) = (100/81)^(-0.5) = 9/10.
       const stability = 10.0;
-      const r = calculateRetrievability(stability, stability);
-      // 1 / (1 + (19/81) * 1) = 81 / 100 = 0.81 in power law vs (1 + (19/81))^-1
-      // 1 / (1 + 19/81) = 81 / 100 = 0.81
-      expect(r).toBeCloseTo(0.81, 2);
+      expect(calculateRetrievability(stability, stability)).toBeCloseTo(0.9, 6);
+      expect(calculateRetrievability(4.0, 4.0)).toBeCloseTo(0.9, 6);
+      expect(calculateRetrievability(120.0, 120.0)).toBeCloseTo(0.9, 6);
+    });
+
+    it('follows the FSRS power curve, not a hyperbolic curve', () => {
+      // Half a stability later the true value is (1 + 19/162)^-0.5 ≈ 0.9465,
+      // whereas the old 1/(1+factor*t/S) form gave ≈ 0.8949.
+      expect(calculateRetrievability(10.0, 5.0)).toBeCloseTo(0.9465, 3);
+      // Twice the stability: (1 + 38/81)^-0.5 = 9/sqrt(119) ≈ 0.8250
+      expect(calculateRetrievability(10.0, 20.0)).toBeCloseTo(0.825, 3);
     });
 
     it('monotonically decays as time passes', () => {
@@ -41,6 +52,38 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
 
       expect(iLarge).toBeGreaterThan(iSmall);
       expect(iSmall).toBeGreaterThanOrEqual(1);
+    });
+
+    it('is the exact inverse of the forgetting curve at every target retention', () => {
+      const stability = 30.0;
+      for (const target of [0.8, 0.85, 0.9, 0.95]) {
+        const interval = calculateNextInterval(stability, target);
+        // Feed the interval back through R(t, S) and land on the requested retention.
+        expect(calculateRetrievability(stability, interval)).toBeCloseTo(target, 2);
+      }
+    });
+
+    it('schedules at exactly the stability when target retention is the FSRS default 0.90', () => {
+      expect(calculateNextInterval(1.0, 0.9)).toBe(1);
+      expect(calculateNextInterval(10.0, 0.9)).toBe(10);
+      expect(calculateNextInterval(90.0, 0.9)).toBe(90);
+    });
+
+    it('shortens the interval as requested retention rises', () => {
+      const stability = 40.0;
+      const i80 = calculateNextInterval(stability, 0.8);
+      const i85 = calculateNextInterval(stability, 0.85);
+      const i90 = calculateNextInterval(stability, 0.9);
+      const i95 = calculateNextInterval(stability, 0.95);
+
+      expect(i80).toBeGreaterThan(i85);
+      expect(i85).toBeGreaterThan(i90);
+      expect(i90).toBeGreaterThan(i95);
+    });
+
+    it('keeps the documented constants consistent', () => {
+      // FACTOR and DECAY must satisfy R(S, S) = 0.9 together.
+      expect(Math.pow(1 + FSRS_FACTOR, FSRS_DECAY)).toBeCloseTo(0.9, 10);
     });
   });
 

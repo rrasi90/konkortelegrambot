@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { KnowledgeNode, TRACK_LABELS, TrackId } from '../data/konkorData';
 import { YEARLY_KONKOR_BOOKLETS } from '../data/yearlyKonkorExams';
+import { getArshadCoverage } from '../data/examCoverage';
+
+/** تبدیل ارقام لاتین به فارسی برای نمایش در رابط کاربری */
+const toPersianDigits = (value: string): string =>
+  value
+    .replace(/[0-9]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[Number(d)])
+    .replace(/\./g, '٫');
+
+const arshadCoverage = getArshadCoverage();
 import {
   LearnerSixDState,
   ReviewCard,
@@ -509,10 +518,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                شبیه‌ساز ۱۵ دوره کنکور (۱۳۹۱ تا ۱۴۰۵)
+                آرشیو {toPersianDigits(String(YEARLY_KONKOR_BOOKLETS.length))} دوره آزمون کارشناسی ارشد (۱۳۹۱ تا ۱۴۰۵)
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-6">
-                {YEARLY_KONKOR_BOOKLETS.length} دفترچه رسمی سازمان سنجش به همراه تخمین رتبه و دانشگاه قبولی
+                دفترچه‌های رسمی ارشد (کد ۱۱۴۲) با {toPersianDigits(String(arshadCoverage.available))} سؤال
+                از {toPersianDigits(String(arshadCoverage.declared))} سؤال اعلام‌شده ({toPersianDigits(String(arshadCoverage.percent))}٪)
+              </p>
+              <p className="text-[11px] text-amber-700 dark:text-amber-400 mt-1 leading-5 font-medium">
+                آزمون دکتری هنوز دفترچهٔ رسمی ثبت‌شده ندارد.
               </p>
             </div>
           </button>

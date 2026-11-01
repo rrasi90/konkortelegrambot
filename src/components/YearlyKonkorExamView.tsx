@@ -1479,8 +1479,8 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
 
               <div className="space-y-2.5">
                 {rankPrediction.universityAdmissions.map((ua) => {
-                  const isAdmitted = ua.status === 'قبولی قطعی (احتمال > ۹۵٪)';
-                  const isBorderline = ua.status === 'قبولی محتمل / مرزی (احتمال ۶۰٪ تا ۹۰٪)';
+                  const isAdmitted = ua.status === 'بسیار هم‌خوان (شبیه‌سازی)';
+                  const isBorderline = ua.status === 'مرزی (شبیه‌سازی)';
                   const minRequired =
                     predictorDegree === 'master'
                       ? ua.tier.minTarazMaster

@@ -5,7 +5,25 @@ import type { BookChapter } from './bookChaptersTypes';
 import type { QuestionItem } from './konkorData';
 
 export type { BookChapter };
-export { getChapterImportance, CHAPTER_IMPORTANCE_LABEL } from './bookChaptersTypes';
+export {
+  getChapterImportance,
+  CHAPTER_IMPORTANCE_LABEL,
+  CHAPTER_FREQUENCY_BASIS,
+  DOCTORATE_IMPORTANCE_LABEL,
+  getDoctorateChapterImportance,
+} from './bookChaptersTypes';
+
+/**
+ * توضیح شفاف انتخاب فصل‌ها برای نمایش در رابط کاربری.
+ * ده فصلِ هر کتاب، «ده فصل پرتکرار ارشد» است، نه کل کتاب.
+ */
+export const getChapterSelectionNote = (bookId: string): string => {
+  const chapters = BOOK_CHAPTERS[bookId] ?? [];
+  return (
+    `${chapters.length} فصل با بیشترین فراوانی در آزمون کارشناسی ارشد (کد ۱۱۴۲) انتخاب شده است. ` +
+    'این فهرست کل کتاب نیست و برای اولویت‌بندی دکتری باید با فراوانی سؤال دکتری جایگزین شود.'
+  );
+};
 
 /** کاتالوگ کامل فصل‌های کلیدی همهٔ کتاب‌ها (۱۰ فصل برای هر کتاب) */
 export const BOOK_CHAPTERS: Record<string, BookChapter[]> = {
@@ -43,7 +61,17 @@ export const getBookForNode = (nodeId: string): ReferenceBookItem | undefined =>
 export interface ChapterQuestionGroup {
   chapter: BookChapter | null;
   questions: QuestionItem[];
+  /**
+   * شناسهٔ فصل‌های دیگری که همین گره‌های دانش را پوشش می‌دهند.
+   * وقتی یک سؤال هم‌زمان به چند فصل مربوط است، تقسیم قطعی آن به یک فصل
+   * از نظر علمی دقیق نیست؛ این فهرست همان ابهام را آشکار می‌کند.
+   */
+  sharedWith?: string[];
 }
+
+/** همهٔ فصل‌هایی که یک گرهٔ دانش را پوشش می‌دهند. */
+export const getChaptersForNode = (bookId: string, nodeId: string): BookChapter[] =>
+  (BOOK_CHAPTERS[bookId] ?? []).filter((ch) => ch.nodes.includes(nodeId));
 
 /**
  * توزیع تست‌های بانک روی فصل‌ها: هر گره فقط به نخستین فصلی که آن را پوشش می‌دهد
@@ -75,14 +103,31 @@ export const groupBookQuestionsByChapter = (
   questions.forEach((q) => {
     const ownerId = nodeOwner.get(q.nodeId);
     const group = ownerId ? groups.find((g) => g.chapter?.id === ownerId) : undefined;
-    if (group) group.questions.push(q);
-    else rest.questions.push(q); // گره‌های بدون فصل منتسب → سبد «سایر مباحث»
+    if (group && group.chapter) {
+      group.questions.push(q);
+      // اگر همان گره چند فصل را پوشش می‌دهد، ابهام انتساب را ثبت کن
+      const alsoIn = getChaptersForNode(bookId, q.nodeId)
+        .filter((ch) => ch.id !== group.chapter?.id)
+        .map((ch) => ch.id);
+      if (alsoIn.length > 0) {
+        const shared = new Set([...(group.sharedWith ?? []), ...alsoIn]);
+        group.sharedWith = [...shared];
+      }
+    } else {
+      rest.questions.push(q); // گره‌های بدون فصل منتسب → سبد «سایر مباحث»
+    }
   });
 
   return [...groups.filter((g) => g.questions.length > 0), ...(rest.questions.length ? [rest] : [])];
 };
 
-/** متن مطالعهٔ کامل کتاب برای نمایش/دانلود */
+/**
+ * «جزوهٔ جامع» یک کتاب — نه متن کامل کتاب.
+ *
+ * خروجی شامل شناسنامهٔ کتاب، فصل‌های منتخب پرتکرار، نکات، فرمول‌ها و تست‌های
+ * همان مبحث است. این یک تألیف آموزشی است و جای متن اصلی کتاب را نمی‌گیرد؛
+ * برای همین برچسب آن در رابط کاربری «جزوهٔ جامع» است، نه «مطالعهٔ کامل کتاب».
+ */
 export const buildFullBookMarkdown = (
   book: ReferenceBookItem,
   answers: { chapter: BookChapter; questions: QuestionItem[] }[]
@@ -92,6 +137,11 @@ export const buildFullBookMarkdown = (
   lines.push(`**درس:** ${book.courseName} · **مؤلفان:** ${book.authors}`);
   lines.push(`**ضرایب:** ارشد — ${book.coefficientMaster} · دکتری — ${book.coefficientPhd}\n`);
   lines.push(`## چرا این کتاب؟\n${book.whyImportant}\n`);
+  lines.push(
+    '> **این فایل جزوهٔ تألیفی است، نه متن کامل کتاب.** ' +
+      'فصل‌های زیر بر اساس فراوانی سؤال در آزمون کارشناسی ارشد (کد ۱۱۴۲) انتخاب شده‌اند ' +
+      'و متن اصلی کتاب را شامل نمی‌شوند.\n'
+  );
 
   const chapters = getBookChapters(book.id);
   lines.push(`## فهرست فصل‌های کلیدی (${chapters.length} فصل)\n`);

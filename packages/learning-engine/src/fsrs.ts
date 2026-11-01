@@ -33,8 +33,15 @@ export const DEFAULT_FSRS_WEIGHTS = [
   2.61, // w[16]: easy rating bonus multiplier
 ] as const;
 
-/** Retention factor constant: 19 / 81 ensures R(S, S) = 0.90 */
+/** Retention factor constant: 19 / 81 ensures R(S, S) = 0.90 (see DECAY below) */
 export const FSRS_FACTOR = 19 / 81;
+
+/**
+ * Forgetting-curve decay (FSRS-5 `DECAY` / `w[20]`).
+ * With FACTOR = 19/81 this makes R(S, S) = (1 + 19/81)^(-1/2) = 9/10 = 0.90,
+ * which is the definition of stability in FSRS.
+ */
+export const FSRS_DECAY = -0.5;
 
 function getW(w: readonly number[], index: number): number {
   return w[index] ?? (DEFAULT_FSRS_WEIGHTS as readonly number[])[index] ?? 1.0;
@@ -58,21 +65,26 @@ export interface FSRSConfig {
   maximumInterval?: number;    // Interval cap in days (default: 365)
 }
 
-/** Compute retrievability R(t, S) = (1 + FACTOR * (t / S))^(-1) */
+/** Compute retrievability R(t, S) = (1 + FACTOR * (t / S))^DECAY */
 export function calculateRetrievability(stability: number, daysElapsed: number): number {
   if (stability <= 0) return 0;
   if (daysElapsed <= 0) return 1.0;
-  return Math.max(0, Math.min(1.0, 1 / (1 + FSRS_FACTOR * (daysElapsed / stability))));
+  const value = Math.pow(1 + FSRS_FACTOR * (daysElapsed / stability), FSRS_DECAY);
+  return Math.max(0, Math.min(1.0, value));
 }
 
-/** Calculate interval in days for a given stability and target retention */
+/**
+ * Calculate interval in days for a given stability and target retention.
+ * Inverse of the forgetting curve: t = S * (R^(1/DECAY) - 1) / FACTOR, i.e. t = S * (R^-2 - 1) / (19/81).
+ * For the FSRS default target R = 0.90 this reduces to t = S.
+ */
 export function calculateNextInterval(
   stability: number,
   requestedRetention = 0.90,
   maximumInterval = 365
 ): number {
   const target = Math.max(0.70, Math.min(0.98, requestedRetention));
-  const rawInterval = (stability / FSRS_FACTOR) * (1 / target - 1);
+  const rawInterval = (stability * (Math.pow(target, 1 / FSRS_DECAY) - 1)) / FSRS_FACTOR;
   return Math.max(1, Math.min(maximumInterval, Math.round(rawInterval)));
 }
 
