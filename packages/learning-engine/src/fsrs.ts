@@ -46,7 +46,6 @@ export const FSRS_DECAY = -0.5;
 function getW(w: readonly number[], index: number): number {
   return w[index] ?? (DEFAULT_FSRS_WEIGHTS as readonly number[])[index] ?? 1.0;
 }
- // ~0.2345679
 
 export interface FSRSState {
   stability: number;       // S: days until retrievability drops to 90%
