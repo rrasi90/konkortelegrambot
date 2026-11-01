@@ -26,18 +26,17 @@
       "title": "دفترچه راهنمای ثبت‌نام و شرکت در آزمون دکتری ۱۴۰۶",
       "publisher": "سازمان سنجش آموزش کشور",
       "date": "1405-08-04",
-      "type": "official_document_publication_report",
-      "url": "https://www.sanjesh.org",
-      "accessed": true,
-      "contentVerified": [
-        "publication date reported",
-        "registration window reported as 1405-08-03 to 1405-08-09",
-        "exam date reported as 1405-11-16"
-      ],
+      "type": "official_primary_document_link",
+      "url": "https://www8.sanjesh.org/download/1406/phd/reg/RegphdNote1406v1.pdf",
+      "accessed": false,
+      "contentVerified": [],
       "contentNotVerified": [
-        "page-level 2162 management combination table in this audit"
+        "row-level 2162 field and combination table",
+        "final 1406 subject bundles",
+        "eligibility list for related master's degrees",
+        "registration corrections"
       ],
-      "accessNote": "Publication and dates corroborated by contemporaneous reports; official document should be imported and page-cited during completion of the 1406 verification gate."
+      "accessNote": "خبرگزاری صداوسیما در 1405-08-04 انتشار دفترچه در درگاه سنجش و لینک رسمی همین PDF را گزارش کرده است؛ خود فایل رسمی از محیط ممیزی با HTTP 403 قابل دریافت نبود."
     },
     {
       "id": "src-sanjesh-phd-1405-handbook",
@@ -56,9 +55,11 @@
         "subject bundles 1 through 9",
         "combination codes 1 through 7",
         "field-level checkbox mappings",
-        "special admissions notes"
+        "special admissions notes",
+        "combination-code definition on printed page 2",
+        "management rows and course bundle checkmarks visually inspected on printed pages 24 and 25"
       ],
-      "accessNote": "A mirrored copy of the official handbook; pages 24 and 25 were visually inspected because the text extraction did not preserve table layout in full."
+      "accessNote": "نسخهٔ آینه‌ای دفترچهٔ رسمی؛ صفحات ۲۴ و ۲۵ و تعریف «کد ترکیب» در صفحهٔ چاپی ۲ بصری بررسی شدند. جدول‌های راست‌به‌چپ باید با علامت‌های بصری خوانده شوند؛ متن استخراج‌شده به‌تنهایی کافی نیست."
     },
     {
       "id": "src-sanjesh-phd-1406-registration-news",
@@ -146,6 +147,40 @@
       "type": "design_guideline",
       "url": "https://udlguidelines.cast.org/more/about-guidelines-3-0/",
       "use": "Accessibility and flexible learning-design principles."
+    },
+    {
+      "id": "src-sanjesh-phd-1406-registration-extension",
+      "title": "تمدید مهلت ثبت‌نام آزمون دکتری ۱۴۰۶ تا ۱۵ آبان",
+      "publisher": "خبرنامه دانشجویان ایران؛ بازنشر اظهارات مقام سازمان سنجش",
+      "date": "1405-08-09",
+      "type": "secondary_republication_of_official_statement",
+      "url": "https://iusnews.ir/fa/news-details/566524/",
+      "accessed": true,
+      "contentVerified": [
+        "registration deadline extended to 1405-08-15",
+        "exam date 1405-11-16 reaffirmed"
+      ],
+      "contentNotVerified": [],
+      "accessNote": "این منبع ثانویه، اظهارات معاون آزمون‌های سازمان سنجش را نقل می‌کند؛ برای تاریخ تمدید مناسب است، نه برای مواد امتحانی."
+    },
+    {
+      "id": "src-sanjesh-phd-1406-registration-announcement",
+      "title": "خبر انتشار دفترچهٔ ثبت‌نام دکتری ۱۴۰۶ به نقل از سازمان سنجش",
+      "publisher": "خبرگزاری صداوسیما",
+      "date": "1405-08-04",
+      "type": "secondary_republication_of_official_publication_notice",
+      "url": "https://wona.ir/news/29lrekjeck/",
+      "accessed": true,
+      "contentVerified": [
+        "registration handbook publication date 1405-08-04",
+        "official registration guide PDF URL",
+        "initial registration window 1405-08-03 to 1405-08-09",
+        "exam date 1405-11-16"
+      ],
+      "contentNotVerified": [
+        "contents of the linked PDF"
+      ],
+      "accessNote": "صفحه خبر، لینک رسمی PDF روی دامنه www8.sanjesh.org را نشان می‌دهد؛ فایل PDF مستقیم از محیط ممیزی 403 می‌دهد."
     }
   ]
 }

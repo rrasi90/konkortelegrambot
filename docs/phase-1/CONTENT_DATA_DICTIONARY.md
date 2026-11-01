@@ -46,7 +46,22 @@
 | sourceId | string | بله | سند تعیین‌کننده |
 | verificationStatus | enum | بله | وضعیت اعتبار |
 
-### 4. ExamSubjectBundle و Course
+### 4. ExamFieldSubjectAssignment (نگاشت ردیف رشته/گرایش به بسته‌های درسی)
+
+| فیلد | نوع | الزامی | توضیح |
+|---|---|---:|---|
+| assignmentId | string | بله | شناسهٔ پایدار |
+| examSpecificationId | string | بله | سال/نسخهٔ آزمون |
+| examCombinationId | string/null | بله | کد ترکیب درج‌شده؛ null اگر در جدول خالی است |
+| examFieldId | string | بله | ردیف دقیق رشته/گرایش |
+| subjectBundleIds | string[] | بله | بسته‌های درسی علامت‌خورده برای همان ردیف |
+| restrictionNote | string/null | خیر | محدودیت پذیرش یا وابستگی |
+| extractionStatus | enum | بله | visually_checked / pending_consistency_review / needs_manual_review / no_bundle_marked |
+| sourceId | string | بله | سند و locator |
+
+**قانون:** کد ترکیب را از روی بسته‌های درسی حدس نزن و بسته‌ها را نیز صرفاً از روی کد ترکیب تکمیل نکن. هر دو داده از ردیف جدول استخراج شوند و کنترل سازگاری جداگانه انجام شود.
+
+### 5. ExamSubjectBundle و Course
 
 | فیلد | نوع | الزامی | توضیح |
 |---|---|---:|---|
@@ -61,7 +76,7 @@
 | level | enum | بله | bachelor / master / doctoral / general |
 | curriculumStatus | enum | بله | official_heading / proposed_expansion |
 
-### 5. Topic، Concept، Skill و LearningOutcome
+### 6. Topic، Concept، Skill و LearningOutcome
 
 | فیلد | نوع | الزامی | توضیح |
 |---|---|---:|---|
@@ -77,7 +92,7 @@
 | outcomeId | string | بله | نتیجهٔ یادگیری |
 | successCriterion | string | بله | معیار مشاهده‌پذیر موفقیت |
 
-### 6. LearningResource و Source
+### 7. LearningResource و Source
 
 | فیلد | نوع | الزامی | توضیح |
 |---|---|---:|---|
@@ -96,7 +111,7 @@
 | sourceReliability | enum | بله | سطح اعتبار منبع |
 | rightsNote | string | خیر | وضعیت مجوز/محدودیت استفاده |
 
-### 7. Question
+### 8. Question
 
 | فیلد | نوع | الزامی | توضیح |
 |---|---|---:|---|
@@ -119,7 +134,7 @@
 | keyVerificationStatus | enum | بله | not_applicable / pending / checked / disputed |
 | contentStatus | enum | بله | draft / review / approved / published / retired |
 
-### 8. AdmissionPath
+### 9. AdmissionPath
 
 | فیلد | نوع | الزامی | توضیح |
 |---|---|---:|---|

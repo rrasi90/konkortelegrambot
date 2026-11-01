@@ -141,30 +141,25 @@
       "type": "object",
       "required": [
         "combinationCode",
-        "fields",
+        "fieldAssignments",
         "verificationStatus"
       ],
       "properties": {
         "combinationCode": {
           "type": "string"
         },
-        "fields": {
+        "fieldAssignments": {
           "type": "array",
           "items": {
-            "type": "string"
-          }
-        },
-        "subjectBundleIds": {
-          "type": "array",
-          "items": {
-            "type": "string"
+            "$ref": "#/$defs/fieldAssignment"
           }
         },
         "verificationStatus": {
           "enum": [
             "official_verified",
             "pending_official_verification",
-            "not_applicable"
+            "not_applicable",
+            "pending_consistency_review"
           ]
         }
       },
@@ -285,6 +280,50 @@
         },
         "sourceId": {
           "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "fieldAssignment": {
+      "type": "object",
+      "required": [
+        "fieldId",
+        "fieldName",
+        "subjectBundleIds",
+        "extractionStatus"
+      ],
+      "properties": {
+        "fieldId": {
+          "type": "string"
+        },
+        "fieldName": {
+          "type": "string"
+        },
+        "trackName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "subjectBundleIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "admissionRestriction": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "extractionStatus": {
+          "enum": [
+            "visually_checked",
+            "pending_consistency_review",
+            "needs_manual_review",
+            "no_bundle_marked"
+          ]
         }
       },
       "additionalProperties": false
