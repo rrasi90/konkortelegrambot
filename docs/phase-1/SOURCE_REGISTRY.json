@@ -1,0 +1,151 @@
+{
+  "registryVersion": "1.0.0",
+  "auditDate": "2026-11-01",
+  "sources": [
+    {
+      "id": "src-sanjesh-phd-1406-fields",
+      "title": "اطلاعیه سازمان سنجش درباره رشته‌گرایش‌ها، مواد امتحانی و ضرایب دکتری ۱۴۰۶",
+      "publisher": "سازمان سنجش آموزش کشور",
+      "date": "1404-12-26",
+      "type": "official_primary_link",
+      "url": "https://www.sanjesh.org/_sanjesh/documents/1406/regphd1406.pdf",
+      "accessed": true,
+      "contentVerified": [
+        "language coefficient 1",
+        "specialized subjects coefficient 5",
+        "educational-research admission weights",
+        "research-oriented admission weights"
+      ],
+      "contentNotVerified": [
+        "row-level management 2162 fields and combinations"
+      ],
+      "accessNote": "The official PDF link was identified in the official notice but returned HTTP 403 to this audit environment; the notice text was readable through a secondary reproduction. Do not treat inaccessible attachment details as extracted."
+    },
+    {
+      "id": "src-sanjesh-phd-1406-registration",
+      "title": "دفترچه راهنمای ثبت‌نام و شرکت در آزمون دکتری ۱۴۰۶",
+      "publisher": "سازمان سنجش آموزش کشور",
+      "date": "1405-08-04",
+      "type": "official_document_publication_report",
+      "url": "https://www.sanjesh.org",
+      "accessed": true,
+      "contentVerified": [
+        "publication date reported",
+        "registration window reported as 1405-08-03 to 1405-08-09",
+        "exam date reported as 1405-11-16"
+      ],
+      "contentNotVerified": [
+        "page-level 2162 management combination table in this audit"
+      ],
+      "accessNote": "Publication and dates corroborated by contemporaneous reports; official document should be imported and page-cited during completion of the 1406 verification gate."
+    },
+    {
+      "id": "src-sanjesh-phd-1405-handbook",
+      "title": "دفترچه راهنمای ثبت‌نام و شرکت در آزمون دکتری ۱۴۰۵، صفحات چاپی ۲۴ و ۲۵",
+      "publisher": "وزارت علوم، تحقیقات و فناوری / سازمان سنجش آموزش کشور",
+      "date": "1404",
+      "type": "official_document_mirror",
+      "url": "https://zehnagahane.ir/wp-content/uploads/2025/11/دفترچه-دکتری-۱۴۰۵.pdf",
+      "accessed": true,
+      "pages": [
+        "24",
+        "25"
+      ],
+      "contentVerified": [
+        "exam set 2162 management",
+        "subject bundles 1 through 9",
+        "combination codes 1 through 7",
+        "field-level checkbox mappings",
+        "special admissions notes"
+      ],
+      "accessNote": "A mirrored copy of the official handbook; pages 24 and 25 were visually inspected because the text extraction did not preserve table layout in full."
+    },
+    {
+      "id": "src-sanjesh-phd-1406-registration-news",
+      "title": "دفترچه ثبت‌نام آزمون دکتری ۱۴۰۶ منتشر شد؛ جزئیات و زمان آزمون",
+      "publisher": "نورنیوز (republication of the publication notice)",
+      "date": "1405-08-04",
+      "type": "secondary_republication",
+      "url": "https://nournews.ir/fa/news/355362/",
+      "accessed": true,
+      "contentVerified": [
+        "registration booklet publication date",
+        "exam date 1405-11-16",
+        "registration window 1405-08-03 to 1405-08-09"
+      ]
+    },
+    {
+      "id": "src-sanjesh-phd-1406-weights-republication",
+      "title": "اعلام منابع و جزئیات آزمون دکتری ۱۴۰۶",
+      "publisher": "مملکت آنلاین (republication of Sanjesh notice)",
+      "date": "1404-12-26",
+      "type": "secondary_republication_of_official_notice",
+      "url": "https://www.mamlekatonline.ir/بخش-علمی-دانستنی-75/186054-اعلام-منابع-و-جزئیات-آزمون-دکتری",
+      "accessed": true,
+      "contentVerified": [
+        "educational-research weights 50/20/30",
+        "research-oriented weights 30/20/30/20",
+        "language coefficient 1",
+        "specialized coefficient 5"
+      ]
+    },
+    {
+      "id": "src-car-pzr-2022",
+      "title": "The science of effective learning with spacing and retrieval practice",
+      "authors": [
+        "Carpenter, Shana K.",
+        "Pan, Steven C.",
+        "Butler, Andrew C."
+      ],
+      "publisher": "Nature Reviews Psychology",
+      "date": "2022-08-02",
+      "type": "peer_reviewed_review",
+      "doi": "10.1038/s44159-022-00089-1",
+      "url": "https://www.nature.com/articles/s44159-022-00089-1",
+      "use": "Justifies spacing and retrieval practice as learning design principles; does not prescribe one universal review interval."
+    },
+    {
+      "id": "src-dunlosky-2013",
+      "title": "Improving Students' Learning With Effective Learning Techniques",
+      "authors": [
+        "Dunlosky, John",
+        "Rawson, Katherine A.",
+        "Marsh, Elizabeth J.",
+        "Nathan, Mitchell J.",
+        "Willingham, Daniel T."
+      ],
+      "publisher": "Psychological Science in the Public Interest",
+      "date": "2013",
+      "type": "peer_reviewed_review",
+      "url": "https://journals.sagepub.com/doi/10.1177/1529100612453266",
+      "use": "Evidence review for practice testing and distributed practice; technique effectiveness depends on context."
+    },
+    {
+      "id": "src-aera-apa-ncme",
+      "title": "Standards for Educational and Psychological Testing",
+      "publisher": "AERA, APA, NCME",
+      "date": "2014",
+      "type": "professional_standard",
+      "url": "https://ncme.org/resources/books/testing-standards/",
+      "use": "Validity, reliability, fairness and evidence for interpretations and uses of test scores."
+    },
+    {
+      "id": "src-qti-3",
+      "title": "Question and Test Interoperability (QTI) 3.0",
+      "publisher": "1EdTech / IMS Global",
+      "date": "2022-05-01",
+      "type": "technical_standard",
+      "url": "https://www.imsglobal.org/sites/default/files/spec/qti/v3/info/index.html",
+      "use": "Optional exchange format for items, tests and results; not a replacement for the internal canonical schema."
+    },
+    {
+      "id": "src-cast-udl-3",
+      "title": "CAST Universal Design for Learning Guidelines 3.0",
+      "publisher": "CAST",
+      "date": "2024-07",
+      "type": "design_guideline",
+      "url": "https://udlguidelines.cast.org/more/about-guidelines-3-0/",
+      "use": "Accessibility and flexible learning-design principles."
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "exam:phd:1406",
+  "examType": "phd",
+  "examYear": 1406,
+  "organizer": "سازمان سنجش آموزش کشور",
+  "effectiveFrom": "1404-12-26",
+  "lastReviewedAt": "2026-11-01",
+  "examSets": [
+    {
+      "setCode": "2162",
+      "officialTitle": "مدیریت",
+      "experimentalGroup": "علوم انسانی",
+      "verificationStatus": "pending_official_verification",
+      "note": "2162 به‌عنوان مجموعهٔ مدیریت در دفترچهٔ 1405 تصریح شده؛ ردیف‌ها و ترکیب‌های پیوست 1406 باید مجدداً با فایل همان سال تطبیق داده شوند.",
+      "combinations": [],
+      "priorYearBaseline": {
+        "examYear": 1405,
+        "verificationStatus": "official_verified_from_prior_year_handbook",
+        "combinationCodes": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ],
+        "rowLevelMatrix": "EXAM_COMBINATIONS_1405_BASELINE.csv",
+        "courseBundleNumbers": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9"
+        ],
+        "note": "این داده فقط baseline سال قبل است و نباید به 1406 کپی خودکار شود."
+      }
+    }
+  ],
+  "assessmentComponents": [
+    {
+      "componentId": "language",
+      "officialTitle": "زبان",
+      "scope": "language",
+      "coefficient": 1,
+      "coefficientScope": "individual_course",
+      "level": [
+        "general"
+      ],
+      "questionCount": null,
+      "durationMinutes": null,
+      "verificationStatus": "official_verified"
+    },
+    {
+      "componentId": "specialized_bundle",
+      "officialTitle": "دروس تخصصی در سطح کارشناسی، کارشناسی ارشد و دکتری",
+      "scope": "specialized_bundle",
+      "coefficient": 5,
+      "coefficientScope": "whole_bundle",
+      "level": [
+        "bachelor",
+        "master",
+        "doctoral"
+      ],
+      "questionCount": null,
+      "durationMinutes": null,
+      "verificationStatus": "official_verified"
+    }
+  ],
+  "admissionPaths": [
+    {
+      "pathId": "educational_research",
+      "centralizedExamPercent": 50,
+      "recordsPercent": 20,
+      "interviewPercent": 30,
+      "proposalPercent": null,
+      "sourceId": "src-sanjesh-phd-1406-fields"
+    },
+    {
+      "pathId": "research_oriented",
+      "centralizedExamPercent": 30,
+      "recordsPercent": 20,
+      "interviewPercent": 30,
+      "proposalPercent": 20,
+      "sourceId": "src-sanjesh-phd-1406-fields"
+    }
+  ],
+  "schedule": {
+    "registrationStart": "1405-08-03",
+    "registrationEndAnnounced": "1405-08-09",
+    "registrationBookletPublication": "1405-08-04",
+    "examDate": "1405-11-16",
+    "scheduleVerification": "secondary_republication_of_official_announcement"
+  },
+  "sources": [
+    "src-sanjesh-phd-1406-fields",
+    "src-sanjesh-phd-1406-registration",
+    "src-sanjesh-phd-1406-registration-news",
+    "src-sanjesh-phd-1405-handbook"
+  ],
+  "verificationStatus": "partially_verified",
+  "limitations": [
+    "The row-level 2162 field/combination table for 1406 has not been extracted from the official 1406 attachment.",
+    "The official 1406 attachment URL was identified but returned HTTP 403 in this audit environment.",
+    "Question counts, time limits and negative marking are intentionally null until supported by the 1406 handbook.",
+    "The 1405 subject/combination matrix is stored as a historical baseline and must not be silently reused for 1406."
+  ]
+}
