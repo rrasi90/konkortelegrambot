@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-11-01T23:15:38.689Z",
+  "generatedAt": "2026-11-01T23:44:18.905Z",
   "base": "http://127.0.0.1:8787",
   "chromeVersion": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-  "passed": 14,
+  "passed": 15,
   "failed": 0,
   "results": [
     {
@@ -59,6 +59,11 @@
       "name": "بارگذاری کتابخانهٔ درس‌ها",
       "ok": true,
       "detail": "577 elements"
+    },
+    {
+      "name": "باز شدن «مطالعهٔ کامل» با listener (بدون onclick تزریقی)",
+      "ok": true,
+      "detail": "6220 chars"
     },
     {
       "name": "بازیابی جلسه و پیشرفت پس از بارگذاری مجدد صفحه",

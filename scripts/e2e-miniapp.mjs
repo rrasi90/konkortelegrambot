@@ -225,6 +225,20 @@ async function main() {
     const lessonCount = await evaluate(`document.querySelectorAll('#lessons-container *').length`);
     check('بارگذاری کتابخانهٔ درس‌ها', lessonCount > 5, `${lessonCount} elements`);
 
+    const bookOpened = await evaluate(`(function () {
+      var btn = document.querySelector('button[data-book-id]');
+      if (!btn) return false;
+      btn.click();
+      return true;
+    })()`);
+    await waitFor(
+      `document.querySelector('#lessons-container') && document.querySelector('#lessons-container').innerText.includes('بازگشت به لیست کتاب‌ها')`,
+      10000,
+      'full book view',
+    );
+    const bookText = await evaluate(`document.querySelector('#lessons-container').innerText`);
+    check('باز شدن «مطالعهٔ کامل» با listener (بدون onclick تزریقی)', bookOpened && bookText.length > 50, `${bookText.length} chars`);
+
     // 7) reload: session/device identity and persisted tracks survive a page reload
     await cdpSend.send('Page.reload', { ignoreCache: false });
     await waitFor(`document.querySelector('#view-app') && !document.querySelector('#view-app').hidden`, 25000, 'app after reload');

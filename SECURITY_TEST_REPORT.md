@@ -57,7 +57,7 @@
 | Self-report values restricted to `slip` / `didnt_know` | PASS | Route validation + tests |
 | PostgREST filter injection via `attemptId` | FIXED + TESTED | Client `attemptId` was interpolated unencoded into `findAnswerByAttempt`; now `encodeURIComponent` with a regression test (`supabase-store.test.ts`) |
 | SQL injection in database RPCs | PASS (reviewed) | Answer writes go through parameterized `submit_answer_secure`; ticket/attempt checks use bound parameters |
-| XSS in Telegram mini-app | NOT_VERIFIED | Persian text is rendered via DOM/HTML paths; no dedicated sanitizer/XSS test suite was run |
+| XSS in Telegram mini-app | FIXED + PARTIALLY VERIFIED | Manual sink review found a data-driven inline handler (`onclick="renderFullBook('…')"`); HTML escaping decodes `&#39;` before JS parsing, so a crafted `courseId` could break out. Replaced with `data-book-id` + `addEventListener`; E2E now clicks the generated button and opens the full-book view (15/15 local checks). No comprehensive sanitizer/audit yet |
 
 ## 5. Data exposure
 
@@ -77,14 +77,17 @@
 - **Distributed rate limiting / DDoS protection:** NOT_STARTED (only in-memory limiter tested).
 - **CSRF/CORS/headers review:** NOT_STARTED for a deployed origin.
 - **Dependency and secret scanning in CI:** NOT_STARTED (no CI secret store verified).
-- **XSS/HTML sanitization audit of the mini-app:** NOT_STARTED.
+- **Comprehensive XSS/HTML sanitization audit of the mini-app:** NOT_STARTED. One data-driven
+  inline-handler sink was found by manual review and fixed (R-033), and the fixed path is exercised
+  by the E2E run; this is not a systematic review of every DOM sink or a sanitizer test suite.
 - **Telegram `initData` replay window:** accepted limitation — the 24-hour `auth_date` window is
   enforced, but captured initData is not one-time-use (standard Telegram behavior).
 
 ## 7. Conclusion
 
 Local authentication, ticket enforcement, RLS/RPC isolation, answer-key containment and the tested
-input-validation paths pass with executable evidence, including two Phase 5 hardening fixes
-(constant-time signature comparison and encoded PostgREST filter value). This is **not** a clean
-bill of health: external pentest, staging configuration, encryption and client-side XSS review
-remain open, so the Gate 5 security criterion is only partially met.
+input-validation paths pass with executable evidence, including three Phase 5 hardening fixes
+(constant-time signature comparison, encoded PostgREST filter value, and removal of a data-driven
+inline-handler XSS sink). This is **not** a clean
+bill of health: external pentest, staging configuration, encryption and a comprehensive client-side
+XSS audit remain open, so the Gate 5 security criterion is only partially met.

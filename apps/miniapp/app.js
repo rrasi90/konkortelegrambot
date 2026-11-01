@@ -678,7 +678,7 @@
       html += '<div class="course-accordion' + (isOpen ? ' open' : '') + '" data-course-id="' + escapeHtml(course.courseId) + '">';
       html += '<div class="course-accordion-header">';
       html += '<div><strong>' + escapeHtml(course.courseTitle) + '</strong> <span style="font-size:11.5px;color:var(--ink-soft);font-weight:400;margin-right:6px;">(' + filteredTopics.length + ' مبحث کلیدی)</span></div>';
-      html += '<button class="btn small" onclick="renderFullBook(\'' + escapeHtml(course.courseId) + '\')" style="margin-right:8px;">📖 مطالعه کامل</button>';
+      html += '<button class="btn small" data-book-id="' + escapeHtml(course.courseId) + '" style="margin-right:8px;">📖 مطالعه کامل</button>';
       html += '<span class="accordion-arrow" style="font-size:12px;color:var(--ink-soft);">' + (isOpen ? '▲' : '▼') + '</span>';
       html += '</div>';
 
@@ -728,6 +728,14 @@
     }
 
     container.innerHTML = html;
+
+    // دکمهٔ مطالعهٔ کامل با listener واقعی؛ دادهٔ سرور هرگز داخل onclick تزریق نمی‌شود
+    container.querySelectorAll('button[data-book-id]').forEach(function (btn) {
+      btn.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        window.renderFullBook(btn.getAttribute('data-book-id'));
+      });
+    });
 
     // متصل کردن رویداد کلیک باز/بسته شدن آکاردئون
     container.querySelectorAll('.course-accordion-header').forEach(function (hdr) {

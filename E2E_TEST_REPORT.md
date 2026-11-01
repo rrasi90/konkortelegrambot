@@ -18,7 +18,7 @@ PORT=8787 npx tsx scripts/dev-server.mjs      # terminal 1
 node scripts/e2e-miniapp.mjs                  # terminal 2
 ```
 
-Result: **14/14 checks passed**, 0 console errors, 0 local HTTP ≥400 responses.
+Result: **15/15 checks passed**, 0 console errors, 0 local HTTP ≥400 responses.
 Raw output: `evidence/phase-5/e2e-miniapp-run.txt`;
 machine-readable result: `evidence/phase-5/e2e-miniapp-result.json`.
 
@@ -35,9 +35,10 @@ machine-readable result: `evidence/phase-5/e2e-miniapp-result.json`.
 | 9 | "Next question" enables after submit | PASS | screenshot |
 | 10 | Map tab loads `/api/map` | PASS | 25 chars, `e2e-05-map.png` |
 | 11 | Lessons library loads `/api/lessons` | PASS | 577 elements |
-| 12 | Session/progress survives page reload | PASS | `e2e-06-reload.png` |
-| 13 | No local API response ≥400 during flow | PASS | 0 recorded |
-| 14 | No console error or uncaught page exception | PASS | 0 recorded |
+| 12 | Full-book view opens via `data-book-id` listener (no data-driven inline `onclick`) | PASS | 6220 chars, R-033 regression |
+| 13 | Session/progress survives page reload | PASS | `e2e-06-reload.png` |
+| 14 | No local API response ≥400 during flow | PASS | 0 recorded |
+| 15 | No console error or uncaught page exception | PASS | 0 recorded |
 
 ## 2. Scope gaps (not claimed as tested)
 
