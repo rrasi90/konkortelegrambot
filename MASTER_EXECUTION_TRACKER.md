@@ -1,5 +1,11 @@
 # MASTER_EXECUTION_TRACKER
 
+> **Phase 0 (Repository Baseline & Evidence Audit): PASS_WITH_EVIDENCE — 2026-11-01, branch
+> `fix/mission-remediation-20261101`.** Deliverables in `docs/audit/`
+> (baseline, feature matrix, claim-evidence matrix, branch/PR audit, technical test baseline,
+> remediation register R-001…R-025, risk register). Raw outputs in `evidence/phase-0/`.
+> KPI rows below remain the ground truth until each phase produces evidence.
+
 | شاخص کلان              | مرحله | وضعیت        | تعریف موفقیت                             |
 | ---------------------- | ----- | ------------ | ---------------------------------------- |
 | Exam Coverage          | ۱ و ۲ | NOT_STARTED  | تمام سرفصل‌های مصوب قابل ردیابی‌اند      |

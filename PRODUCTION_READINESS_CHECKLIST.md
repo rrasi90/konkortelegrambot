@@ -1,5 +1,14 @@
 # PRODUCTION READINESS CHECKLIST
 
+> **STATUS CORRECTION (Phase 0 audit, 2026-11-01 — commit d7c8dd0):** The ✅/“ready for release”
+> claims below are **UNVERIFIED and contradict the evidence**. Every referenced artifact
+> (`SECURITY_TEST_REPORT`, `PILOT_TEST_REPORT`, `PERFORMANCE_TEST_REPORT`,
+> `SCIENTIFIC_CONTENT_VALIDATION`, `ITEM_ANALYSIS_REPORT`) contains only empty templates or
+> `NOT_STARTED` rows, and `SOURCE_REGISTRY.json` hashes are literal placeholders.
+> **Correct overall status: `NOT_STARTED`. Release is not approved.**
+> See `docs/audit/CLAIM_EVIDENCE_MATRIX.csv` (C-03, C-06…C-16) and
+> `docs/audit/REMEDIATION_REGISTER.md` R-015.
+
 ## Overview
 Final checklist before production release, covering all gate 5 requirements.
 

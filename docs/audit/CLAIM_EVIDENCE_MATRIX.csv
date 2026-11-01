@@ -1,0 +1,21 @@
+claim_id,claim_text,claimed_in,evidence_required,evidence_found,verdict
+C-01,"Curriculum master covers 20 subjects",PHASE_1_ACCEPTANCE_REPORT.md,real CSV row count + official source,"MANAGEMENT_CURRICULUM_MASTER.csv has 17 data rows; no source doc cited",FALSE
+C-02,"Coverage matrix has 15 rows (per acceptance report)",PHASE_1_ACCEPTANCE_REPORT.md,row count,"CURRICULUM_COVERAGE_MATRIX.csv has 17 rows; report says 15",INCONSISTENT
+C-03,"All sources have SHA-256 hashes",PHASE_1_ACCEPTANCE_REPORT.md ('SHA-256 hashes planned'/checklist),64-hex per source,"SOURCE_REGISTRY.json: all 6 hash fields are literal 'placeholder-sha256-*' strings",FALSE
+C-04,"Coefficients official_verified",MANAGEMENT_CURRICULUM_MASTER.csv + EXAM_SPECIFICATION_1406.md,official booklet row citation,"CSV lists every subject coefficient=1 official_verified while scoring model examStructure.ts uses 4/5; no booklet extract attached",UNVERIFIED + CONTRADICTORY
+C-05,"2162 is the combination code",CURRICULUM_COVERAGE_MATRIX.csv (combinationCode=2162 on every row) vs src/data/examStructure.ts:54 (set code),"official designation of 2162 semantics","examStructure.ts header comment itself warns set!=combination; business subgroup reuses 2162; coverage CSV conflates them",FALSE (category error)
+C-06,"Official PhD question bank exists",OFFICIAL_PHD_QUESTION_BANK.md,question records with source/page/key,"3 placeholder entries only (phd-1405-001..003; empty options; pending_review) — doc honestly labels them placeholders",NOT_STARTED
+C-07,"Scientific content validation performed",SCIENTIFIC_CONTENT_VALIDATION.md,completed checklists with reviewers,"every check '⬜' unchecked; framework template only",NOT_STARTED
+C-08,"Item analysis (CTT/IRT) computed",ITEM_ANALYSIS_REPORT.md,response data + stats output,sample table (p=0.65/0.48 r_pb=0.42/0.18 MNSQ 1.05/1.45) are illustrative template numbers with zero response data behind them,NOT_STARTED
+C-09,"Engine parity verified",ENGINE_PARITY_REPORT.md,side-by-side scenario outputs,"doc itself states 'Comparison not yet performed'; all scenarios ❓",NOT_STARTED
+C-10,"Security audit complete",SECURITY_AUDIT.md,scan/test results,"all 10 OWASP areas NOT_STARTED on main",NOT_STARTED
+C-11,"Security tests passed",SECURITY_TEST_REPORT.md,test run results,"all rows '⬜'; summary N; '[List critical issues]' placeholder",NOT_STARTED
+C-12,"E2E scenarios executed",E2E_TEST_REPORT.md,scenario run logs,"all checklists '- [ ]' unchecked; plans only",NOT_STARTED
+C-13,"Pilot completed 3 tiers",PILOT_TEST_REPORT.md / PRODUCTION_READINESS_CHECKLIST.md,participant data,"PILOT doc contains recruitment targets only; N=___ blank; no results",NOT_STARTED
+C-14,"Performance measured",PERFORMANCE_TEST_REPORT.md,benchmark output,"every Measured cell '?'",NOT_STARTED
+C-15,"Ready for final release; all Gate 5 satisfied",PRODUCTION_READINESS_CHECKLIST.md,evidence links per criterion,"zero evidence; contradicts MASTER_EXECUTION_TRACKER.md (all NOT_STARTED) on the same commit d7c8dd0",FALSE
+C-16,"All 28 Phase 1-5 artifacts delivered",commit message d7c8dd0,working code+tests per artifact,"22 changed files are markdown/CSV/JSON frameworks; no tests/validator/code evidence for most claims",MISLEADING
+C-17,"Learning engine (packages/learning-engine) is the product engine",TARGET_ARCHITECTURE.md,React importing shared package,"React app never imports @ael/engine; still runs aelEngine.ts",FALSE for deployed React UI
+C-18,"Dependency security clean",SECURITY_AUDIT.md,npm audit output,"npm audit: 0 vulnerabilities (2026-11-01, evidence/phase-0/npm-audit-and-branches.txt)",PASS_WITH_EVIDENCE
+C-19,"Unit tests pass",CI,typecheck+vitest output,"128/128 tests, 11 files pass locally; exit 0 (evidence/phase-0/vitest-baseline.txt)",PASS_WITH_EVIDENCE
+C-20,"Adaptive planner priority formula as documented",ADAPTIVE_PLANNER.md,code implementing doc formula,"doc formula divides by forgetting risk (inverted) AND is implemented nowhere; React multiplies (1+urgency); Worker uses additive UrgencyV2",FALSE on two counts

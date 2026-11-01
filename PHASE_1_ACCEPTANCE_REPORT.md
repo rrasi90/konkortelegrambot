@@ -1,5 +1,14 @@
 # PHASE 1 ACCEPTANCE REPORT
 
+> **STATUS CORRECTION (Phase 0 audit, 2026-11-01):** Gate 1 is **NOT passed**. Claims below are
+> contradicted by the data: the curriculum CSV has **17 rows, not 20 subjects**; the coverage CSV
+> has 17 rows, not 15; `SOURCE_REGISTRY.json` contains **placeholder sha256 strings, not hashes**;
+> set code 2162 is conflated with combination codes; coefficients marked `official_verified` have
+> no attached official evidence. Correct status: `IMPLEMENTED_UNVERIFIED` at best.
+> See `docs/audit/CLAIM_EVIDENCE_MATRIX.csv` (C-01…C-05) and Phase 1 remediation in
+> `docs/audit/REMEDIATION_REGISTER.md` (R-001…R-005). A corrected foundation is being rebuilt on
+> branch `phase-1/scientific-foundation` (PR #4).
+
 ## Gate 1 Status: NOT_STARTED → READY_FOR_REVIEW
 
 ### Executive Summary
