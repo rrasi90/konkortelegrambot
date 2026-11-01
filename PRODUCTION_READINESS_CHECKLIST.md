@@ -36,9 +36,9 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 
 | Item | Status | Evidence / limitation |
 |---|---|---|
-| Migrations apply from scratch | PASS_WITH_EVIDENCE | Docker PostgreSQL 16 harness, migrations 0001–0012 + seeds (`evidence/phase-3`, `evidence/phase-4/db-*`) |
+| Migrations apply from scratch | PASS_WITH_EVIDENCE | Docker PostgreSQL 16: 0001–0013 + seeds recreated from scratch in `scripts/bench-db.sh`; integrity suite EXIT=0 (`evidence/phase-5/db-integrity-0013.txt`) |
 | Data integrity constraints verified | PASS_WITH_EVIDENCE | Integrity suite incl. tickets, RLS/RPC checks (R-010, R-020, R-023) |
-| Backup and restore tested | NOT_STARTED | No restore rehearsal artifact |
+| Backup and restore tested | PASS_WITH_EVIDENCE (scoped local DB) | `scripts/db-backup-restore.sh`: pg_dump → restore into fresh DB, all 6 key row counts match, index preserved (`evidence/phase-5/db-backup-restore.txt`); deployment artifact rollback still NOT_STARTED |
 | Availability SLA | NOT_STARTED | Not defined or measured |
 | Disaster recovery | NOT_STARTED | No DR plan/runbook |
 | Production database parity | BLOCKED | No Supabase credentials; local plain Postgres only (RK-07) |
@@ -76,7 +76,8 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 |---|---|---|
 | Local API benchmark | PASS_WITH_EVIDENCE (scoped) | 20 concurrent, 0% errors, p99 ≤21 ms (`evidence/phase-4/bench-worker-local.txt`) |
 | Template thresholds (local) | PASS_WITH_EVIDENCE (scoped) | Queue/answer/simulation/dashboard within limits; auth/content not isolated |
-| Database performance | NOT_STARTED | No query/lock/index measurements |
+| Database query latency (local/synthetic) | PASS_WITH_EVIDENCE (scoped) | 200k answer events; 30-day evidence query p95 10.6→3.4 ms after index 0013; other hot queries p95 ≤1.3 ms (`evidence/phase-5/db-bench-*`, `db-integrity-0013.txt`) |
+| Database concurrency/locks/pool | NOT_STARTED | No concurrent-session, lock-wait or PostgREST path measurement |
 | Stress (2×–10×) | NOT_STARTED | Not run |
 | Cloudflare Worker runtime | NOT_STARTED | Benchmarked in Node, not `workerd` |
 | Cross-platform performance | NOT_STARTED | Not measured |
@@ -120,8 +121,8 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 | Pilot tiers | All 3 | BLOCKED | NOT MET |
 | E2E | Passed | Local mini-app 14/14; staging/Telegram absent | PARTIAL |
 | Security test | Passed | Local suites; no staging/pentest | PARTIAL |
-| Performance test | Passed | Local only | PARTIAL |
-| Rollback tested | Yes | NOT_STARTED | NOT MET |
+| Performance test | Passed | Local API + local PostgreSQL/synthetic only | PARTIAL |
+| Rollback tested | Yes | DB dump/restore passed; deployment rollback NOT_STARTED | NOT MET |
 | Monitoring configured | Yes | NOT_STARTED | NOT MET |
 
 **Decision: NO-GO / DEFER.** The product is not release-ready. The remaining blockers are external

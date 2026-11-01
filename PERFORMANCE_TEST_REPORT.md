@@ -2,8 +2,9 @@
 
 **Run date:** 2026-11-02
 **Branch:** `fix/mission-remediation-20261101`
-**Status:** `PASS_WITH_EVIDENCE` for a local in-memory benchmark; production-load, database,
-stress and cross-platform performance remain `NOT_STARTED` / `BLOCKED` (no production infra).
+**Status:** `PASS_WITH_EVIDENCE` for a local in-memory API benchmark and local PostgreSQL
+query latency; production-load, Worker-runtime, stress and cross-platform performance remain
+`NOT_STARTED` / `BLOCKED` (no production infra).
 
 ## 1. Method (what was measured)
 
@@ -35,7 +36,38 @@ node scripts/bench-worker.mjs                 # terminal 2
 Error rate: **0%** across 1,380 requests. Answer count is 160 because 20 users × 8 queue items
 yielded 160 one-time tickets; it was not padded to 200.
 
-## 3. Threshold check (from the previous template)
+## 3. Database query latency (local PostgreSQL 16, synthetic load)
+
+- Harness: `scripts/bench-db.sh` creates a throwaway `ael_bench` database inside the
+  `ael-pg-test` container, applies **all migrations (0001–0013) and seeds from scratch**, then
+  loads 500 users, 200,000 answer events (40% owned by one hot user), 100,000 mastery-history
+  rows, 7,000 review cards and 15,000 queue items.
+- Each query runs 10 warmups + 50 measured executions; timing uses server-side
+  `clock_timestamp()`. This measures **query execution only** — the PostgREST hop and network
+  are not included.
+- `answer_events` previously had only `(user_id, pack_id)`; `EXPLAIN` showed a bitmap scan on
+  that index plus a heap filter that removed 26,664 of 40,000 user rows. Migration
+  `0013_answer_events_user_time_index.sql` adds `(user_id, answered_at)` for `listAnswersSince`.
+
+| Query | Before fix avg / p95 | After index avg / p95 | Verdict |
+|---|---|---|---|
+| `answer_events` 30-day count | 9.94 / 10.55 ms | 2.61 / 3.41 ms | PASS (local, < 100 ms) |
+| `answer_events` 30-day row fetch | 11.49 / 12.68 ms | 3.97 / 4.93 ms | PASS (local) |
+| `mastery_history` 7-day count | 1.05 / 1.31 ms | 1.00 / 1.19 ms | PASS (local) |
+| Due review cards | 0.03 / 0.10 ms | 0.02 / 0.07 ms | PASS (local) |
+| Today's queue items | 0.02 / 0.06 ms | 0.03 / 0.11 ms | PASS (local) |
+| User mastery (PK lookup) | 0.02 / 0.04 ms | 0.02 / 0.04 ms | PASS (local) |
+
+After the index, `EXPLAIN (ANALYZE, BUFFERS)` confirms `Bitmap Index Scan on
+answer_events_user_answered_idx` and removes the heap-filtered rows. Evidence:
+`evidence/phase-5/db-bench-before-index.txt`, `db-bench-after-index.txt`. Migration 0013 was
+applied from scratch in the same run, and the DB integrity suite passed with `EXIT=0`
+(`evidence/phase-5/db-integrity-0013.txt`).
+
+These numbers describe a synthetic 200k-row local database, not production data volume or
+concurrent database load.
+
+## 4. Threshold check (from the previous template)
 
 | Operation | Threshold | Measured local p99 | Verdict |
 |---|---|---|---|
@@ -46,21 +78,23 @@ yielded 160 one-time tickets; it was not padded to 200.
 | Exam simulation load (`start`) | < 5 s | 15.3 ms | PASS (local) |
 | Dashboard update (`/api/analytics/learning`) | < 2 s | 14.9 ms | PASS (local) |
 
-## 4. Not measured — explicitly out of scope
+## 5. Not measured — explicitly out of scope
 
-- **Database performance:** no query/lock/index measurements against PostgreSQL; only migration and
-  integrity tests exist.
+- **Database concurrency, locks and connection pool:** single-query latency is measured above;
+  concurrent sessions, lock waits, pool saturation and PostgREST/Supabase path remain
+  `NOT_STARTED`.
 - **Cloudflare Worker runtime:** tests run in Node, not `workerd`; CPU-time and cold-start behavior
   are unmeasured.
 - **Stress beyond 20 concurrent / 2×–10× load:** not run.
 - **Resource monitoring (CPU/memory/DB pool):** not instrumented.
 - **Cross-platform / cross-browser:** not run.
-- **Production SLA:** not claimed; loopback MemoryStore numbers must not be presented as production
-  capacity.
+- **Production SLA:** not claimed; loopback MemoryStore and synthetic PostgreSQL numbers must not
+  be presented as production capacity.
 
-## 5. Conclusion
+## 6. Conclusion
 
 The measured local API latency is comfortably below the template thresholds with zero errors at
-20 concurrent users on the in-memory harness. This supports functional readiness, **not** a
-production performance guarantee. Gate 5 performance remains incomplete until database, Worker
-runtime and stress measurements exist.
+20 concurrent users on the in-memory harness, and the measured PostgreSQL query p95 is ≤ 5 ms
+after adding the missing evidence-window index. This supports functional and query-level
+readiness, **not** a production performance guarantee. Gate 5 performance remains incomplete
+until Worker-runtime, concurrent-database, resource and stress measurements exist.

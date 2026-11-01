@@ -33,10 +33,15 @@
 > **Phase 5 (Validation & Release Gate): IN_PROGRESS (scoped local) — 2026-11-02.** Real local browser E2E through the
 > mini-app + worker (installed Chrome via CDP): 14/14 checks, 0 console errors, 0 local HTTP errors (`evidence/phase-5/`).
 > Local worker benchmark: 20 concurrent users, 1,380 requests, 0 errors, p99 ≤ 21 ms on MemoryStore
-> (`evidence/phase-4/bench-worker-local.txt`). `E2E_TEST_REPORT.md`, `PERFORMANCE_TEST_REPORT.md` and
-> `PRODUCTION_READINESS_CHECKLIST.md` now report only measured scope; release decision is **NO-GO / DEFER**.
+> (`evidence/phase-4/bench-worker-local.txt`). Local PostgreSQL benchmark with 200k synthetic answer events:
+> the 30-day evidence query improved from p95 10.6 ms to 3.4 ms after migration 0013 added the missing
+> `(user_id, answered_at)` index; DB integrity suite `EXIT=0` and a pg_dump→restore drill matched all six
+> key tables and preserved the index (`evidence/phase-5/db-bench-*`, `db-backup-restore.txt`).
+> `E2E_TEST_REPORT.md`, `PERFORMANCE_TEST_REPORT.md` and
+> `PRODUCTION_READINESS_CHECKLIST.md` now report only measured scope; the full gate table is in
+> `docs/phase-5/PHASE_5_EXECUTION_TRACKER.md`; release decision is **NO-GO / DEFER**.
 > **BLOCKED/NOT_STARTED:** real pilot (no participants), SME content validation, staging/Telegram-host E2E,
-> Postgres/Worker-runtime/stress performance, rollback drill, monitoring and legal/privacy review. No merge or deploy performed.
+> Worker-runtime/concurrent-DB/stress performance, rollback drill, monitoring and legal/privacy review. No merge or deploy performed.
 
 | شاخص کلان              | مرحله | وضعیت        | تعریف موفقیت                             |
 | ---------------------- | ----- | ------------ | ---------------------------------------- |
