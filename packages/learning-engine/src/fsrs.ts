@@ -194,12 +194,23 @@ export function scheduleNextFSRS(
 /* 6-Dimensional Learner Skill Modeling                               */
 /* ------------------------------------------------------------------ */
 
+/**
+ * §8.6 — ده علت خطا (mission Phase 4 §8.6).
+ * هر پاسخ غلط در حد امکان علت‌یابی می‌شود؛ هر خطا الزاماً ضعف قطعی یک فصل نیست.
+ */
 export type ErrorTypeClassification =
-  | 'slip'                 // Careless slip on high-mastery concept
-  | 'concept_gap'          // Fundamental gap in target concept
-  | 'prerequisite_failure' // Failure due to unmastered prerequisite
-  | 'misread'              // Confident trap / misreading distractor
-  | 'none';
+  | 'slip'                 // Careless slip on high-mastery concept (موجه توقف موج)
+  | 'concept_gap'          // شکاف در خود مفهومی که سؤال هدفش بود
+  | 'knowledge_gap'        // شکاف در پیش‌نیاز/دانش زیربنایی
+  | 'misconception'        // باور غلط — انتخاب دامِ تستی
+  | 'calculation_error'    // خطای محاسباتی در سؤال محاسباتی
+  | 'reading_error'        // بی‌دقتی در صورت سؤال (اطمینان بالا + پاسخ غلط)
+  | 'theory_confusion'     // خلط نظریه‌ها — دام با ضعف هم‌خانوادهٔ مفهومی
+  | 'recall_failure'       // فراموشی — بازیابی پایین با شایستگی پیشین بالا
+  | 'time_pressure'        // فشار زمان — پاسخ بسیار کندتر از زمان مجاز
+  | 'guessing'             // حدس — اطمینان خوداظهاری بسیار پایین
+  | 'unknown'              // شواهد برای علت‌یابی کافی نیست (هرگز به‌عنوان ضعف قطعی تفسیر نشود)
+  | 'none';                // پاسخ صحیح — خطایی برای طبقه‌بندی نیست
 
 export interface SkillEvidenceInput {
   wasCorrect: boolean;
@@ -210,36 +221,88 @@ export interface SkillEvidenceInput {
   confidenceRating?: number; // 1-5
   /** خوداظهاری لغزش (slip): شاهد شکاف نیست — از کسر شایستگی می‌کاهد */
   isSlip?: boolean;
+  /** §8.6: آیا سؤال محاسباتی است (از قرارداد کانترکت/کلمات کلیدی مشتق می‌شود) */
+  requiresCalculation?: boolean;
+  /** §8.6: نکتهٔ دام تستی سؤال — منبع طبقه‌بندی misconception/theory_confusion */
+  trapNote?: string;
+  /** §8.6: تسلط گره‌های هم‌خانوادهٔ مفهومی (برای تشخیص خلط نظریه‌ها) */
+  siblingMasteries?: number[];
+  /** §8.6: بازیابی حافظه از FSRS (برای تشخیص فراموشی) */
+  memoryRetrievability?: number;
+}
+
+/** §8.6 — قواعد علت‌یابی: صریح، اولویت‌دار و فقط از شاهد قابل‌مشاهده.
+ * «هر خطا الزاماً ضعف قطعی یک فصل نیست»: نبودِ شاهد → unknown، نه concept_gap. */
+export function classifyErrorType(
+  evidence: SkillEvidenceInput,
+  ctx?: { requiresCalculation?: boolean }
+): ErrorTypeClassification {
+  if (evidence.wasCorrect) return 'none';
+
+  const fast =
+    evidence.responseTimeMs !== undefined &&
+    evidence.expectedTimeMs !== undefined &&
+    evidence.expectedTimeMs > 0 &&
+    evidence.responseTimeMs < evidence.expectedTimeMs * 0.5;
+  const verySlow =
+    evidence.responseTimeMs !== undefined &&
+    evidence.expectedTimeMs !== undefined &&
+    evidence.expectedTimeMs > 0 &&
+    evidence.responseTimeMs > evidence.expectedTimeMs * 1.5;
+  const hasTrap = !!evidence.trapNote;
+
+  // 1) لغزش: شایستگی بالا + پاسخ بسیار سریع — موجه توقف موج سرایت
+  if (evidence.currentMastery >= 75 && fast) return 'slip';
+  if (evidence.isSlip) return 'slip';
+
+  // 2) فشار زمان: پاسخ بسیار کندتر از زمان مجاز
+  if (verySlow) return 'time_pressure';
+
+  // 3) فراموشی: شایستگی پیشین بالا ولی بازیابی حافظه پایین
+  if (
+    evidence.currentMastery >= 60 &&
+    evidence.memoryRetrievability !== undefined &&
+    evidence.memoryRetrievability < 0.7
+  ) {
+    return 'recall_failure';
+  }
+
+  // 4) خلط نظریه‌ها: دامِ تستی + ضعف هم‌خانوادهٔ مفهومی (حداقل دو شواهد)
+  if (hasTrap && (evidence.siblingMasteries ?? []).some((m) => m < 60)) {
+    return 'theory_confusion';
+  }
+
+  // 5) باور غلط: انتخاب پاسخِ دامِ مستند (دامنهٔ دام در بانک ثبت شده)
+  if (hasTrap) return 'misconception';
+
+  // 6) خطای محاسباتی: سؤال محاسباتی + پاسخ سریع/عادی بدون نشانگر شکاف
+  if (evidence.requiresCalculation === true && (fast || evidence.responseTimeMs !== undefined)) {
+    return 'calculation_error';
+  }
+
+  // 7) بی‌دقتی در صورت: اطمینان خوداظهاری بسیار بالا ولی پاسخ غلط
+  if (evidence.confidenceRating !== undefined && evidence.confidenceRating >= 5) {
+    return 'reading_error';
+  }
+
+  // 8) حدس: اطمینان خوداظهاری بسیار پایین
+  if (evidence.confidenceRating !== undefined && evidence.confidenceRating <= 1) {
+    return 'guessing';
+  }
+
+  // 9) شکاف دانش: پیش‌نیاز ضعیف
+  if (evidence.prerequisiteMastery !== undefined && evidence.prerequisiteMastery < 50) {
+    return 'knowledge_gap';
+  }
+
+  // 10) شکاف مفهومی: خودِ گره ضعیف بوده و پاسخ هم منطقیِ همان شکاف است
+  if (evidence.currentMastery < 60) return 'concept_gap';
+
+  // شواهد ناکافی — ضعف قطعی فرض نمی‌شود
+  return 'unknown';
 }
 
 /** Classify error type from learner answer evidence */
-export function classifyErrorType(evidence: SkillEvidenceInput): ErrorTypeClassification {
-  if (evidence.wasCorrect) return 'none';
-
-  // If high mastery (> 75) and answered unusually fast (< half expected time) -> slip
-  if (
-    evidence.currentMastery >= 75 &&
-    evidence.responseTimeMs !== undefined &&
-    evidence.expectedTimeMs !== undefined &&
-    evidence.responseTimeMs < evidence.expectedTimeMs * 0.5
-  ) {
-    return 'slip';
-  }
-
-  // If high confidence (4 or 5) but wrong -> misread or caught by sophisticated trap
-  if (evidence.confidenceRating !== undefined && evidence.confidenceRating >= 4) {
-    return 'misread';
-  }
-
-  // If prerequisite is weak (< 50) -> prerequisite failure
-  if (evidence.prerequisiteMastery !== undefined && evidence.prerequisiteMastery < 50) {
-    return 'prerequisite_failure';
-  }
-
-  // Otherwise fundamental concept gap
-  return 'concept_gap';
-}
-
 export interface SixDimensionalLearnerState {
   // 1. Competence / Proficiency Probability: P(L) in [0, 1]
   proficiencyProbability: number;

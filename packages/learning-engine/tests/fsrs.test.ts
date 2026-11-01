@@ -125,7 +125,7 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
     });
   });
 
-  describe('classifyErrorType (Diagnostic Error Attribution)', () => {
+  describe('classifyErrorType (§8.6 — ده علت خطا با قواعد صریح)', () => {
     it('returns "none" on correct answer', () => {
       expect(classifyErrorType({ wasCorrect: true, currentMastery: 80 })).toBe('none');
     });
@@ -141,24 +141,94 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
       ).toBe('slip');
     });
 
-    it('classifies high-confidence error as "misread"', () => {
+    it('self-reported slip is slip regardless of other signals', () => {
+      expect(
+        classifyErrorType({ wasCorrect: false, currentMastery: 20, isSlip: true })
+      ).toBe('slip');
+    });
+
+    it('classifies very slow answer as "time_pressure"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 40,
+          responseTimeMs: 100_000,
+          expectedTimeMs: 60_000,
+        })
+      ).toBe('time_pressure');
+    });
+
+    it('classifies high-mastery/low-retrievability as "recall_failure"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 80,
+          memoryRetrievability: 0.5,
+        })
+      ).toBe('recall_failure');
+    });
+
+    it('classifies trap-note error with weak confusable sibling as "theory_confusion"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 55,
+          trapNote: 'خلط مدل هرسبرگ با منتزکیو',
+          siblingMasteries: [70, 40],
+        })
+      ).toBe('theory_confusion');
+    });
+
+    it('classifies trap-note error without sibling evidence as "misconception"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 45,
+          trapNote: 'دام انحرافی گزینهٔ ۳',
+        })
+      ).toBe('misconception');
+    });
+
+    it('classifies wrong answer on calculation question as "calculation_error"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 55,
+          requiresCalculation: true,
+          responseTimeMs: 50_000,
+          expectedTimeMs: 60_000,
+        })
+      ).toBe('calculation_error');
+    });
+
+    it('classifies max-confidence wrong answer as "reading_error"', () => {
       expect(
         classifyErrorType({
           wasCorrect: false,
           currentMastery: 60,
           confidenceRating: 5,
         })
-      ).toBe('misread');
+      ).toBe('reading_error');
     });
 
-    it('classifies error with weak prerequisite as "prerequisite_failure"', () => {
+    it('classifies min-confidence wrong answer as "guessing"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 60,
+          confidenceRating: 1,
+        })
+      ).toBe('guessing');
+    });
+
+    it('classifies error with weak prerequisite as "knowledge_gap"', () => {
       expect(
         classifyErrorType({
           wasCorrect: false,
           currentMastery: 55,
           prerequisiteMastery: 30,
         })
-      ).toBe('prerequisite_failure');
+      ).toBe('knowledge_gap');
     });
 
     it('classifies low-mastery error as "concept_gap"', () => {
@@ -169,6 +239,32 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
           prerequisiteMastery: 70,
         })
       ).toBe('concept_gap');
+    });
+
+    it('returns "unknown" when evidence is insufficient — هر خطا ضعف قطعی فصل نیست', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 70,
+          prerequisiteMastery: 80,
+        })
+      ).toBe('unknown');
+    });
+
+    it('ده علت همگی مقدار متمایز تولید می‌کنند (پوشش کامل §8.6)', () => {
+      const causes = new Set([
+        classifyErrorType({ wasCorrect: false, currentMastery: 85, responseTimeMs: 10_000, expectedTimeMs: 60_000 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 40, responseTimeMs: 100_000, expectedTimeMs: 60_000 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 80, memoryRetrievability: 0.5 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 55, trapNote: 'دام', siblingMasteries: [40] }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 45, trapNote: "دام" }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 55, requiresCalculation: true, responseTimeMs: 50_000, expectedTimeMs: 60_000 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 60, confidenceRating: 5 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 60, confidenceRating: 1 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 55, prerequisiteMastery: 30 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 25, prerequisiteMastery: 70 }),
+      ]);
+      expect(causes.size).toBe(10);
     });
   });
 
