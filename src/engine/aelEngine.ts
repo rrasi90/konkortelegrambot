@@ -574,9 +574,11 @@ export function applyLessonUnderstandingRating(params: {
 
   // حذف کارت درسنامه فعلی اگر در صف بود
   const remCardId = `card.remedial.${node.id}`;
-  const remIdx = nextCards.findIndex((c) => c.id === remCardId);
-  if (remIdx !== -1 && rating >= 3) {
-    nextCards.splice(remIdx, 1);
+  // PR#3 port (30e7935): خوداظهاری درسنامه نباید شکاف تشخیص‌داده‌شده را پاک کند؛
+  // فقط اولویت کارت remedial کاهش می‌یابد تا شواهد عملکردی آن را حل کند.
+  if (rating >= 3) {
+    const remedialCard = nextCards.find((card) => card.id === remCardId);
+    if (remedialCard) remedialCard.priorityScore = Math.min(remedialCard.priorityScore, 40);
   }
 
   let intervalDays = 1;

@@ -666,7 +666,13 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       attemptIdByCard.set(s.item.card.id, attemptId);
       tickets.push({ attemptId, questionId: qid, attemptType: s.isProof ? 'proof' : 'practice' });
     }
-    await store.issueAttemptTickets(user.id, tickets).catch(() => undefined);
+    // PR#3 port (aa35200): شکست صدور بلیت باید fail-closed باشد — صف بدون بلیت ثبت‌ناپذیر است
+    try {
+      await store.issueAttemptTickets(user.id, tickets);
+    } catch (error) {
+      console.error('[worker] failed to issue queue attempt tickets:', error);
+      return c.json({ error: 'صف سؤال‌ها آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
 
     const items = selected.map((s) => {
       const node = state.nodes.get(s.item.card.nodeId);
@@ -714,7 +720,6 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
           responseTimeMs?: number;
           confidenceRating?: number;
           selfReport?: 'slip' | 'didnt_know';
-          attemptType?: 'practice' | 'diagnostic' | 'verification' | 'proof';
         }
       | null;
     if (
@@ -735,10 +740,6 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         : undefined;
     const selfReport =
       body.selfReport === 'slip' || body.selfReport === 'didnt_know' ? body.selfReport : undefined;
-    const attemptType =
-      body.attemptType === 'proof' || body.attemptType === 'diagnostic' || body.attemptType === 'verification'
-        ? body.attemptType
-        : 'practice';
 
     // idempotency: تلاش تکراری همان نتیجهٔ قبلی را برمی‌گرداند
     const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
@@ -768,6 +769,32 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const state = await loadEngineState(user.id);
     const question = state.questions.get(body.questionId);
     if (!question) return c.json({ error: 'سؤال ناشناخته' }, 404);
+
+    // PR#3 port (0d356ab/aa35200): نوع تلاش از بلیت صادرشدهٔ سمت سرور خوانده می‌شود،
+    // نه از فیلد client — ارجاع client نمی‌تواند practice را به proof ارتقا دهد.
+    let ticket;
+    try {
+      ticket = await store.getAttemptTicket(user.id, body.attemptId, body.questionId);
+    } catch (error) {
+      console.error('[worker] failed to read attempt ticket:', error);
+      return c.json({ error: 'اعتبار تلاش بررسی نشد؛ صف را تازه‌سازی کنید.' }, 503);
+    }
+    if (!ticket) return c.json({ error: 'بلیت معتبر برای این سؤال پیدا نشد؛ صف را تازه‌سازی کنید.' }, 400);
+    if (ticket.consumedAt || new Date(ticket.expiresAt).getTime() <= Date.now()) {
+      return c.json({ error: 'بلیت این تلاش مصرف‌شده یا منقضی است؛ صف را تازه‌سازی کنید.' }, 409);
+    }
+
+    const attemptType =
+      ticket.attemptType === 'proof' || ticket.attemptType === 'holdout'
+        ? 'proof'
+        : ticket.attemptType === 'practice' ||
+            ticket.attemptType === 'diagnostic' ||
+            ticket.attemptType === 'verification'
+          ? ticket.attemptType
+          : null;
+    if (!attemptType) {
+      return c.json({ error: 'نوع این تلاش هنوز در موتور یادگیری پشتیبانی نمی‌شود.' }, 400);
+    }
 
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
     let result;
@@ -1062,7 +1089,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       questionId: q.id,
       attemptType: 'verification' as const,
     }));
-    await store.issueAttemptTickets(user.id, tickets).catch(() => undefined);
+    try {
+      await store.issueAttemptTickets(user.id, tickets);
+    } catch (error) {
+      console.error('[worker] failed to issue night-quiz attempt tickets:', error);
+      return c.json({ error: 'کوییز شبانه آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
 
     const items = picked.map((q, i) => {
       const node = nodeMap.get(q.nodeId);

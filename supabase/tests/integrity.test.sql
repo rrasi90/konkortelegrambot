@@ -170,3 +170,52 @@ $$;
 delete from answer_events where attempt_id in ('test-attempt-1', 'test-rls-1');
 delete from user_node_mastery where user_id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222');
 delete from app_users where id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222');
+
+-- ۱۱) بلیت الزامی است: پاسخ بدون بلیت صادرشده باید رد شود
+do $$
+declare v_qid text;
+begin
+  insert into app_users (id, display_name) values ('44444444-4444-4444-4444-444444444444', 'تست ۴') on conflict do nothing;
+  select id into v_qid from questions limit 1;
+  begin
+    perform submit_answer_secure('44444444-4444-4444-4444-444444444444', 'no-ticket-at-all', v_qid, 0);
+    raise exception 'پاسخ بدون بلیت نباید پذیرفته شود';
+  exception when others then
+    null; -- انتظار خطا داریم
+  end;
+  delete from app_users where id = '44444444-4444-4444-4444-444444444444';
+end
+$$;
+
+-- ۱۲) بلیت متعلق به کاربر دیگر رد می‌شود
+do $$
+declare v_qid text;
+begin
+  insert into app_users (id, display_name) values ('55555555-5555-5555-5555-555555555555', 'تست ۵') on conflict do nothing;
+  insert into app_users (id, display_name) values ('66666666-6666-6666-6666-666666666666', 'تست ۶') on conflict do nothing;
+  select id into v_qid from questions limit 1;
+  insert into attempt_tickets (attempt_id, user_id, question_id, expires_at)
+  values ('ticket-cross-user', '55555555-5555-5555-5555-555555555555', v_qid, now() + interval '1 hour');
+  begin
+    perform submit_answer_secure('66666666-6666-6666-6666-666666666666', 'ticket-cross-user', v_qid, 0);
+    raise exception 'بلیت کاربر دیگر نباید قابل‌استفاده باشد';
+  exception when others then
+    null;
+  end;
+  delete from answer_events where user_id in ('55555555-5555-5555-5555-555555555555','66666666-6666-6666-6666-666666666666');
+  delete from attempt_tickets where attempt_id = 'ticket-cross-user';
+  delete from app_users where id in ('55555555-5555-5555-5555-555555555555','66666666-6666-6666-6666-666666666666');
+end
+$$;
+
+-- ۱۳) RPC فقط service_role؛ anon/authenticated نباید execute داشته باشند
+do $$
+begin
+  if has_function_privilege('anon', 'submit_answer_secure(uuid,text,text,int,jsonb,jsonb,jsonb,jsonb)', 'EXECUTE') then
+    raise exception 'anon نباید بتواند RPC ثبت پاسخ را صدا بزند';
+  end if;
+  if has_function_privilege('authenticated', 'submit_answer_secure(uuid,text,text,int,jsonb,jsonb,jsonb,jsonb)', 'EXECUTE') then
+    raise exception 'authenticated نباید بتواند RPC ثبت پاسخ را صدا بزند';
+  end if;
+end
+$$;

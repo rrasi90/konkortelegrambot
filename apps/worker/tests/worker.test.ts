@@ -76,12 +76,12 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     const target = queue.items.find((i: any) => i.card.nodeId === 'sm.value_chain');
     expect(target).toBeTruthy();
 
-    // پاسخ غلط
+    // پاسخ غلط (بلیت تلاش از خود صف می‌آید)
     const answerRes = await app.request(
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 't1', questionId: target.question.id, selectedOption: 3 }),
+        body: JSON.stringify({ attemptId: target.attemptId, questionId: target.question.id, selectedOption: 3 }),
       }),
     );
     expect(answerRes.status).toBe(200);
@@ -105,7 +105,7 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 't1', questionId: target.question.id, selectedOption: 3 }),
+        body: JSON.stringify({ attemptId: target.attemptId, questionId: target.question.id, selectedOption: 3 }),
       }),
     );
     const replay = await json(replayRes);
@@ -136,7 +136,7 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 'c1', questionId: q.id, selectedOption: q.correctOption }),
+        body: JSON.stringify({ attemptId: item.attemptId, questionId: q.id, selectedOption: q.correctOption }),
       }),
     );
     const mapRes = await app.request('/api/map', authed(token));
@@ -337,7 +337,7 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
         '/api/answers',
         authed(token, {
           method: 'POST',
-          body: JSON.stringify({ attemptId: 'home-t1', questionId: question.id, selectedOption: wrongOption }),
+          body: JSON.stringify({ attemptId: target.attemptId, questionId: question.id, selectedOption: wrongOption }),
         }),
       ),
     );
@@ -358,6 +358,7 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
     expect(night.items.length).toBe(1);
     expect(night.items[0].card.questionId).toBe(question.id);
     expect(night.items[0].question.correctOption).toBeUndefined(); expect(night.items[0].question.explanation).toBeUndefined(); expect(night.items[0].question.trapNote).toBeUndefined();
+    expect(night.items[0].attemptId).toBeTruthy();
 
     // پاسخ درست در کوییز شبانه → سکه بیشتر (۲) و گزارش درست
     const nightRes = await json(
@@ -365,7 +366,7 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
         '/api/answers',
         authed(token, {
           method: 'POST',
-          body: JSON.stringify({ attemptId: 'home-t2', questionId: question.id, selectedOption: question.correctOption }),
+          body: JSON.stringify({ attemptId: night.items[0].attemptId, questionId: question.id, selectedOption: question.correctOption }),
         }),
       ),
     );
@@ -430,22 +431,22 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
     const q1 = queue.items[0].question.id;
     const q2 = queue.items[1].question.id;
 
-    // ثبت پاسخ برای q1 با شناسه تلاش att-1
+    // ثبت پاسخ برای q1 با بلیت صادرشده برای همان آیتم صف
     const ans1 = await app.request(
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 'att-security-test', questionId: q1, selectedOption: 0 }),
+        body: JSON.stringify({ attemptId: queue.items[0].attemptId, questionId: q1, selectedOption: 0 }),
       }),
     );
     expect(ans1.status).toBe(200);
 
-    // تلاش برای استفاده مجدد از att-1 برای سؤال دیگر (q2)
+    // تلاش برای استفاده مجدد از همان بلیت برای سؤال دیگر (q2)
     const badReplay = await app.request(
       '/api/answers',
       authed(token, {
         method: 'POST',
-        body: JSON.stringify({ attemptId: 'att-security-test', questionId: q2, selectedOption: 0 }),
+        body: JSON.stringify({ attemptId: queue.items[0].attemptId, questionId: q2, selectedOption: 0 }),
       }),
     );
     expect(badReplay.status).toBe(400);
@@ -589,6 +590,10 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
   it('پاسخ تازه: wasCorrect/آمار/درس‌نامه در ریشهٔ پاسخ و مسیر replay همان قرارداد را دارد', async () => {
     const token = await login();
     const question = store.questions.find((q) => q.nodeId === 'sm.rbv')!;
+    const me = await json(await app.request('/api/me', authed(token)));
+    await store.issueAttemptTickets(me.user.id, [
+      { attemptId: 'att-contract-1', questionId: question.id, attemptType: 'practice' },
+    ]);
 
     const first = await json(
       await app.request(
@@ -630,6 +635,65 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
     expect(replay.wasCorrect).toBe(true);
     expect(replay.stats).toEqual(first.stats);
     expect(replay.lesson?.id).toBe('sm.rbv');
+  });
+
+  // PR#3 port (83b6ab4): کلاینت نمی‌تواند تلاش تمرینی را به اثبات تسلط ارتقا دهد
+  it('نوع تلاش از بلیت سرور می‌آید و attemptType جعلی کلاینت نادیده گرفته می‌شود', async () => {
+    const token = await login();
+    const queue = await json(await app.request('/api/queue?limit=20', authed(token)));
+    const item = queue.items.find((candidate: any) => candidate.attemptType === 'practice' && candidate.question);
+    expect(item).toBeDefined();
+    const realQ1 = store.questions.find((x) => x.id === item.question.id)!;
+
+    const response = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({
+          attemptId: item.attemptId,
+          questionId: item.question.id,
+          selectedOption: realQ1.correctOption,
+          responseTimeMs: 20_000,
+          confidenceRating: 3,
+        }),
+      }),
+    );
+    expect(response.status).toBe(200);
+    const result = await json(response);
+    expect(result.report.attemptType).toBe('practice');
+    expect(result.report.coverageStatus).not.toBe('proven');
+
+    // حتی با فیلد attemptType: 'proof' در body — از بلیت خوانده می‌شود، نه از client
+    const item2 = queue.items.filter((candidate: any) => candidate.attemptType === 'practice' && candidate.question)[1];
+    const realQ2 = store.questions.find((x) => x.id === item2.question.id)!;
+    const escalated = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({
+          attemptId: item2.attemptId,
+          questionId: item2.question.id,
+          selectedOption: realQ2.correctOption,
+          attemptType: 'proof',
+        }),
+      }),
+    );
+    expect(escalated.status).toBe(200);
+    expect((await json(escalated)).report.attemptType).toBe('practice');
+  });
+
+  it('بدون بلیت صادرشده، ثبت پاسخ رد می‌شود (۴۰۰)', async () => {
+    const token = await login();
+    const queue = await json(await app.request('/api/queue?limit=3', authed(token)));
+    const item = queue.items.find((i: any) => i.question);
+    const res = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: 'att-never-issued', questionId: item.question.id, selectedOption: 0 }),
+      }),
+    );
+    expect(res.status).toBe(400);
   });
 
   it('کوییز شبانه: بلیت تلاش صادر می‌شود و با همان attemptId قابل پاسخ است', async () => {
@@ -704,7 +768,11 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
   it('خوداظهاری برای پاسخ درست رد می‌شود (۴۰۰)', async () => {
     const token = await login();
     const question = store.questions.find((q) => q.nodeId === 'sm.rbv')!;
+    const me = await json(await app.request('/api/me', authed(token)));
     const attemptId = 'att-self-report-correct';
+    await store.issueAttemptTickets(me.user.id, [
+      { attemptId, questionId: question.id, attemptType: 'practice' },
+    ]);
     await app.request(
       '/api/answers',
       authed(token, {
