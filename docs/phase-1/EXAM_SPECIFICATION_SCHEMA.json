@@ -1,0 +1,333 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/konkor/exam-specification.schema.json",
+  "title": "Konkor Exam Specification",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "examType",
+    "examYear",
+    "organizer",
+    "examSets",
+    "assessmentComponents",
+    "admissionPaths",
+    "sources",
+    "verificationStatus"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "examType": {
+      "enum": [
+        "phd",
+        "msc"
+      ]
+    },
+    "examYear": {
+      "type": "integer",
+      "minimum": 1390,
+      "maximum": 1500
+    },
+    "organizer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "effectiveFrom": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "lastReviewedAt": {
+      "type": "string",
+      "format": "date"
+    },
+    "examSets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/examSet"
+      },
+      "minItems": 1
+    },
+    "assessmentComponents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/component"
+      },
+      "minItems": 1
+    },
+    "admissionPaths": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/admissionPath"
+      },
+      "minItems": 1
+    },
+    "schedule": {
+      "type": "object"
+    },
+    "priorYearBaseline": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verificationStatus": {
+      "enum": [
+        "draft",
+        "partially_verified",
+        "official_verified",
+        "superseded"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "examSet": {
+      "type": "object",
+      "required": [
+        "setCode",
+        "officialTitle",
+        "experimentalGroup",
+        "verificationStatus"
+      ],
+      "properties": {
+        "setCode": {
+          "type": "string"
+        },
+        "officialTitle": {
+          "type": "string"
+        },
+        "experimentalGroup": {
+          "type": "string"
+        },
+        "verificationStatus": {
+          "enum": [
+            "official_verified",
+            "official_link_unreadable",
+            "secondary_reported",
+            "pending_official_verification"
+          ]
+        },
+        "combinations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/combination"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "combination": {
+      "type": "object",
+      "required": [
+        "combinationCode",
+        "fieldAssignments",
+        "verificationStatus"
+      ],
+      "properties": {
+        "combinationCode": {
+          "type": "string"
+        },
+        "fieldAssignments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fieldAssignment"
+          }
+        },
+        "verificationStatus": {
+          "enum": [
+            "official_verified",
+            "pending_official_verification",
+            "not_applicable",
+            "pending_consistency_review"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "component": {
+      "type": "object",
+      "required": [
+        "componentId",
+        "officialTitle",
+        "scope",
+        "coefficient",
+        "verificationStatus"
+      ],
+      "properties": {
+        "componentId": {
+          "type": "string"
+        },
+        "officialTitle": {
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "language",
+            "specialized_bundle",
+            "aptitude",
+            "other"
+          ]
+        },
+        "coefficient": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "coefficientScope": {
+          "enum": [
+            "whole_bundle",
+            "individual_course",
+            "unknown"
+          ]
+        },
+        "level": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "bachelor",
+              "master",
+              "doctoral",
+              "general"
+            ]
+          }
+        },
+        "questionCount": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "durationMinutes": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "verificationStatus": {
+          "enum": [
+            "official_verified",
+            "pending_official_verification",
+            "not_listed_in_official_specification"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "admissionPath": {
+      "type": "object",
+      "required": [
+        "pathId",
+        "centralizedExamPercent",
+        "recordsPercent",
+        "interviewPercent",
+        "proposalPercent",
+        "sourceId"
+      ],
+      "properties": {
+        "pathId": {
+          "enum": [
+            "educational_research",
+            "research_oriented"
+          ]
+        },
+        "centralizedExamPercent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "recordsPercent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "interviewPercent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "proposalPercent": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "sourceId": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "fieldAssignment": {
+      "type": "object",
+      "required": [
+        "fieldId",
+        "fieldName",
+        "subjectBundleIds",
+        "extractionStatus"
+      ],
+      "properties": {
+        "fieldId": {
+          "type": "string"
+        },
+        "fieldName": {
+          "type": "string"
+        },
+        "trackName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "subjectBundleIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "admissionRestriction": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "extractionStatus": {
+          "enum": [
+            "visually_checked",
+            "pending_consistency_review",
+            "needs_manual_review",
+            "no_bundle_marked"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
