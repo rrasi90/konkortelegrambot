@@ -5,7 +5,7 @@
  *
  * Prerequisite: PORT=8787 npx tsx scripts/dev-server.mjs
  * Run: node scripts/e2e-miniapp.mjs
- * Env: BASE_URL, CHROME_PATH, CDP_PORT
+ * Env: BASE_URL, CHROME_PATH, CDP_PORT, E2E_OUTPUT_SUFFIX
  */
 import { spawn } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync, mkdirSync } from 'node:fs';
@@ -15,6 +15,7 @@ import { join } from 'node:path';
 const base = process.env.BASE_URL ?? 'http://127.0.0.1:8787';
 const chromePath = process.env.CHROME_PATH ?? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 const cdpPort = Number(process.env.CDP_PORT ?? 9223);
+const outputSuffix = process.env.E2E_OUTPUT_SUFFIX ?? '';
 const evidenceDir = join(process.cwd(), 'evidence', 'phase-5');
 mkdirSync(evidenceDir, { recursive: true });
 
@@ -100,7 +101,8 @@ async function waitFor(expression, timeoutMs = 20000, label = expression) {
 
 async function shot(name) {
   const { data } = await cdpSend.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
-  writeFileSync(join(evidenceDir, name), Buffer.from(data, 'base64'));
+  const outName = outputSuffix ? name.replace(/\.png$/, `${outputSuffix}.png`) : name;
+  writeFileSync(join(evidenceDir, outName), Buffer.from(data, 'base64'));
 }
 
 async function main() {
@@ -254,7 +256,11 @@ async function main() {
     cdpSend.close();
     chrome.kill();
     await new Promise((resolve) => setTimeout(resolve, 300));
-    rmSync(profile, { recursive: true, force: true });
+    try {
+      rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 });
+    } catch (error) {
+      console.warn(`warn: temp profile cleanup failed (${error.code}); ${profile}`);
+    }
   }
 
   const failed = results.filter((r) => !r.ok);
@@ -268,7 +274,7 @@ async function main() {
     consoleErrors,
     localHttpErrors,
   };
-  writeFileSync(join(evidenceDir, 'e2e-miniapp-result.json'), JSON.stringify(summary, null, 2));
+  writeFileSync(join(evidenceDir, `e2e-miniapp-result${outputSuffix}.json`), JSON.stringify(summary, null, 2));
   console.log(`\n${summary.passed}/${results.length} checks passed`);
   if (failed.length > 0) process.exitCode = 1;
 }

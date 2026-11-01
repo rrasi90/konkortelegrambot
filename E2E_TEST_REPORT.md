@@ -9,7 +9,7 @@ exam-simulation UI scenarios remain `NOT_STARTED` (see scope gaps).
 
 Harness: `scripts/e2e-miniapp.mjs` — dependency-free Chrome DevTools Protocol driver.
 Target: `scripts/dev-server.mjs` serving `apps/miniapp` and the real Hono worker with `MemoryStore`
-and `content/examples/demo-pack.json`. Installed Google Chrome, headless, 430×900 viewport.
+and `content/examples/demo-pack.json`. Headless Google Chrome and Microsoft Edge, 430×900 viewport.
 
 Run command:
 
@@ -18,9 +18,12 @@ PORT=8787 npx tsx scripts/dev-server.mjs      # terminal 1
 node scripts/e2e-miniapp.mjs                  # terminal 2
 ```
 
-Result: **15/15 checks passed**, 0 console errors, 0 local HTTP ≥400 responses.
-Raw output: `evidence/phase-5/e2e-miniapp-run.txt`;
-machine-readable result: `evidence/phase-5/e2e-miniapp-result.json`.
+Result: **15/15 checks passed in Chrome and 15/15 in Edge**, 0 console errors, 0 local HTTP ≥400
+responses in either run.
+Raw output: `evidence/phase-5/e2e-miniapp-run.txt` (Chrome),
+`evidence/phase-5/e2e-miniapp-edge-run.txt` (Edge);
+machine-readable results: `evidence/phase-5/e2e-miniapp-result.json`,
+`evidence/phase-5/e2e-miniapp-result-edge.json`.
 
 | # | Check | Result | Evidence |
 |---|---|---|---|
@@ -44,7 +47,8 @@ machine-readable result: `evidence/phase-5/e2e-miniapp-result.json`.
 
 - **Telegram hosts** (Android/iOS/Desktop/Web Telegram) — the run used plain Chrome with the
   device-token path, not Telegram `initData`. Telegram-specific behavior is not verified here.
-- **Other browsers** (Firefox/Safari/Edge) — not run.
+- **Other browsers** (Firefox, Safari) and mobile Telegram hosts — not run. Microsoft Edge was run
+  headlessly through the same harness (`E2E_OUTPUT_SUFFIX=-edge`) and passed all 15 checks.
 - **Exam simulation UI** — the mini-app does not expose an exam-simulation screen; the API is
   covered by worker tests (§8.7, 19 tests) and DB RPC verification, not by this UI run.
 - **Readiness report UI / skill dashboard UI** — not surfaced in the mini-app flow exercised here.
@@ -65,5 +69,6 @@ machine-readable result: `evidence/phase-5/e2e-miniapp-result.json`.
 ## 4. Reproduce
 
 1. Start the dev server on port 8787.
-2. Run `node scripts/e2e-miniapp.mjs` (Chrome path overridable via `CHROME_PATH`).
+2. Run `node scripts/e2e-miniapp.mjs` (Chrome path overridable via `CHROME_PATH`; use
+   `E2E_OUTPUT_SUFFIX=-edge` to keep a second browser's artifacts separate).
 3. Inspect `evidence/phase-5/e2e-miniapp-result.json` and screenshots.

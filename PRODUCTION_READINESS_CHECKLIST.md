@@ -60,7 +60,7 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 
 | Item | Status | Evidence / limitation |
 |---|---|---|
-| E2E local flow | PASS_WITH_EVIDENCE | 14/14 checks, screenshots + JSON (`evidence/phase-5/`) — MemoryStore only |
+| E2E local flow | PASS_WITH_EVIDENCE | 15/15 checks in Chrome and 15/15 in Edge, screenshots + JSON (`evidence/phase-5/`) — MemoryStore only |
 | Telegram-host E2E | NOT_STARTED | Requires bot/staging; not run |
 | Exam-simulation UI E2E | NOT_STARTED | Mini-app has no simulation screen |
 | Pilot (technical/educational/extended) | BLOCKED | No real participants (R-012); no pilot data |
@@ -119,7 +119,7 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 | Pilot scientific validation | Complete | BLOCKED (no participants/SME) | NOT MET |
 | Question quality | Verified | Structural only | NOT MET |
 | Pilot tiers | All 3 | BLOCKED | NOT MET |
-| E2E | Passed | Local mini-app 14/14; staging/Telegram absent | PARTIAL |
+| E2E | Passed | Local mini-app 15/15 in Chrome and Edge; staging/Telegram absent | PARTIAL |
 | Security test | Passed | Local suites; no staging/pentest | PARTIAL |
 | Performance test | Passed | Local API + local PostgreSQL/synthetic only | PARTIAL |
 | Rollback tested | Yes | DB dump/restore passed; deployment rollback NOT_STARTED | NOT MET |

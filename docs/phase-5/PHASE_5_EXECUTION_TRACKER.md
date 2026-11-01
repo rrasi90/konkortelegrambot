@@ -6,7 +6,7 @@ dependency instead of inventing results.
 
 | Gate item | Scope | Status | Evidence / blocker |
 |---|---|---|---|
-| Local mini-app E2E | Installed Chrome via CDP through real mini-app + Hono worker + MemoryStore: auto-auth, track selection, home, queue, question display, no answer-key leak, answer submit, feedback, next, map, lessons, full-book listener, reload persistence | PASS_WITH_EVIDENCE (scoped local) | `scripts/e2e-miniapp.mjs`: 15/15 checks, 0 console errors, 0 local HTTP ≥400 (incl. R-033 XSS-sink regression); screenshots + JSON in `evidence/phase-5/`; report `E2E_TEST_REPORT.md` |
+| Local mini-app E2E | Headless Chrome + Edge via CDP through real mini-app + Hono worker + MemoryStore: auto-auth, track selection, home, queue, question display, no answer-key leak, answer submit, feedback, next, map, lessons, full-book listener, reload persistence | PASS_WITH_EVIDENCE (scoped local) | `scripts/e2e-miniapp.mjs`: 15/15 checks in Chrome and 15/15 in Edge, 0 console errors, 0 local HTTP ≥400 (incl. R-033 XSS-sink regression); screenshots + JSON in `evidence/phase-5/`; report `E2E_TEST_REPORT.md` |
 | Local API performance | 20 concurrent users, 7 scenarios, 200 requests each | PASS_WITH_EVIDENCE (scoped local) | `scripts/bench-worker.mjs`: 1,380 requests, 0 errors, p99 ≤21 ms (`evidence/phase-4/bench-worker-local.txt`) |
 | Local DB query performance | PostgreSQL 16, 200k synthetic answer events; analytics/queue query shapes | PASS_WITH_EVIDENCE (scoped local) | `scripts/bench-db.sh`: 30-day evidence query p95 10.6→3.4 ms after index 0013, other hot queries p95 ≤1.3 ms (`evidence/phase-5/db-bench-*`) |
 | Migration 0013 from scratch | `(user_id, answered_at)` index for `listAnswersSince`; all migrations 0001–0013 + seeds on a fresh DB | PASS_WITH_EVIDENCE | `scripts/bench-db.sh` fresh run; DB integrity suite `EXIT=0` (`evidence/phase-5/db-integrity-0013.txt`); full vitest 259/259 (`vitest-after-db-0013.txt`) |
@@ -17,7 +17,7 @@ dependency instead of inventing results.
 | SME scientific validation | Item keys, difficulty, English taxonomy sign-off | BLOCKED | No human subject-matter expert; official answer-key PDFs return 403 (R-005/R-007, RK-05) |
 | Telegram-host and staging E2E | Real Telegram clients, staging URL, bot initData | NOT_STARTED | No staging/bot credentials or deploy target (RK-07) |
 | Exam-simulation UI E2E | Browser flow for start/answer/submit/report | NOT_STARTED | Mini-app has no exam-simulation screen (API-only) |
-| Other browsers/platforms | Firefox, Safari, iOS/Android Telegram | NOT_STARTED | Only installed Chrome 430×900 was exercised |
+| Other browsers/platforms | Firefox, Safari, iOS/Android Telegram | NOT_STARTED | Chrome and headless Edge both pass locally; Firefox/Safari and mobile Telegram hosts not exercised |
 | Worker-runtime performance | `workerd` CPU, cold start, edge limits | NOT_STARTED | Benchmarks run in Node, not the Cloudflare runtime |
 | Concurrent DB load | Connection pool, lock waits, PostgREST path | NOT_STARTED | Single-session query latency only; local Postgres has no PostgREST |
 | Stress 2×–10× | Beyond-expected load and resource saturation | NOT_STARTED | Not run |
