@@ -616,10 +616,10 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col ambient-bento-bg text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0">
+    <div className="min-h-screen flex flex-col ambient-bento-bg text-slate-900 dark:text-slate-100 transition-colors pb-20 md:pb-0">
       {/* نوار بالای یکپارچه و مینیمال با افکت Glassmorphism */}
-      <header className="sticky top-0 z-40 glass-header px-4 sm:px-8 py-3">
-        <div className="max-w-[1240px] mx-auto flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 glass-header px-3 sm:px-6 md:px-8 py-2.5 sm:py-3 w-full">
+        <div className="max-w-[1240px] mx-auto flex items-center justify-between gap-2 sm:gap-4 w-full">
           {/* برند سامانه */}
           <a
             href="#home"
@@ -628,12 +628,13 @@ export default function App() {
               tmaHaptic.impact('light');
               setActiveTab('home');
             }}
-            className="flex items-center gap-2 text-sm sm:text-base font-bold text-slate-900 dark:text-white whitespace-nowrap shrink-0"
+            className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-base font-bold text-slate-900 dark:text-white whitespace-nowrap shrink-0"
           >
-            <span className="w-7 h-7 rounded-md bg-blue-700 text-white text-[13px] font-bold flex items-center justify-center shrink-0">
+            <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-blue-700 text-white text-[11px] sm:text-[13px] font-bold flex items-center justify-center shrink-0">
               م
             </span>
-            <span>سامانه جامع کنکور مدیریت</span>
+            <span className="hidden sm:inline">سامانه جامع کنکور مدیریت</span>
+            <span className="sm:hidden font-bold">آموزش کنکور</span>
           </a>
 
           {/* لینک‌های ناوبری اصلی */}
@@ -722,10 +723,11 @@ export default function App() {
             <button
               type="button"
               onClick={handleStartDailySession}
-              className="px-3.5 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all active:scale-95 whitespace-nowrap shrink-0 flex items-center gap-1.5 cursor-pointer shadow-xs"
+              className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all active:scale-95 whitespace-nowrap shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>مرور امروز</span>
+              <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
+              <span className="hidden sm:inline">مرور امروز</span>
+              <span className="sm:hidden">مرور</span>
             </button>
           </div>
         </div>
@@ -733,10 +735,10 @@ export default function App() {
 
       {/* Main Content Container (Supports both Full Width and 430px Telegram Mini-App Frame Mode) */}
       <main
-        className={`flex-1 w-full mx-auto transition-all duration-300 ${
+        className={`flex-1 w-full min-w-0 mx-auto transition-all duration-200 overflow-x-hidden ${
           isTmaMobileFrame
             ? 'max-w-[440px] my-4 border-4 border-slate-800 dark:border-slate-700 rounded-[24px] shadow-2xl overflow-hidden bg-slate-50 dark:bg-[#12100d] px-3.5 py-4'
-            : 'max-w-[1240px] px-4 sm:px-8 py-6'
+            : 'max-w-[1240px] px-2.5 sm:px-6 md:px-8 py-3 sm:py-6'
         }`}
       >
         {/* نوار بالای اختصاصی در حالت پیش‌نمایش قاب موبایل مینی‌اپ تلگرام */}
@@ -1082,8 +1084,8 @@ export default function App() {
         className={`${
           isTmaMobileFrame
             ? 'sticky bottom-0 max-w-[440px] mx-auto w-full rounded-b-[20px]'
-            : 'fixed bottom-0 inset-x-0 md:hidden'
-        } z-40 bg-[#fffdf8]/96 dark:bg-[#171512]/96 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800/90 px-2 py-1.5 pb-safe`}
+            : 'fixed bottom-0 inset-x-0 md:hidden w-full'
+        } z-40 bg-[#fffdf8]/96 dark:bg-[#171512]/96 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800/90 px-1.5 sm:px-2 py-1 sm:py-1.5 pb-safe`}
       >
         <div className="grid grid-cols-5 gap-1">
           {[

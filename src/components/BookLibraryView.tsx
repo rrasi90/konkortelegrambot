@@ -293,7 +293,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
               ))}
             </div>
 
-            <div className="relative flex-1 min-w-[200px]">
+            <div className="relative w-full sm:flex-1 min-w-0">
               <Search className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-2.5" />
               <input
                 type="text"
@@ -352,7 +352,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 text-center shrink-0">
+          <div className="grid grid-cols-3 gap-1.5 sm:gap-2 text-center w-full sm:w-auto shrink-0">
             {[
               { label: 'فصل کلیدی', value: fa(chapters.length) },
               { label: 'سؤال در ادوار', value: fa(totalExam) },

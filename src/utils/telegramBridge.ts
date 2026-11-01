@@ -95,7 +95,7 @@ export function getTelegramWebApp(): TelegramWebAppInstance | null {
 
 export function isRunningInsideTelegram(): boolean {
   const tg = getTelegramWebApp();
-  return Boolean(tg && tg.initData && tg.initData.length > 0);
+  return Boolean(tg && (tg.platform || (tg.initData && tg.initData.length > 0) || tg.initDataUnsafe?.user));
 }
 
 export function getTelegramUserInfo(): TelegramUser {
@@ -131,6 +131,20 @@ export function initTelegramMiniApp(isDark: boolean): {
       tg.disableVerticalSwipes?.();
       tg.setHeaderColor?.(bgHex);
       tg.setBackgroundColor?.(bgHex);
+
+      // همگام‌سازی ابعاد واقعی ویوپورت تلگرام در تغییر اندازه یا چرخش گوشی
+      const syncViewport = () => {
+        if (typeof document !== 'undefined') {
+          if (tg.viewportHeight) {
+            document.documentElement.style.setProperty('--tg-viewport-height', `${tg.viewportHeight}px`);
+          }
+          if (tg.viewportStableHeight) {
+            document.documentElement.style.setProperty('--tg-viewport-stable-height', `${tg.viewportStableHeight}px`);
+          }
+        }
+      };
+      syncViewport();
+      tg.onEvent?.('viewportChanged', syncViewport);
     } catch {
       // نادیده گرفتن متدهای پشتیبانی‌نشده در نسخه‌های قدیمی‌تر کلاینت
     }
