@@ -193,7 +193,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   return (
     <div className="space-y-4">
       {/* نوار تب‌بندی تمیز میز کار (جلوگیری از شلوغی صفحه اول) */}
-      <div className="bento-card glass-panel p-3.5 sm:px-5 flex flex-wrap items-center justify-between gap-3">
+      <div className="bento-card glass-panel p-2.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 w-full">
         <div className="tab-strip" role="tablist" aria-label="بخش‌های میز کار">
           {[
             {
@@ -316,7 +316,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </p>
 
               {/* خلاصه ترکیب صف امروز با زیرکارت‌های شیشه‌ای */}
-              <div className="grid grid-cols-3 gap-3 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 pt-1 w-full">
                 <div className="p-3.5 rounded-xl bg-white/8 backdrop-blur-md border border-white/12">
                   <div className="text-[11px] text-slate-300">تست‌های کنکور</div>
                   <div className="text-base font-bold mt-0.5 tabular-nums">

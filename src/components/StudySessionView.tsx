@@ -296,7 +296,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
   const badge = getCardTypeHeader();
 
   return (
-    <div className="max-w-3xl mx-auto pb-24">
+    <div className="w-full max-w-3xl mx-auto pb-24 min-w-0">
       {/* ۱. هدر جلسه با نوار پیشرفت */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 mb-4 shadow-xs">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
@@ -458,7 +458,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
               <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
               <span>میزان تسلط خود بر این درسنامه را ثبت کنید:</span>
             </h4>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-5 gap-1 sm:gap-2">
               {([1, 2, 3, 4, 5] as const).map((r) => (
                 <button
                   key={r}
@@ -895,7 +895,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
                         <div className="font-bold text-slate-900 dark:text-white">
                           تسلط شما بر این درسنامه (۱ تا ۵):
                         </div>
-                        <div className="grid grid-cols-5 gap-1.5">
+                        <div className="grid grid-cols-5 gap-1 sm:gap-1.5">
                           {([1, 2, 3, 4, 5] as const).map((r) => (
                             <button
                               key={r}
