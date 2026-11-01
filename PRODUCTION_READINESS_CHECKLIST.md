@@ -1,151 +1,130 @@
 # PRODUCTION READINESS CHECKLIST
 
-> **STATUS CORRECTION (Phase 0 audit, 2026-11-01 — commit d7c8dd0):** The ✅/“ready for release”
-> claims below are **UNVERIFIED and contradict the evidence**. Every referenced artifact
-> (`SECURITY_TEST_REPORT`, `PILOT_TEST_REPORT`, `PERFORMANCE_TEST_REPORT`,
-> `SCIENTIFIC_CONTENT_VALIDATION`, `ITEM_ANALYSIS_REPORT`) contains only empty templates or
-> `NOT_STARTED` rows, and `SOURCE_REGISTRY.json` hashes are literal placeholders.
-> **Correct overall status: `NOT_STARTED`. Release is not approved.**
-> See `docs/audit/CLAIM_EVIDENCE_MATRIX.csv` (C-03, C-06…C-16) and
-> `docs/audit/REMEDIATION_REGISTER.md` R-015.
+> **STATUS CORRECTION (Phase 0 audit, 2026-11-01 — commit d7c8dd0):** the original ✅ / "ready for
+> final release" claims were unsupported and contradicted the evidence.
+>
+> **Phase 5 update (2026-11-02):** E2E local flow and local performance are now measured, but
+> production read-only gates (pilot, SME content validation, staging, monitoring, rollback) are not.
+> **Overall status remains `BLOCKED` / `DEFER`. Release is NOT approved.**
 
-## Overview
-Final checklist before production release, covering all gate 5 requirements.
+Statuses follow the standard set only. A row without a linked artifact is not a pass.
 
-### 1. Scientific Validation ✅
+## 1. Scientific validation
 
-| Item | Status | Notes |
-| ---- | ----- | ----- |
-| Scientific content validation complete | ✅ | `SCIENTIFIC_CONTENT_VALIDATION.md` |
-| Item analysis report complete | ✅ | `ITEM_ANALYSIS_REPORT.md` |
-| Psychometric analysis done | ✅ | CTT and IRT analysis |
-| Question quality verified | ✅ | All quality checks passed |
-| Curriculum coverage confirmed | ✅ | All exam topics covered |
-| Source integrity verified | ✅ | SHA-256 hashes match |
+| Item | Status | Evidence / limitation |
+|---|---|---|
+| Content validation script run | PASS_WITH_EVIDENCE | `evidence/phase-4/content-validate-exam87.txt` — 2 packs, 0 warnings |
+| Scientific content quality report | IMPLEMENTED_UNVERIFIED | `docs/phase-2/CONTENT_QUALITY_REPORT.md`, derived from bank data |
+| Psychometric analysis (CTT/IRT) | BLOCKED | No response data; no assumed parameters were invented |
+| Question quality verified | IMPLEMENTED_UNVERIFIED | Structural checks pass; distractor/ difficulty quality not empirically validated |
+| Curriculum coverage confirmed | BLOCKED | Topic matrix is `pending_sme_review` (R-004); SME is external |
+| Source integrity verified | BLOCKED | Official PDFs return HTTP 403; hashes cannot be attached (R-005) |
 
-### 2. Question Quality ✅
+## 2. Question quality
 
-| Item | Status | Notes |
-| ---- | ----- | ----- |
-| Official question bank populated | ✅ | `OFFICIAL_PHD_QUESTION_BANK.md` |
-| Authored questions reviewed | ✅ | Quality standards met |
-| AI-reviewed questions validated | ✅ | Review pipeline complete |
-| Distractor quality | ✅ | All distractors meaningful |
-| Cognitive level consistency | ✅ | Matches subject/topic |
-| Difficulty range appropriate | ✅ | Within acceptable range |
+| Item | Status | Evidence / limitation |
+|---|---|---|
+| Official question bank populated | PASS_WITH_EVIDENCE (scoped) | 156 traced items, 0 empty options, provenance fields (R-006) |
+| Authored/demo questions labeled | PASS_WITH_EVIDENCE | `examLevel` + `contentOrigin` on demo seed/import; disclosed in simulation |
+| SME review of items | BLOCKED | No SME sign-off artifact exists |
+| AI-reviewed questions validated | NOT_STARTED | No review pipeline artifact |
+| Distractor quality | NOT_STARTED | No empirical distractor analysis |
+| Difficulty calibration | BLOCKED | Requires response data |
+| English item bank | BLOCKED | 0 labeled English questions; §8.8 reports `operational=false` |
 
-### 3. System Reliability ✅
+## 3. System reliability
 
-| Item | Status | Notes |
-| ---- | ----- | ----- |
-| Database migration plan | ✅ | `DATABASE_MIGRATION_PLAN.md` |
-| Data integrity preserved | ✅ | No user progress lost |
-| Migration runnable from scratch | ✅ | All migrations testable |
-| Backup and restore tested | ✅ | Procedure documented |
-| Availability SLA | ✅ | Defined and tested |
-| Disaster recovery | ✅ | Plan in place |
+| Item | Status | Evidence / limitation |
+|---|---|---|
+| Migrations apply from scratch | PASS_WITH_EVIDENCE | Docker PostgreSQL 16 harness, migrations 0001–0012 + seeds (`evidence/phase-3`, `evidence/phase-4/db-*`) |
+| Data integrity constraints verified | PASS_WITH_EVIDENCE | Integrity suite incl. tickets, RLS/RPC checks (R-010, R-020, R-023) |
+| Backup and restore tested | NOT_STARTED | No restore rehearsal artifact |
+| Availability SLA | NOT_STARTED | Not defined or measured |
+| Disaster recovery | NOT_STARTED | No DR plan/runbook |
+| Production database parity | BLOCKED | No Supabase credentials; local plain Postgres only (RK-07) |
 
-### 4. Security ✅
+## 4. Security
 
-| Item | Status | Notes |
-| ---- | ----- | ----- |
-| OWASP Top 10 assessment done | ✅ | `SECURITY_AUDIT.md` |
-| Authentication validated | ✅ | Server-side initData verification |
-| Authorization enforced | ✅ | RBAC implemented |
-| SQL injection prevention | ✅ | Parameterized queries only |
-| Rate limiting infrastructure | ✅ | In-place and tested |
-| Token security | ✅ | Crypto.getRandomValues() used |
-| Data encryption | ✅ | At rest and in transit |
-| Security test report | ✅ | `SECURITY_TEST_REPORT.md` |
+| Item | Status | Evidence / limitation |
+|---|---|---|
+| Authentication hardened | PASS_WITH_EVIDENCE | Prod unsigned modes 401; rate limiter wired; cross-user/ticket tests (R-010) |
+| Attempt-ticket enforcement | PASS_WITH_EVIDENCE | Server-issued single-use tickets; RPC/RLS verified (§8.7, R-010) |
+| SQL injection posture | PASS_WITH_EVIDENCE (scoped) | Parameterized REST/RPC paths; no raw user SQL found in reviewed endpoints |
+| Rate limiting | PASS_WITH_EVIDENCE (scoped) | In-memory limiter tested (429); distributed/edge limits not configured |
+| Token generation | PASS_WITH_EVIDENCE | `crypto.getRandomValues`/UUID; no `Math.random` session tokens |
+| OWASP Top 10 full assessment | IMPLEMENTED_UNVERIFIED | Partial audit; no external pentest |
+| Encryption at rest/in transit | NOT_STARTED | Depends on deployment configuration; unverified |
+| Security test report | IMPLEMENTED_UNVERIFIED | Local suites pass; staging/prod security not tested |
 
-### 5. Operational Readiness ✅
+## 5. Operational readiness
 
-| Item | Status | Notes |
-| ---- | ----- | ----- |
-| E2E test report complete | ✅ | `E2E_TEST_REPORT.md` |
-| Pilot test completed | ✅ | All 3 tiers executed |
-| Technical pilot bugs fixed | ✅ | Critical issues resolved |
-| Educational pilot analyzed | ✅ | Learning gains measured |
-| Extended pilot analyzed | ✅ | Behavior patterns documented |
-| A/B test results | ✅ | Significant findings |
-| Deployment procedure documented | ✅ | Step-by-step guide |
-| Rollback procedure | ✅ | Tested and verified |
-| Monitoring setup | ✅ | Alerts configured |
-| Logging infrastructure | ✅ | Structured logging in place |
+| Item | Status | Evidence / limitation |
+|---|---|---|
+| E2E local flow | PASS_WITH_EVIDENCE | 14/14 checks, screenshots + JSON (`evidence/phase-5/`) — MemoryStore only |
+| Telegram-host E2E | NOT_STARTED | Requires bot/staging; not run |
+| Exam-simulation UI E2E | NOT_STARTED | Mini-app has no simulation screen |
+| Pilot (technical/educational/extended) | BLOCKED | No real participants (R-012); no pilot data |
+| A/B testing | NOT_STARTED | No experiment harness/data |
+| Deployment runbook | NOT_STARTED | Only a `wrangler deploy` mention exists |
+| Rollback procedure | NOT_STARTED | Not rehearsed |
+| Monitoring/alerts | NOT_STARTED | No dashboards or alert configuration |
+| Structured logging | IMPLEMENTED_UNVERIFIED | Console logs only; no aggregation/retention policy |
 
-### 6. Performance ✅
+## 6. Performance
 
-| Item | Status | Notes |
-| ---- | ----- | ----- |
-| Performance test report | ✅ | `PERFORMANCE_TEST_REPORT.md` |
-| Response time thresholds met | ✅ | All within limits |
-| Load test passed | ✅ | Expected load handled |
-| Stress test passed | ✅ | Beyond-expected load |
-| Cross-platform consistency | ✅ | All major platforms |
-| Scalability verified | ✅ | 2x load handled |
+| Item | Status | Evidence / limitation |
+|---|---|---|
+| Local API benchmark | PASS_WITH_EVIDENCE (scoped) | 20 concurrent, 0% errors, p99 ≤21 ms (`evidence/phase-4/bench-worker-local.txt`) |
+| Template thresholds (local) | PASS_WITH_EVIDENCE (scoped) | Queue/answer/simulation/dashboard within limits; auth/content not isolated |
+| Database performance | NOT_STARTED | No query/lock/index measurements |
+| Stress (2×–10×) | NOT_STARTED | Not run |
+| Cloudflare Worker runtime | NOT_STARTED | Benchmarked in Node, not `workerd` |
+| Cross-platform performance | NOT_STARTED | Not measured |
 
-### 7. Content & Localization ✅
+## 7. Content and localization
 
-| Item | Status | Notes |
-| ---- | ----- | ----- |
-| Persian UI fully displayed | ✅ | UTF-8 encoding confirmed |
-| Mathematical content | ✅ | Rendering verified |
-| Image/media handling | ✅ | All formats supported |
-| Versioned content files | ✅ | In repository for distribution |
-| Content change audit trail | ✅ | Git history tracks changes |
+| Item | Status | Evidence / limitation |
+|---|---|---|
+| Persian RTL UI | PASS_WITH_EVIDENCE (scoped) | Chrome 430×900 E2E rendered Persian flow |
+| UTF-8 content | PASS_WITH_EVIDENCE | Import/validation scripts + E2E text rendering |
+| Mathematical rendering | NOT_STARTED | Not exercised in E2E |
+| Image/media handling | NOT_STARTED | Not exercised |
+| Versioned content files | PASS_WITH_EVIDENCE | Repo packs + provenance-aware importer |
+| Content change audit trail | PASS_WITH_EVIDENCE | Git history + bank metadata |
 
-### 8. Documentation ✅
+## 8. Documentation
 
-| Item | Status | Notes |
-| ---- | ----- | ----- |
-| Master execution tracker | ✅ | `MASTER_EXECUTION_TRACKER.md` |
-| All gate reports complete | ✅ | Gates 1-5 all done |
-| API contracts | ✅ | Defined and tested |
-| User documentation | ✅ | Prepared if needed |
-| Developer documentation | ✅ | Onboard guide ready |
+| Item | Status | Evidence / limitation |
+|---|---|---|
+| Phase trackers current | PASS_WITH_EVIDENCE | Phase 1–4 trackers + register updated with evidence links |
+| API contracts documented | IMPLEMENTED_UNVERIFIED | `docs/api/api.md` predates new §8.7–§8.10 endpoints; update pending |
+| Developer onboarding | NOT_STARTED | No verified onboarding run |
+| User documentation | NOT_STARTED | No user-facing guide verified |
+| Analytics metric catalog | PASS_WITH_EVIDENCE | `docs/phase-4/LEARNING_ANALYTICS_METRICS.md` |
 
-### 9. Legal & Compliance ✅
+## 9. Legal and compliance
 
-| Item | Status | Notes |
-| ---- | ----- | ----- |
-| Data privacy | ✅ | PII handled correctly |
-| Terms of service | ✅ | Drafted and reviewed |
-| Privacy policy | ✅ | Prepared |
-| Educational compliance | ✅ | Meets standards |
-| Age restrictions | ✅ | If applicable |
+| Item | Status | Evidence / limitation |
+|---|---|---|
+| Data privacy / PII handling | NOT_STARTED | No privacy audit artifact |
+| Terms of service | NOT_STARTED | Not reviewed |
+| Privacy policy | NOT_STARTED | Not reviewed |
+| Age restrictions | NOT_STARTED | Not assessed |
 
-### 10. Final Release Gate 5 Criteria
+## 10. Gate 5 decision
 
-| Criterion | Required Status | Evidence |
-| --------- | -------------- | -------- |
-| **Pilot scientific validation** | Complete | `SCIENTIFIC_CONTENT_VALIDATION.md` |
-| **Question quality** | Verified | `ITEM_ANALYSIS_REPORT.md` |
-| **Pilot test reports** | All 3 tiers done | `PILOT_TEST_REPORT.md` |
-| **E2E tests** | Passed | `E2E_TEST_REPORT.md` |
-| **Security test** | Passed | `SECURITY_TEST_REPORT.md` |
-| **Performance test** | Passed | `PERFORMANCE_TEST_REPORT.md` |
-| **Production checklist** | 100% complete | `PRODUCTION_READINESS_CHECKLIST.md` |
-| **Master execution tracker** | Updated | `MASTER_EXECUTION_TRACKER.md` |
-| **Rollback tested** | Yes | Deployment docs |
-| **Monitoring configured** | Yes | Alerts active |
+| Criterion | Required | Current | Verdict |
+|---|---|---|---|
+| Pilot scientific validation | Complete | BLOCKED (no participants/SME) | NOT MET |
+| Question quality | Verified | Structural only | NOT MET |
+| Pilot tiers | All 3 | BLOCKED | NOT MET |
+| E2E | Passed | Local mini-app 14/14; staging/Telegram absent | PARTIAL |
+| Security test | Passed | Local suites; no staging/pentest | PARTIAL |
+| Performance test | Passed | Local only | PARTIAL |
+| Rollback tested | Yes | NOT_STARTED | NOT MET |
+| Monitoring configured | Yes | NOT_STARTED | NOT MET |
 
-### 11. Final Release Decision Matrix
-
-| Scenario | Decision | Rationale |
-| -------- | -------- | --------- |
-| **All criteria met** | ✅ PROCEED TO RELEASE | All gates passed, ready for production |
-| **One critical blocker** | ❌ BLOCKER | Critical security or functionality issue |
-| **Multiple medium issues** | ⚠️ CONDITIONAL | Fix in next release cycle, document limitations |
-| **Pilot data insufficient** | ❌ DEFER | Need more pilot data before release |
-
-### 12. Release Communication
-
-| Audience | Message | Channel |
-| -------- | -------- | -------- |
-| **Users** | "New version released with enhanced learning features" | In-app notification, Telegram post |
-| **Developers** | "Production deployment complete, see changelog" | Team channel, documentation |
-| **Stakeholders** | "Release successful, monitoring active" | Email, dashboard |
-| **Support Team** | "New release features, known issues list" | Team meeting, docs |
-
----
-*Production readiness checklist complete. All gate 5 requirements satisfied. Ready for final release.*
+**Decision: NO-GO / DEFER.** The product is not release-ready. The remaining blockers are external
+or require owner approval: real pilot participants, SME content validation, retrievable official
+sources, production credentials/staging, and a rehearsed rollback/monitoring plan. No merge to
+`main` and no production deployment has been performed.

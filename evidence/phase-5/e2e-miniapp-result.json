@@ -1,0 +1,81 @@
+{
+  "generatedAt": "2026-11-01T23:15:38.689Z",
+  "base": "http://127.0.0.1:8787",
+  "chromeVersion": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  "passed": 14,
+  "failed": 0,
+  "results": [
+    {
+      "name": "دسترسی خودکار و نمایش صفحهٔ انتخاب گرایش",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "انتخاب چندگرایشی و فعال‌شدن دکمهٔ تأیید",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ورود به اپ پس از انتخاب گرایش",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "بارگذاری خانه از API",
+      "ok": true,
+      "detail": "252 chars"
+    },
+    {
+      "name": "بارگذاری صف امروز",
+      "ok": true,
+      "detail": "کارت سؤال نمایش داده شد"
+    },
+    {
+      "name": "نمایش سؤال و گزینه‌ها بدون کلید پاسخ",
+      "ok": true,
+      "detail": "4 گزینه"
+    },
+    {
+      "name": "نشت نکردن کلید/توضیح پیش از پاسخ",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ثبت پاسخ و نمایش بازخورد سرور",
+      "ok": true,
+      "detail": "1528 chars"
+    },
+    {
+      "name": "فعال‌شدن «سؤال بعدی» پس از ثبت",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "بارگذاری نقشهٔ مسیر از API",
+      "ok": true,
+      "detail": "25 chars"
+    },
+    {
+      "name": "بارگذاری کتابخانهٔ درس‌ها",
+      "ok": true,
+      "detail": "577 elements"
+    },
+    {
+      "name": "بازیابی جلسه و پیشرفت پس از بارگذاری مجدد صفحه",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "بدون پاسخ HTTP خطادار از API محلی",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "بدون خطای کنسول/استثنای صفحه",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "consoleErrors": [],
+  "localHttpErrors": []
+}
