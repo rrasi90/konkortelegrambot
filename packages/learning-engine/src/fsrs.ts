@@ -209,6 +209,8 @@ export interface SkillEvidenceInput {
   currentMastery: number; // 0-100
   prerequisiteMastery?: number; // 0-100
   confidenceRating?: number; // 1-5
+  /** خوداظهاری لغزش (slip): شاهد شکاف نیست — از کسر شایستگی می‌کاهد */
+  isSlip?: boolean;
 }
 
 /** Classify error type from learner answer evidence */
@@ -252,15 +254,31 @@ export interface SixDimensionalLearnerState {
   fluencySpeedRatio: number;
   // 6. Dominant Error Type: diagnostic classification
   dominantErrorType: ErrorTypeClassification | 'unknown';
+  /** §8.2: holdout تنها مسیر به proven/mastered — از تلاش attemptType='proof' */
+  provenViaHoldout?: boolean;
+  /** زمان آخرین شاهد (برای سنجش تازگی در اطمینان) */
+  lastEvidenceAt?: string;
+  /** تعداد شواهد صحیح (برای سازگاری در اطمینان) */
+  correctCount?: number;
+  /** انواع مستقل تلاش که شاهد جمع شده‌اند (برای تنوع در اطمینان) */
+  distinctAttemptTypes?: string[];
   // Synthesis Lifecycle Status
   coverageStatus: 'unseen' | 'diagnosed' | 'learning' | 'remediated' | 'needs_proof' | 'proven' | 'mastered';
+}
+
+/** §8.2 زمینهٔ شواهد — نوع تلاش و زمان، برای اطمینان چندعاملی و دروازهٔ holdout */
+export interface SixDUpdateContext {
+  attemptType?: 'practice' | 'diagnostic' | 'verification' | 'proof' | 'holdout' | 'exam_simulation';
+  answeredAt?: string;
+  now?: string;
 }
 
 /** Apply Bayesian evidence update to the 6D learner skill state */
 export function update6DLearnerSkillState(
   prior: SixDimensionalLearnerState | null,
   evidence: SkillEvidenceInput,
-  fsrsState?: FSRSState
+  fsrsState?: FSRSState,
+  ctx?: SixDUpdateContext
 ): SixDimensionalLearnerState {
   const current: SixDimensionalLearnerState = prior ?? {
     proficiencyProbability: 0.50,
@@ -273,14 +291,38 @@ export function update6DLearnerSkillState(
   };
 
   const wasCorrect = evidence.wasCorrect;
+  const isSlip = evidence.isSlip === true;
   const newEvidenceCount = current.evidenceCount + 1;
-  const newConfidence = Math.min(0.95, current.confidence + 0.10);
+  const isProof = ctx?.attemptType === 'proof' || ctx?.attemptType === 'holdout';
+  const provenViaHoldout = current.provenViaHoldout === true || (isProof && wasCorrect);
 
-  // Bayesian update on competence
+  // شمارندهٔ شواهد صحیح و انواع مستقل تلاش (پایهٔ سازگاری و تنوع در اطمینان)
+  const prevCorrect = current.correctCount ?? Math.round((current.confidence ?? 0.1) * current.evidenceCount);
+  const newCorrectCount = Math.min(newEvidenceCount, prevCorrect + (wasCorrect || isSlip ? 1 : 0));
+  const prevTypes = current.distinctAttemptTypes ?? [];
+  const newTypes = ctx?.attemptType && !prevTypes.includes(ctx.attemptType)
+    ? [...prevTypes, ctx.attemptType]
+    : prevTypes;
+
+  /* ---------- §8.2 اطمینان چندعاملی ----------
+   * چگالی شاهد × سازگاری پاسخ‌ها × تنوع نوع تلاش × تازگی.
+   * خوداظهاری (confidenceRating) در این محاسبه نقشی ندارد — شاهد مستقل، نه حس کاربر. */
+  const density = Math.min(1, newEvidenceCount / 5);
+  const accuracy = newCorrectCount / newEvidenceCount;
+  const variety = Math.min(1, Math.max(1, newTypes.length) / 3);
+  const answeredAtMs = ctx?.answeredAt ? new Date(ctx.answeredAt).getTime() : NaN;
+  const nowMs = ctx?.now ? new Date(ctx.now).getTime() : Date.now();
+  const daysSince = Number.isFinite(answeredAtMs) ? Math.max(0, (nowMs - answeredAtMs) / 86_400_000) : 0;
+  const recency = Math.exp(-daysSince / 14); // عمر متوسط ۱۴ روز
+  const newConfidence = Math.min(0.95, Math.max(0.05, 0.35 * density + 0.35 * accuracy + 0.15 * variety + 0.15 * recency));
+
+  // Bayesian update on competence — لغزش (خوداظهاری) شایستگی را کم نمی‌کند
   let newProficiency: number;
   if (wasCorrect) {
     const gain = 0.18 * (1.0 - current.proficiencyProbability);
     newProficiency = Math.min(0.99, current.proficiencyProbability + gain);
+  } else if (isSlip) {
+    newProficiency = current.proficiencyProbability;
   } else {
     const loss = 0.15 * current.proficiencyProbability;
     newProficiency = Math.max(0.01, current.proficiencyProbability - loss);
@@ -300,27 +342,32 @@ export function update6DLearnerSkillState(
   // Memory retrievability
   const newRetrievability = fsrsState ? fsrsState.retrievability : wasCorrect ? 1.0 : 0.75;
 
-  // Lifecycle Coverage Status
+  // Lifecycle Coverage Status — §8.2: «proven»/«mastered» فقط با شاهد هولدآوت؛
+  // توالی تمرین/خودارزیابی به‌تنهایی نمی‌تواند اثبات تولید کند.
   let status: SixDimensionalLearnerState['coverageStatus'];
-  if (newEvidenceCount < 2) {
-    status = 'diagnosed';
-  } else if (!wasCorrect) {
-    status = 'remediated';
-  } else if (newProficiency >= 0.80 && newEvidenceCount >= 4) {
-    status = 'mastered';
-  } else if (newProficiency >= 0.65 && newEvidenceCount >= 3) {
+  if (provenViaHoldout) {
     status = 'proven';
+  } else if (newEvidenceCount < 2) {
+    status = 'diagnosed';
+  } else if (!wasCorrect && !isSlip) {
+    status = 'remediated';
+  } else if (newProficiency >= 0.65 && newEvidenceCount >= 3) {
+    status = 'needs_proof';
   } else {
     status = 'learning';
   }
 
   return {
     proficiencyProbability: Math.round(newProficiency * 1000) / 1000,
-    confidence: Math.round(newConfidence * 100) / 100,
+    confidence: Math.round(newConfidence * 1000) / 1000,
     evidenceCount: newEvidenceCount,
     memoryRetrievability: Math.round(newRetrievability * 100) / 100,
     fluencySpeedRatio: newSpeedRatio,
     dominantErrorType: newDominantError,
+    provenViaHoldout,
+    lastEvidenceAt: ctx?.answeredAt,
+    correctCount: newCorrectCount,
+    distinctAttemptTypes: newTypes,
     coverageStatus: status,
   };
 }

@@ -173,7 +173,7 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
   });
 
   describe('update6DLearnerSkillState', () => {
-    it('updates competence, confidence, and transitions status to mastered after consistent evidence', () => {
+    it('§8.2: توالی تمرین به‌تنهایی هرگز proven/mastered نمی‌سازد — فقط needs_proof', () => {
       let state = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 });
       expect(state.coverageStatus).toBe('diagnosed');
       expect(state.evidenceCount).toBe(1);
@@ -181,13 +181,92 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
       state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 65 });
       expect(state.evidenceCount).toBe(2);
 
-      state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 75 });
-      expect(state.coverageStatus).toBe('proven');
-
-      state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 90 });
-      state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 95 });
-      expect(state.coverageStatus).toBe('mastered');
+      for (const m of [75, 90, 95, 97, 98]) {
+        state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: m });
+        expect(['learning', 'needs_proof']).toContain(state.coverageStatus);
+        expect(state.coverageStatus).not.toBe('proven');
+        expect(state.coverageStatus).not.toBe('mastered');
+      }
       expect(state.proficiencyProbability).toBeGreaterThan(0.80);
+    });
+
+    it('§8.2: پاسخ درستِ هولدآوت (attemptType=proof) تنها مسیر به proven است', () => {
+      let state = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 40 });
+      state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 55 }, undefined, {
+        attemptType: 'proof',
+      });
+      expect(state.coverageStatus).toBe('proven');
+      expect(state.provenViaHoldout).toBe(true);
+      // پس از اثبات، پاسخ غلطِ تمرینی هم وضعیت اثبات‌شده را از بین نمی‌برد
+      state = update6DLearnerSkillState(state, { wasCorrect: false, currentMastery: 60 });
+      expect(state.provenViaHoldout).toBe(true);
+      expect(state.coverageStatus).toBe('proven');
+    });
+
+    it('§8.2: تلاش اثباتِ غلط proven نمی‌سازد', () => {
+      const state = update6DLearnerSkillState(null, { wasCorrect: false, currentMastery: 70 }, undefined, {
+        attemptType: 'proof',
+      });
+      expect(state.provenViaHoldout === true).toBe(false);
+      expect(state.coverageStatus).not.toBe('proven');
+    });
+
+    it('§8.2: خوداظهاری اطمینان (confidenceRating) شایستگی را تغییر نمی‌دهد', () => {
+      const withSelfConfidence = update6DLearnerSkillState(null, {
+        wasCorrect: true,
+        currentMastery: 50,
+        confidenceRating: 5,
+      });
+      const without = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 });
+      expect(withSelfConfidence.proficiencyProbability).toBe(without.proficiencyProbability);
+
+      const seeded = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 });
+      const slipWrong = update6DLearnerSkillState(seeded, {
+        wasCorrect: false,
+        currentMastery: 80,
+        isSlip: true,
+      });
+      const plain = update6DLearnerSkillState(seeded, { wasCorrect: false, currentMastery: 80 });
+      expect(slipWrong.proficiencyProbability).toBe(seeded.proficiencyProbability); // بدون کسر
+      expect(plain.proficiencyProbability).toBeLessThan(seeded.proficiencyProbability);
+    });
+
+    it('§8.2: اطمینان با چگالی شاهد و تنوع نوع تلاش رشد می‌کند', () => {
+      const t0 = '2026-11-01T12:00:00Z';
+      const one = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 }, undefined, {
+        attemptType: 'practice',
+        answeredAt: t0,
+        now: t0,
+      });
+      const twoSameKind = update6DLearnerSkillState(one, { wasCorrect: true, currentMastery: 60 }, undefined, {
+        attemptType: 'practice',
+        answeredAt: t0,
+        now: t0,
+      });
+      expect(twoSameKind.confidence).toBeGreaterThan(one.confidence);
+
+      const twoVaried = update6DLearnerSkillState(one, { wasCorrect: true, currentMastery: 60 }, undefined, {
+        attemptType: 'diagnostic',
+        answeredAt: t0,
+        now: t0,
+      });
+      expect(twoVaried.confidence).toBeGreaterThan(twoSameKind.confidence);
+      expect(twoVaried.distinctAttemptTypes).toEqual(['practice', 'diagnostic']);
+    });
+
+    it('§8.2: اطمینان با کهنگی شاهد کاهش می‌یابد', () => {
+      const old = '2026-06-01T12:00:00Z';
+      const fresh = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 }, undefined, {
+        attemptType: 'practice',
+        answeredAt: old,
+        now: old,
+      });
+      const stale = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 }, undefined, {
+        attemptType: 'practice',
+        answeredAt: old,
+        now: '2026-11-01T12:00:00Z',
+      });
+      expect(stale.confidence).toBeLessThan(fresh.confidence);
     });
 
     it('transitions to "remediated" upon error', () => {

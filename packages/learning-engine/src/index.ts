@@ -220,6 +220,8 @@ export function applyAnswer(
     : 'none';
   // لغزش (slip) شاهدِ شکاف مفهومی نیست؛ موج سرایت متوقف می‌شود
   const suppressRipple = !wasCorrect && errorType === 'slip';
+  // §8.2: لغزش (خوداظهاری یا تشخیص خودکار) شایستگی ۶بعدی را کم نمی‌کند
+  evidence.isSlip = suppressRipple;
 
   const masteryUpdates = new Map<string, UserNodeMastery>();
   const cardUpdates = new Map<string, ReviewCard>();
@@ -470,12 +472,18 @@ export function applyAnswer(
             : 'unknown',
         }
       : null;
-    const sixD = update6DLearnerSkillState(prior, evidence, qCard.fsrs);
-    // تلاشِ اثباتِ درست، مستقیماً وضعیت را «اثبات‌شده» می‌کند
+    const sixD = update6DLearnerSkillState(prior, evidence, qCard.fsrs, {
+      attemptType: input.attemptType,
+      answeredAt: now.toISOString(),
+    });
+    // «proven» فقط از مدل شش‌بعدی و فقط با شاهد هولدآوت می‌آید (update6D دروازه‌اش می‌کند)؛
+    // تلاش اثباتِ درست همان دروازه را باز می‌کند.
     if (isProof && wasCorrect) {
       sixD.coverageStatus = 'proven';
+      sixD.provenViaHoldout = true;
     } else if (
       !isProof &&
+      !sixD.provenViaHoldout &&
       sixD.proficiencyProbability >= 0.75 &&
       sixD.coverageStatus !== 'proven' &&
       sixD.coverageStatus !== 'mastered'
