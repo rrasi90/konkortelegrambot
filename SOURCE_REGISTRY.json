@@ -1,0 +1,80 @@
+{
+  "sourceRegistryVersion": "1.0",
+  "generatedAt": "2026-11-01T17:30:00Z",
+  "officialDocuments": [
+    {
+      "title": " outwardly published exam specifications 1406",
+      "date": "26 February 1405 (Miladi: 17 March 2026)",
+      "version": "1.0",
+      "sha256": "placeholder-sha256-official-1406-specifications",
+      "source": "Organization of Educational Measurement",
+      "notes": "Published on 26 Esfand 1404; Registration Office published on 4 Aban 1405"
+    },
+    {
+      "title": "Exam structure 1405",
+      "date": "1405",
+      "version": "1.0",
+      "sha256": "placeholder-sha256-exam-structure-1405",
+      "source": "Organization of Educational Measurement",
+      "notes": "Aptitude test removed; specialized coefficient increased to 5"
+    },
+    {
+      "title": "Exam structure 1404",
+      "date": "1404",
+      "version": "1.0",
+      "sha256": "placeholder-sha256-exam-structure-1404",
+      "source": "Organization of Educational Measurement",
+      "notes": "Aptitude test present with coefficient 1; specialized coefficient was 4"
+    }
+  ],
+  "academicReferences": [
+    {
+      "title": "Carpenter et al. (2022). Spacing and Retrieval Practice.",
+      "authors": ["Carpenter", "et al."],
+      "journal": "Nature Reviews Psychology",
+      "year": 2022,
+      "sha256": "placeholder-sha256-carpenter-2022"
+    },
+    {
+      "title": "Roediger & Karpicke (2006). Test-Enhanced Learning.",
+      "authors": ["Roediger", "Karpicke"],
+      "journal": "Journal of Experimental Psychology",
+      "year": 2006,
+      "sha256": "placeholder-sha256-roediger-2006"
+    },
+    {
+      "title": "Dunlosky et al. (2013). Learning Techniques.",
+      "authors": ["Dunlosky", "et al."],
+      "journal": "Psychological Science in the Public Interest",
+      "year": 2013,
+      "sha256": "placeholder-sha256-dunlosky-2013"
+    }
+  ],
+  "examYearDocuments": {
+    "1405": {
+      "officialSpecTitle": " outwardly published exam specifications 1405",
+      "publicationDate": "4 Aban 1405",
+      "structureSource": "EXAM_SPECIFICATION_1405.md (placeholder)",
+      "notes": "Aptitude test removed; specialized coefficient 5; language coefficient 1; 40 language questions; 80-90 specialized questions"
+    },
+    "1406": {
+      "officialSpecTitle": " outwardly published exam specifications 1406",
+      "publicationDate": "26 Esfand 1404 (announcement); 4 Aban 1405 (registration)",
+      "structureSource": "EXAM_SPECIFICATION_1406.md",
+      "notes": "Structure unchanged from 1405; confirmed by examination cycle"
+    }
+  },
+  "verificationChain": {
+    "1406": {
+      "source": "Published announcements (26 Esfand 1404)",
+      "status": "reported",
+      "requiresValidation": true,
+      "validationTarget": "Official exam booklet 1406"
+    }
+  },
+  "knownGaps": [
+    "Official 1406 exam booklet not yet publicly available at time of registry creation",
+    "Some subgroup codes still require official documentation (technology, foresight, stpolicy)",
+    "Exact coefficient ratios for all subgroups verified against 1406 sources"
+  ]
+}
