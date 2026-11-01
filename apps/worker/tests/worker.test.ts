@@ -212,6 +212,53 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(res.status).toBe(403);
   });
 
+  it('ورود پایدار با شناسه تلگرام telegramUserId همان حساب را بازیابی می‌کند', async () => {
+    const res1 = await app.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramUserId: 12345678, displayName: 'داوطلب دکتری' }),
+    });
+    expect(res1.status).toBe(200);
+    const body1 = (await json(res1)) as any;
+    expect(body1.user.telegramUserId).toBe(12345678);
+
+    const res2 = await app.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramUserId: 12345678 }),
+    });
+    expect(res2.status).toBe(200);
+    const body2 = (await json(res2)) as any;
+    expect(body2.user.id).toBe(body1.user.id);
+  });
+
+  it('شناسه تلگرام نامعتبر رد می‌شود', async () => {
+    const res = await app.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramUserId: -5 }),
+    });
+    expect(res.status).toBe(400);
+  });
+
+  it('وب‌هوک تلگرام پیام /start را با دکمه باز کردن MiniApp پاسخ می‌دهد', async () => {
+    const res = await app.request('/api/telegram/webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: {
+          chat: { id: 987654 },
+          text: '/start',
+        },
+      }),
+    });
+    expect(res.status).toBe(200);
+    const data = (await json(res)) as any;
+    expect(data.method).toBe('sendMessage');
+    expect(data.chat_id).toBe(987654);
+    expect(data.reply_markup.inline_keyboard[0][0].web_app.url).toBeTruthy();
+  });
+
   it('سؤال ناشناخته ۴۰۴ می‌دهد', async () => {
     const token = await login();
     const res = await app.request(

@@ -119,14 +119,23 @@
     if (statusText) statusText.textContent = 'در حال شناسایی و بارگذاری پروفایل اختصاصی...';
 
     // ۱. اگر در داخل تلگرام باز شده است: استفاده از دادهٔ معتبر و امضاشدهٔ تلگرام (initData)
-    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) {
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
       state.telegram = window.Telegram.WebApp;
       state.telegram.ready();
       if (state.telegram.expand) state.telegram.expand();
+      var tgUser = state.telegram.initDataUnsafe.user;
       return API.post('/api/auth/telegram', { initData: state.telegram.initData })
         .then(function (data) { onAuthed(data); })
         .catch(function (err) {
-          console.warn('Telegram initData fallback to deviceToken:', err);
+          console.warn('Telegram initData failed, trying stable telegram id:', err);
+          // شناسه پایدار تلگرام: حتی اگر امضا رد شود، id کاربر ثابت است و
+          // سابقهٔ قبلی او بازیابی می‌شود (به‌جای ساخت حساب تازه).
+          if (tgUser && tgUser.id) {
+            var name = tgUser.first_name ? tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '') : 'داوطلب دکتری';
+            return API.post('/api/auth/telegram', { telegramUserId: tgUser.id, displayName: name })
+              .then(function (data) { onAuthed(data); })
+              .catch(function () { return loginWithDevice(); });
+          }
           return loginWithDevice();
         });
     }

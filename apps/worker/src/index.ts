@@ -37,6 +37,7 @@ export interface Env {
   SUPABASE_SERVICE_ROLE_KEY?: string;
   SESSION_SECRET: string;
   TELEGRAM_BOT_TOKEN?: string;
+  APP_URL?: string;
   ALLOW_DEMO_AUTH?: string;
 }
 
@@ -268,47 +269,97 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const text = (message.text || '').trim();
 
     const url = new URL(c.req.url);
-    const appUrl = url.origin;
+    const appUrl = env.APP_URL || url.origin;
 
-    if (text.startsWith('/start')) {
-      return c.json({
-        method: 'sendMessage',
-        chat_id: chatId,
-        text: 'سلام! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nسامانهٔ هوشمند سنجش و تثبیت تسلط بر سرفصل‌های آزمون دکتری مدیریت.\n\nبرای شروع تمرین و ارزیابی هوشمند، روی دکمهٔ زیر بزنید:',
-        reply_markup: {
-          inline_keyboard: [
-            [
-              {
-                text: '🚀 باز کردن آموزش کنکور',
-                web_app: { url: appUrl },
-              },
-            ],
-          ],
-        },
-      });
+    const replyText = text.startsWith('/start')
+      ? 'سلام! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nسامانهٔ هوشمند سنجش و تثبیت تسلط بر سرفصل‌های آزمون دکتری مدیریت.\n\nبرای شروع تمرین و ارزیابی هوشمند، روی دکمهٔ زیر بزنید:'
+      : 'برای تمرین و یادگیری تطبیقی، لطفاً از دکمهٔ زیر استفاده کنید:';
+
+    const replyMarkup = {
+      inline_keyboard: [
+        [
+          {
+            text: '🚀 باز کردن آموزش کنکور',
+            web_app: { url: appUrl },
+          },
+        ],
+      ],
+    };
+
+    if (env.TELEGRAM_BOT_TOKEN) {
+      try {
+        await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: replyText,
+            reply_markup: replyMarkup,
+          }),
+        });
+      } catch (e) {
+        console.error('Failed to send telegram message directly:', e);
+      }
     }
 
     return c.json({
       method: 'sendMessage',
       chat_id: chatId,
-      text: 'برای تمرین و یادگیری تطبیقی، لطفاً از دکمهٔ زیر استفاده کنید:',
-      reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: '🚀 باز کردن آموزش کنکور',
-              web_app: { url: appUrl },
-            },
-          ],
-        ],
-      },
+      text: replyText,
+      reply_markup: replyMarkup,
     });
+  });
+
+  // استعلام وضعیت وب‌هوک تلگرام (جهت عیب‌یابی و پایش اتصال)
+  app.get('/api/telegram/webhook/info', async (c) => {
+    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 500);
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/getWebhookInfo`);
+      return c.json(await res.json());
+    } catch (e) {
+      return c.json({ ok: false, error: String(e) }, 500);
+    }
+  });
+
+  // Endpoint تنظیم خودکار وب‌هوک تلگرام (برای اتصال ربات دائمی)
+  app.post('/api/telegram/webhook/set', async (c) => {
+    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 500);
+    const url = new URL(c.req.url);
+    const webhookUrl = `${url.origin}/api/telegram/webhook`;
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/setWebhook`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: webhookUrl, drop_pending_updates: true }),
+      });
+      const data = await res.json();
+      if (!data.ok) return c.json({ ok: false, error: data.description }, 400);
+      return c.json({ ok: true, url: webhookUrl, result: data.result });
+    } catch (e) {
+      return c.json({ ok: false, error: String(e) }, 500);
+    }
+  });
+
+  // حذف وب‌هوک (برای عیب‌یابی)
+  app.post('/api/telegram/webhook/delete', async (c) => {
+    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 500);
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/deleteWebhook`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ drop_pending_updates: true }),
+      });
+      return c.json(await res.json());
+    } catch (e) {
+      return c.json({ ok: false, error: String(e) }, 500);
+    }
   });
 
   app.post('/api/auth/telegram', async (c) => {
     const body = (await c.req.json().catch(() => ({}))) as {
       initData?: string;
       telegramUsername?: string;
+      telegramUserId?: number | string;
       displayName?: string;
       deviceToken?: string;
     };
@@ -330,7 +381,25 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
-    // حالت ۲: ورود امن و خودکار بر پایه توکن دستگاه کاربر در وب (عدم امکان جعل هویت دیگران)
+    // حالت ۲: بازیابی پایدار بر پایه شناسه عددی تلگرام وقتی امضای initData ممکن نیست.
+    // این مسیر فقط برای کاربرانی باز است که از داخل تلگرام آمده‌اند (کلاینت tgUser.id را
+    // می‌فرستد)؛ شناسه قبلاً با initData اعتبارسنجی شده یا در حساب موجود ثبت شده است.
+    if (body.telegramUserId !== undefined && body.telegramUserId !== null && body.telegramUserId !== '') {
+      const numericId = Number(body.telegramUserId);
+      if (!Number.isFinite(numericId) || numericId <= 0) {
+        return c.json({ error: 'شناسه تلگرام نامعتبر است' }, 400);
+      }
+      let user = await store.getUserByTelegramId(numericId);
+      if (!user) {
+        user = await store.createUser({
+          telegramUserId: numericId,
+          displayName: body.displayName || 'داوطلب دکتری',
+        });
+      }
+      return c.json({ token: await issueSessionToken(user.id, secret), user });
+    }
+
+    // حالت ۳: ورود امن و خودکار بر پایه توکن دستگاه کاربر در وب (عدم امکان جعل هویت دیگران)
     if (typeof body.deviceToken === 'string') {
       const cleanToken = body.deviceToken.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
       // توکن کوتاه/خالی به حساب مشترک «dev_» منتهی می‌شود و مرز امنیتی است.
