@@ -52,7 +52,8 @@ import { CodePatchesView } from './components/CodePatchesView';
 import { TelegramBotSimulatorModal } from './components/TelegramBotSimulatorModal';
 import { YearlyKonkorExamView } from './components/YearlyKonkorExamView';
 import { MistakeNotebookView } from './components/MistakeNotebookView';
-import { YEARLY_KONKOR_QUESTIONS } from './data/yearlyKonkorExams';
+import { SubjectDedicatedHubView } from './components/SubjectDedicatedHubView';
+import { YEARLY_KONKOR_QUESTIONS, KonkorCourseSectionId } from './data/yearlyKonkorExams';
 import {
   MistakeEntry,
   MistakeErrorType,
@@ -79,6 +80,7 @@ import {
   Award,
   BookMarked,
   MoreHorizontal,
+  Sparkles,
   X,
 } from 'lucide-react';
 
@@ -88,6 +90,7 @@ type ActiveTab =
   | 'exams'
   | 'map'
   | 'lessons'
+  | 'subject_hub'
   | 'notebook'
   | 'ingest'
   | 'patches';
@@ -140,6 +143,7 @@ export default function App() {
   const [selectedLessonNodeId, setSelectedLessonNodeId] = useState<string | null>(
     'mb.structure'
   );
+  const [selectedSubjectId, setSelectedSubjectId] = useState<KonkorCourseSectionId>('islamic');
 
   // ۱. راه‌اندازی اولیه Telegram Mini-App SDK (disableVerticalSwipes + Theme)
   useEffect(() => {
@@ -595,6 +599,30 @@ export default function App() {
     }
   };
 
+  const handleStartCoursePractice = (
+    _subjectId: KonkorCourseSectionId,
+    selectedQuestions: QuestionItem[]
+  ) => {
+    const now = new Date();
+    const courseQueue: ReviewCard[] = selectedQuestions.map((q) => ({
+      id: `course_practice_${q.id}`,
+      nodeId: q.nodeId,
+      cardType: 'question',
+      questionId: q.id,
+      dueAt: now.toISOString(),
+      priorityScore: 95,
+      attemptType: 'practice',
+      fsrs: initFSRS(now),
+    }));
+
+    if (courseQueue.length > 0) {
+      setIsNightQuizMode(false);
+      setCustomSessionQueue(courseQueue);
+      setSessionKey((prev) => prev + 1);
+      setActiveTab('study');
+    }
+  };
+
   // ۴. پردازش Deep-Link تلگرام (?startapp=...) هنگام ورود از دکمه‌های شیشه‌ای ربات
   useEffect(() => {
     const cmd = parseTelegramStartParam();
@@ -641,6 +669,7 @@ export default function App() {
           <nav className="hidden md:flex items-center gap-5 text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-400">
             {[
               { id: 'home', label: 'میز کار' },
+              { id: 'subject_hub', label: 'مطالعه درس‌به‌درس' },
               { id: 'study', label: 'جلسه تست' },
               { id: 'exams', label: 'کنکورهای ۱۳۹۱ تا ۱۴۰۵' },
               { id: 'map', label: 'درخت مهارت' },
@@ -821,6 +850,10 @@ export default function App() {
               setActiveTab('lessons');
             }}
             onNavigateTab={(t) => setActiveTab(t)}
+            onSelectSubject={(subjId) => {
+              setSelectedSubjectId(subjId);
+              setActiveTab('subject_hub');
+            }}
             onResetToZeroState={handleResetToZeroState}
           />
         )}
@@ -1067,6 +1100,22 @@ export default function App() {
           />
         )}
 
+        {activeTab === 'subject_hub' && (
+          <SubjectDedicatedHubView
+            initialSubjectId={selectedSubjectId}
+            nodes={nodes}
+            lessons={lessons}
+            questions={questions}
+            yearlyQuestions={YEARLY_KONKOR_QUESTIONS}
+            onStartCoursePractice={handleStartCoursePractice}
+            onOpenLesson={(nodeId) => {
+              setSelectedLessonNodeId(nodeId);
+              setActiveTab('lessons');
+            }}
+            onRecordMistake={(q, opt) => recordAnswerInNotebook(q, opt, false, 'concept_gap')}
+          />
+        )}
+
         {activeTab === 'ingest' && (
           <ContentIngestionStudio
             existingNodeIds={nodes.map((n) => n.id)}
@@ -1125,7 +1174,7 @@ export default function App() {
             aria-expanded={isMoreMenuOpen}
             aria-haspopup="menu"
             className={`flex flex-col items-center justify-center py-1.5 rounded-lg text-[10px] font-medium transition-all active:scale-95 cursor-pointer ${
-              ['map', 'notebook', 'ingest', 'patches'].includes(activeTab)
+              ['subject_hub', 'map', 'notebook', 'ingest', 'patches'].includes(activeTab)
                 ? 'text-blue-700 dark:text-blue-300 font-bold bg-blue-500/10'
                 : 'text-slate-500 dark:text-slate-400'
             }`}
@@ -1158,6 +1207,7 @@ export default function App() {
               </button>
             </div>
             {[
+              { id: 'subject_hub' as ActiveTab, label: 'مطالعه تفکیکی درس‌به‌درس', icon: Sparkles },
               { id: 'map' as ActiveTab, label: 'درخت مهارت و نقشه تسلط', icon: Layers },
               { id: 'notebook' as ActiveTab, label: 'دفتر خطا و مرور اشتباه‌ها', icon: BookMarked },
               { id: 'ingest' as ActiveTab, label: 'افزودن بستهٔ محتوا', icon: FilePlus2 },

@@ -122,6 +122,7 @@ export interface QuestionItem {
   courseSectionId?: string;
   courseSectionTitle?: string;
   designedFromTextbook?: string;
+  examLevel?: 'ارشد' | 'دکتری';
   isQuarantinedProof?: boolean;
   isDiagnosticProbe?: boolean;
   text: string;

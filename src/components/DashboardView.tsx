@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { KnowledgeNode, TRACK_LABELS, TrackId } from '../data/konkorData';
-import { YEARLY_KONKOR_BOOKLETS } from '../data/yearlyKonkorExams';
+import { YEARLY_KONKOR_BOOKLETS, KonkorCourseSectionId } from '../data/yearlyKonkorExams';
+import { SUBJECT_COURSE_DEFINITIONS } from '../data/subjectHubMeta';
 import { getArshadCoverage } from '../data/examCoverage';
 
 /** تبدیل ارقام لاتین به فارسی برای نمایش در رابط کاربری */
@@ -69,8 +70,9 @@ interface DashboardViewProps {
   onOpenLessonNode: (nodeId: string) => void;
   onOpenYearlyExam: (year?: number) => void;
   onNavigateTab: (
-    tab: 'study' | 'exams' | 'map' | 'lessons' | 'notebook' | 'ingest' | 'patches'
+    tab: 'study' | 'exams' | 'map' | 'lessons' | 'subject_hub' | 'notebook' | 'ingest' | 'patches'
   ) => void;
+  onSelectSubject?: (subjectId: KonkorCourseSectionId) => void;
   onResetToZeroState: () => void;
 }
 
@@ -107,6 +109,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onOpenLessonNode,
   onOpenYearlyExam,
   onNavigateTab,
+  onSelectSubject,
   onResetToZeroState,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<DashboardSubTab>('today');
@@ -577,6 +580,53 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </p>
             </div>
           </button>
+
+          {/* بخش اختصاصی: مطالعه تفکیکی درس‌به‌درس (۸ درس رسمی کنکور) */}
+          <div className="bento-span-12 bento-card glass-panel p-5 sm:p-6 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/60 dark:border-slate-800">
+              <div>
+                <div className="inline-flex items-center gap-1.5 text-[10px] font-bold text-blue-700 dark:text-blue-300 bg-blue-500/10 px-2 py-0.5 rounded-md mb-1">
+                  <Sparkles className="w-3 h-3" />
+                  <span>تفکیک کامل بر اساس نام درس (آموزش + کتاب + تست اختصاصی)</span>
+                </div>
+                <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                  مطالعهٔ تفکیکی درس‌به‌درس: ورود مستقیم به درس مورد نظر
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  با کلیک بر روی هر درس، فقط آموزش‌ها، فصول کتب مرجع، نکات طلایی ۲+ تکرار و تست‌های همان درس را مطالعه و تمرین کنید.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => onNavigateTab('subject_hub')}
+                className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>ورود به پیشخوان دروس</span>
+                <ArrowLeft className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
+              {SUBJECT_COURSE_DEFINITIONS.map((subj) => (
+                <button
+                  key={subj.id}
+                  type="button"
+                  onClick={() => {
+                    if (onSelectSubject) onSelectSubject(subj.id);
+                    onNavigateTab('subject_hub');
+                  }}
+                  className="p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/40 hover:border-blue-500 hover:shadow-xs transition-all text-right flex flex-col justify-between gap-2 group cursor-pointer"
+                >
+                  <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                    {subj.shortTitle}
+                  </div>
+                  <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono pt-1 border-t border-slate-200/60 dark:border-slate-800">
+                    {subj.questionCountInExam.split(' ')[0]} تست
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
