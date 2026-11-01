@@ -73,7 +73,7 @@ create table if not exists daily_queue_items (
   question_id text not null references questions(id) on delete cascade,
   node_id text references knowledge_nodes(id) on delete set null,
   reason text not null default 'scheduled' check
-    (reason in ('scheduled','review','new_material','remedial','proof','night_quiz','exam_simulation')),
+    (reason in ('scheduled','review','new_material','remedial','proof','night_quiz','exam_simulation','diagnostic')),
   priority numeric,
   status text not null default 'pending' check
     (status in ('pending','answered','skipped','expired')),

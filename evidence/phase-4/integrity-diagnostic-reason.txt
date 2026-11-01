@@ -1,0 +1,32 @@
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+INSERT 0 1
+INSERT 0 1
+SET
+SET
+ own_visible 
+-------------
+           1
+(1 row)
+
+SET
+ foreign_hidden 
+----------------
+              1
+(1 row)
+
+RESET
+DO
+DO
+DELETE 2
+DELETE 0
+DELETE 2
+DO
+DO
+DO
+DO

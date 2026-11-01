@@ -279,6 +279,21 @@ begin
     raise exception 'ردیف audit_logs ثبت نشد';
   end if;
 
+  -- §8.1: مقدار reason='diagnostic' باید در چک‌کنstraint daily_queue_items مجاز باشد
+  insert into daily_queue_items (user_id, queue_date, attempt_id, question_id, reason)
+  values (v_uid, '2026-11-01', 'dq-diag-1', v_q, 'diagnostic');
+  if not exists (select 1 from daily_queue_items where attempt_id = 'dq-diag-1' and reason = 'diagnostic') then
+    raise exception 'ردیف diagnostic در daily_queue_items ثبت نشد';
+  end if;
+  -- و مقدار کاملاً نامعتبر باید با check_rejected رد شود
+  begin
+    insert into daily_queue_items (user_id, queue_date, attempt_id, question_id, reason)
+    values (v_uid, '2026-11-01', 'dq-bad-1', v_q, 'not_a_reason');
+    raise exception 'reason نامعتبر باید با check رد شود';
+  exception when check_violation then
+    null;
+  end;
+
   delete from mastery_history where user_id = v_uid;
   delete from user_node_mastery where user_id = v_uid;
   delete from exam_selections where user_id = v_uid;

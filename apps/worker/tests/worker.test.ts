@@ -942,3 +942,81 @@ describe('R-020 — جداول دامنهٔ جدید (exam_selections، audit_lo
     expect(await store.countMasteryHistoryRows((await json(await app.request('/api/me', authed(token)))).user.id)).toBeGreaterThan(0);
   });
 });
+
+describe('Phase 4 §8.1 — آزمون تشخیصی و وضعیت اولیه UNKNOWN', () => {
+  it('/api/diagnostic بدون احراز هویت 401 می‌دهد', async () => {
+    const res = await app.request('/api/diagnostic');
+    expect(res.status).toBe(401);
+  });
+
+  it('آیتم‌های تشخیصی بلیت diagnostic دارند و کلید پاسخ افشا نمی‌شود', async () => {
+    const token = await login();
+    const diag = await json(await app.request('/api/diagnostic?count=3', authed(token)));
+    expect(diag.items.length).toBeGreaterThan(0);
+    expect(diag.items.length).toBeLessThanOrEqual(3);
+    for (const item of diag.items) {
+      expect(item.attemptType).toBe('diagnostic');
+      expect(typeof item.attemptId).toBe('string');
+      expect(item.question.correctOption).toBeUndefined();
+      expect(item.question.explanation).toBeUndefined();
+      expect(item.question.trapNote).toBeUndefined();
+      expect(['assessed', 'unknown']).toContain(item.assessmentState);
+      expect(item.question.examYear).not.toBe(1404); // قرنطینه هولدآوت از تشخیص آزاد نمی‌شود
+    }
+  });
+
+  it('صف تازه برای کاربر جدید: وضعیت UNKNOWN با تخمین NULL — نه پیش‌فرض ساختگی ۵۰', async () => {
+    const token = await login();
+    const queue = await json(await app.request('/api/queue?limit=5', authed(token)));
+    expect(queue.items.length).toBeGreaterThan(0);
+    for (const item of queue.items) {
+      expect(['assessed', 'unknown']).toContain(item.assessmentState);
+      if (item.assessmentState === 'unknown') {
+        expect(item.masteryEstimate).toBeNull();
+        expect(item.evidenceLevel).toBe('none');
+      }
+    }
+  });
+
+  it('ثبت پاسخ با بلیت تشخیصی پذیرفته می‌شود؛ نوع تلاش از بلیت سرور می‌آید', async () => {
+    const token = await login();
+    const diag = await json(await app.request('/api/diagnostic?count=1', authed(token)));
+    const item = diag.items[0];
+    const question = store.questions.find((x) => x.id === item.question.id)!;
+    expect(question.options.length).toBeGreaterThan(1);
+    const wrongOption = (question.correctOption + 1) % question.options.length;
+    const ansRes = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: item.attemptId, questionId: question.id, selectedOption: wrongOption }),
+      }),
+    );
+    expect(ansRes.status).toBe(200);
+    const ans = await json(ansRes);
+    expect(ans.report.attemptType).toBe('diagnostic');
+    expect(ans.wasCorrect).toBe(false);
+  });
+
+  it('بلیت جعلی تشخیصی (صدیت‌نشده) رد می‌شود', async () => {
+    const token = await login();
+    const q = store.questions[0];
+    const res = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: 'att-fake-diagnostic', questionId: q.id, selectedOption: q.correctOption }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  it('آیتم‌های تشخیصی در daily_queue_items با reason=diagnostic ثبت می‌شوند', async () => {
+    const token = await login();
+    const userId = (await json(await app.request('/api/me', authed(token)))).user.id;
+    await app.request('/api/diagnostic?count=2', authed(token));
+    const rows = store.queueItems.filter((r) => r.userId === userId);
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.every((r) => r.reason === 'diagnostic')).toBe(true);
+  });
+});

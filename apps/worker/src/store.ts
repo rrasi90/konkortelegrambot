@@ -84,7 +84,8 @@ export type QueueItemReason =
   | 'remedial'
   | 'proof'
   | 'night_quiz'
-  | 'exam_simulation';
+  | 'exam_simulation'
+  | 'diagnostic';
 
 export interface DailyQueueItemRow {
   attemptId: string;

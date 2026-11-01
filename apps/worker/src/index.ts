@@ -572,6 +572,107 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     return c.json({ tracks: [...tracks], packs });
   });
 
+  // ---------- §8.1 آزمون تشخیصی (Phase 4) ----------
+  // وضعیت اولیهٔ کاربر جدید UNKNOWN است؛ این مسیر شواهد تشخیصی جمع می‌کند.
+  // خروجی: initial_skill_estimate (از state پس از ثبت پاسخ‌ها), evidence_count,
+  // confidence, knowledge_gaps, unknown_topics, strengths, weaknesses, recommended_next_actions
+  app.get('/api/diagnostic', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const requested = Number(c.req.query('count') ?? 10);
+    const count = Number.isFinite(requested) ? Math.max(1, Math.min(20, Math.floor(requested))) : 10;
+    const state = await loadEngineState(user.id);
+
+    const allowed = (nodeId: string): boolean => {
+      const n = state.nodes.get(nodeId);
+      return !!n && (n.track === 'common' || user.activeTracks.includes(n.track));
+    };
+    const seenQuestionIds = new Set(state.cards.map((card) => card.questionId).filter(Boolean));
+    // گره‌های ارزیابی‌نشده اول؛ تنوع با گروهبندی بر حسب course
+    const unseen = [...state.questions.values()].filter(
+      (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id) && q.examYear !== 1404,
+    );
+    const seen = [...state.questions.values()].filter(
+      (q) => allowed(q.nodeId) && seenQuestionIds.has(q.id) && q.examYear !== 1404,
+    );
+    const diversify = (pool: Question[]): Question[] => {
+      const byCourse = new Map<string, Question[]>();
+      for (const q of pool) {
+        const key = state.nodes.get(q.nodeId)?.course ?? 'unknown';
+        const list = byCourse.get(key);
+        if (list) list.push(q);
+        else byCourse.set(key, [q]);
+      }
+      const queues = [...byCourse.values()];
+      const out: Question[] = [];
+      while (out.length < count && queues.some((list) => list.length > 0)) {
+        for (const list of queues) {
+          if (out.length >= count) break;
+          const next = list.shift();
+          if (next) out.push(next);
+        }
+      }
+      return out;
+    };
+    const picked = [...diversify(unseen), ...diversify(seen)].slice(0, count);
+    if (picked.length === 0) {
+      return c.json({ error: 'برای سنجش تشخیصی سؤال قابل‌دسترس نیست؛ گرایش‌ها را بررسی کنید.' }, 409);
+    }
+
+    const tickets = picked.map((q) => ({
+      attemptId: `att-${crypto.randomUUID()}`,
+      questionId: q.id,
+      attemptType: 'diagnostic' as const,
+    }));
+    // fail-closed: بدون بلیت، پاسخ ثبت‌ناپذیر است
+    try {
+      await store.issueAttemptTickets(user.id, tickets);
+    } catch (error) {
+      console.error('[worker] failed to issue diagnostic attempt tickets:', error);
+      return c.json({ error: 'آزمون تشخیصی آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
+
+    store
+      .insertDailyQueueItems(
+        user.id,
+        tehranMidnightIso().slice(0, 10),
+        tickets.map((t, idx) => ({
+          attemptId: t.attemptId,
+          questionId: t.questionId,
+          nodeId: picked[idx]!.nodeId,
+          reason: 'diagnostic' as const,
+          priority: null,
+        })),
+      )
+      .catch((e) => console.error('[worker] daily_queue_items diagnostic persist failed:', e));
+
+    const assessedNodeIds = new Set<string>();
+    state.mastery.forEach((_v, nodeId) => assessedNodeIds.add(nodeId));
+    const items = picked.map((q, idx) => {
+      const node = state.nodes.get(q.nodeId);
+      return {
+        question: toPublicQuestion(q),
+        course: node?.course,
+        chapter: node?.chapter,
+        topic: node?.topic,
+        attemptId: tickets[idx]!.attemptId,
+        attemptType: 'diagnostic' as const,
+        masteryBefore: assessedNodeIds.has(q.nodeId) ? state.mastery.get(q.nodeId) ?? null : null,
+        assessmentState: assessedNodeIds.has(q.nodeId) ? 'assessed' : ('unknown' as const),
+      };
+    });
+    return c.json({
+      items,
+      count: picked.length,
+      meta: {
+        unassessed_node_count: picked.filter((q) => !assessedNodeIds.has(q.nodeId)).length,
+        answer_registration: 'POST /api/answers با attemptId این آیتم‌ها (attemptType=diagnostic)',
+        confidence_note:
+          'خوداظهاری همراه پاسخ ثبت شود (self-report)؛ به‌تنهایی شاهد تسلط نیست.',
+      },
+    });
+  });
+
   app.get('/api/queue', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
@@ -707,8 +808,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
             : ('review' as const);
         const nodeId = item.card.nodeId;
 
-        const mastery = masteryMap.get(nodeId) ?? DEFAULT_MASTERY;
-        const knowledgeGap01 = Math.min(1, Math.max(0, (100 - mastery) / 100));
+        // §8.1: گره ارزیابی‌نشده = UNKNOWN، نه پیش‌فرض ساختگی ۵۰.
+        // کمبود شاهد → بیشترین شکاف دانش؛ «ندانستن» ضعف نیست، نیاز به سنجش است.
+        const masteryRaw = masteryMap.get(nodeId);
+        const isUnassessed = masteryRaw === undefined;
+        const knowledgeGap01 = isUnassessed ? 1 : Math.min(1, Math.max(0, (100 - masteryRaw!) / 100));
 
         let forgettingRisk: number;
         if (item.card.fsrs) {
@@ -724,8 +828,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
             overdueDays <= 0 ? 0 : Math.min(0.9, overdueDays / Math.max(1, item.card.intervalDays));
         }
 
+        // پیش‌نیاز ارزیابی‌نشده محافظه‌کارانه ۰: کاربر مبتدی بدون پیش‌نیاز به
+        // محتوای پیشرفته نرود (خاصیت ۷ §۸.۴)
         const prereqScores = (prereqByNode.get(nodeId) ?? []).map(
-          (pid) => masteryMap.get(pid) ?? DEFAULT_MASTERY,
+          (pid) => masteryMap.get(pid) ?? 0,
         );
         const prereqMultiplier = derivePrereqMultiplier(prereqScores);
 
@@ -740,15 +846,19 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
           currentPack: '',
           masteryMap,
         });
-        const benefit = calculateExpectedBenefit(activityType, {
-          masteryMap,
-          evidenceLevel: 'partial',
-        });
+        const benefit = isUnassessed
+          // سود سنجش تشخیصی برای گره ناشناخته (حداکثر) — نه مرور یک حدس
+          ? calculateExpectedBenefit('diagnostic', { masteryMap, evidenceLevel: 'none' })
+          : calculateExpectedBenefit(activityType, {
+              masteryMap,
+              evidenceLevel: 'partial',
+            });
         const minutes = estimatedMinutesForNode(nodeId);
         return {
           item,
           minutes,
           isProof: proofIds.has(item.card.id) || item.card.isProof === true,
+          needsDiagnostic: isUnassessed,
           priority: computePriorityV3({
             examValue,
             knowledgeGap01,
@@ -798,7 +908,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     // R-020 daily_queue_items persistence (best-effort, never blocks the response)
     {
       const queueDate = tehranMidnightIso().slice(0, 10);
-      const rows: { attemptId: string; questionId: string; nodeId: string | null; reason: 'scheduled' | 'review' | 'new_material' | 'remedial' | 'proof' | 'night_quiz' | 'exam_simulation'; priority: number }[] = [];
+      const rows: { attemptId: string; questionId: string; nodeId: string | null; reason: 'scheduled' | 'review' | 'new_material' | 'remedial' | 'proof' | 'night_quiz' | 'exam_simulation' | 'diagnostic'; priority: number }[] = [];
       for (const s of selected) {
         const attemptId = attemptIdByCard.get(s.item.card.id);
         const qid = s.item.card.questionId;
@@ -831,6 +941,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         chapterTitle: node?.chapter,
         attemptId: attemptIdByCard.get(s.item.card.id),
         attemptType: s.isProof ? ('proof' as const) : ('practice' as const),
+        // §8.1: وضعیت دانش پیش از این تلاش — بدون حدس ساختگی
+        assessmentState: s.needsDiagnostic ? ('unknown' as const) : ('assessed' as const),
+        masteryEstimate: s.needsDiagnostic ? null : masteryMap.get(s.item.card.nodeId) ?? null,
+        evidenceLevel: s.needsDiagnostic ? ('none' as const) : ('partial' as const),
         estimatedMinutes: s.minutes,
         priority: Math.round(s.priority * 100) / 100,
         proofLabel: s.isProof ? '🎯 تست اثبات تسلط (سؤال دیده‌نشده)' : undefined,
