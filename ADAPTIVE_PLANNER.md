@@ -151,6 +151,20 @@ Before selecting a topic:
 - Check time totals don't exceed user budget
 - Confirm at least one item per selected exam combination
 
+### Daily Queue Budget Rule (§8.5, implemented in `apps/worker/src/index.ts` GET /api/queue)
+Explicit, test-enforced accounting (worker tests §8.5):
+1. **Proof items are prior commitments** — they always stay in the queue, and their minutes are
+   deducted from the budget first (`proofMinutes`).
+2. **Spendable items** (review / practice / remedial) are added strictly while
+   `spendableMinutes + item.minutes ≤ max(0, budgetMinutes − proofMinutes)`. An item that does not
+   fit is skipped — the old "always take the first item even if over budget" convention was removed
+   because it broke the stated guarantee.
+3. **Response invariants:** `spentMinutes` equals the exact sum of `estimatedMinutes` over returned
+   items; `spentMinutes = proofMinutes + spendableMinutes`; `spendableMinutes ≤ max(0, budget − proofMinutes)`.
+4. **Mixed activity types are exposed per item** (`activityType: review | remedial | proof`) and the
+   remedial reason is persisted to `daily_queue_items` (`reason = 'remedial'` for repair cards).
+5. With no budget set, the queue is uncapped but the same totals are reported.
+
 ### Acceptance Criteria (Phase 4)
 | Criterion | Requirement |
 | --------- | ----------- |

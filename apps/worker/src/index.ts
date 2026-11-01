@@ -857,6 +857,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         return {
           item,
           minutes,
+          activityType,
           isProof: proofIds.has(item.card.id) || item.card.isProof === true,
           needsDiagnostic: isUnassessed,
           priority: computePriorityV3({
@@ -875,17 +876,25 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       .sort((a, b) => b.priority - a.priority);
     const proofItems = scored.filter((s) => s.isProof);
 
-    // بودجهٔ زمانی روزانه: آیتم‌های اثبات همیشه می‌مانند؛ بقیه تا سقف بودجه
-    let spentMinutes = 0;
+    // §8.5 بودجهٔ زمانی روزانه — قاعدهٔ صریح و تست‌پذیر:
+    //   1) آیتم‌های اثبات (proof) تعهد قبلی‌اند: همیشه می‌مانند و زمانشان از بودجه کم می‌شود.
+    //   2) آیتم‌های قابل‌هزینه (تمرین/مرور/جبرانی) فقط تا سقف «بودجه − زمان اثبات» انتخاب می‌شوند؛
+    //      آیتمی که از باقی‌مانده بزرگ‌تر باشد هرگز اضافه نمی‌شود (قاعدهٔ «اولین آیتم حتی اگر بیشتر» حذف شد).
+    //   3) guarantee: spentMinutes == مجموع estimatedMinutes آیتم‌های ارسال‌شده
+    //      و spendableMinutes ≤ max(0, budgetMinutes − proofMinutes).
+    const proofMinutes = proofItems.reduce((acc, s) => acc + s.minutes, 0);
+    const remainingBudget = budgetMinutes === undefined ? Infinity : Math.max(0, budgetMinutes - proofMinutes);
+    let spendableMinutes = 0;
     const selected: typeof scored = [...proofItems];
     for (const s of nonProof) {
-      if (budgetMinutes !== undefined && spentMinutes + s.minutes > budgetMinutes && selected.length > proofItems.length) {
+      if (budgetMinutes !== undefined && spendableMinutes + s.minutes > remainingBudget) {
         continue;
       }
       selected.push(s);
-      spentMinutes += s.minutes;
+      spendableMinutes += s.minutes;
       if (selected.length >= limit) break;
     }
+    const spentMinutes = proofMinutes + spendableMinutes;
 
     // ---------- صدور بلیت تلاش (attempt tickets) ----------
     const attemptIdByCard = new Map<string, string>();
@@ -917,7 +926,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
           attemptId,
           questionId: qid,
           nodeId: s.item.card.nodeId ?? null,
-          reason: s.isProof ? 'proof' : 'scheduled',
+          reason: s.isProof ? 'proof' : s.activityType === 'remedial' ? 'remedial' : 'scheduled',
           priority: s.priority,
         });
       }
@@ -941,6 +950,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         chapterTitle: node?.chapter,
         attemptId: attemptIdByCard.get(s.item.card.id),
         attemptType: s.isProof ? ('proof' as const) : ('practice' as const),
+        // §8.5: نوع فعالیت برای هر آیتم (مرور/جبرانی/اثبات) — صف ترکیبی قابل راستی‌آزمایی
+        activityType: s.activityType,
         // §8.1: وضعیت دانش پیش از این تلاش — بدون حدس ساختگی
         assessmentState: s.needsDiagnostic ? ('unknown' as const) : ('assessed' as const),
         masteryEstimate: s.needsDiagnostic ? null : masteryMap.get(s.item.card.nodeId) ?? null,
@@ -962,6 +973,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       mode,
       budgetMinutes: budgetMinutes ?? null,
       spentMinutes,
+      // §8.5: تفکیک شفاف هزینهٔ زمان — اثبات از بودجه کسر می‌شود، قابل‌هزینه تا سقف باقی‌مانده
+      proofMinutes,
+      spendableMinutes,
     });
   });
 

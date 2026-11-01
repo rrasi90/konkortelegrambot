@@ -1020,3 +1020,104 @@ describe('Phase 4 §8.1 — آزمون تشخیصی و وضعیت اولیه UNK
     expect(rows.every((r) => r.reason === 'diagnostic')).toBe(true);
   });
 });
+
+describe('Phase 4 §8.5 — صف روزانهٔ ترکیبی با بودجهٔ زمانیِ سازگار', () => {
+  const DAY_MS = 86_400_000;
+
+  function seedCard(userId: string, questionId: string, opts: { isRepair?: boolean } = {}) {
+    const q = store.questions.find((x) => x.id === questionId)!;
+    const nowMs = Date.now();
+    const card = {
+      id: `card-repair-${questionId}`,
+      userId,
+      nodeId: q.nodeId,
+      cardType: 'question' as const,
+      questionId,
+      dueAt: new Date(nowMs - DAY_MS).toISOString(),
+      intervalDays: 1,
+      ease: 2.5,
+      isRepair: opts.isRepair === true,
+      timesSeen: 1,
+      timesCorrect: 0,
+    };
+    store.cards.set(card.id, card as any);
+    return card;
+  }
+
+  it('انواع فعالیت در آیتم‌ها و متادیتای بودجه آشکار است (review/practice/proof/remedial)', async () => {
+    const token = await login();
+    const userId = (await json(await app.request('/api/me', authed(token)))).user.id;
+    const q = store.questions.find((x) => x.examYear !== 1404 && !x.nodeId.startsWith('stats.'))!;
+    seedCard(userId, q.id, { isRepair: true });
+    const queue = await json(await app.request('/api/queue?limit=3', authed(token)));
+    const remedial = queue.items.find((i: any) => i.card.id === `card-repair-${q.id}`);
+    expect(remedial).toBeDefined();
+    expect(remedial.activityType).toBe('remedial');
+    expect(remedial.attemptType).toBe('practice');
+    expect(typeof queue.proofMinutes).toBe('number');
+    expect(typeof queue.spendableMinutes).toBe('number');
+    const row = store.queueItems.find((r) => r.userId === userId && r.questionId === q.id);
+    expect(row?.reason).toBe('remedial');
+  });
+
+  it('سازگاری بودجه: مجموع زمان قابل‌هزینه ≤ بودجه و spentMinutes دقیقاً برابر مجموع آیتم‌ها', async () => {
+    const token = await login();
+    const BUDGET = 12;
+    const queue = await json(await app.request(`/api/queue?limit=30&budgetMinutes=${BUDGET}`, authed(token)));
+    expect(queue.budgetMinutes).toBe(BUDGET);
+    const sumAll = queue.items.reduce((acc: number, i: any) => acc + i.estimatedMinutes, 0);
+    expect(queue.spentMinutes).toBe(sumAll);
+    const proofSum = queue.items
+      .filter((i: any) => i.attemptType === 'proof')
+      .reduce((acc: number, i: any) => acc + i.estimatedMinutes, 0);
+    expect(queue.proofMinutes).toBe(proofSum);
+    const spendableSum = sumAll - proofSum;
+    expect(queue.spendableMinutes).toBe(spendableSum);
+    expect(spendableSum).toBeLessThanOrEqual(Math.max(0, BUDGET - proofSum));
+    // قاعدهٔ سخت‌گیرانه: بدون آیتهایی که بودجه را می‌شکنند؛ حداقل زمان آیتم ۵ دقیقه
+    for (const i of queue.items) expect(i.estimatedMinutes).toBeGreaterThanOrEqual(5);
+  });
+
+  it('اثبات تسلط زمانش را از بودجه می‌خورد و باز هم می‌ماند؛ با بودجهٔ کوچک صف خالی ولی سازگار است', async () => {
+    const token = await login();
+    const me = await json(await app.request('/api/me', authed(token)));
+    const userId = me.user.id as string;
+    store.questions.push({
+      id: 'q-1404-budget-rbv',
+      nodeId: 'sm.rbv',
+      examYear: 1404,
+      text: 'سؤال اثبات برای تست بودجه',
+      options: ['الف', 'ب'],
+      correctOption: 0,
+    } as any);
+    store.skillStates.set(`${userId}:skill.sm.rbv.vrio`, {
+      skillId: 'skill.sm.rbv.vrio',
+      userId,
+      proficiencyProbability: 0.8,
+      confidence: 0.5,
+      evidenceCount: 2,
+      memoryRetrievability: 1,
+      fluencySpeedRatio: 1,
+      dominantErrorType: 'unknown',
+      coverageStatus: 'needs_proof',
+    } as any);
+
+    // بودجهٔ ۳۰: اثبات (۵ دقیقه) می‌ماند و تا ۲۵ دقیقه باقی‌مانده قابل‌هزینه اضافه می‌شود
+    const q30 = await json(await app.request('/api/queue?limit=30&budgetMinutes=30', authed(token)));
+    const proof = q30.items.filter((i: any) => i.attemptType === 'proof');
+    expect(proof.length).toBeGreaterThan(0);
+    expect(q30.proofMinutes).toBe(proof.reduce((a: number, i: any) => a + i.estimatedMinutes, 0));
+    expect(q30.spendableMinutes).toBeLessThanOrEqual(Math.max(0, 30 - q30.proofMinutes));
+    expect(q30.spentMinutes).toBe(
+      q30.items.reduce((a: number, i: any) => a + i.estimatedMinutes, 0),
+    );
+
+    // بودجهٔ ۱ (کمتر از حداقل زمان هر آیتم): هیچ آیتم قابل‌هزینه‌ای اضافه نمی‌شود؛
+    // فقط تعهدات اثبات حفظ می‌شوند و زمان قابل‌هزینه صفر است (سازگار با قاعدهٔ §8.5).
+    const q1 = await json(await app.request('/api/queue?limit=30&budgetMinutes=1', authed(token)));
+    expect(q1.items.every((i: any) => i.attemptType === 'proof')).toBe(true);
+    expect(q1.spendableMinutes).toBe(0);
+    expect(q1.spentMinutes).toBe(q1.proofMinutes);
+  });
+});
+
