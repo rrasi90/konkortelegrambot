@@ -86,3 +86,15 @@ describe('SupabaseStore — هویت پایدار کاربر', () => {
     expect(calls.some((c) => c.method === 'GET' && c.url.includes('telegram_user_id=eq.4242'))).toBe(true);
   });
 });
+
+describe('SupabaseStore — فیلترهای PostgREST', () => {
+  it('attemptId ورودی را encode می‌کند تا نتواند فیلتر دیگری به کوئری تزریق کند', async () => {
+    installFetch(() => jsonResponse([]));
+    const store = new SupabaseStore('https://db.test', 'service-key');
+
+    await store.findAnswerByAttempt('user-1', 'a&user_id=eq.attacker&select=*');
+
+    expect(calls[0].url).toContain('attempt_id=eq.a%26user_id%3Deq.attacker%26select%3D*');
+    expect(calls[0].url).not.toContain('attempt_id=eq.a&user_id=eq.attacker');
+  });
+});

@@ -612,7 +612,7 @@ export class SupabaseStore implements DataStore {
       'GET',
       'answer_events',
       undefined,
-      `?user_id=eq.${userId}&attempt_id=eq.${attemptId}&select=*`,
+      `?user_id=eq.${encodeURIComponent(userId)}&attempt_id=eq.${encodeURIComponent(attemptId)}&select=*`,
     )) as Record<string, unknown>[] | null;
     const row = rows?.[0];
     return row

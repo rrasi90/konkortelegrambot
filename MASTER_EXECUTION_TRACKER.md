@@ -37,7 +37,9 @@
 > the 30-day evidence query improved from p95 10.6 ms to 3.4 ms after migration 0013 added the missing
 > `(user_id, answered_at)` index; DB integrity suite `EXIT=0` and a pg_dump→restore drill matched all six
 > key tables and preserved the index (`evidence/phase-5/db-bench-*`, `db-backup-restore.txt`).
-> `E2E_TEST_REPORT.md`, `PERFORMANCE_TEST_REPORT.md` and
+> Security local suite 266/266 adds initData signature/staleness coverage and fixes two Phase 5
+> findings (constant-time signature compare, encoded PostgREST `attemptId`) — R-032.
+> `E2E_TEST_REPORT.md`, `PERFORMANCE_TEST_REPORT.md`, `SECURITY_TEST_REPORT.md` and
 > `PRODUCTION_READINESS_CHECKLIST.md` now report only measured scope; the full gate table is in
 > `docs/phase-5/PHASE_5_EXECUTION_TRACKER.md`; release decision is **NO-GO / DEFER**.
 > **BLOCKED/NOT_STARTED:** real pilot (no participants), SME content validation, staging/Telegram-host E2E,

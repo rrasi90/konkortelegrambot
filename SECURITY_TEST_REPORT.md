@@ -1,137 +1,90 @@
-# SECURITY_TEST_REPORT
+# SECURITY TEST REPORT
 
-## Overview
-Security testing results covering authentication, authorization, and data protection.
+> **STATUS CORRECTION (Phase 5, 2026-11-02):** the previous content was an unchecked template
+> (`⬜` on every row) with no executed results. This version records only commands that were
+> actually run on branch `fix/mission-remediation-20261101`. **Scope is local code/test only:**
+> no staging deployment, no external penetration test, no encryption-at-rest verification and no
+> Supabase/Cloudflare production configuration were examined.
 
-### 1. Authentication Testing
+## 1. Method and environment
 
-#### 1.1 Token Validation
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| Token format validation | ⬜ | Should match expected format |
-| Expired token rejection | ⬜ | Must reject expired tokens |
-| Token signature verification | ⬜ | Using bot token secret |
-| Replay attack prevention | ⬜ | Single-use tokens |
+- Runtime: Node v24.18.0, Vitest 5.0.5, Hono worker with `MemoryStore` for API tests.
+- Database: PostgreSQL 16 in Docker (`ael-pg-test`) with migrations 0001–0013 and seeds.
+- Suites: full `npm test -- --run` (266 tests), worker typecheck and build; 14-block psql
+  integrity suite; targeted code review of auth, ticket and PostgREST query paths.
+- Evidence: `evidence/phase-5/security-local-suite.txt` (266/266, `TYPECHECK_EXIT=0`,
+  `BUILD_EXIT=0`), `evidence/phase-3/r020-integrity.txt` (14 blocks, EXIT=0),
+  `evidence/phase-5/db-integrity-0013.txt` (EXIT=0).
 
-#### 1.2 Telegram initData
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| Server-side validation | ⬜ | Using cryptographic verification |
-| initData hash check | ⬜ | Using HMAC-SHA256 |
-| Parameter timestamp check | ⬜ | Within 24-hour window |
-| Origin verification | ⬜ | Matching expected origin |
+## 2. Authentication and session integrity
 
-#### 1.3 Session Management
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| Session timeout | ⬜ | After configurable inactivity |
-| Concurrent session limit | ⬜ | Maximum active sessions per user |
-| Refresh token flow | ⬜ | If using refresh tokens |
-| Session fixation prevention | ⬜ | New session after login |
+| Test | Result | Evidence / note |
+|---|---|---|
+| No token → protected routes rejected | PASS | Worker suite: `/api/diagnostic`, `/api/english/skills`, `/api/analytics/learning` expect 401 |
+| Forged/tampered session token rejected | PASS | `apps/worker/tests/auth.test.ts` — changed suffix, different secret, malformed token |
+| Unsigned Telegram-ID login (mode 2) rejected in production | PASS | R-010 worker test expects 401 without `ALLOW_DEMO_AUTH` |
+| Device-token login (mode 3) rejected in production | PASS | R-010 worker test expects 401 without `ALLOW_DEMO_AUTH` |
+| Demo login disabled when flag off | PASS | Worker test expects rejection |
+| Signed Telegram `initData` accepted | PASS | New auth tests build the documented HMAC chain and verify `userId`/name |
+| Tampered `initData` field rejected | PASS | Signature mismatch test |
+| Payload signed with another bot token rejected | PASS | Signature mismatch test |
+| Stale `auth_date` (> 24 h) rejected | PASS | Returns `auth_date stale` |
+| Missing hash / missing user id rejected | PASS | Returns explicit errors |
+| Session-token comparison constant-time | PASS | `constantTimeEqual` used for session tokens and initData hash (hardening in this phase) |
+| Rate limit on auth path | PASS (local) | Test gets 429 after threshold; limiter is in-memory per isolate — edge/distributed limiting NOT configured |
 
-### 2. Authorization Testing
+## 3. Authorization and resource isolation
 
-#### 2.1 Role-Based Access Control
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| User role enforcement | ⬜ | Each endpoint checks role |
-| Admin-only endpoints | ⬜ | Restricted to admin users |
-| Permission cascading | ⬜ | Roles inherit permissions |
-| Permission denial logging | ⬜ | Failed attempts logged |
+| Test | Result | Evidence / note |
+|---|---|---|
+| Attempt ticket is single-use | PASS | Integrity block 10: ticket consumed after submit; replay rejected |
+| Answer with unissued ticket rejected | PASS | Integrity block 11 + worker test (`۴۰۰`) |
+| Another user's ticket rejected | PASS | Integrity block 12 |
+| RLS isolation between users | PASS | Integrity block 8 switches role/session and verifies row visibility |
+| Direct read of `questions` table denied; `v_public_questions` only | PASS | Integrity block 9 for `anon` and `authenticated` |
+| Answer RPC executable only by `service_role` | PASS | Integrity block 13 |
+| Client cannot set `attemptType`/proof status | PASS | Worker test: forged client `attemptType` ignored; ticket is server-issued |
+| Self-reported confidence cannot manufacture mastery | PASS | Worker tests reject self-report for a correct answer and keep it non-probative |
+| Exam-session retrieval scoped to owner | PARTIAL | Store query includes `user_id` + RLS owner-read (0012), but no dedicated cross-user API test yet |
 
-#### 2.2 Cross-User Access Prevention
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| User A cannot access User B data | ⬜ | API returns 403 or error |
-| Cannot modify another's progress | ⬜ | Write operations blocked |
-| Cannot view another's exam results | ⬜ | Read operations blocked |
-| IDOR (Insecure Direct Object Reference) prevention | ⬜ | All object access validated |
+## 4. Input validation and injection
 
-### 3. Data Protection
+| Test | Result | Evidence / note |
+|---|---|---|
+| Unknown question → 404 | PASS | Worker suite |
+| Invalid exam-selection year/sub-group → 400 | PASS | R-020 worker tests |
+| Queue limit clamped to 1–50; negative/non-numeric safe | PASS | Worker suite |
+| Self-report values restricted to `slip` / `didnt_know` | PASS | Route validation + tests |
+| PostgREST filter injection via `attemptId` | FIXED + TESTED | Client `attemptId` was interpolated unencoded into `findAnswerByAttempt`; now `encodeURIComponent` with a regression test (`supabase-store.test.ts`) |
+| SQL injection in database RPCs | PASS (reviewed) | Answer writes go through parameterized `submit_answer_secure`; ticket/attempt checks use bound parameters |
+| XSS in Telegram mini-app | NOT_VERIFIED | Persian text is rendered via DOM/HTML paths; no dedicated sanitizer/XSS test suite was run |
 
-#### 3.1 Sensitivity in Logs
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| PII not in error logs | ⬜ | Personal identifiers masked |
-| Passwords never logged | ⬜ | Confirmed no password logging |
-| Credit card/financial data | ⬜ | Not applicable (educational app) |
-| User IDs in URLs | ⬜ | Should use token-based auth |
+## 5. Data exposure
 
-#### 3.2 Response Filtering
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| Minimum data in responses | ⬜ | Only necessary fields included |
-| Password/hash exposure | ⬜ | Never in response body |
-| User metadata overexposure | ⬜ | Limited to necessary fields |
-| API version exposure | ⬜ | Controlled via versioning |
+| Test | Result | Evidence / note |
+|---|---|---|
+| Answer key absent from queue/diagnostic items | PASS | Worker tests assert `correctOption` is not returned; `toPublicQuestion` used |
+| Simulation does not reveal correctness while active | PASS | `/api/exam-simulation/answer` returns only `{ recorded: true }`; scoring on submit |
+| Answer key returned only after answer submission/replay | PASS | `POST /api/answers` response contract |
+| Secrets in repository | PASS (scan) | No bot token/service key literals in tracked source; scripts use demo auth only |
+| Encryption at rest / in transit | NOT_VERIFIED | Depends on Supabase/Cloudflare deployment configuration; not inspectable here |
 
-#### 3.3 Storage Security
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| Password hashing | ⬜ | Using bcrypt/argon2 |
-| Data encryption at rest | ⬜ | AES-256 or equivalent |
-| Backup encryption | ⬜ | Backups also encrypted |
-| Database connection security | ⬜ | TLS for all connections |
+## 6. Not performed — explicit gate gaps
 
-### 4. Rate Limiting & Resource Protection
+- **OWASP Top 10 full assessment and external penetration test:** NOT_STARTED. `SECURITY_AUDIT.md`
+  is a planning document, not an executed audit.
+- **Staging/production security testing:** NOT_STARTED (no credentials or deploy target, RK-07).
+- **Distributed rate limiting / DDoS protection:** NOT_STARTED (only in-memory limiter tested).
+- **CSRF/CORS/headers review:** NOT_STARTED for a deployed origin.
+- **Dependency and secret scanning in CI:** NOT_STARTED (no CI secret store verified).
+- **XSS/HTML sanitization audit of the mini-app:** NOT_STARTED.
+- **Telegram `initData` replay window:** accepted limitation — the 24-hour `auth_date` window is
+  enforced, but captured initData is not one-time-use (standard Telegram behavior).
 
-#### 4.1 Infrastructure Rate Limits
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| Global request limit | ⬜ | Per IP or per user |
-| Per-endpoint limits | ⬜ | Different limits per endpoint |
-| User-identity proportional limits | ⬜ | Higher limits for paying/users |
-| Burst allowance | ⬜ | Configurable burst limit |
+## 7. Conclusion
 
-#### 4.2 Denial of Service Protection
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| Request flooding prevention | ⬜ | Rate limits enforceable |
-| Connection timeout | ⬜ | Reasonable timeout values |
-| Resource cleanup | ⬜ | No memory leaks detected |
-| Graceful degradation | ⬜ | Degrade gracefully under load |
-
-### 5. SQL Injection Prevention
-
-| Test | Result | Notes |
-| ---- | ------ | ----- |
-| Parameterized queries only | ⬜ | No raw SQL concatenation |
-| Input validation | ⬜ | All inputs validated |
-| SECURITY DEFINER function audit | ⬜ | All functions reviewed |
-| search_path verification | ⬜ | Verified for each function |
-| User ownership checks | ⬜ | In all data access functions |
-
-### 5. Test Results Summary
-
-| Category | Passed | Failed | Notes |
-| -------- | -------- | -------- | ----- |
-| Authentication | N | N | |
-| Authorization | N | N | |
-| Data Protection | N | N | |
-| Rate Limiting | N | N | |
-| SQL Injection Prevention | N | N | |
-| Overall Security Score | N/N | - | |
-
-### 6. Remediation Priority
-
-| Priority | Issue | Resolution | Target Date |
-| -------- | ----- | ---------- | ----------- |
-| **Critical** | [List critical issues] | [Description] | [Date] |
-| **High** | [List high issues] | [Description] | [Date] |
-| **Medium** | [List medium issues] | [Description] | [Date] |
-| **Low** | [List low issues] | [Description] | [Date] |
-
-### 7. Security Test Completion Criteria
-
-| Criterion | Threshold |
-| --------- | --------- |
-| Critical vulnerabilities | 0 remaining |
-| High-severity issues | 0 remaining |
-| Authentication bypass | 0 |
-| Authorization bypass | 0 |
-| SQL injection vectors | 0 |
-| Rate limiting functional | Yes |
-| All tests run | 100% |
-
----
-*Security test report framework complete. Proceed to performance test report.*
+Local authentication, ticket enforcement, RLS/RPC isolation, answer-key containment and the tested
+input-validation paths pass with executable evidence, including two Phase 5 hardening fixes
+(constant-time signature comparison and encoded PostgREST filter value). This is **not** a clean
+bill of health: external pentest, staging configuration, encryption and client-side XSS review
+remain open, so the Gate 5 security criterion is only partially met.
