@@ -241,6 +241,41 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(res.status).toBe(400);
   });
 
+  it('R-010: حالت ۲ (شناسه خام تلگرام) بدون پرچم دمو رد می‌شود', async () => {
+    const closed = createApp({ ...ENV, ALLOW_DEMO_AUTH: 'false' }, { store: new MemoryStore() });
+    const res = await closed.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramUserId: 999888777 }),
+    });
+    expect(res.status).toBe(401);
+  });
+
+  it('R-010: حالت ۳ (توکن دستگاه) بدون پرچم دمو رد می‌شود', async () => {
+    const closed = createApp({ ...ENV, ALLOW_DEMO_AUTH: 'false' }, { store: new MemoryStore() });
+    const res = await closed.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deviceToken: 'dev_' + 'a'.repeat(20) }),
+    });
+    expect(res.status).toBe(401);
+  });
+
+  it('R-010: محدودکنندهٔ نرخ روی مسیر احراز هویت پس از آستانه ۴۲۹ می‌دهد', async () => {
+    const limited = createApp({ ...ENV }, { store: new MemoryStore() });
+    let last = 0;
+    for (let i = 0; i < 40; i++) {
+      const res = await limited.request('/api/auth/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegramUserId: 1000 + i }),
+      });
+      last = res.status;
+      if (last === 429) break;
+    }
+    expect(last).toBe(429);
+  });
+
   it('وب‌هوک تلگرام پیام /start را با دکمه باز کردن MiniApp پاسخ می‌دهد', async () => {
     const res = await app.request('/api/telegram/webhook', {
       method: 'POST',

@@ -252,6 +252,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if(entry.count>=RATE_MAX) return c.json({error:'درخواست بیش از حد مجاز'},429);
     entry.count++; return next();
   }
+  // R-010: محدودکنندهٔ نرخ روی مسیرهای احراز هویت و ثبت پاسخ (قبلاً تعریف‌شده ولی متصل‌نشده بود)
+  app.use('/api/auth/*', (c, next) => rateLimit(c, next));
+  app.use('/api/answers', (c, next) => rateLimit(c, next));
+  app.use('/api/self-report', (c, next) => rateLimit(c, next));
+  app.use('/api/telegram/webhook*', (c, next) => rateLimit(c, next));
 
   app.get('/api/lessons', (c) => c.json({ courses: COURSES_LESSONS }));
 
@@ -381,10 +386,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
-    // حالت ۲: بازیابی پایدار بر پایه شناسه عددی تلگرام وقتی امضای initData ممکن نیست.
-    // این مسیر فقط برای کاربرانی باز است که از داخل تلگرام آمده‌اند (کلاینت tgUser.id را
-    // می‌فرستد)؛ شناسه قبلاً با initData اعتبارسنجی شده یا در حساب موجود ثبت شده است.
+    // حالت ۲: بازیابی پایدار بر پایه شناسه عددی تلگرام — فقط با پرچم دمو.
+    // R-010: شناسه عددی تلگرام عمومی و قابل حدس است؛ پذیرش آن بدون امضای initData
+    // یعنی تصاحب حساب هر کاربری. در پروداکشن (ALLOW_DEMO_AUTH=false که خودِ
+    // createApp در production throw می‌کند اگر true باشد) این مسیر بسته است و
+    // ورود واقعی از حالت ۱ (initData + HMAC) انجام می‌شود.
     if (body.telegramUserId !== undefined && body.telegramUserId !== null && body.telegramUserId !== '') {
+      if (!allowDemoAuth) {
+        return c.json({ error: 'ورود بدون امضای تلگرام مجاز نیست؛ از initData استفاده کنید' }, 401);
+      }
       const numericId = Number(body.telegramUserId);
       if (!Number.isFinite(numericId) || numericId <= 0) {
         return c.json({ error: 'شناسه تلگرام نامعتبر است' }, 400);
@@ -399,8 +409,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
-    // حالت ۳: ورود امن و خودکار بر پایه توکن دستگاه کاربر در وب (عدم امکان جعل هویت دیگران)
+    // حالت ۳: ورود بر پایه توکن دستگاه — فقط با پرچم دمو (R-010).
+    // توکن دستگاه چیزی است که کلاینت خودش انتخاب می‌کند؛ هر کسی که یک رشتهٔ
+    // تصادفی ۱۶+ نویسه بسازد می‌تواند حساب جدید باز کند و در صورت تغییر client
+    // روی همان مرورگر، مالک حساب دیگری را جای خود جا بزند. این مسیر برای
+    // تست وب/محلی است، نه هویت‌بخشی پروداکشن.
     if (typeof body.deviceToken === 'string') {
+      if (!allowDemoAuth) {
+        return c.json({ error: 'ورود با توکن دستگاه فقط در دمو مجاز است' }, 401);
+      }
       const cleanToken = body.deviceToken.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
       // توکن کوتاه/خالی به حساب مشترک «dev_» منتهی می‌شود و مرز امنیتی است.
       if (cleanToken.replace(/^dev_/, '').length < 16) {
