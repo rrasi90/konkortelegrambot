@@ -22,6 +22,21 @@
 > 21-scenario parity harness (**16 diverged / 5 matched**) and `@ael/engine` designated sole runtime (ARC-01). **True engine
 > unification and the R-025 store-convergence acceptance test are NOT claimed** — carried IN_PROGRESS to Phase 4/5 migration.
 > Details in `docs/phase-3/PHASE_3_ACCEPTANCE_REPORT.md`. Evidence: `evidence/phase-3/`.
+> **Phase 4 (Adaptive Learning & Exam Readiness): PASS_WITH_EVIDENCE (scoped) — 2026-11-02.**
+> §8.1–§8.7 and §8.10 are implemented and tested: diagnostic with UNKNOWN initial state, evidence-layered mastery
+> with holdout gate, FSRS reference tests, property-tested planner, budget-consistent queue, 10-cause error taxonomy,
+> level-aware official exam simulation (PhD 2162 vs Master 1142 never conflated), and 13 evidence-derived analytics
+> metrics with vanity metrics excluded. The doctorate-management operational path (diagnostic → evidence mastery →
+> FSRS → budgeted queue → simulation → report) is met at code/test level. **§8.8 English serving and §8.9 research lab
+> remain BLOCKED** (zero labeled English questions/passages; no 11-capability spec, source corpus or AI governance), so
+> Phase 4 is **not** globally complete. Details in `docs/phase-4/PHASE_4_EXECUTION_TRACKER.md`; evidence `evidence/phase-4/`.
+> **Phase 5 (Validation & Release Gate): IN_PROGRESS (scoped local) — 2026-11-02.** Real local browser E2E through the
+> mini-app + worker (installed Chrome via CDP): 14/14 checks, 0 console errors, 0 local HTTP errors (`evidence/phase-5/`).
+> Local worker benchmark: 20 concurrent users, 1,380 requests, 0 errors, p99 ≤ 21 ms on MemoryStore
+> (`evidence/phase-4/bench-worker-local.txt`). `E2E_TEST_REPORT.md`, `PERFORMANCE_TEST_REPORT.md` and
+> `PRODUCTION_READINESS_CHECKLIST.md` now report only measured scope; release decision is **NO-GO / DEFER**.
+> **BLOCKED/NOT_STARTED:** real pilot (no participants), SME content validation, staging/Telegram-host E2E,
+> Postgres/Worker-runtime/stress performance, rollback drill, monitoring and legal/privacy review. No merge or deploy performed.
 
 | شاخص کلان              | مرحله | وضعیت        | تعریف موفقیت                             |
 | ---------------------- | ----- | ------------ | ---------------------------------------- |
@@ -29,15 +44,15 @@
 | Verified Content       | ۲     | IMPLEMENTED_UNVERIFIED | بانک ساختاری آماده؛ تأیید علمی (SME/کلید رسمی) BLOCKED |
 | Question Quality       | ۲ و ۵ | IN_PROGRESS  | قواعد ساختاری تست‌شده؛ CTT/IRT بدون داده پاسخ BLOCKED |
 | Architecture Parity    | ۳     | IN_PROGRESS  | یک موتور و یک منبع محتوا — موجودی انحراف ۱۶/۲۱ بلیت‌شده؛ مهاجرت legacy باقی |
-| Learning Effectiveness | ۴ و ۵ | NOT_STARTED  | بهبود واقعی یادگیری اندازه‌گیری می‌شود   |
-| Exam Readiness         | ۴ و ۵ | NOT_STARTED  | عملکرد در آزمون جامع سنجیده می‌شود       |
-| System Reliability     | ۳ و ۵ | IN_PROGRESS  | عملکرد پایدار و قابل بازیابی — تست‌های فنی فاز ۳ سبز؛ benchmark واقعی باقی |
+| Learning Effectiveness | ۴ و ۵ | IN_PROGRESS  | مکانیزم‌ها تست‌شده؛ سنجش بهبود واقعی بدون پایلوت BLOCKED |
+| Exam Readiness         | ۴ و ۵ | IN_PROGRESS  | شبیه‌سازی و نمره‌دهی تست‌شده؛ آمادگی واقعی کاربر سنجیده نشده |
+| System Reliability     | ۳ و ۵ | IN_PROGRESS  | E2E و benchmark محلی سبز؛ staging/DB/stress/rollback NOT_STARTED |
 | Security               | ۳ و ۵ | IN_PROGRESS  | امنیت احراز هویت و داده‌ها تأیید شده است — R-010/R-017/R-019 با شواهد؛ pentest/تأیید پروداکشن باقی |
 
 ---
 ## مراحل اجرای پروژه
-- [ ] مرحله ۱: تثبیت بنیاد علمی و مشخصات آزمون
-- [ ] مرحله ۲: ساخت دایرةالمعارف آموزشی و بانک سؤال معتبر
-- [ ] مرحله ۳: یکپارچه‌سازی معماری و موتور هوشمند
-- [ ] مرحله ۴: تکمیل سیستم آموزش تطبیقی و آمادگی آزمون
-- [ ] مرحله ۵: اعتبارسنجی علمی، آزمایش واقعی و انتشار محصول نهایی
+- [x] مرحله ۱: تثبیت بنیاد علمی و مشخصات آزمون — PASS_WITH_EVIDENCE
+- [x] مرحله ۲: ساخت دایرةالمعارف آموزشی و بانک سؤال معتبر — PASS_WITH_EVIDENCE (scoped؛ تأیید علمی SME/کلید رسمی BLOCKED)
+- [x] مرحله ۳: یکپارچه‌سازی معماری و موتور هوشمند — PASS_WITH_EVIDENCE (scoped؛ مهاجرت legacy موتور R-009 باقی)
+- [ ] مرحله ۴: تکمیل سیستم آموزش تطبیقی و آمادگی آزمون — PASS_WITH_EVIDENCE (scoped) در کد/تست؛ §8.8 و §8.9 BLOCKED
+- [ ] مرحله ۵: اعتبارسنجی علمی، آزمایش واقعی و انتشار محصول نهایی — IN_PROGRESS (scoped local)؛ انتشار NO-GO/DEFER

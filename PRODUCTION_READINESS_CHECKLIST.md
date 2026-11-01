@@ -97,7 +97,7 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 | Item | Status | Evidence / limitation |
 |---|---|---|
 | Phase trackers current | PASS_WITH_EVIDENCE | Phase 1–4 trackers + register updated with evidence links |
-| API contracts documented | IMPLEMENTED_UNVERIFIED | `docs/api/api.md` predates new §8.7–§8.10 endpoints; update pending |
+| API contracts documented | PASS_WITH_EVIDENCE | `docs/api/api.md` now covers auth, tracks, diagnostic (§8.1), exam-selection (R-020), exam-structure + simulation start/answer/submit/get (§8.7), english skills (§8.8) and learning analytics (§8.10), matching route handlers |
 | Developer onboarding | NOT_STARTED | No verified onboarding run |
 | User documentation | NOT_STARTED | No user-facing guide verified |
 | Analytics metric catalog | PASS_WITH_EVIDENCE | `docs/phase-4/LEARNING_ANALYTICS_METRICS.md` |

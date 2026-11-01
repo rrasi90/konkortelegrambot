@@ -30,7 +30,11 @@ Authorization: Bearer <session_token>
 
 ### `PUT /api/tracks`
 
-بدنه: `{ "tracks": ["technology"] }` — هستهٔ مشترک خودکار اضافه می‌شود. مقادیر مجاز: `common`, `business`, `technology`.
+بدنه: `{ "tracks": ["technology"] }` — هستهٔ مشترک خودکار اضافه می‌شود. مقادیر مجاز: `common`, `business`, `technology`, `strategy`, `industrial`.
+
+### `GET /api/tracks`
+
+گرایش‌های موجود بر اساس پک‌های نصب‌شده (و `packs`).
 
 ### `GET /api/queue?limit=10`
 
@@ -101,7 +105,85 @@ Authorization: Bearer <session_token>
 
 ### آمار در پاسخ ثبت
 
-پاسخ `POST /api/answers` حالا `stats` هم دارد: `{ "coins": 3, "streakDays": 1, "dayNumber": 1 }` — سکهٔ زنده برای هدر اپ (پاسخ درست ۲ سکه، غلط ۱ سکه؛ روز پیوسته با تقویم تهران محاسبه می‌شود).
+پاسخ `POST /api/answers` حالا `stats` هم دارد: `{ "coins": 3, "streakDays": 1, "dayNumber": 1 }` — سکهٔ زنده برای هدر اپ (پاسخ درست ۲ سکه، غلط ۱ سکه؛ روز پیوسته با تقویم تهران محاسبه می‌شود). این اعداد شاخص یادگیری نیستند و در `/api/analytics/learning` شمرده نمی‌شوند.
+
+## Phase 4 — تشخیص، ساختار آزمون و شبیه‌سازی
+
+### `GET /api/diagnostic?count=10`
+
+آزمون تشخیصی (§8.1). `count` بین ۱ و ۲۰ (پیش‌فرض ۱۰). سؤال‌های سال ۱۴۰۴ قرنطینه‌اند. ابتدا گره‌های ارزیابی‌نشده و سپس دیده‌شده‌ها، با تنوع بر حسب درس انتخاب می‌شوند.
+
+- برای هر آیتم بلیت تک‌مصرف `attemptType=diagnostic` صادر می‌شود؛ بدون بلیت، ثبت پاسخ ممکن نیست (fail-closed).
+- وضعیت اولیهٔ گرهٔ ارزیابی‌نشده `assessmentState: "unknown"` و `masteryBefore: null` است؛ مقدار پیش‌فرض ۵۰ به‌عنوان سنجش گزارش نمی‌شود.
+- اگر هیچ سؤالی در دسترس نباشد: `409`. خطای صدور بلیت: `503`.
+
+پاسخ: `{ items: [{ question, course, chapter, topic, attemptId, attemptType, masteryBefore, assessmentState }], count, meta }` — پاسخ‌ها از همان `POST /api/answers` با `attemptId` آیتم‌ها ثبت می‌شوند.
+
+### `GET /api/exam-selection`
+
+انتخاب فعال کنکور داوطلب (`exam_selections`) یا `null`.
+
+### `PUT /api/exam-selection`
+
+بدنه: `{ "examYear": 1406, "subGroupId": "…", "combinationCode": "…", "setCode": "…" }`.
+
+- `examYear` عدد صحیح ۱۳۹۰–۱۴۲۰؛ `subGroupId` رشتهٔ غیرخالی حداکثر ۶۴ کاراکتر.
+- `combinationCode` و `setCode` اختیاری‌اند (رشته/عدد تا ۱۶ کاراکتر)؛ مقدار نامعتبر `400`.
+- ذخیره‌سازی و ثبت `audit_logs` انجام می‌شود. پاسخ: `{ ok: true, selection }`.
+
+### `GET /api/exam-structure?level=doctorate&year=1405`
+
+ساختار رسمی آزمون (§8.7). `level` یکی از `doctorate` یا `master`؛ `year` بین ۱۳۹۰ و ۱۴۲۰ (پیش‌فرض آخرین سال مدل‌شده). سطح/سال نامعتبر `400`.
+
+پاسخ شامل `path` (مسیر سطح)، `available`, `structure` (یا `null`), `warnings`, `subGroups`, `combinations` است. اگر شبیه‌سازی سروری آن سطح در دسترس نباشد، `available: false` با `reason` صریح برگردانده می‌شود و ساختار جعلی ساخته نمی‌شود.
+
+### `POST /api/exam-simulation/start`
+
+شروع جلسهٔ شبیه‌سازی رسمی. بدنه: `{ "level": "doctorate", "examYear": 1405, "subGroupId": "…", "combinationCode": "…", "scale": 1 }`.
+
+- `level` نامعتبر `400`؛ سطح بدون شبیه‌سازی سروری `503` با `path`.
+- نبود سؤال قابل‌استفاده برای سال/گرایش: `409` همراه `disclosures`.
+- برای هر جای پاسخ‌برگ، بلیت `attemptType=exam_simulation` صادر می‌شود؛ خطای بلیت/ذخیره‌سازی `503`.
+- پاسخ شامل `session` (ساختار، تخصیص دروس، `coverageRatio`، `negativeMarkingRatio`، `officiality`, `contentOrigins`, زمان شروع/انقضا) و `items` است.
+- **کلید پاسخ در پاسخ API نیست**؛ `question` از `toPublicQuestion` می‌آید. درست‌بودن پاسخ تا `submit` اعلام نمی‌شود.
+- سؤال‌های غیررسمی هرگز با عنوان آزمون رسمی دکتری ارائه نمی‌شوند؛ `officiality` و `contentOrigins` این مرز را افشا می‌کنند.
+
+### `POST /api/exam-simulation/answer`
+
+بدنه: `{ "sessionId": "…", "attemptId": "…", "questionId": "…", "selectedOption": 2, "responseTimeMs": 45000 }`.
+
+- شناسهٔ جلسه/تلاش/سؤال الزامی و `selectedOption` عدد صحیح؛ وگرنه `400`.
+- جلسهٔ ناشناس `404`؛ جلسهٔ غیرفعال یا منقضی `409`؛ بلیت مصرف‌شده/پاسخ تکراری `409`.
+- پاسخ همیشه `{ "recorded": true }` است — **درستی پاسخ عمداً اعلام نمی‌شود** (رفتار آزمون رسمی).
+
+### `POST /api/exam-simulation/submit`
+
+بدنه: `{ "sessionId": "…" }`. نمره‌دهی سمت سرور با `scoreExamSession` (نمرهٔ خام/تراز، نمرهٔ منفی، تفکیک دروس، پاسخ‌برگ) انجام می‌شود. ارسال دوبارهٔ جلسهٔ نمره‌دهی‌شده همان گزارش را با `already_scored: true` برمی‌گرداند. جلسهٔ ناشناس `404`؛ برنامهٔ غیرقابل‌بازتولید `500`.
+
+پاسخ: `{ report, answered, total }`.
+
+### `GET /api/exam-simulation/:id`
+
+وضعیت و آیتم‌های جلسه (بدون کلید پاسخ) به‌همراه `report` در صورت نمره‌دهی و `disclosures`. جلسهٔ ناشناس `404`.
+
+## Phase 4 — ماژول زبان و تحلیل یادگیری
+
+### `GET /api/english/skills`
+
+۱۰ مهارت مستقل زبان انگلیسی (§8.8) به‌همراه `prerequisiteIds`, `verification: "proposed_curriculum_pending_sme"`, `nodePresent`, `questionCount` (بدون ۱۴۰۴), `assessed`, `mastery` (فقط با شاهد؛ وگرنه `null`), `evidenceCount`, `coverageStatus`.
+
+پاسخ شامل `skillCount`, `englishQuestionCount`, `assessableSkillCount`, `contentGap` (مهارت‌های بدون سؤال برچسب‌خورده), `operational` (تنها وقتی `contentGap` خالی باشد), `masterySource` و `taxonomy` است. تا تأیید کارشناس موضوع و افزودن محتوا، `taxonomy.status = proposed_curriculum_pending_sme` می‌ماند و شکاف محتوا صریح گزارش می‌شود.
+
+### `GET /api/analytics/learning`
+
+۱۳ شاخص یادگیری مبتنی بر شاهد (§8.10) در `metrics`:
+
+`assessedNodeCount`, `assessableNodeCount`, `diagnosticCoverageRatio`, `masteryDistribution`, `meanMasteryAssessed`, `medianMasteryAssessed`, `recentAccuracy30d`, `recentEvidenceCount30d`, `dueReviewCount`, `meanRetrievability`, `errorTypeDistribution`, `proofCoverage`, `learningVelocity7d`.
+
+- گره‌های دیدنی = هستهٔ مشترک + گرایش‌های فعال؛ سؤال‌های ۱۴۰۴ در هیچ شاخصی شمرده نمی‌شوند.
+- شاخص بدون شاهد `null` است (نه صفر و نه ۵۰). `errorTypeDistribution` دارای ۱۰ علت + `unknown` + `none` است.
+- `metricCatalog` تعریف/منبع هر ۱۳ شاخص را می‌دهد؛ `excludedVanityMetrics = [login_count, streak_days, xp, coins, session_count]` صریحاً از پاسخ حذف شده‌اند.
+- تمرکز شاخص‌ها بر شاهد ذخیره‌شده است: پاسخ‌های ۳۰ روز، `mastery_history` هفت روز، کارت‌های FSRS و وضعیت مهارت‌ها.
 
 ## کدهای وضعیت
 
