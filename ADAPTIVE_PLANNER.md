@@ -19,16 +19,32 @@ Study Priority = f(Exam Weight, Knowledge Gap, Forgetting Risk, Prerequisite Imp
 | **Time Budget** | User config | Daily available minutes |
 
 ### Priority Calculation Formula
+
+Canonical implementation: `computePriorityV3` in `@ael/utils` (`packages/utils/priority-calculations.ts`).
+Documented formula and implemented function are kept identical (R-011).
+
 ```
-Priority = (Exam Weight × Knowledge Gap × Prerequisite Multiplier) / (Forgetting Risk + ε)
+Priority = (Exam Weight × Knowledge Gap × Prerequisite Multiplier
+            × (1 + Forgetting Risk) × (1 + Exam Proximity)
+            × Expected Benefit) / max(1, Estimated Minutes)
 ```
 
 Where:
-- `Exam Weight`: Specialization coefficient × subject coefficient from exam structure
-- `Knowledge Gap`: 100 - current mastery estimate (0-100 scale)
-- `Prerequisite Multiplier`: 1.0 if all prerequisites met; 0.5 if any prerequisite gap; 0.2 if multiple gaps
-- `Forgetting Risk`: 1 - FSRS memory retention score (0-1)
-- `ε`: Small constant (0.01) to avoid division by zero
+- `Exam Weight`: Specialization coefficient × subject coefficient from exam structure (`calculateExamValue`)
+- `Knowledge Gap`: normalized 0–1 mastery gap (`knowledgeGap01`)
+- `Prerequisite Multiplier`: 1.0 if all prerequisites met; 0.5 if any prerequisite gap; 0.2 if multiple gaps (`derivePrereqMultiplier`)
+- `Forgetting Risk`: 1 − FSRS memory retention score (0–1)
+- `Exam Proximity`: 0–1 term that grows as the exam date approaches (0 far away, 1 at exam time)
+- `Expected Benefit`: benefit of the activity type (`calculateExpectedBenefit`)
+- Denominator: `max(1, Estimated Minutes)` — time cost is the only divisor; there is no ε term.
+
+> **Status correction (R-011):** the previously documented formula divided by
+> `(Forgetting Risk + ε)`, which inverted the semantics — a higher forgetting risk
+> *lowered* priority. The canonical function multiplies by `(1 + Forgetting Risk)`
+> instead, and the old `calculateUrgency` / `calculateMasteryUrgency` /
+> `calculateUrgencyV2` helpers (three divergent urgency scales) were removed from
+> `@ael/utils`. Per ARC-01, `computePriorityV3` is the single priority source;
+> the worker's daily-queue scoring calls it directly.
 
 ### Daily Plan Generation Process
 

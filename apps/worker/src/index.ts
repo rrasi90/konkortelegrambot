@@ -12,6 +12,7 @@ import {
   DEFAULT_ENGINE_CONFIG,
   applyAnswer,
   buildDailyQueue,
+  calculateRetrievability,
   isTrackId,
   questionCardId,
   statusFromMastery,
@@ -25,7 +26,8 @@ import { MemoryStore } from './memory-store';
 import { SupabaseStore } from './store';
 import { skillMetaMap, estimatedMinutesForNode, skillForNode, skillTitle, nodeForSkill } from './skills-data';
 import {
-  calculateUrgencyV2,
+  computePriorityV3,
+  derivePrereqMultiplier,
   calculateExamValue,
   calculateExpectedBenefit,
 } from '@ael/utils';
@@ -681,10 +683,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
 
     // ---------- گام ۳: برنامه‌ریز بودجه‌محور (ROI Planner) ----------
-    // Priority = ExamValue × ExpectedBenefit × Urgency ÷ EstimatedMinutes
+    // R-011 (ARC-02): امتیاز اولویت فقط از تابع کاننیکال computePriorityV3 در @ael/utils
+    // محاسبه می‌شود؛ خطر فراموشی از منحنی توانی FSRS (@ael/engine) مشتق می‌شود.
     const masteryMap = state.mastery;
     const examDate = stats.examDate ? new Date(`${stats.examDate}T00:00:00Z`) : undefined;
     const proofIds = new Set(proofCards.map((pc) => pc.id));
+    // پیش‌نیازهای هر گره (yال ی «prerequisite»: source → target = پیش‌نیازهای source)
+    const prereqByNode = new Map<string, string[]>();
+    for (const dep of state.dependencies) {
+      if (dep.relation !== 'prerequisite') continue;
+      const list = prereqByNode.get(dep.source) ?? [];
+      list.push(dep.target);
+      prereqByNode.set(dep.source, list);
+    }
+    const scoreNowMs = Date.now();
     const scored = queue
       .filter((item) => isConceptualNode(item.card.nodeId))
       .map((item) => {
@@ -693,11 +705,37 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
           : item.card.isRepair
             ? ('remedial' as const)
             : ('review' as const);
-        const urgency = calculateUrgencyV2(
-          { intervalDays: item.card.intervalDays, dueAt: item.card.dueAt, nodeId: item.card.nodeId },
-          { masteryMap, examDate },
+        const nodeId = item.card.nodeId;
+
+        const mastery = masteryMap.get(nodeId) ?? DEFAULT_MASTERY;
+        const knowledgeGap01 = Math.min(1, Math.max(0, (100 - mastery) / 100));
+
+        let forgettingRisk: number;
+        if (item.card.fsrs) {
+          const elapsedDays = Math.max(
+            0,
+            (scoreNowMs - new Date(item.card.fsrs.lastReviewedAt).getTime()) / 86400000,
+          );
+          forgettingRisk = 1 - calculateRetrievability(item.card.fsrs.stability, elapsedDays);
+        } else {
+          // کارت بدون وضعیت FSRS: تقریب خطی نسبت تأخیر به فاصله (مستند در ARC-02)
+          const overdueDays = (scoreNowMs - new Date(item.card.dueAt).getTime()) / 86400000;
+          forgettingRisk =
+            overdueDays <= 0 ? 0 : Math.min(0.9, overdueDays / Math.max(1, item.card.intervalDays));
+        }
+
+        const prereqScores = (prereqByNode.get(nodeId) ?? []).map(
+          (pid) => masteryMap.get(pid) ?? DEFAULT_MASTERY,
         );
-        const examValue = calculateExamValue(item.card.nodeId, {
+        const prereqMultiplier = derivePrereqMultiplier(prereqScores);
+
+        let examProximity01 = 0;
+        if (examDate) {
+          const daysLeft = Math.max(0, (examDate.getTime() - scoreNowMs) / 86400000);
+          examProximity01 = Math.max(0, Math.min(1, 1 - daysLeft / 90));
+        }
+
+        const examValue = calculateExamValue(nodeId, {
           examPackWeights: new Map<string, number>(),
           currentPack: '',
           masteryMap,
@@ -706,12 +744,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
           masteryMap,
           evidenceLevel: 'partial',
         });
-        const minutes = estimatedMinutesForNode(item.card.nodeId);
+        const minutes = estimatedMinutesForNode(nodeId);
         return {
           item,
           minutes,
           isProof: proofIds.has(item.card.id) || item.card.isProof === true,
-          priority: (examValue * benefit * urgency) / Math.max(1, minutes),
+          priority: computePriorityV3({
+            examValue,
+            knowledgeGap01,
+            prereqMultiplier,
+            forgettingRisk,
+            examProximity01,
+            expectedBenefit: benefit,
+            minutes,
+          }),
         };
       });
     const nonProof = scored

@@ -14,7 +14,10 @@ import {
   scheduleNextFSRS,
   type FSRSState,
 } from '../packages/learning-engine/src/index';
-import { calculateUrgencyV2 } from '../packages/utils/priority-calculations';
+import {
+  computePriorityV3,
+  derivePrereqMultiplier,
+} from '../packages/utils/priority-calculations';
 
 type Row = {
   scenario: string;
@@ -106,29 +109,37 @@ for (const S of [1.5, 3, 7]) {
   }
 }
 
-// ---------- Seam 3: queue urgency (4 scenarios) ----------
-for (const overdueDays of [0, 3, 10]) {
-  const dueAt = new Date(NOW.getTime() - overdueDays * 86_400_000).toISOString();
-  const R = overdueDays === 0 ? 0.9 : overdueDays === 3 ? 0.7 : 0.4;
-  const sharedU = calculateUrgencyV2(
-    { intervalDays: 5, dueAt, nodeId: 'n1' },
-    { masteryMap: new Map([['n1', 60]]), fsrsRetentionMap: new Map([['n1', R]]), examDate: new Date(NOW.getTime() + 45 * 86_400_000) },
-    NOW,
-  );
-  const reactU = Math.max(0.1, 1 - R); // aelEngine.ts:1532 forgettingUrgency (multiplier form)
+// ---------- Seam 3: queue urgency (post-R-011 convergence check) ----------
+// R-011 removed the three divergent urgency formulas (calculateUrgency /
+// calculateMasteryUrgency / calculateUrgencyV2). Production worker scoring now calls
+// computePriorityV3; this seam verifies the React legacy forgetting-urgency proxy
+// (1−R, multiplied as 1+x) equals the canonical risk term (1+forgettingRisk).
+for (const R of [0.9, 0.7, 0.4]) {
+  const reactU = Math.max(0.1, 1 - R); // aelEngine.ts legacy ROI: forgettingUrgency
+  const canonicalRiskTerm = computePriorityV3({
+    examValue: 1,
+    knowledgeGap01: 1,
+    prereqMultiplier: derivePrereqMultiplier([]),
+    forgettingRisk: 1 - R,
+    examProximity01: 0,
+    expectedBenefit: 1,
+    minutes: 1,
+  }); // == (1 + (1−R)) since every other factor is neutral
   rec({
-    scenario: `urg-${String(n++).padStart(2, '0')}-overdue${overdueDays}`,
-    seam: 'urgency', input: `overdue=${overdueDays}d R=${R}`,
-    react: `1-R=${reactU.toFixed(3)} (multiplied as 1+x)`, shared: `UrgencyV2=${sharedU.toFixed(3)}`,
-    verdict: 'DIVERGED',
-    note: 'engine queue (buildDailyQueue) ignores urgency entirely — due-time sort only; three different semantics',
+    scenario: `urg-${String(n++).padStart(2, '0')}-R${R}`,
+    seam: 'urgency', input: `retrievability=${R}`,
+    react: `urgency=${reactU.toFixed(3)} (multiplied as 1+x)`,
+    shared: `riskTerm=${canonicalRiskTerm.toFixed(3)} (== 1+urgency)`,
+    verdict: near(1 + reactU, canonicalRiskTerm) ? 'MATCHED' : 'DIVERGED',
+    note: 'R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)',
   });
 }
 rec({
   scenario: 'urg-04-engine-order',
   seam: 'urgency', input: 'two due cards, higher-urgency due later',
-  react: 'ROI-ordered (priorityScore/urgency)', shared: 'dueAt-ordered (no urgency term)',
-  verdict: 'DIVERGED', note: 'unify in Phase 4 (R-011)',
+  react: 'ROI-ordered (priorityScore/urgency)', shared: 'dueAt-ordered (buildDailyQueue core)',
+  verdict: 'DIVERGED',
+  note: 'worker /api/queue گام۳ now ROI-orders via computePriorityV3 (R-011); @ael/engine buildDailyQueue still due-sort — legacy importer migration is Phase-5 end-state',
 });
 
 // ---------- output ----------
@@ -139,7 +150,8 @@ const body = rows
     .map((v) => (/[",]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v))
     .join(','))
   .join('\n');
-await mkdir('docs/phase-3', { recursive: true });
-await writeFile('docs/phase-3/ENGINE_PARITY_MATRIX.csv', header + body + '\n', 'utf8');
+const outDir = process.argv[2] ?? 'docs/phase-3';
+await mkdir(outDir, { recursive: true });
+await writeFile(`${outDir}/ENGINE_PARITY_MATRIX.csv`, header + body + '\n', 'utf8');
 console.log(`PARITY HARNESS: ${rows.length} scenarios, ${diverged} diverged, ${rows.length - diverged} matched`);
-console.log('written: docs/phase-3/ENGINE_PARITY_MATRIX.csv');
+console.log(`written: ${outDir}/ENGINE_PARITY_MATRIX.csv`);
