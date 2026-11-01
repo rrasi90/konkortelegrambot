@@ -24,7 +24,23 @@ import { MathText } from './MathText';
 import { LessonDeepDivePanel } from './LessonDeepDivePanel';
 import { getLessonDeepDive, getDeepDiveWordCount } from '../data/lessonDeepDives';
 import { getBookForNode } from '../data/bookChaptersRepo';
+import {
+  EXAM_YEAR_STRUCTURES,
+  LATEST_EXAM_YEAR,
+  MANAGEMENT_EXAM_SET,
+  MANAGEMENT_SUB_GROUPS,
+  getExamStructure,
+  getExamStructureWarnings,
+  getSpecializationSharePercent,
+  getSubGroupSubjects,
+} from '../data/examStructure';
 import { BookLibraryView } from './BookLibraryView';
+
+/** تبدیل ارقام لاتین به فارسی برای نمایش در رابط کاربری */
+const toPersianDigits = (value: string): string =>
+  value
+    .replace(/[0-9]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[Number(d)])
+    .replace(/\./g, '٫');
 import {
   BookOpen,
   Scale,
@@ -79,19 +95,19 @@ const RATING_OPTIONS: {
   {
     rating: 3,
     label: '۳ — درک متوسط',
-    desc: 'تسلط ۵۰٪ + فعال‌سازی تست‌های آموزشی در صف امروز',
+    desc: 'فعال‌سازی تست‌های آموزشی در صف امروز — تسلط با پاسخ درست ساخته می‌شود',
     colorClass: 'hover:border-amber-500 data-[active=true]:bg-amber-500 data-[active=true]:text-slate-950',
   },
   {
     rating: 4,
     label: '۴ — خوب یاد گرفتم',
-    desc: 'تسلط ۶۸٪ + باز شدن لایه بعدی درخت مهارت + مرور ۴ روزه',
+    desc: 'باز شدن لایه بعدی درخت مهارت + مرور ۴ روزه',
     colorClass: 'hover:border-blue-500 data-[active=true]:bg-blue-600 data-[active=true]:text-white',
   },
   {
     rating: 5,
-    label: '۵ — کاملاً مسلط شدم',
-    desc: 'تسلط ۷۶٪ + باز شدن فوری تست قرنطینه کنکور ۱۴۰۴',
+    label: '۵ — کاملاً فهمیدم',
+    desc: 'باز شدن فوری تست قرنطینه برای اثبات تسلط',
     colorClass: 'hover:border-emerald-500 data-[active=true]:bg-emerald-600 data-[active=true]:text-white',
   },
 ];
@@ -119,6 +135,9 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
   const [selected100PageCourseId, setSelected100PageCourseId] = useState<string>(
     CENTRALIZED_100PAGE_COURSE_CATALOG[0]?.courseId || 'course.100p.management_theories'
   );
+  // ساختار آزمون دکتری بر اساس سال نسخه‌بندی می‌شود؛ پیش‌فرض روی آخرین سال ثبت‌شده است.
+  const [examYear, setExamYear] = useState<number>(LATEST_EXAM_YEAR);
+  const [structureGroupId, setStructureGroupId] = useState<string>('business');
 
   const downloadMarkdownFile = (filename: string, content: string) => {
     const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
@@ -341,6 +360,157 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
       {/* تب ۴: جدول رسمی مقایسه ضرایب دروس کنکور کارشناسی ارشد مجموعه مدیریت (کد ۱۱۴۲) */}
       {librarySection === 'coefficients_table' && (
         <div className="space-y-4">
+          {/* ساختار آزمون دکتری — نسخه‌بندی‌شده بر اساس سال */}
+          {(() => {
+            const structure = getExamStructure(examYear);
+            const warnings = getExamStructureWarnings(examYear);
+            const subjects = getSubGroupSubjects(structureGroupId);
+            const group = MANAGEMENT_SUB_GROUPS.find((g) => g.id === structureGroupId);
+            const share = getSpecializationSharePercent(examYear, structureGroupId);
+            const years = Object.keys(EXAM_YEAR_STRUCTURES).map(Number).sort((a, b) => a - b);
+
+            return (
+              <div className="bento-card glass-panel p-5 space-y-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="flex items-start gap-2">
+                    <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+                    <div>
+                      <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                        ساختار آزمون دکتری {toPersianDigits(String(examYear))} — مجموعهٔ امتحانی{' '}
+                        {toPersianDigits(MANAGEMENT_EXAM_SET.code)}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                        قواعد آزمون هر سال متفاوت است؛ الگوی سال‌های قبل به‌طور خودکار به این سال نسبت داده نمی‌شود.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {years.map((y) => (
+                      <button
+                        key={y}
+                        type="button"
+                        onClick={() => setExamYear(y)}
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-colors cursor-pointer ${
+                          examYear === y
+                            ? 'bg-emerald-600 text-white border-emerald-600'
+                            : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-emerald-400'
+                        }`}
+                      >
+                        {toPersianDigits(String(y))}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  <div className="glass-subcard p-3">
+                    <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                      ضریب دروس تخصصی
+                    </div>
+                    <div className="text-lg font-black text-emerald-700 dark:text-emerald-400">
+                      {toPersianDigits(String(structure.specializationCoefficient))}
+                    </div>
+                  </div>
+                  <div className="glass-subcard p-3">
+                    <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400">ضریب زبان</div>
+                    <div className="text-lg font-black text-blue-700 dark:text-blue-400">
+                      {toPersianDigits(String(structure.languageCoefficient))}
+                    </div>
+                  </div>
+                  <div className="glass-subcard p-3">
+                    <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400">استعداد تحصیلی</div>
+                    <div
+                      className={`text-sm font-black mt-1 ${
+                        structure.hasAptitude
+                          ? 'text-slate-700 dark:text-slate-200'
+                          : 'text-rose-600 dark:text-rose-400'
+                      }`}
+                    >
+                      {structure.hasAptitude
+                        ? `ضریب ${toPersianDigits(String(structure.aptitudeCoefficient ?? 1))}`
+                        : 'حذف شده'}
+                    </div>
+                  </div>
+                  <div className="glass-subcard p-3">
+                    <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                      سهم تخصصی از نمره
+                    </div>
+                    <div className="text-lg font-black text-indigo-700 dark:text-indigo-400">
+                      {toPersianDigits(String(share))}٪
+                    </div>
+                  </div>
+                </div>
+
+                {warnings.length > 0 && (
+                  <ul className="space-y-1.5">
+                    {warnings.map((w) => (
+                      <li
+                        key={w}
+                        className="flex items-start gap-2 text-[11px] leading-relaxed text-amber-800 dark:text-amber-300 bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/70 dark:border-amber-900/50 rounded-lg px-2.5 py-1.5"
+                      >
+                        <ShieldAlert className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                        <span>{toPersianDigits(w)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                <div>
+                  <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                    {MANAGEMENT_SUB_GROUPS.map((g) => (
+                      <button
+                        key={g.id}
+                        type="button"
+                        onClick={() => setStructureGroupId(g.id)}
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-bold border transition-colors cursor-pointer ${
+                          structureGroupId === g.id
+                            ? 'bg-slate-900 text-white border-slate-900 dark:bg-white dark:text-slate-900 dark:border-white'
+                            : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-400'
+                        }`}
+                      >
+                        {g.title}
+                        {g.code && (
+                          <span className="mr-1 opacity-60">({toPersianDigits(g.code)})</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed mb-2">
+                    <span className="font-bold">رشته‌های این زیرمجموعه:</span>{' '}
+                    {group?.fields.join(' • ')}
+                    {group?.code === null && (
+                      <span className="text-amber-700 dark:text-amber-400 font-bold">
+                        {' '}
+                        — کد این زیرمجموعه هنوز با دفترچهٔ رسمی تطبیق داده نشده است.
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                    {subjects.map((s) => (
+                      <div
+                        key={s.id}
+                        className="flex items-center justify-between gap-2 rounded-lg border border-slate-200/70 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 px-2.5 py-1.5"
+                      >
+                        <span className="text-[11px] font-semibold text-slate-800 dark:text-slate-200">
+                          {s.title}
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">
+                          {s.level === 'کارشناسی' ? 'کارشناسی' : 'کارشناسی ارشد'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed border-t border-slate-200/60 dark:border-slate-800 pt-2">
+                  منبع: {structure.source}
+                </p>
+              </div>
+            );
+          })()}
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {(['business', 'industrial', 'technology'] as ManagementBranchId[]).map((branchId) => {
               const meta = MANAGEMENT_BRANCH_META[branchId];

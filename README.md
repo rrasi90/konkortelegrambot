@@ -63,3 +63,4 @@ npm test
 * **آزمون‌های خودکار:** `npm test` (۸۶ تست پاس‌شده)
 * **استقرار در کلودفلر:** `npx wrangler deploy --cwd apps/worker`
 * **ممیزی کامل محتوا، کاستی‌ها و برنامهٔ یادگیری:** [docs/status/learning-audit-2026.md](./docs/status/learning-audit-2026.md)
+* **ممیزی پوشش واقعی آزمون دکتری (اعداد، ساختار سالانه، نقشهٔ راه و معیار پذیرش):** [docs/status/phd-coverage-audit-2026-11.md](./docs/status/phd-coverage-audit-2026-11.md)

@@ -12,6 +12,7 @@ import {
   buildFullBookMarkdown,
   getChapterImportance,
   CHAPTER_IMPORTANCE_LABEL,
+  CHAPTER_FREQUENCY_BASIS,
 } from '../data/bookChaptersRepo';
 import type { BookChapter } from '../data/bookChaptersTypes';
 import type { QuestionItem } from '../data/konkorData';
@@ -255,7 +256,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-6 max-w-2xl">
                 هر کتاب، ده فصل کلیدی دارد که بر پایهٔ تعداد سؤال طرح‌شده در ادوار مرتب شده‌اند. با
-                باز کردن هر کتاب، جزوهٔ آموزشی فصل‌ها، مطالعهٔ کامل کتاب و تست‌های همان درس را
+                باز کردن هر کتاب، فصل‌های پرتکرار، جزوهٔ جامع کتاب و تست‌های همان درس را
                 یک‌جا می‌بینید.
               </p>
             </div>
@@ -383,7 +384,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
         <div className="tab-strip" role="tablist" aria-label="بخش‌های کتاب">
           {[
             { id: 'chapters' as const, label: `فصل‌های مهم (${fa(chapters.length)})`, icon: ListChecks },
-            { id: 'full' as const, label: 'مطالعهٔ کامل کتاب', icon: FileText },
+            { id: 'full' as const, label: 'جزوهٔ جامع کتاب', icon: FileText },
             { id: 'tests' as const, label: `تست‌های این درس (${fa(bookQuestionCount)})`, icon: HelpCircle },
           ].map((t) => {
             const Icon = t.icon;
@@ -413,16 +414,21 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer"
         >
           <Download className="w-3.5 h-3.5" />
-          دانلود کتاب کامل (.md)
+          دانلود جزوهٔ جامع (.md)
         </button>
       </div>
 
       {/* فصل‌های مهم: مرتب بر پایهٔ تعداد سؤال */}
       {tab === 'chapters' && (
         <div className="space-y-2.5">
-          <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 px-1">
-            <span>مرتب‌شده بر پایهٔ تعداد سؤال طرح‌شده در ادوار کنکور</span>
-            <span>برای دیدن آموزش و تست هر فصل، روی آن بزنید</span>
+          <div className="flex flex-col gap-1 text-[11px] text-slate-500 dark:text-slate-400 px-1">
+            <div className="flex items-center justify-between">
+              <span>مرتب‌شده بر پایهٔ تعداد سؤال طرح‌شده در ادوار کنکور</span>
+              <span>برای دیدن آموزش و تست هر فصل، روی آن بزنید</span>
+            </div>
+            <span className="text-[10px] text-amber-700 dark:text-amber-400 font-bold leading-5">
+              مبنا: {CHAPTER_FREQUENCY_BASIS}
+            </span>
           </div>
 
           {chapters.map((ch, idx) => {
@@ -540,13 +546,16 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
         </div>
       )}
 
-      {/* مطالعهٔ کامل کتاب */}
+      {/* جزوهٔ جامع کتاب */}
       {tab === 'full' && (
         <div className="space-y-4">
           <div className="bento-card p-4 flex flex-wrap items-center justify-between gap-2">
             <div className="text-xs text-slate-600 dark:text-slate-300 leading-6">
-              <strong className="text-slate-900 dark:text-white">مطالعهٔ کامل کتاب:</strong>{' '}
-              همهٔ {fa(chapters.length)} فصل کلیدی به‌ترتیب، در یک صفحه؛ مناسب مرور پیش از آزمون.
+              <strong className="text-slate-900 dark:text-white">جزوهٔ جامع کتاب:</strong>{' '}
+              {fa(chapters.length)} فصل کلیدی به‌ترتیب، در یک صفحه؛ مناسب مرور پیش از آزمون.
+              <span className="block mt-1 text-[11px] text-amber-700 dark:text-amber-400">
+                این یک جزوهٔ تألیفی است، نه متن کامل کتاب. برای متن اصلی باید به نسخهٔ چاپی کتاب مراجعه کنید.
+              </span>
             </div>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">
               {fa(chapters.reduce((s, c) => s + c.points.length, 0))} نکتهٔ آموزشی
@@ -593,7 +602,11 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                 </div>
                 <div className="reading-surface">
                   <p className="text-[11px] text-amber-700 dark:text-amber-400 font-bold mb-1">
-                    {fa(ch.examCount)} سؤال از این فصل در ادوار · {CHAPTER_IMPORTANCE_LABEL[getChapterImportance(ch.examCount)]}
+                    {fa(ch.examCount)} سؤال از این فصل در آزمون ارشد ·{' '}
+                    {CHAPTER_IMPORTANCE_LABEL[getChapterImportance(ch.examCount)]}
+                    <span className="block font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+                      فراوانی دکتری این فصل هنوز ثبت نشده است.
+                    </span>
                   </p>
                   <ul className="lesson-prose list-disc pr-5 space-y-1">
                     {ch.points.map((p, pi) => (
@@ -686,7 +699,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
             <div className="bento-card p-6 text-center space-y-3">
               <p className="text-sm text-slate-600 dark:text-slate-300">
                 هنوز تستی از این درس در بانک سامانه ثبت نشده است. نکات و آموزش فصل‌ها در
-                «مطالعهٔ کامل کتاب» و درس‌نامه‌های تعاملی در دسترس است.
+                «جزوهٔ جامع کتاب» و درس‌نامه‌های تعاملی در دسترس است.
               </p>
               {activeBook.linkedNodeId && (
                 <button

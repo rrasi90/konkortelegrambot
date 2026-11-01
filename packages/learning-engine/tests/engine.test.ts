@@ -205,7 +205,7 @@ describe('layer 1 — direct reset & trap card', () => {
     expect(traps.length).toBe(1);
   });
 
-  it('پاسخ درست با FSRS فاصلهٔ مرور می‌سازد (کارت تازه: Good → ۲ روز)', () => {
+  it('پاسخ درست با FSRS فاصلهٔ مرور می‌سازد (کارت تازه: Good → ۳ روز)', () => {
     const existing: ReviewCard = {
       ...card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv'),
       intervalDays: 10,
@@ -218,12 +218,13 @@ describe('layer 1 — direct reset & trap card', () => {
       { userId: 'user-1', activeTracks: ['common'] },
     );
     const updated = res.cardUpdates.find((c) => c.id === existing.id);
-    // FSRS: بدون وضعیت قبلی، Good → stability ۳٫۲ → فاصلهٔ ۲ روز
-    expect(updated?.intervalDays).toBe(2);
+    // FSRS: بدون وضعیت قبلی، Good → stability ۳٫۲.
+    // طبق تعریف FSRS، در نرخ بازیابی هدف ۹۰٪ فاصله برابر خودِ stability است، پس ≈ ۳ روز.
+    expect(updated?.intervalDays).toBe(3);
     expect(updated?.ease).toBeCloseTo(2.05);
-    expect(new Date(updated?.dueAt ?? '').getTime()).toBe(addDays(NOW, 2).getTime());
+    expect(new Date(updated?.dueAt ?? '').getTime()).toBe(addDays(NOW, 3).getTime());
     expect(updated?.fsrs?.stability).toBeCloseTo(3.2);
-    expect(new Date(updated?.fsrs?.dueAt ?? '').getTime()).toBe(addDays(NOW, 2).getTime());
+    expect(new Date(updated?.fsrs?.dueAt ?? '').getTime()).toBe(addDays(NOW, 3).getTime());
   });
 });
 

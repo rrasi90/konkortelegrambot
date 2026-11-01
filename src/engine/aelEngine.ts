@@ -52,6 +52,12 @@ export interface LearnerSixDState {
   evidenceCount: number;
   /** آخرین امتیاز خودارزیابی درسنامه از ۱ تا ۵ */
   lastLessonSelfRating?: 1 | 2 | 3 | 4 | 5;
+  /**
+   * خودارزیابی دانشجو از فهم درس‌نامه (۱ تا ۵).
+   * این مقدار «شاهد تسلط» نیست و به masteryScore منتقل نمی‌شود؛
+   * فقط مسیر مطالعه، کارت‌های ترمیمی و اولویت صف را تعیین می‌کند.
+   */
+  selfReportedUnderstanding?: 1 | 2 | 3 | 4 | 5;
   /** آیا این گره روی مرز دانش داوطلب باز است؟ (Knowledge Frontier) */
   isUnlockedInFrontier: boolean;
   /** آیا کارت چغر (Leech) در این مبحث شناسایی شده؟ */
@@ -88,7 +94,8 @@ export interface MasteryDeltaWithTitle {
     | 'prerequisite_probe'
     | 'cross_course_bridge'
     | 'placement_propagation'
-    | 'lesson_self_rating';
+    | 'lesson_self_rating'
+    | 'direct_review';
 }
 
 export interface RippleReport {
@@ -194,6 +201,24 @@ export interface ROINodeRanking {
 /* ------------------------------------------------------------------ */
 /* FSRS v4.5 Core Functions                                           */
 /* ------------------------------------------------------------------ */
+
+/**
+ * تسلط پس از یک پاسخ درست.
+ *
+ * رشد نسبی است: هر پاسخ درست فقط بخشی از فاصلهٔ باقی‌مانده تا ۱۰۰ را پر می‌کند.
+ * در نتیجه یک پاسخ درست جهش ۰→۵۵ نمی‌سازد و بازدهی هر پاسخ بعدی کمتر می‌شود.
+ * اعتمادبه‌نفس خودگزارشی دانشجو در این محاسبه وارد نمی‌شود؛ شاهد تسلط فقط
+ * عملکرد واقعی روی سؤال است.
+ */
+export function nextMasteryAfterCorrectAnswer(
+  before: number,
+  attemptType: AttemptType = 'practice'
+): number {
+  const start = Math.max(0, Math.min(100, before));
+  const gainRate = attemptType === 'proof' ? 0.3 : 0.18;
+  const gain = Math.max(3, Math.round((100 - start) * gainRate));
+  return Math.min(100, Math.round(start + gain));
+}
 
 export function initFSRS(now = new Date()): CardFSRSState {
   return {
@@ -482,9 +507,14 @@ export function recomputeKnowledgeFrontier(
     const prereqs = dependencies.filter(
       (d) => d.source === node.id && d.relation === 'prerequisite'
     );
-    const allPrereqsSatisfied =
-      prereqs.length === 0 ||
-      prereqs.every((p) => (updated[p.target]?.masteryScore ?? 0) >= 45);
+    // یک پیش‌نیاز وقتی «طی‌شده» حساب می‌شود که یا تسلط اثبات‌شده داشته باشد،
+    // یا دست‌کم خوانده شده باشد. خواندن، تسلط نمی‌سازد، اما مسیر مطالعه را باز می‌کند.
+    const isTraversed = (p: NodeDependency) => {
+      const st = updated[p.target];
+      if (!st) return false;
+      return st.masteryScore >= 45 || st.coverageStatus !== 'unseen';
+    };
+    const allPrereqsSatisfied = prereqs.length === 0 || prereqs.every(isTraversed);
 
     updated[node.id] = {
       ...updated[node.id],
@@ -549,13 +579,11 @@ export function applyLessonUnderstandingRating(params: {
     nextCards.splice(remIdx, 1);
   }
 
-  let targetScore = before;
   let intervalDays = 1;
   let scheduleSummary = '';
 
   if (rating === 1) {
     // امتیاز ۱: اصلاً متوجه نشدم -> فعال‌سازی پیش‌نیاز + نگه داشتن درسنامه در صدر صف امروز
-    targetScore = Math.max(15, Math.min(25, before + 10));
     intervalDays = 0;
     st.coverageStatus = 'weak';
     st.rippleAlert = 'probe_queued';
@@ -582,7 +610,6 @@ export function applyLessonUnderstandingRating(params: {
     scheduleSummary = `امتیاز ۱ ثبت شد: تست‌های سخت «${node.topic}» فعلاً متوقف شدند و درسنامه پیش‌نیاز مستقیم آن در اولویت اول برنامه امروز قرار گرفت.`;
   } else if (rating === 2) {
     // امتیاز ۲: ابهام دارم -> افزودن کارت مقایسه و کارت دام طراح قبل از تست چهارگزینه‌ای
-    targetScore = Math.max(30, before + 15);
     intervalDays = 1;
     st.coverageStatus = 'weak';
     st.rippleAlert = 'needs_remediation';
@@ -603,10 +630,9 @@ export function applyLessonUnderstandingRating(params: {
         });
       }
     }
-    scheduleSummary = `امتیاز ۲ ثبت شد: تسلط به ${targetScore}٪ رسید و «جدول مقایسه مفاهیم متشابه» برای رفع ابهام به ابتدای برنامه امروز اضافه شد.`;
+    scheduleSummary = `امتیاز ۲ ثبت شد: «جدول مقایسه مفاهیم متشابه» برای رفع ابهام به ابتدای برنامه امروز اضافه شد. تسلط تغییر نکرد؛ برای ثبت تسلط باید تست بزنی.`;
   } else if (rating === 3) {
     // امتیاز ۳: درک متوسط -> باز شدن تست‌های استاندارد با فاصله مرور ۲ روزه
-    targetScore = Math.max(50, before + 25);
     intervalDays = 2;
     st.coverageStatus = 'learning';
     st.rippleAlert = null;
@@ -631,18 +657,16 @@ export function applyLessonUnderstandingRating(params: {
         });
       }
     }
-    scheduleSummary = `امتیاز ۳ ثبت شد: تسلط «${node.topic}» به ${targetScore}٪ رسید و تست‌های استاندارد آن در صف امروز فعال شدند.`;
+    scheduleSummary = `امتیاز ۳ ثبت شد: تست‌های استاندارد «${node.topic}» در صف امروز فعال شدند. تسلط از صفر شروع می‌شود و با پاسخ درست تو ساخته می‌شود.`;
   } else if (rating === 4) {
     // امتیاز ۴: یادگیری خوب -> تسلط ۶۸٪، باز شدن لایه بعدی درخت دانش و فاصله ۴ روزه
-    targetScore = Math.max(68, before + 35);
     intervalDays = 4;
     st.coverageStatus = 'learning';
     st.rippleAlert = null;
     st.hasLeechCard = false;
-    scheduleSummary = `امتیاز ۴ ثبت شد: تسلط به ${targetScore}٪ ارتقا یافت، پایداری حافظه روی ۴ روز تنظیم شد و مباحث وابسته در درخت مهارت بازگشایی شدند.`;
+    scheduleSummary = `امتیاز ۴ ثبت شد: پایداری مرور روی ۴ روز تنظیم شد و مباحث وابسته در درخت مهارت بازگشایی شدند. تسلط پس از تست‌های همین مبحث ثبت می‌شود.`;
   } else {
-    // امتیاز ۵: تسلط کامل -> تسلط ۷۶٪ و باز شدن مستقیم تست قرنطینه کنکور ۱۴۰۴ برای اثبات!
-    targetScore = Math.max(76, before + 45);
+    // امتیاز ۵: فهم کامل -> باز شدن مستقیم تست قرنطینه برای اثبات (تسلط فقط با پاسخ درست ثبت می‌شود)
     intervalDays = 7;
     st.coverageStatus = 'needs_proof';
     st.rippleAlert = null;
@@ -664,15 +688,18 @@ export function applyLessonUnderstandingRating(params: {
         });
       }
     }
-    scheduleSummary = `امتیاز ۵ (تسلط کامل) ثبت شد! تسلط به ${targetScore}٪ رسید و قفل «تست قرنطینه کنکور ۱۴۰۴» برای اثبات نهایی تسلط در صدر صف امروز باز شد.`;
+    scheduleSummary = `امتیاز ۵ ثبت شد: قفل «تست قرنطینه» برای اثبات نهایی تسلط در صدر صف امروز باز شد. تسلطت فقط با پاسخ درست به همین تست‌ها اندازه‌گیری می‌شود.`;
   }
 
-  st.masteryScore = Math.min(100, targetScore);
-  st.proficiencyProbability = Number((st.masteryScore / 100).toFixed(2));
+  // خودارزیابی، شاهد تسلط نیست. خواندن درس‌نامه امتیاز تسلط را بالا نمی‌برد؛
+  // فقط وضعیت آمادگی/مسیر مطالعه را ثبت می‌کند. تسلط صرفاً با پاسخ مستقل
+  // به سؤال تغییر می‌کند (applyQuestionAttempt).
+  st.masteryScore = before;
+  st.proficiencyProbability = Number((before / 100).toFixed(2));
+  st.selfReportedUnderstanding = rating;
   st.memoryStability = intervalDays || 0.8;
   st.retrievability = rating >= 3 ? 0.94 : 0.72;
   st.lastLessonSelfRating = rating;
-  st.evidenceCount += 1;
 
   // بروزرسانی مرز دانش (Knowledge Frontier)
   nextNodeStates = recomputeKnowledgeFrontier(nextNodeStates, nodes, dependencies);
@@ -922,8 +949,7 @@ export function evaluateAnswerAndRipple(params: {
   // ۲. حالت پاسخ صحیح + الگوریتم FIRe (اعتبار مرور ضمنی به پیش‌نیازها - MathAcademy)
   if (wasCorrect) {
     const before = currentSixD.masteryScore;
-    const baseJump = before === 0 ? 55 : card.attemptType === 'proof' ? 16 : confidence === 'high' ? 14 : 9;
-    const after = Math.min(100, Math.round(before + baseJump));
+    const after = nextMasteryAfterCorrectAnswer(before, card.attemptType);
 
     const grade: 3 | 4 = confidence === 'high' && responseTimeMs <= question.expectedTimeMs ? 4 : 3;
     const updatedFsrs = isNightVerification ? card.fsrs : stepFSRS(card.fsrs, grade, now);
