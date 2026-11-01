@@ -3105,6 +3105,21 @@ export const INITIAL_QUESTION_BANK: QuestionItem[] = [
   ...YEARLY_KONKOR_QUESTIONS,
 ];
 
+/**
+ * R-026 — INITIAL_QUESTION_BANK خودش شامل YEARLY_KONKOR_QUESTIONS است (spread بالا)،
+ * پس هر مصرف‌کننده‌ای که این دو آرایه را به هم می‌چسباند، ۹۶ آیتم مشترک را دوباره
+ * می‌شمارد. تنها مرجع ادغام یکتا بر پایهٔ id همین تابع است (اولین رخداد برنده).
+ */
+export function mergeQuestionsUnique(...banks: QuestionItem[][]): QuestionItem[] {
+  const byId = new Map<string, QuestionItem>();
+  for (const bank of banks) {
+    for (const q of bank) {
+      if (!byId.has(q.id)) byId.set(q.id, q);
+    }
+  }
+  return [...byId.values()];
+}
+
 // Compat exports for existing imports
 export const KNOWLEDGE_NODES = INITIAL_KNOWLEDGE_NODES;
 export const NODE_DEPENDENCIES = INITIAL_NODE_DEPENDENCIES;

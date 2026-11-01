@@ -14,7 +14,7 @@
  */
 
 import { YEARLY_KONKOR_BOOKLETS, YEARLY_KONKOR_QUESTIONS } from './yearlyKonkorExams';
-import { INITIAL_QUESTION_BANK } from './konkorData';
+import { INITIAL_QUESTION_BANK, mergeQuestionsUnique } from './konkorData';
 
 export type ExamLevel = 'ارشد' | 'دکتری';
 
@@ -100,10 +100,11 @@ export function getArshadCoverage(): CoverageReport {
  * برگردانده می‌شود.
  */
 export function getDoctorateCoverage(): CoverageReport {
-  const doctorateQuestions = [
-    ...INITIAL_QUESTION_BANK.filter(isDoctorate),
-    ...YEARLY_KONKOR_QUESTIONS.filter(isDoctorate),
-  ];
+  // R-026: YEARLY ⊂ INITIAL — ادغام فقط با یکتاسازی id مجاز است
+  const doctorateQuestions = mergeQuestionsUnique(
+    INITIAL_QUESTION_BANK.filter(isDoctorate),
+    YEARLY_KONKOR_QUESTIONS.filter(isDoctorate),
+  );
 
   return {
     level: 'دکتری',
