@@ -11,10 +11,27 @@ Branch: `fix/mission-remediation-20261101`. Statuses use the standard set only; 
 | 8.4 Adaptive planner | Inverted risk division fixed (R-011); 8 monotonicity properties with property tests | PASS_WITH_EVIDENCE | `packages/utils/tests/priority-calculations.test.ts` (22 tests) — `evidence/phase-4/vitest-r011.txt`; register row R-011 |
 | 8.5 Daily queue budget | Explicit budget rule: proof = prior commitment (counted first), spendable items never break `budget − proofMinutes`; exact sum invariants; per-item activityType + remedial reason persisted; doc rule == code | PASS_WITH_EVIDENCE | `apps/worker/src/index.ts` GET /api/queue; `ADAPTIVE_PLANNER.md` §Daily Queue Budget Rule; worker tests §8.5 (3 tests, 48/48 file) — `evidence/phase-4/vitest-budget85.txt` (201/201), `typecheck-budget85.txt`, `build-worker-budget85.txt` |
 | 8.6 Error analysis | 10 mission error causes implemented as an explicit priority-ordered classifier over observable evidence only (slip, time_pressure, recall_failure, theory_confusion, misconception, calculation_error, reading_error, guessing, knowledge_gap, concept_gap) + `unknown` when evidence insufficient — an error is never a definitive chapter weakness; error wave governed by documented rules (slip stops wave, ripple only below mastery 60, capacity 6 with honest deferred count, sibling baseline stored once) | PASS_WITH_EVIDENCE | `packages/learning-engine/src/fsrs.ts` `classifyErrorType`; `packages/learning-engine/src/index.ts` `ERROR_WAVE_RULES` + evidence wiring; tests: classifier 14 tests incl. all-10-distinct coverage, slip-suppression + capacity + threshold wave tests — `evidence/phase-4/vitest-errors86.txt` (210/210), `typecheck-errors86.txt`, `build-worker-errors86.txt` |
-| 8.7 Exam simulation | Official structure per year (combos, counts, coefficients, time, negative marking, answer sheet, scoring, report); MA vs PhD distinct paths | NOT_STARTED | — |
+| 8.7 Exam simulation | Single level-aware structure source (`@ael/contracts`): PhD 2162 vs Master 1142 have distinct titles/codes; per-year coefficients, official counts (spec range 80–90, language 40), durations (105/40), negative marking (1/3) and aptitude removal from 1405; optional official combination code validated against the sub-group mapping; answer sheet with single-use tickets, out-of-order answering, server-side correctness only, official weighted scoring + confidence report. Master simulation is refused server-side with an explicit content-gap reason; 1404 is quarantined; unlabeled/demo content is disclosed as readiness assessment, never as an official past-paper simulator; per-subject allocation is explicitly pooled because official per-subject counts are not recorded | PASS_WITH_EVIDENCE | `packages/contracts/src/exam-structure.ts`, `packages/learning-engine/src/exam-simulation.ts`, `apps/worker/src/index.ts` (`/api/exam-structure`, `/api/exam-simulation/*`), `supabase/migrations/0012_exam_simulation_sessions.sql`; tests: engine 19 + worker 19 — `evidence/phase-4/vitest-exam87-engine.txt` (99/99), `vitest-exam87-worker.txt` (70/70), `vitest-exam87-all.txt` (248/248), `typecheck-exam87-*.txt`, `build-worker-exam87.txt`, `content-validate-exam87.txt`; DB RPC/RLS all error codes — `db-migration-0012-apply.txt`, `db-verify-exam87.txt`, `db-seed-provenance-exam87.txt`; manifest `exam87-run-manifest.txt` |
 | 8.8 English module | 10 skills beyond word lists | NOT_STARTED | — |
 | 8.9 Research lab | 11 capabilities; AI strictly as sourced assistant | NOT_STARTED | — |
 | 8.10 Analytics dashboard | 13 real learning metrics; logins/streak/XP must not substitute | NOT_STARTED | — |
+
+## §8.7 content boundary (designed vs implemented vs proven)
+
+- **Implemented and proven:** the simulator mechanics follow the same-year official structure
+  (counts, coefficients, durations, negative marking, weighted scoring, confidence, answer sheet).
+  Level separation and ticket enforcement are covered by engine/worker tests and by the DB RPC
+  verification (`evidence/phase-4/db-verify-exam87.txt`).
+- **Content dependency (not a code gap):** a session is labeled `official_booklet` only when every
+  used question carries `examLevel=doctorate` and `contentOrigin=official_booklet`. The current
+  server pool is demo/designed, so sessions report `scaled_pool`/`mixed` and state they are
+  readiness assessments. Importing a provenance-labeled official pool is required before any
+  "official past-paper simulator" claim; the import script now carries these labels.
+- **Master (1142):** no server-verified Master question pool exists, so simulation returns 503 with
+  the documented content-gap reason; it is never rendered as the PhD path.
+- **Per-subject quotas:** the official structure records bundle titles, not per-subject counts.
+  Specialization allocation is therefore pooled (`subjectAllocation: 'pooled'`) and disclosed;
+  no per-subject share is invented.
 
 ## §8.3 reference-and-deviation registry (mission: "record reference library version and parameters")
 

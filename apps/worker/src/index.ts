@@ -12,14 +12,26 @@ import {
   DEFAULT_ENGINE_CONFIG,
   applyAnswer,
   buildDailyQueue,
+  buildExamSessionPlan,
   calculateRetrievability,
   isTrackId,
   questionCardId,
+  scoreExamSession,
   statusFromMastery,
   DEFAULT_MASTERY,
 } from '@ael/engine';
-import type { EngineState, QueueItem } from '@ael/engine';
+import type { EngineState, ExamSessionPlan, QueueItem } from '@ael/engine';
 import type { ReviewCard, TrackId, Question, PublicQuestion } from '@ael/contracts';
+import {
+  getCombination,
+  getExamPath,
+  getExamStructure,
+  getExamStructureWarnings,
+  getSubGroupSubjects,
+  getSubGroups,
+  isExamLevel,
+  LATEST_EXAM_YEAR,
+} from '@ael/contracts';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
 import type { AppUser, DataStore, UserStats } from './store';
 import { MemoryStore } from './memory-store';
@@ -670,6 +682,311 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         confidence_note:
           'خوداظهاری همراه پاسخ ثبت شود (self-report)؛ به‌تنهایی شاهد تسلط نیست.',
       },
+    });
+  });
+
+  /* ---------- §8.7 — ساختار رسمی آزمون و شبیه‌سازی ---------- */
+
+  app.get('/api/exam-structure', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const levelParam = c.req.query('level') ?? 'doctorate';
+    if (!isExamLevel(levelParam)) {
+      return c.json({ error: 'سطح آزمون نامعتبر است؛ «doctorate» یا «master».' }, 400);
+    }
+    const path = getExamPath(levelParam);
+    const yearParam = c.req.query('year');
+    const examYear = yearParam === undefined ? LATEST_EXAM_YEAR : Number(yearParam);
+    if (!Number.isInteger(examYear) || examYear < 1390 || examYear > 1420) {
+      return c.json({ error: 'سال آزمون نامعتبر است.' }, 400);
+    }
+    const subGroups = getSubGroups().map((g) => ({
+      id: g.id,
+      title: g.title,
+      verification: g.verification,
+      combinationCodes: g.combinationCodes,
+      subjects: getSubGroupSubjects(g.id),
+    }));
+
+    if (path.serverSimulation !== 'available') {
+      // صادقانه: ساختار سالانهٔ این سطح در سرور ثبت نشده و ادعا نمی‌شود
+      return c.json({
+        path,
+        available: false,
+        structure: null,
+        reason: path.serverSimulationReason,
+        subGroups,
+      });
+    }
+
+    const structure = getExamStructure(levelParam, examYear);
+    return c.json({
+      path,
+      available: true,
+      structure,
+      warnings: getExamStructureWarnings(levelParam, examYear),
+      subGroups,
+      combinations: subGroups.flatMap((g) =>
+        g.combinationCodes.map((code) => ({
+          combinationCode: code,
+          subGroupId: g.id,
+          titles: getCombination(code)?.titles ?? [],
+          verification: getCombination(code)?.verification ?? 'needs_check',
+        })),
+      ),
+    });
+  });
+
+  app.post('/api/exam-simulation/start', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as {
+      level?: string;
+      examYear?: number;
+      subGroupId?: string;
+      combinationCode?: string;
+      scale?: number;
+    } | null;
+    if (!body) return c.json({ error: 'بدنهٔ درخواست نامعتبر است.' }, 400);
+    if (!isExamLevel(body.level)) {
+      return c.json({ error: 'سطح آزمون نامعتبر است؛ «doctorate» یا «master».' }, 400);
+    }
+    const path = getExamPath(body.level);
+    if (path.serverSimulation !== 'available') {
+      return c.json(
+        { error: path.serverSimulationReason ?? 'شبیه‌سازی این سطح در سرور فعال نیست.', path },
+        503,
+      );
+    }
+    const examYear = Number(body.examYear ?? LATEST_EXAM_YEAR);
+    if (!Number.isInteger(examYear) || examYear < 1390 || examYear > 1420) {
+      return c.json({ error: 'سال آزمون نامعتبر است.' }, 400);
+    }
+    const subGroupId = String(body.subGroupId ?? '');
+    const state = await loadEngineState(user.id);
+
+    let plan: ExamSessionPlan;
+    try {
+      plan = buildExamSessionPlan({
+        level: body.level,
+        examYear,
+        subGroupId,
+        combinationCode:
+          typeof body.combinationCode === 'string' ? body.combinationCode : undefined,
+        questions: [...state.questions.values()],
+        nodes: [...state.nodes.values()],
+        scale: typeof body.scale === 'number' ? body.scale : undefined,
+        newAttemptId: () => `att-${crypto.randomUUID()}`,
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'ساخت جلسهٔ شبیه‌سازی ممکن نشد.';
+      return c.json({ error: message }, 400);
+    }
+    if (plan.answerSheet.length === 0) {
+      return c.json(
+        {
+          error: 'برای این سال و گرایش، سؤال قابل‌استفاده‌ای در مخزن سرور نیست.',
+          disclosures: plan.disclosures,
+        },
+        409,
+      );
+    }
+
+    // fail-closed: بدون بلیت تک‌مصرف، پاسخ ثبت‌ناپذیر است
+    try {
+      await store.issueAttemptTickets(
+        user.id,
+        plan.ticketRequests.map((t) => ({ ...t, attemptType: 'exam_simulation' as const })),
+      );
+    } catch (error) {
+      console.error('[worker] failed to issue exam simulation tickets:', error);
+      return c.json({ error: 'جلسهٔ شبیه‌سازی آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
+
+    const expiresAt = new Date(
+      Date.now() + (plan.durationMinutes ?? 180) * 60_000,
+    ).toISOString();
+    let session;
+    try {
+      session = await store.createExamSimulationSession({
+        userId: user.id,
+        level: plan.level,
+        examYear: plan.examYear,
+        subGroupId: plan.subGroupId,
+        bookletCode: plan.bookletCode,
+        plan,
+        disclosures: plan.disclosures,
+        expiresAt,
+        items: plan.answerSheet.map((slot) => ({
+          questionId: slot.questionId,
+          sectionId: slot.sectionId,
+          questionNumber: slot.questionNumber,
+          attemptId: slot.attemptId,
+        })),
+      });
+    } catch (error) {
+      console.error('[worker] failed to persist exam simulation session:', error);
+      return c.json({ error: 'ثبت جلسهٔ شبیه‌سازی ممکن نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
+
+    const questionById = new Map([...state.questions.values()].map((q) => [q.id, q]));
+    const items = plan.answerSheet.map((slot) => {
+      const question = questionById.get(slot.questionId);
+      return {
+        questionNumber: slot.questionNumber,
+        sectionId: slot.sectionId,
+        attemptId: slot.attemptId,
+        question: question ? toPublicQuestion(question) : null,
+      };
+    });
+
+    return c.json({
+      session: {
+        id: session.id,
+        level: plan.level,
+        examYear: plan.examYear,
+        subGroupId: plan.subGroupId,
+        combinationCode: plan.combinationCode,
+        subjects: plan.subjects,
+        subjectAllocation: plan.subjectAllocation,
+        bookletCode: plan.bookletCode,
+        pathTitle: plan.pathTitle,
+        status: session.status,
+        startedAt: session.startedAt,
+        expiresAt: session.expiresAt,
+        durationMinutes: plan.durationMinutes,
+        timingVerified: plan.timingVerified,
+        officialTotalQuestions: plan.officialTotalQuestions,
+        allocatedTotalQuestions: plan.allocatedTotalQuestions,
+        coverageRatio: plan.coverageRatio,
+        negativeMarkingRatio: plan.negativeMarkingRatio,
+        sections: plan.sections,
+        officiality: plan.contentOfficiality,
+        contentOrigins: plan.contentOrigins,
+      },
+      items,
+      disclosures: plan.disclosures,
+      warnings: plan.warnings,
+      answer_registration: 'POST /api/exam-simulation/answer با attemptId هر آیتم',
+    });
+  });
+
+  app.post('/api/exam-simulation/answer', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as {
+      sessionId?: string;
+      attemptId?: string;
+      questionId?: string;
+      selectedOption?: number;
+      responseTimeMs?: number;
+    } | null;
+    if (!body?.sessionId || !body.attemptId || !body.questionId) {
+      return c.json({ error: 'شناسهٔ جلسه، تلاش و سؤال الزامی است.' }, 400);
+    }
+    if (!Number.isInteger(body.selectedOption)) {
+      return c.json({ error: 'گزینهٔ انتخابی نامعتبر است.' }, 400);
+    }
+    const session = await store.getExamSimulationSession(user.id, body.sessionId);
+    if (!session) return c.json({ error: 'جلسهٔ شبیه‌سازی پیدا نشد.' }, 404);
+    if (session.status !== 'active') {
+      return c.json({ error: 'این جلسه دیگر فعال نیست.' }, 409);
+    }
+    if (new Date(session.expiresAt).getTime() <= Date.now()) {
+      return c.json({ error: 'زمان این جلسه به پایان رسیده است.' }, 409);
+    }
+    try {
+      await store.recordExamSimulationResponse({
+        userId: user.id,
+        sessionId: session.id,
+        attemptId: body.attemptId,
+        questionId: body.questionId,
+        selectedOption: body.selectedOption as number,
+        responseTimeMs: typeof body.responseTimeMs === 'number' ? body.responseTimeMs : null,
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'ثبت پاسخ ممکن نشد.';
+      const conflict =
+        message.includes('already consumed') ||
+        message.includes('already answered') ||
+        message.includes('not active');
+      return c.json({ error: message }, conflict ? 409 : 400);
+    }
+    // درستی پاسخ عمداً اعلام نمی‌شود — رفتار آزمون رسمی
+    return c.json({ recorded: true });
+  });
+
+  app.post('/api/exam-simulation/submit', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as { sessionId?: string } | null;
+    if (!body?.sessionId) return c.json({ error: 'شناسهٔ جلسه الزامی است.' }, 400);
+    const session = await store.getExamSimulationSession(user.id, body.sessionId);
+    if (!session) return c.json({ error: 'جلسهٔ شبیه‌سازی پیدا نشد.' }, 404);
+    if (session.status === 'scored' && session.report) {
+      return c.json({ report: session.report, already_scored: true });
+    }
+    const plan = session.plan as ExamSessionPlan | null;
+    if (!plan) return c.json({ error: 'برنامهٔ جلسه بازتولید نشد.' }, 500);
+
+    const [items, responses, questions] = await Promise.all([
+      store.listExamSimulationItems(session.id),
+      store.listExamSimulationResponses(session.id),
+      store.listQuestions(),
+    ]);
+    const report = scoreExamSession(
+      plan,
+      questions,
+      responses.map((r) => ({ questionId: r.questionId, selectedOption: r.selectedOption })),
+    );
+    await store.submitExamSimulationSession(session.id, report);
+    return c.json({
+      report,
+      answered: responses.length,
+      total: items.length,
+    });
+  });
+
+  app.get('/api/exam-simulation/:id', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const sessionId = c.req.param('id');
+    const session = await store.getExamSimulationSession(user.id, sessionId);
+    if (!session) return c.json({ error: 'جلسهٔ شبیه‌سازی پیدا نشد.' }, 404);
+    const items = await store.listExamSimulationItems(session.id);
+    const questions = await store.listQuestions();
+    const questionById = new Map(questions.map((q) => [q.id, q]));
+    const plan = session.plan as ExamSessionPlan | null;
+    return c.json({
+      session: {
+        id: session.id,
+        level: session.level,
+        examYear: session.examYear,
+        subGroupId: session.subGroupId,
+        combinationCode: plan?.combinationCode ?? null,
+        subjects: plan?.subjects ?? [],
+        subjectAllocation: plan?.subjectAllocation ?? 'pooled',
+        bookletCode: session.bookletCode,
+        pathTitle: plan?.pathTitle ?? null,
+        status: session.status,
+        startedAt: session.startedAt,
+        expiresAt: session.expiresAt,
+        submittedAt: session.submittedAt,
+        officiality: plan?.contentOfficiality ?? null,
+        coverageRatio: plan?.coverageRatio ?? null,
+        negativeMarkingRatio: plan?.negativeMarkingRatio ?? null,
+      },
+      items: items.map((item) => {
+        const question = questionById.get(item.questionId);
+        return {
+          questionNumber: item.questionNumber,
+          sectionId: item.sectionId,
+          attemptId: item.attemptId,
+          question: question ? toPublicQuestion(question) : null,
+        };
+      }),
+      report: session.report,
+      disclosures: session.disclosures,
     });
   });
 

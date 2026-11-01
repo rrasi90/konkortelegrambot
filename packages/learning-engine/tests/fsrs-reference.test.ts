@@ -129,7 +129,7 @@ describe('§8.3 FSRS reference tests', () => {
       const w = DEFAULT_FSRS_WEIGHTS;
       for (const rating of [Rating.Again, Rating.Hard, Rating.Good, Rating.Easy]) {
         const st = initializeFSRSState(rating, new Date(D0));
-        expect(st.stability).toBeCloseTo(w[rating - 1], 6);
+        expect(st.stability).toBeCloseTo(w[rating - 1]!, 6);
         const d0 = w[4] - Math.exp(w[5] * (rating - 1)) + 1;
         expect(st.difficulty).toBeCloseTo(Math.max(1, Math.min(10, d0)), 6);
       }

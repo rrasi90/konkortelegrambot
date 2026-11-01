@@ -763,7 +763,33 @@ export function round1(x: number): number {
   return Math.round(x * 10) / 10;
 }
 
-export { isTrackId, isQuestion, isNodeDependency, TRACK_IDS, DEPENDENCY_RELATIONS };
-export type { TrackId, DependencyRelation, ReviewCard, Question, KnowledgeNode, NodeDependency, UserNodeMastery };
+export {
+  isTrackId,
+  isQuestion,
+  isNodeDependency,
+  isExamLevel,
+  TRACK_IDS,
+  DEPENDENCY_RELATIONS,
+  EXAM_LEVELS,
+  getExamPath,
+  getExamStructure,
+  getExamStructureWarnings,
+  getSubGroup,
+  getSubGroupSubjects,
+} from '@ael/contracts';
+export type {
+  TrackId,
+  DependencyRelation,
+  ReviewCard,
+  Question,
+  KnowledgeNode,
+  NodeDependency,
+  UserNodeMastery,
+  ExamLevel,
+  ExamPathIdentity,
+  ExamYearStructure,
+  ExamVerification,
+} from '@ael/contracts';
 
 export * from './fsrs';
+export * from './exam-simulation';

@@ -3,6 +3,9 @@
  * Shared contracts: types + runtime validation for the adaptive learning engine.
  */
 
+export * from './exam-structure';
+import type { ExamLevel } from './exam-structure';
+
 /* ---------- Track & Knowledge Graph ---------- */
 
 export const TRACK_IDS = ['common', 'business', 'technology', 'strategy', 'industrial'] as const;
@@ -55,6 +58,13 @@ export interface CardFSRSState {
   intervalDays: number;
 }
 
+export const QUESTION_CONTENT_ORIGINS = [
+  'official_booklet',
+  'textbook_designed',
+  'synthetic_demo',
+] as const;
+export type QuestionContentOrigin = (typeof QUESTION_CONTENT_ORIGINS)[number];
+
 export interface Question {
   id: string;
   nodeId: string;
@@ -69,6 +79,10 @@ export interface Question {
   isVerified?: boolean;
   /** زمان موردانتظار پاسخ‌گویی (میلی‌ثانیه) — مبنای روانی اجرا */
   expectedTimeMs?: number;
+  /** سطح آزمونِ منبع سؤال؛ بدون تطابق سطح، سؤال وارد جلسهٔ شبیه‌سازی آن سطح نمی‌شود */
+  examLevel?: ExamLevel;
+  /** مبدأ محتوا — فقط official_booklet می‌تواند جلسهٔ «ساخته‌شده از دفترچهٔ رسمی» بسازد */
+  contentOrigin?: QuestionContentOrigin;
 }
 
 /** سؤالی که به کلاینت فرستاده می‌شود — بدون گزینهٔ صحیح، بدون توضیح تشریحی و بدون یادداشت دام */

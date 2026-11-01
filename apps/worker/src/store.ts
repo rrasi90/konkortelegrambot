@@ -95,6 +95,44 @@ export interface DailyQueueItemRow {
   priority?: number | null;
 }
 
+/* ---------- §8.7 — جلسهٔ شبیه‌سازی آزمون ---------- */
+
+export type ExamSimulationSessionStatus = 'active' | 'submitted' | 'scored';
+
+export interface ExamSimulationSessionRow {
+  id: string;
+  userId: string;
+  level: string;
+  examYear: number;
+  subGroupId: string;
+  bookletCode: string;
+  status: ExamSimulationSessionStatus;
+  /** عکسِ برنامهٔ جلسه (ساختار رسمی + تخصیص + افشاها) برای نمره‌دهی بازتولیدپذیر */
+  plan: unknown;
+  disclosures: string[];
+  startedAt: string;
+  expiresAt: string;
+  submittedAt: string | null;
+  report: unknown | null;
+}
+
+export interface ExamSimulationItemRow {
+  sessionId: string;
+  questionId: string;
+  sectionId: string;
+  questionNumber: number;
+  attemptId: string;
+}
+
+export interface ExamSimulationResponseRow {
+  sessionId: string;
+  questionId: string;
+  selectedOption: number;
+  isCorrect: boolean;
+  responseTimeMs: number | null;
+  answeredAt: string;
+}
+
 export interface DataStore {
   getUser(userId: string): Promise<AppUser | null>;
   getUserByTelegramId(telegramUserId: number): Promise<AppUser | null>;
@@ -173,6 +211,43 @@ export interface DataStore {
 
   /** ردیف‌های تاریخچهٔ تسلط نوشته‌شده توسط trigger (مخصوص تست/ممیزی) */
   countMasteryHistoryRows(userId: string): Promise<number>;
+
+  /* ---------- §8.7 — جلسهٔ شبیه‌سازی آزمون ---------- */
+
+  /** ساخت جلسه + اقلام آن (برگهٔ پاسخ) */
+  createExamSimulationSession(input: {
+    userId: string;
+    level: string;
+    examYear: number;
+    subGroupId: string;
+    bookletCode: string;
+    plan: unknown;
+    disclosures: string[];
+    expiresAt: string;
+    items: { questionId: string; sectionId: string; questionNumber: number; attemptId: string }[];
+  }): Promise<ExamSimulationSessionRow>;
+
+  getExamSimulationSession(userId: string, sessionId: string): Promise<ExamSimulationSessionRow | null>;
+
+  listExamSimulationItems(sessionId: string): Promise<ExamSimulationItemRow[]>;
+
+  /**
+   * ثبت اتمیک پاسخ شبیه‌سازی: بلیتِ exam_simulation مصرف می‌شود و درستی
+   * سمت سرور از بانک سؤال تعیین می‌گردد (کلاینت نمی‌تواند خودش را درست اعلام کند).
+   */
+  recordExamSimulationResponse(input: {
+    userId: string;
+    sessionId: string;
+    attemptId: string;
+    questionId: string;
+    selectedOption: number;
+    responseTimeMs?: number | null;
+  }): Promise<void>;
+
+  listExamSimulationResponses(sessionId: string): Promise<ExamSimulationResponseRow[]>;
+
+  /** بستن جلسه و ذخیرهٔ گزارش نمره */
+  submitExamSimulationSession(sessionId: string, report: unknown): Promise<void>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -398,6 +473,8 @@ export class SupabaseStore implements DataStore {
       correct_option: number;
       explanation: string | null;
       trap_note: string | null;
+      exam_level: string | null;
+      content_origin: string | null;
     }[];
     const questions = rows.map((r) => ({
       id: r.id,
@@ -408,6 +485,8 @@ export class SupabaseStore implements DataStore {
       correctOption: r.correct_option,
       explanation: r.explanation ?? undefined,
       trapNote: r.trap_note ?? undefined,
+      examLevel: (r.exam_level ?? undefined) as Question['examLevel'],
+      contentOrigin: (r.content_origin ?? undefined) as Question['contentOrigin'],
     }));
     this._questionsCache = questions;
     return questions;
@@ -824,5 +903,157 @@ export class SupabaseStore implements DataStore {
     const total = cr ? Number(cr.split('/')[1]) : 0;
     await res.text();
     return Number.isFinite(total) ? total : 0;
+  }
+
+  /* ---------- §8.7 — جلسهٔ شبیه‌سازی آزمون ---------- */
+
+  private toExamSimulationSession(row: Record<string, unknown>): ExamSimulationSessionRow {
+    return {
+      id: String(row.id),
+      userId: String(row.user_id),
+      level: String(row.level),
+      examYear: Number(row.exam_year),
+      subGroupId: String(row.sub_group_id),
+      bookletCode: String(row.booklet_code),
+      status: String(row.status) as ExamSimulationSessionStatus,
+      plan: row.plan_snapshot ?? null,
+      disclosures: Array.isArray(row.disclosures) ? (row.disclosures as string[]) : [],
+      startedAt: String(row.started_at),
+      expiresAt: String(row.expires_at),
+      submittedAt: row.submitted_at == null ? null : String(row.submitted_at),
+      report: row.report ?? null,
+    };
+  }
+
+  async createExamSimulationSession(input: {
+    userId: string;
+    level: string;
+    examYear: number;
+    subGroupId: string;
+    bookletCode: string;
+    plan: unknown;
+    disclosures: string[];
+    expiresAt: string;
+    items: { questionId: string; sectionId: string; questionNumber: number; attemptId: string }[];
+  }): Promise<ExamSimulationSessionRow> {
+    const rows = (await this.request('POST', 'exam_sessions', {
+      user_id: input.userId,
+      level: input.level,
+      exam_year: input.examYear,
+      sub_group_id: input.subGroupId,
+      booklet_code: input.bookletCode,
+      status: 'active',
+      plan_snapshot: input.plan,
+      disclosures: input.disclosures,
+      expires_at: input.expiresAt,
+    })) as Record<string, unknown>[] | null;
+    const session = this.toExamSimulationSession(rows?.[0] ?? {});
+    try {
+      if (input.items.length > 0) {
+        await this.request(
+          'POST',
+          'exam_session_items',
+          input.items.map((item) => ({
+            session_id: session.id,
+            question_id: item.questionId,
+            section_id: item.sectionId,
+            question_number: item.questionNumber,
+            attempt_id: item.attemptId,
+          })),
+        );
+      }
+    } catch (error) {
+      // fail-closed: جلسهٔ نیمه‌ساخته نباید به‌عنوان جلسهٔ فعال باقی بماند
+      await this.request('PATCH', `exam_sessions?id=eq.${encodeURIComponent(session.id)}`, {
+        status: 'submitted',
+      }).catch(() => undefined);
+      throw error;
+    }
+    return session;
+  }
+
+  async getExamSimulationSession(userId: string, sessionId: string): Promise<ExamSimulationSessionRow | null> {
+    const rows = (await this.request(
+      'GET',
+      'exam_sessions',
+      undefined,
+      `?id=eq.${encodeURIComponent(sessionId)}&user_id=eq.${encodeURIComponent(userId)}&select=*`,
+    )) as Record<string, unknown>[] | null;
+    const row = rows?.[0];
+    return row ? this.toExamSimulationSession(row) : null;
+  }
+
+  async listExamSimulationItems(sessionId: string): Promise<ExamSimulationItemRow[]> {
+    const rows = (await this.request(
+      'GET',
+      'exam_session_items',
+      undefined,
+      `?session_id=eq.${encodeURIComponent(sessionId)}&select=*&order=question_number.asc`,
+    )) as {
+      session_id: string;
+      question_id: string;
+      section_id: string;
+      question_number: number;
+      attempt_id: string;
+    }[] | null;
+    return (rows ?? []).map((r) => ({
+      sessionId: r.session_id,
+      questionId: r.question_id,
+      sectionId: r.section_id,
+      questionNumber: Number(r.question_number),
+      attemptId: r.attempt_id,
+    }));
+  }
+
+  async recordExamSimulationResponse(input: {
+    userId: string;
+    sessionId: string;
+    attemptId: string;
+    questionId: string;
+    selectedOption: number;
+    responseTimeMs?: number | null;
+  }): Promise<void> {
+    // RPC امن: بلیت exam_simulation مصرف می‌شود و درستی سمت سرور محاسبه می‌گردد
+    // (نتیجهٔ درستی به کلاینت برنمی‌گردد؛ فقط پس از ارسال جلسه در گزارش می‌آید)
+    await this.request('POST', 'rpc/record_exam_simulation_response', {
+      p_user_id: input.userId,
+      p_session_id: input.sessionId,
+      p_attempt_id: input.attemptId,
+      p_question_id: input.questionId,
+      p_selected_option: input.selectedOption,
+      p_response_time_ms: input.responseTimeMs ?? null,
+    });
+  }
+
+  async listExamSimulationResponses(sessionId: string): Promise<ExamSimulationResponseRow[]> {
+    const rows = (await this.request(
+      'GET',
+      'exam_session_responses',
+      undefined,
+      `?session_id=eq.${encodeURIComponent(sessionId)}&select=*`,
+    )) as {
+      session_id: string;
+      question_id: string;
+      selected_option: number;
+      is_correct: boolean;
+      response_time_ms: number | null;
+      answered_at: string;
+    }[] | null;
+    return (rows ?? []).map((r) => ({
+      sessionId: r.session_id,
+      questionId: r.question_id,
+      selectedOption: Number(r.selected_option),
+      isCorrect: Boolean(r.is_correct),
+      responseTimeMs: r.response_time_ms == null ? null : Number(r.response_time_ms),
+      answeredAt: String(r.answered_at),
+    }));
+  }
+
+  async submitExamSimulationSession(sessionId: string, report: unknown): Promise<void> {
+    await this.request('PATCH', `exam_sessions?id=eq.${encodeURIComponent(sessionId)}`, {
+      status: 'scored',
+      report,
+      submitted_at: new Date().toISOString(),
+    });
   }
 }

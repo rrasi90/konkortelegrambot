@@ -35,7 +35,17 @@ export class MemoryStore implements DataStore {
     else if (defaultSeed?.dependencies) this.dependencies = (defaultSeed.dependencies as unknown as any[]).map((d) => ({ ...d }));
 
     if (initialData?.questions) this.questions = initialData.questions;
-    else if (defaultSeed?.questions) this.questions = (defaultSeed.questions as unknown as any[]).map((q) => ({ ...q }));
+    else if (defaultSeed?.questions) {
+      // بستهٔ نمایشی: محتوای ساختگیِ مسیر دکتری — برچسب مبدأ صریح ثبت می‌شود
+      // تا جلسهٔ شبیه‌سازی هرگز آن را «سؤال دفترچهٔ رسمی» معرفی نکند.
+      const packMeta = (defaultSeed as unknown as { meta?: { synthetic?: boolean } }).meta ?? {};
+      const contentOrigin = packMeta.synthetic ? 'synthetic_demo' : 'textbook_designed';
+      this.questions = (defaultSeed.questions as unknown as any[]).map((q) => ({
+        ...q,
+        examLevel: q.examLevel ?? 'doctorate',
+        contentOrigin: q.contentOrigin ?? contentOrigin,
+      }));
+    }
   }
 
   async getUser(userId: string): Promise<AppUser | null> {
@@ -299,5 +309,127 @@ export class MemoryStore implements DataStore {
 
   async countMasteryHistoryRows(userId: string): Promise<number> {
     return this.masteryHistory.filter((h) => h.userId === userId).length;
+  }
+
+  /* ---------- §8.7 — جلسهٔ شبیه‌سازی آزمون (in-memory) ---------- */
+
+  examSessions = new Map<
+    string,
+    import('./store').ExamSimulationSessionRow
+  >();
+  examSessionItems: import('./store').ExamSimulationItemRow[] = [];
+  examSessionResponses: import('./store').ExamSimulationResponseRow[] = [];
+
+  async createExamSimulationSession(input: {
+    userId: string;
+    level: string;
+    examYear: number;
+    subGroupId: string;
+    bookletCode: string;
+    plan: unknown;
+    disclosures: string[];
+    expiresAt: string;
+    items: { questionId: string; sectionId: string; questionNumber: number; attemptId: string }[];
+  }): Promise<import('./store').ExamSimulationSessionRow> {
+    const now = new Date().toISOString();
+    const session: import('./store').ExamSimulationSessionRow = {
+      id: `exs-${crypto.randomUUID()}`,
+      userId: input.userId,
+      level: input.level,
+      examYear: input.examYear,
+      subGroupId: input.subGroupId,
+      bookletCode: input.bookletCode,
+      status: 'active',
+      plan: input.plan,
+      disclosures: input.disclosures,
+      startedAt: now,
+      expiresAt: input.expiresAt,
+      submittedAt: null,
+      report: null,
+    };
+    this.examSessions.set(session.id, session);
+    for (const item of input.items) {
+      this.examSessionItems.push({ sessionId: session.id, ...item });
+    }
+    return session;
+  }
+
+  async getExamSimulationSession(userId: string, sessionId: string): Promise<import('./store').ExamSimulationSessionRow | null> {
+    const session = this.examSessions.get(sessionId);
+    if (!session || session.userId !== userId) return null;
+    return session;
+  }
+
+  async listExamSimulationItems(sessionId: string): Promise<import('./store').ExamSimulationItemRow[]> {
+    return this.examSessionItems
+      .filter((i) => i.sessionId === sessionId)
+      .sort((a, b) => a.questionNumber - b.questionNumber);
+  }
+
+  async recordExamSimulationResponse(input: {
+    userId: string;
+    sessionId: string;
+    attemptId: string;
+    questionId: string;
+    selectedOption: number;
+    responseTimeMs?: number | null;
+  }): Promise<void> {
+    // ترتیب بررسی‌ها با RPC مهاجرت 0012 یکسان است:
+    // جلسه → مالکیت → فعال‌بودن → انقضا → بلیت → سؤال → نوع تلاش → مصرف → آیتم → تکرار
+    const session = this.examSessions.get(input.sessionId);
+    if (!session) throw new Error('Exam session not found');
+    if (session.userId !== input.userId) throw new Error('Exam session belongs to another user');
+    if (session.status !== 'active') throw new Error('Exam session is not active');
+    if (Date.parse(session.expiresAt) < Date.now()) throw new Error('Exam session expired');
+
+    const ticket = this.tickets.get(input.attemptId);
+    if (!ticket) throw new Error('Attempt ticket not found');
+    if (ticket.userId !== input.userId) throw new Error('Attempt ticket belongs to another user');
+    if (ticket.questionId !== input.questionId) throw new Error('Attempt ticket question mismatch');
+    if (ticket.attemptType !== 'exam_simulation') throw new Error('Attempt ticket is not an exam simulation ticket');
+    if (ticket.consumedAt) throw new Error('Attempt ticket already consumed');
+    if (ticket.expiresAt <= Date.now()) throw new Error('Attempt ticket expired');
+
+    const item = this.examSessionItems.find(
+      (i) => i.sessionId === input.sessionId && i.questionId === input.questionId,
+    );
+    if (!item) throw new Error('Question is not part of this exam session');
+    if (item.attemptId !== input.attemptId) throw new Error('Attempt ticket does not match session item');
+    if (this.examSessionResponses.some((r) => r.sessionId === input.sessionId && r.questionId === input.questionId)) {
+      throw new Error('Question already answered in this exam session');
+    }
+
+    const question = this.questions.find((candidate) => candidate.id === input.questionId);
+    if (!question) throw new Error('Question not found');
+    if (
+      !Number.isInteger(input.selectedOption) ||
+      input.selectedOption < 0 ||
+      input.selectedOption >= question.options.length
+    ) {
+      throw new Error('Selected option is out of range');
+    }
+
+    ticket.consumedAt = new Date().toISOString();
+    const isCorrect = input.selectedOption === question.correctOption;
+    this.examSessionResponses.push({
+      sessionId: input.sessionId,
+      questionId: input.questionId,
+      selectedOption: input.selectedOption,
+      isCorrect,
+      responseTimeMs: input.responseTimeMs ?? null,
+      answeredAt: new Date().toISOString(),
+    });
+  }
+
+  async listExamSimulationResponses(sessionId: string): Promise<import('./store').ExamSimulationResponseRow[]> {
+    return this.examSessionResponses.filter((r) => r.sessionId === sessionId);
+  }
+
+  async submitExamSimulationSession(sessionId: string, report: unknown): Promise<void> {
+    const session = this.examSessions.get(sessionId);
+    if (!session) throw new Error('Exam session not found');
+    session.status = 'scored';
+    session.report = report;
+    session.submittedAt = new Date().toISOString();
   }
 }
