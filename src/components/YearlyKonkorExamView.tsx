@@ -9,6 +9,7 @@ import {
 import { KnowledgeNode, InteractiveLesson } from '../data/konkorData';
 import { MajorExamBranch } from '../engine/aelEngine';
 import { MathText } from './MathText';
+import { TopicDiagramVisualizer } from './TopicDiagramVisualizer';
 import {
   predictKonkorRankAndUniversity,
   HISTORICAL_TOP_RANK_PROFILES,
@@ -18,7 +19,6 @@ import {
 } from '../data/konkorRankPredictor';
 import {
   FileText,
-  Download,
   Play,
   Pause,
   CheckCircle2,
@@ -360,40 +360,8 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
     setRemainingSeconds((currentBooklet.durationMinutes || 150) * 60);
   };
 
-  const handleDownloadYearBookletSummary = () => {
-    const lines: string[] = [
-      `# دفترچه تشریحی و کالبدشکافی کنکور کارشناسی ارشد مدیریت سال ${selectedYear}`,
-      `- **کد دفترچه سازمان سنجش:** ${currentBooklet.bookletCode}`,
-      `- **عنوان آزمون:** ${currentBooklet.examDateLabel}`,
-      `- **تعداد کل سؤالات دفترچه:** ${currentBooklet.totalQuestionsInBooklet} سؤال (${currentBooklet.durationMinutes} دقیقه)`,
-      ``,
-      `## جدول بودجه‌بندی و شماره سؤالات دفترچه سال ${selectedYear}`,
-      ...currentBooklet.subjectRanges.map(
-        (r) =>
-          `- **${r.title}:** از سؤال ${r.fromQuestion} تا ${r.toQuestion} (${r.count} سؤال) | ضریب بازرگانی: ${r.coeffBusiness} | ضریب صنعتی: ${r.coeffIndustrial} | ضریب تکنولوژی: ${r.coeffTechnology}`
-      ),
-      ``,
-      `---`,
-      `## سؤالات شناسنامه‌دار به ترتیب شماره دفترچه به همراه منبع طرح سؤال و پاسخ تشریحی`,
-      ...allQuestionsOfSelectedYear.map(
-        (q) =>
-          `\n### سؤال شماره ${q.bookletQuestionNumber} دفترچه (${q.courseSectionTitle})\n- **منبع دقیق طرح سؤال:** ${q.designedFromTextbook}\n- **آدرس در دفترچه:** ${q.sourceReference}\n\n**صورت سؤال:**\n${q.text}\n\n**گزینه‌ها:**\n${q.options
-            .map((opt, idx) => `${idx + 1}) ${opt}`)
-            .join('\n')}\n\n- **گزینه صحیح:** گزینه ${q.correctOption + 1}\n- **پاسخ تشریحی کامل (مستخرج از منبع):** ${q.explanation}\n- **دام طراح کنکور:** ${q.trapNote}\n`
-      ),
-    ];
-
-    const blob = new Blob([lines.join('\n')], {
-      type: 'text/markdown;charset=utf-8',
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `konkor-arshad-modiriat-${selectedYear}-descriptive-key.md`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  const handleViewYearBookletSummary = () => {
+    setViewMode('descriptive');
   };
 
   const currentQuestion = yearQuestions[activeQuestionIndex] ?? yearQuestions[0];
@@ -631,25 +599,24 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
               <span>ارسال به مرور تطبیقی</span>
             </button>
 
-            <a
-              href={currentBooklet.pdfAssetUrl}
-              download={`Konkor_Arshad_Modiriat_${selectedYear}_${currentBooklet.bookletCode}.pdf`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => setViewMode(viewMode === 'pdf_split' ? 'simulator' : 'pdf_split')}
               className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+              title="مشاهده نسخه رسمی دفترچه در محیط برنامه"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>PDF اصلی {selectedYear}</span>
-            </a>
+              <FileText className="w-3.5 h-3.5" />
+              <span>{viewMode === 'pdf_split' ? 'بازگشت به سوالات' : `دفترچه رسمی ${selectedYear}`}</span>
+            </button>
 
             <button
               type="button"
-              onClick={handleDownloadYearBookletSummary}
+              onClick={handleViewYearBookletSummary}
               className="px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer"
-              title="دانلود فایل Markdown کلید و پاسخنامه تشریحی"
+              title="مشاهده پاسخنامه تشریحی و کلید در سامانه"
             >
               <FileText className="w-3.5 h-3.5 text-blue-500" />
-              <span className="hidden sm:inline">کلید تشریحی (.md)</span>
+              <span className="hidden sm:inline">کلید و پاسخ تشریحی</span>
             </button>
           </div>
         </div>
@@ -989,6 +956,12 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
                   </div>
                 )}
 
+                {/* نمودار مفهومی وکتوری متناسب با موضوع سوال */}
+                <TopicDiagramVisualizer
+                  nodeId={currentQuestion.nodeId}
+                  topic={`${currentQuestion.courseSectionTitle} ${currentQuestion.text} ${currentQuestion.designedFromTextbook}`}
+                />
+
                 {lessons[currentQuestion.nodeId] && (
                   <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 text-xs space-y-1.5">
                     <div className="font-bold text-slate-900 dark:text-white flex items-center justify-between">
@@ -1094,6 +1067,12 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
                       <strong>دام طراح کنکور:</strong> <MathText text={q.trapNote} />
                     </div>
                   )}
+
+                  {/* نمودار مفهومی وکتوری کم‌حجم مرتبط با سوال */}
+                  <TopicDiagramVisualizer
+                    nodeId={q.nodeId}
+                    topic={`${q.courseSectionTitle} ${q.text} ${q.designedFromTextbook}`}
+                  />
                 </div>
               </div>
             );
@@ -1113,19 +1092,13 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
                   {currentBooklet.bookletCode})
                 </span>
               </h3>
-              <a
-                href={currentBooklet.pdfAssetUrl}
-                download={`Konkor_Arshad_Modiriat_${selectedYear}_${currentBooklet.bookletCode}.pdf`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>دانلود فایل PDF</span>
-              </a>
+              <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-lg flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                <span>مشاهده برخط در سامانه</span>
+              </span>
             </div>
             <iframe
-              src={currentBooklet.pdfAssetUrl}
+              src={`${currentBooklet.pdfAssetUrl}#toolbar=0&navpanes=0`}
               title={`دفترچه کنکور مدیریت سال ${selectedYear}`}
               className="w-full h-[680px] rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-950"
             />

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { LessonDeepDive } from '../data/lessonDeepDiveTypes';
 import { RichText } from './RichText';
+import { TopicDiagramVisualizer } from './TopicDiagramVisualizer';
 import {
   Target,
   Lightbulb,
@@ -34,6 +35,12 @@ export const LessonDeepDivePanel: React.FC<LessonDeepDivePanelProps> = ({ dive, 
 
   return (
     <div className="space-y-6">
+      {/* نمودار مفهومی و تصویر ساختاری سبک در صورت وجود */}
+      <TopicDiagramVisualizer
+        nodeId={dive.nodeId}
+        topic={`${dive.nodeId} ${dive.sections.map((s) => s.title).join(' ')} ${dive.whyItMatters}`}
+      />
+
       {/* اهداف یادگیری */}
       <section className="bento-card p-5 sm:p-6 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">

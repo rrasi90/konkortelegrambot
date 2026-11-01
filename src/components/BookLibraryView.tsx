@@ -1,3 +1,4 @@
+import { TopicDiagramVisualizer } from './TopicDiagramVisualizer';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   REFERENCE_BOOKS_DATABASE,
@@ -22,7 +23,6 @@ import {
   BookOpen,
   ArrowRight,
   ChevronDown,
-  Download,
   FileText,
   Flame,
   Layers,
@@ -227,21 +227,9 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const downloadMarkdown = () => {
-    if (!activeBook) return;
-    const content = buildFullBookMarkdown(
-      activeBook,
-      groups.filter((g) => g.chapter) as { chapter: BookChapter; questions: QuestionItem[] }[]
-    );
-    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${activeBook.id}-full-book.md`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  const handleToggleOnlineSummary = () => {
+    setTab((prev) => (prev === 'full' ? 'chapters' : 'full'));
+    window.scrollTo({ top: 200, behavior: 'smooth' });
   };
 
   /* ------------------------------ فهرست کتاب‌ها ------------------------------ */
@@ -410,11 +398,11 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
         </div>
         <button
           type="button"
-          onClick={downloadMarkdown}
+          onClick={handleToggleOnlineSummary}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer"
         >
-          <Download className="w-3.5 h-3.5" />
-          دانلود جزوهٔ جامع (.md)
+          <BookOpen className="w-3.5 h-3.5" />
+          {tab === 'full' ? 'بازگشت به فهرست فصل‌ها' : 'مطالعه برخط جزوه جامع کتاب'}
         </button>
       </div>
 
@@ -504,6 +492,12 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                         ))}
                       </div>
                     )}
+
+                    {/* نمودار مفهومی وکتوری فوق‌العاده سبک */}
+                    <TopicDiagramVisualizer
+                      nodeId={ch.nodes[0] || ''}
+                      topic={`${ch.title} ${ch.points.join(' ')}`}
+                    />
 
                     <div className="flex flex-wrap items-center gap-2 pt-1">
                       {ch.nodes.length > 0 && (

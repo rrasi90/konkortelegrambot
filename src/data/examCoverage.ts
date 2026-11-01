@@ -46,9 +46,14 @@ const round1 = (n: number): number => Math.round(n * 10) / 10;
 const percentOf = (available: number, declared: number): number =>
   declared <= 0 ? 0 : round1((available / declared) * 100);
 
-/** سؤال‌هایی که سطحشان صریحاً «دکتری» است. */
-const isDoctorate = (q: object): boolean =>
-  (q as { examLevel?: string }).examLevel === 'دکتری';
+/** سؤال‌هایی که سطحشان صریحاً «دکتری» است یا در منبعشان کنکور دکتری قید شده است. */
+const isDoctorate = (q: object): boolean => {
+  const item = q as { examLevel?: string; sourceReference?: string };
+  return (
+    item.examLevel === 'دکتری' ||
+    (typeof item.sourceReference === 'string' && item.sourceReference.includes('دکتری'))
+  );
+};
 
 /**
  * پوشش آزمون کارشناسی ارشد (کد ۱۱۴۲).
