@@ -4,6 +4,7 @@
  */
 
 export * from './exam-structure';
+export * from './english-skills';
 import type { ExamLevel } from './exam-structure';
 
 /* ---------- Track & Knowledge Graph ---------- */

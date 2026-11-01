@@ -23,6 +23,7 @@ import {
 import type { EngineState, ExamSessionPlan, QueueItem } from '@ael/engine';
 import type { ReviewCard, TrackId, Question, PublicQuestion } from '@ael/contracts';
 import {
+  ENGLISH_SKILLS,
   getCombination,
   getExamPath,
   getExamStructure,
@@ -987,6 +988,65 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       }),
       report: session.report,
       disclosures: session.disclosures,
+    });
+  });
+
+  /* ---------- §8.8 — ماژول زبان انگلیسی: ۱۰ مهارت مستقل، نه فهرست لغت ---------- */
+
+  app.get('/api/english/skills', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const state = await loadEngineState(user.id);
+
+    // سؤال‌های سال ۱۴۰۴ قرنطینه‌اند و در هیچ سنجش عملیاتی شمرده نمی‌شوند
+    const questionCountByNode = new Map<string, number>();
+    for (const q of state.questions.values()) {
+      if (q.examYear === 1404) continue;
+      questionCountByNode.set(q.nodeId, (questionCountByNode.get(q.nodeId) ?? 0) + 1);
+    }
+
+    const skills = ENGLISH_SKILLS.map((skill) => {
+      const questionCount = questionCountByNode.get(skill.nodeId) ?? 0;
+      const nodePresent = state.nodes.has(skill.nodeId);
+      const mastery = state.mastery.get(skill.nodeId);
+      const skillState = state.skillStates?.get(skill.id);
+      // سنجش فقط با شاهد واقعی: mastery فقط برای گرهٔ دیده‌شده، وگرنه null (UNKNOWN)
+      const assessed = mastery !== undefined || skillState !== undefined;
+      return {
+        id: skill.id,
+        nodeId: skill.nodeId,
+        bucket: skill.bucket,
+        title: skill.title,
+        description: skill.description,
+        prerequisiteIds: skill.prerequisiteIds,
+        verification: skill.verification,
+        nodePresent,
+        questionCount,
+        assessed,
+        mastery: assessed ? mastery ?? null : null,
+        evidenceCount: skillState?.evidenceCount ?? null,
+        coverageStatus: skillState?.coverageStatus ?? null,
+      };
+    });
+
+    const englishQuestionCount = skills.reduce((sum, s) => sum + s.questionCount, 0);
+    const contentGap = skills.filter((s) => s.questionCount === 0).map((s) => s.id);
+    const assessableSkillCount = skills.filter((s) => s.questionCount > 0).length;
+
+    return c.json({
+      skills,
+      skillCount: skills.length,
+      englishQuestionCount,
+      assessableSkillCount,
+      contentGap,
+      // عملیاتی فقط وقتی هر ۱۰ مهارت سؤال برچسب‌خورده داشته باشند
+      operational: contentGap.length === 0,
+      masterySource: 'پاسخ‌های واقعی به سؤال‌های زبان؛ خوداظهاری به‌تنهایی تسلط نمی‌سازد.',
+      taxonomy: {
+        status: 'proposed_curriculum_pending_sme',
+        note:
+          'تاکسونومی ۱۰ مهارت، پیشنهاد برنامهٔ درسی است و جایگاه رسمی سؤال/ضریب از آن استخراج نمی‌شود؛ تا تأیید کارشناس موضوع و افزودن متن/سؤال برچسب‌خورده، شکاف محتوا صریح گزارش می‌شود.',
+      },
     });
   });
 
