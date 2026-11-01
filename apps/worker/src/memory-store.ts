@@ -1,7 +1,7 @@
 import { defaultSeed } from './default-seed';
 /** پیاده‌سازی درون‌حافظه‌ای لایهٔ داده — برای تست و دمو */
 import type { LearnerSkillState, ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
-import type { AttemptTicket, AnswerEvent, AppUser, DataStore } from './store';
+import type { AttemptTicket, AnswerEvent, AppUser, AuditEventInput, DailyQueueItemRow, DataStore, ExamSelection } from './store';
 
 export class MemoryStore implements DataStore {
   users = new Map<string, AppUser>();
@@ -13,6 +13,14 @@ export class MemoryStore implements DataStore {
   mastery = new Map<string, UserNodeMastery>(); // key: userId:nodeId
   cards = new Map<string, ReviewCard>();
   answers: AnswerEvent[] = [];
+  // R-020 جداول دامنه (حافظه‌ای) — mastery_history شبیه‌سازی trigger در upsertMastery
+  masteryHistory: {
+    userId: string; nodeId: string; previousScore: number | null; newScore: number;
+    changeReason: string; recordedAt: string;
+  }[] = [];
+  examSelections = new Map<string, ExamSelection>(); // key: userId:examYear
+  auditLog: (AuditEventInput & { recordedAt: string })[] = [];
+  queueItems: (DailyQueueItemRow & { userId: string; queueDate: string; status: string })[] = [];
   private seq = 0;
 
   constructor(initialData?: {
@@ -113,7 +121,20 @@ export class MemoryStore implements DataStore {
   }
 
   async upsertMastery(userId: string, rows: UserNodeMastery[]): Promise<void> {
-    for (const r of rows) this.mastery.set(`${userId}:${r.nodeId}`, r);
+    for (const r of rows) {
+      const prev = this.mastery.get(`${userId}:${r.nodeId}`);
+      if (!prev || prev.mastery !== r.mastery || prev.status !== r.status) {
+        this.masteryHistory.push({
+          userId,
+          nodeId: r.nodeId,
+          previousScore: prev?.mastery ?? null,
+          newScore: r.mastery,
+          changeReason: prev ? 'answer_submit' : 'backfill',
+          recordedAt: new Date().toISOString(),
+        });
+      }
+      this.mastery.set(`${userId}:${r.nodeId}`, r);
+    }
   }
 
   async listCards(userId: string): Promise<ReviewCard[]> {
@@ -235,5 +256,48 @@ export class MemoryStore implements DataStore {
         isDemo: meta.isDemo ?? true,
       },
     ];
+  }
+
+  /* ---------- R-020 — دامنهٔ جداول (in-memory) ---------- */
+
+  async saveExamSelection(userId: string, input: {
+    examYear: number;
+    subGroupId: string;
+    combinationCode?: string | null;
+    setCode?: string | null;
+  }): Promise<ExamSelection> {
+    const selection: ExamSelection = {
+      examYear: input.examYear,
+      subGroupId: input.subGroupId,
+      combinationCode: input.combinationCode ?? null,
+      setCode: input.setCode ?? null,
+      selectedAt: new Date().toISOString(),
+    };
+    // فقط یک انتخاب فعال به ازای سال (معادل constraint یکتا در SQL)
+    this.examSelections.set(`${userId}:${input.examYear}`, selection);
+    return selection;
+  }
+
+  async getActiveExamSelection(userId: string): Promise<ExamSelection | null> {
+    let latest: ExamSelection | null = null;
+    for (const [key, sel] of this.examSelections) {
+      if (key.startsWith(`${userId}:`) && (!latest || sel.selectedAt > latest.selectedAt)) latest = sel;
+    }
+    return latest;
+  }
+
+  async logAudit(event: AuditEventInput): Promise<void> {
+    this.auditLog.push({ ...event, recordedAt: new Date().toISOString() });
+  }
+
+  async insertDailyQueueItems(userId: string, queueDate: string, items: DailyQueueItemRow[]): Promise<void> {
+    for (const it of items) {
+      if (this.queueItems.some((q) => q.attemptId === it.attemptId)) continue; // unique attempt_id
+      this.queueItems.push({ ...it, userId, queueDate, status: 'pending' });
+    }
+  }
+
+  async countMasteryHistoryRows(userId: string): Promise<number> {
+    return this.masteryHistory.filter((h) => h.userId === userId).length;
   }
 }

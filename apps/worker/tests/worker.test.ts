@@ -794,25 +794,151 @@ describe('worker API — سیم‌کشی نسل دوم (ROI Planner + بلیت �
     expect(res.status).toBe(400);
   });
 
-  it('خوداظهاری بی‌دقتی: بدون کسر تسلط و بدون موج', async () => {
+  it('خوداظهاری بی‌دقتی: ثبت می‌شود و نوع خطای غالب به slip تغییر می‌کند', async () => {
     const token = await login();
     const queue = await json(await app.request('/api/queue?limit=5', authed(token)));
     const item = queue.items.find((i: any) => i.question);
+    const question = store.questions.find((x) => x.id === item.question.id)!;
+    const wrongOption = (question.correctOption + 1) % question.options.length;
     const ansRes = await app.request(
       '/api/answers',
       authed(token, {
         method: 'POST',
         body: JSON.stringify({
-          attemptId: 'att-slip-test',
-          questionId: item.question.id,
-          selectedOption: (item.question.options?.length ?? 4) > 1 ? 99 : 0,
+          attemptId: item.attemptId,
+          questionId: question.id,
+          selectedOption: wrongOption,
         }),
       }),
     );
-    // گزینهٔ نامعتبر ۴۰۰ می‌دهد؛ پس گزینهٔ غلط واقعی می‌زنیم
-    expect([200, 400]).toContain(ansRes.status);
-    if (ansRes.status === 400) return;
+    expect(ansRes.status).toBe(200);
     const ans = await json(ansRes);
     expect(ans.report.wasCorrect).toBe(false);
+
+    const report = await app.request(
+      '/api/self-report',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: item.attemptId, questionId: question.id, selfReport: 'slip' }),
+      }),
+    );
+    expect(report.status).toBe(200);
+    const body = await json(report);
+    expect(body.ok).toBe(true);
+    expect(body.selfReport).toBe('slip');
+
+    const me = await json(await app.request('/api/me', authed(token)));
+    const skillStates = await store.getSkillStates(me.user.id);
+    const updated = skillStates.find((s) => s.dominantErrorType === 'slip');
+    expect(updated).toBeTruthy();
+  });
+});
+
+describe('R-020 — جداول دامنهٔ جدید (exam_selections، audit_logs، daily_queue_items، mastery_history)', () => {
+  it('ذخیره و بازیابی انتخاب کنکور (PUT/GET round-trip)', async () => {
+    const token = await login();
+    const put = await app.request(
+      '/api/exam-selection',
+      authed(token, {
+        method: 'PUT',
+        body: JSON.stringify({ examYear: 1405, subGroupId: 'mgr-1', combinationCode: '3', setCode: '2162' }),
+      }),
+    );
+    expect(put.status).toBe(200);
+    const got = await json(await app.request('/api/exam-selection', authed(token)));
+    expect(got.selection.examYear).toBe(1405);
+    expect(got.selection.subGroupId).toBe('mgr-1');
+    expect(got.selection.combinationCode).toBe('3');
+    expect(got.selection.setCode).toBe('2162');
+    // PUT دوم همان سال → جایگزین (یک انتخاب فعال به ازای سال)
+    await app.request(
+      '/api/exam-selection',
+      authed(token, { method: 'PUT', body: JSON.stringify({ examYear: 1405, subGroupId: 'mgr-2' }) }),
+    );
+    const after = await json(await app.request('/api/exam-selection', authed(token)));
+    expect(after.selection.subGroupId).toBe('mgr-2');
+  });
+
+  it('اعتبارسنجی ورودی انتخاب کنکور: سال و زیرگروه نامعتبر رد می‌شوند', async () => {
+    const token = await login();
+    const badYear = await app.request(
+      '/api/exam-selection',
+      authed(token, { method: 'PUT', body: JSON.stringify({ examYear: 2027, subGroupId: 'x' }) }),
+    );
+    expect(badYear.status).toBe(400);
+    const badGroup = await app.request(
+      '/api/exam-selection',
+      authed(token, { method: 'PUT', body: JSON.stringify({ examYear: 1404, subGroupId: '   ' }) }),
+    );
+    expect(badGroup.status).toBe(400);
+    const unauth = await app.request('/api/exam-selection');
+    expect(unauth.status).toBe(401);
+  });
+
+  it('صدور صف، آیتم‌ها را در daily_queue_items با attemptId یکتا ثبت می‌کند', async () => {
+    const token = await login();
+    const queue = await json(await app.request('/api/queue?limit=4', authed(token)));
+    expect(queue.items.length).toBeGreaterThan(0);
+    // persist best-effort است؛ در MemoryStore هم‌زمان انجام می‌شود
+    await new Promise((r) => setTimeout(r, 0));
+    const issuedAttemptIds = queue.items.map((i: any) => i.attemptId).filter(Boolean);
+    const persisted = store.queueItems.map((q) => q.attemptId);
+    for (const id of issuedAttemptIds) expect(persisted).toContain(id);
+    expect(new Set(persisted).size).toBe(persisted.length);
+    for (const q of store.queueItems) expect(['scheduled', 'proof']).toContain(q.reason);
+  });
+
+  it('کوییز شبانه آیتم‌ها را با reason=night_quiz persist می‌کند', async () => {
+    const token = await login();
+    const me = await json(await app.request('/api/me', authed(token)));
+    const q = store.questions[0];
+    await store.issueAttemptTickets(me.user.id, [{ attemptId: 'att-r020-night', questionId: q.id, attemptType: 'practice' }]);
+    await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: 'att-r020-night', questionId: q.id, selectedOption: (q.correctOption + 1) % q.options.length }),
+      }),
+    );
+    const night = await json(await app.request('/api/night-quiz', authed(token)));
+    await new Promise((r) => setTimeout(r, 0));
+    expect(night.items.length).toBe(1);
+    const row = store.queueItems.find((x) => x.attemptId === night.items[0].attemptId);
+    expect(row).toBeTruthy();
+    expect(row!.reason).toBe('night_quiz');
+  });
+
+  it('پاسخ با بلیت صادرنشده، ردیف audit_logs ثبت می‌کند', async () => {
+    const token = await login();
+    const queue = await json(await app.request('/api/queue?limit=2', authed(token)));
+    const item = queue.items.find((i: any) => i.question);
+    const res = await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: 'att-ghost-9', questionId: item.question.id, selectedOption: 0 }),
+      }),
+    );
+    expect(res.status).toBe(400);
+    const audit = store.auditLog.find((a) => a.action === 'answer_ticket_not_found');
+    expect(audit).toBeTruthy();
+    expect(audit!.entityId).toBe('att-ghost-9');
+  });
+
+  it('ثبت پاسخ، تاریخچهٔ تسلط (mastery_history معادل trigger) را پر می‌کند', async () => {
+    const token = await login();
+    const queue = await json(await app.request('/api/queue?limit=3', authed(token)));
+    const item = queue.items.find((i: any) => i.question);
+    const question = store.questions.find((x) => x.id === item.question.id)!;
+    await app.request(
+      '/api/answers',
+      authed(token, {
+        method: 'POST',
+        body: JSON.stringify({ attemptId: item.attemptId, questionId: question.id, selectedOption: question.correctOption }),
+      }),
+    );
+    expect(store.masteryHistory.length).toBeGreaterThan(0);
+    expect(store.masteryHistory.every((h) => typeof h.newScore === 'number')).toBe(true);
+    expect(await store.countMasteryHistoryRows((await json(await app.request('/api/me', authed(token)))).user.id)).toBeGreaterThan(0);
   });
 });

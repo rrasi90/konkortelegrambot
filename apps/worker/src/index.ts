@@ -400,12 +400,24 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         return c.json({ error: 'شناسه تلگرام نامعتبر است' }, 400);
       }
       let user = await store.getUserByTelegramId(numericId);
+      const isNew = !user;
       if (!user) {
         user = await store.createUser({
           telegramUserId: numericId,
           displayName: body.displayName || 'داوطلب دکتری',
         });
       }
+      // R-020 audit trail for demo-auth logins (mode 2)
+      store
+        .logAudit({
+          userId: user.id,
+          action: isNew ? 'demo_auth_create_user' : 'demo_auth_existing_user',
+          entityType: 'app_user',
+          entityId: user.id,
+          details: { mode: 'telegramUserId', telegramUserId: numericId },
+          sourceIp: c.req.header('x-forwarded-for') ?? null,
+        })
+        .catch((e) => console.error('[worker] audit log failed:', e));
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
@@ -425,12 +437,23 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       }
       const devUsername = 'dev_' + cleanToken.replace(/^dev_/, '');
       let user = (await store.getUserByTelegramUsername?.(devUsername)) ?? null;
+      const isNew = !user;
       if (!user) {
         user = await store.createUser({
           telegramUsername: devUsername,
           displayName: body.displayName || 'داوطلب کنکور',
         });
       }
+      store
+        .logAudit({
+          userId: user.id,
+          action: isNew ? 'demo_auth_create_user' : 'demo_auth_existing_user',
+          entityType: 'app_user',
+          entityId: user.id,
+          details: { mode: 'deviceToken' },
+          sourceIp: c.req.header('x-forwarded-for') ?? null,
+        })
+        .catch((e) => console.error('[worker] audit log failed:', e));
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
@@ -470,6 +493,58 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const user = await currentUser(c);
     if (!user) return authError(c);
     return c.json({ user });
+  });
+
+  // R-020 — انتخاب کنکور داوطلب (exam_selections)؛ اعتبارسنجی ساختاری سمت سرور
+  app.get('/api/exam-selection', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const selection = await store.getActiveExamSelection(user.id);
+    return c.json({ selection });
+  });
+
+  app.put('/api/exam-selection', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as
+      | { examYear?: unknown; subGroupId?: unknown; combinationCode?: unknown; setCode?: unknown }
+      | null;
+    if (!body) return c.json({ error: 'ورودی نامعتبر' }, 400);
+    const examYear = Number(body.examYear);
+    if (!Number.isInteger(examYear) || examYear < 1390 || examYear > 1420) {
+      return c.json({ error: 'سال کنکور نامعتبر است (1390–1420)' }, 400);
+    }
+    if (typeof body.subGroupId !== 'string' || body.subGroupId.trim().length === 0 || body.subGroupId.length > 64) {
+      return c.json({ error: 'شناسه زیرگروه نامعتبر است' }, 400);
+    }
+    const optionalCode = (v: unknown): string | null | 'invalid' => {
+      if (v === undefined || v === null || v === '') return null;
+      if (typeof v !== 'string' && typeof v !== 'number') return 'invalid';
+      const s = String(v).trim();
+      return s.length > 0 && s.length <= 16 ? s : 'invalid';
+    };
+    const combinationCode = optionalCode(body.combinationCode);
+    const setCode = optionalCode(body.setCode);
+    if (combinationCode === 'invalid' || setCode === 'invalid') {
+      return c.json({ error: 'کد ترکیب/مجموعه نامعتبر است' }, 400);
+    }
+    const selection = await store.saveExamSelection(user.id, {
+      examYear,
+      subGroupId: body.subGroupId.trim(),
+      combinationCode,
+      setCode,
+    });
+    store
+      .logAudit({
+        userId: user.id,
+        action: 'exam_selection_saved',
+        entityType: 'exam_selection',
+        entityId: `${examYear}`,
+        details: { examYear, subGroupId: body.subGroupId.trim(), combinationCode, setCode },
+        sourceIp: c.req.header('x-forwarded-for') ?? null,
+      })
+      .catch((e) => console.error('[worker] audit log failed:', e));
+    return c.json({ ok: true, selection });
   });
 
   app.put('/api/tracks', async (c) => {
@@ -674,6 +749,27 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       return c.json({ error: 'صف سؤال‌ها آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
     }
 
+    // R-020 daily_queue_items persistence (best-effort, never blocks the response)
+    {
+      const queueDate = tehranMidnightIso().slice(0, 10);
+      const rows: { attemptId: string; questionId: string; nodeId: string | null; reason: 'scheduled' | 'review' | 'new_material' | 'remedial' | 'proof' | 'night_quiz' | 'exam_simulation'; priority: number }[] = [];
+      for (const s of selected) {
+        const attemptId = attemptIdByCard.get(s.item.card.id);
+        const qid = s.item.card.questionId;
+        if (!attemptId || !qid) continue;
+        rows.push({
+          attemptId,
+          questionId: qid,
+          nodeId: s.item.card.nodeId ?? null,
+          reason: s.isProof ? 'proof' : 'scheduled',
+          priority: s.priority,
+        });
+      }
+      store
+        .insertDailyQueueItems(user.id, queueDate, rows)
+        .catch((e) => console.error('[worker] daily_queue_items persist failed:', e));
+    }
+
     const items = selected.map((s) => {
       const node = state.nodes.get(s.item.card.nodeId);
       const skill = skillForNode(s.item.card.nodeId);
@@ -779,8 +875,25 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       console.error('[worker] failed to read attempt ticket:', error);
       return c.json({ error: 'اعتبار تلاش بررسی نشد؛ صف را تازه‌سازی کنید.' }, 503);
     }
-    if (!ticket) return c.json({ error: 'بلیت معتبر برای این سؤال پیدا نشد؛ صف را تازه‌سازی کنید.' }, 400);
+    // R-020 audit trail (best-effort): attempts on unknown/consumed/expired tickets are suspicious
+    const auditRejected = (reason: string) =>
+      store
+        .logAudit({
+          userId: user.id,
+          action: `answer_ticket_${reason}`,
+          entityType: 'attempt_ticket',
+          entityId: body.attemptId,
+          details: { questionId: body.questionId, path: '/api/answers' },
+          sourceIp: c.req.header('x-forwarded-for') ?? null,
+        })
+        .catch((e) => console.error('[worker] audit log failed:', e));
+
+    if (!ticket) {
+      await auditRejected('not_found');
+      return c.json({ error: 'بلیت معتبر برای این سؤال پیدا نشد؛ صف را تازه‌سازی کنید.' }, 400);
+    }
     if (ticket.consumedAt || new Date(ticket.expiresAt).getTime() <= Date.now()) {
+      await auditRejected(ticket.consumedAt ? 'already_consumed' : 'expired');
       return c.json({ error: 'بلیت این تلاش مصرف‌شده یا منقضی است؛ صف را تازه‌سازی کنید.' }, 409);
     }
 
@@ -1095,6 +1208,21 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       console.error('[worker] failed to issue night-quiz attempt tickets:', error);
       return c.json({ error: 'کوییز شبانه آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
     }
+
+    // R-020 persist night-quiz queue items (best-effort)
+    store
+      .insertDailyQueueItems(
+        user.id,
+        tehranMidnightIso().slice(0, 10),
+        tickets.map((t, i) => ({
+          attemptId: t.attemptId,
+          questionId: t.questionId,
+          nodeId: picked[i]?.nodeId ?? null,
+          reason: 'night_quiz' as const,
+          priority: null,
+        })),
+      )
+      .catch((e) => console.error('[worker] daily_queue_items persist failed:', e));
 
     const items = picked.map((q, i) => {
       const node = nodeMap.get(q.nodeId);

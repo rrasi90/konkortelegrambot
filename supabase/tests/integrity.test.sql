@@ -219,3 +219,71 @@ begin
   end if;
 end
 $$;
+
+-- ۱۴) R-020 — جداول دامنه: trigger تاریخچهٔ تسلط، یکتایی exam_selections،
+-- attempt_id یکتا در daily_queue_items، درج audit_logs
+do $$
+declare
+  v_uid uuid := '77777777-7777-7777-7777-777777777777';
+  v_node text;
+  v_q text;
+begin
+  insert into app_users (id, display_name) values (v_uid, 'تست ۱۴') on conflict do nothing;
+  select id into v_node from knowledge_nodes limit 1;
+  select id into v_q from questions limit 1;
+
+  -- درج اول user_node_mastery → trigger یک ردیف backfill می‌سازد
+  insert into user_node_mastery (user_id, node_id, mastery_score, status)
+  values (v_uid, v_node, 60, 'learning');
+  if (select count(*) from mastery_history where user_id = v_uid) <> 1 then
+    raise exception 'trigger باید دقیقاً یک ردیف backfill ثبت کند';
+  end if;
+
+  update user_node_mastery set mastery_score = 75 where user_id = v_uid and node_id = v_node;
+  if (select count(*) from mastery_history where user_id = v_uid) <> 2 then
+    raise exception 'به‌روزرسانی تسلط باید ردیف دوم تاریخچه بسازد';
+  end if;
+  if not exists (select 1 from mastery_history where user_id = v_uid and previous_score = 60 and new_score = 75) then
+    raise exception 'مقادیر قبلی/بعدی تسلط در تاریخچه ثبت نشد';
+  end if;
+
+  -- به‌روزرسانی بدون تغییر امتیاز/وضعیت → ردیف جدیدی نمی‌سازد
+  update user_node_mastery set last_error_at = now() where user_id = v_uid and node_id = v_node;
+  if (select count(*) from mastery_history where user_id = v_uid) <> 2 then
+    raise exception 'تغییر بدون تفاوت نباید ردیف تاریخچه بسازد';
+  end if;
+
+  -- constraint: فقط یک انتخاب به ازای هر سال
+  insert into exam_selections (user_id, exam_year, sub_group_id) values (v_uid, 1405, 'mgr-a');
+  begin
+    insert into exam_selections (user_id, exam_year, sub_group_id) values (v_uid, 1405, 'mgr-b');
+    raise exception 'دومین انتخاب برای همان سال باید با unique رد شود';
+  exception when unique_violation then
+    null;
+  end;
+
+  -- attempt_id یکتا در daily_queue_items
+  insert into daily_queue_items (user_id, queue_date, attempt_id, question_id, reason)
+  values (v_uid, '2026-11-01', 'dq-att-1', v_q, 'scheduled');
+  begin
+    insert into daily_queue_items (user_id, queue_date, attempt_id, question_id, reason)
+    values (v_uid, '2026-11-01', 'dq-att-1', v_q, 'review');
+    raise exception 'attempt_id تکراری در daily_queue_items باید رد شود';
+  exception when unique_violation then
+    null;
+  end;
+
+  -- audit_logs قابل درج است
+  insert into audit_logs (user_id, action, entity_type) values (v_uid, 'test_action', 'unit_test');
+  if not exists (select 1 from audit_logs where user_id = v_uid and action = 'test_action') then
+    raise exception 'ردیف audit_logs ثبت نشد';
+  end if;
+
+  delete from mastery_history where user_id = v_uid;
+  delete from user_node_mastery where user_id = v_uid;
+  delete from exam_selections where user_id = v_uid;
+  delete from daily_queue_items where user_id = v_uid;
+  delete from audit_logs where user_id = v_uid;
+  delete from app_users where id = v_uid;
+end
+$$;

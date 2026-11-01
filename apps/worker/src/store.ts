@@ -59,6 +59,41 @@ export interface AttemptTicket {
   expiresAt: string;
 }
 
+/** R-020 — انتخاب کنکور داوطلب (جداول exam_selections / audit_logs / daily_queue_items) */
+export interface ExamSelection {
+  examYear: number;
+  subGroupId: string;
+  combinationCode: string | null;
+  setCode: string | null;
+  selectedAt: string;
+}
+
+export interface AuditEventInput {
+  userId: string | null;
+  action: string;
+  entityType?: string;
+  entityId?: string;
+  details?: unknown;
+  sourceIp?: string | null;
+}
+
+export type QueueItemReason =
+  | 'scheduled'
+  | 'review'
+  | 'new_material'
+  | 'remedial'
+  | 'proof'
+  | 'night_quiz'
+  | 'exam_simulation';
+
+export interface DailyQueueItemRow {
+  attemptId: string;
+  questionId: string;
+  nodeId?: string | null;
+  reason: QueueItemReason;
+  priority?: number | null;
+}
+
 export interface DataStore {
   getUser(userId: string): Promise<AppUser | null>;
   getUserByTelegramId(telegramUserId: number): Promise<AppUser | null>;
@@ -117,6 +152,26 @@ export interface DataStore {
 
   /** فهرست گرایش‌ها از بسته‌های آزمون (برای /api/tracks داینامیک) */
   listPacks(): Promise<{ packId: string; title: string; tracks: TrackId[]; isDemo: boolean }[]>;
+
+  /* ---------- R-020 — جداول دامنهٔ مفقود ---------- */
+
+  /** ذخیره/به‌روزرسانی انتخاب کنکور فعال کاربر (جدول exam_selections) */
+  saveExamSelection(userId: string, input: {
+    examYear: number;
+    subGroupId: string;
+    combinationCode?: string | null;
+    setCode?: string | null;
+  }): Promise<ExamSelection>;
+  getActiveExamSelection(userId: string): Promise<ExamSelection | null>;
+
+  /** ثبت رویداد حساس در audit_logs (best-effort سمت worker) */
+  logAudit(event: AuditEventInput): Promise<void>;
+
+  /** persists issued queue items (daily_queue_items) */
+  insertDailyQueueItems(userId: string, queueDate: string, items: DailyQueueItemRow[]): Promise<void>;
+
+  /** ردیف‌های تاریخچهٔ تسلط نوشته‌شده توسط trigger (مخصوص تست/ممیزی) */
+  countMasteryHistoryRows(userId: string): Promise<number>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -665,5 +720,108 @@ export class SupabaseStore implements DataStore {
       tracks: (r.tracks ?? ['common']) as TrackId[],
       isDemo: Boolean(r.is_demo),
     }));
+  }
+
+  /* ---------- R-020 implementations ---------- */
+
+  async saveExamSelection(userId: string, input: {
+    examYear: number;
+    subGroupId: string;
+    combinationCode?: string | null;
+    setCode?: string | null;
+  }): Promise<ExamSelection> {
+    const rows = (await this.request('POST', 'exam_selections', {
+      user_id: userId,
+      exam_year: input.examYear,
+      sub_group_id: input.subGroupId,
+      combination_code: input.combinationCode ?? null,
+      set_code: input.setCode ?? null,
+      is_active: true,
+      selected_at: new Date().toISOString(),
+    })) as Record<string, unknown>[] | null;
+    const row = rows?.[0] ?? {};
+    return {
+      examYear: Number(row.exam_year ?? input.examYear),
+      subGroupId: String(row.sub_group_id ?? input.subGroupId),
+      combinationCode: row.combination_code == null ? input.combinationCode ?? null : String(row.combination_code),
+      setCode: row.set_code == null ? input.setCode ?? null : String(row.set_code),
+      selectedAt: String(row.selected_at ?? new Date().toISOString()),
+    };
+  }
+
+  async getActiveExamSelection(userId: string): Promise<ExamSelection | null> {
+    const rows = (await this.request(
+      'GET',
+      'exam_selections',
+      undefined,
+      `?user_id=eq.${encodeURIComponent(userId)}&is_active=is.true&order=selected_at.desc&limit=1`,
+    )) as Record<string, unknown>[] | null;
+    const row = rows?.[0];
+    if (!row) return null;
+    return {
+      examYear: Number(row.exam_year),
+      subGroupId: String(row.sub_group_id),
+      combinationCode: row.combination_code == null ? null : String(row.combination_code),
+      setCode: row.set_code == null ? null : String(row.set_code),
+      selectedAt: String(row.selected_at),
+    };
+  }
+
+  async logAudit(event: AuditEventInput): Promise<void> {
+    // audit_logs کلید یکتا ندارد؛ درج ساده بدون merge (helper مشترک Prefer merge می‌فرستد)
+    const res = await fetch(`${this.url}/rest/v1/audit_logs`, {
+      method: 'POST',
+      headers: {
+        apikey: this.serviceRoleKey,
+        Authorization: `Bearer ${this.serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({
+        user_id: event.userId,
+        action: event.action,
+        entity_type: event.entityType ?? null,
+        entity_id: event.entityId ?? null,
+        details: event.details ?? {},
+        source_ip: event.sourceIp ?? null,
+      }),
+    });
+    if (!res.ok) {
+      throw new Error(`Supabase POST audit_logs: ${res.status} ${await res.text()}`);
+    }
+  }
+
+  async insertDailyQueueItems(userId: string, queueDate: string, items: DailyQueueItemRow[]): Promise<void> {
+    if (items.length === 0) return;
+    await this.request('POST', 'daily_queue_items', items.map((it) => ({
+      user_id: userId,
+      queue_date: queueDate,
+      attempt_id: it.attemptId,
+      question_id: it.questionId,
+      node_id: it.nodeId ?? null,
+      reason: it.reason,
+      priority: it.priority ?? null,
+      status: 'pending',
+    })));
+  }
+
+  async countMasteryHistoryRows(userId: string): Promise<number> {
+    const res = await fetch(
+      `${this.url}/rest/v1/mastery_history?user_id=eq.${encodeURIComponent(userId)}&select=id`,
+      {
+        headers: {
+          apikey: this.serviceRoleKey,
+          Authorization: `Bearer ${this.serviceRoleKey}`,
+          Prefer: 'count=exact',
+          Range: '0-0',
+          RangeUnit: 'items',
+        },
+      },
+    );
+    if (!res.ok) return 0;
+    const cr = res.headers.get('content-range'); // e.g. "0-0/17"
+    const total = cr ? Number(cr.split('/')[1]) : 0;
+    await res.text();
+    return Number.isFinite(total) ? total : 0;
   }
 }
