@@ -1,7 +1,7 @@
 # ARC-01 — تک‌نهادی موتور یادگیری (Single Learning-Engine Runtime)
 
 **شماره اقدام:** R-009 (+ تصمیم R-025 در §5)
-**وضعیت:** IMPLEMENTED_UNVERIFIED — تصمیم معماری ثبت و شواهد انحراف جمع‌آوری شده است؛ *توحید واقعی هنوز انجام نشده* و به Phase 4 موکول می‌شود. ادعای «یکپارچه شد» در این سند نمی‌شود.
+**وضعیت:** IN_PROGRESS — PR #6 بخش FSRS را به موتور canonical متصل کرده و CI آن سبز است؛ همگرایی کامل runtime و learner store هنوز انجام نشده است. ادعای «یکپارچه شد» در این سند نمی‌شود.
 **تاریخ:** 2026-11-01
 **شاخه:** `fix/mission-remediation-20261101`
 
@@ -19,37 +19,36 @@
 
 - فایل‌های import‌کنندهٔ موتور legacy (16 فایل):
   `src/App.tsx`, `src/components/ContentIngestionStudio.tsx`, `src/components/DashboardView.tsx`, `src/components/KonkorScoreSimulatorCard.tsx`, `src/components/LessonsLibraryView.tsx`, `src/components/MasteryVelocityChart.tsx`, `src/components/PlacementModal.tsx`, `src/components/SkillTreeGraph.tsx`, `src/components/StudySessionView.tsx`, `src/components/TelegramBotSimulatorModal.tsx`, `src/components/YearlyKonkorExamView.tsx`, `src/data/konkorRankPredictor.ts`, `src/data/referenceBooksRepo.ts`, `src/tests/lessonRatingEvidence.test.ts`, `src/tests/masteryEvidence.test.ts`, `src/utils/telegramBridge.ts`
-- import‌کنندهٔ موتور مشترک `@ael/engine` (3 نقطه):
-  `apps/worker/src/index.ts`, `apps/worker/src/skills-data.ts`, `packages/learning-engine/tests/engine.test.ts`
+- import‌کنندهٔ مستقیم موتور مشترک `@ael/engine` (5 نقطه):
+  `apps/worker/src/index.ts`, `apps/worker/src/skills-data.ts`, `packages/learning-engine/tests/engine.test.ts`, `src/engine/aelEngine.ts` (FSRS adapter), `src/tests/legacyFsrsParity.test.ts`
 
 نتیجهٔ صادقانه: **امروز دو runtime موازی در production‌-مورد-استفاده وجود دارد.** اپ React (سکوی Telegram/مرورگر) از legacy و Worker API از @ael/engine استفاده می‌کند. این سند تصمیم را تثبیت می‌کند، نه نتیجه را.
 
 ## ۳) موجودی انحراف‌ها (PARITY MATRIX)
 
 هارنس: `scripts/engine-parity-harness.mts` → خروجی `docs/phase-3/ENGINE_PARITY_MATRIX.csv`
-نتیجهٔ اجرا (معمول‌شده در `evidence/phase-3/parity-harness.txt`):
+
+نتیجهٔ اجرای CI روی PR #6، head=`e78eb20418336ef77c048aa55647e996b0f91fb9`، run=`41430029958`:
 
 ```text
-PARITY HARNESS: 21 scenarios, 16 diverged, 5 matched
+PARITY HARNESS: 21 scenarios, 1 diverged, 20 matched
 ```
 
-سه درز (seam) سنجیده شد:
+تجزیهٔ نتیجه:
 
-1. **FSRS interval/state** — legacy یک heuristic ساده (ضرایب ثابت + افت خطی) است؛ `@ael/engine` FSRS-5 واقعی با توان فراموشی و `calculateNextInterval` را پیاده می‌کند. بازه‌ها در تقریباً همهٔ سناریوها واگردان‌اند؛ در lapse واگرایی شدیدتر است.
-2. **Retrievability** — legacy از `proxy = min(0.99, 0.88 + 0.01·S)` استفاده می‌کند که **گذشت زمان را نادیده می‌گیرد**؛ `calculateRetrievability` در @ael/engine طبق curve واقعی با elapsed decay می‌کند. برای هر دو S-base، legacy یا ثابت/خوش‌بینانه‌تر است.
-3. **Urgency** — سه معنای متفاوت در سه پیاده‌سازی:
-   - legacy (React): `1 + (1 − R)` ضربی
-   - `packages/utils` UrgencyV2: **افزوده مبتنی بر تأخیر (overdue-based)**
-   - `buildDailyQueue` در @ael/engine: **فقط due-based** (هیچ urgency term ندارد)
+1. **FSRS interval/state:** هر ۱۱ سناریو MATCHED است. `src/engine/aelEngine.ts` دیگر transition مستقل ندارد و برای اولین مرور از `initializeFSRSState` و برای مرورهای بعدی از `scheduleNextFSRS` در `@ael/engine` استفاده می‌کند. sentinel قدیمی `stability=0` برای کارت مرورنشده حفظ شده است.
+2. **Retrievability:** هر ۶ سناریو MATCHED است. adapter React همان `calculateRetrievability` canonical را صدا می‌زند؛ مقدار R برای علت‌یابی خطا نیز بر اساس زمان سپری‌شده از آخرین مرور محاسبه می‌شود، نه مقدار ذخیره‌شدهٔ روز مرور.
+3. **Urgency factor:** هر ۳ سناریوی عددی MATCHED است؛ هر دو مسیر از term ضربی `1 + forgettingRisk` استفاده می‌کنند.
+4. **Queue ordering:** تنها واگرایی باقی‌مانده `urg-04-engine-order` است: Worker از `computePriorityV3`/ROI استفاده می‌کند، اما `buildDailyQueue` در `@ael/engine` هنوز صرفاً بر اساس `dueAt` مرتب می‌کند.
 
-نتیجهٔ علمی این موجودی: تا پیش از رفع این ۱۶ انحراف، هر ادعای «یکپارچگی محاسباتی» جعل است.
+این نتیجه به معنی توحید کامل نیست: ۱۶ مصرف‌کنندهٔ React هنوز به facade/migration backlog legacy وابسته‌اند و React هنوز به Worker/Supabase learner store مهاجرت نکرده است. گزارش CI: https://github.com/rrasi90/konkortelegrambot/actions/runs/41430029958.
 
 ## ۴) مسیر مهاجرت (R-009 → Phase 4/5)
 
 به‌ترتیب، با تست‌های معطوف به هر گام:
 
 1. **Phase 4، R-011 (توحید فرمول اولویت):** UrgencyV2 در `packages/utils` را تنها منبع «امتیاز فوریت» قرار ده؛ `buildDailyQueue` در @ael/engine باید همان تابع را import کند؛ legacy داخل React حذف یا به wrapper از @ael/engine تبدیل شود.
-2. **Phase 4 (diagnostic/mastery evidence layer):** خروجی‌های FSRS legacy در `aelEngine.ts` را با توابع @ael/engine جایگزین کن؛ تست‌های پاریتی (fsrs-01..10) را روی نسخهٔ نهایی re-run و target = انحراف صفر قرار بده.
+2. **FSRS convergence slice (PR #6):** adapter React به توابع canonical متصل شد؛ ۱۱ سناریوی interval/state و ۶ سناریوی retrievability در CI بدون واگرایی‌اند. تست‌های parity در `src/tests/legacyFsrsParity.test.ts` و `scripts/engine-parity-harness.mts` نگهبان این قراردادند.
 3. **Phase 5:** ۱۶ فایل import legacy را مرحله‌ای به @ael/engine منتقل کن؛ در پایان، `grep -r "engine/aelEngine"` باید خالی باشد یا فقط به adapterهای نازک migrate-شده اشاره کند.
 
 هر فاز با `PARITY HARNESS` و تست‌های unit مشخص اندازه‌گیری می‌شود؛ تا زمانی که ۲۱ سناریو به انحراف صفر (یا مستندسازی‌شدهٔ «عمداً متفاوت») نرسیده باشد، وضعیت «unified» اعلام نمی‌شود.
@@ -74,6 +73,6 @@ PARITY HARNESS: 21 scenarios, 16 diverged, 5 matched
 
 ## ۷) آنچه این سند **ادعا نمی‌کند**
 
-- موتور React حذف یا یکسان نشده — فقط به‌عنوان deprecated علامت‌گذاری و موجودی انحراف آن تهیه شده است.
-- انحراف صفر در parity matrix نیست؛ عدد واقعی ۱۶ انحراف از ۲۱ سناریو است.
+- موتور React به‌طور کامل حذف یا یکسان نشده؛ FSRS آن از facade canonical استفاده می‌کند، اما منطق تسلط، ripple، ترتیب صف و مهاجرت state هنوز کامل منتقل نشده‌اند.
+- انحراف صفر در parity matrix نیست؛ اکنون ۱ مورد از ۲۱ سناریو باقی است (ترتیب صف).
 - تصمیم R-025 به معنای حذف `MemoryStore` نیست؛ به معنای ممنوعیت production آن است.
