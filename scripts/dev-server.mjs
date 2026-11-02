@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * سرور توسعهٔ محلی — برای آزمون دستی مینی‌اپ.
+ * سرور توسعهٔ محلی — برای آزمون دستی مینی‌اپ و رابط کاربری مدرن.
  * اجرا: npx tsx scripts/dev-server.mjs
- * - فایل‌های ایستا از apps/miniapp
+ * - فایل‌های ایستا: اولویت با بیلد مدرن React (dist) در صورت وجود، در غیر این صورت apps/miniapp
  * - مسیرهای /api/* به اپ Hono (با MemoryStore و بستهٔ دمو) وصل می‌شوند
  */
 import { createServer } from 'node:http';
@@ -55,9 +55,15 @@ const server = createServer(async (req, res) => {
       return;
     }
 
-    // فایل‌های ایستا
-    let filePath = join(root, 'apps/miniapp', url.pathname === '/' ? 'index.html' : url.pathname);
-    if (!existsSync(filePath)) filePath = join(root, 'apps/miniapp', 'index.html');
+    // فایل‌های ایستا: اولویت با بیلد مدرن React (dist)
+    const staticBase = existsSync(join(root, 'dist', 'index.html'))
+      ? join(root, 'dist')
+      : join(root, 'apps/miniapp');
+    let relPath = url.pathname === '/' ? 'index.html' : url.pathname.replace(/^\//, '');
+    let filePath = join(staticBase, relPath);
+    if (!existsSync(filePath) || !extname(filePath)) {
+      filePath = join(staticBase, 'index.html');
+    }
     const ext = extname(filePath);
     res.writeHead(200, { 'Content-Type': MIME[ext] ?? 'application/octet-stream' });
     res.end(readFileSync(filePath));
