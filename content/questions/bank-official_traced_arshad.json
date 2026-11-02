@@ -8,11 +8,12 @@
   ],
   "tier": "official_traced_arshad",
   "counts": {
-    "total": 156,
+    "total": 101,
     "rawInput": 252,
     "mergedDuplicates": 96,
     "contentConflicts": 0,
-    "official_traced_arshad": 101
+    "official_traced_arshad": 101,
+    "corpusTotal": 156
   },
   "questions": [
     {
