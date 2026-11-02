@@ -3,7 +3,7 @@
 - **PHASE:** 3 — Architecture, engine parity & security
 - **START_COMMIT:** `563b1b4` (اولین کامیت فاز ۳؛ Phase 2 در `093fe48` بسته شد)
 - **END_COMMIT:** `c971885` (`fix/mission-remediation-20261101`؛ این سند در کامیت بعد از آن است و تغییر کد ندارد)
-- **BRANCH:** `fix/mission-remediation-20261101` — بدون merge به main؛ deploy ممنوع تا تأیید صریح مالک
+- **BRANCH:** `fix/mission-remediation-20261101` — تغییرات از مسیر PR #5 برای merge به main ارائه شده‌اند؛ production deploy همچنان ممنوع است
 
 ## §1 DELIVERABLES
 | فایل/کامیت | نقش |
@@ -54,3 +54,14 @@
 
 ## §7 GATE_DECISION: **PASS_WITH_EVIDENCE (scoped)**
 زیرساخت امنیتی، دیتابیس، جداول دامنه و مماری انحراف موتور با اجرای واقعی تست‌ها اثبات شد. **توحید واقعی موتور و store یکتا اثبات نشده** و به‌صورت IN_PROGRESS با برنامه مهاجرت Phase 4/5 ثبت شده است. هیچ ادعای «architecture unified» یا «production ready» در این فاز نمی‌شود.
+
+
+## §8 Follow-up verification — 2026-11-02
+
+- Migration `0014_engine_authoritative_skill_state.sql` replaces the simplified SQL proficiency updater with an atomic persist of the exact `skillStateUpdate.state` produced by `@ael/engine`.
+- The Worker passes that state inside the signed/server-side answer RPC payload; the RPC remains restricted to `service_role`.
+- Integrity block 15 verifies the exact values for proficiency, confidence, evidence count, retrievability, fluency, dominant error type and coverage status.
+- GitHub Actions PR #5 applied migrations 0001–0014 on a fresh plain PostgreSQL 16 service and passed the database integrity job. The same run passed `npm ci`, typecheck, 268/268 Vitest tests (18 files) and content validation.
+- Remaining architecture work is unchanged: 16 React legacy imports remain and parity is not zero. The SQL duplicate heuristic is removed, but React→Worker state convergence and full engine unification are still open under R-009/R-025.
+- No production deployment, external pilot or SME content validation is claimed.
+
