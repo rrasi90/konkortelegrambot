@@ -1,7 +1,21 @@
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { findClientAnswerKeyLeaks } from '../../scripts/audit-client-bundle';
+import {
+  assertWorkerAssetsConfiguration,
+  auditClientBundle,
+  findClientAnswerKeyLeaks,
+} from '../../scripts/audit-client-bundle';
 
 describe('public client bundle answer-key guard', () => {
+  it('Wrangler serves the audited Mini App directory and routes API requests through the Worker', async () => {
+    await expect(assertWorkerAssetsConfiguration()).resolves.toBeUndefined();
+  });
+
+  it('the Cloudflare Worker-served Mini App contains no embedded answer keys', async () => {
+    const findings = await auditClientBundle(resolve(process.cwd(), 'apps/miniapp'));
+    expect(findings).toEqual([]);
+  });
+
   it('detects embedded question and lesson answer-key literals', () => {
     const findings = findClientAnswerKeyLeaks({
       'assets/app.js': 'const q={id:"q.one",correctOption:2}; const lesson={correctIndex:1};',

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -b",
     "dev": "wrangler dev",
-    "deploy": "npm run --prefix ../.. build && npm run --prefix ../.. audit:client-bundle && wrangler deploy"
+    "deploy": "npm run --prefix ../.. build:worker && npm run --prefix ../.. audit:miniapp && npx --yes wrangler deploy"
   },
   "dependencies": {
     "@ael/contracts": "*",
