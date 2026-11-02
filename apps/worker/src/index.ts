@@ -327,7 +327,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const text = (message.text || '').trim();
 
     const url = new URL(c.req.url);
-    const appUrl = env.APP_URL || url.origin;
+    const appUrl = env.APP_URL || (url.origin + '/?v=' + Date.now());
 
     const replyText = text.startsWith('/start')
       ? 'سلام! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nسامانهٔ هوشمند سنجش و تثبیت تسلط بر سرفصل‌های آزمون دکتری مدیریت.\n\nبرای شروع تمرین و ارزیابی هوشمند، روی دکمهٔ زیر بزنید:'
