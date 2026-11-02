@@ -205,6 +205,37 @@ describe('layer 1 — direct reset & trap card', () => {
     expect(traps.length).toBe(1);
   });
 
+  it('§8.6: در کاربر تازه‌وارث (بی‌شاهد)، خطای دام‌دار theory_confusion برچسب نمی‌خورد', () => {
+    // نقص پیشین: هم‌خانواده‌های ندیده‌شده با تسلط ساختگی ۵۰ وارد می‌شدند و
+    // قاعدهٔ ۴ (دام + هم‌خانوادهٔ ضعیف) همیشه آتش می‌گرفت.
+    const state = buildState();
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a-no-evidence', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common', 'business', 'technology'] },
+    );
+    expect(res.report.errorType).not.toBe('theory_confusion');
+    // بدون هیچ شاهدی، علت «ساختگی» نیست و به unknown/مستندِ دیگر می‌رسد
+    expect(['misconception', 'unknown', 'calculation_error', 'reading_error', 'guessing']).toContain(
+      res.report.errorType,
+    );
+  });
+
+  it('§8.6: theory_confusion فقط وقتی هم‌خانواده واقعاً سنجیده شده و ضعیف است اعلام می‌شود', () => {
+    const state = buildState({
+      mastery: new Map([
+        ['sm.rbv', 70],
+        ['sm.value_chain', 35],
+      ]),
+    });
+    const res = applyAnswer(
+      state,
+      { userId: 'user-1', questionId: 'q-rbv-1', attemptId: 'a-confusion', selectedOption: 1, answeredAt: NOW.toISOString() },
+      { userId: 'user-1', activeTracks: ['common', 'business', 'technology'] },
+    );
+    expect(res.report.errorType).toBe('theory_confusion');
+  });
+
   it('پاسخ درست با FSRS فاصلهٔ مرور می‌سازد (کارت تازه: Good → ۳ روز)', () => {
     const existing: ReviewCard = {
       ...card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv'),
@@ -218,12 +249,12 @@ describe('layer 1 — direct reset & trap card', () => {
       { userId: 'user-1', activeTracks: ['common'] },
     );
     const updated = res.cardUpdates.find((c) => c.id === existing.id);
-    // FSRS: بدون وضعیت قبلی، Good → stability ۳٫۲.
+    // FSRS: بدون وضعیت قبلی، Good → stability از w[2] (مجموعهٔ منتشرشدهٔ FSRS-5 = ۳٫۱۷۳).
     // طبق تعریف FSRS، در نرخ بازیابی هدف ۹۰٪ فاصله برابر خودِ stability است، پس ≈ ۳ روز.
     expect(updated?.intervalDays).toBe(3);
     expect(updated?.ease).toBeCloseTo(2.05);
     expect(new Date(updated?.dueAt ?? '').getTime()).toBe(addDays(NOW, 3).getTime());
-    expect(updated?.fsrs?.stability).toBeCloseTo(3.2);
+    expect(updated?.fsrs?.stability).toBeCloseTo(3.173);
     expect(new Date(updated?.fsrs?.dueAt ?? '').getTime()).toBe(addDays(NOW, 3).getTime());
   });
 });
