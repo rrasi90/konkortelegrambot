@@ -108,9 +108,15 @@ describe('قرارداد بانک سؤالات (Phase 2)', () => {
     expect(raw).toContain('"cognitiveLevel": "unclassified"');
   });
 
-  it('جمع سه پرونده با شمار کل بانک برابر است', () => {
-    expect(phd.questions.length + arshad.questions.length + quarantine.questions.length).toBe(
-      phd.counts.total
-    );
+  it('تعداد هر فایل با total خودش و جمع سه فایل با corpusTotal برابر است', () => {
+    expect(phd.counts.total).toBe(phd.questions.length);
+    expect(arshad.counts.total).toBe(arshad.questions.length);
+    expect(quarantine.counts.total).toBe(quarantine.questions.length);
+    expect(phd.counts.official_traced_phd).toBe(phd.questions.length);
+    expect(arshad.counts.official_traced_arshad).toBe(arshad.questions.length);
+    expect(quarantine.counts.quarantine).toBe(quarantine.questions.length);
+    expect(phd.counts.corpusTotal).toBe(arshad.counts.corpusTotal);
+    expect(phd.counts.corpusTotal).toBe(quarantine.counts.corpusTotal);
+    expect(all.length).toBe(phd.counts.corpusTotal);
   });
 });
