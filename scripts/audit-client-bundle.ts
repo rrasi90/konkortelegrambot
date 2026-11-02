@@ -15,11 +15,11 @@ const ANSWER_KEY_PATTERNS: Array<{
 }> = [
   {
     field: 'correctOption',
-    pattern: /["']?correctOption["']?\\s*:\\s*[0-3]\\b/g,
+    pattern: /["']?correctOption["']?\s*:\s*[0-3]\\b/g,
   },
   {
     field: 'correctIndex',
-    pattern: /["']?correctIndex["']?\\s*:\\s*[0-1]\\b/g,
+    pattern: /["']?correctIndex["']?\s*:\s*[0-1]\\b/g,
   },
 ];
 
@@ -52,7 +52,7 @@ async function collectAssets(
     if (!entry.isFile() || !SCAN_EXTENSIONS.has(extname(entry.name).toLowerCase())) {
       continue;
     }
-    const name = relative(root, absolute).replaceAll('\\\\', '/');
+    const name = relative(root, absolute).replaceAll('\\', '/');
     assets[name] = await readFile(absolute, 'utf8');
   }
   return assets;
@@ -74,7 +74,7 @@ async function runAudit(): Promise<void> {
   if (findings.length > 0) {
     const details = findings
       .map((finding) => `- ${finding.asset}: ${finding.field} × ${finding.count}`)
-      .join('\\n');
+      .join('\n');
     throw new Error(
       [
         'PUBLIC CLIENT BUNDLE REJECTED: answer-key fields are embedded in deployable assets.',
@@ -84,7 +84,7 @@ async function runAudit(): Promise<void> {
       ].join('\\n'),
     );
   }
-  process.stdout.write('Client bundle security audit: PASS (no embedded answer-key literals).\\n');
+  process.stdout.write('Client bundle security audit: PASS (no embedded answer-key literals).\n');
 }
 
 const invokedPath = process.argv[1] ? resolve(process.argv[1]) : '';
