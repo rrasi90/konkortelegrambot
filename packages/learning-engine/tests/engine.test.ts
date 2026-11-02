@@ -437,6 +437,43 @@ describe('input validation', () => {
   });
 });
 
+describe('time-decayed recall evidence', () => {
+  it('طبقه‌بندی فراموشی از بازیابیِ محاسبه‌شده با زمان استفاده می‌کند، نه R ذخیره‌شدهٔ قدیمی', () => {
+    const lastReviewedAt = new Date(NOW.getTime() - 10 * 86_400_000).toISOString();
+    const previous = card(questionCardId('user-1', 'q-rbv-1'), 'sm.rbv', {
+      fsrs: {
+        stability: 1.5,
+        difficulty: 5,
+        retrievability: 1,
+        reps: 4,
+        lapses: 0,
+        lastReviewedAt,
+        dueAt: NOW.toISOString(),
+        intervalDays: 1,
+      },
+    });
+    const state = buildState({
+      mastery: new Map([['sm.rbv', 80]]),
+      cards: [previous],
+      skills: new Map([[smRbvSkill.id, smRbvSkill]]),
+    });
+
+    const result = applyAnswer(
+      state,
+      {
+        userId: 'user-1',
+        questionId: 'q-rbv-1',
+        attemptId: 'time-decayed-recall-1',
+        selectedOption: 1,
+        answeredAt: NOW.toISOString(),
+      },
+      { userId: 'user-1', activeTracks: ['common'] },
+    );
+
+    expect(result.report.errorType).toBe('recall_failure');
+  });
+});
+
 describe('slip suppression (سرکوب موج در لغزش)', () => {
   it('خوداظهاری «بی‌دقتی کردم»: بدون کسر تسلط، بدون شوک و بدون probe', () => {
     const sibling = card(questionCardId('user-1', 'q-rbv-2'), 'sm.rbv', { intervalDays: 20 });

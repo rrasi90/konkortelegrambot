@@ -33,6 +33,7 @@ import type {
 } from '@ael/contracts';
 import {
   Rating,
+  calculateRetrievability,
   classifyErrorType,
   initializeFSRSState,
   scheduleNextFSRS,
@@ -225,6 +226,16 @@ export function applyAnswer(
   const priorCard = state.cards.find(
     (c) => c.id === questionCardId(user.userId, question.id),
   );
+  const priorFsrs = priorCard?.fsrs;
+  const priorReviewTime = priorFsrs ? Date.parse(priorFsrs.lastReviewedAt) : Number.NaN;
+  const elapsedDays =
+    Number.isFinite(priorReviewTime) && priorFsrs
+      ? Math.max(0, (now.getTime() - priorReviewTime) / 86_400_000)
+      : 0;
+  const currentMemoryRetrievability =
+    priorFsrs && priorFsrs.stability > 0
+      ? calculateRetrievability(priorFsrs.stability, elapsedDays)
+      : undefined;
   const nodeForQ = state.nodes.get(question.nodeId);
   const siblingMasteries = nodeForQ
     ? [...state.nodes.values()]
@@ -249,7 +260,7 @@ export function applyAnswer(
     requiresCalculation,
     trapNote: question.trapNote,
     siblingMasteries,
-    memoryRetrievability: priorCard?.fsrs?.retrievability,
+    memoryRetrievability: currentMemoryRetrievability,
   };
   // خوداظهاری کاربر اولویت دارد؛ در نبود آن موتور طبقه‌بندی می‌کند
   const errorType: ErrorTypeClassification = !wasCorrect

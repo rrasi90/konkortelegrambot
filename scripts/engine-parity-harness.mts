@@ -6,7 +6,7 @@
 // scenario. This is a divergence map for the Phase-4 unification, NOT a parity claim.
 // Run: npx tsx scripts/engine-parity-harness.mts
 import { writeFile, mkdir } from 'node:fs/promises';
-import { initFSRS, stepFSRS } from '../src/engine/aelEngine';
+import { calculateCardRetrievability, initFSRS, stepFSRS } from '../src/engine/aelEngine';
 import {
   Rating,
   calculateRetrievability,
@@ -97,8 +97,7 @@ for (const [S, D, elapsed] of bases) {
 for (const S of [1.5, 3, 7]) {
   for (const t of [1, 4]) {
     const shared = calculateRetrievability(S, t);
-    // React runtime proxy used inside stepFSRS: 0.88 + 0.01*S (ignores elapsed time)
-    const react = Math.min(0.99, 0.88 + 0.01 * S);
+    const react = calculateCardRetrievability(S, t);
     rec({
       scenario: `ret-${String(n++).padStart(2, '0')}-S${S}-t${t}`,
       seam: 'retrievability', input: `S=${S} elapsedDays=${t}`,
@@ -143,6 +142,16 @@ rec({
 });
 
 // ---------- output ----------
+const canonicalSeamDivergences = rows.filter(
+  (r) =>
+    (r.seam === 'fsrs-interval' || r.seam === 'retrievability') &&
+    r.verdict === 'DIVERGED',
+);
+if (canonicalSeamDivergences.length > 0) {
+  throw new Error(
+    `Canonical FSRS parity failed: ${canonicalSeamDivergences.map((r) => r.scenario).join(', ')}`,
+  );
+}
 const diverged = rows.filter((r) => r.verdict === 'DIVERGED').length;
 const header = 'scenario,seam,input,react_runtime,shared_engine_runtime,verdict,note\n';
 const body = rows
