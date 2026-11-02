@@ -1,8 +1,9 @@
 # ران‌بوک فعال‌سازی نسخهٔ جدید — ۱۴۰۴-۰۸-۱۲
 
 این پرونده فقط کارهایی را ثبت می‌کند که **واقعاً** اجرا شده‌اند و آن‌ها را که منتظر ورودی
-صاحب محصول هستند صریحاً باز می‌گذارد. هیچ مرحلهٔ غیرقابل‌بازگشت (deploy، webhook، مهاجرت روی
-دیتابیس واقعی) بدون تأیید و بدون شاهد انجام نشده است.
+صاحب محصول هستند صریحاً باز می‌گذارد. **وضعیت امروز:** کد روی `main` merge و publish شد و
+ورکر Cloudflare با نسخهٔ جدید deploy و روی دامنهٔ زنده راستی‌آزمایی شد (جدول ۲-ب). مراحل
+مانده: اتصال Supabase + مهاجرت ۰۰۱۵ (گام ۱ و ۲) و تنظیم دکمهٔ تلگرام (گام ۴، نیازمند توکن).
 
 ## ۰) وضعیت فعلی (تأییدشده با دستور)
 
@@ -109,16 +110,31 @@ curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook" \
 
 بدون `TELEGRAM_WEBHOOK_SECRET` ورکر مسیر وب‌هوک را عمداً ۵۰۳ می‌دهد (رفتار مستندشده).
 
-## ۳) آنچه عمداً انجام **نشد**
+## ۲-ب) آنچه **انجام شد** (همین تاریخ، با شاهد)
+
+| مرحله | نتیجه | شاهد |
+|---|---|---|
+| merge + push به `main` | انجام شد (از `d3e640d` تا `b3b9d74`) | خروجی `git push origin main` |
+| `wrangler deploy` (سه بار: نسخهٔ اول، رفع A-25، افزودن A-26) | EXIT=0؛ آخرین Version ID `16e3221c-90d5-46d0-9eb3-29f87da26a29` روی `https://adaptive-exam-worker.ael-worker.workers.dev` | لاگ deploy |
+| سلامت زنده | `GET /api/health` → `{"ok":true}` با ۲۰۰ | `evidence/deploy-20261103/live-ui-checks.txt` |
+| سرو نسخهٔ جدید مینی‌اپ | `/` شامل `id="view-app"` و `btn-relogin`؛ `app.js` شامل `el('btn-book-back')`، `el('btn-freeze-streak')`، `className = 'option'` و بدون onclick داده‌محور | `live-ui-checks.txt`، `live-app.js`، `live-root.html` |
+| A-06 زنده | آیتم صف فاقد `trapNote`/`explanation`/`correctOption`/`ease`/`fsrs`/`timesSeen`/`userId`؛ کلیدهای کارت فقط `id,nodeId,cardType,questionId,trapCardId,isRepair,isProof` | `live-api-checks.txt`، `live-queue.json` |
+| A-17 زنده | کاربر تازه: `progress = {"overall":null,"assessedNodes":0,"nodes":17}` | `live-home.json` |
+| A-14 زنده | `PUT /api/tracks` با ورودی تکراری → `["common","business","technology","strategy","industrial"]`؛ `limit=5` → دقیقاً ۵ آیتم | `live-api-checks.txt` |
+| A-25/A-26/A-27 | شمارندهٔ نرخ در زنده اجرا می‌شود (`X-RateLimit-Remaining` کاهش می‌یابد)؛ اندازه‌گیری شد که محافظت per-isolate است: با burst ۱۲۰ درخواستی اولین ۴۲۹ در درخواست **#۶۱** با آستانهٔ ۳۰ ⇒ دو ایزولیت | `live-rate-limit-observable.txt`، `live-rate-limit-isolates.txt` |
+
+## ۳) آنچه انجام **نشده** یا عمداً باز مانده
 
 - **انتشار GitHub Pages:** شغل `deploy-pages.yml` روی `main` اجرا می‌شود و در گام
   `npm run audit:client-bundle` **معمولاً FAIL** است: باندل React هنوز ۱۸۵ بار `correctOption` و
   ۲۶ بار `correctIndex` دارد (نقص ثبت‌شدهٔ R-036). این درِ امنیتی عمدی است؛ قرمز بودن آن شغل به
   معنای رگرسیون جدید نیست، و تا مهاجرت رابط React به مسیرهای احرازشدهٔ ورکر (R-025) نباید رد شود.
   **گذراندن آن با `--no-verify` یا حذف گام ممنوع است.**
-- **deploy ورکر:** انجام نشد، چون گام‌های ۱ و ۲ (مهاجرت واقعی + اتصال Supabase + بستن درب دمو)
-  نیازمند ورودی شما هستند. deploy با تنظیمات فعلی، نسخه‌ای با حافظهٔ ناپایدار و ورود بدون
-  احراز هویت را فعال می‌کرد.
+- **اتصال Supabase و مهاجرت ۰۰۱۵:** انجام نشده. چون دیتابیس اصلاً وصل نبود، deploy انجام‌شده
+  ریسک داده‌ای نداشت (نسخهٔ قبلی هم MemoryStore بود)، اما ماندگاری داده همچنان برقرار نیست و
+  به‌عنوان RK-13 باز ثبت شده است.
+- **بستن `ALLOW_DEMO_AUTH`:** با تأیید صریح صاحب محصول فعلاً باز ماند و به‌عنوان RK-12 (ریسک
+  تصاحب حساب با شناسهٔ حدس‌زدنی) ثبت شد؛ بستنش مسیر ورود مرورگر معمولی را می‌بندد.
 - **تنظیم دکمهٔ تلگرام:** انجام نشد چون `TELEGRAM_BOT_TOKEN` در این محیط موجود نیست و مقدار
   secret ورکر با wrangler خوانده نمی‌شود.
 
