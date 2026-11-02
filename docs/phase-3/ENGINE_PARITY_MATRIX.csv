@@ -1,22 +1,22 @@
 scenario,seam,input,react_runtime,shared_engine_runtime,verdict,note
-fsrs-01-fresh-easy,fsrs-interval,"brand-new card, rating=Easy(4)",14,8,DIVERGED,React: stepFSRS on hand-made init; shared: FSRS-5 init weights
-fsrs-02-S2.5-g1,fsrs-interval,S=2.5 D=5 elapsed=2d rating=1,0,1,DIVERGED,different growth formulas
-fsrs-03-S2.5-g2,fsrs-interval,S=2.5 D=5 elapsed=2d rating=2,3,4,DIVERGED,different growth formulas
-fsrs-04-S2.5-g3,fsrs-interval,S=2.5 D=5 elapsed=2d rating=3,10,7,DIVERGED,different growth formulas
-fsrs-05-S2.5-g4,fsrs-interval,S=2.5 D=5 elapsed=2d rating=4,19,15,DIVERGED,different growth formulas
-fsrs-06-S2.5-lapse,fsrs-interval,lapse at S=2.5 elapsed=2d,0,1,DIVERGED,relearn after failure
-fsrs-07-S8-g1,fsrs-interval,S=8 D=6 elapsed=5d rating=1,0,2,DIVERGED,different growth formulas
-fsrs-08-S8-g2,fsrs-interval,S=8 D=6 elapsed=5d rating=2,10,10,MATCHED,exact
-fsrs-09-S8-g3,fsrs-interval,S=8 D=6 elapsed=5d rating=3,27,17,DIVERGED,different growth formulas
-fsrs-10-S8-g4,fsrs-interval,S=8 D=6 elapsed=5d rating=4,48,30,DIVERGED,different growth formulas
-fsrs-11-S8-lapse,fsrs-interval,lapse at S=8 elapsed=5d,0,2,DIVERGED,relearn after failure
-ret-12-S1.5-t1,retrievability,S=1.5 elapsedDays=1,0.895,0.930,MATCHED,React ignores elapsed time (power curve absent)
-ret-13-S1.5-t4,retrievability,S=1.5 elapsedDays=4,0.895,0.784,DIVERGED,React ignores elapsed time (power curve absent)
-ret-14-S3-t1,retrievability,S=3 elapsedDays=1,0.910,0.963,DIVERGED,React ignores elapsed time (power curve absent)
-ret-15-S3-t4,retrievability,S=3 elapsedDays=4,0.910,0.873,MATCHED,React ignores elapsed time (power curve absent)
-ret-16-S7-t1,retrievability,S=7 elapsedDays=1,0.950,0.984,MATCHED,React ignores elapsed time (power curve absent)
-ret-17-S7-t4,retrievability,S=7 elapsedDays=4,0.950,0.939,MATCHED,React ignores elapsed time (power curve absent)
-urg-18-overdue0,urgency,overdue=0d R=0.9,1-R=0.100 (multiplied as 1+x),UrgencyV2=64.000,DIVERGED,engine queue (buildDailyQueue) ignores urgency entirely — due-time sort only; three different semantics
-urg-19-overdue3,urgency,overdue=3d R=0.7,1-R=0.300 (multiplied as 1+x),UrgencyV2=81.000,DIVERGED,engine queue (buildDailyQueue) ignores urgency entirely — due-time sort only; three different semantics
-urg-20-overdue10,urgency,overdue=10d R=0.4,1-R=0.600 (multiplied as 1+x),UrgencyV2=121.000,DIVERGED,engine queue (buildDailyQueue) ignores urgency entirely — due-time sort only; three different semantics
-urg-04-engine-order,urgency,"two due cards, higher-urgency due later",ROI-ordered (priorityScore/urgency),dueAt-ordered (no urgency term),DIVERGED,unify in Phase 4 (R-011)
+fsrs-01-fresh-easy,fsrs-interval,"brand-new card, rating=Easy(4)",8,8,MATCHED,React adapter delegates to canonical @ael/engine FSRS-5 initialization
+fsrs-02-S2.5-g1,fsrs-interval,S=2.5 D=5 elapsed=2d rating=1,1,1,MATCHED,canonical FSRS-5 transition
+fsrs-03-S2.5-g2,fsrs-interval,S=2.5 D=5 elapsed=2d rating=2,4,4,MATCHED,canonical FSRS-5 transition
+fsrs-04-S2.5-g3,fsrs-interval,S=2.5 D=5 elapsed=2d rating=3,7,7,MATCHED,canonical FSRS-5 transition
+fsrs-05-S2.5-g4,fsrs-interval,S=2.5 D=5 elapsed=2d rating=4,15,15,MATCHED,canonical FSRS-5 transition
+fsrs-06-S2.5-lapse,fsrs-interval,lapse at S=2.5 elapsed=2d,1,1,MATCHED,canonical FSRS-5 lapse transition
+fsrs-07-S8-g1,fsrs-interval,S=8 D=6 elapsed=5d rating=1,2,2,MATCHED,canonical FSRS-5 transition
+fsrs-08-S8-g2,fsrs-interval,S=8 D=6 elapsed=5d rating=2,10,10,MATCHED,canonical FSRS-5 transition
+fsrs-09-S8-g3,fsrs-interval,S=8 D=6 elapsed=5d rating=3,17,17,MATCHED,canonical FSRS-5 transition
+fsrs-10-S8-g4,fsrs-interval,S=8 D=6 elapsed=5d rating=4,30,30,MATCHED,canonical FSRS-5 transition
+fsrs-11-S8-lapse,fsrs-interval,lapse at S=8 elapsed=5d,2,2,MATCHED,canonical FSRS-5 lapse transition
+ret-12-S1.5-t1,retrievability,S=1.5 elapsedDays=1,0.930,0.930,MATCHED,React adapter delegates to canonical FSRS-5 forgetting curve
+ret-13-S1.5-t4,retrievability,S=1.5 elapsedDays=4,0.784,0.784,MATCHED,React adapter delegates to canonical FSRS-5 forgetting curve
+ret-14-S3-t1,retrievability,S=3 elapsedDays=1,0.963,0.963,MATCHED,React adapter delegates to canonical FSRS-5 forgetting curve
+ret-15-S3-t4,retrievability,S=3 elapsedDays=4,0.873,0.873,MATCHED,React adapter delegates to canonical FSRS-5 forgetting curve
+ret-16-S7-t1,retrievability,S=7 elapsedDays=1,0.984,0.984,MATCHED,React adapter delegates to canonical FSRS-5 forgetting curve
+ret-17-S7-t4,retrievability,S=7 elapsedDays=4,0.939,0.939,MATCHED,React adapter delegates to canonical FSRS-5 forgetting curve
+urg-18-R0.9,urgency,retrievability=0.9,urgency=0.100 (multiplied as 1+x),riskTerm=1.100 (== 1+urgency),MATCHED,R-011 canonical multiplicative risk term
+urg-19-R0.7,urgency,retrievability=0.7,urgency=0.300 (multiplied as 1+x),riskTerm=1.300 (== 1+urgency),MATCHED,R-011 canonical multiplicative risk term
+urg-20-R0.4,urgency,retrievability=0.4,urgency=0.600 (multiplied as 1+x),riskTerm=1.600 (== 1+urgency),MATCHED,R-011 canonical multiplicative risk term
+urg-04-engine-order,urgency,"two due cards, higher-urgency due later",ROI-ordered (priorityScore/urgency),dueAt-ordered (buildDailyQueue core),DIVERGED,Worker /api/queue uses computePriorityV3; @ael/engine buildDailyQueue still sorts only by dueAt

@@ -16,6 +16,13 @@
  */
 
 import {
+  calculateRetrievability as calculateSharedRetrievability,
+  initializeFSRSState,
+  Rating as SharedFSRSRating,
+  scheduleNextFSRS,
+} from '@ael/engine';
+
+import {
   KnowledgeNode,
   NodeDependency,
   QuestionItem,
@@ -238,47 +245,21 @@ export function initFSRS(now = new Date()): CardFSRSState {
   };
 }
 
+export function calculateCardRetrievability(stability: number, daysElapsed: number): number {
+  return calculateSharedRetrievability(stability, daysElapsed);
+}
+
 export function stepFSRS(
   prev: CardFSRSState,
   grade: 1 | 2 | 3 | 4,
   now = new Date()
 ): CardFSRSState {
-  const d0 = prev.difficulty || 5.0;
-  const s0 = prev.stability > 0 ? prev.stability : 1.8;
-
-  const nextDiff = Math.min(10, Math.max(1, d0 - 0.6 * (grade - 3)));
-  let nextStab = s0;
-  let lapses = prev.lapses;
-  let intervalDays = 1;
-
-  if (grade === 1) {
-    nextStab = Math.max(0.5, s0 * 0.4);
-    lapses += 1;
-    intervalDays = 0;
-  } else if (grade === 2) {
-    nextStab = Math.max(1.2, s0 * 1.25);
-    intervalDays = Math.max(1, Math.round(nextStab));
-  } else if (grade === 3) {
-    nextStab = s0 * (1 + 1.45 * Math.pow(11 - nextDiff, 0.5) * Math.pow(s0, -0.15));
-    intervalDays = Math.max(2, Math.round(nextStab));
-  } else {
-    nextStab = s0 * (1 + 2.1 * Math.pow(11 - nextDiff, 0.5) * Math.pow(s0, -0.15));
-    intervalDays = Math.max(4, Math.round(nextStab * 1.3));
-  }
-
-  const dueDate = new Date(now.getTime() + intervalDays * 86400000);
-  const retrievability = grade === 1 ? 0.65 : Math.min(0.99, 0.88 + nextStab * 0.01);
-
-  return {
-    stability: Number(nextStab.toFixed(2)),
-    difficulty: Number(nextDiff.toFixed(2)),
-    retrievability: Number(retrievability.toFixed(2)),
-    reps: prev.reps + 1,
-    lapses,
-    lastReviewedAt: now.toISOString(),
-    dueAt: dueDate.toISOString(),
-    intervalDays,
-  };
+  const rating: SharedFSRSRating = grade;
+  // stability=0 is the persisted legacy sentinel for a card that has never been reviewed.
+  // Preserve the sentinel at initialization; the first actual answer initializes canonical FSRS.
+  return prev.stability <= 0
+    ? initializeFSRSState(rating, now)
+    : scheduleNextFSRS(prev, rating, now);
 }
 
 /* ------------------------------------------------------------------ */
@@ -704,8 +685,7 @@ export function applyLessonUnderstandingRating(params: {
   st.masteryScore = before;
   st.proficiencyProbability = Number((before / 100).toFixed(2));
   st.selfReportedUnderstanding = rating;
-  st.memoryStability = intervalDays || 0.8;
-  st.retrievability = rating >= 3 ? 0.94 : 0.72;
+  // Memory stability/retrievability change only after an actual review event.
   st.lastLessonSelfRating = rating;
 
   // بروزرسانی مرز دانش (Knowledge Frontier)

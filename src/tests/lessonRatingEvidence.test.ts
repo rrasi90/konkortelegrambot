@@ -113,6 +113,28 @@ describe('applyLessonUnderstandingRating — خواندن، تسلط نمی‌س
     );
   });
 
+  it('خودارزیابی درسنامه پایداری و احتمال بازیابی حافظه را تغییر نمی‌دهد', () => {
+    const base = buildBase();
+    base.nodeStates[targetNode.id] = {
+      ...base.nodeStates[targetNode.id],
+      memoryStability: 12.5,
+      retrievability: 0.63,
+    };
+    const result = applyLessonUnderstandingRating({
+      nodeId: targetNode.id,
+      rating: 5,
+      nodeStates: base.nodeStates,
+      cards: base.cards,
+      stats: base.stats,
+      nodes,
+      dependencies,
+      questions,
+    });
+
+    expect(result.nextNodeStates[targetNode.id].memoryStability).toBe(12.5);
+    expect(result.nextNodeStates[targetNode.id].retrievability).toBe(0.63);
+  });
+
   it('initFSRS برای کارت جدید پایداری صفر می‌سازد (بدون تقلب در مرور)', () => {
     const fsrs = initFSRS(new Date('2026-11-01T00:00:00Z'));
     expect(fsrs.stability).toBe(0);
