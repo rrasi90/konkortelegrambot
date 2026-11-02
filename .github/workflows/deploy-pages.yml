@@ -36,6 +36,11 @@ jobs:
       - name: Build Vite App
         run: npm run build
 
+      # Fail closed: the legacy React bundle currently contains exam answer keys.
+      # Keep this gate until the UI is migrated to authenticated Worker answer endpoints.
+      - name: Reject public bundles containing answer keys
+        run: npm run audit:client-bundle
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
