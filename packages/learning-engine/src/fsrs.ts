@@ -12,25 +12,39 @@ export const Rating = {
 
 export type Rating = (typeof Rating)[keyof typeof Rating];
 
-/** Standard FSRS default parameter weights (calibrated for academic multiple-choice) */
+/**
+ * وزن‌های پیش‌فرض منتشرشدهٔ FSRS-5.
+ * مبدأ: FSRS5_DEFAULT_WEIGHTS در پکیین مرجعِ قفل‌شده `ts-fsrs@6.0.0`
+ * (node_modules/ts-fsrs/dist/constants-*.cjs) — همان منبعی که تست مرجع
+ * (`tests/fsrs-reference.test.ts`) با آن مقایسه می‌کند.
+ *
+ * چرا این مجموعه و نه مقادیر قبلی؟ قبلاً w[4]=4.93 و w[5]=0.94 (مقادیر
+ * FSRS-4.5) در فرمول نماییِ FSRS-5 برای دشواری اولیه به کار می‌رفت و نتیجه
+ * D0(Good)=D0(Easy)=1 می‌شد؛ یعنی بُعد دشواری عملاً از کار می‌افتاد.
+ * ادعای «کالیبره‌شده برای سؤالات تستی دانشگاه» در نسخهٔ قبل هیچ شواهدی
+ * نداشت و حذف شده است؛ تا کالیبراسیون واقعی روی دادهٔ خودِ محصول، این
+ * مقادیرِ منتشرشده مبنای صریح و قابل‌استناد است.
+ */
 export const DEFAULT_FSRS_WEIGHTS = [
-  0.4,  // w[0]: initial stability for Rating.Again
-  1.2,  // w[1]: initial stability for Rating.Hard
-  3.2,  // w[2]: initial stability for Rating.Good
-  8.0,  // w[3]: initial stability for Rating.Easy
-  4.93, // w[4]: initial difficulty base
-  0.94, // w[5]: initial difficulty scaling
-  0.86, // w[6]: difficulty step per rating delta
-  0.01, // w[7]: difficulty mean-reversion factor
-  1.49, // w[8]: stability recall exponent
-  0.14, // w[9]: stability power decay
-  0.94, // w[10]: retrievability factor in stability increase
-  2.18, // w[11]: stability forget base
-  0.05, // w[12]: forget difficulty power
-  0.34, // w[13]: forget stability power
-  1.26, // w[14]: retrievability impact on forget
-  0.29, // w[15]: hard rating penalty multiplier
-  2.61, // w[16]: easy rating bonus multiplier
+  0.40255, // w[0]: initial stability for Rating.Again
+  1.18385, // w[1]: initial stability for Rating.Hard
+  3.173,   // w[2]: initial stability for Rating.Good
+  15.69105, // w[3]: initial stability for Rating.Easy
+  7.1949,  // w[4]: initial difficulty base
+  0.5345,  // w[5]: initial difficulty scaling
+  1.4604,  // w[6]: difficulty step per rating delta
+  0.0046,  // w[7]: difficulty mean-reversion factor
+  1.54575, // w[8]: stability recall exponent
+  0.1192,  // w[9]: stability power decay
+  1.01925, // w[10]: retrievability factor in stability increase
+  1.9395,  // w[11]: stability forget base
+  0.11,    // w[12]: forget difficulty power
+  0.29605, // w[13]: forget stability power
+  2.2698,  // w[14]: retrievability impact on forget
+  0.2315,  // w[15]: hard rating penalty multiplier
+  2.9898,  // w[16]: easy rating bonus multiplier
+  0.51655, // w[17]: same-day stability factor (FSRS-5 defines it; ما هنوز استفاده نمی‌کنیم)
+  0.6621,  // w[18]: same-day stability exponent (استفاده‌نشده — انحراف مستند)
 ] as const;
 
 /** Retention factor constant: 19 / 81 ensures R(S, S) = 0.90 (see DECAY below) */
@@ -42,6 +56,15 @@ export const FSRS_FACTOR = 19 / 81;
  * which is the definition of stability in FSRS.
  */
 export const FSRS_DECAY = -0.5;
+
+/** §8.2 — تنها آستانهٔ آمادگی اثبات تسلط (در سراسر موتور).
+ * پیش‌تر دو مقدار موازی وجود داشت (۰٫۶۵ در وضعیت پوشش و ۰٫۷۵ در نامزد اثبات)؛
+ * چون Worker کارت holdout را از روی coverageStatus صادر می‌کند آستانهٔ واقعی
+ * ۰٫۶۵ بود، در حالی که کامنت‌ها ۰٫۷۵ را ادعا می‌کردند. */
+export const PROOF_READINESS_PROFICIENCY = 0.75;
+
+/** حداقل شمار شواهد پیش از درخواست اثبات */
+export const PROOF_READINESS_MIN_EVIDENCE = 3;
 
 function getW(w: readonly number[], index: number): number {
   return w[index] ?? (DEFAULT_FSRS_WEIGHTS as readonly number[])[index] ?? 1.0;
@@ -137,10 +160,14 @@ export function scheduleNextFSRS(
   const D = currentState.difficulty;
   const S = currentState.stability;
 
-  // 1. Next Difficulty: mean-reversion towards D0(3)
-  const d0Good = getW(w, 4) - Math.exp(getW(w, 5) * 2) + 1;
+  // 1. Next Difficulty: mean-reversion towards the clamp of D0(Easy).
+  // مرجع: در ts-fsrs نیز `mean_reversion(init_difficulty(Rating.Easy), next_d)`
+  // و سپس clamp به [1,10] است. نسخهٔ قبلی D0(3) را «بدون clamp» هدف می‌گرفت و
+  // با وزن‌های FSRS-4.5 آن مقدار منفی می‌شد؛ جاذبِ دشواری اشتباه بود.
+  const d0EasyRaw = getW(w, 4) - Math.exp(getW(w, 5) * (Rating.Easy - 1)) + 1;
+  const d0Easy = Math.max(1.0, Math.min(10.0, d0EasyRaw));
   const deltaD = -getW(w, 6) * (rating - 3);
-  const rawNextD = getW(w, 7) * d0Good + (1 - getW(w, 7)) * (D + deltaD);
+  const rawNextD = getW(w, 7) * d0Easy + (1 - getW(w, 7)) * (D + deltaD);
   const nextD = Math.max(1.0, Math.min(10.0, rawNextD));
 
   // 2. Next Stability
@@ -230,7 +257,10 @@ export interface SkillEvidenceInput {
   wasCorrect: boolean;
   responseTimeMs?: number;
   expectedTimeMs?: number;
-  currentMastery: number; // 0-100
+  /** تسلط فعلی گره؛ undefined یعنی «هنوز هیچ شاهدی نیست» (§8.1/§8.6).
+   * این مقدار هرگز با عدد پیش‌فرض ۵۰ پر نمی‌شود، وگرنه نبودِ شاهد به‌اشتباه
+   * ضعفِ سنجیده‌شده تفسیر می‌شود. */
+  currentMastery?: number; // 0-100
   prerequisiteMastery?: number; // 0-100
   confidenceRating?: number; // 1-5
   /** خوداظهاری لغزش (slip): شاهد شکاف نیست — از کسر شایستگی می‌کاهد */
@@ -266,7 +296,7 @@ export function classifyErrorType(
   const hasTrap = !!evidence.trapNote;
 
   // 1) لغزش: شایستگی بالا + پاسخ بسیار سریع — موجه توقف موج سرایت
-  if (evidence.currentMastery >= 75 && fast) return 'slip';
+  if (evidence.currentMastery !== undefined && evidence.currentMastery >= 75 && fast) return 'slip';
   if (evidence.isSlip) return 'slip';
 
   // 2) فشار زمان: پاسخ بسیار کندتر از زمان مجاز
@@ -274,6 +304,7 @@ export function classifyErrorType(
 
   // 3) فراموشی: شایستگی پیشین بالا ولی بازیابی حافظه پایین
   if (
+    evidence.currentMastery !== undefined &&
     evidence.currentMastery >= 60 &&
     evidence.memoryRetrievability !== undefined &&
     evidence.memoryRetrievability < 0.7
@@ -281,7 +312,9 @@ export function classifyErrorType(
     return 'recall_failure';
   }
 
-  // 4) خلط نظریه‌ها: دامِ تستی + ضعف هم‌خانوادهٔ مفهومی (حداقل دو شواهد)
+  // 4) خلط نظریه‌ها: دامِ تستی + ضعف «سنجیده‌شدهٔ» هم‌خانوادهٔ مفهومی.
+  // siblingMasteries فقط گره‌های دارای شاهده؛ گرهٔ ندیده‌شده نباید با مقدار
+  // پیش‌فرض ۵۰ وارد شود، وگرنه این قاعده برای هر سؤال دام‌دار آتش می‌گیرد.
   if (hasTrap && (evidence.siblingMasteries ?? []).some((m) => m < 60)) {
     return 'theory_confusion';
   }
@@ -309,8 +342,9 @@ export function classifyErrorType(
     return 'knowledge_gap';
   }
 
-  // 10) شکاف مفهومی: خودِ گره ضعیف بوده و پاسخ هم منطقیِ همان شکاف است
-  if (evidence.currentMastery < 60) return 'concept_gap';
+  // 10) شکاف مفهومی: خودِ گره «سنجیده‌شده» ضعیف بوده و پاسخ هم منطقیِ همان شکاف است.
+  // بدون شاهد (currentMastery === undefined) ضعف قطعی فرض نمی‌شود → unknown.
+  if (evidence.currentMastery !== undefined && evidence.currentMastery < 60) return 'concept_gap';
 
   // شواهد ناکافی — ضعف قطعی فرض نمی‌شود
   return 'unknown';
@@ -427,7 +461,10 @@ export function update6DLearnerSkillState(
     status = 'diagnosed';
   } else if (!wasCorrect && !isSlip) {
     status = 'remediated';
-  } else if (newProficiency >= 0.65 && newEvidenceCount >= 3) {
+  } else if (
+    newProficiency >= PROOF_READINESS_PROFICIENCY &&
+    newEvidenceCount >= PROOF_READINESS_MIN_EVIDENCE
+  ) {
     status = 'needs_proof';
   } else {
     status = 'learning';

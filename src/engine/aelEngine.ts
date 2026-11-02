@@ -1129,7 +1129,9 @@ export function evaluateAnswerAndRipple(params: {
 
   const before = currentSixD.masteryScore;
   const penalty = before === 0 ? 0 : Math.max(6, Math.round(before * 0.22));
-  const after = before === 0 ? 12 : Math.max(12, before - penalty);
+  // پاسخ غلط هرگز نباید تسلط را بالا ببرد. نسخهٔ قبلی برای گرهٔ سنجیده‌نشده
+  // (before=0) مقدار ۱۲ می‌نوشت؛ یعنی «غلط جواب دادن» شایستگی می‌ساخت.
+  const after = before === 0 ? 0 : Math.max(0, before - penalty);
 
   currentSixD.masteryScore = after;
   currentSixD.proficiencyProbability = Number((after / 100).toFixed(2));
@@ -1246,7 +1248,9 @@ export function evaluateAnswerAndRipple(params: {
     if (targetNode && targetState) {
       const pBefore = targetState.masteryScore;
       const pPenalty = pBefore === 0 ? 0 : Math.max(3, Math.round(pBefore * 0.12 * edge.weight));
-      const pAfter = pBefore === 0 ? 10 : Math.max(15, pBefore - pPenalty);
+      // موج ناشی از یک پاسخ غلط نباید پیش‌نیاز/هم‌خانوادهٔ سنجیده‌نشده را از ۰
+      // به ۱۰ برساند و یا کف ۱۵ تحمیل کند؛ سرایت فقط کسر می‌کند، نه اعطا.
+      const pAfter = pBefore === 0 ? 0 : Math.max(0, pBefore - pPenalty);
       targetState.masteryScore = pAfter;
       targetState.proficiencyProbability = Number((pAfter / 100).toFixed(2));
       targetState.rippleAlert = 'probe_queued';
@@ -1375,7 +1379,9 @@ export function rollbackSlipPenalty(
 
   const target = restoredNodeStates[currentReport.nodeId];
   const before = target.masteryScore;
-  const after = Math.max(before === 0 ? 0 : 20, before - 2);
+  // «بازگشت» لغزش یعنی حذف تنبیه، نه ساختن شایستگی. کف ۲۰ در نسخهٔ قبلی
+  // باعث می‌شد گره‌ای که ۱۵ بود بعد از اعلام لغزش به ۲۰ برسد (افزایش!).
+  const after = Math.max(0, before - 2);
   target.masteryScore = after;
   target.proficiencyProbability = Number((after / 100).toFixed(2));
   target.rippleAlert = null;

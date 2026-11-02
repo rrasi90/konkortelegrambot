@@ -301,7 +301,7 @@ describe('R-038 — پیشرفت خانه: «بی‌شاهد» با صفر یک�
     const me = await json(await app.request('/api/me', authed(token)));
     const userId = me.user.id as string;
 
-    await store.upsertMastery(userId, [{ userId, nodeId: 'sm.rbv', mastery: 80, status: 'mastered' }]);
+    await store.upsertMastery(userId, [{ nodeId: 'sm.rbv', mastery: 80, status: 'mastered' }]);
 
     const home = await json(await app.request('/api/home', authed(token)));
     expect(home.progress.assessedNodes).toBe(1);
