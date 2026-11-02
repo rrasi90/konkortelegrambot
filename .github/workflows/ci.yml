@@ -18,6 +18,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+      - run: npx tsx scripts/engine-parity-harness.mts
       - run: npm run validate:content
 
   database:
