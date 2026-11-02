@@ -101,7 +101,7 @@ export interface ExamSessionPlan {
   pathTitle: string;
   bookletCode: string;
   structureVerification: ExamYearStructure['verification'];
-  negativeMarkingRatio: number;
+  negativeMarkingRatio: number | null;
   sections: ExamSectionPlan[];
   officialTotalQuestions: number | null;
   allocatedTotalQuestions: number;
@@ -352,6 +352,11 @@ export function buildExamSessionPlan(input: BuildExamSessionPlanInput): ExamSess
       'زمان هر بخش برای این سال در ساختار رسمی ثبت نشده است؛ فقط جمع زمان‌های معلوم اعلام می‌گردد و جلسه زمان‌بندی‌شدهٔ رسمی محسوب نمی‌شود.'
     );
   }
+  if (structure.negativeMarkingRatio === null) {
+    disclosures.push(
+      'نمرهٔ منفی این سال از دفترچهٔ رسمی تأیید نشده است؛ نمرهٔ وزنی رسمی محاسبه نمی‌شود و نتیجه صرفاً شمارش پاسخ‌هاست.'
+    );
+  }
 
   return {
     level: input.level,
@@ -399,9 +404,9 @@ export interface ExamSectionScore {
   correct: number;
   wrong: number;
   unanswered: number;
-  /** درست − نسبت جریمه × نادرست */
-  netCorrect: number;
-  rawPercent: number;
+  /** null وقتی نمرهٔ منفی رسمی آن سال تأیید نشده باشد */
+  netCorrect: number | null;
+  rawPercent: number | null;
   weight: number;
 }
 
@@ -411,10 +416,10 @@ export interface ExamSessionReport {
   subGroupId: string;
   pathTitle: string;
   bookletCode: string;
-  negativeMarkingRatio: number;
+  negativeMarkingRatio: number | null;
   sections: ExamSectionScore[];
-  /** میانگین وزنیِ درصد بخش‌ها با ضریب‌های همان سال */
-  weightedScore: number;
+  /** null وقتی نمرهٔ منفی رسمی آن سال تأیید نشده باشد */
+  weightedScore: number | null;
   /** سهم ضریب بخش‌هایی که سؤال داشته‌اند از کل ضریب‌های رسمی */
   coefficientCoverageRatio: number;
   coverageRatio: number | null;
@@ -469,9 +474,15 @@ export function scoreExamSession(
       );
     }
     const allocated = slots.length;
-    const netCorrect = correct - plan.negativeMarkingRatio * wrong;
+    const penaltyRatio = plan.negativeMarkingRatio;
+    const netCorrect =
+      penaltyRatio === null ? null : correct - penaltyRatio * wrong;
     const rawPercent =
-      allocated === 0 ? 0 : Math.max(-100 * plan.negativeMarkingRatio, (netCorrect / allocated) * 100);
+      penaltyRatio === null
+        ? null
+        : allocated === 0
+          ? 0
+          : Math.max(-100 * penaltyRatio, ((netCorrect ?? 0) / allocated) * 100);
     sectionScores.push({
       sectionId: section.sectionId,
       title: section.title,
@@ -481,17 +492,25 @@ export function scoreExamSession(
       correct,
       wrong,
       unanswered,
-      netCorrect: Math.round(netCorrect * 100) / 100,
-      rawPercent: Math.round(rawPercent * 100) / 100,
+      netCorrect: netCorrect === null ? null : Math.round(netCorrect * 100) / 100,
+      rawPercent: rawPercent === null ? null : Math.round(rawPercent * 100) / 100,
       weight: allocated > 0 ? section.coefficient : 0,
     });
   }
 
-  const scored = sectionScores.filter((s) => s.weight > 0);
-  const weightedSum = scored.reduce((acc, s) => acc + s.weight * s.rawPercent, 0);
+  const scored = sectionScores.filter((s) => s.weight > 0 && s.rawPercent !== null);
+  const weightedSum = scored.reduce((acc, s) => acc + s.weight * (s.rawPercent ?? 0), 0);
   const weightTotal = scored.reduce((acc, s) => acc + s.weight, 0);
   const allCoefficientTotal = plan.sections.reduce((acc, s) => acc + s.coefficient, 0);
-  const weightedScore = weightTotal > 0 ? weightedSum / weightTotal : 0;
+  const weightedScore =
+    plan.negativeMarkingRatio !== null && weightTotal > 0
+      ? weightedSum / weightTotal
+      : null;
+  if (plan.negativeMarkingRatio === null) {
+    disclosures.push(
+      'به‌دلیل نامشخص بودن نمرهٔ منفی رسمی، درصد خالص و نمرهٔ وزنی رسمی محاسبه نشده‌اند.'
+    );
+  }
   const coefficientCoverageRatio =
     allCoefficientTotal > 0 ? weightTotal / allCoefficientTotal : 0;
 
@@ -510,7 +529,7 @@ export function scoreExamSession(
     bookletCode: plan.bookletCode,
     negativeMarkingRatio: plan.negativeMarkingRatio,
     sections: sectionScores,
-    weightedScore: Math.round(weightedScore * 100) / 100,
+    weightedScore: weightedScore === null ? null : Math.round(weightedScore * 100) / 100,
     coefficientCoverageRatio: Math.round(coefficientCoverageRatio * 1000) / 1000,
     coverageRatio: plan.coverageRatio === null ? null : Math.round(plan.coverageRatio * 1000) / 1000,
     readinessConfidence: Math.round(readinessConfidence * 1000) / 1000,
