@@ -8,11 +8,12 @@
   ],
   "tier": "quarantine",
   "counts": {
-    "total": 156,
+    "total": 17,
     "rawInput": 252,
     "mergedDuplicates": 96,
     "contentConflicts": 0,
-    "quarantine": 17
+    "quarantine": 17,
+    "corpusTotal": 156
   },
   "questions": [
     {
