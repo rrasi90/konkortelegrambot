@@ -395,6 +395,27 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(res.status).toBe(429);
   });
 
+  it('A-26: محدودکننده خودش را در پاسخ گزارش می‌دهد (قابل مشاهده در پروداکشن)', async () => {
+    const limited = createApp({ ...ENV }, { store: new MemoryStore() });
+    const first = await limited.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramUserId: 4242, displayName: 'x' }),
+    });
+    expect(first.headers.get('x-ratelimit-limit')).toBe('30');
+    expect(first.headers.get('x-ratelimit-remaining')).toBe('29');
+    expect(first.headers.get('x-ratelimit-key')).toMatch(/^[0-9a-f]{8}$/);
+
+    const second = await limited.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '203.0.113.9' },
+      body: JSON.stringify({ telegramUserId: 4243, displayName: 'x' }),
+    });
+    // کلید متفاوت ⇒ اثر انگشت متفاوت و شمارندهٔ جدا
+    expect(second.headers.get('x-ratelimit-key')).not.toBe(first.headers.get('x-ratelimit-key'));
+    expect(second.headers.get('x-ratelimit-remaining')).toBe('29');
+  });
+
   it('R-040: وب‌هوک بدون Secret Token درست یا با Secret اشتباه رد می‌شود', async () => {
     const body = JSON.stringify({
       message: { chat: { id: 987654 }, text: '/start' },

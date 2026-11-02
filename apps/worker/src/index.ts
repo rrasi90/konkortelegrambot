@@ -350,7 +350,17 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   const rateLimits = options.rateLimits ?? globalRateLimits;
   const RATE_WINDOW_MS = 60_000;
   const RATE_MAX = 30;
-  function rateLimit(c:any,next:()=>void){
+
+  /** اثر انگشت کوتاه کلید محدودکننده؛ خودِ کلید (توکن/IP) به کلاینت نشت نمی‌کند */
+  async function keyFingerprint(key: string): Promise<string> {
+    const bytes = new TextEncoder().encode(key);
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(digest).slice(0, 4))
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
+
+  function rateLimit(c:any,next:()=>Promise<void>){
     const key = (c.req.header('authorization')||c.req.header('x-forwarded-for')||'anon') as string;
     const now = Date.now();
     // پاک‌سازی دوره‌ای: در پروداکشن شمارنده سطح isolate است و بدون این،
@@ -358,10 +368,32 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (rateLimits.size > 1000) {
       for (const [k, v] of rateLimits) if (now > v.resetAt) rateLimits.delete(k);
     }
-    const entry = rateLimits.get(key);
-    if(!entry || now>entry.resetAt){ rateLimits.set(key,{count:1,resetAt:now+RATE_WINDOW_MS}); return next(); }
-    if(entry.count>=RATE_MAX) return c.json({error:'درخواست بیش از حد مجاز'},429);
-    entry.count++; return next();
+    let entry = rateLimits.get(key);
+    if(!entry || now>entry.resetAt){ entry = {count:1,resetAt:now+RATE_WINDOW_MS}; rateLimits.set(key,entry); }
+    else if(entry.count>=RATE_MAX){
+      // ۴۲۹ با هدرهای صریح (نه c.header بعد از ساخت پاسخ) تا در همهٔ runtimeها دیده شوند
+      return c.json(
+        { error: 'درخواست بیش از حد مجاز' },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': String(RATE_MAX),
+            'X-RateLimit-Remaining': '0',
+            'X-RateLimit-Window-Ms': String(RATE_WINDOW_MS),
+          },
+        },
+      );
+    }
+    else entry.count++;
+    // مشاهده‌پذیری (A-26): بدون این سرها نمی‌توان تشخیص داد که در پروداکشن
+    // شمارنده واقعاً بین درخواست‌ها share می‌شود یا هر درخواست به isolate تازه می‌افتد.
+    c.header('X-RateLimit-Limit', String(RATE_MAX));
+    c.header('X-RateLimit-Remaining', String(Math.max(0, RATE_MAX - entry.count)));
+    c.header('X-RateLimit-Window-Ms', String(RATE_WINDOW_MS));
+    return keyFingerprint(key).then((fp) => {
+      c.header('X-RateLimit-Key', fp);
+      return next();
+    });
   }
   // R-010: محدودکنندهٔ نرخ روی مسیرهای احراز هویت و ثبت پاسخ (قبلاً تعریف‌شده ولی متصل‌نشده بود)
   app.use('/api/auth/*', (c, next) => rateLimit(c, next));

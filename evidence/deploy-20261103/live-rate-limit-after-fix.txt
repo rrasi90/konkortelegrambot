@@ -1,0 +1,3 @@
+requests issued: 34 | statuses tail: 200,200,200,200
+A-25 fixed in production: NO
+threshold matches RATE_MAX=30: false
