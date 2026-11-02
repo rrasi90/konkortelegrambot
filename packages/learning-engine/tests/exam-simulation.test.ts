@@ -180,6 +180,28 @@ describe('§8.7 ساختار رسمی جلسهٔ شبیه‌سازی', () => {
     expect(plan.disclosures.join('\n')).toContain('تعداد سؤالات «استعداد تحصیلی»');
   });
 
+  it('برای ۱۴۰۶ جزئیات تأییدنشدهٔ ۱۴۰۵ را کپی نمی‌کند و نمرهٔ رسمی نمی‌سازد', () => {
+    const plan = buildExamSessionPlan({
+      level: 'doctorate',
+      examYear: 1406,
+      subGroupId: 'industrial',
+      questions: doctoratePool,
+      nodes,
+      newAttemptId: attemptFactory(),
+    });
+    expect(plan.structureVerification).toBe('reported');
+    expect(plan.officialTotalQuestions).toBeNull();
+    expect(plan.coverageRatio).toBeNull();
+    expect(plan.durationMinutes).toBeNull();
+    expect(plan.timingVerified).toBe(false);
+    expect(plan.negativeMarkingRatio).toBeNull();
+    expect(plan.answerSheet).toHaveLength(0);
+    const report = scoreExamSession(plan, doctoratePool, []);
+    expect(report.weightedScore).toBeNull();
+    expect(report.sections.every((section) => section.rawPercent === null)).toBe(true);
+    expect(report.disclosures.join('\\n')).toContain('نمرهٔ وزنی رسمی محاسبه نمی‌شود');
+  });
+
   it('سطح ارشد در سرور شبیه‌سازی نمی‌شود و دلیل صادقانهٔ کمبود محتوا برمی‌گردد', () => {
     expect(() =>
       buildExamSessionPlan({
