@@ -1,0 +1,7 @@
+npm notice run react-example@0.0.0 validate:phase1
+npm notice run node scripts/validate-phase-1-foundation.mjs
+PHASE 1 FOUNDATION VALIDATION: PASS
+- 1405 row-level field mappings: 31
+- Proposed curriculum topics: 172
+- Registered sources: 12
+- 1406 remains partially verified; no unverified combinations were inferred.

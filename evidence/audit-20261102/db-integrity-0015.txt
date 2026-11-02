@@ -1,0 +1,25 @@
+== scratch DB recreate ==
+DROP DATABASE
+CREATE DATABASE
+psql:<stdin>:148: NOTICE:  trigger "trg_mastery_touch" for relation "user_node_mastery" does not exist, skipping
+psql:<stdin>:150: NOTICE:  trigger "trg_review_cards_touch" for relation "review_cards" does not exist, skipping
+psql:<stdin>:49: NOTICE:  trigger "trg_holdout_check" for relation "exam_pack_questions" does not exist, skipping
+psql:<stdin>:65: NOTICE:  policy "read_exam_packs" for relation "exam_packs" does not exist, skipping
+psql:<stdin>:72: NOTICE:  policy "read_holdout_context" for relation "exam_pack_questions" does not exist, skipping
+psql:<stdin>:73: NOTICE:  policy "read_exam_pack_questions" for relation "exam_pack_questions" does not exist, skipping
+psql:<stdin>:49: NOTICE:  trigger "trg_user_node_mastery_history" for relation "user_node_mastery" does not exist, skipping
+psql:<stdin>:90: NOTICE:  policy "read_own_exam_selections" for relation "exam_selections" does not exist, skipping
+psql:<stdin>:92: NOTICE:  policy "read_own_mastery_history" for relation "mastery_history" does not exist, skipping
+psql:<stdin>:94: NOTICE:  policy "read_own_audit_logs" for relation "audit_logs" does not exist, skipping
+psql:<stdin>:96: NOTICE:  policy "read_own_daily_queue_items" for relation "daily_queue_items" does not exist, skipping
+psql:<stdin>:148: NOTICE:  policy "read_own_exam_sessions" for relation "exam_sessions" does not exist, skipping
+psql:<stdin>:150: NOTICE:  policy "read_own_exam_session_items" for relation "exam_session_items" does not exist, skipping
+psql:<stdin>:153: NOTICE:  policy "read_own_exam_session_responses" for relation "exam_session_responses" does not exist, skipping
+psql:<stdin>:42: NOTICE:  policy "read_own_app_users" for relation "app_users" does not exist, skipping
+== integrity 16 blocks ==
+INTEGRITY_EXIT=0
+== counts ==
+questions=18
+nodes=27
+packs=1
+skills=17

@@ -1,0 +1,11 @@
+ALTER TABLE
+COMMENT
+REVOKE
+GRANT
+COMMENT
+ALTER TABLE
+DROP POLICY
+psql:<stdin>:42: NOTICE:  policy "read_own_app_users" for relation "app_users" does not exist, skipping
+CREATE POLICY
+ALTER DEFAULT PRIVILEGES
+ALTER DEFAULT PRIVILEGES

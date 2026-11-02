@@ -1,0 +1,6 @@
+npm notice run react-example@0.0.0 validate:content
+npm notice run node scripts/validate-content.mjs --all
+بستهٔ «demo-pack-phd-management» معتبر است: 17 گره، 14 یال، 18 سؤال. (0 هشدار)
+بستهٔ «phd-management-business-v1» معتبر است: 18 گره، 14 یال، 21 سؤال. (0 هشدار)
+
+همهٔ 2 بستهٔ محتوایی معتبرند.
