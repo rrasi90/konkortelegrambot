@@ -19,7 +19,8 @@
     "build:worker": "npm run --prefix apps/worker build",
     "validate:content": "node scripts/validate-content.mjs --all",
     "test": "vitest run",
-    "validate:phase1": "node scripts/validate-phase-1-foundation.mjs"
+    "validate:phase1": "node scripts/validate-phase-1-foundation.mjs",
+    "audit:client-bundle": "tsx scripts/audit-client-bundle.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
