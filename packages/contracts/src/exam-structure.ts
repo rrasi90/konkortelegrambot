@@ -376,7 +376,7 @@ export interface ExamYearStructure {
   languageQuestionCount: number | null;
   durationMinutes: { specialization: number | null; language: number | null };
   /** جریمهٔ هر پاسخ نادرست به نسبت هر پاسخ درست */
-  negativeMarkingRatio: number;
+  negativeMarkingRatio: number | null;
   verification: ExamVerification;
   source: string;
   changes: string[];
@@ -436,15 +436,20 @@ export const DOCTORATE_EXAM_YEAR_STRUCTURES: Record<number, ExamYearStructure> =
     languageCoefficient: 1,
     aptitudeCoefficient: null,
     hasAptitude: false,
-    specializationQuestionCount: { min: 80, max: 90 },
-    languageQuestionCount: 40,
-    durationMinutes: { specialization: 105, language: 40 },
-    negativeMarkingRatio: 1 / 3,
+    // اطلاعیهٔ عمومی فقط ضرایب را تثبیت کرده است؛ تعداد، زمان و نمرهٔ منفی
+    // از دفترچهٔ ۱۴۰۶ استخراج نشده‌اند و نباید از ۱۴۰۵ کپی شوند.
+    specializationQuestionCount: null,
+    languageQuestionCount: null,
+    durationMinutes: { specialization: null, language: null },
+    negativeMarkingRatio: null,
     verification: 'reported',
     source:
-      'رویهٔ آزمون ۱۴۰۶ بر پایهٔ اطلاعیه‌های منتشرشده: ادامهٔ ساختار ۱۴۰۵ ' +
-      '(زبان ضریب ۱، تخصصی ضریب ۵، بدون استعداد تحصیلی). نیازمند تطبیق با دفترچهٔ رسمی ۱۴۰۶.',
-    changes: ['ساختار نسبت به ۱۴۰۵ تغییر نکرد.'],
+      'اطلاعیهٔ عمومی ۱۴۰۶ ضریب زبان ۱، ضریب مجموعهٔ تخصصی ۵ و حذف استعداد را گزارش می‌کند؛ ' +
+      'تعداد سؤال، مدت آزمون و نمرهٔ منفی تا دریافت پیوست رسمی نامشخص‌اند.',
+    changes: [
+      'ضرایب زبان ۱ و تخصصی ۵ بر اساس اطلاعیهٔ عمومی ۱۴۰۶ ثبت شده‌اند.',
+      'تعداد سؤال، مدت و نمرهٔ منفی در انتظار تطبیق با دفترچهٔ رسمی هستند.',
+    ],
   },
 };
 
@@ -518,6 +523,16 @@ export function getExamStructureWarnings(level: ExamLevel, year: number): string
       'ساختار این سال از منبع ثانویه ثبت شده و هنوز با دفترچهٔ رسمی تطبیق داده نشده است.'
     );
   }
+  if (structure.negativeMarkingRatio === null) {
+    warnings.push(
+      'نمرهٔ منفی این سال هنوز از دفترچهٔ رسمی تأیید نشده است؛ نمرهٔ وزنی رسمی محاسبه نمی‌شود.'
+    );
+  }
+  if (structure.specializationQuestionCount === null || structure.languageQuestionCount === null) {
+    warnings.push(
+      'تعداد سؤال‌های رسمی این سال هنوز تأیید نشده است؛ شبیه‌سازی با تعداد رسمی تا دریافت دفترچه ممکن نیست.'
+    );
+  }
   if (getExamPath(level).serverSimulation === 'content_gap') {
     warnings.push(getExamPath(level).serverSimulationReason ?? '');
   }
@@ -527,11 +542,13 @@ export function getExamStructureWarnings(level: ExamLevel, year: number): string
 /** مجموع ضریب‌ها برای محاسبهٔ سهم هر درس از نمرهٔ کل. */
 export function getCoefficientTotal(level: ExamLevel, year: number, subGroupId: string): number {
   const structure = getExamStructure(level, year);
-  const specialized = SUB_GROUP_SUBJECTS[subGroupId]?.length ?? 0;
+  // ضریب ۵ به کل بستهٔ تخصصی تعلق دارد، نه به هر یک از درس‌های داخل بسته.
+  // تعداد درس‌های فهرست‌شده نباید وزن رسمی تخصصی را چند برابر کند.
+  if (!SUB_GROUP_SUBJECTS[subGroupId]) return 0;
   return (
-    specialized * structure.specializationCoefficient +
-    structure.languageCoefficient +
-    (structure.aptitudeCoefficient ?? 0)
+    Math.max(0, structure.specializationCoefficient) +
+    Math.max(0, structure.languageCoefficient) +
+    Math.max(0, structure.aptitudeCoefficient ?? 0)
   );
 }
 
@@ -544,8 +561,7 @@ export function getSpecializationSharePercent(
   const structure = getExamStructure(level, year);
   const total = getCoefficientTotal(level, year, subGroupId);
   if (total <= 0) return 0;
-  const specialized =
-    (SUB_GROUP_SUBJECTS[subGroupId]?.length ?? 0) * structure.specializationCoefficient;
+  const specialized = Math.max(0, structure.specializationCoefficient);
   return Math.round((specialized / total) * 100);
 }
 
