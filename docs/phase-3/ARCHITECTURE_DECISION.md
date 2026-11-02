@@ -63,6 +63,13 @@ PARITY HARNESS: 21 scenarios, 0 diverged, 21 matched
 - `MemoryStore` همان قرارداد `DataStore` را implement می‌کند و برای تست‌های E2E و harness‌های محلی ضروری است؛ این فروشگاه موازی **نه** یک منبع دادهٔ دومی است و **نه** در Worker واقعی فعال می‌شود (ENV flag در production با hardening بررسی شده؛ R-010).
 - بنابراین: «حذف MemoryStore» هدف نیست؛ هدف **ممنوعیت استفاده از MemoryStore در production** است. hardening (R-010) این را تضمین می‌کند.
 
+### اصلاح انتقالی PR #8 — پشتیبان React، نه منبع حقیقت دومِ مورد تأیید
+
+- React اکنون snapshot کامل محلی خود را در Telegram CloudStorage v4 نیز پشتیبان می‌گیرد و آن را هنگام شروع، پیش از فعال‌کردن autosave، بازیابی می‌کند.
+- این مسیر برای رفع نقص واقعی read/write و جلوگیری از از دست رفتن پیشرفت React در تعویض دستگاه است؛ **تصمیم معماری R-025 را تغییر نمی‌دهد**.
+- تا زمانی که React به Worker API مهاجرت نکرده و آزمون برابری state با Supabase اجرا نشده، CloudStorage یک مسیر انتقالی/پشتیبان است و داده‌های React و Worker هنوز می‌توانند از هم جدا باشند.
+- دفتر خطا، تم و سایر داده‌های محلی خارج از snapshot این PR هستند.
+
 ## ۶) پاک‌سازی مرده (انجام‌شده در این خوشه)
 
 تابع مردهٔ `calculateMasteryDeltaWithInsights` از `apps/worker/src/store.ts` حذف شد (grep هیچ import/usage نشان نمی‌دهد). تأیید پس از حذف:
