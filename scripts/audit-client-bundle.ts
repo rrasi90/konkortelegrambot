@@ -8,7 +8,7 @@ export interface ClientBundleFinding {
   count: number;
 }
 
-const SCAN_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.json', '.html']);
+const SCAN_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.json', '.html', '.map']);
 const ANSWER_KEY_PATTERNS: Array<{
   field: ClientBundleFinding['field'];
   pattern: RegExp;
