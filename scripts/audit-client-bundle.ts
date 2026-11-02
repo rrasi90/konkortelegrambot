@@ -1,5 +1,5 @@
 import { readdir, readFile } from 'node:fs/promises';
-import { extname, join, relative, resolve } from 'node:path';
+import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export interface ClientBundleFinding {
@@ -58,6 +58,43 @@ async function collectAssets(
   return assets;
 }
 
+export async function assertWorkerAssetsConfiguration(
+  workerConfigPath = resolve(process.cwd(), 'apps/worker/wrangler.jsonc'),
+  expectedAssetDirectory = resolve(process.cwd(), 'apps/miniapp'),
+): Promise<void> {
+  const configText = await readFile(workerConfigPath, 'utf8');
+  let config: {
+    assets?: {
+      directory?: unknown;
+      run_worker_first?: unknown;
+    };
+  };
+  try {
+    config = JSON.parse(configText) as typeof config;
+  } catch {
+    throw new Error(`Worker assets audit requires valid JSON configuration: ${workerConfigPath}`);
+  }
+
+  const configuredDirectory = config.assets?.directory;
+  if (typeof configuredDirectory !== 'string' || configuredDirectory.trim() === '') {
+    throw new Error('Worker assets audit rejected: assets.directory is missing from wrangler.jsonc.');
+  }
+  const resolvedConfiguredDirectory = resolve(dirname(workerConfigPath), configuredDirectory);
+  if (resolvedConfiguredDirectory !== resolve(expectedAssetDirectory)) {
+    throw new Error(
+      `Worker assets audit rejected: Wrangler publishes ${resolvedConfiguredDirectory}, but the audited directory is ${resolve(expectedAssetDirectory)}.`,
+    );
+  }
+
+  const workerFirst = config.assets?.run_worker_first;
+  const apiUsesWorker =
+    workerFirst === true ||
+    (Array.isArray(workerFirst) && workerFirst.some((route) => route === '/api/*' || route === '/*'));
+  if (!apiUsesWorker) {
+    throw new Error('Worker assets audit rejected: /api/* must be routed through the Worker before static asset fallback.');
+  }
+}
+
 export async function auditClientBundle(
   root = resolve(process.cwd(), 'dist'),
 ): Promise<ClientBundleFinding[]> {
@@ -69,6 +106,9 @@ export async function auditClientBundle(
 }
 
 async function runAudit(root: string): Promise<void> {
+  if (resolve(root) === resolve(process.cwd(), 'apps/miniapp')) {
+    await assertWorkerAssetsConfiguration(undefined, root);
+  }
   const findings = await auditClientBundle(root);
   if (findings.length > 0) {
     const details = findings
