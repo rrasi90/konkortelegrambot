@@ -10,3 +10,5 @@ coverage/
 public/assets/aistudio/konkortelegrambot-main_*.zip
 *.tsbuildinfo
 apps/worker/.wrangler/
+.dev.vars
+apps/worker/.dev.vars
