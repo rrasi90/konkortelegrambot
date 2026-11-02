@@ -30,5 +30,4 @@ dependency instead of inventing results.
 **NO-GO / DEFER.** Local functional, API, database-query and DB-restore evidence is real and
 archived, but release criteria that require people or infrastructure — pilot, SME validation,
 staging/Telegram E2E, Worker-runtime/stress performance, monitoring and legal review — are not
-met. No merge to `main` and no production deployment was performed; both require explicit owner
-approval.
+met. The remediation changes are proposed for `main` in PR #5; regardless of merge, production deployment remains **NO-GO / DEFER** and requires a separate release gate and explicit approval.
