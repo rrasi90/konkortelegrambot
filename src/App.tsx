@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   createZeroStateEngine,
   hydrateAndReconcileSavedState,
@@ -39,6 +39,7 @@ import {
   parseTelegramStartParam,
   saveStateToTelegramStorage,
   loadStateFromTelegramStorage,
+  loadLatestStateFromTelegramStorage,
   clearTelegramZeroStateStorage,
   tmaHaptic,
 } from './utils/telegramBridge';
@@ -120,6 +121,9 @@ export default function App() {
   );
   const [cards, setCards] = useState<ReviewCard[]>(initialEngineData.cards);
   const [stats, setStats] = useState<UserStats>(initialEngineData.stats);
+  const [learnerStateHydrated, setLearnerStateHydrated] = useState(false);
+  const [storageRecoveryNotice, setStorageRecoveryNotice] = useState<string | null>(null);
+  const resetDuringHydrationRef = useRef(false);
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
   const [selectedExamYear, setSelectedExamYear] = useState<number>(1405);
@@ -145,6 +149,42 @@ export default function App() {
   );
   const [selectedSubjectId, setSelectedSubjectId] = useState<KonkorCourseSectionId>('islamic');
 
+  // بازیابی async از CloudStorage؛ تا پایان این مرحله autosave و تعامل آموزشی مسدود است.
+  useEffect(() => {
+    let cancelled = false;
+    const fallbackPayload = {
+      ...initialEngineData,
+      savedAt: new Date(0).toISOString(),
+    };
+    void loadLatestStateFromTelegramStorage(fallbackPayload)
+      .then((result) => {
+        if (cancelled) return;
+        if (!resetDuringHydrationRef.current) {
+          const reconciled = hydrateAndReconcileSavedState(
+            result.payload,
+            INITIAL_KNOWLEDGE_NODES,
+            INITIAL_QUESTION_BANK,
+            INITIAL_NODE_DEPENDENCIES,
+          );
+          setNodeStates(reconciled.nodeStates);
+          setCards(reconciled.cards);
+          setStats(reconciled.stats);
+        }
+        setStorageRecoveryNotice(result.warning ?? null);
+        setLearnerStateHydrated(true);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setStorageRecoveryNotice(
+          'بازیابی ذخیره انجام نشد؛ نسخهٔ موجود روی همین دستگاه حفظ شده است.',
+        );
+        setLearnerStateHydrated(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [initialEngineData]);
+
   // ۱. راه‌اندازی اولیه Telegram Mini-App SDK (disableVerticalSwipes + Theme)
   useEffect(() => {
     const root = document.documentElement;
@@ -161,15 +201,22 @@ export default function App() {
     initTelegramMiniApp(isDark);
   }, [isDark]);
 
-  // ۲. ذخیره‌سازی خودکار وضعیت در CloudStorage / LocalStorage تلگرام
+  // ۲. فقط پس از پایان بازیابی، snapshot کامل ذخیره می‌شود تا Zero-State روی backup ننویسد.
   useEffect(() => {
-    saveStateToTelegramStorage({
+    if (!learnerStateHydrated) return;
+    void saveStateToTelegramStorage({
       nodeStates,
       cards,
       stats,
       savedAt: new Date().toISOString(),
+    }).then((result) => {
+      if (!result.cloudSaved && result.error && !storageRecoveryNotice) {
+        setStorageRecoveryNotice(
+          'ذخیرهٔ محلی انجام شد، اما پشتیبان ابری ذخیره نشد. اتصال تلگرام را بررسی کنید.',
+        );
+      }
     });
-  }, [nodeStates, cards, stats]);
+  }, [nodeStates, cards, stats, learnerStateHydrated]);
 
   // ۳. ذخیره‌سازی دفتر خطا در حافظه محلی تا پس از بستن برنامه هم باقی بماند
   useEffect(() => {
@@ -257,7 +304,10 @@ export default function App() {
 
   // ریست کامل رکوردها به وضعیت صفر (Zero-State) و پاکسازی CloudStorage
   const handleResetToZeroState = () => {
-    clearTelegramZeroStateStorage();
+    resetDuringHydrationRef.current = true;
+    void clearTelegramZeroStateStorage().catch(() => {
+      setStorageRecoveryNotice('پاک‌سازی پشتیبان ابری کامل نشد؛ دوباره تلاش کنید.');
+    });
     const fresh = createZeroStateEngine(nodes, questions);
     setNodeStates(fresh.nodeStates);
     setCards(fresh.cards);
@@ -645,6 +695,34 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col ambient-bento-bg text-slate-900 dark:text-slate-100 transition-colors pb-20 md:pb-0">
+      {!learnerStateHydrated && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 p-6 text-center text-white backdrop-blur-sm"
+        >
+          <div className="max-w-sm rounded-2xl border border-white/15 bg-slate-900 p-6 shadow-2xl">
+            <div className="mx-auto mb-3 h-7 w-7 animate-spin rounded-full border-2 border-white/25 border-t-blue-400" />
+            <p className="font-bold">در حال بازیابی پیشرفت شما</p>
+            <p className="mt-2 text-sm text-slate-300">تا پایان بررسی نسخهٔ محلی و ابری، جلسهٔ آموزشی آغاز نمی‌شود.</p>
+          </div>
+        </div>
+      )}
+      {storageRecoveryNotice && learnerStateHydrated && (
+        <div
+          role="alert"
+          className="fixed bottom-4 left-4 right-4 z-[90] mx-auto max-w-2xl rounded-xl border border-amber-500/40 bg-amber-50 px-4 py-3 text-sm text-amber-950 shadow-lg dark:bg-amber-950 dark:text-amber-100"
+        >
+          {storageRecoveryNotice}
+          <button
+            type="button"
+            onClick={() => setStorageRecoveryNotice(null)}
+            className="mr-3 font-bold underline"
+          >
+            بستن
+          </button>
+        </div>
+      )}
       {/* نوار بالای یکپارچه و مینیمال با افکت Glassmorphism */}
       <header className="sticky top-0 z-40 glass-header px-3 sm:px-6 md:px-8 py-2.5 sm:py-3 w-full">
         <div className="max-w-[1240px] mx-auto flex items-center justify-between gap-2 sm:gap-4 w-full">

@@ -9,6 +9,8 @@
 
 Statuses follow the standard set only. A row without a linked artifact is not a pass.
 
+> **Client persistence correction (PR #8):** Telegram CloudStorage now stores complete chunked learner snapshots and is read on startup. This is a transitional React backup path only; it does not satisfy R-025 (React→Worker/Supabase canonical store), and the mistake notebook remains device-local.
+
 ## 1. Scientific validation
 
 | Item | Status | Evidence / limitation |
@@ -38,6 +40,7 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 |---|---|---|
 | Migrations apply from scratch | PASS_WITH_EVIDENCE | Docker PostgreSQL 16: 0001–0013 + seeds recreated from scratch in `scripts/bench-db.sh`; integrity suite EXIT=0 (`evidence/phase-5/db-integrity-0013.txt`) |
 | Data integrity constraints verified | PASS_WITH_EVIDENCE | Integrity suite incl. tickets, RLS/RPC checks (R-010, R-020, R-023) |
+| Telegram learner snapshot backup/recovery | PASS_WITH_EVIDENCE (scoped client tests) | PR #8 verifies complete React nodeStates/cards/stats backup, cloud restore, two-slot failure safety, version selection and Zero-State invalidation. Not a Supabase backup, not mistake-notebook backup and not staging Telegram-host E2E |
 | Backup and restore tested | PASS_WITH_EVIDENCE (scoped local DB) | `scripts/db-backup-restore.sh`: pg_dump → restore into fresh DB, all 6 key row counts match, index preserved (`evidence/phase-5/db-backup-restore.txt`); deployment artifact rollback still NOT_STARTED |
 | Availability SLA | NOT_STARTED | Not defined or measured |
 | Disaster recovery | NOT_STARTED | No DR plan/runbook |
