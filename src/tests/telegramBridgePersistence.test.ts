@@ -29,11 +29,13 @@ class MemoryStorage {
 let local: MemoryStorage;
 let cloud: Map<string, string>;
 let failCloudKeys: Set<string>;
+let cloudGetItemsCalls: number;
 
 function installStorageMocks() {
   local = new MemoryStorage();
   cloud = new Map();
   failCloudKeys = new Set();
+  cloudGetItemsCalls = 0;
 
   const cloudApi = {
     setItem: (
@@ -50,6 +52,13 @@ function installStorageMocks() {
     },
     getItem: (key: string, callback: (error: Error | null, value?: string) => void) => {
       callback(null, cloud.get(key));
+    },
+    getItems: (
+      keys: string[],
+      callback: (error: Error | null, values?: Record<string, string | null>) => void,
+    ) => {
+      cloudGetItemsCalls += 1;
+      callback(null, Object.fromEntries(keys.map((key) => [key, cloud.get(key) ?? null])));
     },
     removeItem: (
       key: string,
@@ -157,6 +166,32 @@ describe('Telegram CloudStorage full learner snapshots', () => {
 
     expect(result.source).toBe('cloud_v4');
     expect(result.payload).toEqual(original);
+  });
+
+  it('round-trips a Unicode surrogate pair placed exactly across a chunk boundary', async () => {
+    const empty = payload('2026-11-02T10:00:00.000Z', '');
+    const questionTextProperty = '"questionText":"';
+    const serializedEmpty = JSON.stringify(empty);
+    const textStart = serializedEmpty.indexOf(questionTextProperty) + questionTextProperty.length;
+    const prefixLength = 2999 - textStart;
+    expect(prefixLength).toBeGreaterThan(0);
+
+    const original = payload(
+      '2026-11-02T10:00:00.000Z',
+      `${'x'.repeat(prefixLength)}😀tail`,
+    );
+    const serialized = JSON.stringify(original);
+    expect(serialized.charCodeAt(2999)).toBeGreaterThanOrEqual(0xd800);
+    expect(serialized.charCodeAt(2999)).toBeLessThanOrEqual(0xdbff);
+    expect(serialized.charCodeAt(3000)).toBeGreaterThanOrEqual(0xdc00);
+    expect(serialized.charCodeAt(3000)).toBeLessThanOrEqual(0xdfff);
+
+    expect((await saveStateToTelegramStorage(original)).cloudSaved).toBe(true);
+    local.clear();
+    const restored = await loadLatestStateFromTelegramStorage(payload('1970-01-01T00:00:00.000Z'));
+
+    expect(restored.payload).toEqual(original);
+    expect(cloudGetItemsCalls).toBe(1);
   });
 
   it('does not replace the last committed cloud snapshot when a new chunk fails', async () => {
