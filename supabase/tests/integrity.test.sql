@@ -6,7 +6,9 @@
 do $$
 begin
   perform set_config('assert.status', 'ok', false);
-  if exists (select 1 from knowledge_nodes where track not in ('common','business','technology')) then
+  -- 0007 محدودیت CHECK را حذف کرد؛ فهرس معتبر گرایش در قرارداد است
+  -- (TRACK_IDS در @ael/contracts) و اینجا همان فهرس را برمی‌گرداند.
+  if exists (select 1 from knowledge_nodes where track not in ('common','business','technology','strategy','industrial')) then
     raise exception 'track نامعتبر در knowledge_nodes';
   end if;
   if not exists (select 1 from questions where verification_status = 'demo') then
@@ -387,5 +389,64 @@ begin
   delete from learner_skill_states where user_id = v_uid;
   delete from skills where id = v_skill_id;
   delete from app_users where id = v_uid;
+end
+$$;
+
+-- ۱۶) مهاجرت ۰۰۱۵: ستون انجماد زنجیره موجود، RPC منسوخ در دسترس عموم نباشد،
+-- app_users policy خواندن-خودی داشته باشد و default privileges تعریف شده باشد
+do $$
+declare
+  v_acl pg_catalog.aclitem[];
+begin
+  if not exists (
+    select 1 from information_schema.columns
+    where table_name = 'app_users' and column_name = 'streak_freeze_month'
+  ) then
+    raise exception 'ستون streak_freeze_month باید وجود داشته باشد وگرنه هر پاسخ روی Supabase با ۴۰۰/۵۰۰ می‌شکند';
+  end if;
+
+  if not exists (
+    select 1 from information_schema.columns
+    where table_name = 'app_users' and column_name = 'streak_freeze_granted'
+  ) then
+    raise exception 'ستون streak_freeze_granted باید وجود داشته باشد؛ خرید و مصرف قفل نمی‌توانند یک شمارنده باشند';
+  end if;
+
+  select proacl into v_acl
+  from pg_proc
+  where proname = 'submit_answer_atomic'
+  limit 1;
+
+  if v_acl is null then
+    raise exception 'تابع منسوخ submit_answer_atomic پیدا نشد';
+  end if;
+
+  if exists (
+    select 1 from unnest(v_acl) as a(item)
+    where a.item::text like '=%' or a.item::text like 'anon=%' or a.item::text like 'authenticated=%'
+  ) then
+    raise exception 'RPC منسوخ submit_answer_atomic نباید به public/anon/authenticated اجازهٔ اجرا داشته باشد';
+  end if;
+
+  if has_function_privilege('anon', 'submit_answer_atomic(uuid,text,integer,text,boolean,jsonb,jsonb,jsonb,jsonb)', 'EXECUTE')
+     or has_function_privilege('authenticated', 'submit_answer_atomic(uuid,text,integer,text,boolean,jsonb,jsonb,jsonb,jsonb)', 'EXECUTE') then
+    raise exception 'اجزة اجرای submit_answer_atomic برای نقش‌های عمومی بسته نشده است';
+  end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where tablename = 'app_users' and policyname = 'read_own_app_users'
+  ) then
+    raise exception 'app_users باید policy خواندن-خودی داشته باشد';
+  end if;
+
+  if not exists (
+    select 1 from pg_default_acl d
+    join pg_roles r on r.oid = d.defaclrole
+    where d.defaclobjtype = 'r'
+      and d.defaclacl::text like '%service_role=%'
+  ) then
+    raise exception 'default privileges برای جدول‌های آینده تعریف نشده است';
+  end if;
 end
 $$;

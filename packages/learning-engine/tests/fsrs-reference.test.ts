@@ -13,9 +13,19 @@
 //     stability/elapsed points (both curves satisfy R(S,S)=0.9 for S≥1) and NOT on
 //     fractional-S points or DSR transitions. Our engine implements the FSRS-5 transition
 //     formulas per spec; ts-fsrs numbers are not the acceptance criterion for transitions.
-//   our weights: DEFAULT_FSRS_WEIGHTS = 17-param FSRS-5 set; w[0..3]=(0.4,1.2,3.2,8.0) are
-//     deliberately re-calibrated for academic MCQ (published FSRS-5 defaults:
-//     0.4025/1.1822/3.1213/8.0) — recorded deviation, not a bug.
+//   our weights: DEFAULT_FSRS_WEIGHTS is the published FSRS-5 19-parameter default set,
+//     taken from the pinned oracle artifact (FSRS5_DEFAULT_WEIGHTS in
+//     node_modules/ts-fsrs/dist/constants-*.cjs). The previous claim that w[0..3] were
+//     "re-calibrated for academic MCQ" had no supporting evidence and was removed; the
+//     old 4.93/0.94 pair (FSRS-4.5 values) fed the FSRS-5 exponential D0 formula and made
+//     D0(Good) == D0(Easy) == 1, collapsing the difficulty dimension.
+//   KNOWN DEVIATION #2 (recorded, not silently ignored): we implement only w[0..16]
+//     transitions. FSRS-5 also defines same-day (short-term) reviews with w[17]/w[18];
+//     a second review inside the same day therefore runs the long-term formula at
+//     fractional elapsed time. The pinned oracle is FSRS-6 (different short-term form,
+//     w[19] and linear damping), so copying its short-term curve would silently change
+//     the model we claim to implement — adopting it is a model decision that needs the
+//     owner/SME, not a bug fix.
 import { describe, expect, it } from 'vitest';
 import {
   FSRS5_DEFAULT_DECAY,
@@ -133,9 +143,25 @@ describe('§8.3 FSRS reference tests', () => {
         const d0 = w[4] - Math.exp(w[5] * (rating - 1)) + 1;
         expect(st.difficulty).toBeCloseTo(Math.max(1, Math.min(10, d0)), 6);
       }
-      // وزن‌های منتشرشدهٔ FSRS-5 برای S0 با ما متفاوت است (کالیبراسیون MCQ) — مستند:
-      const publishedFSRS5S0 = [0.4025, 1.1822, 3.1213, 8.0];
-      expect(DEFAULT_FSRS_WEIGHTS.slice(0, 4)).not.toEqual(publishedFSRS5S0);
+      // وزن‌ها باید همان مجموعهٔ منتشرشدهٔ FSRS-5 باشد (مبدأ: FSRS5_DEFAULT_WEIGHTS
+      // در artifact نصب‌شدهٔ ts-fsrs@6.0.0) — این جایگزین ادعای بی‌شاهد
+      // «کالیبراسیون MCQ» شده است.
+      const publishedFSRS5S0 = [0.40255, 1.18385, 3.173, 15.69105];
+      expect([...DEFAULT_FSRS_WEIGHTS.slice(0, 4)]).toEqual(publishedFSRS5S0);
+    });
+
+    it('D0 برای چهار rating باید متمایز باشد (رفع تنزل D0(Good)=D0(Easy)=1)', () => {
+      const w = DEFAULT_FSRS_WEIGHTS;
+      const d0 = (rating: number) =>
+        Math.max(1, Math.min(10, w[4]! - Math.exp(w[5]! * (rating - 1)) + 1));
+      const values = [Rating.Again, Rating.Hard, Rating.Good, Rating.Easy].map((r) => d0(r as number));
+      // با وزن‌های FSRS-4.5 در فرمول FSRS-5، Good و Easy هر دو روی ۱ می‌افتادند
+      expect(new Set(values.map((v) => v.toFixed(3))).size).toBe(4);
+      expect(values[2]).toBeGreaterThan(values[3]!);
+      for (const v of values) {
+        expect(v).toBeGreaterThan(1);
+        expect(v).toBeLessThanOrEqual(10);
+      }
     });
 
     it('Again روی کارت تازه: reps=0 و lapses=1؛ Good: reps=1 و lapses=0', () => {

@@ -1,20 +1,25 @@
 # SECURITY TEST REPORT
 
-> **STATUS CORRECTION (Phase 5, 2026-11-02):** the previous content was an unchecked template
-> (`⬜` on every row) with no executed results. This version records only commands that were
-> actually run on branch `fix/mission-remediation-20261101`. **Scope is local code/test only:**
-> no staging deployment, no external penetration test, no encryption-at-rest verification and no
-> Supabase/Cloudflare production configuration were examined.
+> **STATUS CORRECTION (Phase 5, 2026-11-02; extended by the comprehensive audit 2026-11-03):** the
+> previous content was an unchecked template (`⬜` on every row) with no executed results. This
+> version records only commands that were actually run on branch `fix/comprehensive-audit-20261102`.
+> **Scope is local code/test only:** no staging deployment, no external penetration test, no
+> encryption-at-rest verification and no Supabase/Cloudflare production configuration were examined.
+>
+> The 2026-11-03 audit changed two claims that had been recorded too favourably here: the rate
+> limiter (A-04) and the queue payload exposure (A-06). Both are documented in
+> `docs/audit/COMPREHENSIVE_AUDIT_20261102.md`.
 
 ## 1. Method and environment
 
 - Runtime: Node v24.18.0, Vitest 5.0.5, Hono worker with `MemoryStore` for API tests.
-- Database: PostgreSQL 16 in Docker (`ael-pg-test`) with migrations 0001–0013 and seeds.
-- Suites: full `npm test -- --run` (266 tests), worker typecheck and build; 14-block psql
+- Database: PostgreSQL 16 in Docker (`ael-pg-test`) with migrations 0001–0015 and seeds.
+- Suites: full `npm test -- --run` (332 tests), worker typecheck and build; 16-block psql
   integrity suite; targeted code review of auth, ticket and PostgREST query paths.
-- Evidence: `evidence/phase-5/security-local-suite.txt` (266/266, `TYPECHECK_EXIT=0`,
-  `BUILD_EXIT=0`), `evidence/phase-3/r020-integrity.txt` (14 blocks, EXIT=0),
-  `evidence/phase-5/db-integrity-0013.txt` (EXIT=0).
+- Evidence: `evidence/audit-20261102/vitest-final.txt` (332/332),
+  `evidence/audit-20261102/db-integrity-0015.txt` (migrations 0001→0015 + seeds + 16 blocks on a
+  fresh scratch DB, `INTEGRITY_EXIT=0`), `evidence/audit-20261102/db-migration-0015.txt`,
+  plus the earlier `evidence/phase-5/security-local-suite.txt` (266/266).
 
 ## 2. Authentication and session integrity
 
@@ -31,7 +36,7 @@
 | Stale `auth_date` (> 24 h) rejected | PASS | Returns `auth_date stale` |
 | Missing hash / missing user id rejected | PASS | Returns explicit errors |
 | Session-token comparison constant-time | PASS | `constantTimeEqual` used for session tokens and initData hash (hardening in this phase) |
-| Rate limit on auth path | PASS (local) | Test gets 429 after threshold; limiter is in-memory per isolate — edge/distributed limiting NOT configured |
+| Rate limit on auth path | FIXED + TESTED (A-04) | The counter Map was created inside `createApp`, and the Workers entrypoint calls `createApp(env)` **per request** — so every request got a fresh counter and 429 could never fire in production (tests reused one app and missed it). Counter moved to module scope with a production-path regression test; in-memory per isolate only — edge/distributed limiting still NOT configured |
 
 ## 3. Authorization and resource isolation
 
@@ -43,9 +48,12 @@
 | RLS isolation between users | PASS | Integrity block 8 switches role/session and verifies row visibility |
 | Direct read of `questions` table denied; `v_public_questions` only | PASS | Integrity block 9 for `anon` and `authenticated` |
 | Answer RPC executable only by `service_role` | PASS | Integrity block 13 |
+| Legacy `submit_answer_atomic` RPC (0003) was `security definer`, took an arbitrary `p_user_id`, checked no ticket/ownership, **and granted EXECUTE to PUBLIC** | FIXED + TESTED (A-02) | Migration 0015 revokes it from `public/anon/authenticated`; integrity block 16 asserts the ACL and `has_function_privilege('anon', …) = false`. This was the most severe finding of the audit: any anon-key holder could forge answers/mastery for any user |
 | Client cannot set `attemptType`/proof status | PASS | Worker test: forged client `attemptType` ignored; ticket is server-issued |
 | Self-reported confidence cannot manufacture mastery | PASS | Worker tests reject self-report for a correct answer and keep it non-probative |
+| Self-report cannot invent skill evidence or demote `proven` | FIXED + TESTED (A-15) | `/api/self-report` used to write `evidenceCount: 1` and `coverageStatus: 'remediated'` even when the engine had produced no skill state; it now only relabels `dominantErrorType` on engine-created state and audits the no-state case |
 | Exam-session retrieval scoped to owner | PARTIAL | Store query includes `user_id` + RLS owner-read (0012), but no dedicated cross-user API test yet |
+| `app_users` had RLS enabled with zero policies | FIXED (migration 0015) | 0015 adds `read_own_app_users`; the dead `grant select` is now meaningful |
 
 ## 4. Input validation and injection
 
@@ -57,13 +65,13 @@
 | Self-report values restricted to `slip` / `didnt_know` | PASS | Route validation + tests |
 | PostgREST filter injection via `attemptId` | FIXED + TESTED | Client `attemptId` was interpolated unencoded into `findAnswerByAttempt`; now `encodeURIComponent` with a regression test (`supabase-store.test.ts`) |
 | SQL injection in database RPCs | PASS (reviewed) | Answer writes go through parameterized `submit_answer_secure`; ticket/attempt checks use bound parameters |
-| XSS in Telegram mini-app | FIXED + PARTIALLY VERIFIED | Manual sink review found a data-driven inline handler (`onclick="renderFullBook('…')"`); HTML escaping decodes `&#39;` before JS parsing, so a crafted `courseId` could break out. Replaced with `data-book-id` + `addEventListener`; E2E now clicks the generated button and opens the full-book view (15/15 local checks). No comprehensive sanitizer/audit yet |
+| XSS in Telegram mini-app | FIXED + PARTIALLY VERIFIED | Manual sink review found a data-driven inline handler (`onclick="renderFullBook('…')"`); HTML escaping decodes `&#39;` before JS parsing, so a crafted `courseId` could break out. Replaced with `data-book-id` + `addEventListener`; E2E clicks the generated button and opens the full-book view (20/20 local checks in Chrome and Edge). A new wiring test also fails if any inline `onclick` is rebuilt with string-concatenated data, if an interactive control in `index.html` has no binding, or if a CSS `display` rule overrides `[hidden]` again. A comprehensive DOM-sink audit is still NOT_STARTED |
 
 ## 5. Data exposure
 
 | Test | Result | Evidence / note |
 |---|---|---|
-| Answer key absent from queue/diagnostic items | PASS | Worker tests assert `correctOption` is not returned; `toPublicQuestion` used |
+| Answer key absent from queue/diagnostic items | PASS + EXTENDED | Worker tests assert `correctOption` is not returned; `toPublicQuestion` used. **Audit finding A-06:** the queue response spread the whole internal `QueueItem`, so the designer trap note and card internals (`ease`, `fsrs`, `timesSeen`, `userId`) reached the client before an answer — items are now built field-by-field and a test asserts the absence of every one of those keys |
 | Simulation does not reveal correctness while active | PASS | `/api/exam-simulation/answer` returns only `{ recorded: true }`; scoring on submit |
 | Answer key returned only after answer submission/replay | PASS | `POST /api/answers` response contract |
 | Secrets in repository | PASS (scan) | No bot token/service key literals in tracked source; scripts use demo auth only |
@@ -83,11 +91,26 @@
 - **Telegram `initData` replay window:** accepted limitation — the 24-hour `auth_date` window is
   enforced, but captured initData is not one-time-use (standard Telegram behavior).
 
+- **Anti-abuse coverage of ticket-issuing routes:** the limiter now also wraps
+  `/api/night-quiz`, `/api/diagnostic` and `/api/exam-simulation*`; before this they were
+  unlimited, which combined with A-05 made a coin-farming loop possible.
+- **Concurrency semantics:** `submitAnswerAtomic` return value was ignored, so a concurrent
+  duplicate submission double-awarded stats in production and returned a generic 500 locally; now
+  the replay is recognised (no second award) and a consumed ticket maps to 409 (A-14).
+- **Error-message leakage:** raw `store`/RPC error strings were echoed to clients on the
+  exam-simulation path; they are now classified into generic 400/409 messages (A-14).
+
 ## 7. Conclusion
 
 Local authentication, ticket enforcement, RLS/RPC isolation, answer-key containment and the tested
-input-validation paths pass with executable evidence, including three Phase 5 hardening fixes
-(constant-time signature comparison, encoded PostgREST filter value, and removal of a data-driven
-inline-handler XSS sink). This is **not** a clean
-bill of health: external pentest, staging configuration, encryption and a comprehensive client-side
-XSS audit remain open, so the Gate 5 security criterion is only partially met.
+input-validation paths pass with executable evidence. The 2026-11-03 audit additionally closed one
+privilege-escalation path that had been open since migration 0003 (public execute on a security-definer
+answer RPC, A-02), one production-only control failure that unit tests could not see (rate limiting,
+A-04), one information exposure in the queue payload (A-06) and one reward-farming loop (A-05), and
+recorded the remaining items honestly as DEFERRED / NOT_STARTED / BLOCKED in
+`docs/audit/COMPREHENSIVE_AUDIT_20261102.md` (A-18…A-24).
+
+This is still **not** a clean bill of health: external pentest, staging configuration, encryption at
+rest/in transit, distributed rate limiting and a comprehensive client-side XSS audit remain open, and
+all evidence is local (MemoryStore + Docker PostgreSQL). The Gate 5 security criterion is therefore
+only partially met.

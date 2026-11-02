@@ -508,6 +508,14 @@ export function getExamStructureWarnings(level: ExamLevel, year: number): string
   const structure = getExamStructure(level, year);
   const warnings: string[] = [];
 
+  // ساختار سال‌های ثبت‌نشده بی‌صدا از سال دیگر کپی نمی‌شود؛ جایگزینی افشا می‌کند
+  if (level === 'doctorate' && structure.year !== year) {
+    warnings.push(
+      `ساختار رسمی سال ${year} در این مرجع ثبت نشده است؛ ساختار سال ${structure.year} اعمال شد. ` +
+        'نتایج این مسیر را «ساختار سال درخواستی» نبینید.'
+    );
+  }
+
   if (!structure.hasAptitude) {
     warnings.push(
       'در این سال «استعداد تحصیلی» از مواد امتحانی حذف شده است؛ مطالعهٔ آن وقت تلف‌شده است.'

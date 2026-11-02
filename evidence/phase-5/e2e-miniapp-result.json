@@ -1,10 +1,15 @@
 {
-  "generatedAt": "2026-11-01T23:49:01.547Z",
+  "generatedAt": "2026-11-02T21:03:26.070Z",
   "base": "http://127.0.0.1:8787",
   "chromeVersion": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-  "passed": 15,
+  "passed": 20,
   "failed": 0,
   "results": [
+    {
+      "name": "سرور مینی‌اپ را سرو می‌کند (نه بیلد React)",
+      "ok": true,
+      "detail": "view-app=true reactRoot=false"
+    },
     {
       "name": "دسترسی خودکار و نمایش صفحهٔ انتخاب گرایش",
       "ok": true,
@@ -23,7 +28,7 @@
     {
       "name": "بارگذاری خانه از API",
       "ok": true,
-      "detail": "252 chars"
+      "detail": "266 chars"
     },
     {
       "name": "بارگذاری صف امروز",
@@ -51,6 +56,11 @@
       "detail": ""
     },
     {
+      "name": "بازخورد بصری گزینهٔ درست/غلط (کلاس + رنگ واقعی)",
+      "ok": true,
+      "detail": "{\"marked\":true,\"differs\":true,\"color\":\"rgb(28, 121, 74)\"}"
+    },
+    {
       "name": "بارگذاری نقشهٔ مسیر از API",
       "ok": true,
       "detail": "25 chars"
@@ -66,9 +76,24 @@
       "detail": "6220 chars"
     },
     {
+      "name": "دکمهٔ «بازگشت به لیست کتاب‌ها» کار می‌کند",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "بازیابی جلسه و پیشرفت پس از بارگذاری مجدد صفحه",
       "ok": true,
       "detail": ""
+    },
+    {
+      "name": "دکمهٔ «قفل روز پیوسته» listener واقعی دارد",
+      "ok": true,
+      "detail": "1 listener"
+    },
+    {
+      "name": "دکمهٔ ذخیرهٔ تاریخ کنکور listener واقعی دارد",
+      "ok": true,
+      "detail": "1 listener"
     },
     {
       "name": "بدون پاسخ HTTP خطادار از API محلی",
