@@ -302,3 +302,90 @@ begin
   delete from app_users where id = v_uid;
 end
 $$;
+
+-- ۱۵) وضعیت مهارت باید دقیقاً خروجی موتور باشد؛ هیچ heuristic مستقل SQL اجرا نشود
+do $$
+declare
+  v_uid uuid := '88888888-8888-8888-8888-888888888888';
+  v_qid text;
+  v_node text;
+  v_correct int;
+  v_skill_id text := 'integrity-engine-authoritative-skill';
+  v_result jsonb;
+begin
+  insert into app_users (id, display_name)
+  values (v_uid, 'تست وضعیت موتور') on conflict do nothing;
+
+  select id, node_id, correct_option
+  into v_qid, v_node, v_correct
+  from questions
+  order by id
+  limit 1;
+
+  if v_qid is null or v_node is null then
+    raise exception 'برای تست وضعیت موتور سؤال و گرهٔ معتبر لازم است';
+  end if;
+
+  insert into skills (id, node_id, title, verification_status)
+  values (v_skill_id, v_node, 'Integrity engine state', 'unverified')
+  on conflict (id) do nothing;
+
+  insert into attempt_tickets (attempt_id, user_id, question_id, attempt_type, expires_at)
+  values ('ticket-engine-authoritative-state', v_uid, v_qid, 'practice', now() + interval '1 hour');
+
+  v_result := submit_answer_secure(
+    v_uid,
+    'ticket-engine-authoritative-state',
+    v_qid,
+    v_correct,
+    jsonb_build_object(
+      'skillStateUpdate',
+      jsonb_build_object(
+        'nodeId', v_node,
+        'state', jsonb_build_object(
+          'skillId', v_skill_id,
+          'proficiencyProbability', 0.8123,
+          'confidence', 0.6543,
+          'evidenceCount', 7,
+          'memoryRetrievability', 0.8765,
+          'fluencySpeedRatio', 1.2345,
+          'dominantErrorType', 'time_pressure',
+          'coverageStatus', 'needs_proof'
+        )
+      )
+    ),
+    '[]'::jsonb,
+    '[]'::jsonb,
+    '[]'::jsonb
+  );
+
+  if not exists (
+    select 1 from learner_skill_states
+    where user_id = v_uid
+      and skill_id = v_skill_id
+      and proficiency_probability = 0.8123
+      and confidence = 0.6543
+      and evidence_count = 7
+      and memory_retrievability = 0.8765
+      and fluency_speed_ratio = 1.2345
+      and dominant_error_type = 'time_pressure'
+      and coverage_status = 'needs_proof'
+  ) then
+    raise exception 'وضعیت مهارت باید بدون تغییر از خروجی موتور ذخیره شود';
+  end if;
+
+  if exists (
+    select 1 from learner_skill_states
+    where user_id = v_uid and skill_id = v_skill_id
+      and proficiency_probability in (0.65, 0.35)
+  ) then
+    raise exception 'heuristic قدیمی SQL نباید وضعیت مهارت بسازد';
+  end if;
+
+  delete from answer_events where user_id = v_uid;
+  delete from attempt_tickets where user_id = v_uid;
+  delete from learner_skill_states where user_id = v_uid;
+  delete from skills where id = v_skill_id;
+  delete from app_users where id = v_uid;
+end
+$$;
