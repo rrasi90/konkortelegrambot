@@ -120,10 +120,15 @@ const meta = {
 for (const [tier, list] of Object.entries(buckets)) {
   await writeFile(
     `content/questions/bank-${tier}.json`,
-    JSON.stringify({ ...meta, tier, counts: { total: unique.length,
-    rawInput: items.length,
-    mergedDuplicates,
-    contentConflicts: contentConflicts.length, [tier]: list.length }, questions: list }, null, 2) + '\n',
+    JSON.stringify({ ...meta, tier, counts: {
+      // total is the number of items in THIS file; corpusTotal is the cross-tier count.
+      total: list.length,
+      corpusTotal: unique.length,
+      rawInput: items.length,
+      mergedDuplicates,
+      contentConflicts: contentConflicts.length,
+      [tier]: list.length,
+    }, questions: list }, null, 2) + '\n',
     'utf8',
   );
   console.log(`${tier}: ${list.length}`);
