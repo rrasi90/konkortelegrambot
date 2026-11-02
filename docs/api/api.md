@@ -30,7 +30,7 @@ Authorization: Bearer <session_token>
 
 ### `PUT /api/tracks`
 
-بدنه: `{ "tracks": ["technology"] }` — هستهٔ مشترک خودکار اضافه می‌شود. مقادیر مجاز: `common`, `business`, `technology`, `strategy`, `industrial`.
+بدنه: `{ "tracks": ["technology"] }` — هستهٔ مشترک خودکار اضافه می‌شود. مقادیر مجاز: `common`, `business`, `technology`, `strategy`, `industrial`. ورودی تکراری حذف می‌شود و فهرست بیش از ۵۰ عنصر `400` می‌گیرد (ممیزی A-14).
 
 ### `GET /api/tracks`
 
@@ -40,7 +40,9 @@ Authorization: Bearer <session_token>
 
 صف امروز: کارت‌های سررسیدشدهٔ گرایش‌های فعال؛ در صورت کمبود، کارت تازه برای سؤال‌های دیده‌نشده ساخته می‌شود.
 
-هر آیتم: `card` (وضعیت زمان‌بندی)، `question` (بدون `correctOption` — کلید به کلاینت نمی‌رسد)، `course/chapter/topic`.
+هر آیتم: `card` (فیلدهای نمایشی: `id`, `nodeId`, `cardType`, `questionId`, `trapCardId`, `isRepair`, `isProof`, و برای کارت `trap_note` همان `trapNote`)، `question` (بدون `correctOption`/`explanation`/`trapNote`)، `course/chapter/topic`، `attemptId`, `attemptType`, `activityType`, `assessmentState`, `masteryEstimate`, `evidenceLevel`, `estimatedMinutes`, `priority`, `courseTitle/chapterTitle`.
+
+> ممیزی A-06: پیش‌تر آیتم با spread کامل `QueueItem` ساخته می‌شد و یادداشت دامِ سؤال‌های تستی و جزئیات داخلی کارت (`ease`, `fsrs`, `timesSeen`, `userId`) پیش از پاسخ به کلاینت می‌رفت. اکنون ساختار فیلدبه‌فیلد است و تست رگرسیون دارد.
 
 ### `POST /api/answers`
 
@@ -83,11 +85,13 @@ Authorization: Bearer <session_token>
 
 داشبورد خانه (الهام از واژه‌راه): سلام، سکه، روز پیوسته، شمارهٔ روز، شمارش معکوس تا کنکور، پیشرفت کل مسیر، خلاصهٔ امروز، تعداد کارت‌های سررسید، وضعیت کوییز شبانه و پیام منتور.
 
+> ممیزی A-17: `progress.overall` وقتی هیچ گرهٔ سنجیده‌شده‌ای وجود ندارد `null` است (نه ۰) و میانگین فقط روی `assessedNodes` گرفته می‌شود. کلاینت در این حالت «هنوز سنجیده نشده» نمایش می‌دهد.
+
 ```json
 {
   "user": { "displayName": "…", "activeTracks": ["common", "technology"] },
   "stats": { "coins": 1, "streakDays": 1, "dayNumber": 1, "examDate": "2027-02-19", "daysLeft": 113 },
-  "progress": { "overall": 48, "nodes": 10 },
+  "progress": { "overall": 48, "assessedNodes": 6, "nodes": 10 },
   "today": { "answered": 1, "correct": 0 },
   "reviewDue": 4,
   "nightQuiz": { "available": true, "wrongCount": 1 },
@@ -101,11 +105,13 @@ Authorization: Bearer <session_token>
 
 ### `PUT /api/settings`
 
-تنظیم تاریخ کنکور: `{ "examDate": "YYYY-MM-DD" }` (یا `null` برای حذف). فرمت نامعتبر ۴۰۰ می‌دهد.
+تنظیم تاریخ کنکور: `{ "examDate": "YYYY-MM-DD" }` (یا `null` برای حذف). فرمت نامعتبر ۴۰۰ می‌دهد؛ تاریخِ وجودنداشته مثل `2026-02-30` هم رد می‌شود (ممیزی A-14 — regex تنها کافی نبود و `daysLeft` را NaN/خاموش می‌کرد).
 
 ### آمار در پاسخ ثبت
 
 پاسخ `POST /api/answers` حالا `stats` هم دارد: `{ "coins": 3, "streakDays": 1, "dayNumber": 1 }` — سکهٔ زنده برای هدر اپ (پاسخ درست ۲ سکه، غلط ۱ سکه؛ روز پیوسته با تقویم تهران محاسبه می‌شود). این اعداد شاخص یادگیری نیستند و در `/api/analytics/learning` شمرده نمی‌شوند.
+
+> ممیزی A-05: سکه فقط برای **اولین حل درست** هر سؤال در هر روز صادر می‌شود. اثر موتور حافظه (FSRS) روی تکرار مرور همچنان اعمال می‌شود. پاسخ تکراریِ همان `attemptId` با `replay: true` برمی‌گردد و آمار را دوباره افزایش نمی‌دهد؛ اگر بلیت در مسابقهٔ هم‌زمان مصرف شده باشد `409` داده می‌شود (نه `500`).
 
 ## Phase 4 — تشخیص، ساختار آزمون و شبیه‌سازی
 
@@ -129,7 +135,7 @@ Authorization: Bearer <session_token>
 
 - `examYear` عدد صحیح ۱۳۹۰–۱۴۲۰؛ `subGroupId` رشتهٔ غیرخالی حداکثر ۶۴ کاراکتر.
 - `combinationCode` و `setCode` اختیاری‌اند (رشته/عدد تا ۱۶ کاراکتر)؛ مقدار نامعتبر `400`.
-- ذخیره‌سازی و ثبت `audit_logs` انجام می‌شود. پاسخ: `{ ok: true, selection }`.
+- ذخیره‌سازی و ثبت `audit_logs` انجام می‌شود. دومین ثبت برای همان سال، همان ردیف را به‌روز می‌کند (upsert روی قید `(user_id, exam_year)`؛ ممیزی A-03). پاسخ: `{ ok: true, selection }`.
 
 ### `GET /api/exam-structure?level=doctorate&year=1405`
 
@@ -184,6 +190,22 @@ Authorization: Bearer <session_token>
 - شاخص بدون شاهد `null` است (نه صفر و نه ۵۰). `errorTypeDistribution` دارای ۱۰ علت + `unknown` + `none` است.
 - `metricCatalog` تعریف/منبع هر ۱۳ شاخص را می‌دهد؛ `excludedVanityMetrics = [login_count, streak_days, xp, coins, session_count]` صریحاً از پاسخ حذف شده‌اند.
 - تمرکز شاخص‌ها بر شاهد ذخیره‌شده است: پاسخ‌های ۳۰ روز، `mastery_history` هفت روز، کارت‌های FSRS و وضعیت مهارت‌ها.
+
+## انگیزش و قفل زنجیره
+
+### `POST /api/streak/freeze`
+
+خرید قفل روز پیوسته. حداقل ۳ روز پیوسته لازم است و حداکثر ۲ قفل در هر ماه (تقویم تهران).
+پاسخ: `{ ok, streakFreezeGranted, streakFreezeUsed, streakDays, month, message }`.
+
+> ممیزی A-16: `streakFreezeGranted` (خرید) و `streakFreezeUsed` (مصرف) دو شمارندهٔ جدا هستند؛
+> با یک شمارنده مشترک، خرید قفل هیچ اثری روی زنجیره نداشت. قفل موجود، **یک** روز جاافتاده
+> (فاصلهٔ دقیقاً ۲ روزه بین دو روز مطالعه) را پل می‌زند و آنگاه مصرف ثبت می‌شود؛ فاصله‌های
+> بزرگ‌تر با قفل جبران نمی‌شوند.
+
+### `PUT /api/settings`
+
+(بالا) تنظیم تاریخ کنکور.
 
 ## کدهای وضعیت
 

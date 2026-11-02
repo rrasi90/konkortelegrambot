@@ -33,6 +33,7 @@ import type {
 } from '@ael/contracts';
 import {
   Rating,
+  PROOF_READINESS_PROFICIENCY,
   calculateRetrievability,
   classifyErrorType,
   initializeFSRSState,
@@ -181,13 +182,16 @@ export function skillMetaForNode(state: EngineState, nodeId: string): SkillMeta 
 /** ضعیف‌ترین پیش‌نیازِ یک مهارت — ورودی تشخیص خطا */
 function weakestPrerequisiteMastery(state: EngineState, meta: SkillMeta | undefined): number | undefined {
   if (!meta || meta.prerequisites.length === 0) return undefined;
-  const nodeIds: string[] = [];
+  const values: number[] = [];
   for (const skillId of meta.prerequisites) {
     const prereq = state.skills?.get(skillId);
-    if (prereq) nodeIds.push(prereq.nodeId);
+    if (!prereq) continue;
+    const m = prereq.nodeId ? state.mastery.get(prereq.nodeId) : undefined;
+    if (m !== undefined) values.push(m);
   }
-  if (nodeIds.length === 0) return undefined;
-  return Math.min(...nodeIds.map((n) => masteryOf(state, n)));
+  // هیچ پیش‌نیاز سنجیده‌شده ⇒ undefined (نه ۵۰ ساختگی)
+  if (values.length === 0) return undefined;
+  return Math.min(...values);
 }
 
 function clone<T>(x: T): T {
@@ -237,6 +241,9 @@ export function applyAnswer(
       ? calculateRetrievability(priorFsrs.stability, elapsedDays)
       : undefined;
   const nodeForQ = state.nodes.get(question.nodeId);
+  // §8.6: فقط هم‌خانواده‌هایی که واقعاً سنجیده شده‌اند وارد می‌شوند. قبلاً
+  // masteryOf برای گره‌های ندیده‌شده ۵۰ برمی‌گرداند و قاعدهٔ ۴ (م<۶۰) برای هر
+  // سؤال دام‌دار آتش می‌گرفت: theory_confusion به‌جای misconception/unknown.
   const siblingMasteries = nodeForQ
     ? [...state.nodes.values()]
         .filter(
@@ -245,14 +252,15 @@ export function applyAnswer(
             n.chapter === nodeForQ.chapter &&
             n.course === nodeForQ.course,
         )
-        .map((n) => masteryOf(state, n.id))
+        .map((n) => state.mastery.get(n.id))
+        .filter((m): m is number => m !== undefined)
     : [];
   const requiresCalculation = /محاسبه|چقدرت? است|مقدار|حاصل/.test(question.text);
   const evidence: SkillEvidenceInput = {
     wasCorrect,
     responseTimeMs: input.responseTimeMs,
     expectedTimeMs: question.expectedTimeMs,
-    currentMastery: masteryOf(state, question.nodeId),
+    currentMastery: state.mastery.get(question.nodeId),
     prerequisiteMastery: weakestPrerequisiteMastery(state, skillMeta),
     confidenceRating: input.confidenceRating,
     // خوداظهاری slip قبل از طبقه‌بندی ست می‌شود تا محافظ §8.2 شامل حالت خودکار هم بشود
@@ -545,11 +553,13 @@ export function applyAnswer(
     } else if (
       !isProof &&
       !sixD.provenViaHoldout &&
-      sixD.proficiencyProbability >= 0.75 &&
+      sixD.proficiencyProbability >= PROOF_READINESS_PROFICIENCY &&
       sixD.coverageStatus !== 'proven' &&
       sixD.coverageStatus !== 'mastered'
     ) {
-      // آمادگی اثبات: ۱ سؤال دیده‌نشده (قرنطینه ۱۴۰۴) لازم است
+      // آمادگی اثبات: ۱ سؤال دیده‌نشده (قرنطینهٔ ۱۴۰۴) لازم است.
+      // تنها آستانهٔ مشترک (PROOF_READINESS_PROFICIENCY) اینجا و در مدل ۶بعدی
+      // رعایت می‌شود؛ قبلاً دو عدد موازی (۰٫۶۵ و ۰٫۷۵) جاری بود.
       sixD.coverageStatus = 'needs_proof';
       proofCandidate = { nodeId: question.nodeId, skillId: skillMeta.id };
     }
@@ -722,7 +732,7 @@ function buildMentorMessage(args: {
     theory_confusion: 'دو نظریهٔ هم‌خانواده با هم خلط شده‌اند — کارت مقایسه برایت فعال می‌شود',
     recall_failure: 'مبحث قبلاً قوی بود ولی بازیابی حافظه افت کرده — مرور زمان‌بندی‌شده اولویت است',
     time_pressure: 'پاسخ بسیار کندتر از زمان مجاز آزمون بود — مدیریت زمان تمرین شود',
-    guessing: 'پاسخ با اطمینان بسیار پایین (حدس) ثبت شد؛ این شاهد وزن کمتری به تسلط اضافه می‌کند',
+    guessing: 'پاسخ با اطمینان بسیار پایین (حدس) ثبت شد؛ علت خطا برای هدف‌گیری ترمیم برچسب خورد',
   };
   if (errorType === 'concept_gap') {
     const gapLevel = topicDelta.before < 40 ? 'عمیق' : topicDelta.before < 60 ? 'متوسط' : 'سطوح';

@@ -1,0 +1,3 @@
+npm notice run react-example@0.0.0 audit:miniapp
+npm notice run tsx scripts/audit-client-bundle.ts apps/miniapp
+Client bundle security audit: PASS (no embedded answer-key literals).

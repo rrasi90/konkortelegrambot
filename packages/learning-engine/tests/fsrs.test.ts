@@ -9,7 +9,10 @@ import {
   scheduleNextFSRS,
   classifyErrorType,
   update6DLearnerSkillState,
+  PROOF_READINESS_PROFICIENCY,
+  PROOF_READINESS_MIN_EVIDENCE,
 } from '../src/fsrs';
+import type { SixDimensionalLearnerState } from '../src/fsrs';
 
 describe('FSRS Memory Model & 6D Learner State Engine', () => {
   describe('calculateRetrievability', () => {
@@ -372,5 +375,55 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
       expect(next.coverageStatus).toBe('remediated');
       expect(next.dominantErrorType).toBe('concept_gap');
     });
+  });
+});
+
+describe('A-12 — دروازهٔ واحد آمادگی اثبات (§8.2)', () => {
+  it('آستانهٔ اثبات یک عدد واحد است (۰٫۷۵) و ۰٫۶۵ دیگر جایی ندارد', () => {
+    expect(PROOF_READINESS_PROFICIENCY).toBe(0.75);
+    expect(PROOF_READINESS_MIN_EVIDENCE).toBe(3);
+  });
+
+  it('شایستگی ۰٫۶۶ با چهار شاهد still «needs_proof» نمی‌شود (درگاه ۰٫۷۵)', () => {
+    const prior: SixDimensionalLearnerState = {
+      proficiencyProbability: 0.66,
+      confidence: 0.6,
+      evidenceCount: 4,
+      memoryRetrievability: 0.95,
+      fluencySpeedRatio: 1,
+      dominantErrorType: 'unknown',
+      coverageStatus: 'learning',
+    };
+    // لغزش (slip) شایستگی را نمی‌شکند و رشد هم نمی‌دهد
+    const next = update6DLearnerSkillState(prior, {
+      wasCorrect: false,
+      isSlip: true,
+      currentMastery: 70,
+    });
+    expect(next.proficiencyProbability).toBeLessThan(PROOF_READINESS_PROFICIENCY);
+    expect(next.coverageStatus).not.toBe('needs_proof');
+  });
+
+  it('شایستگی بالای آستانه با سه شاهد needs_proof می‌شود (نه proven)', () => {
+    const prior: SixDimensionalLearnerState = {
+      proficiencyProbability: 0.82,
+      confidence: 0.7,
+      evidenceCount: 3,
+      memoryRetrievability: 0.95,
+      fluencySpeedRatio: 1,
+      dominantErrorType: 'unknown',
+      coverageStatus: 'learning',
+    };
+    const next = update6DLearnerSkillState(prior, { wasCorrect: true, currentMastery: 80 });
+    expect(next.proficiencyProbability).toBeGreaterThanOrEqual(PROOF_READINESS_PROFICIENCY);
+    expect(next.coverageStatus).toBe('needs_proof');
+    expect(next.coverageStatus).not.toBe('proven');
+  });
+
+  it('SkillEvidenceInput.currentMastery اختیاری است؛ بی‌شاهد یعنی undefined (§8.6)', () => {
+    // نبودِ شاهد نباید concept_gap بدهد
+    expect(classifyErrorType({ wasCorrect: false, trapNote: undefined })).toBe('unknown');
+    // و با شاهد ضعیف، concept_gap می‌دهد
+    expect(classifyErrorType({ wasCorrect: false, currentMastery: 30 })).toBe('concept_gap');
   });
 });

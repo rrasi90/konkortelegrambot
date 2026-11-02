@@ -71,13 +71,25 @@ function generateSql() {
   lines.push('');
 
   // 4. جدول مهارت‌ها (در صورت وجود skills.json)
+  // توجه: skills در اسکیما ستون course/chapter/topic/track ندارد؛ این‌ها روی
+  // knowledge_nodes (از طریق node_id) زندگی می‌کنند. همچنین bloom_level روی
+  // خود skills است، نه روی question_skill_mappings. fields prerequisites و
+  // confusable_with در اسکیما جدولی ندارند و درون‌ریزی نمی‌شوند.
   if (existsSync('content/knowledge/skills.json')) {
-    const skills = JSON.parse(readFileSync('content/knowledge/skills.json', 'utf8'));
+    const allSkills = JSON.parse(readFileSync('content/knowledge/skills.json', 'utf8'));
+    // skills.node_id کلید خارجی به knowledge_nodes دارد؛ مهارتی که گره‌اش در
+    // همین بسته نیست باید رد شود وگرنه کل درون‌ریزی با FK می‌شکند.
+    const packNodeIds = new Set((pack.nodes ?? []).map((n) => n.id));
+    const skills = allSkills.filter((s) => packNodeIds.has(s.node_id));
+    const skipped = allSkills.length - skills.length;
+    if (skipped > 0) {
+      lines.push(`-- ${skipped} مهارت از ${allSkills.length} رد شد: گرهشان در این بسته نیست (FK به knowledge_nodes).`);
+    }
     for (const s of skills) {
       lines.push(
-        `INSERT INTO skills (id, title, course, chapter, topic, track, difficulty_estimate) ` +
-        `VALUES (${sqlStr(s.id)}, ${sqlStr(s.title)}, 'مدیریت', NULL, ${sqlStr(s.node_id)}, 'common', ${s.difficulty_estimate ?? 50}) ` +
-        `ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title;`
+        `INSERT INTO skills (id, node_id, title, operational_definition, cognitive_level, bloom_level, difficulty_estimate, estimated_study_minutes, verification_status) ` +
+        `VALUES (${sqlStr(s.id)}, ${sqlNullable(s.node_id)}, ${sqlStr(s.title)}, ${sqlNullable(s.operational_definition)}, ${sqlNullable(s.cognitive_level)}, ${s.bloom_level ?? 3}, ${s.difficulty_estimate ?? 50}, ${sqlNullable(s.estimated_study_minutes)}, ${sqlStr(s.verification_status ?? 'unverified')}) ` +
+        `ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title, operational_definition = EXCLUDED.operational_definition, cognitive_level = EXCLUDED.cognitive_level, bloom_level = EXCLUDED.bloom_level, difficulty_estimate = EXCLUDED.difficulty_estimate, estimated_study_minutes = EXCLUDED.estimated_study_minutes;`
       );
     }
     lines.push('');
@@ -114,15 +126,16 @@ function generateSql() {
       if (!l.trim()) continue;
       const m = JSON.parse(l);
       if (qIds.has(m.question_id)) {
+        // question_skill_mappings ستون bloom_level ندارد (روی skills است)
         lines.push(
-          `INSERT INTO question_skill_mappings (question_id, skill_id, is_primary, bloom_level) ` +
-          `VALUES (${sqlStr(m.question_id)}, ${sqlStr(m.primary_skill_id)}, true, ${m.bloom_level ?? 3}) ` +
+          `INSERT INTO question_skill_mappings (question_id, skill_id, is_primary, weight) ` +
+          `VALUES (${sqlStr(m.question_id)}, ${sqlStr(m.primary_skill_id)}, true, 1.0) ` +
           `ON CONFLICT (question_id, skill_id) DO NOTHING;`
         );
         for (const sec of m.secondary_skill_ids ?? []) {
           lines.push(
-            `INSERT INTO question_skill_mappings (question_id, skill_id, is_primary, bloom_level) ` +
-            `VALUES (${sqlStr(m.question_id)}, ${sqlStr(sec)}, false, ${m.bloom_level ?? 3}) ` +
+            `INSERT INTO question_skill_mappings (question_id, skill_id, is_primary, weight) ` +
+            `VALUES (${sqlStr(m.question_id)}, ${sqlStr(sec)}, false, 0.5) ` +
             `ON CONFLICT (question_id, skill_id) DO NOTHING;`
           );
         }

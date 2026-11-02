@@ -100,6 +100,20 @@ describe('ساختار آزمون دکتری — نسخه‌بندی بر اسا
     expect(w1405).toContain('حذف');
   });
 
+  it('سال ثبت‌نشده بی‌صدا به سال دیگر تبدیل نمی‌شود؛ جایگزینی در هشدارها افشا می‌شود (A-13)', () => {
+    // ۱۳۹۰ در جدول ساختارها نیست؛ تابع closest-year fallback را دارد
+    const structure = getExamStructure(1390);
+    expect(structure.year).not.toBe(1390);
+
+    const warnings = getExamStructureWarnings(1390).join(' ');
+    expect(warnings).toContain('ساختار رسمی سال 1390');
+    expect(warnings).toContain(`اعمال شد`);
+
+    // و برای سال ثبت‌شده چنین هشداری نباید باشد
+    const exact = getExamStructureWarnings(1405).join(' ');
+    expect(exact).not.toContain('اعمال شد');
+  });
+
   it('هر زیرمجموعه درس تخصصی و مجموع ضریب معتبر دارد', () => {
     for (const group of MANAGEMENT_SUB_GROUPS) {
       const subjects = getSubGroupSubjects(group.id);
