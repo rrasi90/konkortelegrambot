@@ -22,6 +22,8 @@ jobs:
       - run: npm run validate:content
       - run: npm run build:worker
       - run: npm run audit:miniapp
+      - name: Validate Wrangler bundle without deploying
+        run: npx --yes wrangler deploy --dry-run --config apps/worker/wrangler.jsonc
 
   database:
     name: Database Migrations & Integrity Tests
