@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createApp } from '../src/index.ts';
 import { MemoryStore } from '../src/memory-store.ts';
 import pack from '../../../content/examples/demo-pack.json';
@@ -7,10 +7,16 @@ import type { ReviewCard } from '@ael/contracts';
 const ENV = {
   SESSION_SECRET: 'test-secret',
   ALLOW_DEMO_AUTH: 'true',
+  TELEGRAM_WEBHOOK_SECRET: 'test_telegram_webhook_secret_2026_secure',
+  ADMIN_API_TOKEN: 'test-admin-api-token-with-at-least-32-characters-2026',
 };
 
 let store: MemoryStore;
 let app: ReturnType<typeof createApp>;
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 beforeEach(async () => {
   store = new MemoryStore();
@@ -328,10 +334,78 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(last).toBe(429);
   });
 
+  it('R-040: وب‌هوک بدون Secret Token درست یا با Secret اشتباه رد می‌شود', async () => {
+    const body = JSON.stringify({
+      message: { chat: { id: 987654 }, text: '/start' },
+    });
+    const missing = await app.request('/api/telegram/webhook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    });
+    expect(missing.status).toBe(401);
+
+    const wrong = await app.request('/api/telegram/webhook', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Telegram-Bot-Api-Secret-Token': 'wrong_secret_token_which_is_long_enough',
+      },
+      body,
+    });
+    expect(wrong.status).toBe(401);
+  });
+
+  it('R-040: مسیرهای مدیریتی وب‌هوک توکن نشست کاربر عادی را نمی‌پذیرند', async () => {
+    const token = await login();
+    const routes = [
+      { path: '/api/telegram/webhook/info', method: 'GET' },
+      { path: '/api/telegram/webhook/set', method: 'POST' },
+      { path: '/api/telegram/webhook/delete', method: 'POST' },
+    ] as const;
+    for (const route of routes) {
+      const res = await app.request(route.path, {
+        method: route.method,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      expect(res.status).toBe(403);
+    }
+  });
+
+  it('R-040: تنظیم وب‌هوک فقط با Admin API Token انجام می‌شود و Secret را به تلگرام می‌فرستد', async () => {
+    const adminApp = createApp({ ...ENV, TELEGRAM_BOT_TOKEN: '123456:test-bot-token' }, { store });
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) =>
+      new Response(JSON.stringify({ ok: true, result: true }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const res = await adminApp.request('/api/telegram/webhook/set', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${ENV.ADMIN_API_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    expect(res.status).toBe(200);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const requestBody = JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body));
+    expect(requestBody).toMatchObject({
+      url: 'http://localhost/api/telegram/webhook',
+      secret_token: ENV.TELEGRAM_WEBHOOK_SECRET,
+    });
+    expect(requestBody).not.toHaveProperty('drop_pending_updates');
+  });
+
   it('وب‌هوک تلگرام پیام /start را با دکمه باز کردن MiniApp پاسخ می‌دهد', async () => {
     const res = await app.request('/api/telegram/webhook', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Telegram-Bot-Api-Secret-Token': ENV.TELEGRAM_WEBHOOK_SECRET,
+      },
       body: JSON.stringify({
         message: {
           chat: { id: 987654 },
