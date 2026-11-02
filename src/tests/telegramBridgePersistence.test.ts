@@ -206,6 +206,31 @@ describe('Telegram CloudStorage full learner snapshots', () => {
     expect(result.warning).toContain('کارت‌ها و زمان‌بندی مرور');
   });
 
+  it('refuses an oversized snapshot without replacing the committed cloud manifest', async () => {
+    const oversized = payload(
+      '2026-11-02T12:00:00.000Z',
+      'x'.repeat(3000 * 240 + 1),
+    );
+    const result = await saveStateToTelegramStorage(oversized);
+
+    expect(result.localSaved).toBe(true);
+    expect(result.cloudSaved).toBe(false);
+    expect(result.error).toContain('max 240');
+    expect(cloud.has('ael_tma_v4_manifest')).toBe(false);
+  });
+
+  it('ignores invalid legacy coverage labels instead of importing arbitrary state', async () => {
+    cloud.set('ael_tma_state_v3', JSON.stringify({
+      m: { 'node.one': [72, 'administrator_override', 4] },
+      s: {},
+    }));
+    const fallback = payload('1970-01-01T00:00:00.000Z');
+    const result = await loadLatestStateFromTelegramStorage(fallback);
+
+    expect(result.payload.nodeStates['node.one'].masteryScore).toBe(63);
+    expect(result.payload.nodeStates['node.one'].coverageStatus).toBe('learning');
+  });
+
   it('invalidates the cloud manifest and local snapshots on zero-state reset', async () => {
     expect((await saveStateToTelegramStorage(payload('2026-11-02T10:00:00.000Z'))).cloudSaved).toBe(true);
     await clearTelegramZeroStateStorage();
