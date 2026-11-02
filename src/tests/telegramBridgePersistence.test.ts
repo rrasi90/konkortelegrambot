@@ -266,6 +266,19 @@ describe('Telegram CloudStorage full learner snapshots', () => {
     expect(result.payload.nodeStates['node.one'].coverageStatus).toBe('learning');
   });
 
+  it('warns when running inside Telegram without the CloudStorage API', async () => {
+    vi.stubGlobal('window', { Telegram: { WebApp: { platform: 'tdesktop' } } });
+    const result = await loadLatestStateFromTelegramStorage(
+      payload('1970-01-01T00:00:00.000Z'),
+    );
+    expect(result.source).toBe('fresh');
+    expect(result.warning).toContain('فقط روی همین دستگاه');
+    const saved = await saveStateToTelegramStorage(payload('2026-11-02T12:00:00.000Z'));
+    expect(saved.localSaved).toBe(true);
+    expect(saved.cloudSaved).toBe(false);
+    expect(saved.error).toContain('CloudStorage API is unavailable');
+  });
+
   it('invalidates the cloud manifest and local snapshots on zero-state reset', async () => {
     expect((await saveStateToTelegramStorage(payload('2026-11-02T10:00:00.000Z'))).cloudSaved).toBe(true);
     await clearTelegramZeroStateStorage();
