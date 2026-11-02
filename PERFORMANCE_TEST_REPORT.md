@@ -1,117 +1,100 @@
-# PERFORMANCE_TEST_REPORT
+# PERFORMANCE TEST REPORT — Phase 5 (R-014)
 
-## Overview
-Performance testing results covering load, response times, and system reliability.
+**Run date:** 2026-11-02
+**Branch:** `fix/mission-remediation-20261101`
+**Status:** `PASS_WITH_EVIDENCE` for a local in-memory API benchmark and local PostgreSQL
+query latency; production-load, Worker-runtime, stress and cross-platform performance remain
+`NOT_STARTED` / `BLOCKED` (no production infra).
 
-### 1. Functional Performance Tests
+## 1. Method (what was measured)
 
-#### 1.1 Response Time Thresholds
-| Operation | Threshold | Status | Notes |
-| --------- | --------- | -------- | ----- |
-| Registration | < 2 seconds | ⬜ | |
-| Content load | < 3 seconds | ⬜ | |
-| Question display | < 1 second | ⬜ | |
-| Answer submission | < 2 seconds | ⬜ | |
-| Exam simulation load | < 5 seconds | ⬜ | |
-| Dashboard update | < 2 seconds | ⬜ | |
+- Harness: `scripts/bench-worker.mjs` (Node global `fetch`, bounded worker pool; no external tool).
+- Target: `scripts/dev-server.mjs` → real Hono worker + `MemoryStore` + demo pack, single process.
+- Load: 20 users, 20 concurrent, 200 requests per read scenario, 7 scenarios.
+- Environment: Windows 10, Node v24.18.0, local loopback. No database or network hops are included.
+- Raw output: `evidence/phase-4/bench-worker-local.txt` (JSON with per-scenario status counts).
 
-#### 1.2 Load Testing Results
-| Load Level | Concurrent Users | Avg Response | P95 Response | Status |
-| ---------- | --------------- | ------------ | ------------ | ------ |
-| Light | 10 | ? | ? | ⬜ |
-| Medium | 25 | ? | ? | ⬜ |
-| Heavy | 50 | ? | ? | ⬜ |
-| Extreme | 100+ | ? | ? | ⬜ |
+Command:
 
-#### 1.3 Database Performance
-| Metric | Target | Measured | Status |
-| -------- | -------- | --------- | -------- |
-| Connection pool size | 20-50 | ? | ⬜ |
-| Query response time | < 100ms | ? | ⬜ |
-| Lock wait time | < 50ms | ? | ⬜ |
-| Index usage | > 95% | ? | ⬜ |
+```bash
+PORT=8787 npx tsx scripts/dev-server.mjs      # terminal 1
+node scripts/bench-worker.mjs                 # terminal 2
+```
 
-### 2. Stress Testing
+## 2. Results (measured, local MemoryStore)
 
-#### 2.1 Beyond-Expected Load
-| Load Multiplier | Concurrent Users | Behavior | Status |
-| ------------- | --------------- | -------- | ------|
-| 2x | 20-50 | ? | ⬜ |
-| 5x | 50-125 | ? | ⬜ |
-| 10x | 100-250 | ? | ⬜ |
+| Scenario | Requests | Errors | RPS | p50 | p90 | p99 | max |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| GET /api/health | 200 | 0 | 2788.5 | 6.1 ms | 9.8 ms | 15.9 ms | 16.1 ms |
+| GET /api/analytics/learning | 200 | 0 | 2248.7 | 8.1 ms | 10.9 ms | 14.9 ms | 15.1 ms |
+| GET /api/queue?limit=10 | 200 | 0 | 1266.1 | 15.3 ms | 17.9 ms | 20.9 ms | 21.0 ms |
+| GET /api/map | 200 | 0 | 2749.8 | 6.0 ms | 11.4 ms | 13.4 ms | 14.9 ms |
+| GET /api/exam-structure | 200 | 0 | 2994.0 | 5.5 ms | 14.6 ms | 18.4 ms | 18.5 ms |
+| POST /api/answers | 160 | 0 | 1707.6 | 11.5 ms | 13.1 ms | 14.6 ms | 14.7 ms |
+| POST /api/exam-simulation/start | 20 | 0 | 1234.9 | 13.3 ms | 15.1 ms | 15.3 ms | 15.3 ms |
 
-#### 2.2 Resource Monitoring
-| Resource | Threshold | Observed | Status |
-| -------- | --------- | -------- | ------ |
-| Memory usage | < 80% | ? | ⬜ |
-| CPU usage | < 80% | ? | ⬜ |
-| Database connections | < 80% of pool | ? | ⬜ |
-| Error rate | < 1% | ? | ⬜ |
+Error rate: **0%** across 1,380 requests. Answer count is 160 because 20 users × 8 queue items
+yielded 160 one-time tickets; it was not padded to 200.
 
-### 3. Cross-Platform Performance
+## 3. Database query latency (local PostgreSQL 16, synthetic load)
 
-#### 3.1 Telegram Platform Comparison
-| Platform | Avg Response | P95 Response | Memory | CPU | Status |
-| -------- | ------------ | ------------ | ------ | --- | ------ |
-| Android Telegram | ? | ? | ? | ? | ⬜ |
-| iOS Telegram | ? | ? | ? | ? | ⬜ |
-| Desktop Telegram | ? | ? | ? | ? | ⬜ |
-| Web Telegram | ? | ? | ? | ? | ⬜ |
+- Harness: `scripts/bench-db.sh` creates a throwaway `ael_bench` database inside the
+  `ael-pg-test` container, applies **all migrations (0001–0013) and seeds from scratch**, then
+  loads 500 users, 200,000 answer events (40% owned by one hot user), 100,000 mastery-history
+  rows, 7,000 review cards and 15,000 queue items.
+- Each query runs 10 warmups + 50 measured executions; timing uses server-side
+  `clock_timestamp()`. This measures **query execution only** — the PostgREST hop and network
+  are not included.
+- `answer_events` previously had only `(user_id, pack_id)`; `EXPLAIN` showed a bitmap scan on
+  that index plus a heap filter that removed 26,664 of 40,000 user rows. Migration
+  `0013_answer_events_user_time_index.sql` adds `(user_id, answered_at)` for `listAnswersSince`.
 
-#### 3.2 Browser Comparison
-| Browser | Avg Response | P95 Response | Status |
-| ------- | ------------ | ------------ | ------ |
-| Chrome (latest) | ? | ? | ⬜ |
-| Firefox (latest) | ? | ? | ⬜ |
-| Safari (latest) | ? | ? | ⬜ |
-| Edge (latest) | ? | ? | ⬜ |
+| Query | Before fix avg / p95 | After index avg / p95 | Verdict |
+|---|---|---|---|
+| `answer_events` 30-day count | 9.94 / 10.55 ms | 2.61 / 3.41 ms | PASS (local, < 100 ms) |
+| `answer_events` 30-day row fetch | 11.49 / 12.68 ms | 3.97 / 4.93 ms | PASS (local) |
+| `mastery_history` 7-day count | 1.05 / 1.31 ms | 1.00 / 1.19 ms | PASS (local) |
+| Due review cards | 0.03 / 0.10 ms | 0.02 / 0.07 ms | PASS (local) |
+| Today's queue items | 0.02 / 0.06 ms | 0.03 / 0.11 ms | PASS (local) |
+| User mastery (PK lookup) | 0.02 / 0.04 ms | 0.02 / 0.04 ms | PASS (local) |
 
-### 4. Performance Test Report Structure
+After the index, `EXPLAIN (ANALYZE, BUFFERS)` confirms `Bitmap Index Scan on
+answer_events_user_answered_idx` and removes the heap-filtered rows. Evidence:
+`evidence/phase-5/db-bench-before-index.txt`, `db-bench-after-index.txt`. Migration 0013 was
+applied from scratch in the same run, and the DB integrity suite passed with `EXIT=0`
+(`evidence/phase-5/db-integrity-0013.txt`).
 
-| Section | Content |
-| -------- | -------- |
-| **Executive Summary** | Overall performance assessment |
-| **Test Objectives** | What performance aspects were tested |
-| **Test Environment** | Hardware, software, configurations |
-| **Load Test Results** | Load levels, concurrent users, response times |
-| **Stress Test Results** | Beyond-expected load behavior |
-| **Resource Monitoring** | Memory, CPU, database metrics |
-| **Cross-Platform Results** | Platform comparison matrix |
-| **Scalability Analysis** | How system scales with load |
-| **Optimization Recommendations** | Performance improvements |
-| **Go/No-Go Criteria** | Pass/fail thresholds |
+These numbers describe a synthetic 200k-row local database, not production data volume or
+concurrent database load.
 
-### 4. Go/No-Go Performance Criteria
+## 4. Threshold check (from the previous template)
 
-| Criterion | Pass Threshold | Fail Trigger |
-| --------- | -------------- | ------------ |
-| **Response times** | All thresholds met | Any critical operation exceeds limit |
-| **Stability under load** | Error rate < 1% at expected load | Error rate spikes under load |
-| **Resource limits** | No memory/CPU saturation | Any resource hits 90%+ threshold |
-| **Scalability** | System handles 2x expected load | Cannot handle 2x load |
-| **Cross-platform consistency** | All major platforms within 20% of each other | Any platform > 50% slower |
+| Operation | Threshold | Measured local p99 | Verdict |
+|---|---|---|---|
+| Registration (`/api/auth/*`) | < 2 s | not isolated in this run | NOT_MEASURED |
+| Content load (`/api/lessons`) | < 3 s | not timed in this harness | NOT_MEASURED |
+| Question display (`/api/queue`) | < 1 s | 20.9 ms | PASS (local) |
+| Answer submission (`/api/answers`) | < 2 s | 14.6 ms | PASS (local) |
+| Exam simulation load (`start`) | < 5 s | 15.3 ms | PASS (local) |
+| Dashboard update (`/api/analytics/learning`) | < 2 s | 14.9 ms | PASS (local) |
 
-### 5. Performance Optimization Notes (from roadmap)
+## 5. Not measured — explicitly out of scope
 
-**Note**: "برایデータ‌های ثابت آموزشی نیز فایل‌های نسخه‌بندی‌شده در مخزن می‌توانند منبع انتشار باشند."
+- **Database concurrency, locks and connection pool:** single-query latency is measured above;
+  concurrent sessions, lock waits, pool saturation and PostgREST/Supabase path remain
+  `NOT_STARTED`.
+- **Cloudflare Worker runtime:** tests run in Node, not `workerd`; CPU-time and cold-start behavior
+  are unmeasured.
+- **Stress beyond 20 concurrent / 2×–10× load:** not run.
+- **Resource monitoring (CPU/memory/DB pool):** not instrumented.
+- **Cross-platform / cross-browser:** not run.
+- **Production SLA:** not claimed; loopback MemoryStore and synthetic PostgreSQL numbers must not
+  be presented as production capacity.
 
-Translation: "For fixed educational data, versioned files in the repository can be the distribution source."
+## 6. Conclusion
 
-This means:
-- Versioned content files in repo can distribute fixed educational data
-- No need for separate CDN or storage for static content
-- Content versioning in `content_versions` table tracks changes
-- Git history provides audit trail for content changes
-
-### 5. Performance Test Completion Criteria
-
-| Criterion | Threshold |
-| --------- | --------- |
-| All response time thresholds met | Yes/No |
-| Error rate under load | < 1% |
-| Resource saturation | < 80% |
-| Cross-platform consistency | Within acceptable variance |
-| Scalability test passed | Yes/No |
-
----
-*Performance test report framework complete. Proceed to production readiness checklist.*
+The measured local API latency is comfortably below the template thresholds with zero errors at
+20 concurrent users on the in-memory harness, and the measured PostgreSQL query p95 is ≤ 5 ms
+after adding the missing evidence-window index. This supports functional and query-level
+readiness, **not** a production performance guarantee. Gate 5 performance remains incomplete
+until Worker-runtime, concurrent-database, resource and stress measurements exist.

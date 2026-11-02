@@ -1,0 +1,29 @@
+npm notice run react-example@0.0.0 npx
+npm notice run vitest run
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90mC:/Star/konkortelegrambot[39m
+
+ [32m✓[39m src/tests/mistakeNotebook.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/fsrs.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/engine.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/tests/questionBank.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/exam-simulation.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/supabase-store.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m src/tests/lessonRatingEvidence.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/learning-analytics.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 68[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/english-skills.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/exam-simulation.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 154[2mms[22m[39m
+ [32m✓[39m src/tests/examCoverage.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m packages/utils/tests/priority-calculations.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/tests/examStructure.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/tests/masteryEvidence.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/fsrs-reference.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/tests/claimHonesty.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/worker.test.ts [2m([22m[2m48 tests[22m[2m)[22m[32m 291[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m17 passed[39m[22m[90m (17)[39m
+[2m      Tests [22m [1m[32m259 passed[39m[22m[90m (259)[39m
+[2m   Start at [22m 02:27:09
+[2m   Duration [22m 733ms[2m (import 36%, tests 33%, transform 25%, worker 6%)[22m
+
+EXIT=0

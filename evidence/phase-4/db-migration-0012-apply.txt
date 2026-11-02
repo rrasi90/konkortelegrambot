@@ -1,0 +1,24 @@
+ALTER TABLE
+ALTER TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE FUNCTION
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+psql:<stdin>:148: NOTICE:  policy "read_own_exam_sessions" for relation "exam_sessions" does not exist, skipping
+DROP POLICY
+CREATE POLICY
+DROP POLICY
+psql:<stdin>:150: NOTICE:  policy "read_own_exam_session_items" for relation "exam_session_items" does not exist, skipping
+CREATE POLICY
+DROP POLICY
+psql:<stdin>:153: NOTICE:  policy "read_own_exam_session_responses" for relation "exam_session_responses" does not exist, skipping
+CREATE POLICY
+GRANT
+REVOKE
+GRANT
+GRANT

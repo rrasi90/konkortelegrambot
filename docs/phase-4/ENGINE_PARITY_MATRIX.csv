@@ -1,0 +1,22 @@
+scenario,seam,input,react_runtime,shared_engine_runtime,verdict,note
+fsrs-01-fresh-easy,fsrs-interval,"brand-new card, rating=Easy(4)",14,8,DIVERGED,React: stepFSRS on hand-made init; shared: FSRS-5 init weights
+fsrs-02-S2.5-g1,fsrs-interval,S=2.5 D=5 elapsed=2d rating=1,0,1,DIVERGED,different growth formulas
+fsrs-03-S2.5-g2,fsrs-interval,S=2.5 D=5 elapsed=2d rating=2,3,4,DIVERGED,different growth formulas
+fsrs-04-S2.5-g3,fsrs-interval,S=2.5 D=5 elapsed=2d rating=3,10,7,DIVERGED,different growth formulas
+fsrs-05-S2.5-g4,fsrs-interval,S=2.5 D=5 elapsed=2d rating=4,19,15,DIVERGED,different growth formulas
+fsrs-06-S2.5-lapse,fsrs-interval,lapse at S=2.5 elapsed=2d,0,1,DIVERGED,relearn after failure
+fsrs-07-S8-g1,fsrs-interval,S=8 D=6 elapsed=5d rating=1,0,2,DIVERGED,different growth formulas
+fsrs-08-S8-g2,fsrs-interval,S=8 D=6 elapsed=5d rating=2,10,10,MATCHED,exact
+fsrs-09-S8-g3,fsrs-interval,S=8 D=6 elapsed=5d rating=3,27,17,DIVERGED,different growth formulas
+fsrs-10-S8-g4,fsrs-interval,S=8 D=6 elapsed=5d rating=4,48,30,DIVERGED,different growth formulas
+fsrs-11-S8-lapse,fsrs-interval,lapse at S=8 elapsed=5d,0,2,DIVERGED,relearn after failure
+ret-12-S1.5-t1,retrievability,S=1.5 elapsedDays=1,0.895,0.930,MATCHED,React ignores elapsed time (power curve absent)
+ret-13-S1.5-t4,retrievability,S=1.5 elapsedDays=4,0.895,0.784,DIVERGED,React ignores elapsed time (power curve absent)
+ret-14-S3-t1,retrievability,S=3 elapsedDays=1,0.910,0.963,DIVERGED,React ignores elapsed time (power curve absent)
+ret-15-S3-t4,retrievability,S=3 elapsedDays=4,0.910,0.873,MATCHED,React ignores elapsed time (power curve absent)
+ret-16-S7-t1,retrievability,S=7 elapsedDays=1,0.950,0.984,MATCHED,React ignores elapsed time (power curve absent)
+ret-17-S7-t4,retrievability,S=7 elapsedDays=4,0.950,0.939,MATCHED,React ignores elapsed time (power curve absent)
+urg-18-R0.9,urgency,retrievability=0.9,urgency=0.100 (multiplied as 1+x),riskTerm=1.100 (== 1+urgency),MATCHED,R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)
+urg-19-R0.7,urgency,retrievability=0.7,urgency=0.300 (multiplied as 1+x),riskTerm=1.300 (== 1+urgency),MATCHED,R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)
+urg-20-R0.4,urgency,retrievability=0.4,urgency=0.600 (multiplied as 1+x),riskTerm=1.600 (== 1+urgency),MATCHED,R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)
+urg-04-engine-order,urgency,"two due cards, higher-urgency due later",ROI-ordered (priorityScore/urgency),dueAt-ordered (buildDailyQueue core),DIVERGED,worker /api/queue گام۳ now ROI-orders via computePriorityV3 (R-011); @ael/engine buildDailyQueue still due-sort — legacy importer migration is Phase-5 end-state

@@ -1,0 +1,68 @@
+== container: ael-pg-test, database: ael_bench ==
+NOTICE:  database "ael_bench" does not exist, skipping
+== migrations (from scratch) ==
+→ 0001_init.sql
+psql:<stdin>:148: NOTICE:  trigger "trg_mastery_touch" for relation "user_node_mastery" does not exist, skipping
+psql:<stdin>:150: NOTICE:  trigger "trg_review_cards_touch" for relation "review_cards" does not exist, skipping
+→ 0002_user_stats.sql
+→ 0003_submit_answer_atomic.sql
+→ 0004_holdout_v2.sql
+psql:<stdin>:49: NOTICE:  trigger "trg_holdout_check" for relation "exam_pack_questions" does not exist, skipping
+psql:<stdin>:65: NOTICE:  policy "read_exam_packs" for relation "exam_packs" does not exist, skipping
+psql:<stdin>:72: NOTICE:  policy "read_holdout_context" for relation "exam_pack_questions" does not exist, skipping
+psql:<stdin>:73: NOTICE:  policy "read_exam_pack_questions" for relation "exam_pack_questions" does not exist, skipping
+→ 0005_attempt_tracking.sql
+→ 0006_learner_and_security.sql
+→ 0007_tracks_and_assets.sql
+→ 0008_identity_and_card_persistence.sql
+→ 0009_public_schema_grants_compat.sql
+→ 0010_secure_attempt_ticket_enforcement.sql
+→ 0011_domain_history_and_queue_tables.sql
+psql:<stdin>:49: NOTICE:  trigger "trg_user_node_mastery_history" for relation "user_node_mastery" does not exist, skipping
+psql:<stdin>:90: NOTICE:  policy "read_own_exam_selections" for relation "exam_selections" does not exist, skipping
+psql:<stdin>:92: NOTICE:  policy "read_own_mastery_history" for relation "mastery_history" does not exist, skipping
+psql:<stdin>:94: NOTICE:  policy "read_own_audit_logs" for relation "audit_logs" does not exist, skipping
+psql:<stdin>:96: NOTICE:  policy "read_own_daily_queue_items" for relation "daily_queue_items" does not exist, skipping
+→ 0012_exam_simulation_sessions.sql
+psql:<stdin>:148: NOTICE:  policy "read_own_exam_sessions" for relation "exam_sessions" does not exist, skipping
+psql:<stdin>:150: NOTICE:  policy "read_own_exam_session_items" for relation "exam_session_items" does not exist, skipping
+psql:<stdin>:153: NOTICE:  policy "read_own_exam_session_responses" for relation "exam_session_responses" does not exist, skipping
+== seeds ==
+→ 0001_demo_pack.sql
+→ 0002_english_skills.sql
+== synthetic load ==
+== query latency (server-side, synthetic data) ==
+         query          | runs | avg_ms | p95_ms | max_ms 
+------------------------+------+--------+--------+--------
+ answer_events_30d      |   50 |  9.943 | 10.553 | 11.337
+ answer_events_30d_rows |   50 | 11.486 | 12.681 | 13.960
+ daily_queue_today      |   50 |  0.024 |  0.064 |  0.111
+ mastery_history_7d     |   50 |  1.045 |  1.307 |  2.005
+ review_cards_due       |   50 |  0.029 |  0.099 |  0.210
+ user_node_mastery      |   50 |  0.019 |  0.039 |  0.070
+(6 rows)
+
+  table_name   | total_size | row_count 
+---------------+------------+-----------
+ answer_events | 58 MB      |    200000
+(1 row)
+
+== explain: answer_events 30-day filter ==
+                                                            QUERY PLAN                                                            
+----------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on answer_events  (cost=470.22..4904.02 rows=13499 width=202) (actual time=1.550..15.534 rows=13336 loops=1)
+   Recheck Cond: (user_id = '00000000-0000-0000-0000-000000000001'::uuid)
+   Filter: (answered_at >= (now() - '30 days'::interval))
+   Rows Removed by Filter: 26664
+   Heap Blocks: exact=3627
+   Buffers: shared hit=3660
+   ->  Bitmap Index Scan on ix_ae_user_pack  (cost=0.00..466.85 rows=40340 width=0) (actual time=1.225..1.226 rows=40000 loops=1)
+         Index Cond: (user_id = '00000000-0000-0000-0000-000000000001'::uuid)
+         Buffers: shared hit=33
+ Planning:
+   Buffers: shared hit=178
+ Planning Time: 0.959 ms
+ Execution Time: 15.944 ms
+(13 rows)
+
+== done ==

@@ -3,6 +3,8 @@
     "name": "demo-pack-phd-management",
     "version": "0.1.0",
     "synthetic": true,
+    "examLevel": "doctorate",
+    "contentOrigin": "synthetic_demo",
     "language": "fa",
     "description": "محتوای نمایشی ساختگی برای توسعه و تست موتور؛ جایگزین بانک سؤالات ۱۱ سال اخیر نیست. پس از تأیید محتوای واقعی از طریق scripts/import-content.mjs وارد می‌شود.",
     "tracks": [

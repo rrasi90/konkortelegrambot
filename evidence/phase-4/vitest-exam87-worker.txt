@@ -1,0 +1,14 @@
+npm notice run react-example@0.0.0 npx
+npm notice run vitest run apps/worker
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90mC:/Star/konkortelegrambot[39m
+
+ [32m✓[39m apps/worker/tests/supabase-store.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/exam-simulation.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 158[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/worker.test.ts [2m([22m[2m48 tests[22m[2m)[22m[33m 349[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m70 passed[39m[22m[90m (70)[39m
+[2m   Start at [22m 02:09:44
+[2m   Duration [22m 916ms[2m (tests 44%, transform 32%, import 22%, worker 2%)[22m
+

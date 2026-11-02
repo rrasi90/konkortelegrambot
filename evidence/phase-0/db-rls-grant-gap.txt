@@ -1,0 +1,7 @@
+DIAGNOSIS 2026-11-01: integrity.test.sql fails at line 104 on plain postgres:16-alpine (what CI ci.yml database job uses).
+ auth_can_use_public | anon_can_use_public 
+---------------------+---------------------
+ f                   | f
+(1 row)
+
+Root cause: no migration grants usage on schema public to authenticated/anon; only 'auth' schema usage granted (0001:26). Supabase provides these grants implicitly; plain Postgres does not.

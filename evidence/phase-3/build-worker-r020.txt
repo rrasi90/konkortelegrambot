@@ -1,0 +1,4 @@
+npm notice run react-example@0.0.0 build:worker
+npm notice run npm run --prefix apps/worker build
+npm notice run @ael/worker@0.1.0 build
+npm notice run tsc -b

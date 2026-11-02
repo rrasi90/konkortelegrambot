@@ -3,6 +3,10 @@
  * Shared contracts: types + runtime validation for the adaptive learning engine.
  */
 
+export * from './exam-structure';
+export * from './english-skills';
+import type { ExamLevel } from './exam-structure';
+
 /* ---------- Track & Knowledge Graph ---------- */
 
 export const TRACK_IDS = ['common', 'business', 'technology', 'strategy', 'industrial'] as const;
@@ -55,6 +59,13 @@ export interface CardFSRSState {
   intervalDays: number;
 }
 
+export const QUESTION_CONTENT_ORIGINS = [
+  'official_booklet',
+  'textbook_designed',
+  'synthetic_demo',
+] as const;
+export type QuestionContentOrigin = (typeof QUESTION_CONTENT_ORIGINS)[number];
+
 export interface Question {
   id: string;
   nodeId: string;
@@ -69,6 +80,10 @@ export interface Question {
   isVerified?: boolean;
   /** زمان موردانتظار پاسخ‌گویی (میلی‌ثانیه) — مبنای روانی اجرا */
   expectedTimeMs?: number;
+  /** سطح آزمونِ منبع سؤال؛ بدون تطابق سطح، سؤال وارد جلسهٔ شبیه‌سازی آن سطح نمی‌شود */
+  examLevel?: ExamLevel;
+  /** مبدأ محتوا — فقط official_booklet می‌تواند جلسهٔ «ساخته‌شده از دفترچهٔ رسمی» بسازد */
+  contentOrigin?: QuestionContentOrigin;
 }
 
 /** سؤالی که به کلاینت فرستاده می‌شود — بدون گزینهٔ صحیح، بدون توضیح تشریحی و بدون یادداشت دام */
@@ -251,8 +266,20 @@ export interface RippleReport {
   mentorMessage: string;
   /** اقدامات کارت برای پایدارسازی */
   actions: CardAction[];
-  /** نوع خطای تشخیص‌داده‌شدهٔ موتور ('none' برای پاسخ درست) */
-  errorType?: 'slip' | 'concept_gap' | 'prerequisite_failure' | 'misread' | 'none';
+  /** §8.6: نوع خطای تشخیص‌داده‌شدهٔ موتور ('none' برای پاسخ درست، 'unknown' وقتی شواهد ناکافی است) */
+  errorType?:
+    | 'slip'
+    | 'concept_gap'
+    | 'knowledge_gap'
+    | 'misconception'
+    | 'calculation_error'
+    | 'reading_error'
+    | 'theory_confusion'
+    | 'recall_failure'
+    | 'time_pressure'
+    | 'guessing'
+    | 'unknown'
+    | 'none';
   /** گره‌هایی که به‌جای کسر نمره، نیازمند سؤال تشخیصی (Probe) شده‌اند */
   probeTargets?: string[];
   /** اگر آمادگی اثبات رسید: گره و مهارتِ نیازمند سؤال دیده‌نشده */

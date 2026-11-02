@@ -1,0 +1,35 @@
+=== MIGRATIONS ===
+MIGRATION 0001_init.sql:
+  applied OK
+MIGRATION 0002_user_stats.sql:
+  applied OK
+MIGRATION 0003_submit_answer_atomic.sql:
+  applied OK
+MIGRATION 0004_holdout_v2.sql:
+  applied OK
+MIGRATION 0005_attempt_tracking.sql:
+  applied OK
+MIGRATION 0006_learner_and_security.sql:
+  applied OK
+MIGRATION 0007_tracks_and_assets.sql:
+  applied OK
+MIGRATION 0008_identity_and_card_persistence.sql:
+  applied OK
+=== SEEDS ===
+seed OK
+=== INTEGRITY TESTS ===
+DO
+DO
+DO
+DO
+DO
+DO
+DO
+INSERT 0 1
+INSERT 0 1
+SET
+SET
+psql:/sb/tests/integrity.test.sql:104: ERROR:  relation "answer_events" does not exist
+LINE 2: from answer_events where user_id = '22222222-2222-2222-2222-...
+             ^
+INTEGRITY_EXIT=3

@@ -1,5 +1,11 @@
 # SECURITY_AUDIT
 
+> **STATUS CORRECTION (Phase 5, 2026-11-02):** this file is a planning/assessment document, not an
+> executed audit. The ✅ marks below list *proposed/implemented fixes*, not verified results, and
+> the per-area "Status" lines are not current gate outcomes. Executed local tests and residual gaps
+> are recorded in `SECURITY_TEST_REPORT.md`; a full OWASP assessment and external pentest remain
+> `NOT_STARTED`.
+
 ## OWASP API Security Top 10 Assessment
 
 This audit addresses the security findings identified in the roadmap for the Konkor platform.

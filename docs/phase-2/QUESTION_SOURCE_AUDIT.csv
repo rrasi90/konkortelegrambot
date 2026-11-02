@@ -1,0 +1,157 @@
+question_id,tier,exam_year,booklet_code,course_section_id,course_id,verification_status,review_status,has_source_reference,has_explanation,reference_excerpt
+q.phd1394.201,official_traced_phd,1394,,management_theories,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت ۱۳۹۴ — درس تئوری‌های مدیریت پیشرفته
+q.phd1395.202,official_traced_phd,1395,,math_stats,statistics.management,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت ۱۳۹۵ — درس آمار و کاربرد آن در مدیریت
+q.phd1396.203,official_traced_phd,1396,,marketing,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت بازرگانی ۱۳۹۶ — درس مدیریت استراتژیک و بازاریابی
+q.phd1397.204,official_traced_phd,1397,,operations_research,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت صنعتی ۱۳۹۷ — درس تحقیق در عملیات پیشرفته
+q.phd1398.205,official_traced_phd,1398,,production,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت تکنولوژی ۱۳۹۸ (کد ۲۱۲۰) — درس مدیریت فناوری و نوآوری
+q.phd1399.206,official_traced_phd,1399,,math_stats,statistics.management,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت ۱۳۹۹ — درس روش تحقیق و آمار
+q.phd1400.207,official_traced_phd,1400,,management_theories,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت ۱۴۰۰ — درس تئوری‌های مدیریت پیشرفته
+q.phd1401.208,official_traced_phd,1401,,production,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت تکنولوژی ۱۴۰۱ — درس مدیریت نوآوری و فناوری
+q.phd1402.209,official_traced_phd,1402,,operations_research,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت صنعتی ۱۴۰۲ — درس تحقیق در عملیات و سیستم‌های صف
+q.phd1403.210,official_traced_phd,1403,,marketing,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت بازرگانی ۱۴۰۳ — درس نظریه‌های پیشرفته بازاریابی
+q.phd1404.211,official_traced_phd,1404,,math_stats,statistics.management,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری تخصصی مدیریت ۱۴۰۴ — درس آمار و روش تحقیق پیشرفته
+q.mb.struct.1,official_traced_phd,1402,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۲ — منبع: تئوری سازمان ریچارد دفت فصل ۴
+q.mb.cont.1,official_traced_phd,1401,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۱ — منبع: تئوری سازمان رابینز فصل ۶ (وودوارد)
+q.sm.vc.1,official_traced_phd,1401,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۱ — منبع: مزیت رقابتی پورتر
+q.sm.rbv.1,official_traced_phd,1402,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۲ — منبع: مقاله بارنی ۱۹۹۱ (VRIO)
+q.sm.port.1,official_traced_phd,1401,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۱ — منبع: مدیریت استراتژیک فرد دیوید فصل ۶
+q.sm.dyn.1,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۳ — منبع: مقاله دیوید تیس ۲۰۰۷
+q.stats.scale.1,official_traced_phd,1401,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۱ — منبع: آمار عادل آذر جلد ۱
+q.stats.anova.1,official_traced_phd,1402,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۲ — منبع: آمار عادل آذر جلد ۲ فصل ۳
+q.stats.reg.1,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۳ — منبع: آمار عادل آذر جلد ۲ فصل ۶
+q.rm.val.1,official_traced_phd,1402,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۲ — منبع: معیار فورنل و لارکر ۱۹۸۱
+q.mb.cult.1,official_traced_phd,1402,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۲ — منبع: فرهنگ سازمانی ادگار شاین
+q.mkt.plc.1,official_traced_phd,1401,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت بازرگانی ۱۴۰۱ — منبع: کاتلر و کلر فصل ۱۱
+q.mkt.brand.1,official_traced_phd,1402,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت بازرگانی ۱۴۰۲ — منبع: مدیریت برند کوین لین کلر
+q.mkt.cons.1,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت بازرگانی ۱۴۰۳ — منبع: رفتار مصرف‌کننده سولومون
+q.inno.scurve.1,official_traced_phd,1402,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت تکنولوژی ۱۴۰۲ — منبع: ملیسا شیلینگ فصل ۳
+q.inno.ambi.1,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت ۱۴۰۳ — منبع: اورایلی و تاشمن ۲۰۰۴
+q.ind.or.1,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت صنعتی ۱۴۰۳ — منبع: پژوهش عملیاتی مهرگان فصل ۴
+q.ind.pom.1,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت صنعتی ۱۴۰۳ — منبع: مدیریت تولید و عملیات دکتر متقی
+q.inno.tidd.1,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت تکنولوژی ۱۴۰۳ — منبع: مدیریت نوآوری تید و بسانت فصل ۱
+q.ind.mcdm.1,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت صنعتی ۱۴۰۳ — منبع: تئوری صف و تصمیم‌گیری دکتر عادل آذر
+q.inno.open.1,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت تکنولوژی ۱۴۰۳ — منبع: نوآوری باز هنری چسبرو
+q.mkt.plc.3,official_traced_phd,1401,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری و ارشد مدیریت بازرگانی ۱۴۰۱ — منبع: استراتژی‌های بازاریابی در مرحله 
+q.mkt.brand.2,official_traced_phd,1402,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری مدیریت بازرگانی ۱۴۰۲ — منبع: مدیریت استراتژیک برند کوین لین کلر (CBB
+q.mkt.cons.2,official_traced_phd,1401,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور کارشناسی ارشد و دکتری بازرگانی ۱۴۰۱ — منبع: ماتریس رفتار خرید هنری اسل (کا
+q.mb.cont.2,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور کارشناسی ارشد و دکتری مدیریت ۱۴۰۳ — منبع: ماتریس فناوری چارلز پرو (Perrow)
+q.stats.anova.2,official_traced_phd,1402,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور دکتری و ارشد مدیریت ۱۴۰۲ — منبع: آمار و کاربرد آن در مدیریت (عادل آذر و مح
+q.stats.scales.2,official_traced_phd,1403,,,,transcribed_pending_key_review,not_reviewed,yes,yes,کنکور کارشناسی ارشد و دکتری مدیریت ۱۴۰۳ — منبع: آمار و احتمال محسن طورانی و عادل
+q.k1391.1,official_traced_arshad,1391,103D,english,english.language,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۱ دفترچه — کلید رسمی سنجش: گزینه ۱
+q.k1391.31,official_traced_arshad,1391,103D,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۳۱ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1391.32,official_traced_arshad,1391,103D,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۳۲ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1391.49,official_traced_arshad,1391,103D,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۴۹ دفترچه — کلید رسمی سنجش: گزینه ۴
+q.k1391.60,official_traced_arshad,1391,103D,operations_research,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۶۰ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1391.167,official_traced_arshad,1391,103D,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۱۶۷ دفترچه — کلید رسمی سنجش: گزینه ۳
+q.k1391.201,official_traced_arshad,1391,103D,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۲۰۱ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1391.222,official_traced_arshad,1391,103D,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۲۲۲ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1391.306,official_traced_arshad,1391,103D,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۳۰۶ دفترچه — کلید رسمی سنجش: گزینه ۴
+q.k1392.1,official_traced_arshad,1392,103A,english,english.language,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۱ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1392.31,official_traced_arshad,1392,103A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۳۱ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1392.35,official_traced_arshad,1392,103A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۳۵ دفترچه — کلید رسمی سنجش: گزینه ۴
+q.k1392.47,official_traced_arshad,1392,103A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۴۷ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1392.48,official_traced_arshad,1392,103A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۴۸ دفترچه — کلید رسمی سنجش: گزینه ۴
+q.k1392.76,official_traced_arshad,1392,103A,operations_research,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۷۶ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1392.189,official_traced_arshad,1392,103A,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۱۸۹ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1392.201,official_traced_arshad,1392,103A,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۲۰۱ دفترچه — کلید رسمی سنجش: گزینه ۲
+q.k1392.225,official_traced_arshad,1392,103A,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۲۲۵ دفترچه — کلید رسمی سنجش: گزینه ۱
+q.k1392.309,official_traced_arshad,1392,103A,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۳۰۹ دفترچه — کلید رسمی سنجش: گزینه ۴
+q.k1393.34,official_traced_arshad,1393,103A,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۳ (کد 103A) — سؤال ۳۴ دفترچه
+q.k1393.69,official_traced_arshad,1393,103A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۳ (کد 103A) — سؤال ۶۹ دفترچه
+q.k1393.81,official_traced_arshad,1393,103A,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۳ (کد 103A) — سؤال ۸۱ دفترچه
+q.k1393.134,official_traced_arshad,1393,103A,operations_research,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۳ (کد 103A) — سؤال ۱۳۴ دفترچه
+q.k1393.168,official_traced_arshad,1393,103A,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۳ (کد 103A) — سؤال ۱۶۸ دفترچه
+q.k1393.181,official_traced_arshad,1393,103A,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۳ (کد 103A) — سؤال ۱۸۱ دفترچه
+q.k1394.44,official_traced_arshad,1394,103C,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۴ (کد 103C) — سؤال ۴۴ دفترچه
+q.k1394.51,official_traced_arshad,1394,103C,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۴ (کد 103C) — سؤال ۵۱ دفترچه
+q.k1394.84,official_traced_arshad,1394,103C,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۴ (کد 103C) — سؤال ۸۴ دفترچه
+q.k1394.128,official_traced_arshad,1394,103C,islamic,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۴ (کد 103C) — سؤال ۱۲۸ دفترچه
+q.k1394.173,official_traced_arshad,1394,103C,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۴ (کد 103C) — سؤال ۱۷۳ دفترچه
+q.k1394.190,official_traced_arshad,1394,103C,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۴ (کد 103C) — سؤال ۱۹۰ دفترچه
+q.k1395.32,official_traced_arshad,1395,107A,islamic,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۵ (کد 107A) — سؤال ۳۲ دفترچه
+q.k1395.46,official_traced_arshad,1395,107A,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۵ (کد 107A) — سؤال ۴۶ دفترچه
+q.k1395.69,official_traced_arshad,1395,107A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۵ (کد 107A) — سؤال ۶۹ دفترچه
+q.k1395.105,official_traced_arshad,1395,107A,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۵ (کد 107A) — سؤال ۱۰۵ دفترچه
+q.k1395.197,official_traced_arshad,1395,107A,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۵ (کد 107A) — سؤال ۱۹۷ دفترچه
+q.k1396.38,official_traced_arshad,1396,106C,islamic,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۶ (کد 106C) — سؤال ۳۸ دفترچه
+q.k1396.65,official_traced_arshad,1396,106C,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۶ (کد 106C) — سؤال ۶۵ دفترچه
+q.k1396.95,official_traced_arshad,1396,106C,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۶ (کد 106C) — سؤال ۹۵ دفترچه
+q.k1396.99,official_traced_arshad,1396,106C,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۶ (کد 106C) — سؤال ۹۹ دفترچه
+q.k1396.176,official_traced_arshad,1396,106C,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۶ (کد 106C) — سؤال ۱۷۶ دفترچه
+q.k1397.39,official_traced_arshad,1397,116A,islamic,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۷ (کد 116A) — سؤال ۳۹ دفترچه
+q.k1397.92,official_traced_arshad,1397,116A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۷ (کد 116A) — سؤال ۹۲ دفترچه
+q.k1397.111,official_traced_arshad,1397,116A,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۷ (کد 116A) — سؤال ۱۱۱ دفترچه
+q.k1397.180,official_traced_arshad,1397,116A,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۷ (کد 116A) — سؤال ۱۸۰ دفترچه
+q.k1398.10,official_traced_arshad,1398,716C,english,english.language,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۸ (کد 716C) — سؤال ۱۰ دفترچه
+q.k1398.83,official_traced_arshad,1398,716C,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۸ (کد 716C) — سؤال ۸۳ دفترچه
+q.k1398.110,official_traced_arshad,1398,716C,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۸ (کد 716C) — سؤال ۱۱۰ دفترچه
+q.k1398.177,official_traced_arshad,1398,716C,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۸ (کد 716C) — سؤال ۱۷۷ دفترچه
+q.k1399.55,official_traced_arshad,1399,316A,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۹ (کد 316A) — سؤال ۵۵ دفترچه
+q.k1399.76,official_traced_arshad,1399,316A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۹ (کد 316A) — سؤال ۷۶ دفترچه
+q.k1399.77,official_traced_arshad,1399,316A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۹ (کد 316A) — سؤال ۷۷ دفترچه
+q.k1399.198,official_traced_arshad,1399,316A,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۳۹۹ (کد 316A) — سؤال ۱۹۸ دفترچه
+q.k1400.38,official_traced_arshad,1400,716C,islamic,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۰ (کد 716C) — سؤال ۳۸ دفترچه
+q.k1400.77,official_traced_arshad,1400,716C,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۰ (کد 716C) — سؤال ۷۷ دفترچه
+q.k1400.96,official_traced_arshad,1400,716C,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۰ (کد 716C) — سؤال ۹۶ دفترچه
+q.k1400.180,official_traced_arshad,1400,716C,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۰ (کد 716C) — سؤال ۱۸۰ دفترچه
+q.k1400.191,official_traced_arshad,1400,716C,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۰ (کد 716C) — سؤال ۱۹۱ دفترچه
+q.k1401.77,official_traced_arshad,1401,517A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۱ (کد 517A) — سؤال ۷۷ دفترچه
+q.k1401.101,official_traced_arshad,1401,517A,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۱ (کد 517A) — سؤال ۱۰۱ دفترچه
+q.k1401.148,official_traced_arshad,1401,517A,operations_research,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۱ (کد 517A) — سؤال ۱۴۸ دفترچه
+q.k1401.187,official_traced_arshad,1401,517A,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۱ (کد 517A) — سؤال ۱۸۷ دفترچه
+q.k1402.49,official_traced_arshad,1402,818C,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۲ (کد 818C) — سؤال ۴۹ دفترچه
+q.k1402.79,official_traced_arshad,1402,818C,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۲ (کد 818C) — سؤال ۷۹ دفترچه
+q.k1402.84,official_traced_arshad,1402,818C,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۲ (کد 818C) — سؤال ۸۴ دفترچه
+q.k1402.185,official_traced_arshad,1402,818C,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۲ (کد 818C) — سؤال ۱۸۵ دفترچه
+q.k1403.52,official_traced_arshad,1403,141C,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۳ (کد 141C) — سؤال ۵۲ دفترچه
+q.k1403.84,official_traced_arshad,1403,141C,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۳ (کد 141C) — سؤال ۸۴ دفترچه
+q.k1403.93,official_traced_arshad,1403,141C,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۳ (کد 141C) — سؤال ۹۳ دفترچه
+q.k1403.101,official_traced_arshad,1403,141C,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۳ (کد 141C) — سؤال ۱۰۱ دفترچه
+q.k1403.186,official_traced_arshad,1403,141C,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۳ (کد 141C) — سؤال ۱۸۶ دفترچه
+q.k1404.41,official_traced_arshad,1404,519C,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۴ (کد 519C) — سؤال ۴۱ دفترچه
+q.k1404.53,official_traced_arshad,1404,519C,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۴ (کد 519C) — سؤال ۵۳ دفترچه
+q.k1404.66,official_traced_arshad,1404,519C,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۴ (کد 519C) — سؤال ۶۶ دفترچه
+q.k1404.94,official_traced_arshad,1404,519C,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۴ (کد 519C) — سؤال ۹۴ دفترچه
+q.k1404.170,official_traced_arshad,1404,519C,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۴ (کد 519C) — سؤال ۱۷۰ دفترچه
+q.k1405.1,official_traced_arshad,1405,319A,english,english.language,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۵ (کد 319A) — سؤال ۱ دفترچه
+q.k1405.26,official_traced_arshad,1405,319A,islamic,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۵ (کد 319A) — سؤال ۲۶ دفترچه
+q.k1405.41,official_traced_arshad,1405,319A,math_stats,statistics.management,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۵ (کد 319A) — سؤال ۴۱ دفترچه
+q.k1405.66,official_traced_arshad,1405,319A,management_theories,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۵ (کد 319A) — سؤال ۶۶ دفترچه
+q.k1405.87,official_traced_arshad,1405,319A,economics,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۵ (کد 319A) — سؤال ۸۷ دفترچه
+q.k1405.136,official_traced_arshad,1405,319A,operations_research,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۵ (کد 319A) — سؤال ۱۳۶ دفترچه
+q.k1405.166,official_traced_arshad,1405,319A,production,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۵ (کد 319A) — سؤال ۱۶۶ دفترچه
+q.k1405.188,official_traced_arshad,1405,319A,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۵ (کد 319A) — سؤال ۱۸۸ دفترچه
+q.k1405.192,official_traced_arshad,1405,319A,marketing,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور ارشد مدیریت ۱۴۰۵ (کد 319A) — سؤال ۱۹۲ دفترچه
+q.bus.eng.1,official_traced_arshad,1403,141C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت بازرگانی ۱۴۰۳ — منبع: زبان تخصصی مدیریت آرمان اشراقی
+q.bus.econ.1,official_traced_arshad,1403,141C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت ۱۴۰۳ — منبع: اقتصاد کلان دکتر محسن نظری (نگاه دانش)
+q.bus.math.1,official_traced_arshad,1403,141C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت ۱۴۰۳ — منبع: ریاضیات عمومی هادی رنجبران
+q.bus.islamic.1,official_traced_arshad,1403,141C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت بازرگانی ۱۴۰۳ — منبع: مدیریت از دیدگاه اسلام دکتر مقی
+q.mkt.plc.2,official_traced_arshad,1402,818C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت بازرگانی ۱۴۰۲ — منبع: مدیریت بازاریابی دکتر حسین جلیل
+q.mb.struct.2,official_traced_arshad,1402,818C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت ۱۴۰۲ — منبع: تئوری‌های مدیریت جوادین و جلیلیان (پیکرب
+q.mb.cont.3,official_traced_arshad,1401,517A,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت ۱۴۰۱ — منبع: مدیریت رفتار سازمانی هرسی و بلانچارد (جو
+q.ind.or.2,official_traced_arshad,1402,818C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت صنعتی و بازرگانی ۱۴۰۲ — منبع: پژوهش عملیاتی دکتر عارف
+q.ind.or.3,official_traced_arshad,1401,517A,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت صنعتی ۱۴۰۱ — منبع: پژوهش عملیاتی دکتر عارفه فدوی (مسئ
+q.ind.pom.2,official_traced_arshad,1402,818C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت صنعتی و تکنولوژی ۱۴۰۲ — منبع: مدیریت تولید دکتر حامد 
+q.ind.pom.3,official_traced_arshad,1401,517A,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت صنعتی ۱۴۰۱ — منبع: مدیریت تولید و عملیات دکتر متقی (ف
+q.bus.econ.2,official_traced_arshad,1402,818C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت ۱۴۰۲ — منبع: اقتصاد خرد دکتر محسن نظری (فصل کشش و درآ
+q.bus.econ.3,official_traced_arshad,1401,517A,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت ۱۴۰۱ — منبع: اقتصاد کلان دکتر محسن نظری (ضریب فزاینده
+q.bus.math.2,official_traced_arshad,1402,818C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت ۱۴۰۲ — منبع: ریاضیات عمومی هادی رنجبران (فصل توابع چن
+q.bus.islamic.2,official_traced_arshad,1402,818C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت ۱۴۰۲ — منبع: اصول و مبانی مدیریت از دیدگاه اسلام دکتر
+q.bus.eng.2,official_traced_arshad,1402,818C,,,official_key_cited_in_reference,not_reviewed,yes,yes,کنکور کارشناسی ارشد مدیریت ۱۴۰۲ — منبع: زبان تخصصی مدیریت آرمان اشراقی (نگاه دان
+q.mb.struct.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط
+q.mb.cont.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط
+q.sm.vc.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط
+q.sm.rbv.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط
+q.sm.port.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط
+q.stats.anova.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط
+q.stats.reg.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط
+q.mkt.brand.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط
+q.ind.or.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط مدیریت صنعتی
+q.ind.pom.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط مدیریت صنعتی
+q.inno.tidd.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط مدیریت فناوری
+q.ind.mcdm.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط مدیریت صنعتی (DEA و AHP)
+q.inno.open.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری دکتری ۱۴۰۴ — قرنطینه اثبات تسلط مدیریت فناوری (روث‌ول و ظرفیت جذب)
+q.bus.eng.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری ارشد مدیریت ۱۴۰۴ — قرنطینه اثبات تسلط زبان (زیر ذره‌بین و اشراقی)
+q.bus.econ.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری ارشد مدیریت ۱۴۰۴ — قرنطینه اثبات تسلط اقتصاد خرد دکتر نظری
+q.bus.math.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری ارشد مدیریت ۱۴۰۴ — قرنطینه اثبات تسلط آمار محسن طورانی
+q.bus.islamic.proof.1404,quarantine,1404,,,,quarantined,not_reviewed,yes,yes,کنکور سراسری ارشد مدیریت ۱۴۰۴ — قرنطینه اثبات تسلط مدیریت اسلامی دکتر مقیمی

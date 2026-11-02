@@ -1,0 +1,82 @@
+=== §8.9 research-lab audit 2026-11-01T22:56:58Z ===
+
+--- [1] implementation grep (routes/components/services) ---
+NO_MATCHES
+
+--- [2] worker API route inventory ---
+app.get('/api/health
+app.get('/api/lessons
+app.post('/api/telegram/webhook
+app.get('/api/telegram/webhook/info
+app.post('/api/telegram/webhook/set
+app.post('/api/telegram/webhook/delete
+app.post('/api/auth/telegram
+app.post('/api/auth/demo
+app.get('/api/me
+app.get('/api/exam-selection
+app.put('/api/exam-selection
+app.put('/api/tracks
+app.get('/api/tracks
+app.get('/api/diagnostic
+app.get('/api/exam-structure
+app.post('/api/exam-simulation/start
+app.post('/api/exam-simulation/answer
+app.post('/api/exam-simulation/submit
+app.get('/api/exam-simulation/:id
+app.get('/api/english/skills
+app.get('/api/analytics/learning
+app.get('/api/queue
+app.post('/api/answers
+app.get('/api/map
+app.get('/api/home
+app.post('/api/self-report
+app.get('/api/night-quiz
+app.post('/api/streak/freeze
+app.put('/api/settings
+
+--- [3] AI provider integration grep ---
+NO_MATCHES
+
+--- [4] in-repo research components listed by DIAGNOSTIC_ASSESSMENT_ENGINE.md ---
+## Research Lab (for interview preparation)
+
+### Research Analysis Components
+| Component | Description |
+| --------- | ----------- |
+| **Article Analysis** | Analyze research articles |
+| **Research Gap** | Identify research gaps |
+| **Methodology** | Evaluate methodology |
+| **Hypothesis** | Assess hypotheses |
+| **Result Evaluation** | Check result validity |
+| **Proposal Design** | Design research proposals |
+| **Research Methods** | Practice quantitative/qualitative/mixed |
+
+### Interview Simulator
+
+#### Specialized Interview
+- Subject-specific questions
+- Deep conceptual understanding
+
+#### Research Methodology Interview
+- Research method questions
+- Design and analysis
+
+#### Thesis Defense Simulation
+- Final defense practice
+- Committee-style questioning
+
+#### Research Experience Discussion
+- Present research background
+- Answer about methodology choices
+
+#### Specialized Language Questions
+- Technical terminology
+- Field-specific concepts
+
+#### Oral Presentation
+- Presentation skills practice
+- Q&A simulation
+
+--- [5] explicit '11' capability spec grep in docs ---
+docs/phase-4/PHASE_4_EXECUTION_TRACKER.md:16:| 8.9 Research lab | 11 capabilities; AI strictly as sourced assistant | NOT_STARTED | — |
+EXIT=0

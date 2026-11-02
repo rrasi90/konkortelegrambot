@@ -1,0 +1,50 @@
+NOTICE:  drop cascades to 25 other objects
+DETAIL:  drop cascades to extension pgcrypto
+drop cascades to table app_users
+drop cascades to table knowledge_nodes
+drop cascades to table node_dependencies
+drop cascades to table questions
+drop cascades to table answer_events
+drop cascades to table user_node_mastery
+drop cascades to table trap_cards
+drop cascades to table review_cards
+drop cascades to table daily_plan
+drop cascades to function touch_updated_at()
+drop cascades to function submit_answer_atomic(uuid,text,integer,text,boolean,jsonb,jsonb,jsonb,jsonb)
+drop cascades to table exam_packs
+drop cascades to table exam_pack_questions
+drop cascades to function set_holdout_policy()
+drop cascades to view v_active_holdout_questions
+drop cascades to table skills
+drop cascades to table question_skill_mappings
+drop cascades to table user_skill_mastery
+drop cascades to view v_user_attempts_summary
+drop cascades to table learner_skill_states
+drop cascades to table attempt_tickets
+drop cascades to view v_public_questions
+drop cascades to function submit_answer_secure(uuid,text,text,integer,jsonb,jsonb,jsonb,jsonb)
+drop cascades to table learning_assets
+DROP SCHEMA
+CREATE SCHEMA
+→ supabase/migrations/0001_init.sql
+NOTICE:  trigger "trg_mastery_touch" for relation "user_node_mastery" does not exist, skipping
+NOTICE:  trigger "trg_review_cards_touch" for relation "review_cards" does not exist, skipping
+→ supabase/migrations/0002_user_stats.sql
+→ supabase/migrations/0003_submit_answer_atomic.sql
+→ supabase/migrations/0004_holdout_v2.sql
+NOTICE:  trigger "trg_holdout_check" for relation "exam_pack_questions" does not exist, skipping
+NOTICE:  policy "read_exam_packs" for relation "exam_packs" does not exist, skipping
+NOTICE:  policy "read_holdout_context" for relation "exam_pack_questions" does not exist, skipping
+NOTICE:  policy "read_exam_pack_questions" for relation "exam_pack_questions" does not exist, skipping
+→ supabase/migrations/0005_attempt_tracking.sql
+→ supabase/migrations/0006_learner_and_security.sql
+→ supabase/migrations/0007_tracks_and_assets.sql
+→ supabase/migrations/0008_identity_and_card_persistence.sql
+→ supabase/migrations/0009_public_schema_grants_compat.sql
+→ supabase/migrations/0010_secure_attempt_ticket_enforcement.sql
+→ supabase/migrations/0011_domain_history_and_queue_tables.sql
+NOTICE:  trigger "trg_user_node_mastery_history" for relation "user_node_mastery" does not exist, skipping
+NOTICE:  policy "read_own_exam_selections" for relation "exam_selections" does not exist, skipping
+NOTICE:  policy "read_own_mastery_history" for relation "mastery_history" does not exist, skipping
+NOTICE:  policy "read_own_audit_logs" for relation "audit_logs" does not exist, skipping
+NOTICE:  policy "read_own_daily_queue_items" for relation "daily_queue_items" does not exist, skipping

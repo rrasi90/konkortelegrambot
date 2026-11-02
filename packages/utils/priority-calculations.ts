@@ -1,46 +1,9 @@
-// Priority calculation utilities for daily queue generation
-
-/** Calculate urgency from interval decay */
-export function calculateUrgency(
-  cardDueDate: string | Date,
-  cardCreatedDate: string | Date,
-  now: Date = new Date()
-): number {
-  const due = new Date(cardDueDate).getTime();
-  const nowMs = now.getTime();
-
-  // Days overdue (positive means past due date)
-  const diffDays = (nowMs - due) / 86400000;
-
-  if (diffDays >= 0) {
-    // Card is due or overdue
-    const daysOverdue = diffDays;
-    const overdueFactor = 1.0 + Math.min(4.0, daysOverdue / 7);
-    return overdueFactor;
-  }
-
-  // Card is not yet due (in future)
-  const daysUntilDue = -diffDays;
-  return 1.0 / (1.0 + daysUntilDue);
-}
-
-/** Calculate mastery-based urgency: lower mastery = higher urgency */
-export function calculateMasteryUrgency(
-  masteryScore: number, // 0-100
-  opts: { threshold?: number } = { threshold: 50 }
-): number {
-  const threshold = opts.threshold ?? 50;
-  const normalized = Math.max(0, Math.min(100, masteryScore));
-
-  if (normalized >= threshold) {
-    // Meets or exceeds threshold: urgency is low (0 to 0.3)
-    const span = Math.max(1, 100 - threshold);
-    return Math.max(0, ((100 - normalized) / span) * 0.3);
-  }
-
-  // Below threshold: urgency is high (0.3 to 1.0)
-  return 0.3 + 0.7 * ((threshold - normalized) / Math.max(1, threshold));
-}
+// Priority calculation utilities for daily queue generation.
+// R-011 (ARC-02): this module holds the ONE canonical priority function used by the
+// production scoring path (worker /api/queue). The three formerly-divergent urgency
+// formulas (due-ratio `calculateUrgency`, banded `calculateMasteryUrgency`, additive
+// `calculateUrgencyV2`) were removed here; their semantics live in the explicit
+// multiplicative terms of `computePriorityV3` below.
 
 /** Calculate exam value from pack metadata and user mastery */
 export function calculateExamValue(
@@ -97,38 +60,55 @@ export function calculateExpectedBenefit(
   }
 }
 
-/** Calculate urgency with all factors combined */
-export function calculateUrgencyV2(
-  card: {
-    intervalDays: number;
-    dueAt: string;
-    nodeId: string;
-  },
-  userState: {
-    masteryMap: Map<string, number>;
-    fsrsRetentionMap?: Map<string, number>;
-    examDate?: Date;
-  },
-  now: Date = new Date()
+/**
+ * Prerequisite multiplier per ADAPTIVE_PLANNER spec:
+ * 1.0 when no prerequisite gap, 0.5 with exactly one gap, 0.2 with multiple gaps.
+ * `prereqScores` are 0-100 mastery values of direct prerequisites.
+ */
+export function derivePrereqMultiplier(
+  prereqScores: number[],
+  opts: { threshold?: number } = {}
 ): number {
-  const dueDate = new Date(card.dueAt);
-  const nowMs = now.getTime();
-  const dueMs = dueDate.getTime();
-  const diffDays = (nowMs - dueMs) / 86400000;
+  const threshold = opts.threshold ?? 60;
+  const gaps = prereqScores.filter((s) => s < threshold).length;
+  if (gaps === 0) return 1.0;
+  if (gaps === 1) return 0.5;
+  return 0.2;
+}
 
-  const baseUrgency = diffDays >= 0
-    ? 1.0 + Math.min(4.0, diffDays / 7)
-    : 1.0 / (1.0 + Math.abs(diffDays));
+const clamp01 = (v: number): number => Math.min(1, Math.max(0, Number.isFinite(v) ? v : 0));
 
-  const mastery = userState.masteryMap.get(card.nodeId) ?? 50;
-  const masteryUrgency = Math.max(0, (100 - mastery) / 100);
+export interface PriorityInputsV3 {
+  /** ضریب کنکوری آیتم (≥0) */
+  examValue: number;
+  /** شکاف تسلط ۰..۱ (۱ = صفر تسلط) */
+  knowledgeGap01: number;
+  /** ضریب پیش‌نیاز (معمولاً 0.2 | 0.5 | 1.0) */
+  prereqMultiplier: number;
+  /** خطر فراموشی ۰..۱ = ۱ − بازیابی‌پذیری FSRS (منحنی توانی؛ منبع محاسبه: @ael/engine) */
+  forgettingRisk: number;
+  /** نزدیکی به کنکور ۰..۱ (۱ = کنکور نزدیک/رسیده) */
+  examProximity01?: number;
+  /** سود مورد انتظار فعالیت (معمولاً 0.5..1.5) */
+  expectedBenefit: number;
+  /** هزینه زمانی (دقیقه) — مخرج کسر */
+  minutes: number;
+}
 
-  let examUrgency = 0.5;
-  if (userState.examDate) {
-    const daysUntilExam = Math.max(0, (userState.examDate.getTime() - nowMs) / 86400000);
-    // As exam approaches (fewer days left), exam urgency increases
-    examUrgency = 1.0 / (1.0 + daysUntilExam / 30);
-  }
-
-  return Math.round(baseUrgency * 40 + masteryUrgency * 40 + examUrgency * 20);
+/**
+ * THE canonical priority function (R-011; formula == ADAPTIVE_PLANNER.md §Priority).
+ * Forgetting risk and exam proximity are MULTIPLICATIVE terms `(1 + x)` —
+ * higher risk means HIGHER priority (the old doc divided by risk: inverted; fixed here).
+ */
+export function computePriorityV3(p: PriorityInputsV3): number {
+  const riskTerm = 1 + clamp01(p.forgettingRisk);
+  const examTerm = 1 + clamp01(p.examProximity01 ?? 0);
+  const numerator =
+    Math.max(0, p.examValue) *
+    clamp01(p.knowledgeGap01) *
+    Math.max(0, p.prereqMultiplier) *
+    riskTerm *
+    examTerm *
+    Math.max(0, p.expectedBenefit);
+  return numerator / Math.max(1, Number.isFinite(p.minutes) && p.minutes > 0 ? p.minutes : 1);
 }

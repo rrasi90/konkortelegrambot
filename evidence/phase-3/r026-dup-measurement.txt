@@ -1,0 +1,9 @@
+{
+ "initialTotal": 156,
+ "initialUniqueIds": 156,
+ "dupInsideInitial": 0,
+ "overlapWithYearly": 96,
+ "yearlyTotal": 96,
+ "yearlyUniqueIds": 96,
+ "sampleDupIds": []
+}

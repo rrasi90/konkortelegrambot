@@ -1,0 +1,129 @@
+base=http://127.0.0.1:8787 users=20 requests/scenario=200 concurrency=20
+┌─────────┬───────────────────────────────────┬──────────┬─────────────┬────────────┬────────────────┬────────┬───────┬───────┬───────┬───────┬────────┐
+│ (index) │ scenario                          │ requests │ concurrency │ errorCount │ statuses       │ rps    │ p50ms │ p90ms │ p99ms │ maxMs │ meanMs │
+├─────────┼───────────────────────────────────┼──────────┼─────────────┼────────────┼────────────────┼────────┼───────┼───────┼───────┼───────┼────────┤
+│ 0       │ 'GET /api/health'                 │ 200      │ 20          │ 0          │ { '200': 200 } │ 2788.5 │ 6.1   │ 9.8   │ 15.9  │ 16.1  │ 6.7    │
+│ 1       │ 'GET /api/analytics/learning'     │ 200      │ 20          │ 0          │ { '200': 200 } │ 2248.7 │ 8.1   │ 10.9  │ 14.9  │ 15.1  │ 8.5    │
+│ 2       │ 'GET /api/queue?limit=10'         │ 200      │ 20          │ 0          │ { '200': 200 } │ 1266.1 │ 15.3  │ 17.9  │ 20.9  │ 21    │ 15.1   │
+│ 3       │ 'GET /api/map'                    │ 200      │ 20          │ 0          │ { '200': 200 } │ 2749.8 │ 6     │ 11.4  │ 13.4  │ 14.9  │ 7.1    │
+│ 4       │ 'GET /api/exam-structure'         │ 200      │ 20          │ 0          │ { '200': 200 } │ 2994   │ 5.5   │ 14.6  │ 18.4  │ 18.5  │ 6.5    │
+│ 5       │ 'POST /api/answers'               │ 160      │ 20          │ 0          │ { '200': 160 } │ 1707.6 │ 11.5  │ 13.1  │ 14.6  │ 14.7  │ 11.1   │
+│ 6       │ 'POST /api/exam-simulation/start' │ 20       │ 20          │ 0          │ { '200': 20 }  │ 1234.9 │ 13.3  │ 15.1  │ 15.3  │ 15.3  │ 12.4   │
+└─────────┴───────────────────────────────────┴──────────┴─────────────┴────────────┴────────────────┴────────┴───────┴───────┴───────┴───────┴────────┘
+
+JSON
+{
+  "generatedAt": "2026-11-01T23:07:51.986Z",
+  "base": "http://127.0.0.1:8787",
+  "users": 20,
+  "requestsPerScenario": 200,
+  "concurrency": 20,
+  "results": [
+    {
+      "scenario": "GET /api/health",
+      "requests": 200,
+      "concurrency": 20,
+      "errorCount": 0,
+      "statuses": {
+        "200": 200
+      },
+      "rps": 2788.5,
+      "p50ms": 6.1,
+      "p90ms": 9.8,
+      "p99ms": 15.9,
+      "maxMs": 16.1,
+      "meanMs": 6.7
+    },
+    {
+      "scenario": "GET /api/analytics/learning",
+      "requests": 200,
+      "concurrency": 20,
+      "errorCount": 0,
+      "statuses": {
+        "200": 200
+      },
+      "rps": 2248.7,
+      "p50ms": 8.1,
+      "p90ms": 10.9,
+      "p99ms": 14.9,
+      "maxMs": 15.1,
+      "meanMs": 8.5
+    },
+    {
+      "scenario": "GET /api/queue?limit=10",
+      "requests": 200,
+      "concurrency": 20,
+      "errorCount": 0,
+      "statuses": {
+        "200": 200
+      },
+      "rps": 1266.1,
+      "p50ms": 15.3,
+      "p90ms": 17.9,
+      "p99ms": 20.9,
+      "maxMs": 21,
+      "meanMs": 15.1
+    },
+    {
+      "scenario": "GET /api/map",
+      "requests": 200,
+      "concurrency": 20,
+      "errorCount": 0,
+      "statuses": {
+        "200": 200
+      },
+      "rps": 2749.8,
+      "p50ms": 6,
+      "p90ms": 11.4,
+      "p99ms": 13.4,
+      "maxMs": 14.9,
+      "meanMs": 7.1
+    },
+    {
+      "scenario": "GET /api/exam-structure",
+      "requests": 200,
+      "concurrency": 20,
+      "errorCount": 0,
+      "statuses": {
+        "200": 200
+      },
+      "rps": 2994,
+      "p50ms": 5.5,
+      "p90ms": 14.6,
+      "p99ms": 18.4,
+      "maxMs": 18.5,
+      "meanMs": 6.5
+    },
+    {
+      "scenario": "POST /api/answers",
+      "requests": 160,
+      "concurrency": 20,
+      "errorCount": 0,
+      "statuses": {
+        "200": 160
+      },
+      "rps": 1707.6,
+      "p50ms": 11.5,
+      "p90ms": 13.1,
+      "p99ms": 14.6,
+      "maxMs": 14.7,
+      "meanMs": 11.1
+    },
+    {
+      "scenario": "POST /api/exam-simulation/start",
+      "requests": 20,
+      "concurrency": 20,
+      "errorCount": 0,
+      "statuses": {
+        "200": 20
+      },
+      "rps": 1234.9,
+      "p50ms": 13.3,
+      "p90ms": 15.1,
+      "p99ms": 15.3,
+      "maxMs": 15.3,
+      "meanMs": 12.4
+    }
+  ]
+}
+EXIT=0

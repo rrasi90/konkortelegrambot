@@ -1,0 +1,63 @@
+== Phase 3 gate: final verification runs (2026-11-01) ==
+
+--- branch/commits ---
+fix/mission-remediation-20261101
+c971885 fix(content): canonical unique-merge for question banks; close R-026
+d639204 docs(audit): close R-020 and R-021 with harness evidence
+2df9bf8 chore(deps): retire bun.lock, designate package-lock.json as sole lockfile (R-021)
+80d8754 feat(db,worker): add missing domain tables with real write paths (R-020)
+e224b23 feat(phase-3): designate @ael/engine sole runtime with parity harness evidence (R-009, R-025 decision)
+cfd7384 fix(security): port PR#3 ticket enforcement and self-report guards (R-010, R-019, R-017)
+1134fde fix(worker): close unsigned auth modes behind demo flag and wire rate limiter (R-010)
+563b1b4 fix(db): grant anon/authenticated/service_role USAGE on public schema (R-023)
+
+npm notice run react-example@0.0.0 typecheck
+npm notice run tsc --noEmit
+TYPECHECK_EXIT=0
+npm notice run react-example@0.0.0 test
+npm notice run vitest run
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90mC:/Star/konkortelegrambot[39m
+
+ [32m✓[39m apps/worker/tests/supabase-store.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m src/tests/questionBank.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/tests/examStructure.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/tests/mistakeNotebook.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/fsrs.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/engine.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/tests/examCoverage.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m packages/utils/tests/priority-calculations.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/tests/claimHonesty.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/tests/lessonRatingEvidence.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/tests/masteryEvidence.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/worker.test.ts [2m([22m[2m39 tests[22m[2m)[22m[32m 154[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[32m152 passed[39m[22m[90m (152)[39m
+[2m   Start at [22m 20:25:34
+[2m   Duration [22m 474ms[2m (import 35%, tests 33%, transform 23%, worker 8%)[22m
+
+VITEST_EXIT=0
+npm notice run react-example@0.0.0 build
+npm notice run vite build
+[36mvite v8.3.5 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 2283 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                     2.56 kB │ gzip:   1.01 kB
+dist/assets/index-L9utFzm1.css    110.87 kB │ gzip:  16.29 kB
+dist/assets/index-Ce0EoTsV.js   2,746.36 kB │ gzip: 750.74 kB
+
+[32m✓ built in 966ms[39m
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+BUILD_EXIT=0
+npm notice run react-example@0.0.0 build:worker
+npm notice run npm run --prefix apps/worker build
+npm notice run @ael/worker@0.1.0 build
+npm notice run tsc -b
+BUILD_WORKER_EXIT=0

@@ -5,6 +5,8 @@ import {
   getCoverageVerdicts,
   getCoverageBySection,
 } from '../data/examCoverage';
+import { INITIAL_QUESTION_BANK, mergeQuestionsUnique } from '../data/konkorData';
+import { YEARLY_KONKOR_QUESTIONS } from '../data/yearlyKonkorExams';
 
 /**
  * پوشش باید از دادهٔ واقعی محاسبه شود، نه از تعداد کتاب یا درس‌نامه.
@@ -82,5 +84,38 @@ describe('پوشش واقعی بانک سؤال', () => {
     expect(totalFromSections).toBeLessThanOrEqual(
       arshad.available + doctorate.available
     );
+  });
+
+  it('R-026: ادغام INITIAL + YEARLY بدون یکتاسازی، آرایهٔ تکراری می‌دهد؛ coverage دکتری یک‌شمارشی است', () => {
+    // شرط ساختاری: هر id سالانه در بانک اصلی هم هست (spread) — پس چسباندن
+    // مستقیم دو آرایه حتماً id تکراری تولید می‌کند.
+    const initialIds = new Set(INITIAL_QUESTION_BANK.map((q) => q.id));
+    for (const q of YEARLY_KONKOR_QUESTIONS) expect(initialIds.has(q.id)).toBe(true);
+    const naiveConcat = [...INITIAL_QUESTION_BANK, ...YEARLY_KONKOR_QUESTIONS];
+    expect(new Set(naiveConcat.map((q) => q.id)).size).toBeLessThan(naiveConcat.length);
+
+    // همان معرف isDoctorate در examCoverage (بدون export آن، منطق را بازتولید می‌کنیم)
+    const isDoctorate = (q: object): boolean => {
+      const item = q as { examLevel?: string; sourceReference?: string };
+      return (
+        item.examLevel === 'دکتری' ||
+        (typeof item.sourceReference === 'string' && item.sourceReference.includes('دکتری'))
+      );
+    };
+
+    // coverage دکتری باید یکتا بشمارد: available == تعداد id یکتای سؤالات دکتری
+    const doctorate = getDoctorateCoverage();
+    const uniquePhdIds = new Set(
+      mergeQuestionsUnique(
+        INITIAL_QUESTION_BANK.filter(isDoctorate),
+        YEARLY_KONKOR_QUESTIONS.filter(isDoctorate),
+      ).map((q) => q.id),
+    );
+    expect(doctorate.available).toBe(uniquePhdIds.size);
+    // و قطعاً کمتر از شمارش naive (اثبات رفع دوباره‌شماری)
+    const naivePhdCount =
+      INITIAL_QUESTION_BANK.filter(isDoctorate).length +
+      YEARLY_KONKOR_QUESTIONS.filter(isDoctorate).length;
+    expect(doctorate.available).toBeLessThanOrEqual(naivePhdCount);
   });
 });
