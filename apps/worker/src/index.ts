@@ -52,6 +52,8 @@ export interface Env {
   SUPABASE_SERVICE_ROLE_KEY?: string;
   SESSION_SECRET: string;
   TELEGRAM_BOT_TOKEN?: string;
+  TELEGRAM_WEBHOOK_SECRET?: string;
+  ADMIN_API_TOKEN?: string;
   APP_URL?: string;
   ALLOW_DEMO_AUTH?: string;
 }
@@ -119,6 +121,33 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     // اگر کاربر در لایهٔ داده نباشد (مثلاً ری‌استارت حافظهٔ موقت) نشست باطل است؛
     // کلاینت با ورود خودکار مجدد پروفایل تازه می‌سازد. ساختن پروفایل جعلی اینجا ممنوع است.
     return store.getUser(userId);
+  }
+
+  /** Token comparison without leaking the matching prefix through timing. */
+  function constantTimeTokenEqual(expected: string, provided: string): boolean {
+    if (expected.length !== provided.length) return false;
+    let difference = 0;
+    for (let i = 0; i < expected.length; i++) {
+      difference |= expected.charCodeAt(i) ^ provided.charCodeAt(i);
+    }
+    return difference === 0;
+  }
+
+  function isAdminAuthorized(c: AppContext): boolean {
+    const expected = env.ADMIN_API_TOKEN;
+    const authorization = c.req.header('Authorization') ?? '';
+    if (!expected || expected.length < 32 || !authorization.startsWith('Bearer ')) return false;
+    return constantTimeTokenEqual(expected, authorization.slice(7));
+  }
+
+  function adminAuthError(c: AppContext) {
+    // Do not reveal whether the admin token is missing, malformed, or incorrect.
+    return c.json({ error: 'دسترسی مدیریت مجاز نیست' }, 403);
+  }
+
+  function isValidTelegramWebhookSecret(value: string | undefined): value is string {
+    // Telegram allows 1–256 URL-safe characters; require >=32 for operational entropy.
+    return typeof value === 'string' && /^[A-Za-z0-9_-]{32,256}$/.test(value);
   }
 
   /** پاسخ استاندارد درس‌نامه — بدون تکرار در چند مسیر */
@@ -276,6 +305,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.get('/api/lessons', (c) => c.json({ courses: COURSES_LESSONS }));
 
   app.post('/api/telegram/webhook', async (c) => {
+    const webhookSecret = env.TELEGRAM_WEBHOOK_SECRET;
+    if (!isValidTelegramWebhookSecret(webhookSecret)) {
+      return c.json({ error: 'وب‌هوک تلگرام تا زمان تنظیم TELEGRAM_WEBHOOK_SECRET غیرفعال است' }, 503);
+    }
+    const suppliedSecret = c.req.header('X-Telegram-Bot-Api-Secret-Token') ?? '';
+    if (!constantTimeTokenEqual(webhookSecret, suppliedSecret)) {
+      return c.json({ error: 'درخواست وب‌هوک نامعتبر است' }, 401);
+    }
+
     const update = (await c.req.json().catch(() => null)) as {
       message?: { chat?: { id?: number }; text?: string };
       edited_message?: { chat?: { id?: number }; text?: string };
@@ -332,7 +370,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   // استعلام وضعیت وب‌هوک تلگرام (جهت عیب‌یابی و پایش اتصال)
   app.get('/api/telegram/webhook/info', async (c) => {
-    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 500);
+    if (!isAdminAuthorized(c)) return adminAuthError(c);
+    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 503);
     try {
       const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/getWebhookInfo`);
       return c.json(await res.json());
@@ -343,14 +382,19 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   // Endpoint تنظیم خودکار وب‌هوک تلگرام (برای اتصال ربات دائمی)
   app.post('/api/telegram/webhook/set', async (c) => {
-    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 500);
+    if (!isAdminAuthorized(c)) return adminAuthError(c);
+    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 503);
+    if (!isValidTelegramWebhookSecret(env.TELEGRAM_WEBHOOK_SECRET)) {
+      return c.json({ error: 'TELEGRAM_WEBHOOK_SECRET باید ۳۲ تا ۲۵۶ نویسهٔ مجاز داشته باشد' }, 503);
+    }
     const url = new URL(c.req.url);
     const webhookUrl = `${url.origin}/api/telegram/webhook`;
     try {
       const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/setWebhook`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: webhookUrl, drop_pending_updates: true }),
+        // Never discard pending Telegram updates during a routine webhook configuration.
+        body: JSON.stringify({ url: webhookUrl, secret_token: env.TELEGRAM_WEBHOOK_SECRET }),
       });
       const data = await res.json();
       if (!data.ok) return c.json({ ok: false, error: data.description }, 400);
@@ -362,12 +406,14 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   // حذف وب‌هوک (برای عیب‌یابی)
   app.post('/api/telegram/webhook/delete', async (c) => {
-    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 500);
+    if (!isAdminAuthorized(c)) return adminAuthError(c);
+    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده' }, 503);
     try {
       const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/deleteWebhook`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ drop_pending_updates: true }),
+        // Keep queued updates; deleting the webhook must not silently erase messages.
+        body: JSON.stringify({}),
       });
       return c.json(await res.json());
     } catch (e) {
