@@ -15,11 +15,11 @@ const ANSWER_KEY_PATTERNS: Array<{
 }> = [
   {
     field: 'correctOption',
-    pattern: /["']?correctOption["']?\s*:\s*[0-3]\\b/g,
+    pattern: /["']?correctOption["']?\s*:\s*[0-3]\b/g,
   },
   {
     field: 'correctIndex',
-    pattern: /["']?correctIndex["']?\s*:\s*[0-1]\\b/g,
+    pattern: /["']?correctIndex["']?\s*:\s*[0-1]\b/g,
   },
 ];
 
@@ -81,7 +81,7 @@ async function runAudit(): Promise<void> {
         details,
         'Move answer keys to the authenticated Worker data path and submit attempts through /api/answers or /api/exam-simulation/*.',
         'Do not bypass this guard for a production deployment.',
-      ].join('\\n'),
+      ].join('\n'),
     );
   }
   process.stdout.write('Client bundle security audit: PASS (no embedded answer-key literals).\n');
