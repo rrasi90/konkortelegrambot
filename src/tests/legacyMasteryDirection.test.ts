@@ -12,7 +12,7 @@ import {
 } from '../data/konkorData';
 
 /**
- * R-042 — موتور قدیمی (deprecated، سطح React) نقض‌های جهت داشت:
+ * A-09 — موتور قدیمی (deprecated، سطح React) نقض‌های جهت داشت:
  * پاسخ غلط یا موجِ آن روی گرهٔ سنجیده‌نشده تسلط «از صفر به بالا» می‌ساخت.
  * این تست‌ها همان ثابت را می‌بندند: یک پاسخ غلط هرگز masteryScore را زیاد نمی‌کند.
  */
@@ -24,7 +24,7 @@ function fixture() {
   return { zero, questionCard, question, wrongOption };
 }
 
-describe('R-042 — موتور قدیمی: پاسخ غلط شایستگی نمی‌سازد', () => {
+describe('A-09 — موتور قدیمی: پاسخ غلط شایستگی نمی‌سازد', () => {
   it('گرهٔ سنجیده‌نشده با پاسخ غلط از ۰ بالاتر نمی‌رود', () => {
     const { zero, questionCard, question, wrongOption } = fixture();
     const before = zero.nodeStates[questionCard.nodeId]!.masteryScore;

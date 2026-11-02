@@ -6,6 +6,12 @@
 > **Phase 5 update (2026-11-02):** E2E local flow and local performance are now measured, but
 > production read-only gates (pilot, SME content validation, staging, monitoring, rollback) are not.
 > **Overall status remains `BLOCKED` / `DEFER`. Release is NOT approved.**
+>
+> **Comprehensive audit (2026-11-03):** a four-track audit (UI, Worker logic, learning engine, data
+> layer) found and fixed 17 defects with regression tests, and recorded 7 further items as
+> DEFERRED / NOT_STARTED / BLOCKED. See `docs/audit/COMPREHENSIVE_AUDIT_20261102.md` and the
+> `A-01…A-24` block in `docs/audit/REMEDIATION_REGISTER.md`. This raises confidence in what was
+> already built; it does not remove any external release blocker.
 
 Statuses follow the standard set only. A row without a linked artifact is not a pass.
 
@@ -38,8 +44,8 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 
 | Item | Status | Evidence / limitation |
 |---|---|---|
-| Migrations apply from scratch | PASS_WITH_EVIDENCE | Docker PostgreSQL 16: 0001–0013 + seeds recreated from scratch in `scripts/bench-db.sh`; integrity suite EXIT=0 (`evidence/phase-5/db-integrity-0013.txt`) |
-| Data integrity constraints verified | PASS_WITH_EVIDENCE | Integrity suite incl. tickets, RLS/RPC checks (R-010, R-020, R-023) |
+| Migrations apply from scratch | PASS_WITH_EVIDENCE | Docker PostgreSQL 16: **0001–0015 + seeds recreated from scratch** on a throwaway DB; 16-block integrity suite EXIT=0 (`evidence/audit-20261102/db-integrity-0015.txt`). Audit A-19 records that migrations 0001/0005/0006/0007 still lack `drop policy if exists`, so re-running them on an applied database fails — fresh application is green, in-place re-run is not |
+| Data integrity constraints verified | PASS_WITH_EVIDENCE | Integrity suite incl. tickets, RLS/RPC checks (R-010, R-020, R-023) and the new block 16 (A-01/A-02: missing stats columns present, legacy RPC no longer executable by PUBLIC/anon/authenticated, `app_users` owner-read policy, default privileges) |
 | Telegram learner snapshot backup/recovery | PASS_WITH_EVIDENCE (scoped client tests) | PR #8 verifies complete React nodeStates/cards/stats backup, cloud restore, two-slot failure safety, version selection and Zero-State invalidation. Not a Supabase backup, not mistake-notebook backup and not staging Telegram-host E2E |
 | Backup and restore tested | PASS_WITH_EVIDENCE (scoped local DB) | `scripts/db-backup-restore.sh`: pg_dump → restore into fresh DB, all 6 key row counts match, index preserved (`evidence/phase-5/db-backup-restore.txt`); deployment artifact rollback still NOT_STARTED |
 | Availability SLA | NOT_STARTED | Not defined or measured |
@@ -53,18 +59,18 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 | Authentication hardened | PASS_WITH_EVIDENCE | Prod unsigned modes 401; rate limiter wired; cross-user/ticket tests (R-010) |
 | Attempt-ticket enforcement | PASS_WITH_EVIDENCE | Server-issued single-use tickets; RPC/RLS verified (§8.7, R-010) |
 | SQL injection posture | PASS_WITH_EVIDENCE (scoped) | Parameterized REST/RPC paths; no raw user SQL found in reviewed endpoints |
-| Rate limiting | PASS_WITH_EVIDENCE (scoped) | In-memory limiter tested (429); distributed/edge limits not configured |
+| Rate limiting | PASS_WITH_EVIDENCE (scoped, corrected) | Audit A-04: the limiter was a **no-op in production** (counter created inside `createApp`, which the Workers entrypoint calls per request). Counter moved to module scope with a production-path regression test. Still in-memory per isolate; distributed/edge limits not configured |
 | Token generation | PASS_WITH_EVIDENCE | `crypto.getRandomValues`/UUID; no `Math.random` session tokens |
 | OWASP Top 10 full assessment | IMPLEMENTED_UNVERIFIED | Partial audit; no external pentest |
 | Public client answer-key exposure (R-036) | BLOCKED — fail-closed deploy gate | React Vite currently bundles correctOption/correctIndex. PR #9 adds a bundle scanner and blocks Pages/guarded Worker deploy until the React UI uses authenticated Worker answer endpoints. This PR is a release mitigation, not removal of keys from the current bundle |
 | Encryption at rest/in transit | NOT_STARTED | Depends on deployment configuration; unverified |
-| Security test report | PASS_WITH_EVIDENCE (scoped local) | `SECURITY_TEST_REPORT.md`: 266/266 tests, initData signature/staleness, token forgery, ticket replay/cross-user, RLS/RPC, PostgREST encoding fix; staging/pentest/encryption/XSS NOT_VERIFIED (`evidence/phase-5/security-local-suite.txt`) |
+| Security test report | PASS_WITH_EVIDENCE (scoped local) | `SECURITY_TEST_REPORT.md`: 332/332 tests (audit revision), incl. A-02 legacy security-definer RPC revoked from PUBLIC/anon/authenticated, A-04 production rate limiting, A-05 coin-farming loop closed, A-06 queue payload exposure removed, A-15 self-report no longer invents evidence; initData signature/staleness, token forgery, ticket replay/cross-user, RLS/RPC, PostgREST encoding fix; staging/pentest/encryption and a comprehensive XSS audit NOT_VERIFIED (`evidence/audit-20261102/vitest-final.txt`, `evidence/phase-5/security-local-suite.txt`) |
 
 ## 5. Operational readiness
 
 | Item | Status | Evidence / limitation |
 |---|---|---|
-| E2E local flow | PASS_WITH_EVIDENCE | 15/15 checks in Chrome and 15/15 in Edge, screenshots + JSON (`evidence/phase-5/`) — MemoryStore only |
+| E2E local flow | PASS_WITH_EVIDENCE | **20/20 checks in Chrome and 20/20 in Edge**, screenshots + JSON (`evidence/phase-5/`, logs in `evidence/audit-20261102/`) — MemoryStore only. Audit A-11 also fixed silent surface drift where a stale React `dist` could be served instead of the mini-app |
 | Telegram-host E2E | NOT_STARTED | Requires bot/staging; not run |
 | Exam-simulation UI E2E | NOT_STARTED | Mini-app has no simulation screen |
 | Pilot (technical/educational/extended) | BLOCKED | No real participants (R-012); no pilot data |
