@@ -20,6 +20,8 @@ jobs:
       - run: npm test
       - run: npx tsx scripts/engine-parity-harness.mts
       - run: npm run validate:content
+      - run: npm run build:worker
+      - run: npm run audit:miniapp
 
   database:
     name: Database Migrations & Integrity Tests
