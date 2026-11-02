@@ -19,7 +19,7 @@
 > Auth backdoors closed behind demo flag + production hardening; attempt tickets strictly server-enforced (migration 0010,
 > PR#3 clusters ported without blind merge); 14-block psql integrity suite green on plain Postgres; missing domain tables added
 > with real write paths (0011); single-lockfile policy proven via fresh-clone `npm ci`; engine divergence inventoried with a
-> 21-scenario parity harness (**PR #6 CI: 1 diverged / 20 matched; one queue-order divergence remains**) and `@ael/engine` designated sole runtime (ARC-01). **True engine
+> 21-scenario parity harness (**PR #7 CI: 0 diverged / 21 matched in measured seams; app-wide React/store convergence remains open**) and `@ael/engine` designated sole runtime (ARC-01). **True engine
 > unification and the R-025 store-convergence acceptance test are NOT claimed** — carried IN_PROGRESS to Phase 4/5 migration.
 > Details in `docs/phase-3/PHASE_3_ACCEPTANCE_REPORT.md`. Evidence: `evidence/phase-3/`.
 > **Phase 4 (Adaptive Learning & Exam Readiness): PASS_WITH_EVIDENCE (scoped) — 2026-11-02.**
@@ -53,7 +53,7 @@
 | Exam Coverage          | ۱ و ۲ | IN_PROGRESS  | تمام سرفصل‌های مصوب قابل ردیابی‌اند      |
 | Verified Content       | ۲     | IMPLEMENTED_UNVERIFIED | بانک ساختاری آماده؛ تأیید علمی (SME/کلید رسمی) BLOCKED |
 | Question Quality       | ۲ و ۵ | IN_PROGRESS  | قواعد ساختاری تست‌شده؛ CTT/IRT بدون داده پاسخ BLOCKED |
-| Architecture Parity    | ۳     | IN_PROGRESS  | FSRS/retrievability converged; ۱ واگرایی ترتیب صف، ۱۶ مصرف‌کننده legacy و مهاجرت store باقی |
+| Architecture Parity    | ۳     | IN_PROGRESS  | ۲۱/۲۱ سناریوی اندازه‌گیری‌شده MATCHED؛ ۱۶ مصرف‌کننده React و مهاجرت learner store باقی |
 | Learning Effectiveness | ۴ و ۵ | IN_PROGRESS  | مکانیزم‌ها تست‌شده؛ سنجش بهبود واقعی بدون پایلوت BLOCKED |
 | Exam Readiness         | ۴ و ۵ | IN_PROGRESS  | شبیه‌سازی و نمره‌دهی تست‌شده؛ آمادگی واقعی کاربر سنجیده نشده |
 | System Reliability     | ۳ و ۵ | IN_PROGRESS  | E2E و benchmark محلی سبز؛ staging/DB/stress/rollback NOT_STARTED |
@@ -69,3 +69,6 @@
 
 
 > **2026-11-02 FSRS convergence slice (PR #6):** The React legacy FSRS facade now delegates transitions and elapsed-time retrievability to `@ael/engine`; lesson self-ratings no longer alter memory metrics, and recall classification computes current R from the last-review timestamp. CI run [41430029958](https://github.com/rrasi90/konkortelegrambot/actions/runs/41430029958) passed: 285/285 Vitest across 19 files, typecheck, content validation, DB migration/integrity, and 21-scenario parity (20 MATCHED / 1 DIVERGED). This does **not** close R-009/R-025: queue ordering, 16 React legacy importers and React→Worker/Supabase state convergence remain open.
+
+
+> **2026-11-02 queue candidate-ranking correction (PR #7):** `buildDailyQueue` now filters and scores the full due-card candidate set before applying its limit. Worker `/api/queue` supplies the cached canonical ROI scorer and filters commute-ineligible nodes before candidate slicing. A Worker integration test verifies that a higher-priority card at the former 51st candidate position is selected. CI run [41431652931](https://github.com/rrasi90/konkortelegrambot/actions/runs/41431652931) passed: 288/288 Vitest (19 files), typecheck, content validation, database migrations/integrity and parity harness 21/21 MATCHED. This closes the measured queue-order seam, not R-009/R-025: 16 React legacy importers and React→Worker/Supabase learner-store migration remain open.
