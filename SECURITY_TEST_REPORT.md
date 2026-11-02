@@ -36,7 +36,7 @@
 | Stale `auth_date` (> 24 h) rejected | PASS | Returns `auth_date stale` |
 | Missing hash / missing user id rejected | PASS | Returns explicit errors |
 | Session-token comparison constant-time | PASS | `constantTimeEqual` used for session tokens and initData hash (hardening in this phase) |
-| Rate limit on auth path | FIXED + TESTED (A-04) | The counter Map was created inside `createApp`, and the Workers entrypoint calls `createApp(env)` **per request** — so every request got a fresh counter and 429 could never fire in production (tests reused one app and missed it). Counter moved to module scope with a production-path regression test; in-memory per isolate only — edge/distributed limiting still NOT configured |
+| Rate limit on auth path | PARTIALLY FIXED + MEASURED (A-04, A-26, A-27) | Two separate problems were found. (۱) The counter Map was created inside `createApp`, which the Workers entrypoint calls per request, so 429 could never fire at all — fixed by moving it to module scope. Confirmed live: `X-RateLimit-*` headers now show a decreasing counter. (۲) A 120-request burst against the deployed Worker was first throttled at request **#61** with `RATE_MAX=30`, i.e. exactly 2 isolates split the load (`evidence/deploy-20261103/live-rate-limit-isolates.txt`). The limiter is therefore a **per-isolate approximation, not a global limit**: its effective threshold is ~30×N and grows with concurrency. Enforcing a real limit requires a Durable Object or KV counter — recorded as A-27, NOT_STARTED |
 
 ## 3. Authorization and resource isolation
 

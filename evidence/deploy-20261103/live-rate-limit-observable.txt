@@ -1,0 +1,17 @@
+per-request observation (same key on purpose):
+ #1 status=200 limit=30 remaining=29 key=0c25434b
+ #2 status=200 limit=30 remaining=29 key=0c25434b
+ #3 status=200 limit=30 remaining=28 key=0c25434b
+ #4 status=200 limit=30 remaining=28 key=0c25434b
+ #5 status=200 limit=30 remaining=27 key=0c25434b
+ #6 status=200 limit=30 remaining=27 key=0c25434b
+ #7 status=200 limit=30 remaining=26 key=0c25434b
+ #8 status=200 limit=30 remaining=26 key=0c25434b
+ #9 status=200 limit=30 remaining=25 key=0c25434b
+ #10 status=200 limit=30 remaining=25 key=0c25434b
+ #11 status=200 limit=30 remaining=24 key=0c25434b
+ #12 status=200 limit=30 remaining=24 key=0c25434b
+distinct key fingerprints seen: 1 0c25434b
+middleware active in production: true
+counter shared across requests: true
+interpretation: counter decreasing ⇒ shared within the isolate
