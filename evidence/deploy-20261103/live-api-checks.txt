@@ -1,0 +1,6 @@
+auth status: 200 | token: issued
+A-14 tracks dedupe/cap -> 200 {"ok":true,"tracks":["common","business","technology","strategy","industrial"]}
+A-17 home progress -> 200 {"overall":null,"assessedNodes":0,"nodes":17}
+queue status: 200 | items: 5 | limit respected: true
+A-06 exposure check -> CLEAN (no pre-answer leak)
+card keys sent: id,nodeId,cardType,questionId,trapCardId,isRepair,isProof

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { createApp } from '../src/index.ts';
+import { createApp, resetRateLimitsForTesting } from '../src/index.ts';
 import { MemoryStore } from '../src/memory-store.ts';
 import pack from '../../../content/examples/demo-pack.json';
 import type { ReviewCard } from '@ael/contracts';
@@ -19,6 +19,8 @@ afterEach(() => {
 });
 
 beforeEach(async () => {
+  // شمارندهٔ مشترک سطح isolate: هر تست از صفر شروع کند
+  resetRateLimitsForTesting();
   store = new MemoryStore();
   store.nodes = pack.nodes.map((n) => ({ ...n })) as typeof store.nodes;
   store.dependencies = pack.dependencies.map((d) => ({ ...d })) as typeof store.dependencies;
@@ -361,6 +363,34 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ telegramUserId: 9999 }),
+    });
+    expect(res.status).toBe(429);
+  });
+
+  it('A-04b: محدودکننده حتی بدون ENVIRONMENT=production هم کار می‌کند (پیکربندی واقعیِ زنده)', async () => {
+    // راستی‌آزمایی روی محیط زنده در ۲۰۲۶-۱۱-۰۳ نشان داد نسخهٔ «اصلاح‌شده» هنوز
+    // بی‌اثر است، چون رفتار مشترک‌سازی شمارنده به ENVIRONMENT گره خورده بود و
+    // ورکر مستقرشده آن متغیر را ست نکرده بود. این تست همان حالت را می‌بندد.
+    const first = createApp({ ...ENV }, { store: new MemoryStore() });
+    let sawThreshold = false;
+    for (let i = 0; i < 31; i++) {
+      const res = await first.request('/api/auth/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegramUserId: 8100 + i }),
+      });
+      if (res.status === 429) {
+        sawThreshold = true;
+        break;
+      }
+    }
+    expect(sawThreshold, 'بی‌اثر بودن محدودکننده در پیکربندی بدون ENVIRONMENT').toBe(true);
+
+    const second = createApp({ ...ENV }, { store: new MemoryStore() });
+    const res = await second.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramUserId: 8999 }),
     });
     expect(res.status).toBe(429);
   });

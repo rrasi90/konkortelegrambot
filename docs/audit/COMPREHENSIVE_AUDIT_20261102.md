@@ -11,7 +11,7 @@
 
 | سنج | پیش از کار | پس از کار | شاهد |
 |---|---|---|---|
-| تست‌های Vitest | 305 / 305 | **332 / 332** (۲۷ تست جدید) | `evidence/audit-20261102/vitest-after-ui-fixes.txt` |
+| تست‌های Vitest | 305 / 305 | **333 / 333** (۲۸ تست جدید) | `evidence/audit-20261102/vitest-after-ui-fixes.txt` (۳۳۲) و `evidence/deploy-20261103/vitest-final.txt` (۳۳۳ پس از A-25) |
 | typecheck (root و worker) | EXIT=0 | EXIT=0 | `baseline-typecheck.txt`, `typecheck-worker.txt` |
 | build Worker | EXIT=0 | EXIT=0 | `build-worker.txt` |
 | E2E مرورگری | 15/15 Chrome، 15/15 Edge | **20/20 Chrome، 20/20 Edge** | `e2e-chrome.txt`, `e2e-edge.txt` |
@@ -128,6 +128,8 @@ React) آن را بر مینی‌اپ ترجیح می‌داد — به‌طور
 فقط روی گره‌های سنجیده‌شده است و در نبودِ شاهد `null` برمی‌گردد (کلاینت هم
 «هنوز سنجیده نشده» نشان می‌دهد).
 
+**A-25 محدودکنندهٔ نرخ در محیط زنده هنوز بی‌اثر بود (با راستی‌آزمایی پس از deploy پیدا شد).** اصلاح A-04 رفتار «شمارندهٔ مشترک» را به `ENVIRONMENT=production` گره زده بود، اما ورکر مستقرشده آن متغیر را ست نکرده بود؛ نتیجهٔ عملی: ۳۳ درخواست پیاپی به `POST /api/auth/telegram` روی دامنهٔ زنده همه `200` گرفت و هیچ ۴۲۹ صادر نشد (`evidence/deploy-20261103/live-rate-limit.txt`). شمارنده حالا بدون قیدِ پروداکشن، سطح isolate مشترک است و تست‌ها با `resetRateLimitsForTesting()` و تزریق Map مستقل ایزوله می‌مانند. تست `A-04b` دقیقاً همان پیکربندی زنده (بدون ENVIRONMENT) را می‌سنجد و با بازگرداندن رفتار قبلی رد می‌شود.
+
 ## ۳. نقص‌هایی که عمداً رفع نشد (با دلیل و وضعیت)
 
 | ID | موضوع | وضعیت | چرا |
@@ -158,7 +160,7 @@ React) آن را بر مینی‌اپ ترجیح می‌داد — به‌طور
 ## ۵. بازتولید
 
 ```bash
-npm test                                             # 332/332
+npm test                                             # 333/333
 npx tsc --noEmit && npx tsc --noEmit -p apps/worker/tsconfig.json
 npm run build:worker
 PORT=8787 npx tsx scripts/dev-server.mjs             # سطح سرو: Mini App

@@ -7,6 +7,12 @@ let globalMemoryStore: DataStore | null = null;
 // نقص پنهان می‌ماند). این‌جا مثل globalMemoryStore در سطح isolate نگه داشته می‌شود.
 const globalRateLimits = new Map<string, { count: number; resetAt: number }>();
 
+/** فقط برای تست: شمارنده‌های مشترک سطح isolate را پاک می‌کند تا هر تست از صفر شروع کند.
+ * در پروداکشن صدا زده نمی‌شود (اثری بر رفتار محدودسازی ندارد). */
+export function resetRateLimitsForTesting(): void {
+  globalRateLimits.clear();
+}
+
 /**
  * API اصلی سامانه — Cloudflare Workers (Hono)
  * همهٔ منطق تصمیم در @ael/engine است؛ این لایه فقط ارکستراسیون و پایدارسازی است.
@@ -334,11 +340,14 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   app.get('/api/health', (c) => c.json({ ok: true }));
 
-  // در پروداکشن entrypoint به‌ازای هر درخواست createApp را صدا می‌زند؛ اگر
-  // شمارنده داخل createApp ساخته شود هر درخواست Map تازه می‌گیرد و ۴۲۹ هرگز
-  // صادر نمی‌شود. پس در پروداکشن شمارندهٔ سطح isolate (ماژول) مشترک است و در
-  // محیط غیرپروداکشن/تست، هر اپ شمارندهٔ مستقل خودش را دارد.
-  const rateLimits = options.rateLimits ?? (isProduction ? globalRateLimits : new Map<string, { count: number; resetAt: number }>());
+  // شمارندهٔ نرخ باید سطح isolate (ماژول) باشد: Workers به‌ازای هر درخواست
+  // createApp(env) را صدا می‌زند، پس Map داخل createApp هیچ‌وقت بیش از یک
+  // درخواست نمی‌بیند و ۴۲۹ هرگز صادر نمی‌شود.
+  // نکتهٔ مهم (تأییدشده روی محیط زنده ۲۰۲۶-۱۱-۰۳): این رفتار نباید به
+  // ENVIRONMENT مشروط شود — ورکر مستقرشده آن متغیر را ست نکرده بود و نسخهٔ
+  // «اصلاح‌شده» همان رفتار بی‌اثر را در پروداکشن نگه داشت. پس پیش‌فرض همیشه
+  // شمارندهٔ مشترک است و تست‌ها با options.rateLimits یک Map مستقل تزریق می‌کنند.
+  const rateLimits = options.rateLimits ?? globalRateLimits;
   const RATE_WINDOW_MS = 60_000;
   const RATE_MAX = 30;
   function rateLimit(c:any,next:()=>void){
