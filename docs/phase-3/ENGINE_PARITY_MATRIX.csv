@@ -1,14 +1,14 @@
 scenario,seam,input,react_runtime,shared_engine_runtime,verdict,note
-fsrs-01-fresh-easy,fsrs-interval,"brand-new card, rating=Easy(4)",8,8,MATCHED,React: stepFSRS on hand-made init; shared: FSRS-5 init weights
+fsrs-01-fresh-easy,fsrs-interval,"brand-new card, rating=Easy(4)",16,16,MATCHED,React: stepFSRS on hand-made init; shared: FSRS-5 init weights
 fsrs-02-S2.5-g1,fsrs-interval,S=2.5 D=5 elapsed=2d rating=1,1,1,MATCHED,exact
 fsrs-03-S2.5-g2,fsrs-interval,S=2.5 D=5 elapsed=2d rating=2,4,4,MATCHED,exact
-fsrs-04-S2.5-g3,fsrs-interval,S=2.5 D=5 elapsed=2d rating=3,7,7,MATCHED,exact
-fsrs-05-S2.5-g4,fsrs-interval,S=2.5 D=5 elapsed=2d rating=4,15,15,MATCHED,exact
+fsrs-04-S2.5-g3,fsrs-interval,S=2.5 D=5 elapsed=2d rating=3,8,8,MATCHED,exact
+fsrs-05-S2.5-g4,fsrs-interval,S=2.5 D=5 elapsed=2d rating=4,19,19,MATCHED,exact
 fsrs-06-S2.5-lapse,fsrs-interval,lapse at S=2.5 elapsed=2d,1,1,MATCHED,relearn after failure
 fsrs-07-S8-g1,fsrs-interval,S=8 D=6 elapsed=5d rating=1,2,2,MATCHED,exact
 fsrs-08-S8-g2,fsrs-interval,S=8 D=6 elapsed=5d rating=2,10,10,MATCHED,exact
-fsrs-09-S8-g3,fsrs-interval,S=8 D=6 elapsed=5d rating=3,17,17,MATCHED,exact
-fsrs-10-S8-g4,fsrs-interval,S=8 D=6 elapsed=5d rating=4,30,30,MATCHED,exact
+fsrs-09-S8-g3,fsrs-interval,S=8 D=6 elapsed=5d rating=3,18,18,MATCHED,exact
+fsrs-10-S8-g4,fsrs-interval,S=8 D=6 elapsed=5d rating=4,39,39,MATCHED,exact
 fsrs-11-S8-lapse,fsrs-interval,lapse at S=8 elapsed=5d,2,2,MATCHED,relearn after failure
 ret-12-S1.5-t1,retrievability,S=1.5 elapsedDays=1,0.930,0.930,MATCHED,React ignores elapsed time (power curve absent)
 ret-13-S1.5-t4,retrievability,S=1.5 elapsedDays=4,0.784,0.784,MATCHED,React ignores elapsed time (power curve absent)
