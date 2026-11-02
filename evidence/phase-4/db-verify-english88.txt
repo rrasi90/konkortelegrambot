@@ -1,0 +1,21 @@
+ english_nodes 
+---------------
+            10
+(1 row)
+
+                                                                                                          taxonomy_ids                                                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ english.cohesion_cloze,english.detail_scanning,english.grammar_context,english.inference_stance,english.main_idea,english.paraphrase,english.reference,english.time_strategy,english.vocabulary_context,english.word_formation
+(1 row)
+
+ english_questions 
+-------------------
+                 0
+(1 row)
+
+ non_common 
+------------
+          0
+(1 row)
+
+EXIT=0

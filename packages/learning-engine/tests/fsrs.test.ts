@@ -125,7 +125,7 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
     });
   });
 
-  describe('classifyErrorType (Diagnostic Error Attribution)', () => {
+  describe('classifyErrorType (§8.6 — ده علت خطا با قواعد صریح)', () => {
     it('returns "none" on correct answer', () => {
       expect(classifyErrorType({ wasCorrect: true, currentMastery: 80 })).toBe('none');
     });
@@ -141,24 +141,94 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
       ).toBe('slip');
     });
 
-    it('classifies high-confidence error as "misread"', () => {
+    it('self-reported slip is slip regardless of other signals', () => {
+      expect(
+        classifyErrorType({ wasCorrect: false, currentMastery: 20, isSlip: true })
+      ).toBe('slip');
+    });
+
+    it('classifies very slow answer as "time_pressure"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 40,
+          responseTimeMs: 100_000,
+          expectedTimeMs: 60_000,
+        })
+      ).toBe('time_pressure');
+    });
+
+    it('classifies high-mastery/low-retrievability as "recall_failure"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 80,
+          memoryRetrievability: 0.5,
+        })
+      ).toBe('recall_failure');
+    });
+
+    it('classifies trap-note error with weak confusable sibling as "theory_confusion"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 55,
+          trapNote: 'خلط مدل هرسبرگ با منتزکیو',
+          siblingMasteries: [70, 40],
+        })
+      ).toBe('theory_confusion');
+    });
+
+    it('classifies trap-note error without sibling evidence as "misconception"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 45,
+          trapNote: 'دام انحرافی گزینهٔ ۳',
+        })
+      ).toBe('misconception');
+    });
+
+    it('classifies wrong answer on calculation question as "calculation_error"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 55,
+          requiresCalculation: true,
+          responseTimeMs: 50_000,
+          expectedTimeMs: 60_000,
+        })
+      ).toBe('calculation_error');
+    });
+
+    it('classifies max-confidence wrong answer as "reading_error"', () => {
       expect(
         classifyErrorType({
           wasCorrect: false,
           currentMastery: 60,
           confidenceRating: 5,
         })
-      ).toBe('misread');
+      ).toBe('reading_error');
     });
 
-    it('classifies error with weak prerequisite as "prerequisite_failure"', () => {
+    it('classifies min-confidence wrong answer as "guessing"', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 60,
+          confidenceRating: 1,
+        })
+      ).toBe('guessing');
+    });
+
+    it('classifies error with weak prerequisite as "knowledge_gap"', () => {
       expect(
         classifyErrorType({
           wasCorrect: false,
           currentMastery: 55,
           prerequisiteMastery: 30,
         })
-      ).toBe('prerequisite_failure');
+      ).toBe('knowledge_gap');
     });
 
     it('classifies low-mastery error as "concept_gap"', () => {
@@ -170,10 +240,36 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
         })
       ).toBe('concept_gap');
     });
+
+    it('returns "unknown" when evidence is insufficient — هر خطا ضعف قطعی فصل نیست', () => {
+      expect(
+        classifyErrorType({
+          wasCorrect: false,
+          currentMastery: 70,
+          prerequisiteMastery: 80,
+        })
+      ).toBe('unknown');
+    });
+
+    it('ده علت همگی مقدار متمایز تولید می‌کنند (پوشش کامل §8.6)', () => {
+      const causes = new Set([
+        classifyErrorType({ wasCorrect: false, currentMastery: 85, responseTimeMs: 10_000, expectedTimeMs: 60_000 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 40, responseTimeMs: 100_000, expectedTimeMs: 60_000 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 80, memoryRetrievability: 0.5 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 55, trapNote: 'دام', siblingMasteries: [40] }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 45, trapNote: "دام" }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 55, requiresCalculation: true, responseTimeMs: 50_000, expectedTimeMs: 60_000 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 60, confidenceRating: 5 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 60, confidenceRating: 1 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 55, prerequisiteMastery: 30 }),
+        classifyErrorType({ wasCorrect: false, currentMastery: 25, prerequisiteMastery: 70 }),
+      ]);
+      expect(causes.size).toBe(10);
+    });
   });
 
   describe('update6DLearnerSkillState', () => {
-    it('updates competence, confidence, and transitions status to mastered after consistent evidence', () => {
+    it('§8.2: توالی تمرین به‌تنهایی هرگز proven/mastered نمی‌سازد — فقط needs_proof', () => {
       let state = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 });
       expect(state.coverageStatus).toBe('diagnosed');
       expect(state.evidenceCount).toBe(1);
@@ -181,13 +277,92 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
       state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 65 });
       expect(state.evidenceCount).toBe(2);
 
-      state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 75 });
-      expect(state.coverageStatus).toBe('proven');
-
-      state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 90 });
-      state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 95 });
-      expect(state.coverageStatus).toBe('mastered');
+      for (const m of [75, 90, 95, 97, 98]) {
+        state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: m });
+        expect(['learning', 'needs_proof']).toContain(state.coverageStatus);
+        expect(state.coverageStatus).not.toBe('proven');
+        expect(state.coverageStatus).not.toBe('mastered');
+      }
       expect(state.proficiencyProbability).toBeGreaterThan(0.80);
+    });
+
+    it('§8.2: پاسخ درستِ هولدآوت (attemptType=proof) تنها مسیر به proven است', () => {
+      let state = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 40 });
+      state = update6DLearnerSkillState(state, { wasCorrect: true, currentMastery: 55 }, undefined, {
+        attemptType: 'proof',
+      });
+      expect(state.coverageStatus).toBe('proven');
+      expect(state.provenViaHoldout).toBe(true);
+      // پس از اثبات، پاسخ غلطِ تمرینی هم وضعیت اثبات‌شده را از بین نمی‌برد
+      state = update6DLearnerSkillState(state, { wasCorrect: false, currentMastery: 60 });
+      expect(state.provenViaHoldout).toBe(true);
+      expect(state.coverageStatus).toBe('proven');
+    });
+
+    it('§8.2: تلاش اثباتِ غلط proven نمی‌سازد', () => {
+      const state = update6DLearnerSkillState(null, { wasCorrect: false, currentMastery: 70 }, undefined, {
+        attemptType: 'proof',
+      });
+      expect(state.provenViaHoldout === true).toBe(false);
+      expect(state.coverageStatus).not.toBe('proven');
+    });
+
+    it('§8.2: خوداظهاری اطمینان (confidenceRating) شایستگی را تغییر نمی‌دهد', () => {
+      const withSelfConfidence = update6DLearnerSkillState(null, {
+        wasCorrect: true,
+        currentMastery: 50,
+        confidenceRating: 5,
+      });
+      const without = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 });
+      expect(withSelfConfidence.proficiencyProbability).toBe(without.proficiencyProbability);
+
+      const seeded = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 });
+      const slipWrong = update6DLearnerSkillState(seeded, {
+        wasCorrect: false,
+        currentMastery: 80,
+        isSlip: true,
+      });
+      const plain = update6DLearnerSkillState(seeded, { wasCorrect: false, currentMastery: 80 });
+      expect(slipWrong.proficiencyProbability).toBe(seeded.proficiencyProbability); // بدون کسر
+      expect(plain.proficiencyProbability).toBeLessThan(seeded.proficiencyProbability);
+    });
+
+    it('§8.2: اطمینان با چگالی شاهد و تنوع نوع تلاش رشد می‌کند', () => {
+      const t0 = '2026-11-01T12:00:00Z';
+      const one = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 }, undefined, {
+        attemptType: 'practice',
+        answeredAt: t0,
+        now: t0,
+      });
+      const twoSameKind = update6DLearnerSkillState(one, { wasCorrect: true, currentMastery: 60 }, undefined, {
+        attemptType: 'practice',
+        answeredAt: t0,
+        now: t0,
+      });
+      expect(twoSameKind.confidence).toBeGreaterThan(one.confidence);
+
+      const twoVaried = update6DLearnerSkillState(one, { wasCorrect: true, currentMastery: 60 }, undefined, {
+        attemptType: 'diagnostic',
+        answeredAt: t0,
+        now: t0,
+      });
+      expect(twoVaried.confidence).toBeGreaterThan(twoSameKind.confidence);
+      expect(twoVaried.distinctAttemptTypes).toEqual(['practice', 'diagnostic']);
+    });
+
+    it('§8.2: اطمینان با کهنگی شاهد کاهش می‌یابد', () => {
+      const old = '2026-06-01T12:00:00Z';
+      const fresh = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 }, undefined, {
+        attemptType: 'practice',
+        answeredAt: old,
+        now: old,
+      });
+      const stale = update6DLearnerSkillState(null, { wasCorrect: true, currentMastery: 50 }, undefined, {
+        attemptType: 'practice',
+        answeredAt: old,
+        now: '2026-11-01T12:00:00Z',
+      });
+      expect(stale.confidence).toBeLessThan(fresh.confidence);
     });
 
     it('transitions to "remediated" upon error', () => {

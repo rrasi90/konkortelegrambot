@@ -1,0 +1,17 @@
+npm audit (env: v24.18.0, 2026-11-01T18:32:51+03:30)
+found 0 vulnerabilities
+---
+d7c8dd0365e8af1917c70c3cc4c3c54d21bffa72
+?? evidence/
+---BRANCHES---
+origin d7c8dd0 2026-11-01
+origin/main d7c8dd0 2026-11-01
+origin/phase-1/scientific-foundation 3cce67b 2026-11-01
+origin/fix/critical-learning-integrity-20261101 a2fb50d 2026-11-01
+origin/deploy/free-telegram-mvp f782488 2026-10-30
+origin/fix/complete-audit-and-security-hardening 32cc35a 2026-10-30
+origin/fix/engine-and-phd-knowledge-integration bcea09c 2026-10-29
+origin/feat/phd-management-knowledge-graph ba272c3 2026-10-29
+origin/fix/adaptive-engine-hardening-20261029 867e039 2026-10-29
+origin/fix/adaptive-core-hardening-2026-10-29 9e38e16 2026-10-28
+origin/feat/adaptive-engine-foundation 110a504 2026-10-29

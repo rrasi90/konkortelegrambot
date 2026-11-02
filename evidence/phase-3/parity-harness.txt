@@ -1,0 +1,15 @@
+=== engine import graph (R-009) ===
+-- React app files importing legacy aelEngine:
+16
+-- Files importing shared @ael/engine:
+3
+-- shared engine imported by:
+apps/worker/src/index.ts
+apps/worker/src/skills-data.ts
+packages/learning-engine/tests/engine.test.ts
+-- dead code check (must be empty):
+DEAD_OK=1
+
+== parity harness ==
+PARITY HARNESS: 21 scenarios, 16 diverged, 5 matched
+written: docs/phase-3/ENGINE_PARITY_MATRIX.csv

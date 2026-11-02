@@ -1,0 +1,25 @@
+== pg_dump ael_bench (custom format) ==
+== create ael_bench_restore ==
+DROP DATABASE
+CREATE DATABASE
+== pg_restore ==
+== row counts: source ==
+answer_events=200000
+app_users=500
+daily_queue_items=15000
+mastery_history=100000
+questions=14
+review_cards=7000
+== row counts: restore ==
+answer_events=200000
+app_users=500
+daily_queue_items=15000
+mastery_history=100000
+questions=14
+review_cards=7000
+RESTORE_COUNTS_MATCH=1
+== index check in restore ==
+answer_events_user_answered_idx=answer_events_user_answered_idx
+== cleanup ==
+DROP DATABASE
+BACKUP_RESTORE_DRILL=PASS

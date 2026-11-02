@@ -85,6 +85,25 @@ export const DEFAULT_ENGINE_CONFIG: EngineConfig = {
   rippleCapacity: 6,
 };
 
+/**
+ * §8.6 — قواعد روشن موج خطا (Error Wave). اثر یک خطا بر مهارت‌های دیگر فقط با این شرایط مجاز است:
+ *  1. پاسخ غلطِ غیرلغزش باشد (slip موج را کاملاً متوقف می‌کند — نه کسر تسلط، نه سرایت).
+ *  2. تسلط گره پس از کسر، زیر rippleThreshold (۶۰) رفته باشد — یک خطای واحد روی گرهٔ قوی موج نمی‌سازد.
+ *  3. سرایت به هم‌خانواده‌ها: فقط کارت سؤالِ همان گره، موعد جلوافتاده با siblingIntervalFactor (۰٫۵)،
+ *     سقف rippleCapacity (۶) کارت در هر موج؛ مازاد deferred ثبت و هیچ داده‌ای حذف نمی‌شود.
+ *  4. سرایت به گره‌های وابسته: کسر linkedPenalty × وزن یال، نه حذف مهارت.
+ *  5. فاصلهٔ اصلی هم‌خانواده فقط بار اول در previousIntervalDays ذخیره می‌شود (تکرار موج، مبنا را خراب نمی‌کند).
+ *  ضمناً طبقه‌بندی خطا در نبودِ شاهد کافی «unknown» است نه concept_gap — هر خطا ضعف قطعی فصل نیست.
+ */
+export const ERROR_WAVE_RULES = {
+  slipStopsWave: true,
+  rippleActivatesBelowMastery: 60,
+  siblingIntervalFactor: 0.5,
+  rippleCapacityPerWave: 6,
+  linkedNodePenaltyShare: 0.25,
+  insufficientEvidenceLabel: 'unknown',
+} as const;
+
 export class EngineError extends Error {}
 
 /* ------------------------------------------------------------------ */
@@ -200,8 +219,24 @@ export function applyAnswer(
   const wasCorrect = input.selectedOption === question.correctOption;
   const isProof = input.attemptType === 'proof';
 
-  /* ---------- طبقه‌بندی خطا (مدل ۶ بعدی) ---------- */
+  /* ---------- طبقه‌بندی خطا (مدل ۶ بعدی — §8.6 ده علت، قواعد صریح) ---------- */
   const skillMeta = skillMetaForNode(state, question.nodeId);
+  // §8.6 سیگنال‌های افزودنی: بازیابی FSRS، تسلط هم‌خانواده‌های مفهومی، دام و محاسبه‌بودن
+  const priorCard = state.cards.find(
+    (c) => c.id === questionCardId(user.userId, question.id),
+  );
+  const nodeForQ = state.nodes.get(question.nodeId);
+  const siblingMasteries = nodeForQ
+    ? [...state.nodes.values()]
+        .filter(
+          (n) =>
+            n.id !== question.nodeId &&
+            n.chapter === nodeForQ.chapter &&
+            n.course === nodeForQ.course,
+        )
+        .map((n) => masteryOf(state, n.id))
+    : [];
+  const requiresCalculation = /محاسبه|چقدرت? است|مقدار|حاصل/.test(question.text);
   const evidence: SkillEvidenceInput = {
     wasCorrect,
     responseTimeMs: input.responseTimeMs,
@@ -209,6 +244,12 @@ export function applyAnswer(
     currentMastery: masteryOf(state, question.nodeId),
     prerequisiteMastery: weakestPrerequisiteMastery(state, skillMeta),
     confidenceRating: input.confidenceRating,
+    // خوداظهاری slip قبل از طبقه‌بندی ست می‌شود تا محافظ §8.2 شامل حالت خودکار هم بشود
+    isSlip: !wasCorrect && input.selfReport === 'slip',
+    requiresCalculation,
+    trapNote: question.trapNote,
+    siblingMasteries,
+    memoryRetrievability: priorCard?.fsrs?.retrievability,
   };
   // خوداظهاری کاربر اولویت دارد؛ در نبود آن موتور طبقه‌بندی می‌کند
   const errorType: ErrorTypeClassification = !wasCorrect
@@ -220,6 +261,8 @@ export function applyAnswer(
     : 'none';
   // لغزش (slip) شاهدِ شکاف مفهومی نیست؛ موج سرایت متوقف می‌شود
   const suppressRipple = !wasCorrect && errorType === 'slip';
+  // §8.2: لغزش (خوداظهاری یا تشخیص خودکار) شایستگی ۶بعدی را کم نمی‌کند
+  evidence.isSlip = suppressRipple;
 
   const masteryUpdates = new Map<string, UserNodeMastery>();
   const cardUpdates = new Map<string, ReviewCard>();
@@ -427,7 +470,13 @@ export function applyAnswer(
 
   /* ---------- کارت مقایسه (خلط مفاهیم متشابه) ---------- */
   let comparisonCardCreated = false;
-  if (!wasCorrect && errorType === 'concept_gap' && skillMeta && skillMeta.confusableWith.length > 0) {
+  // §8.6: خلط نظریه‌ها صریحاً کارت مقایسه می‌طلبد؛ شکاف مفهومی هم همان مسیر را دارد
+  if (
+    !wasCorrect &&
+    (errorType === 'concept_gap' || errorType === 'theory_confusion') &&
+    skillMeta &&
+    skillMeta.confusableWith.length > 0
+  ) {
     const cmpCardId = comparisonCardId(user.userId, question.id);
     if (!state.cards.some((c) => c.id === cmpCardId)) {
       const cmpCard: ReviewCard = {
@@ -459,23 +508,32 @@ export function applyAnswer(
   let proofCandidate: RippleReport['proofCandidate'] = null;
   let coverageStatus: string | undefined;
   if (skillMeta) {
+    // §8.6: برچسب‌های معتبر علت خطا — مقدار ناشناخته/قدیمی «unknown» تفسیر می‌شود، نه ضعف قطعی
+    const VALID_ERROR_LABELS: ReadonlySet<string> = new Set<string>([
+      'slip', 'concept_gap', 'knowledge_gap', 'misconception', 'calculation_error',
+      'reading_error', 'theory_confusion', 'recall_failure', 'time_pressure', 'guessing', 'unknown',
+    ]);
     const priorRaw = state.skillStates?.get(skillMeta.id) ?? null;
     const prior: SixDimensionalLearnerState | null = priorRaw
       ? {
           ...priorRaw,
-          dominantErrorType: (['slip', 'concept_gap', 'prerequisite_failure', 'misread'] as const).includes(
-            priorRaw.dominantErrorType as never,
-          )
-            ? (priorRaw.dominantErrorType as SixDimensionalLearnerState['dominantErrorType'])
+          dominantErrorType: VALID_ERROR_LABELS.has(String(priorRaw.dominantErrorType))
+            ? (priorRaw.dominantErrorType as ErrorTypeClassification)
             : 'unknown',
         }
       : null;
-    const sixD = update6DLearnerSkillState(prior, evidence, qCard.fsrs);
-    // تلاشِ اثباتِ درست، مستقیماً وضعیت را «اثبات‌شده» می‌کند
+    const sixD = update6DLearnerSkillState(prior, evidence, qCard.fsrs, {
+      attemptType: input.attemptType,
+      answeredAt: now.toISOString(),
+    });
+    // «proven» فقط از مدل شش‌بعدی و فقط با شاهد هولدآوت می‌آید (update6D دروازه‌اش می‌کند)؛
+    // تلاش اثباتِ درست همان دروازه را باز می‌کند.
     if (isProof && wasCorrect) {
       sixD.coverageStatus = 'proven';
+      sixD.provenViaHoldout = true;
     } else if (
       !isProof &&
+      !sixD.provenViaHoldout &&
       sixD.proficiencyProbability >= 0.75 &&
       sixD.coverageStatus !== 'proven' &&
       sixD.coverageStatus !== 'mastered'
@@ -617,15 +675,26 @@ function buildMentorMessage(args: {
   }
   const parts: string[] = ['این پاسخ یک شاهد اولیه است؛'];
   const bits: string[] = [];
-  
-  // تحلیل عمیق‌تر بر اساس نوع خطا
+
+  // §8.6: پیام منتور برای هر یک از ده علت خطا (unknown = بدون حکم قطعی)
+  const ERROR_MESSAGES: Partial<Record<ErrorTypeClassification, string>> = {
+    concept_gap: `یک شکاف مفهومی در مبحث «${node.topic}» تشخیص داده شد`,
+    knowledge_gap: 'شکاف در دانش پیش‌نیاز است — خودِ این مبحث لزوماً ضعیف نیست',
+    misconception: 'پاسخ روی یک باورِ رایجِ غلط (دام تستی) داده شد؛ درسنامه را با مقابلهٔ دقیق بخوان',
+    calculation_error: 'اشکال در محاسبه بود، نه در مفهوم؛ یک ستون محاسبهٔ منظم تمرین کن',
+    reading_error: 'احتمالاً صورت سؤال دقیق خوانده نشد (با اطمینان بالا پاسخ غلط دادی)',
+    theory_confusion: 'دو نظریهٔ هم‌خانواده با هم خلط شده‌اند — کارت مقایسه برایت فعال می‌شود',
+    recall_failure: 'مبحث قبلاً قوی بود ولی بازیابی حافظه افت کرده — مرور زمان‌بندی‌شده اولویت است',
+    time_pressure: 'پاسخ بسیار کندتر از زمان مجاز آزمون بود — مدیریت زمان تمرین شود',
+    guessing: 'پاسخ با اطمینان بسیار پایین (حدس) ثبت شد؛ این شاهد وزن کمتری به تسلط اضافه می‌کند',
+  };
   if (errorType === 'concept_gap') {
-    const gapLevel = topicDelta.before < 40 ? 'عمیق' : topicDelta.before < 60 ? 'متوسط' : 'سطوح'; 
+    const gapLevel = topicDelta.before < 40 ? 'عمیق' : topicDelta.before < 60 ? 'متوسط' : 'سطوح';
     bits.push(`یک شکاف مفهومی ${gapLevel} در مبحث «${node.topic}» تشخیص داده شد`);
     if (node.track === 'common') {
       bits.push('برای تثبیت درس مشترک، تمرکز بیشتری لازم است');
     }
-  } else if (errorType === 'prerequisite_failure') {
+  } else if (errorType === 'knowledge_gap') {
     const prereqNodes = prerequisites
       .map((p) => nodes.get(p.nodeId))
       .filter((n): n is NonNullable<typeof n> => Boolean(n));
@@ -636,9 +705,10 @@ function buildMentorMessage(args: {
     if (prereqNodes.some((n) => n.track !== node.track)) {
       bits.push('پیش‌نیاز درسی در مسیر دیگری قرار دارد و نیاز به بازبینی برنامه دارد');
     }
-  } else if (errorType === 'misread') {
-    bits.push('احتمالاً یک دام فریب‌دهنده با اعتماد به نفس بالا پاسخ داده‌اید');
-    bits.push('نتیجهٔ پاسخ غلط به پایان رسید؛ برای مطمئن شدن مرور کنید');
+  } else if (ERROR_MESSAGES[errorType]) {
+    bits.push(ERROR_MESSAGES[errorType]!);
+  } else if (errorType === 'unknown') {
+    bits.push('علت خطا با شواهد موجود قابل تشخیص نبود — این به معنی ضعف قطعی فصل نیست');
   }
   
   if (siblingShock && siblingShock.applied > 0) {
@@ -693,7 +763,33 @@ export function round1(x: number): number {
   return Math.round(x * 10) / 10;
 }
 
-export { isTrackId, isQuestion, isNodeDependency, TRACK_IDS, DEPENDENCY_RELATIONS };
-export type { TrackId, DependencyRelation, ReviewCard, Question, KnowledgeNode, NodeDependency, UserNodeMastery };
+export {
+  isTrackId,
+  isQuestion,
+  isNodeDependency,
+  isExamLevel,
+  TRACK_IDS,
+  DEPENDENCY_RELATIONS,
+  EXAM_LEVELS,
+  getExamPath,
+  getExamStructure,
+  getExamStructureWarnings,
+  getSubGroup,
+  getSubGroupSubjects,
+} from '@ael/contracts';
+export type {
+  TrackId,
+  DependencyRelation,
+  ReviewCard,
+  Question,
+  KnowledgeNode,
+  NodeDependency,
+  UserNodeMastery,
+  ExamLevel,
+  ExamPathIdentity,
+  ExamYearStructure,
+  ExamVerification,
+} from '@ael/contracts';
 
 export * from './fsrs';
+export * from './exam-simulation';

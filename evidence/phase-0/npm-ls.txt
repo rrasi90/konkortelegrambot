@@ -1,0 +1,114 @@
+react-example@0.0.0 C:\Star\konkortelegrambot
+├── UNMET DEPENDENCY @ael/contracts@file:C:\Star\konkortelegrambot\packages\contracts
+├── UNMET DEPENDENCY @ael/engine@file:C:\Star\konkortelegrambot\packages\learning-engine
+├── UNMET DEPENDENCY @ael/utils@file:C:\Star\konkortelegrambot\packages\utils
+├── UNMET DEPENDENCY @ael/worker@file:C:\Star\konkortelegrambot\apps\worker
+├── @google/genai@ invalid: "^2.4.0" from the root project
+├── @jridgewell/gen-mapping@ extraneous
+├── @jridgewell/resolve-uri@ extraneous
+├── @protobufjs/fetch@ extraneous
+├── @protobufjs/utf8@ extraneous
+├── @reduxjs/toolkit@ extraneous
+├── @rolldown/binding-win32-x64-msvc@ extraneous
+├── @rolldown/pluginutils@ extraneous
+├── @tailwindcss/oxide-win32-x64-msvc@ extraneous
+├── UNMET DEPENDENCY @tailwindcss/vite@^4.3.3
+├── UNMET DEPENDENCY @types/canvas-confetti@^1.9.0
+├── UNMET DEPENDENCY @types/cytoscape@^3.21.9
+├── UNMET DEPENDENCY @types/express@^4.17.21
+├── UNMET DEPENDENCY @types/katex@^0.16.8
+├── UNMET DEPENDENCY @types/node@^22.14.0
+├── UNMET DEPENDENCY @types/react-dom@^19.3.0
+├── UNMET DEPENDENCY @types/react@^19.3.0
+├── @types/serve-static@ extraneous
+├── UNMET DEPENDENCY @vitejs/plugin-react@^6.1.1
+├── @vitest/mocker@ extraneous
+├── UNMET DEPENDENCY autoprefixer@^10.4.21
+├── body-parser@ extraneous
+├── UNMET DEPENDENCY canvas-confetti@^1.9.4
+├── cytoscape@ invalid: "^3.34.4" from the root project
+├── UNMET DEPENDENCY dotenv@^17.2.3
+├── es-toolkit@ extraneous
+├── UNMET DEPENDENCY esbuild@^0.25.0
+├── express@ invalid: "^4.21.2" from the root project
+├── finalhandler@ extraneous
+├── framer-motion@ extraneous
+├── gaxios@ extraneous
+├── google-auth-library@ extraneous
+├── hono@ extraneous
+├── katex@ invalid: "^0.19.1" from the root project
+├── lightningcss-win32-x64-msvc@ extraneous
+├── lucide-react@ invalid: "^0.546.0" from the root project
+├── motion-dom@ extraneous
+├── motion-utils@ extraneous
+├── UNMET DEPENDENCY motion@^12.23.24
+├── UNMET DEPENDENCY react-dom@^19.0.1
+├── UNMET DEPENDENCY react-is@^19.3.1
+├── UNMET DEPENDENCY react@^19.0.1
+├── recharts@ invalid: "^3.10.1" from the root project
+├── send@ extraneous
+├── UNMET DEPENDENCY tailwindcss@^4.3.3
+├── tsx@ invalid: "^4.21.0" from the root project
+├── typescript@ invalid: "^7.0.2" from the root project
+├── victory-vendor@ extraneous
+├── vite@ invalid: "^8.3.0" from the root project
+├── vitest@ invalid: "^5.0.5" from the root project
+└── web-streams-polyfill@ extraneous
+
+npm error code ELSPROBLEMS
+npm error missing: @ael/contracts@file:C:\Star\konkortelegrambot\packages\contracts, required by react-example@0.0.0
+npm error missing: @ael/engine@file:C:\Star\konkortelegrambot\packages\learning-engine, required by react-example@0.0.0
+npm error missing: @ael/utils@file:C:\Star\konkortelegrambot\packages\utils, required by react-example@0.0.0
+npm error missing: @ael/worker@file:C:\Star\konkortelegrambot\apps\worker, required by react-example@0.0.0
+npm error invalid: @google/genai@ C:\Star\konkortelegrambot\node_modules\@google\genai
+npm error extraneous: @jridgewell/gen-mapping@ C:\Star\konkortelegrambot\node_modules\@jridgewell\gen-mapping
+npm error extraneous: @jridgewell/resolve-uri@ C:\Star\konkortelegrambot\node_modules\@jridgewell\resolve-uri
+npm error extraneous: @protobufjs/fetch@ C:\Star\konkortelegrambot\node_modules\@protobufjs\fetch
+npm error extraneous: @protobufjs/utf8@ C:\Star\konkortelegrambot\node_modules\@protobufjs\utf8
+npm error extraneous: @reduxjs/toolkit@ C:\Star\konkortelegrambot\node_modules\@reduxjs\toolkit
+npm error extraneous: @rolldown/binding-win32-x64-msvc@ C:\Star\konkortelegrambot\node_modules\@rolldown\binding-win32-x64-msvc
+npm error extraneous: @rolldown/pluginutils@ C:\Star\konkortelegrambot\node_modules\@rolldown\pluginutils
+npm error extraneous: @tailwindcss/oxide-win32-x64-msvc@ C:\Star\konkortelegrambot\node_modules\@tailwindcss\oxide-win32-x64-msvc
+npm error missing: @tailwindcss/vite@^4.3.3, required by react-example@0.0.0
+npm error missing: @types/canvas-confetti@^1.9.0, required by react-example@0.0.0
+npm error missing: @types/cytoscape@^3.21.9, required by react-example@0.0.0
+npm error missing: @types/express@^4.17.21, required by react-example@0.0.0
+npm error missing: @types/katex@^0.16.8, required by react-example@0.0.0
+npm error missing: @types/node@^22.14.0, required by react-example@0.0.0
+npm error missing: @types/react-dom@^19.3.0, required by react-example@0.0.0
+npm error missing: @types/react@^19.3.0, required by react-example@0.0.0
+npm error extraneous: @types/serve-static@ C:\Star\konkortelegrambot\node_modules\@types\serve-static
+npm error missing: @vitejs/plugin-react@^6.1.1, required by react-example@0.0.0
+npm error extraneous: @vitest/mocker@ C:\Star\konkortelegrambot\node_modules\@vitest\mocker
+npm error missing: autoprefixer@^10.4.21, required by react-example@0.0.0
+npm error extraneous: body-parser@ C:\Star\konkortelegrambot\node_modules\body-parser
+npm error missing: canvas-confetti@^1.9.4, required by react-example@0.0.0
+npm error invalid: cytoscape@ C:\Star\konkortelegrambot\node_modules\cytoscape
+npm error missing: dotenv@^17.2.3, required by react-example@0.0.0
+npm error extraneous: es-toolkit@ C:\Star\konkortelegrambot\node_modules\es-toolkit
+npm error missing: esbuild@^0.25.0, required by react-example@0.0.0
+npm error invalid: express@ C:\Star\konkortelegrambot\node_modules\express
+npm error extraneous: finalhandler@ C:\Star\konkortelegrambot\node_modules\finalhandler
+npm error extraneous: framer-motion@ C:\Star\konkortelegrambot\node_modules\framer-motion
+npm error extraneous: gaxios@ C:\Star\konkortelegrambot\node_modules\gaxios
+npm error extraneous: google-auth-library@ C:\Star\konkortelegrambot\node_modules\google-auth-library
+npm error extraneous: hono@ C:\Star\konkortelegrambot\node_modules\hono
+npm error invalid: katex@ C:\Star\konkortelegrambot\node_modules\katex
+npm error extraneous: lightningcss-win32-x64-msvc@ C:\Star\konkortelegrambot\node_modules\lightningcss-win32-x64-msvc
+npm error invalid: lucide-react@ C:\Star\konkortelegrambot\node_modules\lucide-react
+npm error extraneous: motion-dom@ C:\Star\konkortelegrambot\node_modules\motion-dom
+npm error extraneous: motion-utils@ C:\Star\konkortelegrambot\node_modules\motion-utils
+npm error missing: motion@^12.23.24, required by react-example@0.0.0
+npm error missing: react-dom@^19.0.1, required by react-example@0.0.0
+npm error missing: react-is@^19.3.1, required by react-example@0.0.0
+npm error missing: react@^19.0.1, required by react-example@0.0.0
+npm error invalid: recharts@ C:\Star\konkortelegrambot\node_modules\recharts
+npm error extraneous: send@ C:\Star\konkortelegrambot\node_modules\send
+npm error missing: tailwindcss@^4.3.3, required by react-example@0.0.0
+npm error invalid: tsx@ C:\Star\konkortelegrambot\node_modules\tsx
+npm error invalid: typescript@ C:\Star\konkortelegrambot\node_modules\typescript
+npm error extraneous: victory-vendor@ C:\Star\konkortelegrambot\node_modules\victory-vendor
+npm error invalid: vite@ C:\Star\konkortelegrambot\node_modules\vite
+npm error invalid: vitest@ C:\Star\konkortelegrambot\node_modules\vitest
+npm error extraneous: web-streams-polyfill@ C:\Star\konkortelegrambot\node_modules\web-streams-polyfill
+npm error A complete log of this run can be found in: C:\Users\rrasi_oorj8fq\AppData\Local\npm-cache\_logs\2026-11-01T15_13_30_116Z-debug-0.log

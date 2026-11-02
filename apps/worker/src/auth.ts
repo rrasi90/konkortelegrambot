@@ -19,6 +19,14 @@ export function toHex(buf: ArrayBuffer): string {
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+/** مقایسهٔ ثابت‌زمان برای امضاها/توکن‌ها تا نشت زمان‌سنجی رخ ندهد */
+function constantTimeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 /** توکن نشست: `${userId}.${hmac(secret, userId)}` — قابل جعل نیست بدون کلید سرور */
 export async function issueSessionToken(userId: string, secret: string): Promise<string> {
   return `${userId}.${await hmacSha256Hex(secret, userId)}`;
@@ -33,12 +41,7 @@ export async function verifySessionToken(
   const userId = token.slice(0, idx);
   const expected = await hmacSha256Hex(secret, userId);
   const provided = token.slice(idx + 1);
-  if (provided.length !== expected.length) return null;
-  let diff = 0;
-  for (let i = 0; i < expected.length; i++) {
-    diff |= expected.charCodeAt(i) ^ provided.charCodeAt(i);
-  }
-  return diff === 0 ? userId : null;
+  return constantTimeEqual(provided, expected) ? userId : null;
 }
 
 /**
@@ -70,7 +73,7 @@ export async function verifyTelegramInitData(
   const secretSig = await crypto.subtle.sign('HMAC', secretKey, new TextEncoder().encode(botToken));
   const computed = await hmacSha256Hex(secretSig, dataCheckString);
 
-  if (computed !== hash) return { ok: false, error: 'signature mismatch' };
+  if (!constantTimeEqual(computed, hash)) return { ok: false, error: 'signature mismatch' };
 
   const authDate = Number(params.get('auth_date') ?? 0);
   if (!authDate || Math.abs(Date.now() / 1000 - authDate) > maxAgeSeconds) {

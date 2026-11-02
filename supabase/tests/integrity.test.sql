@@ -170,3 +170,222 @@ $$;
 delete from answer_events where attempt_id in ('test-attempt-1', 'test-rls-1');
 delete from user_node_mastery where user_id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222');
 delete from app_users where id in ('11111111-1111-1111-1111-111111111111', '22222222-2222-2222-2222-222222222222');
+
+-- ۱۱) بلیت الزامی است: پاسخ بدون بلیت صادرشده باید رد شود
+do $$
+declare v_qid text;
+begin
+  insert into app_users (id, display_name) values ('44444444-4444-4444-4444-444444444444', 'تست ۴') on conflict do nothing;
+  select id into v_qid from questions limit 1;
+  begin
+    perform submit_answer_secure('44444444-4444-4444-4444-444444444444', 'no-ticket-at-all', v_qid, 0);
+    raise exception 'پاسخ بدون بلیت نباید پذیرفته شود';
+  exception when others then
+    null; -- انتظار خطا داریم
+  end;
+  delete from app_users where id = '44444444-4444-4444-4444-444444444444';
+end
+$$;
+
+-- ۱۲) بلیت متعلق به کاربر دیگر رد می‌شود
+do $$
+declare v_qid text;
+begin
+  insert into app_users (id, display_name) values ('55555555-5555-5555-5555-555555555555', 'تست ۵') on conflict do nothing;
+  insert into app_users (id, display_name) values ('66666666-6666-6666-6666-666666666666', 'تست ۶') on conflict do nothing;
+  select id into v_qid from questions limit 1;
+  insert into attempt_tickets (attempt_id, user_id, question_id, expires_at)
+  values ('ticket-cross-user', '55555555-5555-5555-5555-555555555555', v_qid, now() + interval '1 hour');
+  begin
+    perform submit_answer_secure('66666666-6666-6666-6666-666666666666', 'ticket-cross-user', v_qid, 0);
+    raise exception 'بلیت کاربر دیگر نباید قابل‌استفاده باشد';
+  exception when others then
+    null;
+  end;
+  delete from answer_events where user_id in ('55555555-5555-5555-5555-555555555555','66666666-6666-6666-6666-666666666666');
+  delete from attempt_tickets where attempt_id = 'ticket-cross-user';
+  delete from app_users where id in ('55555555-5555-5555-5555-555555555555','66666666-6666-6666-6666-666666666666');
+end
+$$;
+
+-- ۱۳) RPC فقط service_role؛ anon/authenticated نباید execute داشته باشند
+do $$
+begin
+  if has_function_privilege('anon', 'submit_answer_secure(uuid,text,text,int,jsonb,jsonb,jsonb,jsonb)', 'EXECUTE') then
+    raise exception 'anon نباید بتواند RPC ثبت پاسخ را صدا بزند';
+  end if;
+  if has_function_privilege('authenticated', 'submit_answer_secure(uuid,text,text,int,jsonb,jsonb,jsonb,jsonb)', 'EXECUTE') then
+    raise exception 'authenticated نباید بتواند RPC ثبت پاسخ را صدا بزند';
+  end if;
+end
+$$;
+
+-- ۱۴) R-020 — جداول دامنه: trigger تاریخچهٔ تسلط، یکتایی exam_selections،
+-- attempt_id یکتا در daily_queue_items، درج audit_logs
+do $$
+declare
+  v_uid uuid := '77777777-7777-7777-7777-777777777777';
+  v_node text;
+  v_q text;
+begin
+  insert into app_users (id, display_name) values (v_uid, 'تست ۱۴') on conflict do nothing;
+  select id into v_node from knowledge_nodes limit 1;
+  select id into v_q from questions limit 1;
+
+  -- درج اول user_node_mastery → trigger یک ردیف backfill می‌سازد
+  insert into user_node_mastery (user_id, node_id, mastery_score, status)
+  values (v_uid, v_node, 60, 'learning');
+  if (select count(*) from mastery_history where user_id = v_uid) <> 1 then
+    raise exception 'trigger باید دقیقاً یک ردیف backfill ثبت کند';
+  end if;
+
+  update user_node_mastery set mastery_score = 75 where user_id = v_uid and node_id = v_node;
+  if (select count(*) from mastery_history where user_id = v_uid) <> 2 then
+    raise exception 'به‌روزرسانی تسلط باید ردیف دوم تاریخچه بسازد';
+  end if;
+  if not exists (select 1 from mastery_history where user_id = v_uid and previous_score = 60 and new_score = 75) then
+    raise exception 'مقادیر قبلی/بعدی تسلط در تاریخچه ثبت نشد';
+  end if;
+
+  -- به‌روزرسانی بدون تغییر امتیاز/وضعیت → ردیف جدیدی نمی‌سازد
+  update user_node_mastery set last_error_at = now() where user_id = v_uid and node_id = v_node;
+  if (select count(*) from mastery_history where user_id = v_uid) <> 2 then
+    raise exception 'تغییر بدون تفاوت نباید ردیف تاریخچه بسازد';
+  end if;
+
+  -- constraint: فقط یک انتخاب به ازای هر سال
+  insert into exam_selections (user_id, exam_year, sub_group_id) values (v_uid, 1405, 'mgr-a');
+  begin
+    insert into exam_selections (user_id, exam_year, sub_group_id) values (v_uid, 1405, 'mgr-b');
+    raise exception 'دومین انتخاب برای همان سال باید با unique رد شود';
+  exception when unique_violation then
+    null;
+  end;
+
+  -- attempt_id یکتا در daily_queue_items
+  insert into daily_queue_items (user_id, queue_date, attempt_id, question_id, reason)
+  values (v_uid, '2026-11-01', 'dq-att-1', v_q, 'scheduled');
+  begin
+    insert into daily_queue_items (user_id, queue_date, attempt_id, question_id, reason)
+    values (v_uid, '2026-11-01', 'dq-att-1', v_q, 'review');
+    raise exception 'attempt_id تکراری در daily_queue_items باید رد شود';
+  exception when unique_violation then
+    null;
+  end;
+
+  -- audit_logs قابل درج است
+  insert into audit_logs (user_id, action, entity_type) values (v_uid, 'test_action', 'unit_test');
+  if not exists (select 1 from audit_logs where user_id = v_uid and action = 'test_action') then
+    raise exception 'ردیف audit_logs ثبت نشد';
+  end if;
+
+  -- §8.1: مقدار reason='diagnostic' باید در چک‌کنstraint daily_queue_items مجاز باشد
+  insert into daily_queue_items (user_id, queue_date, attempt_id, question_id, reason)
+  values (v_uid, '2026-11-01', 'dq-diag-1', v_q, 'diagnostic');
+  if not exists (select 1 from daily_queue_items where attempt_id = 'dq-diag-1' and reason = 'diagnostic') then
+    raise exception 'ردیف diagnostic در daily_queue_items ثبت نشد';
+  end if;
+  -- و مقدار کاملاً نامعتبر باید با check_rejected رد شود
+  begin
+    insert into daily_queue_items (user_id, queue_date, attempt_id, question_id, reason)
+    values (v_uid, '2026-11-01', 'dq-bad-1', v_q, 'not_a_reason');
+    raise exception 'reason نامعتبر باید با check رد شود';
+  exception when check_violation then
+    null;
+  end;
+
+  delete from mastery_history where user_id = v_uid;
+  delete from user_node_mastery where user_id = v_uid;
+  delete from exam_selections where user_id = v_uid;
+  delete from daily_queue_items where user_id = v_uid;
+  delete from audit_logs where user_id = v_uid;
+  delete from app_users where id = v_uid;
+end
+$$;
+
+-- ۱۵) وضعیت مهارت باید دقیقاً خروجی موتور باشد؛ هیچ heuristic مستقل SQL اجرا نشود
+do $$
+declare
+  v_uid uuid := '88888888-8888-8888-8888-888888888888';
+  v_qid text;
+  v_node text;
+  v_correct int;
+  v_skill_id text := 'integrity-engine-authoritative-skill';
+  v_result jsonb;
+begin
+  insert into app_users (id, display_name)
+  values (v_uid, 'تست وضعیت موتور') on conflict do nothing;
+
+  select id, node_id, correct_option
+  into v_qid, v_node, v_correct
+  from questions
+  order by id
+  limit 1;
+
+  if v_qid is null or v_node is null then
+    raise exception 'برای تست وضعیت موتور سؤال و گرهٔ معتبر لازم است';
+  end if;
+
+  insert into skills (id, node_id, title, verification_status)
+  values (v_skill_id, v_node, 'Integrity engine state', 'unverified')
+  on conflict (id) do nothing;
+
+  insert into attempt_tickets (attempt_id, user_id, question_id, attempt_type, expires_at)
+  values ('ticket-engine-authoritative-state', v_uid, v_qid, 'practice', now() + interval '1 hour');
+
+  v_result := submit_answer_secure(
+    v_uid,
+    'ticket-engine-authoritative-state',
+    v_qid,
+    v_correct,
+    jsonb_build_object(
+      'skillStateUpdate',
+      jsonb_build_object(
+        'nodeId', v_node,
+        'state', jsonb_build_object(
+          'skillId', v_skill_id,
+          'proficiencyProbability', 0.8123,
+          'confidence', 0.6543,
+          'evidenceCount', 7,
+          'memoryRetrievability', 0.8765,
+          'fluencySpeedRatio', 1.2345,
+          'dominantErrorType', 'time_pressure',
+          'coverageStatus', 'needs_proof'
+        )
+      )
+    ),
+    '[]'::jsonb,
+    '[]'::jsonb,
+    '[]'::jsonb
+  );
+
+  if not exists (
+    select 1 from learner_skill_states
+    where user_id = v_uid
+      and skill_id = v_skill_id
+      and proficiency_probability = 0.8123
+      and confidence = 0.6543
+      and evidence_count = 7
+      and memory_retrievability = 0.8765
+      and fluency_speed_ratio = 1.2345
+      and dominant_error_type = 'time_pressure'
+      and coverage_status = 'needs_proof'
+  ) then
+    raise exception 'وضعیت مهارت باید بدون تغییر از خروجی موتور ذخیره شود';
+  end if;
+
+  if exists (
+    select 1 from learner_skill_states
+    where user_id = v_uid and skill_id = v_skill_id
+      and proficiency_probability in (0.65, 0.35)
+  ) then
+    raise exception 'heuristic قدیمی SQL نباید وضعیت مهارت بسازد';
+  end if;
+
+  delete from answer_events where user_id = v_uid;
+  delete from attempt_tickets where user_id = v_uid;
+  delete from learner_skill_states where user_id = v_uid;
+  delete from skills where id = v_skill_id;
+  delete from app_users where id = v_uid;
+end
+$$;

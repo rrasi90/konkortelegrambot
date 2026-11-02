@@ -1,0 +1,71 @@
+Phase 4 §8.7 — Exam simulation (official structure, session, scoring)
+Branch: fix/mission-remediation-20261101
+Base commit at run time: efef0b4 (changes for §8.7 are uncommitted in this evidence run)
+Run time (UTC): 2026-11-01T22:41:43Z
+Host: Windows 10.0.26200 x64, Node v24.18.0
+DB for migration checks: docker ael-pg-test, PostgreSQL 16.15 (local test container, database ael_test)
+
+COMMANDS AND RESULTS
+1) npx vitest run packages/learning-engine
+   EXIT=0 — 4 files, 99 tests passed (includes 19 exam-simulation tests)
+   evidence: vitest-exam87-engine.txt
+2) npx vitest run apps/worker
+   EXIT=0 — 3 files, 70 tests passed (includes 19 exam-simulation integration tests)
+   evidence: vitest-exam87-worker.txt
+3) npx vitest run (whole repository)
+   EXIT=0 — 15 files, 248 tests passed
+   evidence: vitest-exam87-all.txt
+4) npx tsc --noEmit                                   (client root)  EXIT=0
+   npx tsc --noEmit -p apps/worker/tsconfig.json                     EXIT=0
+   npx tsc --noEmit -p packages/learning-engine/tsconfig.json        EXIT=0
+   npx tsc --noEmit -p packages/contracts/tsconfig.json              EXIT=0
+   evidence: typecheck-exam87-root.txt, typecheck-exam87-worker.txt,
+             typecheck-exam87-engine.txt, typecheck-exam87-contracts.txt
+5) npm run --prefix apps/worker build (tsc -b)        EXIT=0
+   evidence: build-worker-exam87.txt
+6) node scripts/validate-content.mjs --all            EXIT=0
+   2 packs valid, 0 warnings (demo 17 nodes/14 edges/18 questions; business 18/14/21)
+   evidence: content-validate-exam87.txt
+
+DATABASE (migration 0012)
+7) Apply supabase/migrations/0012_exam_simulation_sessions.sql to local ael_test
+   EXIT=0 (columns exam_level/content_origin, exam_sessions, exam_session_items,
+   exam_session_responses, record_exam_simulation_response, RLS policies, grants)
+   evidence: db-migration-0012-apply.txt
+8) evidence/phase-4/verify-exam-simulation-0012.sql (BEGIN … ROLLBACK)
+   EXIT=0 — verified:
+   - structural columns/tables/RLS/SECURITY DEFINER present
+   - successful correct/wrong answer recording and ticket consumption
+   - RPC rejects: 45001 unknown session, 45003 foreign session/ticket,
+     45004 ticket/question mismatch, 45005 consumed ticket, 45006 expired session,
+     45008 option out of range, 45009 inactive session, 45010 non-simulation ticket,
+     45011 question outside answer sheet, 45012 duplicate answer in same session
+   - RLS: authenticated owner sees own rows; other user sees 0 rows;
+     direct INSERT and direct RPC execution by authenticated are denied
+   evidence: db-verify-exam87.txt
+9) Re-apply supabase/seeds/0001_demo_pack.sql (idempotent)
+   EXIT=0 — all 14 demo questions labeled doctorate / synthetic_demo
+   evidence: db-seed-provenance-exam87.txt
+   Note: the seed's question upsert now backfills exam_level/content_origin on
+   conflict, and scripts/import-content.mjs emits these labels from pack meta
+   (examLevel/contentOrigin, with synthetic => synthetic_demo) in both SQL and
+   REST import paths.
+
+SCOPE / HONEST LIMITS
+- Doctorate path (booklet 2162) has official per-year coefficients, counts,
+  durations, negative marking and level-aware structure. Sessions use the
+  repository's verified-question pool.
+- Master path (booklet 1142) has no server-side verified question pool, so the
+  server refuses simulation with an explicit content-gap reason (503) and a
+  distinct title/code; it is never presented as the doctorate simulator.
+- Current server question pool is demo/designed and labeled accordingly.
+  Sessions built from it report contentOfficiality = scaled_pool / mixed and
+  disclose "سنجش آمادگی است، نه پیش‌بینی رتبه" — they are NOT claimed to be an
+  official past-paper simulator. Reaching official_booklet requires an imported,
+  provenance-labeled pool, which is a content dependency, not a code gap.
+- Per-subject question quotas are not recorded in the official structure, so
+  specialization questions are pooled across the sub-group's subjects; the plan
+  carries subjectAllocation = 'pooled' and discloses this rather than inventing
+  per-subject shares.
+- Simulation answers are stored in separate tables and do not mutate mastery,
+  FSRS cards, or answer_events (asserted by tests).

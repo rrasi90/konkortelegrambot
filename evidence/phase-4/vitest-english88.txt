@@ -1,0 +1,31 @@
+npm notice run react-example@0.0.0 npx
+npm notice run vitest run
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90mC:/Star/konkortelegrambot[39m
+
+ [32m✓[39m apps/worker/tests/supabase-store.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m src/tests/examStructure.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/engine.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/fsrs.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m src/tests/mistakeNotebook.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m src/tests/questionBank.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/exam-simulation.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m src/tests/lessonRatingEvidence.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/english-skills.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/exam-simulation.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 502[2mms[22m[39m
+ [32m✓[39m src/tests/examCoverage.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m packages/utils/tests/priority-calculations.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/fsrs-reference.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/tests/claimHonesty.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/tests/masteryEvidence.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/worker.test.ts [2m([22m[2m48 tests[22m[2m)[22m[33m 895[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+[2m      Tests [22m [1m[32m254 passed[39m[22m[90m (254)[39m
+[2m   Start at [22m 02:19:33
+[2m   Duration [22m 2.40s[2m (tests 33%, transform 31%, import 31%, worker 5%)[22m
+
+[2m    Isolate [22m [33m16 workers spawned[39m[2m · ~885ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~402ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+EXIT=0

@@ -1,0 +1,3 @@
+npm notice run @ael/worker@0.1.0 build
+npm notice run tsc -b
+EXIT=0

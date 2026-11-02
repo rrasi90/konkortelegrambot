@@ -24,6 +24,20 @@ function sqlStr(value) {
   return `'${String(value ?? '').replace(/'/g, "''")}'`;
 }
 
+function sqlNullable(value) {
+  return value === null || value === undefined ? 'NULL' : sqlStr(value);
+}
+
+// برچسب سطح آزمون و مبدأ محتوا: بستهٔ ساختگی هرگز «دفترچهٔ رسمی» برچسب نمی‌خورد
+const packExamLevel = pack.meta?.examLevel ?? null;
+const packContentOrigin = pack.meta?.contentOrigin ?? (pack.meta?.synthetic ? 'synthetic_demo' : null);
+function questionExamLevel(question) {
+  return question.examLevel ?? packExamLevel;
+}
+function questionContentOrigin(question) {
+  return question.contentOrigin ?? packContentOrigin;
+}
+
 function generateSql() {
   const lines = [];
   lines.push(`-- تولیدشده توسط scripts/import-content.mjs از ${path}`);
@@ -73,9 +87,9 @@ function generateSql() {
   const status = pack.meta?.synthetic ? 'demo' : 'verified';
   for (const q of pack.questions ?? []) {
     lines.push(
-      `INSERT INTO questions (id, node_id, exam_year, question_text, options, correct_option, explanation, trap_note, verification_status, exam_pack_id) ` +
-      `VALUES (${sqlStr(q.id)}, ${sqlStr(q.nodeId)}, ${q.examYear ?? 'NULL'}, ${sqlStr(q.text)}, '${JSON.stringify(q.options).replace(/'/g, "''")}'::jsonb, ${q.correctOption}, ${sqlStr(q.explanation)}, ${sqlStr(q.trapNote)}, ${sqlStr(status)}, ${sqlStr(packId)}) ` +
-      `ON CONFLICT (id) DO UPDATE SET question_text = EXCLUDED.question_text, options = EXCLUDED.options, correct_option = EXCLUDED.correct_option;`,
+      `INSERT INTO questions (id, node_id, exam_year, question_text, options, correct_option, explanation, trap_note, verification_status, exam_pack_id, exam_level, content_origin) ` +
+      `VALUES (${sqlStr(q.id)}, ${sqlStr(q.nodeId)}, ${q.examYear ?? 'NULL'}, ${sqlStr(q.text)}, '${JSON.stringify(q.options).replace(/'/g, "''")}'::jsonb, ${q.correctOption}, ${sqlStr(q.explanation)}, ${sqlStr(q.trapNote)}, ${sqlStr(status)}, ${sqlStr(packId)}, ${sqlNullable(questionExamLevel(q))}, ${sqlNullable(questionContentOrigin(q))}) ` +
+      `ON CONFLICT (id) DO UPDATE SET question_text = EXCLUDED.question_text, options = EXCLUDED.options, correct_option = EXCLUDED.correct_option, exam_level = EXCLUDED.exam_level, content_origin = EXCLUDED.content_origin;`,
     );
 
     // نگاشت بسته به سؤال در exam_pack_questions به همراه تفکیک Holdout
@@ -173,6 +187,8 @@ await upsert(
     trap_note: x.trapNote ?? null,
     verification_status: pack.meta?.synthetic ? 'demo' : 'verified',
     exam_pack_id: pack.meta?.name ?? null,
+    exam_level: questionExamLevel(x) ?? null,
+    content_origin: questionContentOrigin(x) ?? null,
   })),
 );
 

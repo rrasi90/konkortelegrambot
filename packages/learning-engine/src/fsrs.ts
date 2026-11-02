@@ -46,7 +46,6 @@ export const FSRS_DECAY = -0.5;
 function getW(w: readonly number[], index: number): number {
   return w[index] ?? (DEFAULT_FSRS_WEIGHTS as readonly number[])[index] ?? 1.0;
 }
- // ~0.2345679
 
 export interface FSRSState {
   stability: number;       // S: days until retrievability drops to 90%
@@ -195,12 +194,37 @@ export function scheduleNextFSRS(
 /* 6-Dimensional Learner Skill Modeling                               */
 /* ------------------------------------------------------------------ */
 
+/**
+ * §8.6 — ده علت خطا (mission Phase 4 §8.6).
+ * هر پاسخ غلط در حد امکان علت‌یابی می‌شود؛ هر خطا الزاماً ضعف قطعی یک فصل نیست.
+ */
 export type ErrorTypeClassification =
-  | 'slip'                 // Careless slip on high-mastery concept
-  | 'concept_gap'          // Fundamental gap in target concept
-  | 'prerequisite_failure' // Failure due to unmastered prerequisite
-  | 'misread'              // Confident trap / misreading distractor
-  | 'none';
+  | 'slip'                 // Careless slip on high-mastery concept (موجه توقف موج)
+  | 'concept_gap'          // شکاف در خود مفهومی که سؤال هدفش بود
+  | 'knowledge_gap'        // شکاف در پیش‌نیاز/دانش زیربنایی
+  | 'misconception'        // باور غلط — انتخاب دامِ تستی
+  | 'calculation_error'    // خطای محاسباتی در سؤال محاسباتی
+  | 'reading_error'        // بی‌دقتی در صورت سؤال (اطمینان بالا + پاسخ غلط)
+  | 'theory_confusion'     // خلط نظریه‌ها — دام با ضعف هم‌خانوادهٔ مفهومی
+  | 'recall_failure'       // فراموشی — بازیابی پایین با شایستگی پیشین بالا
+  | 'time_pressure'        // فشار زمان — پاسخ بسیار کندتر از زمان مجاز
+  | 'guessing'             // حدس — اطمینان خوداظهاری بسیار پایین
+  | 'unknown'              // شواهد برای علت‌یابی کافی نیست (هرگز به‌عنوان ضعف قطعی تفسیر نشود)
+  | 'none';                // پاسخ صحیح — خطایی برای طبقه‌بندی نیست
+
+/** ده علت خطای مأموریت — ترتیب پایدار برای گزارش تحلیلی */
+export const ERROR_TYPE_CAUSES = [
+  'slip',
+  'time_pressure',
+  'recall_failure',
+  'theory_confusion',
+  'misconception',
+  'calculation_error',
+  'reading_error',
+  'guessing',
+  'knowledge_gap',
+  'concept_gap',
+] as const satisfies readonly ErrorTypeClassification[];
 
 export interface SkillEvidenceInput {
   wasCorrect: boolean;
@@ -209,36 +233,90 @@ export interface SkillEvidenceInput {
   currentMastery: number; // 0-100
   prerequisiteMastery?: number; // 0-100
   confidenceRating?: number; // 1-5
+  /** خوداظهاری لغزش (slip): شاهد شکاف نیست — از کسر شایستگی می‌کاهد */
+  isSlip?: boolean;
+  /** §8.6: آیا سؤال محاسباتی است (از قرارداد کانترکت/کلمات کلیدی مشتق می‌شود) */
+  requiresCalculation?: boolean;
+  /** §8.6: نکتهٔ دام تستی سؤال — منبع طبقه‌بندی misconception/theory_confusion */
+  trapNote?: string;
+  /** §8.6: تسلط گره‌های هم‌خانوادهٔ مفهومی (برای تشخیص خلط نظریه‌ها) */
+  siblingMasteries?: number[];
+  /** §8.6: بازیابی حافظه از FSRS (برای تشخیص فراموشی) */
+  memoryRetrievability?: number;
+}
+
+/** §8.6 — قواعد علت‌یابی: صریح، اولویت‌دار و فقط از شاهد قابل‌مشاهده.
+ * «هر خطا الزاماً ضعف قطعی یک فصل نیست»: نبودِ شاهد → unknown، نه concept_gap. */
+export function classifyErrorType(
+  evidence: SkillEvidenceInput,
+  ctx?: { requiresCalculation?: boolean }
+): ErrorTypeClassification {
+  if (evidence.wasCorrect) return 'none';
+
+  const fast =
+    evidence.responseTimeMs !== undefined &&
+    evidence.expectedTimeMs !== undefined &&
+    evidence.expectedTimeMs > 0 &&
+    evidence.responseTimeMs < evidence.expectedTimeMs * 0.5;
+  const verySlow =
+    evidence.responseTimeMs !== undefined &&
+    evidence.expectedTimeMs !== undefined &&
+    evidence.expectedTimeMs > 0 &&
+    evidence.responseTimeMs > evidence.expectedTimeMs * 1.5;
+  const hasTrap = !!evidence.trapNote;
+
+  // 1) لغزش: شایستگی بالا + پاسخ بسیار سریع — موجه توقف موج سرایت
+  if (evidence.currentMastery >= 75 && fast) return 'slip';
+  if (evidence.isSlip) return 'slip';
+
+  // 2) فشار زمان: پاسخ بسیار کندتر از زمان مجاز
+  if (verySlow) return 'time_pressure';
+
+  // 3) فراموشی: شایستگی پیشین بالا ولی بازیابی حافظه پایین
+  if (
+    evidence.currentMastery >= 60 &&
+    evidence.memoryRetrievability !== undefined &&
+    evidence.memoryRetrievability < 0.7
+  ) {
+    return 'recall_failure';
+  }
+
+  // 4) خلط نظریه‌ها: دامِ تستی + ضعف هم‌خانوادهٔ مفهومی (حداقل دو شواهد)
+  if (hasTrap && (evidence.siblingMasteries ?? []).some((m) => m < 60)) {
+    return 'theory_confusion';
+  }
+
+  // 5) باور غلط: انتخاب پاسخِ دامِ مستند (دامنهٔ دام در بانک ثبت شده)
+  if (hasTrap) return 'misconception';
+
+  // 6) خطای محاسباتی: سؤال محاسباتی + پاسخ سریع/عادی بدون نشانگر شکاف
+  if (evidence.requiresCalculation === true && (fast || evidence.responseTimeMs !== undefined)) {
+    return 'calculation_error';
+  }
+
+  // 7) بی‌دقتی در صورت: اطمینان خوداظهاری بسیار بالا ولی پاسخ غلط
+  if (evidence.confidenceRating !== undefined && evidence.confidenceRating >= 5) {
+    return 'reading_error';
+  }
+
+  // 8) حدس: اطمینان خوداظهاری بسیار پایین
+  if (evidence.confidenceRating !== undefined && evidence.confidenceRating <= 1) {
+    return 'guessing';
+  }
+
+  // 9) شکاف دانش: پیش‌نیاز ضعیف
+  if (evidence.prerequisiteMastery !== undefined && evidence.prerequisiteMastery < 50) {
+    return 'knowledge_gap';
+  }
+
+  // 10) شکاف مفهومی: خودِ گره ضعیف بوده و پاسخ هم منطقیِ همان شکاف است
+  if (evidence.currentMastery < 60) return 'concept_gap';
+
+  // شواهد ناکافی — ضعف قطعی فرض نمی‌شود
+  return 'unknown';
 }
 
 /** Classify error type from learner answer evidence */
-export function classifyErrorType(evidence: SkillEvidenceInput): ErrorTypeClassification {
-  if (evidence.wasCorrect) return 'none';
-
-  // If high mastery (> 75) and answered unusually fast (< half expected time) -> slip
-  if (
-    evidence.currentMastery >= 75 &&
-    evidence.responseTimeMs !== undefined &&
-    evidence.expectedTimeMs !== undefined &&
-    evidence.responseTimeMs < evidence.expectedTimeMs * 0.5
-  ) {
-    return 'slip';
-  }
-
-  // If high confidence (4 or 5) but wrong -> misread or caught by sophisticated trap
-  if (evidence.confidenceRating !== undefined && evidence.confidenceRating >= 4) {
-    return 'misread';
-  }
-
-  // If prerequisite is weak (< 50) -> prerequisite failure
-  if (evidence.prerequisiteMastery !== undefined && evidence.prerequisiteMastery < 50) {
-    return 'prerequisite_failure';
-  }
-
-  // Otherwise fundamental concept gap
-  return 'concept_gap';
-}
-
 export interface SixDimensionalLearnerState {
   // 1. Competence / Proficiency Probability: P(L) in [0, 1]
   proficiencyProbability: number;
@@ -252,15 +330,31 @@ export interface SixDimensionalLearnerState {
   fluencySpeedRatio: number;
   // 6. Dominant Error Type: diagnostic classification
   dominantErrorType: ErrorTypeClassification | 'unknown';
+  /** §8.2: holdout تنها مسیر به proven/mastered — از تلاش attemptType='proof' */
+  provenViaHoldout?: boolean;
+  /** زمان آخرین شاهد (برای سنجش تازگی در اطمینان) */
+  lastEvidenceAt?: string;
+  /** تعداد شواهد صحیح (برای سازگاری در اطمینان) */
+  correctCount?: number;
+  /** انواع مستقل تلاش که شاهد جمع شده‌اند (برای تنوع در اطمینان) */
+  distinctAttemptTypes?: string[];
   // Synthesis Lifecycle Status
   coverageStatus: 'unseen' | 'diagnosed' | 'learning' | 'remediated' | 'needs_proof' | 'proven' | 'mastered';
+}
+
+/** §8.2 زمینهٔ شواهد — نوع تلاش و زمان، برای اطمینان چندعاملی و دروازهٔ holdout */
+export interface SixDUpdateContext {
+  attemptType?: 'practice' | 'diagnostic' | 'verification' | 'proof' | 'holdout' | 'exam_simulation';
+  answeredAt?: string;
+  now?: string;
 }
 
 /** Apply Bayesian evidence update to the 6D learner skill state */
 export function update6DLearnerSkillState(
   prior: SixDimensionalLearnerState | null,
   evidence: SkillEvidenceInput,
-  fsrsState?: FSRSState
+  fsrsState?: FSRSState,
+  ctx?: SixDUpdateContext
 ): SixDimensionalLearnerState {
   const current: SixDimensionalLearnerState = prior ?? {
     proficiencyProbability: 0.50,
@@ -273,14 +367,38 @@ export function update6DLearnerSkillState(
   };
 
   const wasCorrect = evidence.wasCorrect;
+  const isSlip = evidence.isSlip === true;
   const newEvidenceCount = current.evidenceCount + 1;
-  const newConfidence = Math.min(0.95, current.confidence + 0.10);
+  const isProof = ctx?.attemptType === 'proof' || ctx?.attemptType === 'holdout';
+  const provenViaHoldout = current.provenViaHoldout === true || (isProof && wasCorrect);
 
-  // Bayesian update on competence
+  // شمارندهٔ شواهد صحیح و انواع مستقل تلاش (پایهٔ سازگاری و تنوع در اطمینان)
+  const prevCorrect = current.correctCount ?? Math.round((current.confidence ?? 0.1) * current.evidenceCount);
+  const newCorrectCount = Math.min(newEvidenceCount, prevCorrect + (wasCorrect || isSlip ? 1 : 0));
+  const prevTypes = current.distinctAttemptTypes ?? [];
+  const newTypes = ctx?.attemptType && !prevTypes.includes(ctx.attemptType)
+    ? [...prevTypes, ctx.attemptType]
+    : prevTypes;
+
+  /* ---------- §8.2 اطمینان چندعاملی ----------
+   * چگالی شاهد × سازگاری پاسخ‌ها × تنوع نوع تلاش × تازگی.
+   * خوداظهاری (confidenceRating) در این محاسبه نقشی ندارد — شاهد مستقل، نه حس کاربر. */
+  const density = Math.min(1, newEvidenceCount / 5);
+  const accuracy = newCorrectCount / newEvidenceCount;
+  const variety = Math.min(1, Math.max(1, newTypes.length) / 3);
+  const answeredAtMs = ctx?.answeredAt ? new Date(ctx.answeredAt).getTime() : NaN;
+  const nowMs = ctx?.now ? new Date(ctx.now).getTime() : Date.now();
+  const daysSince = Number.isFinite(answeredAtMs) ? Math.max(0, (nowMs - answeredAtMs) / 86_400_000) : 0;
+  const recency = Math.exp(-daysSince / 14); // عمر متوسط ۱۴ روز
+  const newConfidence = Math.min(0.95, Math.max(0.05, 0.35 * density + 0.35 * accuracy + 0.15 * variety + 0.15 * recency));
+
+  // Bayesian update on competence — لغزش (خوداظهاری) شایستگی را کم نمی‌کند
   let newProficiency: number;
   if (wasCorrect) {
     const gain = 0.18 * (1.0 - current.proficiencyProbability);
     newProficiency = Math.min(0.99, current.proficiencyProbability + gain);
+  } else if (isSlip) {
+    newProficiency = current.proficiencyProbability;
   } else {
     const loss = 0.15 * current.proficiencyProbability;
     newProficiency = Math.max(0.01, current.proficiencyProbability - loss);
@@ -300,27 +418,32 @@ export function update6DLearnerSkillState(
   // Memory retrievability
   const newRetrievability = fsrsState ? fsrsState.retrievability : wasCorrect ? 1.0 : 0.75;
 
-  // Lifecycle Coverage Status
+  // Lifecycle Coverage Status — §8.2: «proven»/«mastered» فقط با شاهد هولدآوت؛
+  // توالی تمرین/خودارزیابی به‌تنهایی نمی‌تواند اثبات تولید کند.
   let status: SixDimensionalLearnerState['coverageStatus'];
-  if (newEvidenceCount < 2) {
-    status = 'diagnosed';
-  } else if (!wasCorrect) {
-    status = 'remediated';
-  } else if (newProficiency >= 0.80 && newEvidenceCount >= 4) {
-    status = 'mastered';
-  } else if (newProficiency >= 0.65 && newEvidenceCount >= 3) {
+  if (provenViaHoldout) {
     status = 'proven';
+  } else if (newEvidenceCount < 2) {
+    status = 'diagnosed';
+  } else if (!wasCorrect && !isSlip) {
+    status = 'remediated';
+  } else if (newProficiency >= 0.65 && newEvidenceCount >= 3) {
+    status = 'needs_proof';
   } else {
     status = 'learning';
   }
 
   return {
     proficiencyProbability: Math.round(newProficiency * 1000) / 1000,
-    confidence: Math.round(newConfidence * 100) / 100,
+    confidence: Math.round(newConfidence * 1000) / 1000,
     evidenceCount: newEvidenceCount,
     memoryRetrievability: Math.round(newRetrievability * 100) / 100,
     fluencySpeedRatio: newSpeedRatio,
     dominantErrorType: newDominantError,
+    provenViaHoldout,
+    lastEvidenceAt: ctx?.answeredAt,
+    correctCount: newCorrectCount,
+    distinctAttemptTypes: newTypes,
     coverageStatus: status,
   };
 }

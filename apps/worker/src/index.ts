@@ -10,22 +10,37 @@ import type { Context } from 'hono';
 import { cors } from 'hono/cors';
 import {
   DEFAULT_ENGINE_CONFIG,
+  ERROR_TYPE_CAUSES,
   applyAnswer,
   buildDailyQueue,
+  buildExamSessionPlan,
+  calculateRetrievability,
   isTrackId,
   questionCardId,
+  scoreExamSession,
   statusFromMastery,
-  DEFAULT_MASTERY,
 } from '@ael/engine';
-import type { EngineState, QueueItem } from '@ael/engine';
+import type { EngineState, ExamSessionPlan, QueueItem } from '@ael/engine';
 import type { ReviewCard, TrackId, Question, PublicQuestion } from '@ael/contracts';
+import {
+  ENGLISH_SKILLS,
+  getCombination,
+  getExamPath,
+  getExamStructure,
+  getExamStructureWarnings,
+  getSubGroupSubjects,
+  getSubGroups,
+  isExamLevel,
+  LATEST_EXAM_YEAR,
+} from '@ael/contracts';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
 import type { AppUser, DataStore, UserStats } from './store';
 import { MemoryStore } from './memory-store';
 import { SupabaseStore } from './store';
 import { skillMetaMap, estimatedMinutesForNode, skillForNode, skillTitle, nodeForSkill } from './skills-data';
 import {
-  calculateUrgencyV2,
+  computePriorityV3,
+  derivePrereqMultiplier,
   calculateExamValue,
   calculateExpectedBenefit,
 } from '@ael/utils';
@@ -252,6 +267,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if(entry.count>=RATE_MAX) return c.json({error:'درخواست بیش از حد مجاز'},429);
     entry.count++; return next();
   }
+  // R-010: محدودکنندهٔ نرخ روی مسیرهای احراز هویت و ثبت پاسخ (قبلاً تعریف‌شده ولی متصل‌نشده بود)
+  app.use('/api/auth/*', (c, next) => rateLimit(c, next));
+  app.use('/api/answers', (c, next) => rateLimit(c, next));
+  app.use('/api/self-report', (c, next) => rateLimit(c, next));
+  app.use('/api/telegram/webhook*', (c, next) => rateLimit(c, next));
 
   app.get('/api/lessons', (c) => c.json({ courses: COURSES_LESSONS }));
 
@@ -381,26 +401,50 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
-    // حالت ۲: بازیابی پایدار بر پایه شناسه عددی تلگرام وقتی امضای initData ممکن نیست.
-    // این مسیر فقط برای کاربرانی باز است که از داخل تلگرام آمده‌اند (کلاینت tgUser.id را
-    // می‌فرستد)؛ شناسه قبلاً با initData اعتبارسنجی شده یا در حساب موجود ثبت شده است.
+    // حالت ۲: بازیابی پایدار بر پایه شناسه عددی تلگرام — فقط با پرچم دمو.
+    // R-010: شناسه عددی تلگرام عمومی و قابل حدس است؛ پذیرش آن بدون امضای initData
+    // یعنی تصاحب حساب هر کاربری. در پروداکشن (ALLOW_DEMO_AUTH=false که خودِ
+    // createApp در production throw می‌کند اگر true باشد) این مسیر بسته است و
+    // ورود واقعی از حالت ۱ (initData + HMAC) انجام می‌شود.
     if (body.telegramUserId !== undefined && body.telegramUserId !== null && body.telegramUserId !== '') {
+      if (!allowDemoAuth) {
+        return c.json({ error: 'ورود بدون امضای تلگرام مجاز نیست؛ از initData استفاده کنید' }, 401);
+      }
       const numericId = Number(body.telegramUserId);
       if (!Number.isFinite(numericId) || numericId <= 0) {
         return c.json({ error: 'شناسه تلگرام نامعتبر است' }, 400);
       }
       let user = await store.getUserByTelegramId(numericId);
+      const isNew = !user;
       if (!user) {
         user = await store.createUser({
           telegramUserId: numericId,
           displayName: body.displayName || 'داوطلب دکتری',
         });
       }
+      // R-020 audit trail for demo-auth logins (mode 2)
+      store
+        .logAudit({
+          userId: user.id,
+          action: isNew ? 'demo_auth_create_user' : 'demo_auth_existing_user',
+          entityType: 'app_user',
+          entityId: user.id,
+          details: { mode: 'telegramUserId', telegramUserId: numericId },
+          sourceIp: c.req.header('x-forwarded-for') ?? null,
+        })
+        .catch((e) => console.error('[worker] audit log failed:', e));
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
-    // حالت ۳: ورود امن و خودکار بر پایه توکن دستگاه کاربر در وب (عدم امکان جعل هویت دیگران)
+    // حالت ۳: ورود بر پایه توکن دستگاه — فقط با پرچم دمو (R-010).
+    // توکن دستگاه چیزی است که کلاینت خودش انتخاب می‌کند؛ هر کسی که یک رشتهٔ
+    // تصادفی ۱۶+ نویسه بسازد می‌تواند حساب جدید باز کند و در صورت تغییر client
+    // روی همان مرورگر، مالک حساب دیگری را جای خود جا بزند. این مسیر برای
+    // تست وب/محلی است، نه هویت‌بخشی پروداکشن.
     if (typeof body.deviceToken === 'string') {
+      if (!allowDemoAuth) {
+        return c.json({ error: 'ورود با توکن دستگاه فقط در دمو مجاز است' }, 401);
+      }
       const cleanToken = body.deviceToken.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
       // توکن کوتاه/خالی به حساب مشترک «dev_» منتهی می‌شود و مرز امنیتی است.
       if (cleanToken.replace(/^dev_/, '').length < 16) {
@@ -408,12 +452,23 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       }
       const devUsername = 'dev_' + cleanToken.replace(/^dev_/, '');
       let user = (await store.getUserByTelegramUsername?.(devUsername)) ?? null;
+      const isNew = !user;
       if (!user) {
         user = await store.createUser({
           telegramUsername: devUsername,
           displayName: body.displayName || 'داوطلب کنکور',
         });
       }
+      store
+        .logAudit({
+          userId: user.id,
+          action: isNew ? 'demo_auth_create_user' : 'demo_auth_existing_user',
+          entityType: 'app_user',
+          entityId: user.id,
+          details: { mode: 'deviceToken' },
+          sourceIp: c.req.header('x-forwarded-for') ?? null,
+        })
+        .catch((e) => console.error('[worker] audit log failed:', e));
       return c.json({ token: await issueSessionToken(user.id, secret), user });
     }
 
@@ -455,6 +510,58 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     return c.json({ user });
   });
 
+  // R-020 — انتخاب کنکور داوطلب (exam_selections)؛ اعتبارسنجی ساختاری سمت سرور
+  app.get('/api/exam-selection', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const selection = await store.getActiveExamSelection(user.id);
+    return c.json({ selection });
+  });
+
+  app.put('/api/exam-selection', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as
+      | { examYear?: unknown; subGroupId?: unknown; combinationCode?: unknown; setCode?: unknown }
+      | null;
+    if (!body) return c.json({ error: 'ورودی نامعتبر' }, 400);
+    const examYear = Number(body.examYear);
+    if (!Number.isInteger(examYear) || examYear < 1390 || examYear > 1420) {
+      return c.json({ error: 'سال کنکور نامعتبر است (1390–1420)' }, 400);
+    }
+    if (typeof body.subGroupId !== 'string' || body.subGroupId.trim().length === 0 || body.subGroupId.length > 64) {
+      return c.json({ error: 'شناسه زیرگروه نامعتبر است' }, 400);
+    }
+    const optionalCode = (v: unknown): string | null | 'invalid' => {
+      if (v === undefined || v === null || v === '') return null;
+      if (typeof v !== 'string' && typeof v !== 'number') return 'invalid';
+      const s = String(v).trim();
+      return s.length > 0 && s.length <= 16 ? s : 'invalid';
+    };
+    const combinationCode = optionalCode(body.combinationCode);
+    const setCode = optionalCode(body.setCode);
+    if (combinationCode === 'invalid' || setCode === 'invalid') {
+      return c.json({ error: 'کد ترکیب/مجموعه نامعتبر است' }, 400);
+    }
+    const selection = await store.saveExamSelection(user.id, {
+      examYear,
+      subGroupId: body.subGroupId.trim(),
+      combinationCode,
+      setCode,
+    });
+    store
+      .logAudit({
+        userId: user.id,
+        action: 'exam_selection_saved',
+        entityType: 'exam_selection',
+        entityId: `${examYear}`,
+        details: { examYear, subGroupId: body.subGroupId.trim(), combinationCode, setCode },
+        sourceIp: c.req.header('x-forwarded-for') ?? null,
+      })
+      .catch((e) => console.error('[worker] audit log failed:', e));
+    return c.json({ ok: true, selection });
+  });
+
   app.put('/api/tracks', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
@@ -476,6 +583,638 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     for (const p of packs) for (const t of p.tracks) tracks.add(t);
     if (packs.length === 0) for (const t of ['common', 'business', 'technology', 'strategy', 'industrial'] as TrackId[]) tracks.add(t);
     return c.json({ tracks: [...tracks], packs });
+  });
+
+  // ---------- §8.1 آزمون تشخیصی (Phase 4) ----------
+  // وضعیت اولیهٔ کاربر جدید UNKNOWN است؛ این مسیر شواهد تشخیصی جمع می‌کند.
+  // خروجی: initial_skill_estimate (از state پس از ثبت پاسخ‌ها), evidence_count,
+  // confidence, knowledge_gaps, unknown_topics, strengths, weaknesses, recommended_next_actions
+  app.get('/api/diagnostic', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const requested = Number(c.req.query('count') ?? 10);
+    const count = Number.isFinite(requested) ? Math.max(1, Math.min(20, Math.floor(requested))) : 10;
+    const state = await loadEngineState(user.id);
+
+    const allowed = (nodeId: string): boolean => {
+      const n = state.nodes.get(nodeId);
+      return !!n && (n.track === 'common' || user.activeTracks.includes(n.track));
+    };
+    const seenQuestionIds = new Set(state.cards.map((card) => card.questionId).filter(Boolean));
+    // گره‌های ارزیابی‌نشده اول؛ تنوع با گروهبندی بر حسب course
+    const unseen = [...state.questions.values()].filter(
+      (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id) && q.examYear !== 1404,
+    );
+    const seen = [...state.questions.values()].filter(
+      (q) => allowed(q.nodeId) && seenQuestionIds.has(q.id) && q.examYear !== 1404,
+    );
+    const diversify = (pool: Question[]): Question[] => {
+      const byCourse = new Map<string, Question[]>();
+      for (const q of pool) {
+        const key = state.nodes.get(q.nodeId)?.course ?? 'unknown';
+        const list = byCourse.get(key);
+        if (list) list.push(q);
+        else byCourse.set(key, [q]);
+      }
+      const queues = [...byCourse.values()];
+      const out: Question[] = [];
+      while (out.length < count && queues.some((list) => list.length > 0)) {
+        for (const list of queues) {
+          if (out.length >= count) break;
+          const next = list.shift();
+          if (next) out.push(next);
+        }
+      }
+      return out;
+    };
+    const picked = [...diversify(unseen), ...diversify(seen)].slice(0, count);
+    if (picked.length === 0) {
+      return c.json({ error: 'برای سنجش تشخیصی سؤال قابل‌دسترس نیست؛ گرایش‌ها را بررسی کنید.' }, 409);
+    }
+
+    const tickets = picked.map((q) => ({
+      attemptId: `att-${crypto.randomUUID()}`,
+      questionId: q.id,
+      attemptType: 'diagnostic' as const,
+    }));
+    // fail-closed: بدون بلیت، پاسخ ثبت‌ناپذیر است
+    try {
+      await store.issueAttemptTickets(user.id, tickets);
+    } catch (error) {
+      console.error('[worker] failed to issue diagnostic attempt tickets:', error);
+      return c.json({ error: 'آزمون تشخیصی آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
+
+    store
+      .insertDailyQueueItems(
+        user.id,
+        tehranMidnightIso().slice(0, 10),
+        tickets.map((t, idx) => ({
+          attemptId: t.attemptId,
+          questionId: t.questionId,
+          nodeId: picked[idx]!.nodeId,
+          reason: 'diagnostic' as const,
+          priority: null,
+        })),
+      )
+      .catch((e) => console.error('[worker] daily_queue_items diagnostic persist failed:', e));
+
+    const assessedNodeIds = new Set<string>();
+    state.mastery.forEach((_v, nodeId) => assessedNodeIds.add(nodeId));
+    const items = picked.map((q, idx) => {
+      const node = state.nodes.get(q.nodeId);
+      return {
+        question: toPublicQuestion(q),
+        course: node?.course,
+        chapter: node?.chapter,
+        topic: node?.topic,
+        attemptId: tickets[idx]!.attemptId,
+        attemptType: 'diagnostic' as const,
+        masteryBefore: assessedNodeIds.has(q.nodeId) ? state.mastery.get(q.nodeId) ?? null : null,
+        assessmentState: assessedNodeIds.has(q.nodeId) ? 'assessed' : ('unknown' as const),
+      };
+    });
+    return c.json({
+      items,
+      count: picked.length,
+      meta: {
+        unassessed_node_count: picked.filter((q) => !assessedNodeIds.has(q.nodeId)).length,
+        answer_registration: 'POST /api/answers با attemptId این آیتم‌ها (attemptType=diagnostic)',
+        confidence_note:
+          'خوداظهاری همراه پاسخ ثبت شود (self-report)؛ به‌تنهایی شاهد تسلط نیست.',
+      },
+    });
+  });
+
+  /* ---------- §8.7 — ساختار رسمی آزمون و شبیه‌سازی ---------- */
+
+  app.get('/api/exam-structure', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const levelParam = c.req.query('level') ?? 'doctorate';
+    if (!isExamLevel(levelParam)) {
+      return c.json({ error: 'سطح آزمون نامعتبر است؛ «doctorate» یا «master».' }, 400);
+    }
+    const path = getExamPath(levelParam);
+    const yearParam = c.req.query('year');
+    const examYear = yearParam === undefined ? LATEST_EXAM_YEAR : Number(yearParam);
+    if (!Number.isInteger(examYear) || examYear < 1390 || examYear > 1420) {
+      return c.json({ error: 'سال آزمون نامعتبر است.' }, 400);
+    }
+    const subGroups = getSubGroups().map((g) => ({
+      id: g.id,
+      title: g.title,
+      verification: g.verification,
+      combinationCodes: g.combinationCodes,
+      subjects: getSubGroupSubjects(g.id),
+    }));
+
+    if (path.serverSimulation !== 'available') {
+      // صادقانه: ساختار سالانهٔ این سطح در سرور ثبت نشده و ادعا نمی‌شود
+      return c.json({
+        path,
+        available: false,
+        structure: null,
+        reason: path.serverSimulationReason,
+        subGroups,
+      });
+    }
+
+    const structure = getExamStructure(levelParam, examYear);
+    return c.json({
+      path,
+      available: true,
+      structure,
+      warnings: getExamStructureWarnings(levelParam, examYear),
+      subGroups,
+      combinations: subGroups.flatMap((g) =>
+        g.combinationCodes.map((code) => ({
+          combinationCode: code,
+          subGroupId: g.id,
+          titles: getCombination(code)?.titles ?? [],
+          verification: getCombination(code)?.verification ?? 'needs_check',
+        })),
+      ),
+    });
+  });
+
+  app.post('/api/exam-simulation/start', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as {
+      level?: string;
+      examYear?: number;
+      subGroupId?: string;
+      combinationCode?: string;
+      scale?: number;
+    } | null;
+    if (!body) return c.json({ error: 'بدنهٔ درخواست نامعتبر است.' }, 400);
+    if (!isExamLevel(body.level)) {
+      return c.json({ error: 'سطح آزمون نامعتبر است؛ «doctorate» یا «master».' }, 400);
+    }
+    const path = getExamPath(body.level);
+    if (path.serverSimulation !== 'available') {
+      return c.json(
+        { error: path.serverSimulationReason ?? 'شبیه‌سازی این سطح در سرور فعال نیست.', path },
+        503,
+      );
+    }
+    const examYear = Number(body.examYear ?? LATEST_EXAM_YEAR);
+    if (!Number.isInteger(examYear) || examYear < 1390 || examYear > 1420) {
+      return c.json({ error: 'سال آزمون نامعتبر است.' }, 400);
+    }
+    const subGroupId = String(body.subGroupId ?? '');
+    const state = await loadEngineState(user.id);
+
+    let plan: ExamSessionPlan;
+    try {
+      plan = buildExamSessionPlan({
+        level: body.level,
+        examYear,
+        subGroupId,
+        combinationCode:
+          typeof body.combinationCode === 'string' ? body.combinationCode : undefined,
+        questions: [...state.questions.values()],
+        nodes: [...state.nodes.values()],
+        scale: typeof body.scale === 'number' ? body.scale : undefined,
+        newAttemptId: () => `att-${crypto.randomUUID()}`,
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'ساخت جلسهٔ شبیه‌سازی ممکن نشد.';
+      return c.json({ error: message }, 400);
+    }
+    if (plan.answerSheet.length === 0) {
+      return c.json(
+        {
+          error: 'برای این سال و گرایش، سؤال قابل‌استفاده‌ای در مخزن سرور نیست.',
+          disclosures: plan.disclosures,
+        },
+        409,
+      );
+    }
+
+    // fail-closed: بدون بلیت تک‌مصرف، پاسخ ثبت‌ناپذیر است
+    try {
+      await store.issueAttemptTickets(
+        user.id,
+        plan.ticketRequests.map((t) => ({ ...t, attemptType: 'exam_simulation' as const })),
+      );
+    } catch (error) {
+      console.error('[worker] failed to issue exam simulation tickets:', error);
+      return c.json({ error: 'جلسهٔ شبیه‌سازی آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
+
+    const expiresAt = new Date(
+      Date.now() + (plan.durationMinutes ?? 180) * 60_000,
+    ).toISOString();
+    let session;
+    try {
+      session = await store.createExamSimulationSession({
+        userId: user.id,
+        level: plan.level,
+        examYear: plan.examYear,
+        subGroupId: plan.subGroupId,
+        bookletCode: plan.bookletCode,
+        plan,
+        disclosures: plan.disclosures,
+        expiresAt,
+        items: plan.answerSheet.map((slot) => ({
+          questionId: slot.questionId,
+          sectionId: slot.sectionId,
+          questionNumber: slot.questionNumber,
+          attemptId: slot.attemptId,
+        })),
+      });
+    } catch (error) {
+      console.error('[worker] failed to persist exam simulation session:', error);
+      return c.json({ error: 'ثبت جلسهٔ شبیه‌سازی ممکن نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
+
+    const questionById = new Map([...state.questions.values()].map((q) => [q.id, q]));
+    const items = plan.answerSheet.map((slot) => {
+      const question = questionById.get(slot.questionId);
+      return {
+        questionNumber: slot.questionNumber,
+        sectionId: slot.sectionId,
+        attemptId: slot.attemptId,
+        question: question ? toPublicQuestion(question) : null,
+      };
+    });
+
+    return c.json({
+      session: {
+        id: session.id,
+        level: plan.level,
+        examYear: plan.examYear,
+        subGroupId: plan.subGroupId,
+        combinationCode: plan.combinationCode,
+        subjects: plan.subjects,
+        subjectAllocation: plan.subjectAllocation,
+        bookletCode: plan.bookletCode,
+        pathTitle: plan.pathTitle,
+        status: session.status,
+        startedAt: session.startedAt,
+        expiresAt: session.expiresAt,
+        durationMinutes: plan.durationMinutes,
+        timingVerified: plan.timingVerified,
+        officialTotalQuestions: plan.officialTotalQuestions,
+        allocatedTotalQuestions: plan.allocatedTotalQuestions,
+        coverageRatio: plan.coverageRatio,
+        negativeMarkingRatio: plan.negativeMarkingRatio,
+        sections: plan.sections,
+        officiality: plan.contentOfficiality,
+        contentOrigins: plan.contentOrigins,
+      },
+      items,
+      disclosures: plan.disclosures,
+      warnings: plan.warnings,
+      answer_registration: 'POST /api/exam-simulation/answer با attemptId هر آیتم',
+    });
+  });
+
+  app.post('/api/exam-simulation/answer', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as {
+      sessionId?: string;
+      attemptId?: string;
+      questionId?: string;
+      selectedOption?: number;
+      responseTimeMs?: number;
+    } | null;
+    if (!body?.sessionId || !body.attemptId || !body.questionId) {
+      return c.json({ error: 'شناسهٔ جلسه، تلاش و سؤال الزامی است.' }, 400);
+    }
+    if (!Number.isInteger(body.selectedOption)) {
+      return c.json({ error: 'گزینهٔ انتخابی نامعتبر است.' }, 400);
+    }
+    const session = await store.getExamSimulationSession(user.id, body.sessionId);
+    if (!session) return c.json({ error: 'جلسهٔ شبیه‌سازی پیدا نشد.' }, 404);
+    if (session.status !== 'active') {
+      return c.json({ error: 'این جلسه دیگر فعال نیست.' }, 409);
+    }
+    if (new Date(session.expiresAt).getTime() <= Date.now()) {
+      return c.json({ error: 'زمان این جلسه به پایان رسیده است.' }, 409);
+    }
+    try {
+      await store.recordExamSimulationResponse({
+        userId: user.id,
+        sessionId: session.id,
+        attemptId: body.attemptId,
+        questionId: body.questionId,
+        selectedOption: body.selectedOption as number,
+        responseTimeMs: typeof body.responseTimeMs === 'number' ? body.responseTimeMs : null,
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'ثبت پاسخ ممکن نشد.';
+      const conflict =
+        message.includes('already consumed') ||
+        message.includes('already answered') ||
+        message.includes('not active');
+      return c.json({ error: message }, conflict ? 409 : 400);
+    }
+    // درستی پاسخ عمداً اعلام نمی‌شود — رفتار آزمون رسمی
+    return c.json({ recorded: true });
+  });
+
+  app.post('/api/exam-simulation/submit', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as { sessionId?: string } | null;
+    if (!body?.sessionId) return c.json({ error: 'شناسهٔ جلسه الزامی است.' }, 400);
+    const session = await store.getExamSimulationSession(user.id, body.sessionId);
+    if (!session) return c.json({ error: 'جلسهٔ شبیه‌سازی پیدا نشد.' }, 404);
+    if (session.status === 'scored' && session.report) {
+      return c.json({ report: session.report, already_scored: true });
+    }
+    const plan = session.plan as ExamSessionPlan | null;
+    if (!plan) return c.json({ error: 'برنامهٔ جلسه بازتولید نشد.' }, 500);
+
+    const [items, responses, questions] = await Promise.all([
+      store.listExamSimulationItems(session.id),
+      store.listExamSimulationResponses(session.id),
+      store.listQuestions(),
+    ]);
+    const report = scoreExamSession(
+      plan,
+      questions,
+      responses.map((r) => ({ questionId: r.questionId, selectedOption: r.selectedOption })),
+    );
+    await store.submitExamSimulationSession(session.id, report);
+    return c.json({
+      report,
+      answered: responses.length,
+      total: items.length,
+    });
+  });
+
+  app.get('/api/exam-simulation/:id', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const sessionId = c.req.param('id');
+    const session = await store.getExamSimulationSession(user.id, sessionId);
+    if (!session) return c.json({ error: 'جلسهٔ شبیه‌سازی پیدا نشد.' }, 404);
+    const items = await store.listExamSimulationItems(session.id);
+    const questions = await store.listQuestions();
+    const questionById = new Map(questions.map((q) => [q.id, q]));
+    const plan = session.plan as ExamSessionPlan | null;
+    return c.json({
+      session: {
+        id: session.id,
+        level: session.level,
+        examYear: session.examYear,
+        subGroupId: session.subGroupId,
+        combinationCode: plan?.combinationCode ?? null,
+        subjects: plan?.subjects ?? [],
+        subjectAllocation: plan?.subjectAllocation ?? 'pooled',
+        bookletCode: session.bookletCode,
+        pathTitle: plan?.pathTitle ?? null,
+        status: session.status,
+        startedAt: session.startedAt,
+        expiresAt: session.expiresAt,
+        submittedAt: session.submittedAt,
+        officiality: plan?.contentOfficiality ?? null,
+        coverageRatio: plan?.coverageRatio ?? null,
+        negativeMarkingRatio: plan?.negativeMarkingRatio ?? null,
+      },
+      items: items.map((item) => {
+        const question = questionById.get(item.questionId);
+        return {
+          questionNumber: item.questionNumber,
+          sectionId: item.sectionId,
+          attemptId: item.attemptId,
+          question: question ? toPublicQuestion(question) : null,
+        };
+      }),
+      report: session.report,
+      disclosures: session.disclosures,
+    });
+  });
+
+  /* ---------- §8.8 — ماژول زبان انگلیسی: ۱۰ مهارت مستقل، نه فهرست لغت ---------- */
+
+  app.get('/api/english/skills', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const state = await loadEngineState(user.id);
+
+    // سؤال‌های سال ۱۴۰۴ قرنطینه‌اند و در هیچ سنجش عملیاتی شمرده نمی‌شوند
+    const questionCountByNode = new Map<string, number>();
+    for (const q of state.questions.values()) {
+      if (q.examYear === 1404) continue;
+      questionCountByNode.set(q.nodeId, (questionCountByNode.get(q.nodeId) ?? 0) + 1);
+    }
+
+    const skills = ENGLISH_SKILLS.map((skill) => {
+      const questionCount = questionCountByNode.get(skill.nodeId) ?? 0;
+      const nodePresent = state.nodes.has(skill.nodeId);
+      const mastery = state.mastery.get(skill.nodeId);
+      const skillState = state.skillStates?.get(skill.id);
+      // سنجش فقط با شاهد واقعی: mastery فقط برای گرهٔ دیده‌شده، وگرنه null (UNKNOWN)
+      const assessed = mastery !== undefined || skillState !== undefined;
+      return {
+        id: skill.id,
+        nodeId: skill.nodeId,
+        bucket: skill.bucket,
+        title: skill.title,
+        description: skill.description,
+        prerequisiteIds: skill.prerequisiteIds,
+        verification: skill.verification,
+        nodePresent,
+        questionCount,
+        assessed,
+        mastery: assessed ? mastery ?? null : null,
+        evidenceCount: skillState?.evidenceCount ?? null,
+        coverageStatus: skillState?.coverageStatus ?? null,
+      };
+    });
+
+    const englishQuestionCount = skills.reduce((sum, s) => sum + s.questionCount, 0);
+    const contentGap = skills.filter((s) => s.questionCount === 0).map((s) => s.id);
+    const assessableSkillCount = skills.filter((s) => s.questionCount > 0).length;
+
+    return c.json({
+      skills,
+      skillCount: skills.length,
+      englishQuestionCount,
+      assessableSkillCount,
+      contentGap,
+      // عملیاتی فقط وقتی هر ۱۰ مهارت سؤال برچسب‌خورده داشته باشند
+      operational: contentGap.length === 0,
+      masterySource: 'پاسخ‌های واقعی به سؤال‌های زبان؛ خوداظهاری به‌تنهایی تسلط نمی‌سازد.',
+      taxonomy: {
+        status: 'proposed_curriculum_pending_sme',
+        note:
+          'تاکسونومی ۱۰ مهارت، پیشنهاد برنامهٔ درسی است و جایگاه رسمی سؤال/ضریب از آن استخراج نمی‌شود؛ تا تأیید کارشناس موضوع و افزودن متن/سؤال برچسب‌خورده، شکاف محتوا صریح گزارش می‌شود.',
+      },
+    });
+  });
+
+  /* ---------- §8.10 — داشبورد تحلیلی: ۱۳ شاخص واقعی یادگیری ----------
+   * ورود/استریک/XP/سکه شاخص یادگیری نیستند و در این پاسخ هیچ‌جا محاسبه یا بازگردانده نمی‌شوند.
+   * شاخصی که شاهد ندارد null است، نه صفرِ ساختگی. */
+  app.get('/api/analytics/learning', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const state = await loadEngineState(user.id);
+    const now = Date.now();
+    const since30d = new Date(now - 30 * 86_400_000).toISOString();
+    const since7d = new Date(now - 7 * 86_400_000).toISOString();
+
+    const [recentAnswers, history7d] = await Promise.all([
+      store.listAnswersSince(user.id, since30d),
+      store.listMasteryHistorySince(user.id, since7d).catch(() => []),
+    ]);
+
+    const visible = [...state.nodes.values()].filter(
+      (n) => n.track === 'common' || user.activeTracks.includes(n.track),
+    );
+    const visibleIds = new Set(visible.map((n) => n.id));
+    const questionCountByNode = new Map<string, number>();
+    for (const q of state.questions.values()) {
+      if (q.examYear === 1404) continue; // قرنطینه در هیچ شاخص عملیاتی شمرده نمی‌شود
+      questionCountByNode.set(q.nodeId, (questionCountByNode.get(q.nodeId) ?? 0) + 1);
+    }
+    const assessableNodes = visible.filter((n) => (questionCountByNode.get(n.id) ?? 0) > 0);
+    const assessableIds = new Set(assessableNodes.map((n) => n.id));
+    const assessedIds = new Set(
+      [...state.mastery.keys()].filter((nodeId) => assessableIds.has(nodeId)),
+    );
+
+    // ۱۳ شاخص
+    const assessedNodeCount = assessedIds.size;
+    const assessableNodeCount = assessableIds.size;
+    const diagnosticCoverageRatio = assessableNodeCount > 0
+      ? Math.round((assessedNodeCount / assessableNodeCount) * 1000) / 1000
+      : null;
+
+    const masteryDistribution = { weak: 0, unstable: 0, learning: 0, mastered: 0 };
+    const assessedValues: number[] = [];
+    for (const nodeId of assessedIds) {
+      const value = state.mastery.get(nodeId);
+      if (value === undefined) continue;
+      assessedValues.push(value);
+      masteryDistribution[statusFromMastery(value)] += 1;
+    }
+    assessedValues.sort((a, b) => a - b);
+    const meanMasteryAssessed = assessedValues.length > 0
+      ? Math.round((assessedValues.reduce((s, v) => s + v, 0) / assessedValues.length) * 100) / 100
+      : null;
+    const medianMasteryAssessed = assessedValues.length > 0
+      ? (() => {
+          const mid = Math.floor(assessedValues.length / 2);
+          return assessedValues.length % 2 === 1
+            ? assessedValues[mid]!
+            : Math.round(((assessedValues[mid - 1]! + assessedValues[mid]!) / 2) * 100) / 100;
+        })()
+      : null;
+
+    const visibleAnswers = recentAnswers.filter((a) => {
+      const nodeId = state.questions.get(a.questionId)?.nodeId;
+      return !!nodeId && visibleIds.has(nodeId);
+    });
+    const recentEvidenceCount30d = visibleAnswers.length;
+    const recentAccuracy30d = recentEvidenceCount30d > 0
+      ? Math.round((visibleAnswers.filter((a) => a.isCorrect).length / recentEvidenceCount30d) * 1000) / 1000
+      : null;
+
+    const visibleCards = state.cards.filter((card) => visibleIds.has(card.nodeId));
+    const dueReviewCount = visibleCards.filter((card) => Date.parse(card.dueAt) <= now).length;
+
+    const retrievabilities: number[] = [];
+    for (const card of visibleCards) {
+      if (!card.fsrs) continue;
+      const reviewedAt = Date.parse(card.fsrs.lastReviewedAt);
+      if (!Number.isFinite(reviewedAt)) continue;
+      const daysElapsed = Math.max(0, (now - reviewedAt) / 86_400_000);
+      retrievabilities.push(calculateRetrievability(card.fsrs.stability, daysElapsed));
+    }
+    const meanRetrievability = retrievabilities.length > 0
+      ? Math.round((retrievabilities.reduce((s, v) => s + v, 0) / retrievabilities.length) * 1000) / 1000
+      : null;
+
+    const errorTypeDistribution: Record<string, number> = {};
+    for (const cause of ERROR_TYPE_CAUSES) errorTypeDistribution[cause] = 0;
+    errorTypeDistribution['unknown'] = 0;
+    errorTypeDistribution['none'] = 0;
+    let evidenceBackedSkillCount = 0;
+    const skillStates = [...(state.skillStates?.values() ?? [])];
+    for (const skillState of skillStates) {
+      if (skillState.evidenceCount > 0) evidenceBackedSkillCount += 1;
+      const type = skillState.dominantErrorType;
+      if (Object.prototype.hasOwnProperty.call(errorTypeDistribution, type)) {
+        errorTypeDistribution[type] = errorTypeDistribution[type]! + 1;
+      }
+    }
+
+    const allSkillIds = new Set<string>();
+    if (state.skills) for (const skillId of state.skills.keys()) allSkillIds.add(skillId);
+    for (const s of skillStates) allSkillIds.add(s.skillId);
+    const provenOrMasteredSkills = skillStates.filter(
+      (s) => s.coverageStatus === 'proven' || s.coverageStatus === 'mastered',
+    ).length;
+    const totalSkills = allSkillIds.size;
+    const proofCoverage = {
+      provenOrMasteredSkills,
+      totalSkills,
+      ratio: totalSkills > 0 ? Math.round((provenOrMasteredSkills / totalSkills) * 1000) / 1000 : null,
+    };
+
+    let masteryDelta = 0;
+    const changedNodes = new Set<string>();
+    let transitionRows = 0;
+    for (const row of history7d) {
+      if (row.previousScore === null || !Number.isFinite(row.previousScore) || !Number.isFinite(row.newScore)) continue;
+      masteryDelta += row.newScore - row.previousScore;
+      changedNodes.add(row.nodeId);
+      transitionRows += 1;
+    }
+    const learningVelocity7d = {
+      masteryDelta: Math.round(masteryDelta * 100) / 100,
+      changedNodeCount: changedNodes.size,
+      historyRowCount: history7d.length,
+      transitionRowCount: transitionRows,
+    };
+
+    return c.json({
+      generatedAt: new Date(now).toISOString(),
+      metrics: {
+        assessedNodeCount,
+        assessableNodeCount,
+        diagnosticCoverageRatio,
+        masteryDistribution,
+        meanMasteryAssessed,
+        medianMasteryAssessed,
+        recentAccuracy30d,
+        recentEvidenceCount30d,
+        dueReviewCount,
+        meanRetrievability,
+        errorTypeDistribution,
+        proofCoverage,
+        learningVelocity7d,
+      },
+      metricCatalog: [
+        { key: 'assessedNodeCount', label: 'گره‌های سنجیده‌شده', unit: 'count', source: 'user_node_mastery ∩ گره‌های دارای سؤال (بدون ۱۴۰۴)', definition: 'گره‌هایی که شاهد پاسخ واقعی دارند؛ مقدار پیش‌فرض ۵۰ به‌عنوان سنجش شمرده نمی‌شود.' },
+        { key: 'assessableNodeCount', label: 'گره‌های قابل‌سنجش', unit: 'count', source: 'knowledge_nodes + questions (examYear ≠ 1404)', definition: 'گره‌های دیدنی گرایش‌های فعال که دست‌کم یک سؤال غیرقرنطینه دارند.' },
+        { key: 'diagnosticCoverageRatio', label: 'پوشش تشخیصی', unit: 'ratio', source: 'assessedNodeCount / assessableNodeCount', definition: 'سهم گره‌های قابل‌سنجش که واقعاً سنجیده شده‌اند؛ بدون گره قابل‌سنجش null.' },
+        { key: 'masteryDistribution', label: 'توزیع تسلط', unit: 'count', source: 'mastery فقط برای گره‌های سنجیده‌شده', definition: 'weak<40، unstable<60، learning<85، mastered≥85 — فقط روی گره‌های سنجیده.' },
+        { key: 'meanMasteryAssessed', label: 'میانگین تسلط سنجیده', unit: 'score', source: 'میانگین mastery گره‌های سنجیده', definition: 'گره‌های ناسنجیده در مخرج نیستند؛ بدون شاهد null.' },
+        { key: 'medianMasteryAssessed', label: 'میانهٔ تسلط سنجیده', unit: 'score', source: 'میانهٔ mastery گره‌های سنجیده', definition: 'مقاوم‌تر از میانگین در برابر چند گرهٔ پرت.' },
+        { key: 'recentAccuracy30d', label: 'دقت ۳۰ روز', unit: 'ratio', source: 'answer_events ۳۰ روز اخیر، گره‌های دیدنی', definition: 'پاسخ صحیح / کل پاسخ؛ تلاش شبیه‌سازی آزمون در answer_events نیست.' },
+        { key: 'recentEvidenceCount30d', label: 'حجم شاهد ۳۰ روز', unit: 'count', source: 'answer_events ۳۰ روز اخیر', definition: 'تعداد پاسخ‌های واقعی ثبت‌شده؛ اعتبار آماری شاخص‌های نرخ به آن وابسته است.' },
+        { key: 'dueReviewCount', label: 'مرور سررسید', unit: 'count', source: 'review cards با dueAt ≤ اکنون', definition: 'فقط کارت‌های گره‌های دیدنی؛ بار واقعی مرور امروز.' },
+        { key: 'meanRetrievability', label: 'میانگین بازیابی حافظه', unit: 'ratio', source: 'FSRS: calculateRetrievability(stability, elapsed)', definition: 'میانگین R کارت‌های دارای وضعیت FSRS؛ بدون وضعیت null.' },
+        { key: 'errorTypeDistribution', label: 'توزیع علت خطا', unit: 'count', source: 'learner_skill_states.dominantErrorType', definition: '۱۰ علت مأموریت + unknown + none؛ unknown ضعف قطعی نیست.' },
+        { key: 'proofCoverage', label: 'پوشش اثبات/holdout', unit: 'ratio', source: 'learner_skill_states.coverageStatus ∈ {proven, mastered}', definition: 'سهم مهارت‌های رسیده به اثبات؛ تسلط خوداظهاری این‌جا شمرده نمی‌شود.' },
+        { key: 'learningVelocity7d', label: 'سرعت یادگیری ۷ روز', unit: 'score-delta', source: 'mastery_history ۷ روز اخیر', definition: 'مجموع تغییر تسلط ردیف‌های دارای مقدار قبلی؛ ردیف backfill فاقد previous_score حذف می‌شود.' },
+      ],
+      excludedVanityMetrics: ['login_count', 'streak_days', 'xp', 'coins', 'session_count'],
+      notes: [
+        'شاخص‌های بدون شاهد null هستند و هرگز با صفر یا ۵۰ پیش‌فرض پر نمی‌شوند.',
+        'unknown در توزیع خطا یعنی شواهد کافی نیست؛ به‌عنوان ضعف فصل تفسیر نمی‌شود.',
+        'ورود، استریک، XP و سکه شاخص یادگیری نیستند و در این پاسخ وجود ندارند.',
+      ],
+    });
   });
 
   app.get('/api/queue', async (c) => {
@@ -589,10 +1328,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
 
     // ---------- گام ۳: برنامه‌ریز بودجه‌محور (ROI Planner) ----------
-    // Priority = ExamValue × ExpectedBenefit × Urgency ÷ EstimatedMinutes
+    // R-011 (ARC-02): امتیاز اولویت فقط از تابع کاننیکال computePriorityV3 در @ael/utils
+    // محاسبه می‌شود؛ خطر فراموشی از منحنی توانی FSRS (@ael/engine) مشتق می‌شود.
     const masteryMap = state.mastery;
     const examDate = stats.examDate ? new Date(`${stats.examDate}T00:00:00Z`) : undefined;
     const proofIds = new Set(proofCards.map((pc) => pc.id));
+    // پیش‌نیازهای هر گره (yال ی «prerequisite»: source → target = پیش‌نیازهای source)
+    const prereqByNode = new Map<string, string[]>();
+    for (const dep of state.dependencies) {
+      if (dep.relation !== 'prerequisite') continue;
+      const list = prereqByNode.get(dep.source) ?? [];
+      list.push(dep.target);
+      prereqByNode.set(dep.source, list);
+    }
+    const scoreNowMs = Date.now();
     const scored = queue
       .filter((item) => isConceptualNode(item.card.nodeId))
       .map((item) => {
@@ -601,25 +1350,69 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
           : item.card.isRepair
             ? ('remedial' as const)
             : ('review' as const);
-        const urgency = calculateUrgencyV2(
-          { intervalDays: item.card.intervalDays, dueAt: item.card.dueAt, nodeId: item.card.nodeId },
-          { masteryMap, examDate },
+        const nodeId = item.card.nodeId;
+
+        // §8.1: گره ارزیابی‌نشده = UNKNOWN، نه پیش‌فرض ساختگی ۵۰.
+        // کمبود شاهد → بیشترین شکاف دانش؛ «ندانستن» ضعف نیست، نیاز به سنجش است.
+        const masteryRaw = masteryMap.get(nodeId);
+        const isUnassessed = masteryRaw === undefined;
+        const knowledgeGap01 = isUnassessed ? 1 : Math.min(1, Math.max(0, (100 - masteryRaw!) / 100));
+
+        let forgettingRisk: number;
+        if (item.card.fsrs) {
+          const elapsedDays = Math.max(
+            0,
+            (scoreNowMs - new Date(item.card.fsrs.lastReviewedAt).getTime()) / 86400000,
+          );
+          forgettingRisk = 1 - calculateRetrievability(item.card.fsrs.stability, elapsedDays);
+        } else {
+          // کارت بدون وضعیت FSRS: تقریب خطی نسبت تأخیر به فاصله (مستند در ARC-02)
+          const overdueDays = (scoreNowMs - new Date(item.card.dueAt).getTime()) / 86400000;
+          forgettingRisk =
+            overdueDays <= 0 ? 0 : Math.min(0.9, overdueDays / Math.max(1, item.card.intervalDays));
+        }
+
+        // پیش‌نیاز ارزیابی‌نشده محافظه‌کارانه ۰: کاربر مبتدی بدون پیش‌نیاز به
+        // محتوای پیشرفته نرود (خاصیت ۷ §۸.۴)
+        const prereqScores = (prereqByNode.get(nodeId) ?? []).map(
+          (pid) => masteryMap.get(pid) ?? 0,
         );
-        const examValue = calculateExamValue(item.card.nodeId, {
+        const prereqMultiplier = derivePrereqMultiplier(prereqScores);
+
+        let examProximity01 = 0;
+        if (examDate) {
+          const daysLeft = Math.max(0, (examDate.getTime() - scoreNowMs) / 86400000);
+          examProximity01 = Math.max(0, Math.min(1, 1 - daysLeft / 90));
+        }
+
+        const examValue = calculateExamValue(nodeId, {
           examPackWeights: new Map<string, number>(),
           currentPack: '',
           masteryMap,
         });
-        const benefit = calculateExpectedBenefit(activityType, {
-          masteryMap,
-          evidenceLevel: 'partial',
-        });
-        const minutes = estimatedMinutesForNode(item.card.nodeId);
+        const benefit = isUnassessed
+          // سود سنجش تشخیصی برای گره ناشناخته (حداکثر) — نه مرور یک حدس
+          ? calculateExpectedBenefit('diagnostic', { masteryMap, evidenceLevel: 'none' })
+          : calculateExpectedBenefit(activityType, {
+              masteryMap,
+              evidenceLevel: 'partial',
+            });
+        const minutes = estimatedMinutesForNode(nodeId);
         return {
           item,
           minutes,
+          activityType,
           isProof: proofIds.has(item.card.id) || item.card.isProof === true,
-          priority: (examValue * benefit * urgency) / Math.max(1, minutes),
+          needsDiagnostic: isUnassessed,
+          priority: computePriorityV3({
+            examValue,
+            knowledgeGap01,
+            prereqMultiplier,
+            forgettingRisk,
+            examProximity01,
+            expectedBenefit: benefit,
+            minutes,
+          }),
         };
       });
     const nonProof = scored
@@ -627,17 +1420,25 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       .sort((a, b) => b.priority - a.priority);
     const proofItems = scored.filter((s) => s.isProof);
 
-    // بودجهٔ زمانی روزانه: آیتم‌های اثبات همیشه می‌مانند؛ بقیه تا سقف بودجه
-    let spentMinutes = 0;
+    // §8.5 بودجهٔ زمانی روزانه — قاعدهٔ صریح و تست‌پذیر:
+    //   1) آیتم‌های اثبات (proof) تعهد قبلی‌اند: همیشه می‌مانند و زمانشان از بودجه کم می‌شود.
+    //   2) آیتم‌های قابل‌هزینه (تمرین/مرور/جبرانی) فقط تا سقف «بودجه − زمان اثبات» انتخاب می‌شوند؛
+    //      آیتمی که از باقی‌مانده بزرگ‌تر باشد هرگز اضافه نمی‌شود (قاعدهٔ «اولین آیتم حتی اگر بیشتر» حذف شد).
+    //   3) guarantee: spentMinutes == مجموع estimatedMinutes آیتم‌های ارسال‌شده
+    //      و spendableMinutes ≤ max(0, budgetMinutes − proofMinutes).
+    const proofMinutes = proofItems.reduce((acc, s) => acc + s.minutes, 0);
+    const remainingBudget = budgetMinutes === undefined ? Infinity : Math.max(0, budgetMinutes - proofMinutes);
+    let spendableMinutes = 0;
     const selected: typeof scored = [...proofItems];
     for (const s of nonProof) {
-      if (budgetMinutes !== undefined && spentMinutes + s.minutes > budgetMinutes && selected.length > proofItems.length) {
+      if (budgetMinutes !== undefined && spendableMinutes + s.minutes > remainingBudget) {
         continue;
       }
       selected.push(s);
-      spentMinutes += s.minutes;
+      spendableMinutes += s.minutes;
       if (selected.length >= limit) break;
     }
+    const spentMinutes = proofMinutes + spendableMinutes;
 
     // ---------- صدور بلیت تلاش (attempt tickets) ----------
     const attemptIdByCard = new Map<string, string>();
@@ -649,7 +1450,34 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       attemptIdByCard.set(s.item.card.id, attemptId);
       tickets.push({ attemptId, questionId: qid, attemptType: s.isProof ? 'proof' : 'practice' });
     }
-    await store.issueAttemptTickets(user.id, tickets).catch(() => undefined);
+    // PR#3 port (aa35200): شکست صدور بلیت باید fail-closed باشد — صف بدون بلیت ثبت‌ناپذیر است
+    try {
+      await store.issueAttemptTickets(user.id, tickets);
+    } catch (error) {
+      console.error('[worker] failed to issue queue attempt tickets:', error);
+      return c.json({ error: 'صف سؤال‌ها آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
+
+    // R-020 daily_queue_items persistence (best-effort, never blocks the response)
+    {
+      const queueDate = tehranMidnightIso().slice(0, 10);
+      const rows: { attemptId: string; questionId: string; nodeId: string | null; reason: 'scheduled' | 'review' | 'new_material' | 'remedial' | 'proof' | 'night_quiz' | 'exam_simulation' | 'diagnostic'; priority: number }[] = [];
+      for (const s of selected) {
+        const attemptId = attemptIdByCard.get(s.item.card.id);
+        const qid = s.item.card.questionId;
+        if (!attemptId || !qid) continue;
+        rows.push({
+          attemptId,
+          questionId: qid,
+          nodeId: s.item.card.nodeId ?? null,
+          reason: s.isProof ? 'proof' : s.activityType === 'remedial' ? 'remedial' : 'scheduled',
+          priority: s.priority,
+        });
+      }
+      store
+        .insertDailyQueueItems(user.id, queueDate, rows)
+        .catch((e) => console.error('[worker] daily_queue_items persist failed:', e));
+    }
 
     const items = selected.map((s) => {
       const node = state.nodes.get(s.item.card.nodeId);
@@ -666,6 +1494,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         chapterTitle: node?.chapter,
         attemptId: attemptIdByCard.get(s.item.card.id),
         attemptType: s.isProof ? ('proof' as const) : ('practice' as const),
+        // §8.5: نوع فعالیت برای هر آیتم (مرور/جبرانی/اثبات) — صف ترکیبی قابل راستی‌آزمایی
+        activityType: s.activityType,
+        // §8.1: وضعیت دانش پیش از این تلاش — بدون حدس ساختگی
+        assessmentState: s.needsDiagnostic ? ('unknown' as const) : ('assessed' as const),
+        masteryEstimate: s.needsDiagnostic ? null : masteryMap.get(s.item.card.nodeId) ?? null,
+        evidenceLevel: s.needsDiagnostic ? ('none' as const) : ('partial' as const),
         estimatedMinutes: s.minutes,
         priority: Math.round(s.priority * 100) / 100,
         proofLabel: s.isProof ? '🎯 تست اثبات تسلط (سؤال دیده‌نشده)' : undefined,
@@ -683,6 +1517,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       mode,
       budgetMinutes: budgetMinutes ?? null,
       spentMinutes,
+      // §8.5: تفکیک شفاف هزینهٔ زمان — اثبات از بودجه کسر می‌شود، قابل‌هزینه تا سقف باقی‌مانده
+      proofMinutes,
+      spendableMinutes,
     });
   });
 
@@ -697,7 +1534,6 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
           responseTimeMs?: number;
           confidenceRating?: number;
           selfReport?: 'slip' | 'didnt_know';
-          attemptType?: 'practice' | 'diagnostic' | 'verification' | 'proof';
         }
       | null;
     if (
@@ -718,10 +1554,6 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         : undefined;
     const selfReport =
       body.selfReport === 'slip' || body.selfReport === 'didnt_know' ? body.selfReport : undefined;
-    const attemptType =
-      body.attemptType === 'proof' || body.attemptType === 'diagnostic' || body.attemptType === 'verification'
-        ? body.attemptType
-        : 'practice';
 
     // idempotency: تلاش تکراری همان نتیجهٔ قبلی را برمی‌گرداند
     const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
@@ -751,6 +1583,49 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const state = await loadEngineState(user.id);
     const question = state.questions.get(body.questionId);
     if (!question) return c.json({ error: 'سؤال ناشناخته' }, 404);
+
+    // PR#3 port (0d356ab/aa35200): نوع تلاش از بلیت صادرشدهٔ سمت سرور خوانده می‌شود،
+    // نه از فیلد client — ارجاع client نمی‌تواند practice را به proof ارتقا دهد.
+    let ticket;
+    try {
+      ticket = await store.getAttemptTicket(user.id, body.attemptId, body.questionId);
+    } catch (error) {
+      console.error('[worker] failed to read attempt ticket:', error);
+      return c.json({ error: 'اعتبار تلاش بررسی نشد؛ صف را تازه‌سازی کنید.' }, 503);
+    }
+    // R-020 audit trail (best-effort): attempts on unknown/consumed/expired tickets are suspicious
+    const auditRejected = (reason: string) =>
+      store
+        .logAudit({
+          userId: user.id,
+          action: `answer_ticket_${reason}`,
+          entityType: 'attempt_ticket',
+          entityId: body.attemptId,
+          details: { questionId: body.questionId, path: '/api/answers' },
+          sourceIp: c.req.header('x-forwarded-for') ?? null,
+        })
+        .catch((e) => console.error('[worker] audit log failed:', e));
+
+    if (!ticket) {
+      await auditRejected('not_found');
+      return c.json({ error: 'بلیت معتبر برای این سؤال پیدا نشد؛ صف را تازه‌سازی کنید.' }, 400);
+    }
+    if (ticket.consumedAt || new Date(ticket.expiresAt).getTime() <= Date.now()) {
+      await auditRejected(ticket.consumedAt ? 'already_consumed' : 'expired');
+      return c.json({ error: 'بلیت این تلاش مصرف‌شده یا منقضی است؛ صف را تازه‌سازی کنید.' }, 409);
+    }
+
+    const attemptType =
+      ticket.attemptType === 'proof' || ticket.attemptType === 'holdout'
+        ? 'proof'
+        : ticket.attemptType === 'practice' ||
+            ticket.attemptType === 'diagnostic' ||
+            ticket.attemptType === 'verification'
+          ? ticket.attemptType
+          : null;
+    if (!attemptType) {
+      return c.json({ error: 'نوع این تلاش هنوز در موتور یادگیری پشتیبانی نمی‌شود.' }, 400);
+    }
 
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
     let result;
@@ -783,7 +1658,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       selectedOption: body.selectedOption,
       attemptId: body.attemptId,
       wasCorrect,
-      rippleReport: result.report,
+      // وضعیت مهارت محاسبه‌شده توسط موتور را همراه پاسخ اتمیک ذخیره کن؛
+      // SQL نباید با یک الگوریتم ساده‌تر همان وضعیت را دوباره تخمین بزند.
+      rippleReport: {
+        ...result.report,
+        skillStateUpdate: result.skillStateUpdate ?? null,
+      },
       masteryUpdates: result.masteryUpdates,
       cardUpserts: result.cardUpdates,
       cardInserts: result.createdCards,
@@ -878,9 +1758,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     for (const n of visible) {
       const row = masteryByNode.get(n.id);
       const coverage = coverageByNode.get(n.id);
-      const assessed = !!row || !!coverage;
-      const mastery = assessed ? (row?.mastery ?? DEFAULT_MASTERY) : null;
-      const status = row?.status ?? (assessed ? statusFromMastery(mastery!) : 'unseen');
+      // مهارت شش‌بعدی به‌تنهایی نمرهٔ تسلط گره نیست؛ مقدار ۵۰ پیش‌فرض نمی‌سازیم.
+      const mastery = row?.mastery ?? null;
+      const status = row?.status ?? coverage?.coverageStatus ?? 'unseen';
       if (!courses.has(n.course)) courses.set(n.course, { course: n.course, chapters: new Map() });
       const course = courses.get(n.course)!;
       if (!course.chapters.has(n.chapter)) course.chapters.set(n.chapter, { chapter: n.chapter, nodes: [] });
@@ -1045,7 +1925,27 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       questionId: q.id,
       attemptType: 'verification' as const,
     }));
-    await store.issueAttemptTickets(user.id, tickets).catch(() => undefined);
+    try {
+      await store.issueAttemptTickets(user.id, tickets);
+    } catch (error) {
+      console.error('[worker] failed to issue night-quiz attempt tickets:', error);
+      return c.json({ error: 'کوییز شبانه آماده نشد؛ لطفاً دوباره تلاش کنید.' }, 503);
+    }
+
+    // R-020 persist night-quiz queue items (best-effort)
+    store
+      .insertDailyQueueItems(
+        user.id,
+        tehranMidnightIso().slice(0, 10),
+        tickets.map((t, i) => ({
+          attemptId: t.attemptId,
+          questionId: t.questionId,
+          nodeId: picked[i]?.nodeId ?? null,
+          reason: 'night_quiz' as const,
+          priority: null,
+        })),
+      )
+      .catch((e) => console.error('[worker] daily_queue_items persist failed:', e));
 
     const items = picked.map((q, i) => {
       const node = nodeMap.get(q.nodeId);

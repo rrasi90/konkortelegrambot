@@ -1,0 +1,29 @@
+npm notice run react-example@0.0.0 npx
+npm notice run vitest run
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90mC:/Star/konkortelegrambot[39m
+
+ [32m✓[39m src/tests/mistakeNotebook.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m src/tests/questionBank.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/engine.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/exam-simulation.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/tests/examStructure.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/supabase-store.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+ [32m✓[39m src/tests/lessonRatingEvidence.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/fsrs-reference.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/fsrs.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m src/tests/examCoverage.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/exam-simulation.test.ts [2m([22m[2m19 tests[22m[2m)[22m[33m 465[2mms[22m[39m
+ [32m✓[39m packages/utils/tests/priority-calculations.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/tests/claimHonesty.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/tests/masteryEvidence.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/worker.test.ts [2m([22m[2m48 tests[22m[2m)[22m[33m 841[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+[2m      Tests [22m [1m[32m248 passed[39m[22m[90m (248)[39m
+[2m   Start at [22m 02:11:15
+[2m   Duration [22m 1.85s[2m (tests 44%, import 28%, transform 23%, worker 5%)[22m
+
+[2m    Isolate [22m [33m15 workers spawned[39m[2m · ~694ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~252ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+

@@ -19,16 +19,32 @@ Study Priority = f(Exam Weight, Knowledge Gap, Forgetting Risk, Prerequisite Imp
 | **Time Budget** | User config | Daily available minutes |
 
 ### Priority Calculation Formula
+
+Canonical implementation: `computePriorityV3` in `@ael/utils` (`packages/utils/priority-calculations.ts`).
+Documented formula and implemented function are kept identical (R-011).
+
 ```
-Priority = (Exam Weight × Knowledge Gap × Prerequisite Multiplier) / (Forgetting Risk + ε)
+Priority = (Exam Weight × Knowledge Gap × Prerequisite Multiplier
+            × (1 + Forgetting Risk) × (1 + Exam Proximity)
+            × Expected Benefit) / max(1, Estimated Minutes)
 ```
 
 Where:
-- `Exam Weight`: Specialization coefficient × subject coefficient from exam structure
-- `Knowledge Gap`: 100 - current mastery estimate (0-100 scale)
-- `Prerequisite Multiplier`: 1.0 if all prerequisites met; 0.5 if any prerequisite gap; 0.2 if multiple gaps
-- `Forgetting Risk`: 1 - FSRS memory retention score (0-1)
-- `ε`: Small constant (0.01) to avoid division by zero
+- `Exam Weight`: Specialization coefficient × subject coefficient from exam structure (`calculateExamValue`)
+- `Knowledge Gap`: normalized 0–1 mastery gap (`knowledgeGap01`)
+- `Prerequisite Multiplier`: 1.0 if all prerequisites met; 0.5 if any prerequisite gap; 0.2 if multiple gaps (`derivePrereqMultiplier`)
+- `Forgetting Risk`: 1 − FSRS memory retention score (0–1)
+- `Exam Proximity`: 0–1 term that grows as the exam date approaches (0 far away, 1 at exam time)
+- `Expected Benefit`: benefit of the activity type (`calculateExpectedBenefit`)
+- Denominator: `max(1, Estimated Minutes)` — time cost is the only divisor; there is no ε term.
+
+> **Status correction (R-011):** the previously documented formula divided by
+> `(Forgetting Risk + ε)`, which inverted the semantics — a higher forgetting risk
+> *lowered* priority. The canonical function multiplies by `(1 + Forgetting Risk)`
+> instead, and the old `calculateUrgency` / `calculateMasteryUrgency` /
+> `calculateUrgencyV2` helpers (three divergent urgency scales) were removed from
+> `@ael/utils`. Per ARC-01, `computePriorityV3` is the single priority source;
+> the worker's daily-queue scoring calls it directly.
 
 ### Daily Plan Generation Process
 
@@ -134,6 +150,20 @@ Before selecting a topic:
 - Ensure no duplicate topic selection within plan
 - Check time totals don't exceed user budget
 - Confirm at least one item per selected exam combination
+
+### Daily Queue Budget Rule (§8.5, implemented in `apps/worker/src/index.ts` GET /api/queue)
+Explicit, test-enforced accounting (worker tests §8.5):
+1. **Proof items are prior commitments** — they always stay in the queue, and their minutes are
+   deducted from the budget first (`proofMinutes`).
+2. **Spendable items** (review / practice / remedial) are added strictly while
+   `spendableMinutes + item.minutes ≤ max(0, budgetMinutes − proofMinutes)`. An item that does not
+   fit is skipped — the old "always take the first item even if over budget" convention was removed
+   because it broke the stated guarantee.
+3. **Response invariants:** `spentMinutes` equals the exact sum of `estimatedMinutes` over returned
+   items; `spentMinutes = proofMinutes + spendableMinutes`; `spendableMinutes ≤ max(0, budget − proofMinutes)`.
+4. **Mixed activity types are exposed per item** (`activityType: review | remedial | proof`) and the
+   remedial reason is persisted to `daily_queue_items` (`reason = 'remedial'` for repair cards).
+5. With no budget set, the queue is uncapped but the same totals are reported.
 
 ### Acceptance Criteria (Phase 4)
 | Criterion | Requirement |

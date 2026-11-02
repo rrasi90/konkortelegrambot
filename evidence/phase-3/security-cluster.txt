@@ -1,0 +1,18 @@
+=== typecheck ===
+npm notice run react-example@0.0.0 typecheck
+npm notice run tsc --noEmit
+EXIT=0
+=== npm test ===
+
+[2m Test Files [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[32m143 passed[39m[22m[90m (143)[39m
+[2m   Start at [22m 19:29:24
+[2m   Duration [22m 448ms[2m (import 39%, tests 29%, transform 23%, worker 9%)[22m
+
+TEST_EXIT=0
+=== worker build ===
+npm notice run react-example@0.0.0 build:worker
+npm notice run npm run --prefix apps/worker build
+npm notice run @ael/worker@0.1.0 build
+npm notice run tsc -b
+BUILD_EXIT=0

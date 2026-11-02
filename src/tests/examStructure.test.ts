@@ -2,32 +2,51 @@ import { describe, it, expect } from 'vitest';
 import {
   MANAGEMENT_EXAM_SET,
   MANAGEMENT_SUB_GROUPS,
+  MANAGEMENT_EXAM_COMBINATIONS,
+  MANAGEMENT_COURSE_BUNDLES,
   EXAM_YEAR_STRUCTURES,
   LATEST_EXAM_YEAR,
   getExamStructure,
   getExamStructureWarnings,
-  getSubGroup,
+  getCoefficientTotal,
   getSubGroupSubjects,
   getSpecializationSharePercent,
   getUnverifiedSubGroupCodes,
+  getCombination,
+  getCombinationsForSubGroup,
 } from '../data/examStructure';
 
 describe('ساختار آزمون دکتری — نسخه‌بندی بر اساس سال', () => {
-  it('کد مجموعهٔ امتحانی مدیریت ۲۱۶۲ است، نه ۲۱۶۴', () => {
+  it('کد مجموعهٔ امتحانی مدیریت ۲۱۶۲ است و هیچ زیرمجموعه‌ای بی‌سند آن را یا کد دیگری ادعا نمی‌کند (R-001)', () => {
     expect(MANAGEMENT_EXAM_SET.code).toBe('2162');
-    // ۲۱۶۴ کد زیرمجموعهٔ مدیریت صنعتی است
-    expect(getSubGroup('industrial')?.code).toBe('2164');
-    expect(getSubGroup('public')?.code).toBe('2163');
-    expect(getSubGroup('media')?.code).toBe('2165');
-    expect(getSubGroup('business')?.code).toBe('2162');
+    // تا مستند رسمی (کارنامه/دفترچه) موجود نباشد، کد زیرمجموعه ثبت نمی‌شود
+    for (const group of MANAGEMENT_SUB_GROUPS) {
+      expect(group.code).toBeNull();
+      expect(group.verification).toBe('needs_check');
+    }
   });
 
-  it('هر زیرمجموعه عنوان و رشته‌های خودش را دارد و کد مجموعه با کد زیرمجموعه قاطی نشده', () => {
-    const codes = MANAGEMENT_SUB_GROUPS.map((g) => g.code).filter(
-      (c): c is string => c !== null
-    );
-    // کدهای زیرمجموعهٔ یکتا هستند
+  it('کد ترکیب ۱ تا ۷ مجزا از کد مجموعه است و بسته‌های معتبر دارد', () => {
+    const codes = MANAGEMENT_EXAM_COMBINATIONS.map((k) => k.combinationCode);
     expect(new Set(codes).size).toBe(codes.length);
+    for (const combo of MANAGEMENT_EXAM_COMBINATIONS) {
+      expect(combo.combinationCode).not.toBe(MANAGEMENT_EXAM_SET.code);
+      expect(combo.combinationCode).toMatch(/^[1-7]$/);
+      // بستهٔ ۱ (زبان) در همهٔ ترکیب‌های ۱۴۰۵ علامت خورده است
+      expect(combo.bundleNumbers).toContain('1');
+      for (const bundle of combo.bundleNumbers) {
+        expect(MANAGEMENT_COURSE_BUNDLES[bundle], `bundle ${bundle}`).toBeDefined();
+      }
+    }
+  });
+
+  it('هر زیرمجموعه به ترکیب(های) موجود نگاشت می‌شود', () => {
+    for (const group of MANAGEMENT_SUB_GROUPS) {
+      const combos = getCombinationsForSubGroup(group.id);
+      expect(combos.length, group.id).toBeGreaterThan(0);
+    }
+    expect(getCombination('3')?.bundleNumbers).toEqual(['1', '2', '5']);
+    expect(getCombination('8')).toBeUndefined();
   });
 
   it('تا ۱۴۰۴ استعداد تحصیلی با ضریب ۱ برگزار می‌شد', () => {
@@ -93,11 +112,11 @@ describe('ساختار آزمون دکتری — نسخه‌بندی بر اسا
     }
   });
 
-  it('سهم تخصصی‌ها در ۱۴۰۵ از ۱۴۰۲ بیشتر است (چون استعداد حذف و ضریب بالا رفته)', () => {
-    const share1402 = getSpecializationSharePercent(1402, 'business');
-    const share1405 = getSpecializationSharePercent(1405, 'business');
-
-    expect(share1405).toBeGreaterThan(share1402);
+  it('ضریب ۵ به کل بستهٔ تخصصی تعلق دارد، نه به تعداد درس‌های داخل بسته', () => {
+    expect(getCoefficientTotal(1405, 'business')).toBe(6);
+    expect(getSpecializationSharePercent(1405, 'business')).toBe(83);
+    expect(getCoefficientTotal(1402, 'business')).toBe(6);
+    expect(getSpecializationSharePercent(1402, 'business')).toBe(67);
   });
 
   it('زیرمجموعه‌های بدون کد رسمی به‌عنوان تأییدنشده علامت خورده‌اند', () => {
