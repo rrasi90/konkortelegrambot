@@ -56,6 +56,7 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 | Rate limiting | PASS_WITH_EVIDENCE (scoped) | In-memory limiter tested (429); distributed/edge limits not configured |
 | Token generation | PASS_WITH_EVIDENCE | `crypto.getRandomValues`/UUID; no `Math.random` session tokens |
 | OWASP Top 10 full assessment | IMPLEMENTED_UNVERIFIED | Partial audit; no external pentest |
+| Public client answer-key exposure (R-036) | BLOCKED — fail-closed deploy gate | React Vite currently bundles correctOption/correctIndex. PR #9 adds a bundle scanner and blocks Pages/guarded Worker deploy until the React UI uses authenticated Worker answer endpoints. This PR is a release mitigation, not removal of keys from the current bundle |
 | Encryption at rest/in transit | NOT_STARTED | Depends on deployment configuration; unverified |
 | Security test report | PASS_WITH_EVIDENCE (scoped local) | `SECURITY_TEST_REPORT.md`: 266/266 tests, initData signature/staleness, token forgery, ticket replay/cross-user, RLS/RPC, PostgREST encoding fix; staging/pentest/encryption/XSS NOT_VERIFIED (`evidence/phase-5/security-local-suite.txt`) |
 
