@@ -15,11 +15,16 @@
 --    جدول‌های زمانِ اجرای مهاجرت را پوشش می‌دهد، پس جدول جدید بعدی بدون grant
 --    مجدد برای service_role قابل استفاده نخواهد بود.
 
--- ---------- ۱) ستون گمشده ----------
+-- ---------- ۱) ستون‌های گمشدهٔ انجماد زنجیره ----------
 alter table app_users add column if not exists streak_freeze_month text;
+-- «خرید قفل» و «مصرف قفل» باید جدا شمرده شوند؛ با یک شمارنده، قفل خریده‌شده
+-- هرگز روی زنجیره اثر نمی‌گذاشت.
+alter table app_users add column if not exists streak_freeze_granted int not null default 0;
 
 comment on column app_users.streak_freeze_month is
-  'شناسهٔ ماه (YYYY-MM) که آخرین انجماد زنجیره در آن مصرف شده است';
+  'شناسهٔ ماه (YYYY-MM) که شمارنده‌های قفل زنجیره به آن مربوط است';
+comment on column app_users.streak_freeze_granted is
+  'تعداد قفل‌های خریداری‌شده در ماه جاری؛ streak_freeze_used شمارندهٔ مصرف واقعی است';
 
 -- ---------- ۲) بستن راه‌فرار RPC قدیمی ----------
 revoke all on function submit_answer_atomic(

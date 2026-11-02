@@ -1,6 +1,12 @@
 import { COURSES_LESSONS, findLessonForNode } from './lessons-data';
 let globalMemoryStore: DataStore | null = null;
 
+// حالت محدودکنندهٔ نرخ باید ماژول-سطح باشد: entrypoint Workers به‌ازای هر درخواست
+// createApp(env) صدا می‌زند، پس Map داخل createApp هیچ‌وقت بیشتر از یک درخواست
+// را نمی‌دید و ۴۲9 هرگز صادر نمی‌شد (در تست‌ها یک اپ مشترک reuse می‌شود و همین
+// نقص پنهان می‌ماند). این‌جا مثل globalMemoryStore در سطح isolate نگه داشته می‌شود.
+const globalRateLimits = new Map<string, { count: number; resetAt: number }>();
+
 /**
  * API اصلی سامانه — Cloudflare Workers (Hono)
  * همهٔ منطق تصمیم در @ael/engine است؛ این لایه فقط ارکستراسیون و پایدارسازی است.
@@ -17,6 +23,7 @@ import {
   calculateRetrievability,
   isTrackId,
   questionCardId,
+  QUARANTINE_HOLDOUT_YEAR,
   scoreExamSession,
   statusFromMastery,
 } from '@ael/engine';
@@ -74,6 +81,8 @@ export function toPublicQuestion(q: Question): PublicQuestion {
 export interface CreateAppOptions {
   /** برای تست: تزریق لایهٔ داده */
   store?: DataStore;
+  /** برای تست: شمارندهٔ مستقل محدودکنندهٔ نرخ */
+  rateLimits?: Map<string, { count: number; resetAt: number }>;
 }
 
 export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Variables: { store: DataStore; secret: string; allowDemoAuth: boolean } }> {
@@ -205,6 +214,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     );
   }
 
+  /** تاریخ YYYY-MM-DD واقعی؛ regex تنها «۲۰۲۶-۰۲-۳۰» را رد نمی‌کند و آن مقدار
+   * بعداً daysBetween را NaN و «روزهای مانده به کنکور» را خاموش می‌کرد. */
+  function isRealISODate(value: string): boolean {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+    const [y, m, d] = value.split('-').map(Number);
+    if (!y || !m || !d) return false;
+    const dt = new Date(Date.UTC(y, m - 1, d));
+    return (
+      dt.getUTCFullYear() === y &&
+      dt.getUTCMonth() === m - 1 &&
+      dt.getUTCDate() === d
+    );
+  }
+
   async function ensureStats(userId: string): Promise<UserStats> {
     return (
       (await store.getStats(userId)) ?? {
@@ -215,29 +238,52 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         dayNumber: 0,
         examDate: null,
         streakFreezeUsed: 0,
+        streakFreezeGranted: 0,
         streakFreezeMonth: null,
       }
     );
   }
 
-  /** سهمیهٔ قفل زنجیره: ۲ بار در هر ماه شمسی/میلادیِ جاری (بر اساس تاریخ تهران) */
+  /** سهمیهٔ قفل زنجیره: حداکثر ۲ قفل خریداری‌شده در هر ماه (تاریخ تهران).
+   * streakFreezeGranted = قفل‌های خریده‌شده؛ streakFreezeUsed = قفل‌های واقعاً
+   * مصرف‌شده برای حفظ زنجیره. تفکیک این دو لازم است وگرنه «خرید قفل» هیچ اثری
+   * روی زنجیره ندارد (همان نقصی که در نسخهٔ قبل وجود داشت). */
   const FREEZE_MONTHLY_LIMIT = 2;
-  function freezeUsage(stats: UserStats) {
-    const month = tehranDateStr().slice(0, 7);
+  function freezeQuota(stats: UserStats, month: string) {
+    const granted = stats.streakFreezeMonth === month ? stats.streakFreezeGranted : 0;
     const used = stats.streakFreezeMonth === month ? stats.streakFreezeUsed : 0;
-    return { used, remaining: Math.max(0, FREEZE_MONTHLY_LIMIT - used), limit: FREEZE_MONTHLY_LIMIT };
+    return { granted, used, purchasable: Math.max(0, FREEZE_MONTHLY_LIMIT - granted), spendable: Math.max(0, granted - used) };
   }
 
-  /** سکه و روز پیوسته را پس از اولین پاسخ روز به‌روز می‌کند */
-  async function applyStatsForAnswer(userId: string, wasCorrect: boolean): Promise<UserStats> {
+  /** سکه و روز پیوسته را پس از پاسخ به‌روز می‌کند.
+   * سکه فقط برای تلاش «تازه» صادر می‌شود: همان سؤال در همان روز دوباره سکه
+   * نمی‌گیرد، وگرنه گرفتن بلیت جدید + دیدن کلید از پاسخ اول بی‌نهایت سکه می‌سازد.
+   * اثر آموزش/موتور حافظه (FSRS) این قاعده را ندارد و همان‌طور ادامه می‌یابد. */
+  async function applyStatsForAnswer(
+    userId: string,
+    wasCorrect: boolean,
+    awardCoins: boolean,
+  ): Promise<UserStats> {
     const stats = await ensureStats(userId);
     const today = tehranDateStr();
     if (stats.lastStudyDate !== today) {
-      stats.streakDays = stats.lastStudyDate === tehranDateStr(-1) ? stats.streakDays + 1 : 1;
+      const month = today.slice(0, 7);
+      const quota = freezeQuota(stats, month);
+      const gap = stats.lastStudyDate ? daysBetween(stats.lastStudyDate, today) : null;
+      stats.streakFreezeMonth = month;
+      if (stats.lastStudyDate === tehranDateStr(-1)) {
+        stats.streakDays += 1;
+      } else if (gap === 2 && quota.spendable > 0) {
+        // دقیقاً یک روز از دست رفته و قفل خریداری‌شده موجود است ⇒ زنجیره حفظ می‌شود
+        stats.streakFreezeUsed = quota.used + 1;
+        stats.streakDays += 1;
+      } else {
+        stats.streakDays = 1;
+      }
       stats.dayNumber += 1;
       stats.lastStudyDate = today;
     }
-    stats.coins += wasCorrect ? 2 : 1;
+    if (awardCoins) stats.coins += wasCorrect ? 2 : 1;
     await store.upsertStats(stats);
     return stats;
   }
@@ -249,11 +295,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     strong: 'نقشه‌ات خوب پیش می‌رود؛ وقتشه گره‌های متزلزل را به تثبیت‌شده برسانی.',
   };
 
-  function mentorMessageFor(stats: UserStats, overall: number, answeredToday: number): string {
+  function mentorMessageFor(stats: UserStats, overall: number | null, answeredToday: number): string {
     if (stats.streakDays === 0 || stats.dayNumber === 0) return MENTOR_MESSAGES.newUser;
     if (answeredToday === 0) return MENTOR_MESSAGES.weak;
     if (stats.streakDays >= 2) return MENTOR_MESSAGES.streak.replace('{n}', String(stats.streakDays));
-    return overall >= 60 ? MENTOR_MESSAGES.strong : MENTOR_MESSAGES.weak;
+    // بدون شاهد، ادعای «قوی بودن» ساخته نمی‌شود
+    return (overall ?? 0) >= 60 ? MENTOR_MESSAGES.strong : MENTOR_MESSAGES.weak;
   }
 
   async function loadEngineState(userId: string): Promise<EngineState> {
@@ -285,12 +332,21 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   app.get('/api/health', (c) => c.json({ ok: true }));
 
-  const rateLimits = new Map<string,{count:number;resetAt:number}>();
+  // در پروداکشن entrypoint به‌ازای هر درخواست createApp را صدا می‌زند؛ اگر
+  // شمارنده داخل createApp ساخته شود هر درخواست Map تازه می‌گیرد و ۴۲۹ هرگز
+  // صادر نمی‌شود. پس در پروداکشن شمارندهٔ سطح isolate (ماژول) مشترک است و در
+  // محیط غیرپروداکشن/تست، هر اپ شمارندهٔ مستقل خودش را دارد.
+  const rateLimits = options.rateLimits ?? (isProduction ? globalRateLimits : new Map<string, { count: number; resetAt: number }>());
   const RATE_WINDOW_MS = 60_000;
   const RATE_MAX = 30;
   function rateLimit(c:any,next:()=>void){
     const key = (c.req.header('authorization')||c.req.header('x-forwarded-for')||'anon') as string;
     const now = Date.now();
+    // پاک‌سازی دوره‌ای: در پروداکشن شمارنده سطح isolate است و بدون این،
+    // کلیدهای seen (هر IP/توکن) بی‌نهایت انباشته می‌شدند.
+    if (rateLimits.size > 1000) {
+      for (const [k, v] of rateLimits) if (now > v.resetAt) rateLimits.delete(k);
+    }
     const entry = rateLimits.get(key);
     if(!entry || now>entry.resetAt){ rateLimits.set(key,{count:1,resetAt:now+RATE_WINDOW_MS}); return next(); }
     if(entry.count>=RATE_MAX) return c.json({error:'درخواست بیش از حد مجاز'},429);
@@ -301,6 +357,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.use('/api/answers', (c, next) => rateLimit(c, next));
   app.use('/api/self-report', (c, next) => rateLimit(c, next));
   app.use('/api/telegram/webhook*', (c, next) => rateLimit(c, next));
+  // صدور بلیت/صف هم مصرف‌محور است؛ بدون این پوشش یک کاربر می‌تواند بی‌نهایت
+  // تلاش جدید برای سؤالات قبلی بگیرد و سکه/تسلط دوباره بسازد.
+  app.use('/api/night-quiz', (c, next) => rateLimit(c, next));
+  app.use('/api/diagnostic', (c, next) => rateLimit(c, next));
+  app.use('/api/exam-simulation*', (c, next) => rateLimit(c, next));
 
   app.get('/api/lessons', (c) => c.json({ courses: COURSES_LESSONS }));
 
@@ -613,10 +674,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!user) return authError(c);
     const body = (await c.req.json()) as { tracks?: unknown };
     if (!Array.isArray(body.tracks)) return c.json({ error: 'tracks نامعتبر' }, 400);
+    // آرایهٔ بی‌حد (مثلاً ۱۰۰٬۰۰۰ عنصر) نباید مستقیم ذخیره شود؛ سقف کار و
+    // سپس حذف تکرارها، نتیجه را خودبه‌خود به اندازهٔ قرارداد محدود می‌کند.
+    if (body.tracks.length > 50) {
+      return c.json({ error: 'فهرست گرایش‌ها بیش از حد بلند است' }, 400);
+    }
     const tracks: TrackId[] = [];
     for (const t of body.tracks) {
       if (!isTrackId(t)) return c.json({ error: `گرایش نامعتبر: ${String(t)}` }, 400);
-      tracks.push(t);
+      if (!tracks.includes(t)) tracks.push(t);
     }
     if (!tracks.includes('common')) tracks.unshift('common');
     await store.setActiveTracks(user.id, tracks);
@@ -649,10 +715,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const seenQuestionIds = new Set(state.cards.map((card) => card.questionId).filter(Boolean));
     // گره‌های ارزیابی‌نشده اول؛ تنوع با گروهبندی بر حسب course
     const unseen = [...state.questions.values()].filter(
-      (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id) && q.examYear !== 1404,
+      (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id) && q.examYear !== QUARANTINE_HOLDOUT_YEAR,
     );
     const seen = [...state.questions.values()].filter(
-      (q) => allowed(q.nodeId) && seenQuestionIds.has(q.id) && q.examYear !== 1404,
+      (q) => allowed(q.nodeId) && seenQuestionIds.has(q.id) && q.examYear !== QUARANTINE_HOLDOUT_YEAR,
     );
     const diversify = (pool: Question[]): Question[] => {
       const byCourse = new Map<string, Question[]>();
@@ -934,6 +1000,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!Number.isInteger(body.selectedOption)) {
       return c.json({ error: 'گزینهٔ انتخابی نامعتبر است.' }, 400);
     }
+    // همان سقف /api/answers: ورودی زمان پاسخ نباید بی‌حد یا منفی ذخیره شود
+    const responseTimeMs =
+      typeof body.responseTimeMs === 'number' && Number.isFinite(body.responseTimeMs) && body.responseTimeMs >= 0
+        ? Math.min(Math.round(body.responseTimeMs), 30 * 60_000)
+        : null;
     const session = await store.getExamSimulationSession(user.id, body.sessionId);
     if (!session) return c.json({ error: 'جلسهٔ شبیه‌سازی پیدا نشد.' }, 404);
     if (session.status !== 'active') {
@@ -949,14 +1020,20 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         attemptId: body.attemptId,
         questionId: body.questionId,
         selectedOption: body.selectedOption as number,
-        responseTimeMs: typeof body.responseTimeMs === 'number' ? body.responseTimeMs : null,
+        responseTimeMs,
       });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'ثبت پاسخ ممکن نشد.';
+      const raw = err instanceof Error ? err.message : '';
       const conflict =
-        message.includes('already consumed') ||
-        message.includes('already answered') ||
-        message.includes('not active');
+        raw.includes('already consumed') ||
+        raw.includes('already answered') ||
+        raw.includes('not active');
+      // متن خام store (SQL/PostgREST) به کلاینت نشت نمی‌کند
+      const message = conflict
+        ? 'این تلاش یا جلسه دیگر قابل استفاده نیست.'
+        : /outside the question options|invalid|does not exist/i.test(raw)
+          ? 'دادهٔ این پاسخ پذیرفته نشد.'
+          : 'ثبت پاسخ ممکن نشد.';
       return c.json({ error: message }, conflict ? 409 : 400);
     }
     // درستی پاسخ عمداً اعلام نمی‌شود — رفتار آزمون رسمی
@@ -1047,7 +1124,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     // سؤال‌های سال ۱۴۰۴ قرنطینه‌اند و در هیچ سنجش عملیاتی شمرده نمی‌شوند
     const questionCountByNode = new Map<string, number>();
     for (const q of state.questions.values()) {
-      if (q.examYear === 1404) continue;
+      if (q.examYear === QUARANTINE_HOLDOUT_YEAR) continue;
       questionCountByNode.set(q.nodeId, (questionCountByNode.get(q.nodeId) ?? 0) + 1);
     }
 
@@ -1118,7 +1195,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const visibleIds = new Set(visible.map((n) => n.id));
     const questionCountByNode = new Map<string, number>();
     for (const q of state.questions.values()) {
-      if (q.examYear === 1404) continue; // قرنطینه در هیچ شاخص عملیاتی شمرده نمی‌شود
+      if (q.examYear === QUARANTINE_HOLDOUT_YEAR) continue; // قرنطینه در هیچ شاخص عملیاتی شمرده نمی‌شود
       questionCountByNode.set(q.nodeId, (questionCountByNode.get(q.nodeId) ?? 0) + 1);
     }
     const assessableNodes = visible.filter((n) => (questionCountByNode.get(n.id) ?? 0) > 0);
@@ -1397,7 +1474,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         (q) =>
           allowed(q.nodeId) &&
           !seenQuestionIds.has(q.id) &&
-          q.examYear !== 1404 &&
+          q.examYear !== QUARANTINE_HOLDOUT_YEAR &&
           isConceptualNode(q.nodeId),
       );
       const newCards: ReviewCard[] = [];
@@ -1434,7 +1511,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       const meta = (state.skills ?? new Map()).get(st.skillId);
       if (!meta) continue;
       const proofQuestion = [...state.questions.values()].find(
-        (q) => q.nodeId === meta.nodeId && q.examYear === 1404,
+        (q) => q.nodeId === meta.nodeId && q.examYear === QUARANTINE_HOLDOUT_YEAR,
       );
       if (!proofQuestion) continue;
       const proofCardId = questionCardId(user.id, proofQuestion.id);
@@ -1499,12 +1576,14 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     let spendableMinutes = 0;
     const selected: typeof scored = [...proofItems];
     for (const s of nonProof) {
+      // سقف تعداد BEFORE افزودن بررسی می‌شود؛ با بررسی پس از push، وقتی
+      // آیتم‌های اثبات خودِ limit را پر می‌کردند یک آیتم اضافه (limit+1) می‌ماند.
+      if (selected.length >= limit) break;
       if (budgetMinutes !== undefined && spendableMinutes + s.minutes > remainingBudget) {
         continue;
       }
       selected.push(s);
       spendableMinutes += s.minutes;
-      if (selected.length >= limit) break;
     }
     const spentMinutes = proofMinutes + spendableMinutes;
 
@@ -1550,17 +1629,37 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const items = selected.map((s) => {
       const node = state.nodes.get(s.item.card.nodeId);
       const skill = skillForNode(s.item.card.nodeId);
+      const { card, question, trapNote } = s.item;
+      // کلاینت فقط همانقدر که برای نمایش لازم است می‌گیرد: spread کاملِ QueueItem
+      // هم یادداشت دام را برای سؤال‌های تستی (قبل از پاسخ) و هم جزئیات داخلی
+      // کارت (ease/fsrsState/timesSeen/userId) را افشا می‌کرد.
+      const publicCard: Record<string, unknown> = {
+        id: card.id,
+        nodeId: card.nodeId,
+        cardType: card.cardType,
+        questionId: card.questionId ?? null,
+        trapCardId: card.trapCardId ?? null,
+        isRepair: card.isRepair === true,
+        isProof: s.isProof,
+      };
+      if (card.cardType === 'trap_note') {
+        // برای کارتِ یادداشت، خودِ متن نکته محتوای نمایشی است (منبع: QueueItem.trapNote)
+        publicCard.trapNote = trapNote ?? null;
+      }
+      if (card.cardType === 'comparison_card') {
+        publicCard.comparisonSkills = card.comparisonSkills ?? null;
+      }
       return {
-        ...s.item,
+        card: publicCard,
         // در پاسخ به کلاینت، سؤال بدون کلید پاسخ، بدون توضیح و بدون یادداشت دام ارسال می‌شود
-        question: s.item.question ? toPublicQuestion(s.item.question) : undefined,
+        question: question ? toPublicQuestion(question) : undefined,
         course: node?.course,
         chapter: node?.chapter,
         topic: node?.topic,
         // نام‌های سازگار با مینی‌اپ (نسخه‌های قبلی از این کلیدها استفاده می‌کنند)
         courseTitle: node?.course,
         chapterTitle: node?.chapter,
-        attemptId: attemptIdByCard.get(s.item.card.id),
+        attemptId: attemptIdByCard.get(card.id),
         attemptType: s.isProof ? ('proof' as const) : ('practice' as const),
         // §8.5: نوع فعالیت برای هر آیتم (مرور/جبرانی/اثبات) — صف ترکیبی قابل راستی‌آزمایی
         activityType: s.activityType,
@@ -1719,26 +1818,64 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
     const wasCorrect = result.report.wasCorrect;
 
+    // سکه فقط برای تلاشی داده می‌شود که همین سؤال را در همین روز «حل نکرده» است.
+    // قاعده روی پاسخِ درست است، پس کوییز شبانه (اولین حل درستِ سؤال غلطِ امروز)
+    // سکه می‌گیرد، اما تکرارِ پاسخ درست همان سؤال در همان روز سکه نمی‌سازد —
+    // همان مسیري که با بلیت تازه + دیدن کلید، بی‌نهایت سکه تولید می‌کرد.
+    const answersToday = await store.listAnswersSince(user.id, tehranMidnightIso()).catch(() => []);
+    const alreadySolvedToday = answersToday.some((a) => a.questionId === body.questionId && a.isCorrect);
+
     // ثبت اتمیک و امن در دیتابیس (RPC امن: تعیین کلید سمت سرور + مصرف بلیت تلاش)
-    await store.submitAnswerAtomic({
-      userId: user.id,
-      questionId: body.questionId,
-      selectedOption: body.selectedOption,
-      attemptId: body.attemptId,
-      wasCorrect,
-      // وضعیت مهارت محاسبه‌شده توسط موتور را همراه پاسخ اتمیک ذخیره کن؛
-      // SQL نباید با یک الگوریتم ساده‌تر همان وضعیت را دوباره تخمین بزند.
-      rippleReport: {
-        ...result.report,
-        skillStateUpdate: result.skillStateUpdate ?? null,
-      },
-      masteryUpdates: result.masteryUpdates,
-      cardUpserts: result.cardUpdates,
-      cardInserts: result.createdCards,
-    });
+    let atomic: { correctOption?: number; replay?: boolean } | null = null;
+    try {
+      atomic = await store.submitAnswerAtomic({
+        userId: user.id,
+        questionId: body.questionId,
+        selectedOption: body.selectedOption,
+        attemptId: body.attemptId,
+        wasCorrect,
+        // وضعیت مهارت محاسبه‌شده توسط موتور را همراه پاسخ اتمیک ذخیره کن؛
+        // SQL نباید با یک الگوریتم ساده‌تر همان وضعیت را دوباره تخمین بزند.
+        rippleReport: {
+          ...result.report,
+          skillStateUpdate: result.skillStateUpdate ?? null,
+        },
+        masteryUpdates: result.masteryUpdates,
+        cardUpserts: result.cardUpdates,
+        cardInserts: result.createdCards,
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      // در مسابقهٔ هم‌زمان بلیت همین حالا مصرف شده است: این ۴۰۹ است، نه ۵۰۰
+      if (/already consumed|Attempt ticket|duplicate key/i.test(message)) {
+        const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
+        if (existing && existing.questionId === body.questionId) {
+          const raced = await ensureStats(user.id);
+          return c.json({
+            wasCorrect: existing.isCorrect,
+            report: enrichMasteryDeltas(
+              existing.rippleReport as { masteryDeltas?: { nodeId: string }[] } | undefined,
+              state.nodes,
+            ),
+            correctOption: question.correctOption,
+            explanation: question.explanation,
+            trapNote: question.trapNote,
+            lesson: lessonPayload(question.nodeId),
+            replay: true,
+            stats: { coins: raced.coins, streakDays: raced.streakDays, dayNumber: raced.dayNumber },
+          });
+        }
+        await auditRejected('race_consumed');
+        return c.json({ error: 'این تلاش هم‌زمان مصرف شد؛ صف را تازه‌سازی کنید.' }, 409);
+      }
+      throw err;
+    }
+
+    // RPC می‌گوید این attempt از قبل ثبت شده بود (replay) — آمار دوباره صادر نمی‌شود
+    const isReplay = atomic?.replay === true;
 
     // پایدارسازی وضعیت شش‌بعدی مهارت (learner_skill_states)
-    if (result.skillStateUpdate) {
+    if (result.skillStateUpdate && !isReplay) {
       await store
         .upsertSkillState(user.id, {
           skillId: result.skillStateUpdate.state.skillId,
@@ -1749,7 +1886,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
 
     // آمار انگیزشی: سکه + روز پیوسته (فقط برای پاسخ‌های تازه، نه replay)
-    const stats = await applyStatsForAnswer(user.id, wasCorrect);
+    const stats = isReplay
+      ? await ensureStats(user.id)
+      : await applyStatsForAnswer(user.id, wasCorrect, !alreadySolvedToday);
 
     const lesson = findLessonForNode(question.nodeId);
     // محتوای مقایسه برای کارت مفاهیم متشابه
@@ -1769,7 +1908,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         : undefined,
       proofReady: result.report.proofCandidate ?? undefined,
       lesson: lessonPayload(question.nodeId),
-      replay: false,
+      replay: isReplay,
       stats: { coins: stats.coins, streakDays: stats.streakDays, dayNumber: stats.dayNumber },
     });
   });
@@ -1878,9 +2017,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const visible = nodes.filter(
       (n) => n.track === 'common' || user.activeTracks.includes(n.track),
     );
-    const overall = (visible.length && masteryRows.length > 0)
-      ? visible.reduce((sum, n) => sum + (masteryByNode.get(n.id) ?? 0), 0) / visible.length
-      : 0;
+    // §8.1: میانگین فقط روی گره‌های «سنجیده‌شده». قبلاً گره‌های بدون شاهد با ۰
+    // جمع می‌شدند و درصد پیشرفت نوپا را مصنوعی پایین نشان می‌داد (نقص null-vs-zero).
+    const assessedNodes = visible.filter((n) => masteryByNode.has(n.id));
+    const overall = assessedNodes.length > 0
+      ? assessedNodes.reduce((sum, n) => sum + (masteryByNode.get(n.id) ?? 0), 0) / assessedNodes.length
+      : null;
     const now = Date.now();
     const reviewDue = cards.filter((card) => {
       if (new Date(card.dueAt).getTime() > now) return false;
@@ -1897,7 +2039,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         examDate: stats.examDate,
         daysLeft: stats.examDate ? daysBetween(tehranDateStr(), stats.examDate) : null,
       },
-      progress: { overall: Math.round(overall), nodes: visible.length },
+      progress: {
+        // null یعنی «هنوز شواهدی نداریم» — نه صفر درصد
+        overall: overall === null ? null : Math.round(overall),
+        assessedNodes: assessedNodes.length,
+        nodes: visible.length,
+      },
       today: { answered: todayAnswers.length, correct: todayAnswers.length - wrongToday.length },
       reviewDue,
       nightQuiz: {
@@ -1941,25 +2088,36 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       const states = await store.getSkillStates(user.id);
       const current = states.find((s) => s.skillId === skill.id);
       const dominant = body.selfReport === 'slip' ? 'slip' : 'concept_gap';
-      await store
-        .upsertSkillState(user.id, {
-          skillId: skill.id,
-          nodeId: question!.nodeId,
-          state: {
+
+      // ARC-01: خوداظهاری شاهد نیست. فقط نوع خطای غالب روی وضعیتی که موتور
+      // ساخته می‌نشیند؛ اگر هنوز هیچ وضعیت skill-ی وجود ندارد، یک وضعیت
+      // ساختگی (مثلاً evidenceCount=1 یا coverageStatus=remediated) نمی‌سازیم
+      // و خوداظهاری همان «برچسب» روی رویداد پاسخ باقی می‌ماند.
+      if (current) {
+        await store
+          .upsertSkillState(user.id, {
             skillId: skill.id,
-            proficiencyProbability: current?.proficiencyProbability ?? 0.5,
-            confidence: current?.confidence ?? 0.1,
-            evidenceCount: current?.evidenceCount ?? 1,
-            memoryRetrievability: current?.memoryRetrievability ?? 1,
-            fluencySpeedRatio: current?.fluencySpeedRatio ?? 1,
-            dominantErrorType: dominant,
-            coverageStatus:
-              body.selfReport === 'slip'
-                ? (current?.coverageStatus ?? 'diagnosed')
-                : 'remediated',
-          },
-        })
-        .catch(() => undefined);
+            nodeId: question!.nodeId,
+            state: {
+              ...current,
+              skillId: skill.id,
+              dominantErrorType: dominant,
+            },
+          })
+          .catch(() => undefined);
+      } else {
+        // خوداظهاری بدون هیچ وضعیت skill-ی از موتور؛ فقط برای ممیزی ثبت می‌شود
+        await store
+          .logAudit({
+            userId: user.id,
+            action: 'self_report_without_skill_state',
+            entityType: 'answer_event',
+            entityId: body.attemptId,
+            details: { skillId: skill.id, selfReport: body.selfReport },
+            sourceIp: c.req.header('x-forwarded-for') ?? null,
+          })
+          .catch(() => undefined);
+      }
     }
     return c.json({
       ok: true,
@@ -1982,10 +2140,18 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const nodeMap = new Map((await store.listNodes()).map((n) => [n.id, n]));
     const wrongIds = [...new Set(todayAnswers.filter((a) => !a.isCorrect).map((a) => a.questionId))];
     // ترتیب سؤال‌ها را می‌شکنیم؛ ترتیب گزینه‌ها ثابت می‌ماند (شناسهٔ گزینه کلید ثبت پاسخ است)
-    const picked = wrongIds
+    // Fisher-Yates: مقایسه‌کنندهٔ sort(() => Math.random()-0.5) یکنواخت نیست و
+    // ترتیب‌های میانی را ترجیح می‌دهد.
+    const shuffled = wrongIds
       .map((id) => questionMap.get(id))
-      .filter((q): q is NonNullable<typeof q> => !!q)
-      .sort(() => Math.random() - 0.5);
+      .filter((q): q is NonNullable<typeof q> => !!q);
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const tmp = shuffled[i]!;
+      shuffled[i] = shuffled[j]!;
+      shuffled[j] = tmp;
+    }
+    const picked = shuffled;
 
     // برای هر آیتم کوییز شبانه بلیت تلاش صادر می‌کنیم؛ بدون آن ثبت پاسخ ممکن نیست
     const tickets = picked.map((q) => ({
@@ -2039,14 +2205,21 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const stats = await ensureStats(user.id);
     if (stats.streakDays < 3) return c.json({ error: 'حداقل ۳ روز پیوسته برای قفل لازم است' }, 400);
     const month = tehranDateStr().slice(0, 7);
-    if (stats.streakFreezeMonth !== month) {
-      stats.streakFreezeUsed = 0;
-      stats.streakFreezeMonth = month;
+    const quota = freezeQuota(stats, month);
+    if (quota.purchasable === 0) {
+      return c.json({ error: 'حداکثر ۲ قفل در ماه مجاز است', granted: quota.granted }, 400);
     }
-    if (stats.streakFreezeUsed >= 2) return c.json({ error: 'حداکثر ۲ بار در ماه مجاز است', used: stats.streakFreezeUsed }, 400);
-    stats.streakFreezeUsed += 1;
+    stats.streakFreezeMonth = month;
+    stats.streakFreezeGranted = quota.granted + 1;
     await store.upsertStats(stats);
-    return c.json({ ok: true, streakFreezeUsed: stats.streakFreezeUsed, streakDays: stats.streakDays, month, message: 'روز پیوسته قفل شد؛ اگر امروز مطالعه نکنی، زنجیره حفظ می‌شود' });
+    return c.json({
+      ok: true,
+      streakFreezeGranted: stats.streakFreezeGranted,
+      streakFreezeUsed: stats.streakFreezeUsed,
+      streakDays: stats.streakDays,
+      month,
+      message: 'روز پیوسته قفل شد؛ اگر یک روز مطالعه نکنی، زنجیره با مصرف این قفل حفظ می‌شود',
+    });
   });
 
   /* ---------- تنظیمات: تاریخ کنکور ---------- */
@@ -2055,8 +2228,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!user) return authError(c);
     const body = (await c.req.json().catch(() => null)) as { examDate?: string | null } | null;
     if (!body || !('examDate' in body)) return c.json({ error: 'ورودی نامعتبر' }, 400);
-    if (body.examDate != null && !/^\d{4}-\d{2}-\d{2}$/.test(body.examDate)) {
-      return c.json({ error: 'examDate باید YYYY-MM-DD باشد' }, 400);
+    if (
+      body.examDate != null &&
+      !isRealISODate(String(body.examDate))
+    ) {
+      return c.json({ error: 'examDate باید یک تاریخ معتبر YYYY-MM-DD باشد' }, 400);
     }
     const stats = await ensureStats(user.id);
     stats.examDate = body.examDate ?? null;

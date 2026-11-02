@@ -1,6 +1,4 @@
-== scratch DB recreate ==
-DROP DATABASE
-CREATE DATABASE
+== migrations 0001→0015 + seeds + integrity on fresh scratch DB ==
 psql:<stdin>:148: NOTICE:  trigger "trg_mastery_touch" for relation "user_node_mastery" does not exist, skipping
 psql:<stdin>:150: NOTICE:  trigger "trg_review_cards_touch" for relation "review_cards" does not exist, skipping
 psql:<stdin>:49: NOTICE:  trigger "trg_holdout_check" for relation "exam_pack_questions" does not exist, skipping
@@ -15,11 +13,7 @@ psql:<stdin>:96: NOTICE:  policy "read_own_daily_queue_items" for relation "dail
 psql:<stdin>:148: NOTICE:  policy "read_own_exam_sessions" for relation "exam_sessions" does not exist, skipping
 psql:<stdin>:150: NOTICE:  policy "read_own_exam_session_items" for relation "exam_session_items" does not exist, skipping
 psql:<stdin>:153: NOTICE:  policy "read_own_exam_session_responses" for relation "exam_session_responses" does not exist, skipping
-psql:<stdin>:42: NOTICE:  policy "read_own_app_users" for relation "app_users" does not exist, skipping
-== integrity 16 blocks ==
+psql:<stdin>:47: NOTICE:  policy "read_own_app_users" for relation "app_users" does not exist, skipping
 INTEGRITY_EXIT=0
-== counts ==
-questions=18
-nodes=27
-packs=1
-skills=17
+streak_freeze_granted exists=2
+anon_atomic_exec=false
