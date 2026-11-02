@@ -2,8 +2,10 @@
 // Runs paired deterministic scenarios through BOTH learning runtimes:
 //   A) src/engine/aelEngine.ts (React runtime)
 //   B) @ael/engine (packages/learning-engine — worker runtime)
-// plus packages/utils urgency (third variant) and records MATCHED/DIVERGED per
-// scenario. This is a divergence map for the Phase-4 unification, NOT a parity claim.
+// plus packages/utils urgency reference checks. The queue-order scenario validates the
+// canonical priority callback against buildDailyQueue; a Worker route integration test
+// separately verifies the former 51st-candidate regression. This is scoped parity evidence,
+// not proof that every React importer or learner-state persistence path is unified.
 // Run: npx tsx scripts/engine-parity-harness.mts
 import { writeFile, mkdir } from 'node:fs/promises';
 import { calculateCardRetrievability, initFSRS, stepFSRS } from '../src/engine/aelEngine';
