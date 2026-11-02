@@ -80,6 +80,10 @@ interface TelegramWebAppInstance {
   CloudStorage?: {
     setItem: (key: string, value: string, cb?: (err: Error | null, stored?: boolean) => void) => void;
     getItem: (key: string, cb: (err: Error | null, value?: string) => void) => void;
+    getItems?: (
+      keys: string[],
+      cb: (err: Error | null, values?: Record<string, string | null>) => void,
+    ) => void;
     removeItem: (key: string, cb?: (err: Error | null, removed?: boolean) => void) => void;
   };
 }
@@ -404,6 +408,29 @@ function cloudGetItem(
   });
 }
 
+function cloudGetItems(
+  storage: NonNullable<TelegramWebAppInstance['CloudStorage']>,
+  keys: string[],
+): Promise<Record<string, string | null>> {
+  if (storage.getItems) {
+    return new Promise((resolve, reject) => {
+      try {
+        storage.getItems?.(keys, (error, values) => {
+          if (error) reject(error);
+          else resolve(values ?? {});
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  const values: Record<string, string | null> = {};
+  return inBatches(keys, CLOUD_WRITE_BATCH_SIZE, async (key) => {
+    values[key] = await cloudGetItem(storage, key);
+  }).then(() => values);
+}
+
 function cloudSetItem(
   storage: NonNullable<TelegramWebAppInstance['CloudStorage']>,
   key: string,
@@ -504,12 +531,16 @@ async function readCloudSnapshot(
   if (!manifest) return null;
 
   const parts = new Array<string>(manifest.chunkCount);
-  const indices = Array.from({ length: manifest.chunkCount }, (_, index) => index);
-  await inBatches(indices, CLOUD_WRITE_BATCH_SIZE, async (index) => {
-    const part = await cloudGetItem(storage, cloudChunkKey(manifest.slot, index));
+  const keys = Array.from(
+    { length: manifest.chunkCount },
+    (_, index) => cloudChunkKey(manifest.slot, index),
+  );
+  const values = await cloudGetItems(storage, keys);
+  for (let index = 0; index < keys.length; index += 1) {
+    const part = values[keys[index]];
     if (typeof part !== 'string') throw new Error(`Cloud snapshot chunk ${index} is missing`);
     parts[index] = part;
-  });
+  }
 
   const serialized = parts.join('');
   if (serialized.length !== manifest.length || checksum(serialized) !== manifest.checksum) {
@@ -539,7 +570,14 @@ function restoreLegacyCloudSummary(
       const coverageStatus = tuple[1];
       const lessonRating = tuple[2];
       if (typeof masteryScore !== 'number' || !Number.isFinite(masteryScore)) continue;
-      if (typeof coverageStatus !== 'string') continue;
+      if (
+        coverageStatus !== 'unseen' &&
+        coverageStatus !== 'weak' &&
+        coverageStatus !== 'learning' &&
+        coverageStatus !== 'needs_proof' &&
+        coverageStatus !== 'proven' &&
+        coverageStatus !== 'mastered'
+      ) continue;
       nodeStates[nodeId] = {
         ...previous,
         masteryScore: Math.max(0, Math.min(100, masteryScore)),
