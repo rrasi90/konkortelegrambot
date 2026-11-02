@@ -3,7 +3,7 @@
 - **PHASE:** 3 — Architecture, engine parity & security
 - **START_COMMIT:** `563b1b4` (اولین کامیت فاز ۳؛ Phase 2 در `093fe48` بسته شد)
 - **END_COMMIT:** `c971885` (`fix/mission-remediation-20261101`؛ این سند در کامیت بعد از آن است و تغییر کد ندارد)
-- **BRANCH:** `fix/mission-remediation-20261101` — تغییرات از مسیر PR #5 برای merge به main ارائه شده‌اند؛ production deploy همچنان ممنوع است
+- **BRANCH:** `fix/mission-remediation-20261101` — PR #5 با squash commit `d962df0` به `main` ادغام شد؛ production deploy همچنان ممنوع است
 
 ## §1 DELIVERABLES
 | فایل/کامیت | نقش |

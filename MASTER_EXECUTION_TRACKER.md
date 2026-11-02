@@ -5,7 +5,7 @@
 > (baseline, feature matrix, claim-evidence matrix, branch/PR audit, technical test baseline,
 > remediation register R-001…R-025, risk register). Raw outputs in `evidence/phase-0/`.
 > KPI rows below remain the ground truth until each phase produces evidence.
-> **Phase 1 (Scientific Foundation): PASS_WITH_EVIDENCE — 2026-11-01.** Combination model fixed in
+> **Phase 1 (Scientific Foundation): PARTIALLY_ACCEPTED — 2026-11-01.** Combination model fixed in
 > code, PR#4 foundation merged into remediation branch, root duplicates deleted, validator extended
 > (placeholder-hash / prerequisite-cycle / combination-bundle checks). External blockers itemized in
 > `docs/phase-1/PHASE_1_ACCEPTANCE_REPORT.md` appendix. Evidence: `evidence/phase-1/`.
@@ -19,7 +19,7 @@
 > Auth backdoors closed behind demo flag + production hardening; attempt tickets strictly server-enforced (migration 0010,
 > PR#3 clusters ported without blind merge); 14-block psql integrity suite green on plain Postgres; missing domain tables added
 > with real write paths (0011); single-lockfile policy proven via fresh-clone `npm ci`; engine divergence inventoried with a
-> 21-scenario parity harness (**16 diverged / 5 matched**) and `@ael/engine` designated sole runtime (ARC-01). **True engine
+> 21-scenario parity harness (**latest 13 diverged / 8 matched**) and `@ael/engine` designated sole runtime (ARC-01). **True engine
 > unification and the R-025 store-convergence acceptance test are NOT claimed** — carried IN_PROGRESS to Phase 4/5 migration.
 > Details in `docs/phase-3/PHASE_3_ACCEPTANCE_REPORT.md`. Evidence: `evidence/phase-3/`.
 > **Phase 4 (Adaptive Learning & Exam Readiness): PASS_WITH_EVIDENCE (scoped) — 2026-11-02.**
@@ -43,7 +43,7 @@
 > `PRODUCTION_READINESS_CHECKLIST.md` now report only measured scope; the full gate table is in
 > `docs/phase-5/PHASE_5_EXECUTION_TRACKER.md`; release decision is **NO-GO / DEFER**.
 > **BLOCKED/NOT_STARTED:** real pilot (no participants), SME content validation, staging/Telegram-host E2E,
-> Worker-runtime/concurrent-DB/stress performance, rollback drill, monitoring and legal/privacy review. No merge or deploy performed.
+> Worker-runtime/concurrent-DB/stress performance, rollback drill, monitoring and legal/privacy review. The remediation branch was merged into `main` via PR #5 (squash commit `d962df03dd5157a6a8af0083c92a0d958e3a7ec6`); no production deploy was performed.
 
 
 > **2026-11-02 correction after PR #5 CI:** 1406 question counts, durations and negative marking are now `null` until the official handbook is verified; the specialist coefficient is applied once to the complete bundle. The map no longer fabricates mastery=50 when only skill-state evidence exists. Migration 0014 persists the exact engine-computed skill state atomically, with integrity block 15. Question bank files now separate per-tier `counts.total` from `corpusTotal`. PR #5 CI on head `9bdbaf08` passed both jobs: PostgreSQL 16 migrations 0001–0014 + integrity; `npm ci`; TypeScript; 268/268 Vitest; content validation. Engine/React unification (R-009/R-025), 1406 handbook extraction, SME review, English content, Research Lab, pilot, staging, production-runtime load, pentest and legal review remain open; Gate 5 stays **NO-GO / DEFER**.
@@ -61,7 +61,7 @@
 
 ---
 ## مراحل اجرای پروژه
-- [x] مرحله ۱: تثبیت بنیاد علمی و مشخصات آزمون — PASS_WITH_EVIDENCE
+- [x] مرحله ۱: تثبیت بنیاد علمی و مشخصات آزمون — PARTIALLY_ACCEPTED (تطبیق دفترچه ۱۴۰۶ و SME باز)
 - [x] مرحله ۲: ساخت دایرةالمعارف آموزشی و بانک سؤال معتبر — PASS_WITH_EVIDENCE (scoped؛ تأیید علمی SME/کلید رسمی BLOCKED)
 - [x] مرحله ۳: یکپارچه‌سازی معماری و موتور هوشمند — PASS_WITH_EVIDENCE (scoped؛ مهاجرت legacy موتور R-009 باقی)
 - [ ] مرحله ۴: تکمیل سیستم آموزش تطبیقی و آمادگی آزمون — PASS_WITH_EVIDENCE (scoped) در کد/تست؛ §8.8 و §8.9 BLOCKED

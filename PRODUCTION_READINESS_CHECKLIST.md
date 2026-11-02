@@ -127,5 +127,4 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 
 **Decision: NO-GO / DEFER.** The product is not release-ready. The remaining blockers are external
 or require owner approval: real pilot participants, SME content validation, retrievable official
-sources, production credentials/staging, and a rehearsed rollback/monitoring plan. No merge to
-`main` and no production deployment has been performed.
+sources, production credentials/staging, and a rehearsed rollback/monitoring plan. The remediation was merged to `main` via PR #5 (`d962df03dd5157a6a8af0083c92a0d958e3a7ec6`); no production deployment has been performed.
