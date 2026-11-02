@@ -1,7 +1,7 @@
 # ARC-01 — تک‌نهادی موتور یادگیری (Single Learning-Engine Runtime)
 
 **شماره اقدام:** R-009 (+ تصمیم R-025 در §5)
-**وضعیت:** IN_PROGRESS — PR #6 بخش FSRS را به موتور canonical متصل کرده و CI آن سبز است؛ همگرایی کامل runtime و learner store هنوز انجام نشده است. ادعای «یکپارچه شد» در این سند نمی‌شود.
+**وضعیت:** IN_PROGRESS — PR #6 همگرایی FSRS و PR #7 رتبه‌بندی صف پیش از limit را با CI سبز پوشش داده‌اند؛ مهاجرت کامل مصرف‌کننده‌های React و learner store هنوز انجام نشده است. ادعای «یکپارچه شد» در این سند نمی‌شود.
 **تاریخ:** 2026-11-01
 **شاخه:** `fix/mission-remediation-20261101`
 
@@ -28,30 +28,30 @@
 
 هارنس: `scripts/engine-parity-harness.mts` → خروجی `docs/phase-3/ENGINE_PARITY_MATRIX.csv`
 
-نتیجهٔ اجرای CI روی PR #6، head=`e78eb20418336ef77c048aa55647e996b0f91fb9`، run=`41430029958`:
+آخرین اجرای CI روی PR #7، head=`382742f2cc57008d5adb30e6e44e40f33c4e23ac`، run=`41431652931`:
 
 ```text
-PARITY HARNESS: 21 scenarios, 1 diverged, 20 matched
+PARITY HARNESS: 21 scenarios, 0 diverged, 21 matched
 ```
 
-تجزیهٔ نتیجه:
+تجزیهٔ آزمون‌ها:
 
-1. **FSRS interval/state:** هر ۱۱ سناریو MATCHED است. `src/engine/aelEngine.ts` دیگر transition مستقل ندارد و برای اولین مرور از `initializeFSRSState` و برای مرورهای بعدی از `scheduleNextFSRS` در `@ael/engine` استفاده می‌کند. sentinel قدیمی `stability=0` برای کارت مرورنشده حفظ شده است.
-2. **Retrievability:** هر ۶ سناریو MATCHED است. adapter React همان `calculateRetrievability` canonical را صدا می‌زند؛ مقدار R برای علت‌یابی خطا نیز بر اساس زمان سپری‌شده از آخرین مرور محاسبه می‌شود، نه مقدار ذخیره‌شدهٔ روز مرور.
-3. **Urgency factor:** هر ۳ سناریوی عددی MATCHED است؛ هر دو مسیر از term ضربی `1 + forgettingRisk` استفاده می‌کنند.
-4. **Queue ordering:** تنها واگرایی باقی‌مانده `urg-04-engine-order` است: Worker از `computePriorityV3`/ROI استفاده می‌کند، اما `buildDailyQueue` در `@ael/engine` هنوز صرفاً بر اساس `dueAt` مرتب می‌کند.
+1. **FSRS interval/state:** هر ۱۱ سناریو MATCHED است. adapter React برای initialize و transition از توابع canonical در `@ael/engine` استفاده می‌کند.
+2. **Retrievability:** هر ۶ سناریو MATCHED است؛ محاسبهٔ بازیابی بر اساس زمان سپری‌شده از آخرین مرور است.
+3. **Urgency factor:** هر ۳ سناریوی عددی MATCHED است و term خطر فراموشی در فرمول canonical ضربی است.
+4. **Queue ordering:** سناریوی ۲۱ اکنون MATCHED است. `buildDailyQueue` گزینه‌های `includeCard` و `priorityScore` دارد؛ Worker همهٔ کارت‌های سررسیدشدهٔ واجدشرایط را امتیازدهی می‌کند و سپس سقف ۵۰ candidate را اعمال می‌کند. فیلتر حالت commute نیز قبل از limit انجام می‌شود. تست Worker ثابت می‌کند کارت با اولویت بالاتر که قبلاً candidate شمارهٔ ۵۱ بود، از صف نهایی حذف نمی‌شود.
 
-این نتیجه به معنی توحید کامل نیست: ۱۶ مصرف‌کنندهٔ React هنوز به facade/migration backlog legacy وابسته‌اند و React هنوز به Worker/Supabase learner store مهاجرت نکرده است. گزارش CI: https://github.com/rrasi90/konkortelegrambot/actions/runs/41430029958.
+این ۲۱ تطابق فقط همان سناریوهای deterministic تعریف‌شده را پوشش می‌دهد؛ **اثبات یکپارچگی کل برنامه نیست**. ۱۶ مصرف‌کنندهٔ React هنوز در migration backlog هستند و React هنوز به Worker/Supabase learner store مهاجرت نکرده است. گزارش CI: https://github.com/rrasi90/konkortelegrambot/actions/runs/41431652931.
 
 ## ۴) مسیر مهاجرت (R-009 → Phase 4/5)
 
 به‌ترتیب، با تست‌های معطوف به هر گام:
 
-1. **Phase 4، R-011 (توحید فرمول اولویت):** UrgencyV2 در `packages/utils` را تنها منبع «امتیاز فوریت» قرار ده؛ `buildDailyQueue` در @ael/engine باید همان تابع را import کند؛ legacy داخل React حذف یا به wrapper از @ael/engine تبدیل شود.
+1. **R-011 / queue ordering (PR #7):** `buildDailyQueue` اکنون callback امتیاز اولویت و فیلتر candidate می‌پذیرد؛ Worker همان `computePriorityV3` را قبل از محدودیت candidate اعمال می‌کند. تست integration مسیر `/api/queue` این رفتار را تا کارت شمارهٔ ۵۱ پوشش می‌دهد.
 2. **FSRS convergence slice (PR #6):** adapter React به توابع canonical متصل شد؛ ۱۱ سناریوی interval/state و ۶ سناریوی retrievability در CI بدون واگرایی‌اند. تست‌های parity در `src/tests/legacyFsrsParity.test.ts` و `scripts/engine-parity-harness.mts` نگهبان این قراردادند.
 3. **Phase 5:** ۱۶ فایل import legacy را مرحله‌ای به @ael/engine منتقل کن؛ در پایان، `grep -r "engine/aelEngine"` باید خالی باشد یا فقط به adapterهای نازک migrate-شده اشاره کند.
 
-هر فاز با `PARITY HARNESS` و تست‌های unit مشخص اندازه‌گیری می‌شود؛ تا زمانی که ۲۱ سناریو به انحراف صفر (یا مستندسازی‌شدهٔ «عمداً متفاوت») نرسیده باشد، وضعیت «unified» اعلام نمی‌شود.
+هارنس فعلی در ۲۱ سناریوی تعریف‌شده انحرافی گزارش نمی‌کند؛ بااین‌حال تا مهاجرت مصرف‌کننده‌های React و اثبات همگرایی store، وضعیت کل معماری «unified» اعلام نمی‌شود.
 
 ## ۵) R-025 — تصمیم تک‌فروشگاه (learner store)
 
@@ -74,5 +74,5 @@ PARITY HARNESS: 21 scenarios, 1 diverged, 20 matched
 ## ۷) آنچه این سند **ادعا نمی‌کند**
 
 - موتور React به‌طور کامل حذف یا یکسان نشده؛ FSRS آن از facade canonical استفاده می‌کند، اما منطق تسلط، ripple، ترتیب صف و مهاجرت state هنوز کامل منتقل نشده‌اند.
-- انحراف صفر در parity matrix نیست؛ اکنون ۱ مورد از ۲۱ سناریو باقی است (ترتیب صف).
+- ۲۱ سناریوی فعلی parity همگی MATCHED هستند؛ این عدد پوشش کامل import graph یا state persistence دو کلاینت را ثابت نمی‌کند.
 - تصمیم R-025 به معنای حذف `MemoryStore` نیست؛ به معنای ممنوعیت production آن است.
