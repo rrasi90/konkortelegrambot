@@ -480,8 +480,17 @@ function checksum(value: string): string {
 
 function makeChunks(value: string): string[] {
   const chunks: string[] = [];
-  for (let offset = 0; offset < value.length; offset += CLOUD_CHUNK_SIZE) {
-    chunks.push(value.slice(offset, offset + CLOUD_CHUNK_SIZE));
+  let offset = 0;
+  while (offset < value.length) {
+    let end = Math.min(value.length, offset + CLOUD_CHUNK_SIZE);
+    // Do not split a UTF-16 surrogate pair at a CloudStorage chunk boundary.
+    const previousCodeUnit = value.charCodeAt(end - 1);
+    const nextCodeUnit = value.charCodeAt(end);
+    const endsWithHighSurrogate = previousCodeUnit >= 0xd800 && previousCodeUnit <= 0xdbff;
+    const startsWithLowSurrogate = nextCodeUnit >= 0xdc00 && nextCodeUnit <= 0xdfff;
+    if (end < value.length && endsWithHighSurrogate && startsWithLowSurrogate) end -= 1;
+    chunks.push(value.slice(offset, end));
+    offset = end;
   }
   return chunks;
 }
