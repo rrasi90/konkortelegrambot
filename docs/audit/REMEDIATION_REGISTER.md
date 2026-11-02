@@ -66,7 +66,7 @@ Exam structure→R-001; curriculum counts→R-002; coefficients→R-003; coverag
 | A-11 | dev-server در صورت وجود `dist` قدیمی، بی‌صدا React را به‌جای مینی‌اپ سرو می‌کرد (E2E روی سطح اشتباه) | `scripts/dev-server.mjs` | PASS_WITH_EVIDENCE | چک صفرم E2E + لاگ سطح سرو‌شده |
 | A-12 | دروازهٔ اثبات دو عدد داشت (۰٫۶۵ در مدل، ۰٫۷۵ در نامزدی) | engine | PASS_WITH_EVIDENCE | `fsrs.test.ts` A-12 |
 | A-13 | جایگزینی بی‌صدای سال آزمونِ ثبت‌نشده با سال ۱۳۹۵ | `packages/contracts/src/exam-structure.ts` | PASS_WITH_EVIDENCE | `src/tests/examStructure.test.ts` (A-13) |
-| A-14 | اصلاحات منطق: نادیده‌گرفتن `replay` از RPC، ۵۰۰ جای ۴۰۹ در مسابقه، نشت متن خام خطا، clamp زمان پاسخ، اعتبار تاریخ، سقف/تکرار گرایش‌ها، Fisher-Yates، ثابت قرنطینه | worker + engine | PASS_WITH_EVIDENCE | `vitest-final.txt` (332/332) |
+| A-14 | اصلاحات منطق: نادیده‌گرفتن `replay` از RPC، ۵۰۰ جای ۴۰۹ در مسابقه، نشت متن خام خطا، clamp زمان پاسخ، اعتبار تاریخ، سقف/تکرار گرایش‌ها، Fisher-Yates، ثابت قرنطینه | worker + engine | PASS_WITH_EVIDENCE | `vitest-final.txt` (333/333 پس از افزودن A-25) |
 | A-15 | خوداظهاری برای مهارتِ بی‌وضعیت، `evidenceCount=1` و `coverageStatus=remediated` می‌ساخت و `proven` را تنزل می‌داد | `/api/self-report` | PASS_WITH_EVIDENCE | `audit-fixes.test.ts` (A-15) |
 | A-16 | قفل زنجیره خریده می‌شد اما هرگز مصرف/اعمال نمی‌شد (خرید و مصرف یک شمارنده بودند) | stats + schema | PASS_WITH_EVIDENCE | `audit-fixes.test.ts` (A-16: پل زدن gap با قفل، و بدون قفل → ۱) |
 | A-17 | `/api/home` نبودِ شاهد را ۰٪ نشان می‌داد و میانگین را روی همهٔ گره‌ها می‌گرفت | home route + mini-app | PASS_WITH_EVIDENCE | `audit-fixes.test.ts` (A-17) + تست خانگی `worker.test.ts` |

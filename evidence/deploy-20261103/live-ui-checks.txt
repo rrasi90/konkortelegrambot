@@ -1,0 +1,11 @@
+== health ==
+{"ok":true} [HTTP 200]
+== served app.js / index.html ==
+served HTML is mini-app      : false
+relogin control in HTML      : false
+back button uses id+listener : true
+relogin listener wired       : true
+freeze button bound          : true
+option uses CSS .option class: true
+no data-driven inline onclick: true
+bytes served                 : 39713

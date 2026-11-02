@@ -49,7 +49,7 @@
 > designer trap notes and FSRS card internals (A-06), an FSRS difficulty dimension that was mathematically
 > collapsed by mixing 4.5 weights into the FSRS-5 formula (A-08), fabricated "no evidence" states read as
 > weakness in error classification (A-07) and in the legacy engine where wrong answers *raised* mastery
-> (A-09), and four dead or invisible UI controls (A-10). Evidence: 332/332 vitest
+> (A-09), and four dead or invisible UI controls (A-10). Evidence: 333/333 vitest
 > (`evidence/audit-20261102/vitest-final.txt`), migrations 0001→0015 + seeds + 16-block integrity on a fresh
 > scratch DB (`db-integrity-0015.txt`), E2E 20/20 in Chrome and Edge, typecheck and Worker build EXIT=0.
 > This strengthens what exists; it removes none of the external release blockers below.

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ENGLISH_SKILLS } from '@ael/contracts';
 import type { KnowledgeNode, Question } from '@ael/contracts';
-import { createApp } from '../src/index.ts';
+import { createApp, resetRateLimitsForTesting } from '../src/index.ts';
 import { MemoryStore } from '../src/memory-store.ts';
 import pack from '../../../content/examples/demo-pack.json';
 
@@ -14,6 +14,8 @@ let store: MemoryStore;
 let app: ReturnType<typeof createApp>;
 
 beforeEach(() => {
+  // شمارندهٔ مشترک سطح isolate: هر تست از صفر شروع کند
+  resetRateLimitsForTesting();
   store = new MemoryStore();
   store.nodes = pack.nodes.map((n) => ({ ...n })) as typeof store.nodes;
   store.dependencies = pack.dependencies.map((d) => ({ ...d })) as typeof store.dependencies;

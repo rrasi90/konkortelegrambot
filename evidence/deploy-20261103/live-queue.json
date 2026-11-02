@@ -1,0 +1,214 @@
+{
+  "items": [
+    {
+      "card": {
+        "id": "user-1:question:demo-q-005",
+        "nodeId": "stats.scales",
+        "cardType": "question",
+        "questionId": "demo-q-005",
+        "trapCardId": null,
+        "isRepair": false,
+        "isProof": false
+      },
+      "question": {
+        "id": "demo-q-005",
+        "nodeId": "stats.scales",
+        "examYear": 1399,
+        "text": "«رتبه‌بندی رضایت کارکنان به‌صورت ضعیف/متوسط/خوب» از چه مقیاسی است؟",
+        "options": [
+          "رتبه‌ای (ترتیبی)",
+          "اسمی",
+          "نسبتی",
+          "فاصله‌ای"
+        ],
+        "isVerified": false
+      },
+      "course": "آمار و کاربرد آن در مدیریت",
+      "chapter": "مبانی اندازه‌گیری",
+      "topic": "مقیاس‌های اسمی، رتبه‌ای، فاصله‌ای و نسبتی",
+      "courseTitle": "آمار و کاربرد آن در مدیریت",
+      "chapterTitle": "مبانی اندازه‌گیری",
+      "attemptId": "att-e2917f4a-46d7-43ce-9551-0bc27872bdc0",
+      "attemptType": "practice",
+      "activityType": "review",
+      "assessmentState": "unknown",
+      "masteryEstimate": null,
+      "evidenceLevel": "none",
+      "estimatedMinutes": 25,
+      "priority": 0.05,
+      "skillEvidence": {
+        "skillId": "skill.stats.scales.identify",
+        "estimatedMinutes": 25
+      }
+    },
+    {
+      "card": {
+        "id": "user-1:question:demo-q-003",
+        "nodeId": "sm.value_chain",
+        "cardType": "question",
+        "questionId": "demo-q-003",
+        "trapCardId": null,
+        "isRepair": false,
+        "isProof": false
+      },
+      "question": {
+        "id": "demo-q-003",
+        "nodeId": "sm.value_chain",
+        "examYear": 1400,
+        "text": "در زنجیرهٔ ارزش پورتر، فعالیت‌های «حاشیه‌ساز» کدام‌اند؟",
+        "options": [
+          "زیرساخت سازمان، مدیریت منابع انسانی، توسعهٔ فناوری و خرید",
+          "ورودی‌ها، عملیات، خروجی‌ها، بازاریابی و فروش و خدمات",
+          "فقط بازاریابی و فروش",
+          "فقط عملیات و خدمات"
+        ],
+        "isVerified": false
+      },
+      "course": "مدیریت استراتژیک پیشرفته",
+      "chapter": "تحلیل صنعت",
+      "topic": "زنجیره ارزش پورتر",
+      "courseTitle": "مدیریت استراتژیک پیشرفته",
+      "chapterTitle": "تحلیل صنعت",
+      "attemptId": "att-bffd1e4e-34e9-4a4f-be99-f80200c069c2",
+      "attemptType": "practice",
+      "activityType": "review",
+      "assessmentState": "unknown",
+      "masteryEstimate": null,
+      "evidenceLevel": "none",
+      "estimatedMinutes": 40,
+      "priority": 0.03,
+      "skillEvidence": {
+        "skillId": "skill.sm.value_chain.porter",
+        "estimatedMinutes": 40
+      }
+    },
+    {
+      "card": {
+        "id": "user-1:question:demo-q-004",
+        "nodeId": "sm.portfolio",
+        "cardType": "question",
+        "questionId": "demo-q-004",
+        "trapCardId": null,
+        "isRepair": false,
+        "isProof": false
+      },
+      "question": {
+        "id": "demo-q-004",
+        "nodeId": "sm.portfolio",
+        "examYear": 1402,
+        "text": "در ماتریس BCG، واحدی که سهم بازار کم اما رشد بازار بالا دارد چه نامیده می‌شود؟",
+        "options": [
+          "علامت سؤال",
+          "ستاره",
+          "گاو شیری",
+          "سگ"
+        ],
+        "isVerified": false
+      },
+      "course": "مدیریت استراتژیک پیشرفته",
+      "chapter": "استراتژی سطح کسب‌وکار",
+      "topic": "ماتریس‌های پورتفولیو (BCG و GE)",
+      "courseTitle": "مدیریت استراتژیک پیشرفته",
+      "chapterTitle": "استراتژی سطح کسب‌وکار",
+      "attemptId": "att-95defff6-dcd1-45f7-b84f-7ef48af1c24c",
+      "attemptType": "practice",
+      "activityType": "review",
+      "assessmentState": "unknown",
+      "masteryEstimate": null,
+      "evidenceLevel": "none",
+      "estimatedMinutes": 45,
+      "priority": 0.03,
+      "skillEvidence": {
+        "skillId": "skill.sm.portfolio.bcg_ge",
+        "estimatedMinutes": 45
+      }
+    },
+    {
+      "card": {
+        "id": "user-1:question:demo-q-001",
+        "nodeId": "sm.rbv",
+        "cardType": "question",
+        "questionId": "demo-q-001",
+        "trapCardId": null,
+        "isRepair": false,
+        "isProof": false
+      },
+      "question": {
+        "id": "demo-q-001",
+        "nodeId": "sm.rbv",
+        "examYear": 1401,
+        "text": "کدام گزینه، ویژگی‌های منبع استراتژیک در مدل بارنی را به‌طور کامل توصیف می‌کند؟",
+        "options": [
+          "ارزش‌مند، کمیاب، تقلیدناپذیر و جایگزینی‌ناپذیر",
+          "فراوان، ارزان و در دسترس",
+          "قابل کپی، ملموس و قابل معامله",
+          "شهودی، ملموس و ماندگار"
+        ],
+        "isVerified": false
+      },
+      "course": "مدیریت استراتژیک پیشرفته",
+      "chapter": "دیدگاه‌های استراتژی",
+      "topic": "دیدگاه مبتنی بر منابع (بارنی)",
+      "courseTitle": "مدیریت استراتژیک پیشرفته",
+      "chapterTitle": "دیدگاه‌های استراتژی",
+      "attemptId": "att-003891b3-e7c9-4ae4-8175-dd402d255a51",
+      "attemptType": "practice",
+      "activityType": "review",
+      "assessmentState": "unknown",
+      "masteryEstimate": null,
+      "evidenceLevel": "none",
+      "estimatedMinutes": 50,
+      "priority": 0.01,
+      "skillEvidence": {
+        "skillId": "skill.sm.rbv.vrio",
+        "estimatedMinutes": 50
+      }
+    },
+    {
+      "card": {
+        "id": "user-1:question:demo-q-002",
+        "nodeId": "sm.rbv",
+        "cardType": "question",
+        "questionId": "demo-q-002",
+        "trapCardId": null,
+        "isRepair": false,
+        "isProof": false
+      },
+      "question": {
+        "id": "demo-q-002",
+        "nodeId": "sm.rbv",
+        "examYear": 1403,
+        "text": "قابلیت‌های پویا (تیس) عمدتاً برای برطرف‌کردن کدام محدودیتِ دیدگاه مبتنی بر منابع مطرح شدند؟",
+        "options": [
+          "سکون قابلیت‌ها در محیط‌های به‌سرعت متغیر",
+          "تأکید بیش از حد بر مشتری",
+          "نادیده‌گرفتن هزینهٔ تولید",
+          "تمرکز بر بازارهای محلی"
+        ],
+        "isVerified": false
+      },
+      "course": "مدیریت استراتژیک پیشرفته",
+      "chapter": "دیدگاه‌های استراتژی",
+      "topic": "دیدگاه مبتنی بر منابع (بارنی)",
+      "courseTitle": "مدیریت استراتژیک پیشرفته",
+      "chapterTitle": "دیدگاه‌های استراتژی",
+      "attemptId": "att-143ac3c8-14b3-41fb-9da0-3e2f2d1f22ac",
+      "attemptType": "practice",
+      "activityType": "review",
+      "assessmentState": "unknown",
+      "masteryEstimate": null,
+      "evidenceLevel": "none",
+      "estimatedMinutes": 50,
+      "priority": 0.01,
+      "skillEvidence": {
+        "skillId": "skill.sm.rbv.vrio",
+        "estimatedMinutes": 50
+      }
+    }
+  ],
+  "mode": "desk",
+  "budgetMinutes": null,
+  "spentMinutes": 210,
+  "proofMinutes": 0,
+  "spendableMinutes": 210
+}

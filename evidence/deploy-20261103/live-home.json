@@ -1,0 +1,35 @@
+{
+  "user": {
+    "displayName": "اعتبارسنجی استقرار",
+    "activeTracks": [
+      "common",
+      "business",
+      "technology",
+      "strategy",
+      "industrial"
+    ]
+  },
+  "stats": {
+    "coins": 0,
+    "streakDays": 0,
+    "dayNumber": 0,
+    "examDate": null,
+    "daysLeft": null
+  },
+  "progress": {
+    "overall": null,
+    "assessedNodes": 0,
+    "nodes": 17
+  },
+  "today": {
+    "answered": 0,
+    "correct": 0
+  },
+  "reviewDue": 0,
+  "nightQuiz": {
+    "available": false,
+    "wrongCount": 0,
+    "wrongAnswersCount": 0
+  },
+  "mentorMessage": "خوش اومدی! هر روز چند سؤال، آرام ولی پیوسته — نقشهٔ تسلطت کم‌کم ساخته می‌شود."
+}

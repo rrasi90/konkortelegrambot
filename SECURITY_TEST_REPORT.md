@@ -14,9 +14,9 @@
 
 - Runtime: Node v24.18.0, Vitest 5.0.5, Hono worker with `MemoryStore` for API tests.
 - Database: PostgreSQL 16 in Docker (`ael-pg-test`) with migrations 0001–0015 and seeds.
-- Suites: full `npm test -- --run` (332 tests), worker typecheck and build; 16-block psql
+- Suites: full `npm test -- --run` (333 tests), worker typecheck and build; 16-block psql
   integrity suite; targeted code review of auth, ticket and PostgREST query paths.
-- Evidence: `evidence/audit-20261102/vitest-final.txt` (332/332),
+- Evidence: `evidence/audit-20261102/vitest-final.txt` (332/332) و `evidence/deploy-20261103/vitest-final.txt` (333/333),
   `evidence/audit-20261102/db-integrity-0015.txt` (migrations 0001→0015 + seeds + 16 blocks on a
   fresh scratch DB, `INTEGRITY_EXIT=0`), `evidence/audit-20261102/db-migration-0015.txt`,
   plus the earlier `evidence/phase-5/security-local-suite.txt` (266/266).
