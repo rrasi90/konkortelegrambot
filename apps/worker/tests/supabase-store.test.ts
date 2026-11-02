@@ -98,3 +98,104 @@ describe('SupabaseStore — فیلترهای PostgREST', () => {
     expect(calls[0].url).not.toContain('attempt_id=eq.a&user_id=eq.attacker');
   });
 });
+
+describe('SupabaseStore — نگاشت درست روی ستون‌های واقعی اسکیما', () => {
+  it('listPacks ستون‌های وجوددارِ exam_packs را می‌خواند و صحیح نگاشت می‌کند', async () => {
+    installFetch(() =>
+      jsonResponse([
+        {
+          id: 'demo-pack',
+          name: 'بستهٔ نمایشی',
+          track: 'business',
+          status: 'published',
+          rights_status: 'authorized',
+          metadata: null,
+        },
+        {
+          id: 'synth-pack',
+          name: 'بستهٔ ساختگی',
+          track: 'common',
+          status: 'draft',
+          rights_status: 'authorized',
+          metadata: { synthetic: true, tracks: ['strategy', 'industrial'] },
+        },
+      ]),
+    );
+    const store = new SupabaseStore('https://db.test', 'service-key');
+    const packs = await store.listPacks();
+
+    // pack_id/title/tracks/is_demo در اسکیما وجود ندارند؛ درخواست قدیمی ۴۰۰ می‌داد
+    expect(calls[0].url).toContain('/rest/v1/exam_packs?');
+    expect(calls[0].url).toContain('select=id,name,track,status,rights_status,metadata');
+    expect(calls[0].url).not.toContain('pack_id');
+    expect(packs[0]).toEqual({ packId: 'demo-pack', title: 'بستهٔ نمایشی', tracks: ['business'], isDemo: false });
+    expect(packs[1]!.tracks).toEqual(['strategy', 'industrial']);
+    expect(packs[1]!.isDemo).toBe(true);
+  });
+
+  it('saveExamSelection با on_conflict می‌نویسد تا انتخاب همان سال تکراری نشود', async () => {
+    installFetch(() =>
+      jsonResponse([
+        {
+          user_id: 'u-1',
+          exam_year: 1406,
+          sub_group_id: 'mgmt',
+          combination_code: '3',
+          set_code: '2162',
+          is_active: true,
+          selected_at: '2026-11-02T00:00:00Z',
+        },
+      ]),
+    );
+    const store = new SupabaseStore('https://db.test', 'service-key');
+    const selection = await store.saveExamSelection('u-1', {
+      examYear: 1406,
+      subGroupId: 'mgmt',
+      combinationCode: '3',
+      setCode: '2162',
+    });
+
+    // قید یکتا روی (user_id, exam_year) است؛ بدون on_conflict دومین PUT خطای ۴۰۹ می‌داد
+    expect(calls[0].method).toBe('POST');
+    expect(calls[0].url).toContain('exam_selections?on_conflict=user_id,exam_year');
+    expect(selection.examYear).toBe(1406);
+  });
+
+  it('listQuestions وضعیت isVerified را از verification_status می‌سازد (نه همیشه false)', async () => {
+    installFetch(() =>
+      jsonResponse([
+        {
+          id: 'q-verified',
+          node_id: 'n-1',
+          exam_year: 1403,
+          question_text: 'سؤال تأییدشده',
+          options: ['الف', 'ب'],
+          correct_option: 0,
+          explanation: null,
+          trap_note: null,
+          exam_level: 'doctorate',
+          content_origin: 'official_booklet',
+          verification_status: 'verified',
+        },
+        {
+          id: 'q-demo',
+          node_id: 'n-2',
+          exam_year: null,
+          question_text: 'سؤال نمایشی',
+          options: ['الف', 'ب'],
+          correct_option: 1,
+          explanation: null,
+          trap_note: null,
+          exam_level: null,
+          content_origin: 'synthetic_demo',
+          verification_status: 'demo',
+        },
+      ]),
+    );
+    const store = new SupabaseStore('https://db.test', 'service-key');
+    const questions = await store.listQuestions();
+
+    expect(questions.find((q) => q.id === 'q-verified')!.isVerified).toBe(true);
+    expect(questions.find((q) => q.id === 'q-demo')!.isVerified).toBe(false);
+  });
+});

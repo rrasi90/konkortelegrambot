@@ -486,6 +486,7 @@ export class SupabaseStore implements DataStore {
       trap_note: string | null;
       exam_level: string | null;
       content_origin: string | null;
+      verification_status: string | null;
     }[];
     const questions = rows.map((r) => ({
       id: r.id,
@@ -498,6 +499,9 @@ export class SupabaseStore implements DataStore {
       trapNote: r.trap_note ?? undefined,
       examLevel: (r.exam_level ?? undefined) as Question['examLevel'],
       contentOrigin: (r.content_origin ?? undefined) as Question['contentOrigin'],
+      // MemoryStore مقدار isVerified را از seed نگه می‌دارد؛ اینجا باید از
+      // verification_status خوانده شود وگرنه در پروداکشن همیشه false است.
+      isVerified: r.verification_status === 'verified',
     }));
     this._questionsCache = questions;
     return questions;
@@ -799,18 +803,32 @@ export class SupabaseStore implements DataStore {
   }
 
   async listPacks(): Promise<{ packId: string; title: string; tracks: TrackId[]; isDemo: boolean }[]> {
+    // exam_packs ستون‌های pack_id/title/tracks/is_demo ندارد؛ نگاشت روی
+    // ستون‌های واقعی انجام می‌شود (وگرنه PostgREST خطای ۴۰۰ می‌دهد و /api/tracks
+    // همیشه بستهٔ خالی برمی‌گرداند).
     const rows = (await this.request(
       'GET',
       'exam_packs',
       undefined,
-      '?select=pack_id,title,tracks,is_demo',
-    )) as { pack_id: string; title: string; tracks: string[] | null; is_demo: boolean | null }[];
-    return (rows ?? []).map((r) => ({
-      packId: r.pack_id,
-      title: r.title,
-      tracks: (r.tracks ?? ['common']) as TrackId[],
-      isDemo: Boolean(r.is_demo),
-    }));
+      '?select=id,name,track,status,rights_status,metadata&is_active=is.true',
+    )) as {
+      id: string;
+      name: string;
+      track: string;
+      status: string;
+      rights_status: string;
+      metadata: Record<string, unknown> | null;
+    }[];
+    return (rows ?? []).map((r) => {
+      const meta = (r.metadata ?? {}) as Record<string, unknown>;
+      const metaTracks = Array.isArray(meta.tracks) ? (meta.tracks as unknown[]).map(String) : [];
+      return {
+        packId: r.id,
+        title: r.name,
+        tracks: (metaTracks.length > 0 ? metaTracks : [r.track]) as TrackId[],
+        isDemo: meta.synthetic === true || r.status === 'draft',
+      };
+    });
   }
 
   /* ---------- R-020 implementations ---------- */
@@ -821,7 +839,10 @@ export class SupabaseStore implements DataStore {
     combinationCode?: string | null;
     setCode?: string | null;
   }): Promise<ExamSelection> {
-    const rows = (await this.request('POST', 'exam_selections', {
+    // یکتایی (user_id, exam_year) در 0011 تعریف شده؛ بدون on_conflict، دومین
+    // PUT برای همان سال خطای duplicate key می‌داد (MemoryStore با Map.set این
+    // واگرایی را پنهان می‌کرد).
+    const rows = (await this.request('POST', 'exam_selections?on_conflict=user_id,exam_year', {
       user_id: userId,
       exam_year: input.examYear,
       sub_group_id: input.subGroupId,
