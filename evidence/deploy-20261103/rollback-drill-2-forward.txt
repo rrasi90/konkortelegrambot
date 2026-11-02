@@ -1,0 +1,9 @@
+== ROLL FORWARD to b72fe023 ==
+Performing rollback...
+│
+╰  SUCCESS  Worker Version b72fe023-1fe1-43e6-8257-dd6501472f2c has been deployed to 100% of traffic.
+
+Current Version ID: b72fe023-1fe1-43e6-8257-dd6501472f2c
+== marker restored ==
+health=200
+detail_without_admin=403

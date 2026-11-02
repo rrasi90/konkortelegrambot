@@ -1,0 +1,15 @@
+== marker before drill (current version b72fe023 has /api/health/detail => 403 without admin token) ==
+detail=403
+== ROLL BACK to 16e3221c ==
+│
+? Are you sure you want to deploy this Worker Version to 100% of traffic?
+🤖 Using fallback value in non-interactive context: yes
+Performing rollback...
+│
+╰  SUCCESS  Worker Version 16e3221c-90d5-46d0-9eb3-29f87da26a29 has been deployed to 100% of traffic.
+
+Current Version ID: 16e3221c-90d5-46d0-9eb3-29f87da26a29
+== verify the rolled-back version is live (endpoint absent => 404) ==
+health=200 detail=200
+{"error":"مسیر API یافت نشد"}health=404 detail=404
+detail_after_rollback=404
