@@ -334,7 +334,7 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(last).toBe(429);
   });
 
-  it('R-034: در پروداکشن شمارندهٔ نرخ از یک createApp به createApp بعدی زنده می‌ماند', async () => {
+  it('A-04: در پروداکشن شمارندهٔ نرخ از یک createApp به createApp بعدی زنده می‌ماند', async () => {
     // Workers به‌ازای هر درخواست createApp(env) را صدا می‌زند؛ اگر شمارنده داخل
     // createApp ساخته شود هر درخواست Map تازه می‌گیرد و ۴۲۹ هرگز صادر نمی‌شود.
     const prodEnv = {

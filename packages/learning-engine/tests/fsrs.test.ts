@@ -378,7 +378,7 @@ describe('FSRS Memory Model & 6D Learner State Engine', () => {
   });
 });
 
-describe('R-041 — دروازهٔ واحد آمادگی اثبات (§8.2)', () => {
+describe('A-12 — دروازهٔ واحد آمادگی اثبات (§8.2)', () => {
   it('آستانهٔ اثبات یک عدد واحد است (۰٫۷۵) و ۰٫۶۵ دیگر جایی ندارد', () => {
     expect(PROOF_READINESS_PROFICIENCY).toBe(0.75);
     expect(PROOF_READINESS_MIN_EVIDENCE).toBe(3);

@@ -4,7 +4,7 @@ import { MemoryStore } from '../src/memory-store.ts';
 import pack from '../../../content/examples/demo-pack.json';
 
 /**
- * رگرسیون‌های ممیزی جامع ۱۴۰۴-۰۸-۱۱ (R-034 تا R-038).
+ * رگرسیون‌های ممیزی جامع ۱۴۰۴-۰۸-۱۱ (A-05 تا A-17).
  * هر تست یک نقص تأییدشده را می‌بندد: سکه‌سازی، نشتی محتوای صف، تاریخ نامعتبر،
  * سقف تعداد صف و خوداظهاری شاهدساز.
  */
@@ -57,7 +57,7 @@ function tehranDate(offsetDays = 0): string {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }).format(d);
 }
 
-describe('R-034 — صف: نشتی و سقف', () => {
+describe('A-06 — صف: نشتی و سقف', () => {
   it('آیتم صف برای سؤالِ تستی یادداشت دام و جزئیات داخلی کارت را افشا نمی‌کند', async () => {
     const token = await login();
     await app.request('/api/tracks', authed(token, { method: 'PUT', body: JSON.stringify({ tracks: ['business', 'technology', 'strategy', 'industrial'] }) }));
@@ -128,7 +128,7 @@ describe('R-034 — صف: نشتی و سقف', () => {
   });
 });
 
-describe('R-035 — سکه: مسیر چرخه‌ای بسته شد', () => {
+describe('A-05 — سکه: مسیر چرخه‌ای بسته شد', () => {
   it('پاسخ درستِ دوبارهٔ همان سؤال در همان روز سکهٔ جدید نمی‌سازد', async () => {
     const token = await login();
     await app.request('/api/tracks', authed(token, { method: 'PUT', body: JSON.stringify({ tracks: ['business', 'technology', 'strategy', 'industrial'] }) }));
@@ -170,7 +170,7 @@ describe('R-035 — سکه: مسیر چرخه‌ای بسته شد', () => {
   });
 });
 
-describe('R-036 — تنظیمات و ورودی‌ها', () => {
+describe('A-14 — تنظیمات و ورودی‌ها', () => {
   it('تاریخ ناموجود (۲۰۲۶-۰۲-۳۰) پذیرفته نمی‌شود', async () => {
     const token = await login();
     const bad = await app.request('/api/settings', authed(token, { method: 'PUT', body: JSON.stringify({ examDate: '2026-02-30' }) }));
@@ -198,7 +198,7 @@ describe('R-036 — تنظیمات و ورودی‌ها', () => {
   });
 });
 
-describe('R-037 — خوداظهاری شاهد نمی‌سازد', () => {
+describe('A-15 — خوداظهاری شاهد نمی‌سازد', () => {
   it('خوداظهاری «نمی‌دانستم» وضعیت مهارتِ بی‌شاهد نمی‌سازد و proven را تنزل نمی‌دهد', async () => {
     const token = await login();
     const me = await json(await app.request('/api/me', authed(token)));
@@ -237,7 +237,7 @@ describe('R-037 — خوداظهاری شاهد نمی‌سازد', () => {
   });
 });
 
-describe('R-039 — قفل زنجیره: خریده‌شده باید مصرف شود', () => {
+describe('A-16 — قفل زنجیره: خریده‌شده باید مصرف شود', () => {
   it('با یک قفل خریداری‌شده و یک روز gap، زنجیره حفظ و یک سهمیه مصرف می‌شود', async () => {
     const token = await login();
     const me = await json(await app.request('/api/me', authed(token)));
@@ -295,7 +295,7 @@ describe('R-039 — قفل زنجیره: خریده‌شده باید مصرف �
   });
 });
 
-describe('R-038 — پیشرفت خانه: «بی‌شاهد» با صفر یکی نیست', () => {
+describe('A-17 — پیشرفت خانه: «بی‌شاهد» با صفر یکی نیست', () => {
   it('برای کاربری که فقط یک گره سنجیده شده، میانگین روی همان گره است نه کل گره‌ها', async () => {
     const token = await login();
     const me = await json(await app.request('/api/me', authed(token)));

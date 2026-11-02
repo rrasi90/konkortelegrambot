@@ -31,7 +31,7 @@
 > remain BLOCKED** (zero labeled English questions/passages; no 11-capability spec, source corpus or AI governance), so
 > Phase 4 is **not** globally complete. Details in `docs/phase-4/PHASE_4_EXECUTION_TRACKER.md`; evidence `evidence/phase-4/`.
 > **Phase 5 (Validation & Release Gate): IN_PROGRESS (scoped local) — 2026-11-02.** Real local browser E2E through the
-> mini-app + worker (headless Chrome and Edge via CDP): 15/15 checks each, 0 console errors, 0 local HTTP errors (`evidence/phase-5/`).
+> mini-app + worker (headless Chrome and Edge via CDP): 15/15 checks each at that step (20/20 after the 2026-11-03 audit), 0 console errors, 0 local HTTP errors (`evidence/phase-5/`).
 > Local worker benchmark: 20 concurrent users, 1,380 requests, 0 errors, p99 ≤ 21 ms on MemoryStore
 > (`evidence/phase-4/bench-worker-local.txt`). Local PostgreSQL benchmark with 200k synthetic answer events:
 > the 30-day evidence query improved from p95 10.6 ms to 3.4 ms after migration 0013 added the missing
@@ -40,6 +40,19 @@
 > Security local suite 266/266 adds initData signature/staleness coverage and fixes two Phase 5
 > findings (constant-time signature compare, encoded PostgREST `attemptId`) — R-032.
 > `E2E_TEST_REPORT.md`, `PERFORMANCE_TEST_REPORT.md`, `SECURITY_TEST_REPORT.md` and
+> **Comprehensive audit — 2026-11-03 (branch `fix/comprehensive-audit-20261102`).** A four-track audit
+> (UI, Worker logic, learning engine, data layer) over `main` found 24 confirmed defects: 17 were fixed with
+> regression tests and 7 are recorded as DEFERRED / NOT_STARTED / BLOCKED with reasons
+> (`docs/audit/COMPREHENSIVE_AUDIT_20261102.md`, register block `A-01…A-24`). Severity highlights: a
+> security-definer answer RPC that any anon key could execute for any user (A-02), a production-only failure
+> of the rate limiter (A-04), a reward-farming loop through re-issued tickets (A-05), pre-answer exposure of
+> designer trap notes and FSRS card internals (A-06), an FSRS difficulty dimension that was mathematically
+> collapsed by mixing 4.5 weights into the FSRS-5 formula (A-08), fabricated "no evidence" states read as
+> weakness in error classification (A-07) and in the legacy engine where wrong answers *raised* mastery
+> (A-09), and four dead or invisible UI controls (A-10). Evidence: 332/332 vitest
+> (`evidence/audit-20261102/vitest-final.txt`), migrations 0001→0015 + seeds + 16-block integrity on a fresh
+> scratch DB (`db-integrity-0015.txt`), E2E 20/20 in Chrome and Edge, typecheck and Worker build EXIT=0.
+> This strengthens what exists; it removes none of the external release blockers below.
 > `PRODUCTION_READINESS_CHECKLIST.md` now report only measured scope; the full gate table is in
 > `docs/phase-5/PHASE_5_EXECUTION_TRACKER.md`; release decision is **NO-GO / DEFER**.
 > **BLOCKED/NOT_STARTED:** real pilot (no participants), SME content validation, staging/Telegram-host E2E,

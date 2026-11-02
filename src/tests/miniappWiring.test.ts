@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 /**
- * R-043 — هیچ کنترل تعاملی مینی‌اپ بی‌عملکرد نماند.
+ * A-10 — هیچ کنترل تعاملی مینی‌اپ بی‌عملکرد نماند.
  * نقص واقعی که این تست را ساخت: دکمهٔ «قفل روز پیوسته» در HTML بود، تابع
  * freezeStreak هم نوشته شده بود، ولی هیچ‌وقت به دکمه وصل نشد — کاربر کلیک
  * می‌کرد و هیچ اتفاقی نمی‌افتاد. این تست همان طبقهٔ نقص را می‌گیرد.
@@ -27,7 +27,7 @@ const interactiveIds = [
   ...idsOf(/<select\b[^>]*>/g),
 ];
 
-describe('R-043 — سیم‌کشی کنترل‌های مینی‌اپ', () => {
+describe('A-10 — سیم‌کشی کنترل‌های مینی‌اپ', () => {
   it('هر کنترل تعاملی در index.html در app.js معرفی (و وصل) شده است', () => {
     expect(interactiveIds.length).toBeGreaterThan(0);
     const unbound = interactiveIds.filter((id) => !js.includes(`'${id}'`));
