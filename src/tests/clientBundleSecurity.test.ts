@@ -22,10 +22,14 @@ describe('public client bundle answer-key guard', () => {
     expect(findings).toEqual([]);
   });
 
-  it('detects whitespace and quoted JSON keys', () => {
+  it('detects whitespace, quoted JSON keys and source-map contents', () => {
     const findings = findClientAnswerKeyLeaks({
       'assets/app.js': '({ "correctOption" : 3, \'correctIndex\' : 0 })',
+      'assets/app.js.map': JSON.stringify({
+        sourcesContent: ['export const key = { correctOption: 1 };'],
+      }),
     });
-    expect(findings).toHaveLength(2);
+    expect(findings).toHaveLength(3);
+    expect(findings[2]).toMatchObject({ asset: 'assets/app.js.map', field: 'correctOption', count: 1 });
   });
 });
