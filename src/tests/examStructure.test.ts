@@ -8,6 +8,7 @@ import {
   LATEST_EXAM_YEAR,
   getExamStructure,
   getExamStructureWarnings,
+  getCoefficientTotal,
   getSubGroupSubjects,
   getSpecializationSharePercent,
   getUnverifiedSubGroupCodes,
