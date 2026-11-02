@@ -45,6 +45,9 @@
 > **BLOCKED/NOT_STARTED:** real pilot (no participants), SME content validation, staging/Telegram-host E2E,
 > Worker-runtime/concurrent-DB/stress performance, rollback drill, monitoring and legal/privacy review. No merge or deploy performed.
 
+
+> **2026-11-02 correction after PR #5 CI:** 1406 question counts, durations and negative marking are now `null` until the official handbook is verified; the specialist coefficient is applied once to the complete bundle. The map no longer fabricates mastery=50 when only skill-state evidence exists. Migration 0014 persists the exact engine-computed skill state atomically, with integrity block 15. Question bank files now separate per-tier `counts.total` from `corpusTotal`. PR #5 CI on head `9bdbaf08` passed both jobs: PostgreSQL 16 migrations 0001–0014 + integrity; `npm ci`; TypeScript; 268/268 Vitest; content validation. Engine/React unification (R-009/R-025), 1406 handbook extraction, SME review, English content, Research Lab, pilot, staging, production-runtime load, pentest and legal review remain open; Gate 5 stays **NO-GO / DEFER**.
+
 | شاخص کلان              | مرحله | وضعیت        | تعریف موفقیت                             |
 | ---------------------- | ----- | ------------ | ---------------------------------------- |
 | Exam Coverage          | ۱ و ۲ | IN_PROGRESS  | تمام سرفصل‌های مصوب قابل ردیابی‌اند      |
