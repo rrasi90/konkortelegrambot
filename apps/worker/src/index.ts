@@ -1232,12 +1232,115 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
     const stats = await ensureStats(user.id);
 
-    // در حالت «در مسیر» (مترو)، سؤال‌های محاسباتی آمار کنار گذاشته می‌شوند
+    // در حالت «در مسیر» (مترو)، سؤال‌های محاسباتی آمار پیش از رتبه‌بندی و limit کنار گذاشته می‌شوند.
     const isConceptualNode = (nodeId: string): boolean =>
       mode === 'desk' || !nodeId.startsWith('stats.');
 
-    // کارت‌های تازه: اگر صف سررسیدشده‌ها پر نشد، برای سؤال‌های دیده‌نشدهٔ گرایش‌های فعال کارت بساز
-    let queue = buildDailyQueue(state, engineUser, { limit: 50 });
+    const now = new Date();
+    const masteryMap = state.mastery;
+    const examDate = stats.examDate ? new Date(`${stats.examDate}T00:00:00Z`) : undefined;
+    const prereqByNode = new Map<string, string[]>();
+    for (const dep of state.dependencies) {
+      if (dep.relation !== 'prerequisite') continue;
+      const list = prereqByNode.get(dep.source) ?? [];
+      list.push(dep.target);
+      prereqByNode.set(dep.source, list);
+    }
+    const scoreNowMs = now.getTime();
+    type QueueScore = {
+      minutes: number;
+      activityType: 'proof' | 'remedial' | 'review';
+      needsDiagnostic: boolean;
+      priority: number;
+    };
+    const scoreCache = new Map<string, QueueScore>();
+    const scoreQueueCard = (card: ReviewCard): QueueScore => {
+      const cached = scoreCache.get(card.id);
+      if (cached) return cached;
+
+      const activityType: QueueScore['activityType'] = card.isProof
+        ? 'proof'
+        : card.isRepair
+          ? 'remedial'
+          : 'review';
+      const nodeId = card.nodeId;
+      // §8.1: گره ارزیابی‌نشده = UNKNOWN، نه پیش‌فرض ساختگی ۵۰.
+      const masteryRaw = masteryMap.get(nodeId);
+      const isUnassessed = masteryRaw === undefined;
+      const knowledgeGap01 = isUnassessed
+        ? 1
+        : Math.min(1, Math.max(0, (100 - masteryRaw) / 100));
+
+      let forgettingRisk: number;
+      if (card.fsrs && card.fsrs.stability > 0) {
+        const lastReviewMs = Date.parse(card.fsrs.lastReviewedAt);
+        const elapsedDays = Number.isFinite(lastReviewMs)
+          ? Math.max(0, (scoreNowMs - lastReviewMs) / 86400000)
+          : 0;
+        forgettingRisk = 1 - calculateRetrievability(card.fsrs.stability, elapsedDays);
+      } else {
+        // کارت بدون وضعیت FSRS: فقط تأخیر واقعی نسبت به موعد، نه فاصلهٔ آینده.
+        const dueMs = Date.parse(card.dueAt);
+        const overdueDays = Number.isFinite(dueMs)
+          ? Math.max(0, (scoreNowMs - dueMs) / 86400000)
+          : 0;
+        forgettingRisk =
+          overdueDays <= 0 ? 0 : Math.min(0.9, overdueDays / Math.max(1, card.intervalDays));
+      }
+
+      // پیش‌نیاز ارزیابی‌نشده محافظه‌کارانه ۰ است؛ مجهول را تسلط فرض نمی‌کنیم.
+      const prereqScores = (prereqByNode.get(nodeId) ?? []).map(
+        (pid) => masteryMap.get(pid) ?? 0,
+      );
+      const prereqMultiplier = derivePrereqMultiplier(prereqScores);
+
+      let examProximity01 = 0;
+      if (examDate && Number.isFinite(examDate.getTime())) {
+        const daysLeft = Math.max(0, (examDate.getTime() - scoreNowMs) / 86400000);
+        examProximity01 = Math.max(0, Math.min(1, 1 - daysLeft / 90));
+      }
+
+      const examValue = calculateExamValue(nodeId, {
+        examPackWeights: new Map<string, number>(),
+        currentPack: '',
+        masteryMap,
+      });
+      const benefit = isUnassessed
+        ? calculateExpectedBenefit('diagnostic', { masteryMap, evidenceLevel: 'none' })
+        : calculateExpectedBenefit(activityType, {
+            masteryMap,
+            evidenceLevel: 'partial',
+          });
+      const minutes = estimatedMinutesForNode(nodeId);
+      const result: QueueScore = {
+        minutes,
+        activityType,
+        needsDiagnostic: isUnassessed,
+        priority: computePriorityV3({
+          examValue,
+          knowledgeGap01,
+          prereqMultiplier,
+          forgettingRisk,
+          examProximity01,
+          expectedBenefit: benefit,
+          minutes,
+        }),
+      };
+      scoreCache.set(card.id, result);
+      return result;
+    };
+
+    // امتیازدهی و فیلتر commute داخل builder و پیش از اعمال سقف candidate انجام می‌شود.
+    const buildScoredQueue = () =>
+      buildDailyQueue(state, engineUser, {
+        limit: 50,
+        now,
+        includeCard: (card) => isConceptualNode(card.nodeId),
+        priorityScore: (card) => scoreQueueCard(card).priority,
+      });
+
+    // کارت‌های تازه فقط وقتی ساخته می‌شوند که صف واجدشرایط کمتر از limit درخواستی باشد.
+    let queue = buildScoredQueue();
     if (queue.length < limit) {
       const seenQuestionIds = new Set(state.cards.map((card) => card.questionId).filter(Boolean));
       const allowed = (nodeId: string): boolean => {
@@ -1248,10 +1351,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         (q) =>
           allowed(q.nodeId) &&
           !seenQuestionIds.has(q.id) &&
-          q.examYear !== 1404 && // قرنطینه ۱۴۰۴ فقط از مسیر اثبات تسلط باز می‌شود
+          q.examYear !== 1404 &&
           isConceptualNode(q.nodeId),
       );
-      const now = new Date();
       const newCards: ReviewCard[] = [];
       for (const q of freshQuestions) {
         if (queue.length + newCards.length >= limit) break;
@@ -1274,13 +1376,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       if (newCards.length > 0) {
         await store.upsertCards(newCards);
         for (const card of newCards) state.cards.push(card);
-        queue = buildDailyQueue(state, engineUser, { limit: 50 });
+        queue = buildScoredQueue();
       }
     }
 
     // ---------- گام ۴: آزمونک اثبات تسلط (Holdout Proof) ----------
     // مهارت با احتمال تسلط ≥ ۰٫۷۵ و پوششِ نیازمند اثبات → ۱ سؤال قرنطینهٔ ۱۴۰۴ همان گره
-    const now = new Date();
     const proofCards: ReviewCard[] = [];
     for (const st of (state.skillStates ?? new Map()).values()) {
       if (st.coverageStatus !== 'needs_proof') continue;
@@ -1321,6 +1422,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       await store.upsertCards(proofCards);
       // کارت‌های اثبات به صف جاری اضافه شوند (ساخت queue پیش از تزریق بود)
       for (const pc of proofCards) {
+        // An existing candidate may have been scored before it was promoted to proof.
+        scoreCache.delete(pc.id);
         if (!queue.some((q) => q.card.id === pc.id)) {
           queue = [...queue, { card: pc, question: state.questions.get(pc.questionId ?? '') }];
         }
@@ -1328,93 +1431,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
 
     // ---------- گام ۳: برنامه‌ریز بودجه‌محور (ROI Planner) ----------
-    // R-011 (ARC-02): امتیاز اولویت فقط از تابع کاننیکال computePriorityV3 در @ael/utils
-    // محاسبه می‌شود؛ خطر فراموشی از منحنی توانی FSRS (@ael/engine) مشتق می‌شود.
-    const masteryMap = state.mastery;
-    const examDate = stats.examDate ? new Date(`${stats.examDate}T00:00:00Z`) : undefined;
     const proofIds = new Set(proofCards.map((pc) => pc.id));
-    // پیش‌نیازهای هر گره (yال ی «prerequisite»: source → target = پیش‌نیازهای source)
-    const prereqByNode = new Map<string, string[]>();
-    for (const dep of state.dependencies) {
-      if (dep.relation !== 'prerequisite') continue;
-      const list = prereqByNode.get(dep.source) ?? [];
-      list.push(dep.target);
-      prereqByNode.set(dep.source, list);
-    }
-    const scoreNowMs = Date.now();
-    const scored = queue
-      .filter((item) => isConceptualNode(item.card.nodeId))
-      .map((item) => {
-        const activityType = item.card.isProof
-          ? ('proof' as const)
-          : item.card.isRepair
-            ? ('remedial' as const)
-            : ('review' as const);
-        const nodeId = item.card.nodeId;
-
-        // §8.1: گره ارزیابی‌نشده = UNKNOWN، نه پیش‌فرض ساختگی ۵۰.
-        // کمبود شاهد → بیشترین شکاف دانش؛ «ندانستن» ضعف نیست، نیاز به سنجش است.
-        const masteryRaw = masteryMap.get(nodeId);
-        const isUnassessed = masteryRaw === undefined;
-        const knowledgeGap01 = isUnassessed ? 1 : Math.min(1, Math.max(0, (100 - masteryRaw!) / 100));
-
-        let forgettingRisk: number;
-        if (item.card.fsrs) {
-          const elapsedDays = Math.max(
-            0,
-            (scoreNowMs - new Date(item.card.fsrs.lastReviewedAt).getTime()) / 86400000,
-          );
-          forgettingRisk = 1 - calculateRetrievability(item.card.fsrs.stability, elapsedDays);
-        } else {
-          // کارت بدون وضعیت FSRS: تقریب خطی نسبت تأخیر به فاصله (مستند در ARC-02)
-          const overdueDays = (scoreNowMs - new Date(item.card.dueAt).getTime()) / 86400000;
-          forgettingRisk =
-            overdueDays <= 0 ? 0 : Math.min(0.9, overdueDays / Math.max(1, item.card.intervalDays));
-        }
-
-        // پیش‌نیاز ارزیابی‌نشده محافظه‌کارانه ۰: کاربر مبتدی بدون پیش‌نیاز به
-        // محتوای پیشرفته نرود (خاصیت ۷ §۸.۴)
-        const prereqScores = (prereqByNode.get(nodeId) ?? []).map(
-          (pid) => masteryMap.get(pid) ?? 0,
-        );
-        const prereqMultiplier = derivePrereqMultiplier(prereqScores);
-
-        let examProximity01 = 0;
-        if (examDate) {
-          const daysLeft = Math.max(0, (examDate.getTime() - scoreNowMs) / 86400000);
-          examProximity01 = Math.max(0, Math.min(1, 1 - daysLeft / 90));
-        }
-
-        const examValue = calculateExamValue(nodeId, {
-          examPackWeights: new Map<string, number>(),
-          currentPack: '',
-          masteryMap,
-        });
-        const benefit = isUnassessed
-          // سود سنجش تشخیصی برای گره ناشناخته (حداکثر) — نه مرور یک حدس
-          ? calculateExpectedBenefit('diagnostic', { masteryMap, evidenceLevel: 'none' })
-          : calculateExpectedBenefit(activityType, {
-              masteryMap,
-              evidenceLevel: 'partial',
-            });
-        const minutes = estimatedMinutesForNode(nodeId);
-        return {
-          item,
-          minutes,
-          activityType,
-          isProof: proofIds.has(item.card.id) || item.card.isProof === true,
-          needsDiagnostic: isUnassessed,
-          priority: computePriorityV3({
-            examValue,
-            knowledgeGap01,
-            prereqMultiplier,
-            forgettingRisk,
-            examProximity01,
-            expectedBenefit: benefit,
-            minutes,
-          }),
-        };
-      });
+    const scored = queue.map((item) => ({
+      item,
+      ...scoreQueueCard(item.card),
+      isProof: proofIds.has(item.card.id) || item.card.isProof === true,
+    }));
     const nonProof = scored
       .filter((s) => !s.isProof)
       .sort((a, b) => b.priority - a.priority);

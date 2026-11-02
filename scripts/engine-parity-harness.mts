@@ -2,18 +2,24 @@
 // Runs paired deterministic scenarios through BOTH learning runtimes:
 //   A) src/engine/aelEngine.ts (React runtime)
 //   B) @ael/engine (packages/learning-engine — worker runtime)
-// plus packages/utils urgency (third variant) and records MATCHED/DIVERGED per
-// scenario. This is a divergence map for the Phase-4 unification, NOT a parity claim.
+// plus packages/utils urgency reference checks. The queue-order scenario validates the
+// canonical priority callback against buildDailyQueue; a Worker route integration test
+// separately verifies the former 51st-candidate regression. This is scoped parity evidence,
+// not proof that every React importer or learner-state persistence path is unified.
 // Run: npx tsx scripts/engine-parity-harness.mts
 import { writeFile, mkdir } from 'node:fs/promises';
 import { calculateCardRetrievability, initFSRS, stepFSRS } from '../src/engine/aelEngine';
 import {
+  DEFAULT_ENGINE_CONFIG,
   Rating,
+  buildDailyQueue,
   calculateRetrievability,
   initializeFSRSState,
   scheduleNextFSRS,
+  type EngineState,
   type FSRSState,
 } from '../packages/learning-engine/src/index';
+import type { KnowledgeNode, ReviewCard, TrackId } from '../packages/contracts/src/index';
 import {
   computePriorityV3,
   derivePrereqMultiplier,
@@ -133,13 +139,97 @@ for (const R of [0.9, 0.7, 0.4]) {
     note: 'R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)',
   });
 }
-rec({
-  scenario: 'urg-04-engine-order',
-  seam: 'urgency', input: 'two due cards, higher-urgency due later',
-  react: 'ROI-ordered (priorityScore/urgency)', shared: 'dueAt-ordered (buildDailyQueue core)',
-  verdict: 'DIVERGED',
-  note: 'worker /api/queue گام۳ now ROI-orders via computePriorityV3 (R-011); @ael/engine buildDailyQueue still due-sort — legacy importer migration is Phase-5 end-state',
-});
+{
+  const lowNode: KnowledgeNode = {
+    id: 'queue.low',
+    track: 'common',
+    course: 'queue-test',
+    chapter: 'priority',
+    topic: 'low-priority',
+  };
+  const highNode: KnowledgeNode = {
+    id: 'queue.high',
+    track: 'common',
+    course: 'queue-test',
+    chapter: 'priority',
+    topic: 'high-priority',
+  };
+  const lowCard: ReviewCard = {
+    id: 'queue:low',
+    userId: 'queue-user',
+    nodeId: lowNode.id,
+    cardType: 'question',
+    dueAt: new Date(NOW.getTime() - 5 * 86_400_000).toISOString(),
+    intervalDays: 5,
+    ease: 2.5,
+    isRepair: false,
+    timesSeen: 2,
+    timesCorrect: 1,
+  };
+  const highCard: ReviewCard = {
+    id: 'queue:high',
+    userId: 'queue-user',
+    nodeId: highNode.id,
+    cardType: 'question',
+    dueAt: new Date(NOW.getTime() - 1 * 86_400_000).toISOString(),
+    intervalDays: 1,
+    ease: 2.5,
+    isRepair: false,
+    timesSeen: 2,
+    timesCorrect: 1,
+  };
+  const queueState: EngineState = {
+    config: DEFAULT_ENGINE_CONFIG,
+    nodes: new Map([[lowNode.id, lowNode], [highNode.id, highNode]]),
+    dependencies: [],
+    questions: new Map(),
+    mastery: new Map(),
+    cards: [lowCard, highCard],
+  };
+  const scores = new Map<string, number>([
+    [lowCard.id, computePriorityV3({
+      examValue: 1,
+      knowledgeGap01: 0.1,
+      prereqMultiplier: derivePrereqMultiplier([]),
+      forgettingRisk: 0.1,
+      examProximity01: 0,
+      expectedBenefit: 1,
+      minutes: 1,
+    })],
+    [highCard.id, computePriorityV3({
+      examValue: 1,
+      knowledgeGap01: 0.9,
+      prereqMultiplier: derivePrereqMultiplier([]),
+      forgettingRisk: 0.4,
+      examProximity01: 0,
+      expectedBenefit: 1,
+      minutes: 1,
+    })],
+  ]);
+  const expectedOrder = [lowCard, highCard]
+    .sort((a, b) => (scores.get(b.id) ?? 0) - (scores.get(a.id) ?? 0))
+    .map((card) => card.id);
+  const actualOrder = buildDailyQueue(
+    queueState,
+    { userId: 'queue-user', activeTracks: ['common'] as TrackId[] },
+    {
+      limit: 2,
+      now: NOW,
+      priorityScore: (card) => scores.get(card.id) ?? 0,
+    },
+  ).map((item) => item.card.id);
+  const expected = expectedOrder.join('>');
+  const actual = actualOrder.join('>');
+  rec({
+    scenario: 'urg-04-engine-order',
+    seam: 'urgency',
+    input: 'two due cards, higher-priority card due later',
+    react: expected,
+    shared: actual,
+    verdict: expected === actual ? 'MATCHED' : 'DIVERGED',
+    note: 'The shared queue builder ranks all eligible candidates using the canonical ROI callback before slicing the requested limit',
+  });
+}
 
 // ---------- output ----------
 const canonicalSeamDivergences = rows.filter(

@@ -383,6 +383,58 @@ describe('daily queue', () => {
     expect(queue.length).toBe(1);
     expect(queue[0]?.card.id).toBe(due.id);
   });
+
+  it('فیلتر واجدشرایط و اولویت قبل از محدودیت تعداد اعمال می‌شوند', () => {
+    const earlierButLowerPriority = card('card:earlier-low', 'sm.rbv', {
+      dueAt: addDays(NOW, -5).toISOString(),
+    });
+    const laterButHigherPriority = card('card:later-high', 'sm.value_chain', {
+      dueAt: addDays(NOW, -1).toISOString(),
+    });
+    const commuteExcluded = card('card:commute-excluded', 'stats.anova', {
+      dueAt: addDays(NOW, -6).toISOString(),
+    });
+    const state = buildState({
+      cards: [earlierButLowerPriority, laterButHigherPriority, commuteExcluded],
+    });
+    const scores = new Map([
+      [earlierButLowerPriority.id, 1],
+      [laterButHigherPriority.id, 10],
+      [commuteExcluded.id, 100],
+    ]);
+    const scoredCardIds: string[] = [];
+
+    const queue = buildDailyQueue(state, user, {
+      limit: 1,
+      now: NOW,
+      includeCard: (candidate) => !candidate.nodeId.startsWith('stats.'),
+      priorityScore: (candidate) => {
+        scoredCardIds.push(candidate.id);
+        return scores.get(candidate.id) ?? 0;
+      },
+    });
+
+    expect(scoredCardIds).toEqual([earlierButLowerPriority.id, laterButHigherPriority.id]);
+    expect(queue).toHaveLength(1);
+    expect(queue[0]?.card.id).toBe(laterButHigherPriority.id);
+  });
+
+  it('در امتیازهای مساوی، موعد قدیمی‌تر tie-breaker باقی می‌ماند', () => {
+    const earlier = card('card:tie-earlier', 'sm.rbv', {
+      dueAt: addDays(NOW, -4).toISOString(),
+    });
+    const later = card('card:tie-later', 'sm.value_chain', {
+      dueAt: addDays(NOW, -2).toISOString(),
+    });
+    const state = buildState({ cards: [later, earlier] });
+    const queue = buildDailyQueue(state, user, {
+      limit: 2,
+      now: NOW,
+      priorityScore: () => 5,
+    });
+
+    expect(queue.map((item) => item.card.id)).toEqual([earlier.id, later.id]);
+  });
 });
 
 describe('mentor message', () => {

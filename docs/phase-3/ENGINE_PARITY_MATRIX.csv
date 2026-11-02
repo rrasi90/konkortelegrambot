@@ -1,4 +1,4 @@
-scenario,seam,input,react_runtime,shared_engine_runtime,verdict,note
+scenario,seam,input,legacy_or_reference,canonical_engine_runtime,verdict,note
 fsrs-01-fresh-easy,fsrs-interval,"brand-new card, rating=Easy(4)",8,8,MATCHED,React adapter delegates to canonical @ael/engine FSRS-5 initialization
 fsrs-02-S2.5-g1,fsrs-interval,S=2.5 D=5 elapsed=2d rating=1,1,1,MATCHED,canonical FSRS-5 transition
 fsrs-03-S2.5-g2,fsrs-interval,S=2.5 D=5 elapsed=2d rating=2,4,4,MATCHED,canonical FSRS-5 transition
@@ -19,4 +19,4 @@ ret-17-S7-t4,retrievability,S=7 elapsedDays=4,0.939,0.939,MATCHED,React adapter 
 urg-18-R0.9,urgency,retrievability=0.9,urgency=0.100 (multiplied as 1+x),riskTerm=1.100 (== 1+urgency),MATCHED,R-011 canonical multiplicative risk term
 urg-19-R0.7,urgency,retrievability=0.7,urgency=0.300 (multiplied as 1+x),riskTerm=1.300 (== 1+urgency),MATCHED,R-011 canonical multiplicative risk term
 urg-20-R0.4,urgency,retrievability=0.4,urgency=0.600 (multiplied as 1+x),riskTerm=1.600 (== 1+urgency),MATCHED,R-011 canonical multiplicative risk term
-urg-04-engine-order,urgency,"two due cards, higher-urgency due later",ROI-ordered (priorityScore/urgency),dueAt-ordered (buildDailyQueue core),DIVERGED,Worker /api/queue uses computePriorityV3; @ael/engine buildDailyQueue still sorts only by dueAt
+urg-04-engine-order,urgency,"two due cards, higher-priority card due later",expected ROI order=queue:high>queue:low,buildDailyQueue order=queue:high>queue:low,MATCHED,Worker passes canonical computePriorityV3 into priority-aware builder; route integration test verifies a high-priority 51st candidate is retained

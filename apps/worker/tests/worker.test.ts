@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { createApp } from '../src/index.ts';
 import { MemoryStore } from '../src/memory-store.ts';
 import pack from '../../../content/examples/demo-pack.json';
+import type { ReviewCard } from '@ael/contracts';
 
 const ENV = {
   SESSION_SECRET: 'test-secret',
@@ -45,6 +46,57 @@ async function json(res: Response): Promise<any> {
 }
 
 describe('worker API — حلقهٔ کامل یادگیری', () => {
+  it('کارت با ROI بالاتر حتی وقتی بعد از ۵۰ موعد قدیمی‌تر قرار می‌گیرد انتخاب می‌شود', async () => {
+    const token = await login();
+    const me = await json(await app.request('/api/me', authed(token)));
+    const userId = me.user.id as string;
+
+    const lowerPriorityQuestion = store.questions.find((q) => q.nodeId === 'sm.rbv');
+    const higherPriorityQuestion = store.questions.find((q) => q.nodeId === 'sm.value_chain');
+    expect(lowerPriorityQuestion).toBeTruthy();
+    expect(higherPriorityQuestion).toBeTruthy();
+
+    await store.upsertMastery(userId, [
+      { nodeId: 'sm.rbv', mastery: 95, status: 'mastered' },
+    ]);
+
+    const now = Date.now();
+    const lowPriorityCards: ReviewCard[] = Array.from({ length: 50 }, (_, index) => ({
+      id: `queue-low-priority-${index}`,
+      userId,
+      nodeId: 'sm.rbv',
+      cardType: 'question',
+      questionId: lowerPriorityQuestion!.id,
+      dueAt: new Date(now - 60_000).toISOString(),
+      intervalDays: 365,
+      ease: 2.5,
+      isRepair: false,
+      timesSeen: 5,
+      timesCorrect: 5,
+    }));
+    const highPriorityCard: ReviewCard = {
+      id: 'queue-high-priority-51st',
+      userId,
+      nodeId: 'sm.value_chain',
+      cardType: 'question',
+      questionId: higherPriorityQuestion!.id,
+      dueAt: new Date(now - 30_000).toISOString(),
+      intervalDays: 1,
+      ease: 2.5,
+      isRepair: false,
+      timesSeen: 0,
+      timesCorrect: 0,
+    };
+    await store.upsertCards([...lowPriorityCards, highPriorityCard]);
+
+    const response = await app.request('/api/queue?limit=1', authed(token));
+    expect(response.status).toBe(200);
+    const queue = await json(response);
+
+    expect(queue.items).toHaveLength(1);
+    expect(queue.items[0].card.id).toBe(highPriorityCard.id);
+    expect(queue.items[0].question.id).toBe(higherPriorityQuestion!.id);
+  });
   it('سلامت سیستم', async () => {
     const app = createApp(ENV);
     const res = await app.request('/api/health');
