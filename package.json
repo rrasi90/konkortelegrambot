@@ -20,7 +20,9 @@
     "validate:content": "node scripts/validate-content.mjs --all",
     "test": "vitest run",
     "validate:phase1": "node scripts/validate-phase-1-foundation.mjs",
-    "audit:client-bundle": "tsx scripts/audit-client-bundle.ts"
+    "audit:client-bundle": "tsx scripts/audit-client-bundle.ts",
+    "audit:miniapp": "tsx scripts/audit-client-bundle.ts apps/miniapp",
+    "dev:miniapp": "tsx scripts/dev-server.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
