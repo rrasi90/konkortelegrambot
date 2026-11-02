@@ -618,7 +618,14 @@ export interface QueueItem {
 export function buildDailyQueue(
   state: EngineState,
   user: EngineUserState,
-  opts: { limit: number; now?: Date },
+  opts: {
+    limit: number;
+    now?: Date;
+    /** Filter candidates before ranking and limiting (e.g. commute-mode exclusions). */
+    includeCard?: (card: ReviewCard) => boolean;
+    /** Higher scores rank first; due date remains the deterministic tie-breaker. */
+    priorityScore?: (card: ReviewCard) => number;
+  },
 ): QueueItem[] {
   const now = opts.now ?? new Date();
   const allowed = (nodeId: string): boolean => {
@@ -626,10 +633,28 @@ export function buildDailyQueue(
     if (!n) return false;
     return n.track === 'common' || user.activeTracks.includes(n.track);
   };
-  const due = state.cards
-    .filter((c) => allowed(c.nodeId) && new Date(c.dueAt).getTime() <= now.getTime())
-    .sort((a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime());
-  return due.slice(0, opts.limit).map((card) => {
+  const eligible = state.cards.filter(
+    (card) =>
+      allowed(card.nodeId) &&
+      new Date(card.dueAt).getTime() <= now.getTime() &&
+      (opts.includeCard?.(card) ?? true),
+  );
+  const priorityByCardId = new Map<string, number>();
+  if (opts.priorityScore) {
+    for (const card of eligible) {
+      const score = opts.priorityScore(card);
+      priorityByCardId.set(card.id, Number.isFinite(score) ? score : 0);
+    }
+  }
+  eligible.sort((a, b) => {
+    if (opts.priorityScore) {
+      const priorityDelta =
+        (priorityByCardId.get(b.id) ?? 0) - (priorityByCardId.get(a.id) ?? 0);
+      if (priorityDelta !== 0) return priorityDelta;
+    }
+    return new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime();
+  });
+  return eligible.slice(0, Math.max(0, opts.limit)).map((card) => {
     const item: QueueItem = { card };
     if (card.questionId) {
       const q = state.questions.get(card.questionId);
