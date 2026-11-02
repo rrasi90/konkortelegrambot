@@ -100,6 +100,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     (env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
       ? new SupabaseStore(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
       : (globalMemoryStore ??= new MemoryStore()));
+  // A-28: نوع لایهٔ داده باید از بیرون قابل تشخیص باشد (حالت بی‌صدا MemoryStore)
+  const storeKind: 'supabase' | 'memory' | 'injected' = options.store
+    ? 'injected'
+    : env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
+      ? 'supabase'
+      : 'memory';
   const isProduction =
     env.ENVIRONMENT === 'production' ||
     (typeof (globalThis as any).process !== 'undefined' && (globalThis as any).process.env?.NODE_ENV === 'production');
@@ -339,6 +345,42 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   /* ------------------------------ routes ------------------------------ */
 
   app.get('/api/health', (c) => c.json({ ok: true }));
+
+  // A-28: پیکربندی runtime را از بیرون قابل‌مشاهده می‌کند. پیش‌تر `/api/health`
+  // فقط {"ok":true} می‌داد، بنابراین ورکری که بی‌صدا با MemoryStore اجرا می‌شد
+  // (مانند محیط زندهٔ ۲۰۲۶-۱۱-۰۳) کاملاً سالم به‌نظر می‌رسید.
+  // فقط بولین/نام حالت برگردانده می‌شود؛ هیچ مقدار secret یا طول آن فاش نمی‌شود.
+  app.get('/api/health/detail', (c) => {
+    if (!isAdminAuthorized(c)) return adminAuthError(c);
+    const warnings: string[] = [];
+    if (storeKind !== 'supabase') {
+      warnings.push('persistence=memory: پیشرفت کاربران با هر deploy یا ایزولیت تازه از بین می‌رود (RK-13)');
+    }
+    if (allowDemoAuth) {
+      warnings.push('demo auth فعال است: ورود با telegramUserId بدون امضا پذیرفته می‌شود (RK-12)');
+    }
+    if (!isProduction) {
+      warnings.push('ENVIRONMENT=production ست نشده ⇒ گاردهای fail-closed پروداکشن اجرا نمی‌شود');
+    }
+    return c.json({
+      ok: true,
+      store: storeKind,
+      environment: env.ENVIRONMENT ?? null,
+      productionGuardsActive: isProduction,
+      demoAuthEnabled: allowDemoAuth,
+      secretsConfigured: {
+        sessionSecret: Boolean(env.SESSION_SECRET),
+        adminApiToken: Boolean(env.ADMIN_API_TOKEN),
+        telegramBotToken: Boolean(env.TELEGRAM_BOT_TOKEN),
+        telegramWebhookSecret: Boolean(env.TELEGRAM_WEBHOOK_SECRET),
+        supabaseUrl: Boolean(env.SUPABASE_URL),
+        supabaseServiceRoleKey: Boolean(env.SUPABASE_SERVICE_ROLE_KEY),
+      },
+      // محدودیت مستندشدهٔ A-27: شمارندهٔ نرخ در هر isolate مستقل است
+      rateLimitScope: 'per-isolate-in-memory',
+      warnings,
+    });
+  });
 
   // شمارندهٔ نرخ باید سطح isolate (ماژول) باشد: Workers به‌ازای هر درخواست
   // createApp(env) را صدا می‌زند، پس Map داخل createApp هیچ‌وقت بیش از یک

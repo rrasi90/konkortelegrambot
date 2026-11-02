@@ -121,7 +121,23 @@ curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/setWebhook" \
 | A-06 زنده | آیتم صف فاقد `trapNote`/`explanation`/`correctOption`/`ease`/`fsrs`/`timesSeen`/`userId`؛ کلیدهای کارت فقط `id,nodeId,cardType,questionId,trapCardId,isRepair,isProof` | `live-api-checks.txt`، `live-queue.json` |
 | A-17 زنده | کاربر تازه: `progress = {"overall":null,"assessedNodes":0,"nodes":17}` | `live-home.json` |
 | A-14 زنده | `PUT /api/tracks` با ورودی تکراری → `["common","business","technology","strategy","industrial"]`؛ `limit=5` → دقیقاً ۵ آیتم | `live-api-checks.txt` |
+| A-28 | پیکربندی زنده قابل مشاهده شد: `GET /api/health/detail` بدون توکن `403` می‌دهد و نوع مخزن/هشدارها را report می‌کند (هیچ مقدار secret فاش نمی‌شود) | `rollback-drill-*.txt`، تست‌های A-28 |
+| A-29 | مانور rollback دوجهته روی ورکر زنده (`b72fe023 → 16e3221c → b72fe023`) با مارکر + E2E کامل بعد از مانور (20/20) | `rollback-drill-1-back.txt`, `rollback-drill-2-forward.txt`, `e2e-production-post-drill.txt` |
 | A-25/A-26/A-27 | شمارندهٔ نرخ در زنده اجرا می‌شود (`X-RateLimit-Remaining` کاهش می‌یابد)؛ اندازه‌گیری شد که محافظت per-isolate است: با burst ۱۲۰ درخواستی اولین ۴۲۹ در درخواست **#۶۱** با آستانهٔ ۳۰ ⇒ دو ایزولیت | `live-rate-limit-observable.txt`، `live-rate-limit-isolates.txt` |
+
+## ۲-پ) دو مانعی که در اجرای خودِ کار پیدا شد (و حدس نزدیم)
+
+1. **محدودکنندهٔ سراسری از این حساب قابل استقرار نیست.** رفع کامل A-27 به Durable Object نیاز
+   دارد؛ `wrangler whoami` این مجوزها را دارد: `workers (write)`, `workers_kv (write)`,
+   `workers_routes (write)`, `workers_scripts (write)`, `workers_tail (read)` — و
+   `durable_objects` در فهرست مجوز **نیست**. KV هم ابزار درست این کار نیست (سقف تقریبی
+   ۱ نوشتار در ثانیه برای هر کلید، در حالی که محدودکننده باید هر درخواست را بنویسد).
+   بنابراین A-27 به‌صورت `BLOCKED (مجوز پلتفرم)` ثبت شد، نه «رفع‌شده».
+2. **توکن‌ها در پوشهٔ پروژه پیدا نشدند.** جست‌وجوی محتوایی روی تمام درخت پروژه (به‌جز
+   `node_modules/`, `.git/`, `dist/`, `.wrangler/`) هیچ رشته‌ای به شکل توکن ربات تلگرام و هیچ
+   `SUPABASE_URL` واقعی پیدا نکرد؛ تنها فایل موجود `.env.example` با placeholder بود و
+   `.env.local`/`.dev.vars` ساخته نشده‌اند (هر دو در `.gitignore`). پس گام‌های ۱، ۲ و ۴ بدون
+   دریافت مقدار از شما قابل اجرا نیستند و ما چیزی را جعل یا حدس نزدیم.
 
 ## ۳) آنچه انجام **نشده** یا عمداً باز مانده
 

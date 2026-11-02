@@ -395,6 +395,53 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(res.status).toBe(429);
   });
 
+  it('A-28: /api/health/detail only with admin token, and never leaks secret values', async () => {
+    const noToken = await app.request('/api/health/detail');
+    expect(noToken.status).toBe(403);
+
+    const wrong = await app.request('/api/health/detail', {
+      headers: { Authorization: 'Bearer definitely-not-the-admin-token-value-1234' },
+    });
+    expect(wrong.status).toBe(403);
+
+    const ok = await app.request('/api/health/detail', {
+      headers: { Authorization: `Bearer ${ENV.ADMIN_API_TOKEN}` },
+    });
+    expect(ok.status).toBe(200);
+    const body = (await ok.json()) as any;
+    expect(body.store).toBe('injected');
+    expect(body.productionGuardsActive).toBe(false);
+    expect(body.demoAuthEnabled).toBe(true);
+    expect(body.rateLimitScope).toBe('per-isolate-in-memory');
+    expect(body.secretsConfigured.sessionSecret).toBe(true);
+    // هیچ مقدار secret یا طول آن در پاسخ نیست
+    const raw = JSON.stringify(body);
+    expect(raw).not.toContain(ENV.ADMIN_API_TOKEN as string);
+    expect(raw).not.toContain(ENV.SESSION_SECRET as string);
+    expect(raw).not.toContain(ENV.TELEGRAM_WEBHOOK_SECRET as string);
+    expect(raw).not.toMatch(/"length"/);
+    // وضعیت نگران‌کننده باید صریح اعلام شود (نه اینکه /api/health سالم به‌نظر برسد)
+    expect(body.warnings.join(' ')).toContain('persistence=memory');
+  });
+
+  it('A-28b: با Supabase متصل، هشدار ماندگاری داده نمایش داده نمی‌شود', async () => {
+    const withSupabase = createApp(
+      { ...ENV, SUPABASE_URL: 'https://example.supabase.co', SUPABASE_SERVICE_ROLE_KEY: 'x'.repeat(40) },
+      { rateLimits: new Map() },
+    );
+    const res = await withSupabase.request('/api/health/detail', {
+      headers: { Authorization: `Bearer ${ENV.ADMIN_API_TOKEN}` },
+    });
+    const body = (await res.json()) as any;
+    expect(body.store).toBe('supabase');
+    expect(body.warnings.join(' ')).not.toContain('persistence=memory');
+  });
+
+  it('A-28c: /api/health عمومی هیچ جزئیات پیکربندی نمی‌دهد', async () => {
+    const res = await app.request('/api/health');
+    expect(await res.json()).toEqual({ ok: true });
+  });
+
   it('A-26: محدودکننده خودش را در پاسخ گزارش می‌دهد (قابل مشاهده در پروداکشن)', async () => {
     const limited = createApp({ ...ENV }, { store: new MemoryStore() });
     const first = await limited.request('/api/auth/telegram', {

@@ -191,6 +191,33 @@ Authorization: Bearer <session_token>
 - `metricCatalog` تعریف/منبع هر ۱۳ شاخص را می‌دهد؛ `excludedVanityMetrics = [login_count, streak_days, xp, coins, session_count]` صریحاً از پاسخ حذف شده‌اند.
 - تمرکز شاخص‌ها بر شاهد ذخیره‌شده است: پاسخ‌های ۳۰ روز، `mastery_history` هفت روز، کارت‌های FSRS و وضعیت مهارت‌ها.
 
+## سلامت و مشاهده‌پذیری
+
+### `GET /api/health`
+
+همیشه `{"ok": true}` و بدون هیچ جزئیات پیکربندی (پاسخ: فقط سلامت).
+
+### `GET /api/health/detail`
+
+`Authorization: Bearer <ADMIN_API_TOKEN>` لازم است؛ بدون آن `403` (بدون افشای اینکه توکن غیب است، کوتاه است یا اشتباه).
+
+پاسخ تنها **حالت‌ها** را می‌گوید و هیچ مقدار secret یا طول آن را فاش نمی‌کند:
+
+```json
+{
+  "ok": true,
+  "store": "supabase | memory | injected",
+  "environment": "production",
+  "productionGuardsActive": true,
+  "demoAuthEnabled": false,
+  "secretsConfigured": { "sessionSecret": true, "supabaseUrl": true, "supabaseServiceRoleKey": true, "telegramBotToken": true, "telegramWebhookSecret": true, "adminApiToken": true },
+  "rateLimitScope": "per-isolate-in-memory",
+  "warnings": ["…"]
+}
+```
+
+ممیزی A-28: پیش از این `/api/health` تنها `ok` می‌داد و ورکری که بی‌صدا با `MemoryStore` اجرا می‌شد کاملاً سالم به‌نظر می‌رسید؛ حالا `warnings` همان وضعیت را اعلام می‌کند (`persistence=memory`، demo auth باز، `ENVIRONMENT` ست‌نشده).
+
 ## انگیزش و قفل زنجیره
 
 ### `POST /api/streak/freeze`

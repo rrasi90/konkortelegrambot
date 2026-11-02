@@ -76,8 +76,8 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 | Pilot (technical/educational/extended) | BLOCKED | No real participants (R-012); no pilot data |
 | A/B testing | NOT_STARTED | No experiment harness/data |
 | Deployment runbook | NOT_STARTED | Only a `wrangler deploy` mention exists |
-| Rollback procedure | NOT_STARTED | Not rehearsed |
-| Monitoring/alerts | NOT_STARTED | No dashboards or alert configuration |
+| Rollback procedure | PASS_WITH_EVIDENCE (scoped: Worker version-level) | 2026-11-03 drill on the live Worker: rolled back `b72fe023 → 16e3221c` and forward again with `wrangler rollback <version-id>`, verified by an observable marker (`/api/health/detail` returns 404 on the older version, 403 on the newer one) and a full browser E2E against production after the drill (20/20). Evidence: `evidence/deploy-20261103/rollback-drill-1-back.txt`, `rollback-drill-2-forward.txt`, `e2e-production-post-drill.txt`. Not rehearsed: Supabase restore into the real DB and DNS/asset rollback |
+| Monitoring/alerts | NOT_STARTED | No dashboards or alert configuration. Added a minimal observable instead (A-28): `GET /api/health/detail` (admin-token gated) reports store kind, `ENVIRONMENT`, demo-auth state and config warnings — without it the live Worker running MemoryStore looked perfectly healthy |
 | Structured logging | IMPLEMENTED_UNVERIFIED | Console logs only; no aggregation/retention policy |
 
 ## 6. Performance
@@ -132,7 +132,7 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 | E2E | Passed | Local mini-app 15/15 in Chrome and Edge; staging/Telegram absent | PARTIAL |
 | Security test | Passed | Local suites; no staging/pentest | PARTIAL |
 | Performance test | Passed | Local API + local PostgreSQL/synthetic only | PARTIAL |
-| Rollback tested | Yes | DB dump/restore passed; deployment rollback NOT_STARTED | NOT MET |
+| Rollback tested | Yes | DB dump/restore passed locally; **Worker version rollback drilled live in both directions** (see §5) | PARTIAL (Supabase restore drill is local-only) |
 | Monitoring configured | Yes | NOT_STARTED | NOT MET |
 
 **Decision: NO-GO / DEFER.** The product is not release-ready. The remaining blockers are external
