@@ -1021,6 +1021,33 @@ describe('Phase 4 §8.1 — آزمون تشخیصی و وضعیت اولیه UNK
   });
 });
 
+describe('API نقشهٔ یادگیری — عدم جعل تسلط', () => {
+  it('وضعیت مهارت به‌تنهایی mastery عددی ۵۰ برای گره تولید نمی‌کند', async () => {
+    const token = await login();
+    const userId = (await json(await app.request('/api/me', authed(token)))).user.id as string;
+    await store.upsertSkillState(userId, {
+      skillId: 'skill.sm.rbv.vrio',
+      nodeId: 'sm.rbv',
+      state: {
+        skillId: 'skill.sm.rbv.vrio',
+        proficiencyProbability: 0.81,
+        confidence: 0.64,
+        evidenceCount: 4,
+        memoryRetrievability: 0.88,
+        fluencySpeedRatio: 1.1,
+        dominantErrorType: 'time_pressure',
+        coverageStatus: 'needs_proof',
+      },
+    });
+    const map = await json(await app.request('/api/map', authed(token)));
+    const node = map.nodes.find((item: any) => item.id === 'sm.rbv');
+    expect(node).toBeDefined();
+    expect(node.mastery).toBeNull();
+    expect(node.status).toBe('needs_proof');
+    expect(map.mastery['sm.rbv'].mastery).toBeNull();
+  });
+});
+
 describe('Phase 4 §8.5 — صف روزانهٔ ترکیبی با بودجهٔ زمانیِ سازگار', () => {
   const DAY_MS = 86_400_000;
 
