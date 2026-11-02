@@ -6,6 +6,7 @@ dependency instead of inventing results.
 
 | Gate item | Scope | Status | Evidence / blocker |
 |---|---|---|---|
+| Telegram CloudStorage learner snapshot recovery | Cross-device restore of nodeStates/cards/stats, two-slot chunk commit, local/cloud version selection, reset invalidation, old-v3 warning, unsupported-client warning | PASS_WITH_EVIDENCE (scoped client tests) | PR #8 CI: 297/297 Vitest, typecheck, parity 21/21 and DB integrity; tests cover restore after local wipe, partial chunk failure preserving prior manifest, Unicode chunk boundary, oversized snapshot, legacy summary and unsupported API. This is not Telegram-host E2E or Worker/Supabase canonical-store convergence |
 | Local mini-app E2E | Headless Chrome + Edge via CDP through real mini-app + Hono worker + MemoryStore: auto-auth, track selection, home, queue, question display, no answer-key leak, answer submit, feedback, next, map, lessons, full-book listener, reload persistence | PASS_WITH_EVIDENCE (scoped local) | `scripts/e2e-miniapp.mjs`: 15/15 checks in Chrome and 15/15 in Edge, 0 console errors, 0 local HTTP ≥400 (incl. R-033 XSS-sink regression); screenshots + JSON in `evidence/phase-5/`; report `E2E_TEST_REPORT.md` |
 | Local API performance | 20 concurrent users, 7 scenarios, 200 requests each | PASS_WITH_EVIDENCE (scoped local) | `scripts/bench-worker.mjs`: 1,380 requests, 0 errors, p99 ≤21 ms (`evidence/phase-4/bench-worker-local.txt`) |
 | Local DB query performance | PostgreSQL 16, 200k synthetic answer events; analytics/queue query shapes | PASS_WITH_EVIDENCE (scoped local) | `scripts/bench-db.sh`: 30-day evidence query p95 10.6→3.4 ms after index 0013, other hot queries p95 ≤1.3 ms (`evidence/phase-5/db-bench-*`) |
@@ -30,4 +31,4 @@ dependency instead of inventing results.
 **NO-GO / DEFER.** Local functional, API, database-query and DB-restore evidence is real and
 archived, but release criteria that require people or infrastructure — pilot, SME validation,
 staging/Telegram E2E, Worker-runtime/stress performance, monitoring and legal review — are not
-met. The remediation changes were merged into `main` through PR #5 (squash commit `d962df0`). This does not approve production release: deployment remains **NO-GO / DEFER** pending a separate release gate and explicit approval.
+met. The remediation changes through PR #7 were merged into `main`; PR #8 adds the scoped Telegram CloudStorage snapshot recovery fix, pending final merge/verification. This does not approve production release: deployment remains **NO-GO / DEFER** pending a separate release gate and explicit approval.
