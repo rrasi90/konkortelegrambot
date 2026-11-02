@@ -334,6 +334,37 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(last).toBe(429);
   });
 
+  it('R-034: در پروداکشن شمارندهٔ نرخ از یک createApp به createApp بعدی زنده می‌ماند', async () => {
+    // Workers به‌ازای هر درخواست createApp(env) را صدا می‌زند؛ اگر شمارنده داخل
+    // createApp ساخته شود هر درخواست Map تازه می‌گیرد و ۴۲۹ هرگز صادر نمی‌شود.
+    const prodEnv = {
+      ...ENV,
+      ENVIRONMENT: 'production',
+      ALLOW_DEMO_AUTH: 'false',
+      SESSION_SECRET: 'production-test-secret-with-enough-length',
+    };
+    const first = createApp(prodEnv, { store: new MemoryStore() });
+    let sawThreshold = false;
+    for (let i = 0; i < 31; i++) {
+      const res = await first.request('/api/auth/telegram', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegramUserId: 7000 + i }),
+      });
+      if (res.status === 429) sawThreshold = true;
+    }
+    expect(sawThreshold).toBe(true);
+
+    // اپ «جدید» با همان isolate باید هنوز محدود شده باشد
+    const second = createApp(prodEnv, { store: new MemoryStore() });
+    const res = await second.request('/api/auth/telegram', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramUserId: 9999 }),
+    });
+    expect(res.status).toBe(429);
+  });
+
   it('R-040: وب‌هوک بدون Secret Token درست یا با Secret اشتباه رد می‌شود', async () => {
     const body = JSON.stringify({
       message: { chat: { id: 987654 }, text: '/start' },
@@ -444,7 +475,9 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
     expect(home.nightQuiz.available).toBe(false);
     expect(home.mentorMessage).toBeTruthy();
     expect(home.progress.nodes).toBeGreaterThan(0);
-    expect(home.progress.overall).toBeGreaterThanOrEqual(0);
+    // §8.1: کاربر تازه هیچ شاهدی ندارد ⇒ null، نه صفرِ ساختگی
+    expect(home.progress.overall).toBeNull();
+    expect(home.progress.assessedNodes).toBe(0);
   });
 
   it('پاسخ غلط: سکه و روز پیوسته ثبت می‌شود و کوییز شبانه همان سؤال را برمی‌گرداند', async () => {

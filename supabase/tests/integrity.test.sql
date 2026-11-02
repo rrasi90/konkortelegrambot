@@ -405,6 +405,13 @@ begin
     raise exception 'ستون streak_freeze_month باید وجود داشته باشد وگرنه هر پاسخ روی Supabase با ۴۰۰/۵۰۰ می‌شکند';
   end if;
 
+  if not exists (
+    select 1 from information_schema.columns
+    where table_name = 'app_users' and column_name = 'streak_freeze_granted'
+  ) then
+    raise exception 'ستون streak_freeze_granted باید وجود داشته باشد؛ خرید و مصرف قفل نمی‌توانند یک شمارنده باشند';
+  end if;
+
   select proacl into v_acl
   from pg_proc
   where proname = 'submit_answer_atomic'
