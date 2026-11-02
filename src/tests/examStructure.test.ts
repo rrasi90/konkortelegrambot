@@ -111,11 +111,11 @@ describe('ساختار آزمون دکتری — نسخه‌بندی بر اسا
     }
   });
 
-  it('سهم تخصصی‌ها در ۱۴۰۵ از ۱۴۰۲ بیشتر است (چون استعداد حذف و ضریب بالا رفته)', () => {
-    const share1402 = getSpecializationSharePercent(1402, 'business');
-    const share1405 = getSpecializationSharePercent(1405, 'business');
-
-    expect(share1405).toBeGreaterThan(share1402);
+  it('ضریب ۵ به کل بستهٔ تخصصی تعلق دارد، نه به تعداد درس‌های داخل بسته', () => {
+    expect(getCoefficientTotal(1405, 'business')).toBe(6);
+    expect(getSpecializationSharePercent(1405, 'business')).toBe(83);
+    expect(getCoefficientTotal(1402, 'business')).toBe(6);
+    expect(getSpecializationSharePercent(1402, 'business')).toBe(67);
   });
 
   it('زیرمجموعه‌های بدون کد رسمی به‌عنوان تأییدنشده علامت خورده‌اند', () => {
