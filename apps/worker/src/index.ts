@@ -19,7 +19,6 @@ import {
   questionCardId,
   scoreExamSession,
   statusFromMastery,
-  DEFAULT_MASTERY,
 } from '@ael/engine';
 import type { EngineState, ExamSessionPlan, QueueItem } from '@ael/engine';
 import type { ReviewCard, TrackId, Question, PublicQuestion } from '@ael/contracts';
@@ -1659,7 +1658,12 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       selectedOption: body.selectedOption,
       attemptId: body.attemptId,
       wasCorrect,
-      rippleReport: result.report,
+      // وضعیت مهارت محاسبه‌شده توسط موتور را همراه پاسخ اتمیک ذخیره کن؛
+      // SQL نباید با یک الگوریتم ساده‌تر همان وضعیت را دوباره تخمین بزند.
+      rippleReport: {
+        ...result.report,
+        skillStateUpdate: result.skillStateUpdate ?? null,
+      },
       masteryUpdates: result.masteryUpdates,
       cardUpserts: result.cardUpdates,
       cardInserts: result.createdCards,
@@ -1754,9 +1758,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     for (const n of visible) {
       const row = masteryByNode.get(n.id);
       const coverage = coverageByNode.get(n.id);
-      const assessed = !!row || !!coverage;
-      const mastery = assessed ? (row?.mastery ?? DEFAULT_MASTERY) : null;
-      const status = row?.status ?? (assessed ? statusFromMastery(mastery!) : 'unseen');
+      // مهارت شش‌بعدی به‌تنهایی نمرهٔ تسلط گره نیست؛ مقدار ۵۰ پیش‌فرض نمی‌سازیم.
+      const mastery = row?.mastery ?? null;
+      const status = row?.status ?? coverage?.coverageStatus ?? 'unseen';
       if (!courses.has(n.course)) courses.set(n.course, { course: n.course, chapters: new Map() });
       const course = courses.get(n.course)!;
       if (!course.chapters.has(n.chapter)) course.chapters.set(n.chapter, { chapter: n.chapter, nodes: [] });
