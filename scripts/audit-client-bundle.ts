@@ -68,8 +68,7 @@ export async function auditClientBundle(
   return findClientAnswerKeyLeaks(assets);
 }
 
-async function runAudit(): Promise<void> {
-  const root = resolve(process.cwd(), 'dist');
+async function runAudit(root: string): Promise<void> {
   const findings = await auditClientBundle(root);
   if (findings.length > 0) {
     const details = findings
@@ -89,7 +88,10 @@ async function runAudit(): Promise<void> {
 
 const invokedPath = process.argv[1] ? resolve(process.argv[1]) : '';
 if (invokedPath === fileURLToPath(import.meta.url)) {
-  runAudit().catch((error: unknown) => {
+  const targetDirectory = process.argv[2]
+    ? resolve(process.cwd(), process.argv[2])
+    : resolve(process.cwd(), 'dist');
+  runAudit(targetDirectory).catch((error: unknown) => {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\\n`);
     process.exitCode = 1;
   });
