@@ -328,7 +328,6 @@ export interface LearnerStorageSaveResult {
 
 const STORAGE_KEY_LOCAL_V4 = 'ael_tma_state_v4';
 const STORAGE_KEY_V4_MANIFEST = 'ael_tma_v4_manifest';
-const STORAGE_KEY_V3 = 'ael_tma_state_v3';
 const CLOUD_CHUNK_SIZE = 3000;
 const CLOUD_MAX_CHUNKS = 240;
 const CLOUD_WRITE_BATCH_SIZE = 8;
