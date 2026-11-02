@@ -55,10 +55,14 @@ const server = createServer(async (req, res) => {
       return;
     }
 
-    // فایل‌های ایستا: اولویت با بیلد مدرن React (dist)
-    const staticBase = existsSync(join(root, 'dist', 'index.html'))
-      ? join(root, 'dist')
-      : join(root, 'apps/miniapp');
+    // فایل‌های ایستا: مینی‌اپ سطح فعال محصول است (ARC-01)؛ بیلد قدیمی React
+    // فقط با DEV_SURFACE=react سرو می‌شود. پیش‌تر «وجود dist» بی‌صدا اولویت
+    // داشت و باعث شد تست‌ها/توسعه‌دهنده بدون اطلاع از سطح دیگری استفاده کنند.
+    const surface = process.env.DEV_SURFACE ?? 'miniapp';
+    const reactBase = join(root, 'dist');
+    const miniappBase = join(root, 'apps/miniapp');
+    const useReact = surface === 'react' && existsSync(join(reactBase, 'index.html'));
+    const staticBase = useReact ? reactBase : miniappBase;
     let relPath = url.pathname === '/' ? 'index.html' : url.pathname.replace(/^\//, '');
     let filePath = join(staticBase, relPath);
     if (!existsSync(filePath) || !extname(filePath)) {
@@ -75,5 +79,14 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`سرور توسعه: http://localhost:${port}`);
+  const surface = process.env.DEV_SURFACE ?? 'miniapp';
+  const reactBuilt = existsSync(join(root, 'dist', 'index.html'));
+  const serving = surface === 'react' && reactBuilt ? 'React (dist)' : 'Mini App (apps/miniapp)';
+  console.log(`سرور توسعه: http://localhost:${port} — سطح سرو‌شده: ${serving}`);
+  if (surface !== 'react' && reactBuilt) {
+    console.log('نکته: بیلد React در dist موجود است ولی سرو نمی‌شود؛ برای آن DEV_SURFACE=react را تنظیم کنید.');
+  }
+  if (surface === 'react' && !reactBuilt) {
+    console.warn('هشدار: DEV_SURFACE=react تنظیم شده ولی dist/index.html نیست؛ مینی‌اپ سرو می‌شود.');
+  }
 });

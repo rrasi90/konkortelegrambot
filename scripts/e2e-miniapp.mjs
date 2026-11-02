@@ -86,6 +86,24 @@ async function evaluate(expression, awaitPromise = false) {
   return result.result.value;
 }
 
+/** objectId برای بازرسی listenerهای واقعی یک نود (DOMDebugger.getEventListeners) */
+async function evaluateObject(expression) {
+  const result = await cdpSend.send('Runtime.evaluate', {
+    expression,
+    returnByValue: false,
+    userGesture: true,
+  });
+  if (result.exceptionDetails) throw new Error(result.exceptionDetails.text ?? 'evaluation failed');
+  return result.result.objectId;
+}
+
+async function clickListeners(selector) {
+  const objectId = await evaluateObject(`document.querySelector(${JSON.stringify(selector)})`);
+  if (!objectId) return [];
+  const res = await cdpSend.send('DOMDebugger.getEventListeners', { objectId, filters: ['click'] });
+  return res.listeners ?? [];
+}
+
 async function waitFor(expression, timeoutMs = 20000, label = expression) {
   const start = Date.now();
   for (;;) {
@@ -157,6 +175,15 @@ async function main() {
     await cdpSend.send('Runtime.enable');
     await cdpSend.send('Network.enable');
 
+    // 0) مطمئن می‌شویم همان مینی‌اپ سرو می‌شود (dev-server می‌تواند بیلد قدیمی
+    //    React را هم سرو کند؛ تست روی سطح اشتباه، شواهد بی‌معنی تولید می‌کند)
+    const servedHtml = await fetch(base).then((r) => r.text());
+    check(
+      'سرور مینی‌اپ را سرو می‌کند (نه بیلد React)',
+      servedHtml.includes('id="view-app"') && !servedHtml.includes('id="root"'),
+      `view-app=${servedHtml.includes('id="view-app"')} reactRoot=${servedHtml.includes('id="root"')}`,
+    );
+
     // 1) auto-auth via device token (ALLOW_DEMO_AUTH) then track selection
     await waitFor(
       `document.querySelector('#view-tracks:not([hidden]), #view-app:not([hidden])')`,
@@ -195,18 +222,33 @@ async function main() {
     check('بارگذاری صف امروز', !queueEmpty, queueEmpty ? 'صف خالی' : 'کارت سؤال نمایش داده شد');
     if (!queueEmpty) {
       const questionText = await evaluate(`document.querySelector('#q-text').innerText`);
-      const optionCount = await evaluate(`document.querySelectorAll('.option-btn').length`);
+      const optionCount = await evaluate(`document.querySelectorAll('.option').length`);
       check('نمایش سؤال و گزینه‌ها بدون کلید پاسخ', questionText.length > 0 && optionCount >= 2, `${optionCount} گزینه`);
       const leaks = await evaluate(`document.body.innerText.includes('correctOption') || document.body.innerText.includes('explanation')`);
       check('نشت نکردن کلید/توضیح پیش از پاسخ', !leaks);
       await shot('e2e-03-question.png');
 
-      await evaluate(`document.querySelector('.option-btn').click(); true`);
+      await evaluate(`document.querySelector('.option').click(); true`);
       await waitFor(`!document.querySelector('#answer-feedback').hidden`, 20000, 'answer feedback');
       const feedbackText = await evaluate(`document.querySelector('#answer-feedback').innerText`);
       check('ثبت پاسخ و نمایش بازخورد سرور', feedbackText.trim().length > 0, `${feedbackText.length} chars`);
       const nextVisible = await evaluate(`!document.querySelector('#btn-next').hidden`);
       check('فعال‌شدن «سؤال بعدی» پس از ثبت', nextVisible);
+      // R-044: گزینه‌ها باید کلاس/استایل واقعی داشته باشند (نقص پیشین: JS کلاس
+      // .option-btn می‌ساخت ولی CSS فقط .option را تعریف کرده بود ⇒ بدون رنگ)
+      const optionStyle = await evaluate(`(function () {
+        var marked = document.querySelector('.option.correct, .option.wrong');
+        if (!marked) return { marked: false };
+        var plain = document.querySelector('.option:not(.correct):not(.wrong)');
+        var a = getComputedStyle(marked).borderTopColor;
+        var b = plain ? getComputedStyle(plain).borderTopColor : '';
+        return { marked: true, differs: a !== b, color: a };
+      })()`);
+      check(
+        'بازخورد بصری گزینهٔ درست/غلط (کلاس + رنگ واقعی)',
+        optionStyle.marked && optionStyle.differs,
+        JSON.stringify(optionStyle),
+      );
       await shot('e2e-04-feedback.png');
     }
 
@@ -241,12 +283,41 @@ async function main() {
     const bookText = await evaluate(`document.querySelector('#lessons-container').innerText`);
     check('باز شدن «مطالعهٔ کامل» با listener (بدون onclick تزریقی)', bookOpened && bookText.length > 50, `${bookText.length} chars`);
 
+    // R-044: دکمهٔ بازگشت از نمای کتاب — پیش‌تر onclick="loadLessons()" داشت که
+    // داخل IIFE تعریف شده بود و کلیک آن ReferenceError می‌داد (دکمهٔ مرده).
+    const backClicked = await evaluate(`(function () {
+      var btn = document.querySelector('#btn-book-back');
+      if (!btn) return false;
+      btn.click();
+      return true;
+    })()`);
+    await waitFor(
+      `document.querySelector('#lessons-container') && document.querySelector('#lessons-container').querySelector('.course-accordion') !== null`,
+      10000,
+      'book list after back',
+    );
+    check('دکمهٔ «بازگشت به لیست کتاب‌ها» کار می‌کند', backClicked);
+    await shot('e2e-07-booklist.png');
+
     // 7) reload: session/device identity and persisted tracks survive a page reload
     await cdpSend.send('Page.reload', { ignoreCache: false });
     await waitFor(`document.querySelector('#view-app') && !document.querySelector('#view-app').hidden`, 25000, 'app after reload');
     await waitFor(`document.querySelector('#home-container') && document.querySelector('#home-container').children.length > 0`, 20000, 'home after reload');
     check('بازیابی جلسه و پیشرفت پس از بارگذاری مجدد صفحه', true);
     await shot('e2e-06-reload.png');
+
+    // 7b) تنظیمات: کنترل‌های بی‌عملکرد (نقص R-043: دکمهٔ قفل هیچ listener نداشت)
+    await evaluate(`document.querySelector('.nav-btn[data-tab="settings"]').click(); true`);
+    await waitFor(
+      `document.querySelector('#tab-settings') && !document.querySelector('#tab-settings').hidden`,
+      10000,
+      'settings tab',
+    );
+    const freezeListeners = await clickListeners('#btn-freeze-streak');
+    check('دکمهٔ «قفل روز پیوسته» listener واقعی دارد', freezeListeners.length > 0, `${freezeListeners.length} listener`);
+    const saveListeners = await clickListeners('#btn-save-exam');
+    check('دکمهٔ ذخیرهٔ تاریخ کنکور listener واقعی دارد', saveListeners.length > 0, `${saveListeners.length} listener`);
+    await shot('e2e-08-settings.png');
 
     // 8) local HTTP errors / console errors during the flow
     check('بدون پاسخ HTTP خطادار از API محلی', localHttpErrors.length === 0, localHttpErrors.join(' | '));

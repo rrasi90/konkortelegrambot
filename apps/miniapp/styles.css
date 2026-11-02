@@ -204,6 +204,11 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
 .option.wrong { border-color: var(--bad); background: var(--bad-soft); }
 .option.wrong .key { background: var(--bad); color: #fff; }
 
+/* قاعدهٔ display روی مقدار UA برای [hidden] را می‌پوشاند (نقص پیشین:
+   چیپ‌های خالی و باکس خوداظهاری با وجود hidden دیده می‌شدند) */
+.stat-chip[hidden],
+.self-report-box[hidden] { display: none !important; }
+
 /* بازخورد */
 .feedback-head {
   font-size: 15px;

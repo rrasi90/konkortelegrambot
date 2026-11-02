@@ -41,7 +41,6 @@
     telegram: null,
     nightMode: false,
     home: null,
-    lastAttemptId: null,
     startTime: null,
   };
 
@@ -86,7 +85,7 @@
 
   function greetingFor() {
     var hour = new Date().getHours();
-    if (hour < 5) return 'شب‌های بخیر، ';
+    if (hour < 5) return 'شب بخیر، ';
     if (hour < 12) return 'صبح بخیر، ';
     if (hour < 17) return 'وقت‌بخیر، ';
     if (hour < 21) return 'عصر بخیر، ';
@@ -270,8 +269,13 @@
       '<div class="mascot-text"><strong>همراه هوشمند شما</strong>' +
       '<p>' + escapeHtml(h.mentorMessage) + '</p></div></section>';
 
-    // کارت هدف: شمارش معکوس + پیشرفت کل مسیر (شروع از ۰٪ برای داوطلب تازه)
-    var overallProgress = typeof h.progress.overall === 'number' ? h.progress.overall : 0;
+    // کارت هدف: شمارش معکوس + پیشرفت کل مسیر
+    // سرور برای «بی‌شاهد» مقدار null می‌دهد؛ نمایش ۰٪ ادعای ساختگی است.
+    var hasEvidence = typeof h.progress.overall === 'number';
+    var overallProgress = hasEvidence ? h.progress.overall : 0;
+    var progressLabel = hasEvidence
+      ? overallProgress + '٪'
+      : 'هنوز سنجیده نشده';
     html += '<section class="dash-card goal-card">';
     if (h.stats.daysLeft !== null && h.stats.daysLeft >= 0) {
       html +=
@@ -280,8 +284,8 @@
     }
     html +=
       '<div class="goal-title">گرایش‌های فعال: ' + escapeHtml(trackTitle) + '</div>' +
-      '<div class="labels"><span>پیشرفت تسلط سرفصل‌ها</span><span>' + overallProgress + '٪</span></div>' +
-      '<div class="bar"><div class="fill" style="width:' + overallProgress + '%"></div></div>' +
+      '<div class="labels"><span>پیشرفت تسلط سرفصل‌ها</span><span>' + progressLabel + '</span></div>' +
+      '<div class="bar"><div class="fill" style="width:' + (hasEvidence ? overallProgress : 0) + '%"></div></div>' +
       '</section>';
 
     // کارت کوییز امروز
@@ -355,8 +359,13 @@
         var doneBtn = el(state.nightMode ? 'btn-night-done' : 'btn-queue-done');
         if (doneBtn) {
           doneBtn.onclick = function () {
-            state.nightMode = false;
-            showTab('home');
+            if (state.nightMode) {
+              state.nightMode = false;
+              showTab('home');
+              return;
+            }
+            // برچسب «تازه‌سازی برنامه» باید برنامه را تازه کند، نه به خانه برگردد
+            loadQueue();
           };
         }
       }
@@ -368,7 +377,6 @@
 
     var question = item.question;
     var card = item.card;
-    state.lastAttemptId = item.attemptId || null;
     state.startTime = Date.now();
 
     var qText = question ? question.text : (card.trapNote || 'مرور این مفهوم در برنامه است.');
@@ -416,8 +424,8 @@
 
     options.forEach(function (optText, idx) {
       var btn = document.createElement('button');
-      btn.className = 'option-btn';
-      btn.innerHTML = '<span class="opt-num">' + (idx + 1) + '</span><span class="opt-text">' + escapeHtml(optText) + '</span>';
+      btn.className = 'option';
+      btn.innerHTML = '<span class="key">' + (idx + 1) + '</span><span class="text">' + escapeHtml(optText) + '</span>';
       btn.onclick = function () {
         submitAnswer(item, idx);
       };
@@ -444,7 +452,7 @@
     };
 
     // غیرفعال کردن گزینه‌ها حین ارسال
-    var optionBtns = document.querySelectorAll('.option-btn');
+    var optionBtns = document.querySelectorAll('.option');
     optionBtns.forEach(function (b) { b.disabled = true; });
 
     API.post('/api/answers', body).then(function (res) {
@@ -468,7 +476,7 @@
     var lesson = res.lesson;
 
     // استایل گزینه‌ها
-    var optionBtns = document.querySelectorAll('.option-btn');
+    var optionBtns = document.querySelectorAll('.option');
     if (optionBtns[correctOption]) optionBtns[correctOption].classList.add('correct');
     if (!wasCorrect && optionBtns[selectedIdx]) optionBtns[selectedIdx].classList.add('wrong');
 
@@ -755,7 +763,7 @@
     if (!container) return;
     var course = cachedLessons ? cachedLessons.find(function(c){ return c.courseId === courseId; }) : null;
     if (!course) { container.innerHTML = '<div class="empty-state"><p>کتاب یافت نشد.</p></div>'; return; }
-    var html = '<div style="padding:8px 0;"><button onclick="loadLessons()" class="btn ghost small">← بازگشت به لیست کتاب‌ها</button></div>';
+    var html = '<div style="padding:8px 0;"><button id="btn-book-back" class="btn ghost small">← بازگشت به لیست کتاب‌ها</button></div>';
     html += '<h2 style="font-size:18px;font-weight:800;color:var(--ink);margin:8px 0 14px;border-right:4px solid var(--primary);padding-right:10px;">📘 ' + escapeHtml(course.courseTitle) + '</h2>';
     if (course.description) html += '<p style="font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:14px;">' + escapeHtml(course.description) + '</p>';
     (course.topics || []).forEach(function(t) {
@@ -772,6 +780,14 @@
       html += '</div>';
     });
     container.innerHTML = html;
+    // دکمهٔ بازگشت با listener واقعی (loadLessons در scope همین IIFE است و
+    // مثل قبل داخل onclick تزریق نمی‌شود)
+    var backBtn = el('btn-book-back');
+    if (backBtn) {
+      backBtn.addEventListener('click', function () {
+        loadLessons();
+      });
+    }
     window.scrollTo(0,0);
   };
 
@@ -910,10 +926,32 @@
   if (btnLogout) {
     btnLogout.addEventListener('click', function () {
       localStorage.removeItem('session_token');
+      state.home = null;
       showView('view-login');
+      // هویت این مینی‌اپ دستگاه-محور است؛ با حذف توکن و فراخوانی مجدد
+      // autoAuthenticate عملاً «ورود» فوری انجام می‌شد و دکمه خروج بی‌اثر
+      // به‌نظر می‌رسید. حالا کاربر صریحاً باید دوباره وارد شود.
+      var spinner = document.querySelector('#auth-status-container .auth-spinner');
+      if (spinner) spinner.style.display = 'none';
+      var statusText = el('auth-status-text');
+      if (statusText) statusText.textContent = 'از جلسه خارج شدید. برای ادامه «ورود دوباره» را بزنید.';
+      var relogin = el('btn-relogin');
+      if (relogin) relogin.hidden = false;
+    });
+  }
+
+  var btnRelogin = el('btn-relogin');
+  if (btnRelogin) {
+    btnRelogin.addEventListener('click', function () {
+      btnRelogin.hidden = true;
+      var spinner = document.querySelector('#auth-status-container .auth-spinner');
+      if (spinner) spinner.style.display = '';
       autoAuthenticate();
     });
   }
+
+  var btnFreeze = el('btn-freeze-streak');
+  if (btnFreeze) btnFreeze.addEventListener('click', freezeStreak);
 
   function escapeHtml(s) {
     return String(s || '').replace(/[&<>"']/g, function (c) {
