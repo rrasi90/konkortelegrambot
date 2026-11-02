@@ -71,7 +71,7 @@ npm run audit:miniapp
 npm run --prefix apps/worker deploy
 ```
 
-**محدودیت مهم:** انتشار GitHub Pages و Build ریشهٔ React همچنان تا حذف کلیدها و انتقال کامل تصحیح به Worker مسدود می‌ماند؛ این تغییر، مصرف‌کنندگان legacy React را مهاجرت‌داده‌شده اعلام نمی‌کند. در محیط production باید `ENVIRONMENT=production`، `SESSION_SECRET` امن، `SUPABASE_URL` و `SUPABASE_SERVICE_ROLE_KEY` تنظیم و `ALLOW_DEMO_AUTH` غیرفعال باشد. فرمان بالا فقط مسیر Worker را استقرار می‌دهد و هیچ استقراری در این تغییر انجام نشده است.
+**محدودیت مهم:** انتشار GitHub Pages و Build ریشهٔ React همچنان تا حذف کلیدها و انتقال کامل تصحیح به Worker مسدود می‌ماند؛ این تغییر، مصرف‌کنندگان legacy React را مهاجرت‌داده‌شده اعلام نمی‌کند. در محیط production باید `ENVIRONMENT=production`، `SESSION_SECRET` امن، `SUPABASE_URL` و `SUPABASE_SERVICE_ROLE_KEY` تنظیم و `ALLOW_DEMO_AUTH` غیرفعال باشد. برای ورود واقعی Mini App نیز `TELEGRAM_BOT_TOKEN` لازم است. برای فعال‌کردن ربات، `TELEGRAM_WEBHOOK_SECRET` با حداقل ۳۲ و حداکثر ۲۵۶ نویسه از مجموعهٔ `A-Z a-z 0-9 _ -` و `ADMIN_API_TOKEN` با حداقل ۳۲ نویسه را فقط به‌عنوان Cloudflare Worker secrets تنظیم کن؛ اولی درخواست‌های دریافتی تلگرام را اعتبارسنجی می‌کند و دومی فقط برای مسیرهای مدیریتی `/api/telegram/webhook/*` از طریق `Authorization: Bearer` است. این دو مقدار نباید داخل فرانت‌اند یا Repository قرار گیرند. تا تنظیم هر دو Secret، مسیر دریافت و مدیریت وب‌هوک عمداً fail-closed است. فرمان بالا فقط مسیر Worker را استقرار می‌دهد و هیچ استقراری در این تغییر انجام نشده است.
 
 ## سیاست قفل‌فایل (R-021)
 
