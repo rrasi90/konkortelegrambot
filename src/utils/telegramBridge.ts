@@ -642,9 +642,13 @@ export async function loadLatestStateFromTelegramStorage(
   const local = readLocalSnapshot();
   const storage = cloudStorage();
   if (!storage) {
+    const isTelegramClient = isRunningInsideTelegram();
+    const warning = isTelegramClient
+      ? 'این نسخهٔ تلگرام CloudStorage در دسترس ندارد؛ پیشرفت فقط روی همین دستگاه ذخیره می‌شود.'
+      : undefined;
     return local
-      ? { payload: local.payload, source: local.source }
-      : { payload: fallback, source: 'fresh' };
+      ? { payload: local.payload, source: local.source, ...(warning ? { warning } : {}) }
+      : { payload: fallback, source: 'fresh', ...(warning ? { warning } : {}) };
   }
 
   let cloudSnapshot: PersistedLearnerPayload | null = null;
@@ -718,10 +722,13 @@ export function saveStateToTelegramStorage(
 
   const storage = cloudStorage();
   if (!storage) {
+    const cloudError = isRunningInsideTelegram()
+      ? 'Telegram CloudStorage API is unavailable in this client'
+      : undefined;
     return Promise.resolve({
       localSaved,
       cloudSaved: false,
-      ...(localError ? { error: localError } : {}),
+      ...(localError || cloudError ? { error: localError ?? cloudError } : {}),
     });
   }
 
