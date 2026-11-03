@@ -191,7 +191,9 @@ flowchart TD
 git clone https://github.com/rrasi90/konkortelegrambot.git
 cd konkortelegrambot
 
-nvm use
+# nvm-windows (PowerShell):
+nvm use 24
+# macOS/Linux with nvm: nvm use
 npm ci
 \`\`\`
 
