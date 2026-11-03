@@ -26,7 +26,7 @@
 مخزن شامل دو سطح محصول است:
 
 - **اپلیکیشن React/Vite** در ریشهٔ مخزن: رابط گسترده‌تر و مجموعه‌ای از داده‌ها، درسنامه‌ها، کتابخانه و شبیه‌سازهای سالانه که فعلاً مسیر توسعه و استفادهٔ محلی آن محسوب می‌شود.
-- **Telegram Mini App + Cloudflare Worker** در \`apps/miniapp\` و \`apps/worker\`: مسیر سبک‌تر و متصل به API سرور که برای استقرار عمومی طراحی شده و در گزارش فعال‌سازی ۳ نوامبر ۲۰۲۶، انتشار و سلامت زندهٔ آن ثبت شده است.
+- **Telegram Mini App + Cloudflare Worker** در `apps/miniapp` و `apps/worker`: مسیر سبک‌تر و متصل به API سرور که برای استقرار عمومی طراحی شده و در گزارش فعال‌سازی ۳ نوامبر ۲۰۲۶، انتشار و سلامت زندهٔ آن ثبت شده است.
 
 > **اصل مهم:** وجود یک قابلیت در اپ React به معنی در دسترس بودن همان قابلیت در Mini App نیست. هم‌ترازی کامل محتوا، رابط‌ها و موتورهای دو مسیر هنوز یک کار توسعه‌ای باز است؛ وضعیت واقعی در بخش‌های بعدی و گزارش‌های ممیزی توضیح داده شده است.
 
@@ -74,8 +74,8 @@
 
 | بخش | وضعیت مستندشده | توضیح |
 |---|---|---|
-| Cloudflare Worker | منتشرشده و بررسی زنده‌شده | سلامت \`/api/health\` و سرو Mini App در گزارش فعال‌سازی ثبت شده است. |
-| Mini App | روی Worker سرو می‌شود | فایل‌های \`apps/miniapp\` به‌عنوان Static Assets استفاده می‌شوند و \`/api/*\` به Worker می‌رود. |
+| Cloudflare Worker | منتشرشده و بررسی زنده‌شده | سلامت `/api/health` و سرو Mini App در گزارش فعال‌سازی ثبت شده است. |
+| Mini App | روی Worker سرو می‌شود | فایل‌های `apps/miniapp` به‌عنوان Static Assets استفاده می‌شوند و `/api/*` به Worker می‌رود. |
 | ذخیره‌سازی پایدار | **مسدود / تکمیل‌نشده** | اتصال Production به Supabase و اجرای Migration شمارهٔ ۰۰۱۵ در Runbook انجام‌نشده ثبت شده است؛ Worker در وضعیت گزارش‌شده از MemoryStore استفاده می‌کند. |
 | Telegram | **فعال‌سازی کامل تأیید نشده** | Secretهای Worker در فهرست Secrets گزارش شده‌اند، اما تنظیم دکمهٔ منو و اتصال نهایی تجربهٔ کاربر به دلیل در دسترس نبودن توکن در محیط اجرای محلی تکمیل نشده است. وضعیت زندهٔ Webhook باید جداگانه بررسی شود. |
 | GitHub Pages | **عمداً مسدود** | Bundle اپ React هنوز شامل فیلدهای کلید پاسخ است؛ اسکنر امنیتی اجازهٔ انتشار عمومی نمی‌دهد. |
@@ -101,7 +101,7 @@
 
 ساختار فعلی یک Monorepo مبتنی بر npm workspaces است:
 
-\`\`\`text
+```text
 konkortelegrambot/
 │
 ├── src/                         # اپ React و Vite (مسیر محلی/Legacy)
@@ -150,11 +150,11 @@ konkortelegrambot/
 ├── .github/workflows/            # CI و مسیر GitHub Pages
 ├── package.json
 └── package-lock.json
-\`\`\`
+```
 
 ### جریان درخواست در مسیر Mini App
 
-\`\`\`mermaid
+```mermaid
 flowchart TD
     U["کاربر تلگرام یا مرورگر"] --> UI["Mini App — apps/miniapp"]
     UI --> API["Cloudflare Worker — Hono"]
@@ -165,11 +165,11 @@ flowchart TD
     STORE --> DB["Supabase — اتصال Production موردنیاز"]
     API --> RESULT["نتیجه و پاسخ API"]
     RESULT --> UI
-\`\`\`
+```
 
 ### نکتهٔ معماری دربارهٔ دو موتور
 
-در حال حاضر React از \`src/engine/aelEngine.ts\` استفاده می‌کند و Worker از پکیج \`packages/learning-engine\`. اسکریپت \`scripts/engine-parity-harness.mts\` تعدادی سناریوی قطعی را بین این دو مسیر مقایسه می‌کند؛ این تست، به‌تنهایی اثبات‌کنندهٔ یکپارچگی کامل تمام مصرف‌کنندگان، داده‌ها یا وضعیت یادگیرنده نیست. یکپارچه‌سازی کامل موتور و محتوا از کارهای باز معماری است.
+در حال حاضر React از `src/engine/aelEngine.ts` استفاده می‌کند و Worker از پکیج `packages/learning-engine`. اسکریپت `scripts/engine-parity-harness.mts` تعدادی سناریوی قطعی را بین این دو مسیر مقایسه می‌کند؛ این تست، به‌تنهایی اثبات‌کنندهٔ یکپارچگی کامل تمام مصرف‌کنندگان، داده‌ها یا وضعیت یادگیرنده نیست. یکپارچه‌سازی کامل موتور و محتوا از کارهای باز معماری است.
 
 ---
 
@@ -181,13 +181,13 @@ flowchart TD
 - npm همراه Node.js
 - Git
 - برای اجرای Worker محلی: ابزار Wrangler از طریق npx
-- برای تست دیتابیس محلی: وابستگی‌های ثبت‌شده در \`package-lock.json\`
+- برای تست دیتابیس محلی: وابستگی‌های ثبت‌شده در `package-lock.json`
 
-نسخهٔ Node در فایل \`.nvmrc\` برابر ۲۴ تعیین شده است.
+نسخهٔ Node در فایل `.nvmrc` برابر ۲۴ تعیین شده است.
 
 ### دریافت و نصب
 
-\`\`\`bash
+```bash
 git clone https://github.com/rrasi90/konkortelegrambot.git
 cd konkortelegrambot
 
@@ -195,7 +195,7 @@ cd konkortelegrambot
 nvm use 24
 # macOS/Linux with nvm: nvm use
 npm ci
-\`\`\`
+```
 
 اگر از nvm استفاده نمی‌کنید، اطمینان حاصل کنید Node.js 24 یا نسخهٔ جدیدتر فعال است.
 
@@ -203,25 +203,25 @@ npm ci
 
 مسیر پیشنهادی برای توسعهٔ مسیر Worker/Mini App:
 
-\`\`\`bash
+```bash
 npm run dev:miniapp
-\`\`\`
+```
 
 سرور محلی روی پورت **۸۷۸۷** اجرا می‌شود:
 
-\`http://localhost:8787\`
+`http://localhost:8787`
 
 این محیط از Worker محلی و MemoryStore همراه بستهٔ دمو استفاده می‌کند. داده‌های آن Production نیستند و برای نگهداری پایدار اطلاعات کاربران طراحی نشده‌اند.
 
 ### اجرای اپ React
 
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
+```
 
 Vite روی پورت **۳۰۰۰** اجرا می‌شود:
 
-\`http://localhost:3000\`
+`http://localhost:3000`
 
 > این رابط مسیر Legacy/محلی است. تا زمانی که ممیزی Bundle کلید پاسخ را رد می‌کند، آن را به‌عنوان نسخهٔ قابل‌انتشار عمومی استفاده نکنید.
 
@@ -233,25 +233,39 @@ Vite روی پورت **۳۰۰۰** اجرا می‌شود:
 
 | فرمان | کاربرد |
 |---|---|
-| \`npm run typecheck\` | بررسی TypeScript کل پروژه |
-| \`npm test\` | اجرای تست‌های Vitest |
-| \`npx tsx scripts/engine-parity-harness.mts\` | مقایسهٔ سناریوهای منتخب دو مسیر Engine |
-| \`npm run validate:content\` | اعتبارسنجی بسته‌های محتوایی |
-| \`npm run build:worker\` | Build/Typecheck مربوط به Worker |
-| \`npm run audit:miniapp\` | اسکن Assetهای واقعی Mini App و بررسی تنظیمات Wrangler |
-| \`npm run audit:client-bundle\` | اسکن Bundle اپ React از نظر نشت کلید پاسخ |
-| \`npx --yes wrangler deploy --dry-run --config apps/worker/wrangler.jsonc\` | اعتبارسنجی بستهٔ Worker بدون انتشار |
-| \`node scripts/db-test-embedded.mjs\` | اجرای Migration، Seed و تست یکپارچگی روی PostgreSQL توکار |
-| \`node scripts/e2e-miniapp.mjs\` | اجرای سناریوهای E2E تعریف‌شده برای Mini App، مطابق تنظیمات اسکریپت |
+| `npm run typecheck` | بررسی TypeScript کل پروژه |
+| `npm test` | اجرای تست‌های Vitest |
+| `npx tsx scripts/engine-parity-harness.mts` | مقایسهٔ سناریوهای منتخب دو مسیر Engine |
+| `npm run validate:content` | اعتبارسنجی بسته‌های محتوایی |
+| `npm run build:worker` | Build/Typecheck مربوط به Worker |
+| `npm run audit:miniapp` | اسکن Assetهای واقعی Mini App و بررسی تنظیمات Wrangler |
+| `npm run audit:client-bundle` | اسکن Bundle اپ React از نظر نشت کلید پاسخ |
+| `npx --yes wrangler deploy --dry-run --config apps/worker/wrangler.jsonc` | اعتبارسنجی بستهٔ Worker بدون انتشار |
+| `node scripts/db-test-embedded.mjs` | اجرای Migration، Seed و تست یکپارچگی روی PostgreSQL توکار |
+| `node scripts/e2e-miniapp.mjs` | اجرای سناریوهای E2E با Chrome؛ ابتدا سرور محلی را در ترمینال جداگانه با `npm run dev:miniapp` اجرا کنید. |
+
+### آزمون مرورگر E2E
+
+این اسکریپت به Chrome محلی و سرور توسعه نیاز دارد. در ترمینال اول سرور را اجرا کنید و در ترمینال دوم تست را:
+
+```bash
+# Terminal 1
+npm run dev:miniapp
+
+# Terminal 2
+node scripts/e2e-miniapp.mjs
+```
+
+در Windows مسیر پیش‌فرض Chrome روی `C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe` است؛ در صورت نصب در مسیر دیگر، مقدار `CHROME_PATH` را تنظیم کنید.
 
 ### بررسی‌های CI
 
-Workflow اصلی در \`.github/workflows/ci.yml\` دو مسیر دارد:
+Workflow اصلی در `.github/workflows/ci.yml` دو مسیر دارد:
 
-1. **Quality:** نصب با \`npm ci\`، Typecheck، تست‌ها، Engine Parity، اعتبارسنجی محتوا، Build Worker، اسکن Mini App و Wrangler Dry Run.
+1. **Quality:** نصب با `npm ci`، Typecheck، تست‌ها، Engine Parity، اعتبارسنجی محتوا، Build Worker، اسکن Mini App و Wrangler Dry Run.
 2. **Database:** اجرای Migrationها و تست‌های یکپارچگی PostgreSQL در سرویس CI.
 
-Workflow مربوط به GitHub Pages در \`.github/workflows/deploy-pages.yml\` عمداً قبل از Upload و Deployment، Bundle را اسکن می‌کند. شکست این Guard در برابر کلید پاسخ، یک کنترل امنیتی است و نباید با حذف یا تضعیف تست برطرف شود.
+Workflow مربوط به GitHub Pages در `.github/workflows/deploy-pages.yml` عمداً قبل از Upload و Deployment، Bundle را اسکن می‌کند. شکست این Guard در برابر کلید پاسخ، یک کنترل امنیتی است و نباید با حذف یا تضعیف تست برطرف شود.
 
 ---
 
@@ -268,19 +282,19 @@ Workflow مربوط به GitHub Pages در \`.github/workflows/deploy-pages.yml\
 
 نمونهٔ ارسال پاسخ:
 
-\`\`\`http
+```http
 POST /api/answers
 Authorization: Bearer <session_token>
 Content-Type: application/json
-\`\`\`
+```
 
-\`\`\`json
+```json
 {
   "attemptId": "unique-attempt-uuid",
   "questionId": "demo-q-001",
   "selectedOption": 2
 }
-\`\`\`
+```
 
 کلاینت نباید بتواند با دستکاری JavaScript یا درخواست HTTP نتیجهٔ تصحیح را جعل کند.
 
@@ -288,8 +302,8 @@ Content-Type: application/json
 
 - اعتبارسنجی Telegram Web App Init Data در سمت سرور.
 - استفاده از Session Token برای APIهای محافظت‌شده.
-- اعتبارسنجی Header وب‌هوک با \`X-Telegram-Bot-Api-Secret-Token\`.
-- محافظت مسیرهای مدیریتی وب‌هوک با \`ADMIN_API_TOKEN\`.
+- اعتبارسنجی Header وب‌هوک با `X-Telegram-Bot-Api-Secret-Token`.
+- محافظت مسیرهای مدیریتی وب‌هوک با `ADMIN_API_TOKEN`.
 - جلوگیری از انتشار کلید پاسخ در Bundle عمومی.
 - محدودسازی نرخ درخواست و اعتبارسنجی ورودی‌ها.
 - عدم نگهداری Secret در Git، Frontend یا Logهای عمومی.
@@ -301,14 +315,14 @@ Content-Type: application/json
 
 | نام | کاربرد |
 |---|---|
-| \`TELEGRAM_BOT_TOKEN\` | اعتبارسنجی و ارتباط با Bot API |
-| \`TELEGRAM_WEBHOOK_SECRET\` | اعتبارسنجی درخواست‌های ورودی تلگرام |
-| \`ADMIN_API_TOKEN\` | حفاظت از مسیرهای مدیریتی |
-| \`SESSION_SECRET\` | امضای Session |
-| \`SUPABASE_URL\` | آدرس پروژهٔ Supabase |
-| \`SUPABASE_SERVICE_ROLE_KEY\` | دسترسی امن Worker به Supabase |
-| \`ENVIRONMENT\` | در Production باید \`production\` باشد |
-| \`ALLOW_DEMO_AUTH\` | ورود نمایشی؛ در Production باید غیرفعال باشد |
+| `TELEGRAM_BOT_TOKEN` | اعتبارسنجی و ارتباط با Bot API |
+| `TELEGRAM_WEBHOOK_SECRET` | اعتبارسنجی درخواست‌های ورودی تلگرام |
+| `ADMIN_API_TOKEN` | حفاظت از مسیرهای مدیریتی |
+| `SESSION_SECRET` | امضای Session |
+| `SUPABASE_URL` | آدرس پروژهٔ Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | دسترسی امن Worker به Supabase |
+| `ENVIRONMENT` | در Production باید `production` باشد |
+| `ALLOW_DEMO_AUTH` | ورود نمایشی؛ در Production باید غیرفعال باشد |
 
 در Production، نبود پیکربندی پایدار و احراز هویت امن باید مانع فعال‌سازی واقعی محصول شود.
 
@@ -316,21 +330,21 @@ Content-Type: application/json
 
 ## ☁️ انتشار Cloudflare Worker
 
-نام Worker در \`apps/worker/wrangler.jsonc\`:
+نام Worker در `apps/worker/wrangler.jsonc`:
 
-\`adaptive-exam-worker\`
+`adaptive-exam-worker`
 
 آدرس ثبت‌شده در Runbook:
 
 **[adaptive-exam-worker.ael-worker.workers.dev](https://adaptive-exam-worker.ael-worker.workers.dev)**
 
-پیکربندی فعلی Assetها از \`apps/miniapp\` استفاده می‌کند و مسیرهای \`/api/*\` را ابتدا به Worker می‌فرستد.
+پیکربندی فعلی Assetها از `apps/miniapp` استفاده می‌کند و مسیرهای `/api/*` را ابتدا به Worker می‌فرستد.
 
 ### اعتبارسنجی و انتشار
 
 ابتدا:
 
-\`\`\`bash
+```bash
 npm ci
 npm run typecheck
 npm test
@@ -338,29 +352,29 @@ npm run validate:content
 npm run build:worker
 npm run audit:miniapp
 npx --yes wrangler deploy --dry-run --config apps/worker/wrangler.jsonc
-\`\`\`
+```
 
 برای انتشار واقعی، پس از بررسی حساب، Environment و Secrets:
 
-\`\`\`bash
+```bash
 npm run --prefix apps/worker deploy
-\`\`\`
+```
 
 این فرمان Worker را Build می‌کند، Assetهای Mini App را اسکن می‌کند و سپس Wrangler را اجرا می‌کند. انتشار واقعی به احراز هویت Cloudflare و پیکربندی Production نیاز دارد.
 
 ### سلامت سرویس
 
-\`\`\`bash
+```bash
 curl -i https://adaptive-exam-worker.ael-worker.workers.dev/api/health
-\`\`\`
+```
 
 انتظار مسیر Health:
 
-\`\`\`json
+```json
 { "ok": true }
-\`\`\`
+```
 
-برای وضعیت جزئی‌تر پیکربندی، Endpoint مدیریتی \`GET /api/health/detail\` نیازمند توکن مدیریتی است و نباید خروجی آن را عمومی منتشر کرد.
+برای وضعیت جزئی‌تر پیکربندی، Endpoint مدیریتی `GET /api/health/detail` نیازمند توکن مدیریتی است و نباید خروجی آن را عمومی منتشر کرد.
 
 > **وضعیت مهم:** Runbook مورخ ۳ نوامبر ۲۰۲۶، پاسخ ۲۰۰ Health، سرو Mini App و یک آزمون E2E بیست‌مرحله‌ای پس از مانور Rollback را ثبت کرده است. همان Runbook اتصال Supabase، Migration شمارهٔ ۰۰۱۵ و تکمیل تنظیم منوی تلگرام را باز می‌گذارد. بنابراین Health سبز به معنی آماده‌بودن ذخیره‌سازی Production یا تکمیل راه‌اندازی تلگرام نیست.
 
@@ -368,11 +382,11 @@ curl -i https://adaptive-exam-worker.ael-worker.workers.dev/api/health
 
 ## 🤖 تلگرام و Mini App
 
-مسیر Mini App از طریق فایل‌های \`apps/miniapp\` عرضه می‌شود و درخواست‌های API آن به Worker می‌رسند.
+مسیر Mini App از طریق فایل‌های `apps/miniapp` عرضه می‌شود و درخواست‌های API آن به Worker می‌رسند.
 
 آدرس وب‌هوک مورد انتظار در Worker:
 
-\`https://adaptive-exam-worker.ael-worker.workers.dev/api/telegram/webhook\`
+`https://adaptive-exam-worker.ael-worker.workers.dev/api/telegram/webhook`
 
 قبل از فعال‌سازی Bot:
 
@@ -380,13 +394,13 @@ curl -i https://adaptive-exam-worker.ael-worker.workers.dev/api/health
 2. Secretهای Worker را بررسی کنید.
 3. URL واقعی Mini App را روی دامنهٔ Worker تنظیم کنید.
 4. Webhook را با Secret Token ثبت کنید.
-5. خروجی \`getWebhookInfo\` را بررسی کنید.
+5. خروجی `getWebhookInfo` را بررسی کنید.
 6. دریافت پیام و بازشدن Mini App را با حساب آزمایشی تست کنید.
 7. احراز هویت تلگرام و ثبت پاسخ را end-to-end آزمایش کنید.
 
 ### هشدار دربارهٔ سرویس Polling قدیمی
 
-اسکریپت \`npm run bot\`، یعنی \`scripts/telegram-bot-service.mjs\`، برای Long Polling است و هنگام شروع، Webhook را حذف می‌کند تا بتواند از \`getUpdates\` استفاده کند. آن را هم‌زمان با Webhook Production اجرا نکنید؛ ممکن است اتصال ورودی ربات را مختل کند. برای مسیر Worker، Webhook باید با روش امن و مستندشده مدیریت شود.
+اسکریپت `npm run bot`، یعنی `scripts/telegram-bot-service.mjs`، برای Long Polling است و هنگام شروع، Webhook را حذف می‌کند تا بتواند از `getUpdates` استفاده کند. آن را هم‌زمان با Webhook Production اجرا نکنید؛ ممکن است اتصال ورودی ربات را مختل کند. برای مسیر Worker، Webhook باید با روش امن و مستندشده مدیریت شود.
 
 ---
 
@@ -396,26 +410,26 @@ Backend با **Hono** روی Cloudflare Workers پیاده‌سازی شده ا�
 
 | مسیر | کاربرد |
 |---|---|
-| \`GET /api/health\` | بررسی سلامت Worker |
-| \`POST /api/auth/telegram\` | ورود با Telegram Init Data |
-| \`POST /api/auth/demo\` | ورود نمایشی در محیط مجاز توسعه |
-| \`GET /api/me\` | اطلاعات کاربر جاری |
-| \`GET /api/home\` | داشبورد و خلاصهٔ وضعیت یادگیری |
-| \`GET /api/tracks\` و \`PUT /api/tracks\` | خواندن و تنظیم گرایش‌های فعال |
-| \`GET /api/queue\` | دریافت صف مطالعه و مرور |
-| \`POST /api/answers\` | ثبت پاسخ و دریافت گزارش تصحیح |
-| \`GET /api/map\` | نقشهٔ مسیر یادگیری |
-| \`GET /api/night-quiz\` | کوییز شبانه |
-| \`GET /api/diagnostic\` | آزمون تشخیصی |
-| \`GET /api/exam-structure\` | ساختار مدل‌شدهٔ آزمون بر اساس سطح و سال |
-| \`POST /api/exam-simulation/start\` | شروع جلسهٔ شبیه‌سازی |
-| \`POST /api/exam-simulation/answer\` | ثبت پاسخ جلسهٔ شبیه‌سازی |
+| `GET /api/health` | بررسی سلامت Worker |
+| `POST /api/auth/telegram` | ورود با Telegram Init Data |
+| `POST /api/auth/demo` | ورود نمایشی در محیط مجاز توسعه |
+| `GET /api/me` | اطلاعات کاربر جاری |
+| `GET /api/home` | داشبورد و خلاصهٔ وضعیت یادگیری |
+| `GET /api/tracks` و `PUT /api/tracks` | خواندن و تنظیم گرایش‌های فعال |
+| `GET /api/queue` | دریافت صف مطالعه و مرور |
+| `POST /api/answers` | ثبت پاسخ و دریافت گزارش تصحیح |
+| `GET /api/map` | نقشهٔ مسیر یادگیری |
+| `GET /api/night-quiz` | کوییز شبانه |
+| `GET /api/diagnostic` | آزمون تشخیصی |
+| `GET /api/exam-structure` | ساختار مدل‌شدهٔ آزمون بر اساس سطح و سال |
+| `POST /api/exam-simulation/start` | شروع جلسهٔ شبیه‌سازی |
+| `POST /api/exam-simulation/answer` | ثبت پاسخ جلسهٔ شبیه‌سازی |
 
 به‌جز مسیرهای احراز هویت و Health، مسیرهای محافظت‌شده به هدر زیر نیاز دارند:
 
-\`\`\`http
+```http
 Authorization: Bearer <session_token>
-\`\`\`
+```
 
 اگر شبیه‌سازی رسمی یک سطح یا سال در Backend موجود نباشد، API باید آن را صریح اعلام کند؛ ساختار یا محتوای ساختگی نباید به‌عنوان آزمون رسمی نمایش داده شود.
 
@@ -436,15 +450,15 @@ Authorization: Bearer <session_token>
 
 فرمان اعتبارسنجی بسته‌های محتوایی:
 
-\`\`\`bash
+```bash
 npm run validate:content
-\`\`\`
+```
 
 ابزار استخراج و ممیزی منابع:
 
-\`\`\`bash
+```bash
 npm run extract:konkor
-\`\`\`
+```
 
 ---
 
@@ -452,7 +466,7 @@ npm run extract:konkor
 
 مخزن فعلاً خصوصی است. تغییرات را در Branch مجزا انجام دهید و از Pull Request برای بازبینی استفاده کنید.
 
-\`\`\`bash
+```bash
 git fetch origin
 git switch main
 git pull --ff-only origin main
@@ -464,7 +478,7 @@ git switch -c feat/short-description
 git add <changed-files>
 git commit -m "feat: describe the change"
 git push -u origin feat/short-description
-\`\`\`
+```
 
 ### قواعد مشارکت
 
@@ -472,7 +486,7 @@ git push -u origin feat/short-description
 - تغییرات یک حوزه را تا حد امکان در یک PR متمرکز نگه دارید.
 - برای تغییر رفتار، تست رگرسیون اضافه کنید.
 - Migration مخرب بدون Backup و برنامهٔ Rollback ممنوع است.
-- فایل‌های Lock را فقط با npm و هماهنگ با \`package.json\` به‌روزرسانی کنید.
+- فایل‌های Lock را فقط با npm و هماهنگ با `package.json` به‌روزرسانی کنید.
 - Guardهای امنیتی را برای سبزشدن CI حذف یا ضعیف نکنید.
 - Deployment آزمایشی را Production معرفی نکنید.
 - Secret، اطلاعات شخصی کاربران و دادهٔ حساس را در Issue یا Log قرار ندهید.
@@ -480,7 +494,7 @@ git push -u origin feat/short-description
 
 ### سیاست Package Manager
 
-\`package-lock.json\` قفل‌فایل رسمی مخزن است. برای نصب قابل‌تکرار از \`npm ci\` استفاده کنید. قفل‌فایل جایگزین مانند \`bun.lock\` را بدون تصمیم معماری و به‌روزرسانی CI اضافه نکنید.
+`package-lock.json` قفل‌فایل رسمی مخزن است. برای نصب قابل‌تکرار از `npm ci` استفاده کنید. قفل‌فایل جایگزین مانند `bun.lock` را بدون تصمیم معماری و به‌روزرسانی CI اضافه نکنید.
 
 ---
 
