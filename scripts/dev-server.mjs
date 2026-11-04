@@ -21,7 +21,8 @@ store.nodes = pack.nodes.map((n) => ({ ...n }));
 store.dependencies = pack.dependencies.map((d) => ({ ...d }));
 store.questions = pack.questions.map((q) => ({ ...q }));
 
-const app = createApp({ SESSION_SECRET: 'dev-secret', ALLOW_DEMO_AUTH: 'true' }, { store });
+// SEC-02: محیط توسعه باید صریحاً اعلان شود؛ محیط نامشخص سخت‌گیرانه (fail-closed) است.
+const app = createApp({ ENVIRONMENT: 'development', SESSION_SECRET: 'dev-secret', ALLOW_DEMO_AUTH: 'true' }, { store });
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',

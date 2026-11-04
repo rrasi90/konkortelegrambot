@@ -5,12 +5,13 @@ import { issueSessionToken } from '../src/auth';
 import { answerLearningQuiz, finishLearningQuiz, startLearningQuiz } from '../src/learning-paths';
 
 const secret = 'learning-path-tests-only';
+const devEnv = { ENVIRONMENT: 'development', SESSION_SECRET: secret };
 const courseId = 'financial-management';
 
 describe('Worker learning paths', () => {
   it('enforces topic quotas through the authenticated API and reports shortage', async () => {
     const store = new MemoryStore();
-    const app = createApp({ SESSION_SECRET: secret }, { store });
+    const app = createApp(devEnv, { store });
     const user = await store.createUser({ displayName: 'Tester' });
     const token = await issueSessionToken(user.id, secret);
     const headers = { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };
@@ -29,7 +30,7 @@ describe('Worker learning paths', () => {
   });
   it('withholds written-answer guidance until timed submission and keeps the result pending', async () => {
     const store = new MemoryStore();
-    const app = createApp({ SESSION_SECRET: secret }, { store });
+    const app = createApp(devEnv, { store });
     const user = await store.createUser({ displayName: 'Tester' });
     const token = await issueSessionToken(user.id, secret);
     const headers = { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' };
@@ -51,7 +52,7 @@ describe('Worker learning paths', () => {
   });
   it('authenticates routes and sends only the public question projection', async () => {
     const store = new MemoryStore();
-    const app = createApp({ SESSION_SECRET: secret }, { store });
+    const app = createApp(devEnv, { store });
     expect((await app.request('/api/learning-paths')).status).toBe(401);
     const user = await store.createUser({ displayName: 'Tester' });
     const token = await issueSessionToken(user.id, secret);

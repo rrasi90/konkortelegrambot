@@ -100,7 +100,28 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     c.header('Cache-Control', 'no-store');
     await next();
   });
-  app.use('*', cors());
+
+  // SEC-02: محیط نامشخص = سخت‌گیرانه (fail-closed). حالت باز فقط با اعلان صریح
+  // ENVIRONMENT=development|test (یا NODE_ENV=development در Node محلی) باز می‌شود.
+  // پیش از این، نبودِ ENVIRONMENT روی ورکر زنده گاردهای پروداکشن را خاموش می‌کرد.
+  const isDevelopment =
+    env.ENVIRONMENT === 'development' ||
+    env.ENVIRONMENT === 'test' ||
+    (typeof (globalThis as any).process !== 'undefined' && (globalThis as any).process.env?.NODE_ENV === 'development');
+  const isProduction = !isDevelopment;
+
+  // SEC-02: CORS از wildcard به فهرست سفید محدود شد. Mini App همیشه same-origin
+  // سرو می‌شود؛ این فهرست فقط برای ابزارهای محلی و APP_URL اعلامی است.
+  const allowedOrigins = new Set(
+    [
+      env.APP_URL,
+      'http://127.0.0.1:8787',
+      'http://localhost:8787',
+      'http://127.0.0.1:3000',
+      'http://localhost:3000',
+    ].filter((value): value is string => typeof value === 'string' && value.length > 0),
+  );
+  app.use('*', cors({ origin: (origin) => (allowedOrigins.has(origin) ? origin : null) }));
 
   const store: DataStore =
     options.store ??
@@ -113,10 +134,6 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     : env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
       ? 'supabase'
       : 'memory';
-  const isProduction =
-    env.ENVIRONMENT === 'production' ||
-    (typeof (globalThis as any).process !== 'undefined' && (globalThis as any).process.env?.NODE_ENV === 'production');
-
   if (isProduction) {
     if (!env.SESSION_SECRET || env.SESSION_SECRET === 'dev-secret' || env.SESSION_SECRET.length < 16) {
       throw new Error('SECURITY VIOLATION: Secure SESSION_SECRET (min 16 chars) is strictly required in production.');
@@ -129,7 +146,9 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
   }
   const secret = env.SESSION_SECRET || 'dev-secret';
-  const allowDemoAuth = env.ALLOW_DEMO_AUTH === 'true';
+  // SEC-02 (کمربند-و-آویز): حتی اگر گارد بالایی به هر دلیلی رد شود، مسیرهای دمو
+  // در پروداکشن در سطح درخواست هم بی‌اثرند؛ پرچم صرفاً در محیط اعلان‌شدهٔ dev اثر دارد.
+  const allowDemoAuth = !isProduction && env.ALLOW_DEMO_AUTH === 'true';
 
   app.use('*', async (c, next) => {
     c.set('store', store);

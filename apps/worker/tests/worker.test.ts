@@ -5,6 +5,7 @@ import pack from '../../../content/examples/demo-pack.json';
 import type { ReviewCard } from '@ael/contracts';
 
 const ENV = {
+  ENVIRONMENT: 'development',
   SESSION_SECRET: 'test-secret',
   ALLOW_DEMO_AUTH: 'true',
   TELEGRAM_WEBHOOK_SECRET: 'test_telegram_webhook_secret_2026_secure',

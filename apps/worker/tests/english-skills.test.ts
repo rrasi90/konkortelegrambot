@@ -6,6 +6,7 @@ import { MemoryStore } from '../src/memory-store.ts';
 import pack from '../../../content/examples/demo-pack.json';
 
 const ENV = {
+  ENVIRONMENT: 'development',
   SESSION_SECRET: 'test-secret',
   ALLOW_DEMO_AUTH: 'true',
 };

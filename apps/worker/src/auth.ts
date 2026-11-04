@@ -76,7 +76,10 @@ export async function verifyTelegramInitData(
   if (!constantTimeEqual(computed, hash)) return { ok: false, error: 'signature mismatch' };
 
   const authDate = Number(params.get('auth_date') ?? 0);
-  if (!authDate || Math.abs(Date.now() / 1000 - authDate) > maxAgeSeconds) {
+  // SEC-02: auth_date آینده (بیش از ۶۰ ثانیه برای تلورانس ساعت) تقلبی است و رد می‌شود؛
+  // پیش از این Math.abs تاریخ آینده را هم در پنجرهٔ اعتبار می‌پذیرفت.
+  const nowSeconds = Date.now() / 1000;
+  if (!authDate || authDate > nowSeconds + 60 || nowSeconds - authDate > maxAgeSeconds) {
     return { ok: false, error: 'auth_date stale' };
   }
 
