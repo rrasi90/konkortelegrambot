@@ -155,9 +155,9 @@ describe('§8.7 ساختار رسمی جلسهٔ شبیه‌سازی', () => {
     expect(plan.disclosures.join('\n')).toContain('سنجش آمادگی');
   });
 
-  it('مخزنِ برچسب‌خوردهٔ دفترچهٔ دکتری می‌تواند رسمی معرفی شود', () => {
+  it('برچسب مبدأ سؤال‌ها به‌تنهایی بازسازی رسمی دفترچه را اثبات نمی‌کند', () => {
     const plan = buildDoctorate1405();
-    expect(plan.contentOfficiality).toBe('official_booklet');
+    expect(plan.contentOfficiality).toBe('scaled_pool');
   });
 
   it('سال ۱۴۰۳: استعداد ضریب دارد ولی تعدادش ثبت نشده — حدس زده نمی‌شود و زمان/جمع رسمی ناقص گزارش می‌شود', () => {
@@ -282,6 +282,20 @@ describe('§8.7 ساختار رسمی جلسهٔ شبیه‌سازی', () => {
       buildDoctorate1405().answerSheet.map((s) => s.questionId)
     );
   });
+
+  it('ترتیب تصادفی تزریق‌شده تکرارپذیر و بدون سؤال تکراری است', () => {
+    const make = (random: () => number) => buildExamSessionPlan({
+      level: 'doctorate', examYear: 1405, subGroupId: 'industrial',
+      questions: doctoratePool, nodes, newAttemptId: attemptFactory(), random,
+    });
+    const first = make(() => 0).answerSheet.map(slot => slot.questionId);
+    const second = make(() => 0).answerSheet.map(slot => slot.questionId);
+    const other = make(() => 0.999).answerSheet.map(slot => slot.questionId);
+    expect(first).toEqual(second);
+    expect(new Set(first).size).toBe(first.length);
+    expect(first).not.toEqual(other);
+    expect(() => make(() => 1)).toThrow(/تصادفی/);
+  });
 });
 
 describe('§8.7 پوشش کامل ساختار رسمی', () => {
@@ -328,7 +342,7 @@ describe('§8.7 پوشش کامل ساختار رسمی', () => {
     expect(plan.allocatedTotalQuestions).toBe(130);
     expect(plan.coverageRatio).toBe(1);
     expect(plan.durationMinutes).toBe(145);
-    expect(plan.contentOfficiality).toBe('official_booklet');
+    expect(plan.contentOfficiality).toBe('scaled_pool');
     expect(plan.answerSheet.filter((s) => s.sectionId === 'language')).toHaveLength(40);
 
     const report = scoreExamSession(

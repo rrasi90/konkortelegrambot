@@ -73,52 +73,34 @@ export interface ChapterQuestionGroup {
 export const getChaptersForNode = (bookId: string, nodeId: string): BookChapter[] =>
   (BOOK_CHAPTERS[bookId] ?? []).filter((ch) => ch.nodes.includes(nodeId));
 
-/**
- * توزیع تست‌های بانک روی فصل‌ها: هر گره فقط به نخستین فصلی که آن را پوشش می‌دهد
- * نسبت داده می‌شود تا هیچ تستی دو بار در صفحهٔ کتاب تکرار نشود.
- */
+/** Explicit references take precedence. Inferred links require a unique chapter. */
 export const groupBookQuestionsByChapter = (
   bookId: string,
   questions: QuestionItem[]
 ): ChapterQuestionGroup[] => {
   const chapters = getBookChapters(bookId);
-  // هر گره به «مشخص‌ترین» فصلی نسبت داده می‌شود که آن را پوشش می‌دهد
-  // (فصلی که گره‌های کمتری دارد، در صورت تساوی فصل با سؤال بیشتر).
-  const nodeOwner = new Map<string, string>();
-  const nodeOwnerScore = new Map<string, number>();
-  chapters.forEach((ch) => {
-    ch.nodes.forEach((nodeId) => {
-      const score = ch.nodes.length * 1000 - ch.examCount;
-      const current = nodeOwnerScore.get(nodeId);
-      if (current === undefined || score < current) {
-        nodeOwner.set(nodeId, ch.id);
-        nodeOwnerScore.set(nodeId, score);
-      }
-    });
-  });
-
   const groups: ChapterQuestionGroup[] = chapters.map((chapter) => ({ chapter, questions: [] }));
-  const rest: ChapterQuestionGroup = { chapter: null, questions: [] };
+  const unresolved: ChapterQuestionGroup = { chapter: null, questions: [] };
+  const candidates = new Set<string>();
 
-  questions.forEach((q) => {
-    const ownerId = nodeOwner.get(q.nodeId);
-    const group = ownerId ? groups.find((g) => g.chapter?.id === ownerId) : undefined;
-    if (group && group.chapter) {
-      group.questions.push(q);
-      // اگر همان گره چند فصل را پوشش می‌دهد، ابهام انتساب را ثبت کن
-      const alsoIn = getChaptersForNode(bookId, q.nodeId)
-        .filter((ch) => ch.id !== group.chapter?.id)
-        .map((ch) => ch.id);
-      if (alsoIn.length > 0) {
-        const shared = new Set([...(group.sharedWith ?? []), ...alsoIn]);
-        group.sharedWith = [...shared];
-      }
+  for (const question of questions) {
+    const matching = getChaptersForNode(bookId, question.nodeId);
+    const chapterId = question.referenceChapterId !== undefined
+      ? question.referenceChapterId
+      : matching.length === 1 ? matching[0].id : undefined;
+    const group = groups.find(({ chapter }) => chapter?.id === chapterId);
+    if (group) {
+      group.questions.push(question);
     } else {
-      rest.questions.push(q); // گره‌های بدون فصل منتسب → سبد «سایر مباحث»
+      unresolved.questions.push(question);
+      if (matching.length > 1) matching.forEach(({ id }) => candidates.add(id));
     }
-  });
+  }
 
-  return [...groups.filter((g) => g.questions.length > 0), ...(rest.questions.length ? [rest] : [])];
+  const assigned = groups.filter((group) => group.questions.length > 0);
+  if (unresolved.questions.length === 0) return assigned;
+  if (candidates.size > 0) unresolved.sharedWith = [...candidates];
+  return [...assigned, unresolved];
 };
 
 /**

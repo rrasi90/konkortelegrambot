@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "id": "statistics-foundations",
+  "version": "1.2.0",
+  "title": "مبانی آمار و احتمال",
+  "status": "authored_pilot",
+  "description": "دو درس کوتاه تألیفی دربارهٔ شاخص مرکزی و احتمال شرطی.",
+  "scopeNote": "بستهٔ آزمایشی تألیفی است و پرسش‌ها در انتظار بازبینی متخصص‌اند.",
+  "sources": [
+    {
+      "id": "nist.stat.location",
+      "title": "NIST Engineering Statistics Handbook",
+      "url": "https://www.itl.nist.gov/div898/handbook/eda/section3/eda351.htm",
+      "locator": "Measures of Location",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "nist.stat.conditional",
+      "title": "NIST Engineering Statistics Handbook",
+      "url": "https://www.itl.nist.gov/div898/handbook/apr/section1/apr1a.htm",
+      "locator": "Conditional probability",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    }
+  ],
+  "topics": [
+    {
+      "id": "stat.center",
+      "title": "میانگین و میانه",
+      "objective": "مرکز داده را با توجه به داده‌های پرت تفسیر کنیم.",
+      "minutes": 4,
+      "prerequisites": [],
+      "concepts": [
+        "میانگین برابر مجموع مقدارها تقسیم بر تعداد آن‌هاست.",
+        "میانه مقدار میانی داده‌های مرتب‌شده است.",
+        "برای تعداد زوج، میانه میانگین دو مقدار میانی است."
+      ],
+      "formula": "Mean = sum(x) / n",
+      "workedExample": "برای ۲، ۳ و ۱۰ میانگین ۵ و میانه ۳ است.",
+      "commonError": "قبل از تعیین میانه داده‌ها را مرتب کن و اثر مقدار پرت بر میانگین را بررسی کن.",
+      "sourceIds": [
+        "nist.stat.location"
+      ]
+    },
+    {
+      "id": "stat.conditional",
+      "title": "احتمال شرطی",
+      "objective": "مخرج احتمال را با شرط مسئله انتخاب کنیم.",
+      "minutes": 4,
+      "prerequisites": [],
+      "concepts": [
+        "احتمال شرطی، فراوانی رویداد مشترک را در میان موارد دارای شرط می‌سنجد.",
+        "برای محاسبه باید احتمال شرط بزرگ‌تر از صفر باشد.",
+        "احتمال A به شرط B با احتمال B به شرط A لزوماً یکسان نیست."
+      ],
+      "formula": "P(A|B) = P(A∩B) / P(B), P(B) > 0",
+      "workedExample": "از ۲۰ نفر دارای ویژگی B، تعداد ۵ نفر ویژگی A هم دارند. احتمال A به شرط B برابر ۵ ÷ ۲۰ یعنی ۲۵٪ است.",
+      "commonError": "مخرج باید تعداد یا احتمال موارد دارای شرط B باشد.",
+      "sourceIds": [
+        "nist.stat.conditional"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "stat.center.q01",
+      "topicId": "stat.center",
+      "difficulty": "basic",
+      "prompt": "میانگین ۲، ۴ و ۹ چقدر است؟",
+      "choices": [
+        "۳",
+        "۵",
+        "۶",
+        "۹"
+      ],
+      "answerIndex": 1,
+      "explanation": "مجموع ۱۵ و تعداد ۳ است، پس میانگین ۵ است.",
+      "optionReasons": [
+        "۳ تعداد داده‌هاست.",
+        "۱۵ تقسیم بر ۳ برابر ۵ است.",
+        "۶ از این مجموع و تعداد حاصل نمی‌شود.",
+        "۹ بزرگ‌ترین مشاهده است."
+      ],
+      "sourceIds": [
+        "nist.stat.location"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 0
+      }
+    },
+    {
+      "id": "stat.center.q02",
+      "topicId": "stat.center",
+      "difficulty": "applied",
+      "prompt": "میانهٔ داده‌های ۲، ۴، ۶ و ۲۰ کدام است؟",
+      "choices": [
+        "۴",
+        "۵",
+        "۶",
+        "۸"
+      ],
+      "answerIndex": 1,
+      "explanation": "دو مقدار میانی ۴ و ۶ هستند و میانگین آن‌ها ۵ است.",
+      "optionReasons": [
+        "۴ فقط یکی از دو مقدار میانی است.",
+        "میانگین دو مقدار میانی ۵ است.",
+        "۶ فقط یکی از دو مقدار میانی است.",
+        "میانگین کل داده‌هاست، نه میانه."
+      ],
+      "sourceIds": [
+        "nist.stat.location"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 2
+      }
+    },
+    {
+      "id": "stat.conditional.q01",
+      "topicId": "stat.conditional",
+      "difficulty": "basic",
+      "prompt": "از ۲۰ نفر دارای گواهی B، تعداد ۵ نفر گواهی A هم دارند. احتمال A به شرط B چقدر است؟",
+      "choices": [
+        "۵٪",
+        "۲۰٪",
+        "۲۵٪",
+        "۴۰٪"
+      ],
+      "answerIndex": 2,
+      "explanation": "در گروه دارای B، پنج نفر از بیست نفر A دارند.",
+      "optionReasons": [
+        "نسبت ۵ به ۲۰ پنج درصد نیست.",
+        "۲۰٪ معادل نسبت ۴ به ۲۰ است.",
+        "۵ تقسیم بر ۲۰ برابر ۲۵٪ است.",
+        "۴۰٪ معادل نسبت ۸ به ۲۰ است."
+      ],
+      "sourceIds": [
+        "nist.stat.conditional"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "workedExample"
+      }
+    },
+    {
+      "id": "stat.conditional.q02",
+      "topicId": "stat.conditional",
+      "difficulty": "applied",
+      "prompt": "اگر P(B)=۰٫۴ و P(A∩B)=۰٫۱ باشد، P(A|B) چقدر است؟",
+      "choices": [
+        "۰٫۱",
+        "۰٫۲۵",
+        "۰٫۴",
+        "۴"
+      ],
+      "answerIndex": 1,
+      "explanation": "احتمال مشترک ۰٫۱ را بر احتمال شرط ۰٫۴ تقسیم می‌کنیم.",
+      "optionReasons": [
+        "۰٫۱ احتمال مشترک است.",
+        "۰٫۱ تقسیم بر ۰٫۴ برابر ۰٫۲۵ است.",
+        "۰٫۴ احتمال شرط است.",
+        "احتمال از یک بزرگ‌تر نمی‌شود."
+      ],
+      "sourceIds": [
+        "nist.stat.conditional"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "stat.center.essay01",
+      "topicId": "stat.center",
+      "kind": "essay",
+      "difficulty": "applied",
+      "prompt": "در داده‌های ۲، ۳ و ۱۰ میانگین و میانه را محاسبه کن و توضیح بده چرا این دو متفاوت‌اند.",
+      "choices": [],
+      "answerIndex": -1,
+      "explanation": "میانگین (۲+۳+۱۰)÷۳ برابر ۵ و میانه برابر ۳ است. مقدار ۱۰ میانگین را نسبت به دو مقدار دیگر به سمت خود می‌کشد.",
+      "optionReasons": [],
+      "rubric": [
+        "میانگین ۵ محاسبه شود.",
+        "میانه ۳ تعیین شود.",
+        "اثر مقدار بزرگ‌تر بر میانگین توضیح داده شود."
+      ],
+      "sourceIds": [
+        "nist.stat.location"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "workedExample"
+      }
+    }
+  ]
+}

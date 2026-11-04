@@ -1,0 +1,61 @@
+{
+  "window": {
+    "from": 1396,
+    "through": 1405
+  },
+  "coverage": [
+    {
+      "examLevel": "ارشد",
+      "path": "content/questions/bank-official_traced_arshad.json",
+      "candidateRows": 65,
+      "traceableRows": 47,
+      "yearsWithTraceableRows": [
+        1396,
+        1397,
+        1398,
+        1399,
+        1400,
+        1401,
+        1402,
+        1403,
+        1404,
+        1405
+      ]
+    },
+    {
+      "examLevel": "دکتری",
+      "path": "content/questions/bank-official_traced_phd.json",
+      "candidateRows": 36,
+      "traceableRows": 0,
+      "yearsWithTraceableRows": []
+    }
+  ],
+  "patterns": [
+    {
+      "id": "strategy.bcg.quadrants",
+      "title": "تشخیص خانه‌های ماتریس BCG",
+      "examLevel": "ارشد",
+      "years": [
+        1402,
+        1405
+      ],
+      "summary": "اول رشد بازار و سپس سهم نسبی بازار را مشخص کن. سهم بالا و رشد بالا به ستاره و سهم بالا و رشد پایین به گاو شیرده مربوط است.",
+      "practicePrompt": "واحدی سهم نسبی بالا دارد ولی بازار آن آهسته رشد می‌کند. خانهٔ ماتریس و یک دلیل را از حافظه بگو.",
+      "status": "trace_pending_review",
+      "occurrences": [
+        {
+          "year": 1402,
+          "booklet": "818C",
+          "number": 185,
+          "itemId": "q.k1402.185"
+        },
+        {
+          "year": 1405,
+          "booklet": "319A",
+          "number": 188,
+          "itemId": "q.k1405.188"
+        }
+      ]
+    }
+  ]
+}

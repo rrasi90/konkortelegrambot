@@ -137,7 +137,11 @@ export const TelegramBotSimulatorModal: React.FC<TelegramBotSimulatorModalProps>
 
   // ۱. شبیه‌سازی دستور /lesson در ربات تلگرام (همراه با دکمه‌های شیشه‌ای ۱ تا ۵)
   const handleSendLessonInChat = (nodeId = 'sm.rbv') => {
-    const node = nodes.find((n) => n.id === nodeId) ?? nodes[0];
+    const node = nodes.find((item) => item.id === nodeId);
+    if (!node) {
+      appendCommandExchange('/lesson', { text: 'شناسهٔ مبحث معتبر نیست.' });
+      return;
+    }
     const lesson = lessons[node.id];
     const currentScore = nodeStates[node.id]?.masteryScore ?? 0;
 
@@ -170,14 +174,11 @@ export const TelegramBotSimulatorModal: React.FC<TelegramBotSimulatorModalProps>
                 inlineButtons: [
                   [
                     {
-                      label:
-                        r === 5
-                          ? 'ورود مستقیم به تست قرنطینه ۱۴۰۴ در مینی‌اپ'
-                          : 'شروع حل تست‌های این مبحث در مینی‌اپ',
+                      label: 'شروع حل تست‌های این مبحث در مینی‌اپ',
                       variant: 'link',
                       onClick: () =>
                         onTriggerDeepLink({
-                          type: r === 5 ? 'proof' : 'practice',
+                          type: 'practice',
                           nodeId: node.id,
                         }),
                     },

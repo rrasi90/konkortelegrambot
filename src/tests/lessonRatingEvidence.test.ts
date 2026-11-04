@@ -74,7 +74,7 @@ describe('applyLessonUnderstandingRating — خواندن، تسلط نمی‌س
     expect(result.nextNodeStates[targetNode.id]?.lastLessonSelfRating).toBe(5);
   });
 
-  it('امتیاز ۵ ادعای ۷۶٪ تسلط نمی‌کند و تست اثبات را باز می‌کند', () => {
+  it('امتیاز ۵ ادعای ۷۶٪ تسلط نمی‌کند و تست اثبات را باز نمی‌کند', () => {
     const base = buildBase();
     const result = applyLessonUnderstandingRating({
       nodeId: targetNode.id,
@@ -89,7 +89,8 @@ describe('applyLessonUnderstandingRating — خواندن، تسلط نمی‌س
 
     const state = result.nextNodeStates[targetNode.id];
     expect(state.masteryScore).toBeLessThan(76);
-    expect(state.coverageStatus).toBe('needs_proof');
+    expect(state.coverageStatus).toBe(base.nodeStates[targetNode.id].coverageStatus);
+    expect(result.nextCards.some((card) => card.cardType === 'proof_1404')).toBe(false);
     // پیام برنامه‌ریز نباید عدد تسلط جعلی نشان دهد
     expect(result.scheduleSummary).not.toMatch(/تسلط.*۷۶/);
   });
@@ -107,7 +108,7 @@ describe('applyLessonUnderstandingRating — خواندن، تسلط نمی‌س
       questions,
     });
 
-    expect(result.nextNodeStates[targetNode.id].coverageStatus).toBe('weak');
+    expect(result.nextNodeStates[targetNode.id].coverageStatus).toBe(base.nodeStates[targetNode.id].coverageStatus);
     expect(result.nextNodeStates[targetNode.id].masteryScore).toBe(
       base.nodeStates[targetNode.id]?.masteryScore ?? 0
     );

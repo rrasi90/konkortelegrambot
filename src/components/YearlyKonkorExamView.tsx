@@ -11,13 +11,6 @@ import { MajorExamBranch } from '../engine/aelEngine';
 import { MathText } from './MathText';
 import { TopicDiagramVisualizer } from './TopicDiagramVisualizer';
 import {
-  predictKonkorRankAndUniversity,
-  HISTORICAL_TOP_RANK_PROFILES,
-  YEAR_DIFFICULTY_CALIBRATIONS,
-  ExamDegreeMode,
-  CourseScoreInput,
-} from '../data/konkorRankPredictor';
-import {
   FileText,
   Play,
   Pause,
@@ -33,9 +26,6 @@ import {
   Layers,
   ChevronDown,
   ChevronUp,
-  Calculator,
-  GraduationCap,
-  TrendingUp,
 } from 'lucide-react';
 
 interface YearlyKonkorExamViewProps {
@@ -61,33 +51,11 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
 }) => {
   const [selectedYear, setSelectedYear] = useState<number>(initialYear);
   const [selectedSection, setSelectedSection] = useState<KonkorCourseSectionId | 'all'>('all');
-  const [viewMode, setViewMode] = useState<'simulator' | 'descriptive' | 'rank_predictor' | 'pdf_split'>('simulator');
+  const [viewMode, setViewMode] = useState<'simulator' | 'descriptive' | 'pdf_split'>('simulator');
   const [userAnswers, setUserAnswers] = useState<Record<string, number | null>>({});
   const [revealedQuestions, setRevealedQuestions] = useState<Record<string, boolean>>({});
   const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
   const [showBudgetTable, setShowBudgetTable] = useState<boolean>(false);
-
-  // حالت‌های موتور تخمین رتبه، تراز و دانشگاه قبولی (ارشد و دکتری)
-  const [predictorDegree, setPredictorDegree] = useState<ExamDegreeMode>('master');
-  const [predictorInputMode, setPredictorInputMode] = useState<'live_exam' | 'custom_counts'>('custom_counts');
-  const [customCounts, setCustomCounts] = useState<
-    Record<KonkorCourseSectionId, { correct: number; wrong: number }>
-  >({
-    english: { correct: 15, wrong: 3 },
-    islamic: { correct: 10, wrong: 2 },
-    math_stats: { correct: 9, wrong: 3 },
-    management_theories: { correct: 16, wrong: 4 },
-    economics: { correct: 14, wrong: 2 },
-    operations_research: { correct: 9, wrong: 2 },
-    production: {
-      correct: selectedBranch === 'business' ? 0 : 9,
-      wrong: selectedBranch === 'business' ? 0 : 2,
-    },
-    marketing: {
-      correct: selectedBranch === 'business' ? 11 : 0,
-      wrong: selectedBranch === 'business' ? 2 : 0,
-    },
-  });
 
   // تایمر شبیه‌ساز جلسه کنکور
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
@@ -133,6 +101,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
   const questionsPerYear = useMemo(() => {
     const map: Record<number, number> = {};
     for (const q of YEARLY_KONKOR_QUESTIONS) {
+      if (q.isQuarantinedProof) continue;
       map[q.examYear] = (map[q.examYear] ?? 0) + 1;
     }
     return map;
@@ -140,7 +109,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
 
   // تمام سؤالات سال انتخابی (بدون فیلتر درس) برای محاسبه کارنامه جامع سال
   const allQuestionsOfSelectedYear = useMemo(() => {
-    return YEARLY_KONKOR_QUESTIONS.filter((q) => q.examYear === selectedYear).sort(
+    return YEARLY_KONKOR_QUESTIONS.filter((q) => q.examYear === selectedYear && !q.isQuarantinedProof).sort(
       (a, b) => a.bookletQuestionNumber - b.bookletQuestionNumber
     );
   }, [selectedYear]);
@@ -226,103 +195,6 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
     };
   }, [allQuestionsOfSelectedYear, currentBooklet, selectedBranch, userAnswers]);
 
-  // محاسبه تخمین رتبه، تراز و دانشگاه قبولی (هم برای پاسخ‌برگ زنده آزمون و هم برای شبیه‌ساز دستی)
-  const rankPrediction = useMemo(() => {
-    const courseInputs: CourseScoreInput[] = KONKOR_COURSE_SECTIONS.map((sec) => {
-      const rangeInfo = currentBooklet.subjectRanges.find((r) => r.sectionId === sec.id);
-      const coeff =
-        selectedBranch === 'business'
-          ? rangeInfo?.coeffBusiness ?? 2
-          : selectedBranch === 'industrial'
-          ? rangeInfo?.coeffIndustrial ?? 2
-          : rangeInfo?.coeffTechnology ?? 2;
-
-      if (predictorInputMode === 'live_exam') {
-        const st = examScoreReport.sectionStats[sec.id];
-        const tot = st?.total || 1;
-        const c = st?.correct || 0;
-        const w = st?.wrong || 0;
-        const u = Math.max(0, tot - c - w);
-        return {
-          sectionId: sec.id,
-          title: sec.title,
-          coeff,
-          totalQuestions: tot,
-          correct: c,
-          wrong: w,
-          unanswered: u,
-          netPercent: st?.rawPercent ?? 0,
-        };
-      } else {
-        const totalInBooklet = rangeInfo?.count ?? 15;
-        const rawC = customCounts[sec.id]?.correct ?? 0;
-        const rawW = customCounts[sec.id]?.wrong ?? 0;
-        const c = Math.min(totalInBooklet, Math.max(0, rawC));
-        const w = Math.min(totalInBooklet - c, Math.max(0, rawW));
-        const u = Math.max(0, totalInBooklet - c - w);
-        const netPercent =
-          totalInBooklet > 0
-            ? Number(Math.max(-33.3, ((c * 3 - w) / (totalInBooklet * 3)) * 100).toFixed(1))
-            : 0;
-        return {
-          sectionId: sec.id,
-          title: sec.title,
-          coeff,
-          totalQuestions: totalInBooklet,
-          correct: c,
-          wrong: w,
-          unanswered: u,
-          netPercent,
-        };
-      }
-    });
-
-    return predictKonkorRankAndUniversity({
-      year: selectedYear,
-      branch: selectedBranch,
-      degree: predictorDegree,
-      courseInputs,
-    });
-  }, [
-    currentBooklet,
-    customCounts,
-    examScoreReport,
-    predictorDegree,
-    predictorInputMode,
-    selectedBranch,
-    selectedYear,
-  ]);
-
-  const applyPresetToCustomCounts = (targetRank: 1 | 10) => {
-    const profile =
-      HISTORICAL_TOP_RANK_PROFILES.find(
-        (p) =>
-          p.branch === selectedBranch &&
-          p.degree === predictorDegree &&
-          p.nationalRank === targetRank
-      ) ?? HISTORICAL_TOP_RANK_PROFILES[0];
-
-    const nextCounts: Record<KonkorCourseSectionId, { correct: number; wrong: number }> =
-      {} as any;
-    for (const sec of KONKOR_COURSE_SECTIONS) {
-      const rangeInfo = currentBooklet.subjectRanges.find((r) => r.sectionId === sec.id);
-      const totalQ = rangeInfo?.count ?? 15;
-      const targetPct = profile.coursePercentages[sec.id] ?? 0;
-      if (targetPct <= 0) {
-        nextCounts[sec.id] = { correct: 0, wrong: 0 };
-      } else {
-        const approxCorrect = Math.min(
-          totalQ,
-          Math.max(1, Math.round((targetPct / 100) * totalQ + 0.5))
-        );
-        const approxWrong = Math.min(totalQ - approxCorrect, 1);
-        nextCounts[sec.id] = { correct: approxCorrect, wrong: approxWrong };
-      }
-    }
-    setPredictorInputMode('custom_counts');
-    setCustomCounts(nextCounts);
-  };
-
   const handleSelectOption = (q: YearlyKonkorQuestion, optIdx: number) => {
     const alreadyAnswered = userAnswers[q.id] !== undefined && userAnswers[q.id] !== null;
     setUserAnswers((prev) => ({
@@ -372,6 +244,15 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
     const s = sec % 60;
     return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   };
+
+  if (selectedBranch === 'phd_all') {
+    return (
+      <section className="bento-card glass-panel p-5 space-y-3">
+        <p>محاسبهٔ درصد آزمون دکتری پس از تأیید دفترچه، مواد و ضرایب رسمی فعال می‌شود.</p>
+        <button type="button" onClick={() => onChangeBranch('business')}>مشاهدهٔ تمرین دفترچه‌های ارشد مدیریت</button>
+      </section>
+    );
+  }
 
   return (
     <div className="space-y-4 pb-20">
@@ -529,11 +410,6 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
             {[
               { id: 'simulator', label: 'شبیه‌ساز تعاملی', icon: Award },
               { id: 'descriptive', label: 'پاسخنامه تشریحی یکجا', icon: BookOpen },
-              {
-                id: 'rank_predictor',
-                label: 'تخمین رتبه، تراز و دانشگاه + کارنامه نفر اول',
-                icon: Calculator,
-              },
               { id: 'pdf_split', label: 'دفترچه PDF اصلی', icon: Eye },
             ].map((m) => {
               const Icon = m.icon;
@@ -687,20 +563,6 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              if (examScoreReport.totalAnswered > 0) {
-                setPredictorInputMode('live_exam');
-              }
-              setViewMode('rank_predictor');
-            }}
-            className="px-3 py-1 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-          >
-            <Calculator className="w-3.5 h-3.5" />
-            <span>محاسبه دقیق رتبه، تراز و دانشگاه قبولی + مقایسه با نفر اول کنکور ←</span>
-          </button>
-
           {examScoreReport.totalAnswered > 0 && (
             <button
               type="button"
@@ -1136,375 +998,6 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
         </div>
       )}
 
-      {/* ۵. حالت چهارم: موتور کالیبره‌شده تخمین رتبه، تراز، دانشگاه قبولی و مقایسه با کارنامه نفر اول کنکور */}
-      {viewMode === 'rank_predictor' && (
-        <div className="space-y-5">
-          {/* هدر و تنظیمات ورودی موتور تخمین رتبه */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <Calculator className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <span>
-                    موتور تخمین رتبه، تراز و دانشگاه قبولی کنکور سال {selectedYear} (کالیبره‌شده با کارنامه نفر اول)
-                  </span>
-                </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  بر اساس ضرایب رسمی گرایش{' '}
-                  {selectedBranch === 'business'
-                    ? 'مدیریت بازرگانی'
-                    : selectedBranch === 'industrial'
-                    ? 'مدیریت صنعتی'
-                    : 'مدیریت تکنولوژی'}
-                  ، نمره منفی یک‌سوم ($-1/3$) و ضریب سختی سال {selectedYear} (
-                  {
-                    YEAR_DIFFICULTY_CALIBRATIONS.find((y) => y.year === selectedYear)
-                      ?.difficultyLabel
-                  }
-                  )
-                </p>
-              </div>
-
-              {/* انتخاب مقطع (ارشد / دکتری) و منبع درصدها */}
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-                  <button
-                    type="button"
-                    onClick={() => setPredictorDegree('master')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
-                      predictorDegree === 'master'
-                        ? 'bg-blue-600 text-white'
-                        : 'text-slate-600 dark:text-slate-400'
-                    }`}
-                  >
-                    کارشناسی ارشد (کد ۱۱۴۲)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPredictorDegree('phd')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
-                      predictorDegree === 'phd'
-                        ? 'bg-purple-600 text-white'
-                        : 'text-slate-600 dark:text-slate-400'
-                    }`}
-                  >
-                    دکتری تخصصی (PhD)
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
-                  <button
-                    type="button"
-                    onClick={() => setPredictorInputMode('custom_counts')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
-                      predictorInputMode === 'custom_counts'
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                        : 'text-slate-600 dark:text-slate-400'
-                    }`}
-                  >
-                    ورود دستی صحیح / غلط
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPredictorInputMode('live_exam')}
-                    className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
-                      predictorInputMode === 'live_exam'
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                        : 'text-slate-600 dark:text-slate-400'
-                    }`}
-                  >
-                    از پاسخ‌برگ آزمون ({examScoreReport.totalAnswered} تست)
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* دکمه‌های شبیه‌سازی سریع کارنامه رتبه ۱ و رتبه ۱۰ کشوری */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-200/70 dark:border-slate-800 text-xs">
-              <span className="text-slate-600 dark:text-slate-400 font-medium">
-                بارگذاری سریع کارنامه‌های معیار سازمان سنجش:
-              </span>
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => applyPresetToCustomCounts(1)}
-                  className="px-3 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 border border-amber-500/30 font-bold cursor-pointer"
-                >
-                  بارگذاری کارنامه رتبه ۱ کشوری
-                </button>
-                <button
-                  type="button"
-                  onClick={() => applyPresetToCustomCounts(10)}
-                  className="px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 font-bold cursor-pointer"
-                >
-                  بارگذاری کارنامه رتبه ۱۰ (قبولی روزانه دانشگاه تهران)
-                </button>
-              </div>
-            </div>
-
-            {/* کارت‌های خروجی کلیدی: رتبه کشوری، تراز کل، میانگین وزنی و دانشگاه قبولی */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
-              <div className="p-4 rounded-2xl bg-blue-600 text-white space-y-1">
-                <div className="text-[11px] text-blue-100">رتبه کشوری تخمینی (سهمیه آزاد)</div>
-                <div className="text-2xl font-black tabular-nums">
-                  رتبه {rankPrediction.estimatedRank}
-                </div>
-                <div className="text-[11px] text-blue-100 tabular-nums">
-                  بازه اطمینان ۹۹٪: رتبه {rankPrediction.rankRangeMin} تا{' '}
-                  {rankPrediction.rankRangeMax} (صدک {rankPrediction.percentile}٪)
-                </div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-900 dark:bg-slate-800 text-white space-y-1">
-                <div className="text-[11px] text-slate-300">
-                  تراز کل کالیبره‌شده (از {rankPrediction.maxTarazScale.toLocaleString('fa-IR')})
-                </div>
-                <div className="text-2xl font-black tabular-nums text-amber-400">
-                  {rankPrediction.scaledTaraz.toLocaleString('fa-IR')}
-                </div>
-                <div className="text-[11px] text-slate-300 tabular-nums">
-                  تراز رتبه ۱ کشوری:{' '}
-                  {rankPrediction.top1RankComparison.totalTaraz.toLocaleString('fa-IR')}
-                </div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1">
-                <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                  میانگین وزنی کل (با نمره منفی)
-                </div>
-                <div className="text-2xl font-black tabular-nums text-slate-900 dark:text-white">
-                  {rankPrediction.weightedAveragePercent}٪
-                </div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 tabular-nums">
-                  میانگین وزنی نفر اول: {rankPrediction.top1RankComparison.weightedAveragePercent}٪
-                </div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-1">
-                <div className="text-[11px] text-emerald-800 dark:text-emerald-300 font-bold flex items-center gap-1">
-                  <GraduationCap className="w-4 h-4" />
-                  <span>بهترین دانشگاه محل قبولی:</span>
-                </div>
-                <div className="text-xs sm:text-sm font-bold text-emerald-950 dark:text-emerald-100 leading-6">
-                  {rankPrediction.bestMatchedUniversity}
-                </div>
-              </div>
-            </div>
-
-            {/* توصیه استراتژیک هوشمند */}
-            <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-950 dark:text-amber-100 flex items-start gap-2 leading-6">
-              <TrendingUp className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-1" />
-              <div>
-                <strong>تحلیل استراتژیک کارنامه شما: </strong>
-                {rankPrediction.strategicAdvice}
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-            {/* ستون راست (۷ ستون): جدول ورود تعداد صحیح/غلط/نزده و مقایسه درس‌به‌درس با کارنامه نفر اول */}
-            <div className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-                  جدول تعداد صحیح، غلط، نزده و مقایسه با درصد نفر اول و دهم کنکور
-                </h3>
-                <span className="text-[11px] text-slate-500">
-                  فرمول درصد خالص: $\frac&#123;3C - W&#125;&#123;3N&#125; \times 100$
-                </span>
-              </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-right border-collapse text-xs">
-                  <thead>
-                    <tr className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
-                      <th className="p-2.5 font-bold">درس (ضریب)</th>
-                      <th className="p-2.5 font-bold text-center">تعداد کل</th>
-                      <th className="p-2.5 font-bold text-center text-emerald-600">صحیح</th>
-                      <th className="p-2.5 font-bold text-center text-rose-600">غلط</th>
-                      <th className="p-2.5 font-bold text-center">نزده</th>
-                      <th className="p-2.5 font-bold text-center text-blue-600">درصد شما</th>
-                      <th className="p-2.5 font-bold text-center text-amber-600">درصد نفر اول</th>
-                      <th className="p-2.5 font-bold text-center">درصد رتبه ۱۰</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-200/70 dark:divide-slate-800 tabular-nums">
-                    {KONKOR_COURSE_SECTIONS.map((sec) => {
-                      const rangeInfo = currentBooklet.subjectRanges.find(
-                        (r) => r.sectionId === sec.id
-                      );
-                      const totalQ =
-                        predictorInputMode === 'live_exam'
-                          ? examScoreReport.sectionStats[sec.id]?.total || 1
-                          : rangeInfo?.count ?? 15;
-                      const coeff =
-                        selectedBranch === 'business'
-                          ? rangeInfo?.coeffBusiness ?? 2
-                          : selectedBranch === 'industrial'
-                          ? rangeInfo?.coeffIndustrial ?? 2
-                          : rangeInfo?.coeffTechnology ?? 2;
-
-                      const breakdownRow = rankPrediction.courseBreakdown.find(
-                        (b) => b.sectionId === sec.id
-                      );
-
-                      const curC =
-                        predictorInputMode === 'live_exam'
-                          ? examScoreReport.sectionStats[sec.id]?.correct ?? 0
-                          : customCounts[sec.id]?.correct ?? 0;
-                      const curW =
-                        predictorInputMode === 'live_exam'
-                          ? examScoreReport.sectionStats[sec.id]?.wrong ?? 0
-                          : customCounts[sec.id]?.wrong ?? 0;
-                      const curU = Math.max(0, totalQ - curC - curW);
-
-                      return (
-                        <tr
-                          key={sec.id}
-                          className={
-                            coeff === 0
-                              ? 'opacity-45 bg-slate-50/40 dark:bg-slate-900/40'
-                              : 'hover:bg-slate-50/80 dark:hover:bg-slate-800/40'
-                          }
-                        >
-                          <td className="p-2.5 font-bold text-slate-900 dark:text-white">
-                            <div>{sec.title}</div>
-                            <span className="text-[10px] font-normal text-slate-500">
-                              ضریب {coeff} {coeff === 0 ? '(عدم تأثیر)' : ''}
-                            </span>
-                          </td>
-                          <td className="p-2.5 text-center font-mono">{totalQ}</td>
-                          <td className="p-2.5 text-center">
-                            {predictorInputMode === 'custom_counts' ? (
-                              <input
-                                type="number"
-                                min={0}
-                                max={totalQ}
-                                value={curC}
-                                onChange={(e) => {
-                                  const val = Math.min(
-                                    totalQ,
-                                    Math.max(0, Number(e.target.value) || 0)
-                                  );
-                                  setCustomCounts((prev) => ({
-                                    ...prev,
-                                    [sec.id]: {
-                                      correct: val,
-                                      wrong: Math.min(totalQ - val, prev[sec.id]?.wrong ?? 0),
-                                    },
-                                  }));
-                                }}
-                                className="w-14 px-1.5 py-1 rounded-lg border border-emerald-500/40 bg-emerald-500/5 text-center font-bold text-emerald-700 dark:text-emerald-300"
-                              />
-                            ) : (
-                              <span className="font-bold text-emerald-600">{curC}</span>
-                            )}
-                          </td>
-                          <td className="p-2.5 text-center">
-                            {predictorInputMode === 'custom_counts' ? (
-                              <input
-                                type="number"
-                                min={0}
-                                max={Math.max(0, totalQ - curC)}
-                                value={curW}
-                                onChange={(e) => {
-                                  const val = Math.min(
-                                    Math.max(0, totalQ - curC),
-                                    Math.max(0, Number(e.target.value) || 0)
-                                  );
-                                  setCustomCounts((prev) => ({
-                                    ...prev,
-                                    [sec.id]: {
-                                      correct: prev[sec.id]?.correct ?? 0,
-                                      wrong: val,
-                                    },
-                                  }));
-                                }}
-                                className="w-14 px-1.5 py-1 rounded-lg border border-rose-500/40 bg-rose-500/5 text-center font-bold text-rose-700 dark:text-rose-300"
-                              />
-                            ) : (
-                              <span className="font-bold text-rose-600">{curW}</span>
-                            )}
-                          </td>
-                          <td className="p-2.5 text-center text-slate-500">{curU}</td>
-                          <td className="p-2.5 text-center font-bold text-blue-600 dark:text-blue-400">
-                            {breakdownRow?.userPercent ?? 0}٪
-                          </td>
-                          <td className="p-2.5 text-center font-bold text-amber-600 dark:text-amber-400">
-                            {breakdownRow?.rank1Percent ?? 0}٪
-                          </td>
-                          <td className="p-2.5 text-center text-slate-600 dark:text-slate-300">
-                            {breakdownRow?.rank10Percent ?? 0}٪
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* ستون چپ (۵ ستون): جدول شانس قبولی در دانشگاه‌های برتر کشور */}
-            <div className="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3.5">
-              <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <GraduationCap className="w-4 h-4 text-emerald-500" />
-                <span>وضعیت قبولی شما در دانشگاه‌های کشور با تراز {rankPrediction.scaledTaraz}</span>
-              </h3>
-
-              <div className="space-y-2.5">
-                {rankPrediction.universityAdmissions.map((ua) => {
-                  const isAdmitted = ua.status === 'بسیار هم‌خوان (شبیه‌سازی)';
-                  const isBorderline = ua.status === 'مرزی (شبیه‌سازی)';
-                  const minRequired =
-                    predictorDegree === 'master'
-                      ? ua.tier.minTarazMaster
-                      : ua.tier.minTarazPhd;
-
-                  return (
-                    <div
-                      key={ua.tier.id}
-                      className={`p-3.5 rounded-xl border text-xs space-y-1.5 ${
-                        isAdmitted
-                          ? 'bg-emerald-500/10 border-emerald-500/40'
-                          : isBorderline
-                          ? 'bg-amber-500/10 border-amber-500/40'
-                          : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 opacity-75'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <span className="font-bold text-slate-900 dark:text-white">
-                          {ua.tier.universityName}
-                        </span>
-                        <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold shrink-0 ${
-                            isAdmitted
-                              ? 'bg-emerald-600 text-white'
-                              : isBorderline
-                              ? 'bg-amber-500 text-slate-950'
-                              : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                          }`}
-                        >
-                          {ua.status}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-600 dark:text-slate-300">
-                        {ua.tier.programs}
-                      </p>
-                      <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-200/60 dark:border-slate-700/60 tabular-nums">
-                        <span>کف تراز لازم: {minRequired}</span>
-                        <span>
-                          {ua.tarazGap >= 0
-                            ? `+${ua.tarazGap} تراز بالاتر از کف قبولی`
-                            : `${Math.abs(ua.tarazGap)} تراز کمتر از کف قبولی`}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

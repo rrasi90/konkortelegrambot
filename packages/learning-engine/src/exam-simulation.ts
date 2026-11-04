@@ -27,6 +27,13 @@ export class ExamSimulationError extends Error {}
 /** قرنطینهٔ ۱۴۰۴: این سال فقط از مسیر اثبات تسلط باز می‌شود، نه شبیه‌سازی. */
 export const QUARANTINE_HOLDOUT_YEAR = 1404;
 
+/** Old local fixtures predate pack membership; the persistent catalog supplies accessType. */
+export function isProofQuestion(question: Question): boolean {
+  return question.accessType === undefined
+    ? question.examYear === QUARANTINE_HOLDOUT_YEAR
+    : question.accessType === 'proof';
+}
+
 export const EXAM_SECTION_IDS = ['specialization', 'language', 'aptitude'] as const;
 export type ExamSectionId = (typeof EXAM_SECTION_IDS)[number];
 
@@ -129,6 +136,8 @@ export interface BuildExamSessionPlanInput {
   scale?: number;
   /** سازندهٔ شناسهٔ تلاش — سمت سرور؛ موتور هیچ شناسه‌ای از خود نمی‌سازد */
   newAttemptId: () => string;
+  /** Optional random source for pool selection; omitted callers retain reproducible legacy ordering. */
+  random?: () => number;
 }
 
 function coefficientForSection(structure: ExamYearStructure, sectionId: ExamSectionId): number {
@@ -200,7 +209,7 @@ export function buildExamSessionPlan(input: BuildExamSessionPlanInput): ExamSess
   const origins = new Set<string>();
   const levels = new Set<string>();
   const eligible = input.questions.filter((q) => {
-    if (q.examYear === QUARANTINE_HOLDOUT_YEAR) return false;
+    if (isProofQuestion(q)) return false;
     if (q.examLevel && q.examLevel !== input.level) {
       levels.add(q.examLevel);
       return false;
@@ -228,6 +237,16 @@ export function buildExamSessionPlan(input: BuildExamSessionPlanInput): ExamSess
   }
   // ترتیب پایدار: انتخاب جلسه باید تکرارپذیر باشد
   for (const list of Object.values(buckets)) list.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  if (input.random) {
+    for (const list of Object.values(buckets)) {
+      for (let i = list.length - 1; i > 0; i--) {
+        const value = input.random();
+        if (!(value >= 0 && value < 1)) throw new ExamSimulationError('منبع تصادفی نامعتبر است.');
+        const j = Math.floor(value * (i + 1));
+        [list[i], list[j]] = [list[j]!, list[i]!];
+      }
+    }
+  }
 
   const sections: ExamSectionPlan[] = [];
   const answerSheet: ExamSessionSlot[] = [];
@@ -322,13 +341,9 @@ export function buildExamSessionPlan(input: BuildExamSessionPlanInput): ExamSess
   const originList = [...origins];
   const hasUnlabeled = levels.has('unlabeled');
   const otherLevels = [...levels].filter((l) => l !== 'unlabeled');
-  const officialOriginCount = originList.filter((o) => o === 'official_booklet').length;
-  const contentOfficiality: ContentOfficiality =
-    officialOriginCount > 0 && (officialOriginCount < originList.length || hasUnlabeled)
-      ? 'mixed'
-      : officialOriginCount > 0
-        ? 'official_booklet'
-        : 'scaled_pool';
+  // The pooled selector has no verified appearance, booklet order or completeness data.
+  // An official origin label on individual items cannot establish an official reproduction.
+  const contentOfficiality: ContentOfficiality = 'scaled_pool';
 
   if (hasUnlabeled) {
     disclosures.push(
@@ -340,13 +355,11 @@ export function buildExamSessionPlan(input: BuildExamSessionPlanInput): ExamSess
       `سؤال‌های سطح دیگر (${otherLevels.join('، ')}) از مخزن این جلسه حذف شدند — هرگز سؤالی از سطح دیگر در برگهٔ این سطح نمی‌آید.`
     );
   }
-  if (contentOfficiality !== 'official_booklet') {
-    disclosures.push(
-      'محتوای این جلسه از سؤال‌های واقعی دفترچهٔ همان سال نیست' +
-        (originList.length > 0 ? ` (مبدأ محتوا: ${originList.join('، ')})` : '') +
-        '؛ نمرهٔ آن سنجش آمادگی است، نه پیش‌بینی رتبه یا کارنامهٔ رسمی.'
-    );
-  }
+  disclosures.push(
+    'این جلسه بازسازی تأییدشدهٔ دفترچهٔ همان سال نیست' +
+      (originList.length > 0 ? ` (مبدأ محتوا: ${originList.join('، ')})` : '') +
+      '؛ نمرهٔ آن سنجش آمادگی است، نه پیش‌بینی رتبه یا کارنامهٔ رسمی.'
+  );
   if (!timingVerified) {
     disclosures.push(
       'زمان هر بخش برای این سال در ساختار رسمی ثبت نشده است؛ فقط جمع زمان‌های معلوم اعلام می‌گردد و جلسه زمان‌بندی‌شدهٔ رسمی محسوب نمی‌شود.'

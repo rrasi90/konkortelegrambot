@@ -96,6 +96,8 @@ type ActiveTab =
   | 'ingest'
   | 'patches';
 
+const LEGACY_PRACTICE_BANK = INITIAL_QUESTION_BANK.filter((question) => !question.isQuarantinedProof);
+
 export default function App() {
   // بانک داده‌های پویا (قابلیت افزودن زنده مباحث جدید توسط کاربر یا ایجنت هوش مصنوعی)
   const [nodes, setNodes] = useState<KnowledgeNode[]>(INITIAL_KNOWLEDGE_NODES);
@@ -103,7 +105,7 @@ export default function App() {
   const [lessons, setLessons] = useState<Record<string, InteractiveLesson>>(
     INITIAL_INTERACTIVE_LESSONS
   );
-  const [questions, setQuestions] = useState<QuestionItem[]>(INITIAL_QUESTION_BANK);
+  const [questions, setQuestions] = useState<QuestionItem[]>(LEGACY_PRACTICE_BANK);
 
   // شروع پیش‌فرض با وضعیت کاملاً صفر (Zero-State Onboarding) یا بازیابی و آشتی هوشمند از CloudStorage/LocalStorage تلگرام
   const initialEngineData = useMemo(() => {
@@ -111,7 +113,7 @@ export default function App() {
     return hydrateAndReconcileSavedState(
       saved,
       INITIAL_KNOWLEDGE_NODES,
-      INITIAL_QUESTION_BANK,
+      LEGACY_PRACTICE_BANK,
       INITIAL_NODE_DEPENDENCIES
     );
   }, []);
@@ -163,7 +165,7 @@ export default function App() {
           const reconciled = hydrateAndReconcileSavedState(
             result.payload,
             INITIAL_KNOWLEDGE_NODES,
-            INITIAL_QUESTION_BANK,
+            LEGACY_PRACTICE_BANK,
             INITIAL_NODE_DEPENDENCIES,
           );
           setNodeStates(reconciled.nodeStates);
@@ -378,11 +380,11 @@ export default function App() {
     const now = new Date();
     const queue: ReviewCard[] = questionIds
       .map((id) => questions.find((q) => q.id === id))
-      .filter((q): q is QuestionItem => !!q)
+      .filter((q): q is QuestionItem => !!q && !q.isQuarantinedProof)
       .map((q) => ({
         id: `mistake.${q.id}`,
         nodeId: q.nodeId,
-        cardType: q.isQuarantinedProof ? 'proof_1404' : 'question',
+        cardType: 'question',
         questionId: q.id,
         dueAt: now.toISOString(),
         priorityScore: 100,
@@ -446,11 +448,12 @@ export default function App() {
       conceptCheck: pkg.lesson.conceptCheck,
     };
 
-    const newQuestions: QuestionItem[] = pkg.questions.map((q) => ({
+    const newQuestions: QuestionItem[] = pkg.questions.filter((q) => !q.isQuarantinedProof).map((q) => ({
       id: q.id,
       nodeId: pkg.node.id,
       examYear: q.examYear,
       sourceReference: q.sourceReference,
+      referenceChapterId: q.referenceChapterId,
       isQuarantinedProof: q.isQuarantinedProof,
       text: q.text,
       options: q.options,
@@ -570,6 +573,7 @@ export default function App() {
     nodeId: string,
     mode: 'practice' | 'proof' | 'remedial'
   ) => {
+    if (!nodes.some((node) => node.id === nodeId)) return;
     const now = new Date();
     if (mode === 'remedial') {
       const remCard: ReviewCard = {
@@ -600,44 +604,18 @@ export default function App() {
       return;
     }
 
-    if (mode === 'proof') {
-      const proofQ =
-        questions.find((q) => q.nodeId === nodeId && q.isQuarantinedProof) ??
-        questions.find((q) => q.nodeId === nodeId);
-      if (proofQ) {
-        setIsNightQuizMode(false);
-        setCustomSessionQueue([
-          {
-            id: `direct.proof.${proofQ.id}`,
-            nodeId,
-            cardType: 'proof_1404',
-            questionId: proofQ.id,
-            dueAt: now.toISOString(),
-            priorityScore: 99,
-            attemptType: 'proof',
-            fsrs: initFSRS(now),
-          },
-        ]);
-        setSessionKey((prev) => prev + 1);
-        setActiveTab('study');
-      }
-      return;
-    }
+    if (mode === 'proof') return; // Proof is only served by the authenticated Worker.
 
     const nodeQuestions = questions
-      .filter((q) => q.nodeId === nodeId)
+      .filter((q) => q.nodeId === nodeId && !q.isQuarantinedProof)
       .map((q) => ({
         id: `direct.q.${q.id}`,
         nodeId,
-        cardType: q.isQuarantinedProof
-          ? ('proof_1404' as const)
-          : ('question' as const),
+        cardType: 'question' as const,
         questionId: q.id,
         dueAt: now.toISOString(),
         priorityScore: 92,
-        attemptType: q.isQuarantinedProof
-          ? ('proof' as const)
-          : ('practice' as const),
+        attemptType: 'practice' as const,
         fsrs: initFSRS(now),
       }));
 
@@ -1007,27 +985,8 @@ export default function App() {
               return restored.updatedReport;
             }}
             onRateLessonInSession={handleRateLessonUnderstanding}
-            onDismissNonQuestionCard={(cardId, nodeId, bonusScore = 5) => {
-              setNodeStates((prev) => {
-                const current = prev[nodeId];
-                if (!current) return prev;
-                const nextScore = Math.min(100, current.masteryScore + bonusScore);
-                return {
-                  ...prev,
-                  [nodeId]: {
-                    ...current,
-                    masteryScore: nextScore,
-                    proficiencyProbability: Number((nextScore / 100).toFixed(2)),
-                    rippleAlert: null,
-                  },
-                };
-              });
-              setCards((prev) => prev.filter((c) => c.id !== cardId));
-              setStats((prev) => ({
-                ...prev,
-                coins: prev.coins + 8,
-                isZeroStateNewUser: false,
-              }));
+            onDismissNonQuestionCard={(cardId) => {
+              setCards((prev) => prev.filter((card) => card.id !== cardId));
             }}
             onExitSession={() => {
               setCustomSessionQueue(null);
@@ -1108,16 +1067,19 @@ export default function App() {
               }))
             }
             onRecordQuestionAttempt={(question, selectedOption) => {
+              if (question.isQuarantinedProof || !nodes.some((node) => node.id === question.nodeId) ||
+                  !questions.some((item) => item.id === question.id && item.nodeId === question.nodeId && !item.isQuarantinedProof)) return;
               const targetCard: ReviewCard = cards.find(
-                (c) => c.questionId === question.id
+                (card) => card.questionId === question.id && card.nodeId === question.nodeId &&
+                  card.cardType === 'question' && card.attemptType !== 'proof'
               ) ?? {
                 id: `card.q.${question.id}`,
                 nodeId: question.nodeId,
-                cardType: question.isQuarantinedProof ? 'proof_1404' : 'question',
+                cardType: 'question',
                 questionId: question.id,
                 dueAt: new Date().toISOString(),
                 priorityScore: 92,
-                attemptType: question.isQuarantinedProof ? 'proof' : 'practice',
+                attemptType: 'practice',
                 fsrs: initFSRS(new Date()),
               };
 
@@ -1148,7 +1110,7 @@ export default function App() {
             onStartYearAdaptiveSession={(year, sectionId) => {
               const now = new Date();
               const filtered = YEARLY_KONKOR_QUESTIONS.filter((q) => {
-                if (q.examYear !== year) return false;
+                if (q.examYear !== year || q.isQuarantinedProof) return false;
                 if (sectionId !== 'all' && q.courseSectionId !== sectionId) return false;
                 return true;
               }).sort((a, b) => a.bookletQuestionNumber - b.bookletQuestionNumber);
@@ -1156,11 +1118,11 @@ export default function App() {
               const yearQueue: ReviewCard[] = filtered.map((q) => ({
                 id: `year.${year}.q.${q.id}`,
                 nodeId: q.nodeId,
-                cardType: q.isQuarantinedProof ? 'proof_1404' : 'question',
+                cardType: 'question',
                 questionId: q.id,
                 dueAt: now.toISOString(),
                 priorityScore: 95,
-                attemptType: q.isQuarantinedProof ? 'proof' : 'practice',
+                attemptType: 'practice',
                 fsrs: initFSRS(now),
               }));
 

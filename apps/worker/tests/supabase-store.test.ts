@@ -176,6 +176,7 @@ describe('SupabaseStore — نگاشت درست روی ستون‌های واق�
           exam_level: 'doctorate',
           content_origin: 'official_booklet',
           verification_status: 'verified',
+          access_type: 'proof',
         },
         {
           id: 'q-demo',
@@ -189,13 +190,15 @@ describe('SupabaseStore — نگاشت درست روی ستون‌های واق�
           exam_level: null,
           content_origin: 'synthetic_demo',
           verification_status: 'demo',
+          access_type: 'practice',
         },
       ]),
     );
     const store = new SupabaseStore('https://db.test', 'service-key');
     const questions = await store.listQuestions();
 
-    expect(questions.find((q) => q.id === 'q-verified')!.isVerified).toBe(true);
+    expect(calls[0].url).toContain('v_worker_question_access');
+    expect(questions.find((q) => q.id === 'q-verified')).toMatchObject({ isVerified: true, accessType: 'proof' });
     expect(questions.find((q) => q.id === 'q-demo')!.isVerified).toBe(false);
   });
 });

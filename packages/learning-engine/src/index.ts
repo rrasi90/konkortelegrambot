@@ -839,3 +839,5 @@ export type {
 
 export * from './fsrs';
 export * from './exam-simulation';
+
+export * from './formative-quiz';

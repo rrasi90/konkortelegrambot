@@ -260,7 +260,7 @@ export const HISTORICAL_TOP_RANK_PROFILES: HistoricalTopRankProfile[] = [
       production: 0,
       marketing: 68.0,
     },
-    note: 'در آزمون دکتری (ضریب ۴ دروس تخصصی، ضریب ۱ زبان و ضریب ۱ استعداد تحصیلی)، تراز کتبی بالای ۴۲۰۰ دعوت به مصاحبه دانشگاه تهران را تضمین می‌کند.',
+    note: 'نمونهٔ نمایشی بدون دادهٔ اعتبارسنجی‌شده.',
   },
   {
     rankLabel: 'رتبه ۱۰ کشوری دکتری تخصصی مدیریت بازرگانی',
@@ -280,7 +280,7 @@ export const HISTORICAL_TOP_RANK_PROFILES: HistoricalTopRankProfile[] = [
       production: 0,
       marketing: 58.0,
     },
-    note: 'تراز کتبی بالای ۴۰۰۰ در دکتری مدیریت شانس قبولی روزانه دانشگاه‌های برتر تهران را به بالای ۹۰٪ می‌رساند.',
+    note: 'نمونهٔ نمایشی بدون دادهٔ اعتبارسنجی‌شده.',
   },
   {
     rankLabel: 'رتبه ۱ کشوری دکتری تخصصی مدیریت صنعتی (کد ۲۱۱۸)',
@@ -360,7 +360,7 @@ export const HISTORICAL_TOP_RANK_PROFILES: HistoricalTopRankProfile[] = [
       production: 52.0,
       marketing: 0,
     },
-    note: 'تراز بالای ۴۰۰۰ در دکتری مدیریت تکنولوژی قبولی در دانشگاه‌های تراز اول تهران را تضمین می‌کند.',
+    note: 'نمونهٔ نمایشی بدون دادهٔ اعتبارسنجی‌شده.',
   },
 ];
 

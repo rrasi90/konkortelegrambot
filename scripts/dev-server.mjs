@@ -2,7 +2,7 @@
 /**
  * سرور توسعهٔ محلی — برای آزمون دستی مینی‌اپ و رابط کاربری مدرن.
  * اجرا: npx tsx scripts/dev-server.mjs
- * - فایل‌های ایستا: اولویت با بیلد مدرن React (dist) در صورت وجود، در غیر این صورت apps/miniapp
+ * - فایل‌های ایستا: apps/miniapp، یا dist-legacy با انتخاب صریح DEV_SURFACE=react
  * - مسیرهای /api/* به اپ Hono (با MemoryStore و بستهٔ دمو) وصل می‌شوند
  */
 import { createServer } from 'node:http';
@@ -59,7 +59,7 @@ const server = createServer(async (req, res) => {
     // فقط با DEV_SURFACE=react سرو می‌شود. پیش‌تر «وجود dist» بی‌صدا اولویت
     // داشت و باعث شد تست‌ها/توسعه‌دهنده بدون اطلاع از سطح دیگری استفاده کنند.
     const surface = process.env.DEV_SURFACE ?? 'miniapp';
-    const reactBase = join(root, 'dist');
+    const reactBase = join(root, 'dist-legacy');
     const miniappBase = join(root, 'apps/miniapp');
     const useReact = surface === 'react' && existsSync(join(reactBase, 'index.html'));
     const staticBase = useReact ? reactBase : miniappBase;
@@ -78,15 +78,15 @@ const server = createServer(async (req, res) => {
   }
 });
 
-server.listen(port, () => {
+server.listen(port, '127.0.0.1', () => {
   const surface = process.env.DEV_SURFACE ?? 'miniapp';
-  const reactBuilt = existsSync(join(root, 'dist', 'index.html'));
-  const serving = surface === 'react' && reactBuilt ? 'React (dist)' : 'Mini App (apps/miniapp)';
+  const reactBuilt = existsSync(join(root, 'dist-legacy', 'index.html'));
+  const serving = surface === 'react' && reactBuilt ? 'React (dist-legacy)' : 'Mini App (apps/miniapp)';
   console.log(`سرور توسعه: http://localhost:${port} — سطح سرو‌شده: ${serving}`);
   if (surface !== 'react' && reactBuilt) {
-    console.log('نکته: بیلد React در dist موجود است ولی سرو نمی‌شود؛ برای آن DEV_SURFACE=react را تنظیم کنید.');
+    console.log('نکته: بیلد React در dist-legacy موجود است ولی سرو نمی‌شود؛ برای آن DEV_SURFACE=react را تنظیم کنید.');
   }
   if (surface === 'react' && !reactBuilt) {
-    console.warn('هشدار: DEV_SURFACE=react تنظیم شده ولی dist/index.html نیست؛ مینی‌اپ سرو می‌شود.');
+    console.warn('هشدار: DEV_SURFACE=react تنظیم شده ولی dist-legacy/index.html نیست؛ مینی‌اپ سرو می‌شود.');
   }
 });

@@ -242,6 +242,8 @@ export interface DataStore {
 
   getExamSimulationSession(userId: string, sessionId: string): Promise<ExamSimulationSessionRow | null>;
 
+  beginExamSimulationSubmission(userId: string, sessionId: string): Promise<ExamSimulationSessionRow>;
+
   listExamSimulationItems(sessionId: string): Promise<ExamSimulationItemRow[]>;
 
   /**
@@ -260,7 +262,7 @@ export interface DataStore {
   listExamSimulationResponses(sessionId: string): Promise<ExamSimulationResponseRow[]>;
 
   /** بستن جلسه و ذخیرهٔ گزارش نمره */
-  submitExamSimulationSession(sessionId: string, report: unknown): Promise<void>;
+  submitExamSimulationSession(userId: string, sessionId: string, report: unknown): Promise<unknown>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -476,9 +478,9 @@ export class SupabaseStore implements DataStore {
     if (this._questionsCache) return this._questionsCache;
     const rows = (await this.request(
       'GET',
-      'questions',
+      'v_worker_question_access',
       undefined,
-      '?verification_status=in.(verified,demo)&select=*',
+      '?select=id,node_id,exam_year,question_text,options,correct_option,explanation,trap_note,exam_level,content_origin,verification_status,access_type',
     )) as {
       id: string;
       node_id: string;
@@ -491,22 +493,29 @@ export class SupabaseStore implements DataStore {
       exam_level: string | null;
       content_origin: string | null;
       verification_status: string | null;
+      access_type: string;
     }[];
-    const questions = rows.map((r) => ({
-      id: r.id,
-      nodeId: r.node_id,
-      examYear: r.exam_year ?? undefined,
-      text: r.question_text,
-      options: r.options,
-      correctOption: r.correct_option,
-      explanation: r.explanation ?? undefined,
-      trapNote: r.trap_note ?? undefined,
-      examLevel: (r.exam_level ?? undefined) as Question['examLevel'],
-      contentOrigin: (r.content_origin ?? undefined) as Question['contentOrigin'],
-      // MemoryStore مقدار isVerified را از seed نگه می‌دارد؛ اینجا باید از
-      // verification_status خوانده شود وگرنه در پروداکشن همیشه false است.
-      isVerified: r.verification_status === 'verified',
-    }));
+    const questions = rows.map((r): Question => {
+      if (r.access_type !== 'practice' && r.access_type !== 'proof') {
+        throw new Error('Unexpected question access classification');
+      }
+      return {
+        id: r.id,
+        nodeId: r.node_id,
+        examYear: r.exam_year ?? undefined,
+        text: r.question_text,
+        options: r.options,
+        correctOption: r.correct_option,
+        explanation: r.explanation ?? undefined,
+        trapNote: r.trap_note ?? undefined,
+        examLevel: (r.exam_level ?? undefined) as Question['examLevel'],
+        contentOrigin: (r.content_origin ?? undefined) as Question['contentOrigin'],
+        // MemoryStore مقدار isVerified را از seed نگه می‌دارد؛ اینجا باید از
+        // verification_status خوانده شود وگرنه در پروداکشن همیشه false است.
+        isVerified: r.verification_status === 'verified',
+        accessType: r.access_type,
+      };
+    });
     this._questionsCache = questions;
     return questions;
   }
@@ -1076,7 +1085,7 @@ export class SupabaseStore implements DataStore {
   }): Promise<void> {
     // RPC امن: بلیت exam_simulation مصرف می‌شود و درستی سمت سرور محاسبه می‌گردد
     // (نتیجهٔ درستی به کلاینت برنمی‌گردد؛ فقط پس از ارسال جلسه در گزارش می‌آید)
-    await this.request('POST', 'rpc/record_exam_simulation_response', {
+    await this.request('POST', 'rpc/record_exam_simulation_response_idempotent', {
       p_user_id: input.userId,
       p_session_id: input.sessionId,
       p_attempt_id: input.attemptId,
@@ -1110,11 +1119,16 @@ export class SupabaseStore implements DataStore {
     }));
   }
 
-  async submitExamSimulationSession(sessionId: string, report: unknown): Promise<void> {
-    await this.request('PATCH', `exam_sessions?id=eq.${encodeURIComponent(sessionId)}`, {
-      status: 'scored',
-      report,
-      submitted_at: new Date().toISOString(),
+  async beginExamSimulationSubmission(userId: string, sessionId: string): Promise<ExamSimulationSessionRow> {
+    const row = await this.request('POST', 'rpc/begin_exam_simulation_submission', {
+      p_user_id: userId, p_session_id: sessionId,
+    });
+    return this.toExamSimulationSession(row as Record<string, unknown>);
+  }
+
+  async submitExamSimulationSession(userId: string, sessionId: string, report: unknown): Promise<unknown> {
+    return this.request('POST', 'rpc/finalize_exam_simulation_submission', {
+      p_user_id: userId, p_session_id: sessionId, p_report: report,
     });
   }
 }

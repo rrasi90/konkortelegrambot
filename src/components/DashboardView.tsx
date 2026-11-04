@@ -19,7 +19,6 @@ import {
   MultiYearFrequencyInsight,
   StudyCourseCategory,
   MajorExamBranch,
-  getNodeEffectiveBranchCoefficient,
 } from '../engine/aelEngine';
 import { shareProgressToTelegramChat, tmaHaptic } from '../utils/telegramBridge';
 import {
@@ -122,9 +121,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const masteredOrProvenCount = allStates.filter(
     (s) => s.coverageStatus === 'mastered' || s.coverageStatus === 'proven'
   ).length;
-  const needsProofNodes = nodes.filter(
-    (n) => nodeStates[n.id]?.coverageStatus === 'needs_proof'
-  );
   const leechNodesCount = allStates.filter((s) => s.hasLeechCard).length;
   const probeOrRemedialCards = queue.filter(
     (c) =>
@@ -144,35 +140,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const activeCategory = stats.preferredCourseCategory || 'all';
   const activeHours = stats.dailyStudyHours || 4;
   const activeTargetQ = stats.dailyTargetQuestions || 20;
-
-  // محاسبه نمره و تراز شبیه‌سازی‌شده کنکور بر اساس masteryScore گره‌های مرتبط با گرایش و ضرایب دروس
-  const { branchWeightedMastery, simulatedKonkorTaraz } = React.useMemo(() => {
-    let weightedSum = 0;
-    let totalWeight = 0;
-
-    for (const node of nodes) {
-      const coeff = getNodeEffectiveBranchCoefficient(node, activeBranch);
-      if (coeff <= 0) continue;
-      const st = nodeStates[node.id];
-      const mScore = st?.masteryScore ?? 0;
-      const nodeImportance = coeff * Math.max(1, node.historicalWeight || 5);
-      weightedSum += mScore * nodeImportance;
-      totalWeight += nodeImportance;
-    }
-
-    const weightedPct =
-      totalWeight > 0 ? Math.round((weightedSum / totalWeight) * 10) / 10 : 0;
-    // فرمول تراز تخمینی سازمان سنجش بر اساس میانگین وزنی ضرایب گرایش
-    const estTaraz =
-      activeBranch === 'phd_all'
-        ? Math.round(2250 + weightedPct * 27)
-        : Math.round(4450 + weightedPct * 54);
-
-    return {
-      branchWeightedMastery: weightedPct,
-      simulatedKonkorTaraz: estTaraz,
-    };
-  }, [nodes, nodeStates, activeBranch]);
 
   const ringRadius = 44;
   const ringCircumference = 2 * Math.PI * ringRadius;
@@ -208,10 +175,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             },
             {
               id: 'simulator' as DashboardSubTab,
-              label: 'شبیه‌ساز رتبه',
-              short: 'شبیه‌ساز',
+              label: 'پیشرفت مباحث',
+              short: 'مباحث',
               icon: Calculator,
-              badge: `تراز ${simulatedKonkorTaraz.toLocaleString('en-US')}`,
+              badge: `${overallMastery}٪`,
             },
             {
               id: 'velocity' as DashboardSubTab,
@@ -387,11 +354,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="flex items-center justify-between gap-4 pb-3 border-b border-slate-200/60 dark:border-slate-800/80">
               <div>
                 <h2 className="text-sm font-bold text-slate-900 dark:text-white">
-                  تسلط کل گراف دانش و نمره شبیه‌سازی کنکور
+                  تسلط کل گراف دانش
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 tabular-nums">
-                  میانگین وزنی گرایش: {branchWeightedMastery}٪ · تراز تخمینی:{' '}
-                  {simulatedKonkorTaraz.toLocaleString('en-US')}
+                  میانگین تسلط در مباحث: {overallMastery}٪
                 </p>
               </div>
               <div className="flex items-center gap-2.5">
@@ -400,7 +366,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   onClick={() => setActiveSubTab('simulator')}
                   className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                 >
-                  شبیه‌ساز نمره ←
+                  پیشرفت مباحث ←
                 </button>
                 <button
                   type="button"
@@ -631,7 +597,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       )}
 
       {/* =================================================================== */}
-      {/* تب ۲: شبیه‌ساز نمره، تراز و رتبه کنکور بر اساس masteryScore و ضرایب */}
+      {/* تب ۲: پیشرفت مباحث */}
       {/* =================================================================== */}
       {activeSubTab === 'simulator' && (
         <div className="bento-grid">
@@ -725,31 +691,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               ))}
             </div>
 
-            {needsProofNodes.length > 0 && (
-              <div className="pt-3 border-t border-slate-200/60 dark:border-slate-800/80 space-y-2">
-                <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                  <Award className="w-4 h-4" />
-                  <span>آماده اثبات نهایی تسلط (سؤالات قرنطینه کنکور ۱۴۰۴):</span>
-                </div>
-                {needsProofNodes.map((n) => (
-                  <div
-                    key={n.id}
-                    className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-between gap-2 text-xs"
-                  >
-                    <span className="font-bold text-slate-900 dark:text-amber-100 truncate">
-                      {n.topic}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => onStartPracticeNode(n.id, 'proof')}
-                      className="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold shrink-0 cursor-pointer"
-                    >
-                      شروع آزمون اثبات
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* ۲. کاشی بنتو رادار فصول پرتکرار ادوار کنکور (۷ ستون) */}

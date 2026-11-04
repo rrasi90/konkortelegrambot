@@ -236,7 +236,7 @@ describe('§8.7 — ثبت پاسخ و گزارش نمره', () => {
     expect(body.correctOption).toBeUndefined();
   });
 
-  it('بلیت تک‌مصرف است: ارسال دوبارهٔ همان تلاش رد می‌شود', async () => {
+  it('ارسال مجدد پاسخ یکسان بی‌اثر است و پاسخ متفاوت رد می‌شود', async () => {
     const token = await login();
     const { payload } = await startSession(token, {
       level: 'doctorate',
@@ -253,7 +253,12 @@ describe('§8.7 — ثبت پاسخ و گزارش نمره', () => {
     const first = await app.request('/api/exam-simulation/answer', authed(token, { method: 'POST', body }));
     expect(first.status).toBe(200);
     const second = await app.request('/api/exam-simulation/answer', authed(token, { method: 'POST', body }));
-    expect(second.status).toBe(409);
+    expect(second.status).toBe(200);
+    expect(store.examSessionResponses).toHaveLength(1);
+    const changed = JSON.stringify({ sessionId: payload.session.id, attemptId: item.attemptId,
+      questionId: item.question.id, selectedOption: 1 });
+    const third = await app.request('/api/exam-simulation/answer', authed(token, { method: 'POST', body: changed }));
+    expect(third.status).toBe(409);
   });
 
   it('جلسهٔ منقضی پاسخ نمی‌پذیرد', async () => {
@@ -431,6 +436,39 @@ describe('§8.7 — ثبت پاسخ و گزارش نمره', () => {
     for (const item of session.items) {
       expect(item.question.correctOption).toBeUndefined();
     }
+  });
+
+  it('ثبت نهایی هم‌زمان یک گزارش پایدار می‌دهد و پاسخ پس از بستن پذیرفته نمی‌شود', async () => {
+    const token = await login();
+    const { payload } = await startSession(token, { level: 'doctorate', examYear: 1405, subGroupId: 'business' });
+    const body = JSON.stringify({ sessionId: payload.session.id });
+    const [first, second] = await Promise.all([
+      app.request('/api/exam-simulation/submit', authed(token, { method: 'POST', body })),
+      app.request('/api/exam-simulation/submit', authed(token, { method: 'POST', body })),
+    ]);
+    expect(first.status).toBe(200);
+    expect(second.status).toBe(200);
+    expect((await json(first)).report).toEqual((await json(second)).report);
+    const item = payload.items[0];
+    const late = await app.request('/api/exam-simulation/answer', authed(token, {
+      method: 'POST', body: JSON.stringify({ sessionId: payload.session.id, attemptId: item.attemptId,
+        questionId: item.question.id, selectedOption: 0 }),
+    }));
+    expect(late.status).toBe(409);
+  });
+
+  it('پس از وقفه میان بستن پاسخ‌ها و محاسبه، ثبت نهایی قابل تکرار است', async () => {
+    const token = await login();
+    const { payload } = await startSession(token, { level: 'doctorate', examYear: 1405, subGroupId: 'business' });
+    const session = store.examSessions.get(payload.session.id)!;
+    await store.beginExamSimulationSubmission(session.userId, session.id);
+    expect(session.status).toBe('submitted');
+    const retry = await app.request('/api/exam-simulation/submit', authed(token, {
+      method: 'POST', body: JSON.stringify({ sessionId: session.id }),
+    }));
+    expect(retry.status).toBe(200);
+    expect(session.status).toBe('scored');
+    expect((await json(retry)).report).toBeTruthy();
   });
 
   it('جلسهٔ کاربر دیگر قابل خواندن نیست', async () => {

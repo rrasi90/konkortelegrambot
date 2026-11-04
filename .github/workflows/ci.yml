@@ -18,8 +18,12 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+      - run: npm run test:db
+      - run: npm run build
+      - run: npm run audit:client-bundle
       - run: npx tsx scripts/engine-parity-harness.mts
       - run: npm run validate:content
+      - run: npm run validate:learning
       - run: npm run build:worker
       - run: npm run audit:miniapp
       - name: Validate Wrangler bundle without deploying
@@ -43,7 +47,8 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
-      DATABASE_URL: postgres://ael:ael@localhost:5432/ael_test
+      AEL_DISPOSABLE_DB: "1"
+      DATABASE_URL: postgres://ael:ael@127.0.0.1:5432/ael_test
     steps:
       - uses: actions/checkout@v4
       - run: bash supabase/tests/run.sh

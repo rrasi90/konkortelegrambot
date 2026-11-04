@@ -29,7 +29,7 @@ import {
   calculateRetrievability,
   isTrackId,
   questionCardId,
-  QUARANTINE_HOLDOUT_YEAR,
+  isProofQuestion,
   scoreExamSession,
   statusFromMastery,
 } from '@ael/engine';
@@ -46,6 +46,8 @@ import {
   isExamLevel,
   LATEST_EXAM_YEAR,
 } from '@ael/contracts';
+import { answerLearningQuiz, finishLearningQuiz, learningOverview, startLearningQuiz } from './learning-paths';
+import { FormativeQuizError } from '@ael/engine';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
 import type { AppUser, DataStore, UserStats } from './store';
 import { MemoryStore } from './memory-store';
@@ -78,6 +80,7 @@ export function toPublicQuestion(q: Question): PublicQuestion {
     id: q.id,
     nodeId: q.nodeId,
     examYear: q.examYear,
+    contentOrigin: q.contentOrigin,
     text: q.text,
     options: q.options,
     isVerified: q.isVerified ?? false,
@@ -93,6 +96,10 @@ export interface CreateAppOptions {
 
 export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Variables: { store: DataStore; secret: string; allowDemoAuth: boolean } }> {
   const app: Hono<{ Variables: { store: DataStore; secret: string; allowDemoAuth: boolean } }> = new Hono();
+  app.use('/api/*', async (c, next) => {
+    c.header('Cache-Control', 'no-store');
+    await next();
+  });
   app.use('*', cors());
 
   const store: DataStore =
@@ -448,6 +455,30 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.use('/api/diagnostic', (c, next) => rateLimit(c, next));
   app.use('/api/exam-simulation*', (c, next) => rateLimit(c, next));
 
+  app.get('/api/learning-paths', async (c) => {
+    const user = await currentUser(c);
+    return user ? c.json(learningOverview()) : authError(c);
+  });
+
+  app.use('/api/learning-quiz/*', (c, next) => rateLimit(c, next));
+  const learningActions = { start: startLearningQuiz, answer: answerLearningQuiz, finish: finishLearningQuiz } as const;
+  for (const action of ['start', 'answer', 'finish'] as const) {
+    app.post(`/api/learning-quiz/${action}`, async (c) => {
+      const user = await currentUser(c);
+      if (!user) return authError(c);
+      const body = await c.req.json().catch(() => null);
+      if (!body || typeof body !== 'object' || Array.isArray(body)) {
+        return c.json({ error: 'درخواست آزمون معتبر نیست.' }, 400);
+      }
+      try {
+        return c.json(await learningActions[action](user.id, secret, body));
+      } catch (error) {
+        if (error instanceof FormativeQuizError) return c.json({ error: error.message }, 400);
+        throw error;
+      }
+    });
+  }
+
   app.get('/api/lessons', (c) => c.json({ courses: COURSES_LESSONS }));
 
   app.post('/api/telegram/webhook', async (c) => {
@@ -800,10 +831,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const seenQuestionIds = new Set(state.cards.map((card) => card.questionId).filter(Boolean));
     // گره‌های ارزیابی‌نشده اول؛ تنوع با گروهبندی بر حسب course
     const unseen = [...state.questions.values()].filter(
-      (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id) && q.examYear !== QUARANTINE_HOLDOUT_YEAR,
+      (q) => allowed(q.nodeId) && !seenQuestionIds.has(q.id) && !isProofQuestion(q),
     );
     const seen = [...state.questions.values()].filter(
-      (q) => allowed(q.nodeId) && seenQuestionIds.has(q.id) && q.examYear !== QUARANTINE_HOLDOUT_YEAR,
+      (q) => allowed(q.nodeId) && seenQuestionIds.has(q.id) && !isProofQuestion(q),
     );
     const diversify = (pool: Question[]): Question[] => {
       const byCourse = new Map<string, Question[]>();
@@ -974,6 +1005,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         questions: [...state.questions.values()],
         nodes: [...state.nodes.values()],
         scale: typeof body.scale === 'number' ? body.scale : undefined,
+        random: Math.random,
         newAttemptId: () => `att-${crypto.randomUUID()}`,
       });
     } catch (err) {
@@ -1098,6 +1130,10 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (new Date(session.expiresAt).getTime() <= Date.now()) {
       return c.json({ error: 'زمان این جلسه به پایان رسیده است.' }, 409);
     }
+    const question = (await store.listQuestions()).find((q) => q.id === body.questionId);
+    if (!question || isProofQuestion(question)) {
+      return c.json({ error: 'این سؤال دیگر در شبیه‌سازی در دسترس نیست.' }, 409);
+    }
     try {
       await store.recordExamSimulationResponse({
         userId: user.id,
@@ -1130,8 +1166,16 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!user) return authError(c);
     const body = (await c.req.json().catch(() => null)) as { sessionId?: string } | null;
     if (!body?.sessionId) return c.json({ error: 'شناسهٔ جلسه الزامی است.' }, 400);
-    const session = await store.getExamSimulationSession(user.id, body.sessionId);
+    let session = await store.getExamSimulationSession(user.id, body.sessionId);
     if (!session) return c.json({ error: 'جلسهٔ شبیه‌سازی پیدا نشد.' }, 404);
+    if (session.status === 'scored' && session.report) {
+      return c.json({ report: session.report, already_scored: true });
+    }
+    try {
+      session = await store.beginExamSimulationSubmission(user.id, session.id);
+    } catch {
+      return c.json({ error: 'ثبت نهایی جلسه ممکن نشد. دوباره تلاش کنید.' }, 503);
+    }
     if (session.status === 'scored' && session.report) {
       return c.json({ report: session.report, already_scored: true });
     }
@@ -1143,14 +1187,19 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       store.listExamSimulationResponses(session.id),
       store.listQuestions(),
     ]);
+    const eligibleQuestions = questions.filter((question) => !isProofQuestion(question));
+    const eligibleIds = new Set(eligibleQuestions.map((question) => question.id));
+    if (items.some((item) => !eligibleIds.has(item.questionId))) {
+      return c.json({ error: 'دسترسی سؤال‌های جلسه تغییر کرده است؛ یک جلسهٔ تازه شروع کنید.' }, 409);
+    }
     const report = scoreExamSession(
       plan,
-      questions,
+      eligibleQuestions,
       responses.map((r) => ({ questionId: r.questionId, selectedOption: r.selectedOption })),
     );
-    await store.submitExamSimulationSession(session.id, report);
+    const storedReport = await store.submitExamSimulationSession(user.id, session.id, report);
     return c.json({
-      report,
+      report: storedReport,
       answered: responses.length,
       total: items.length,
     });
@@ -1164,7 +1213,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     if (!session) return c.json({ error: 'جلسهٔ شبیه‌سازی پیدا نشد.' }, 404);
     const items = await store.listExamSimulationItems(session.id);
     const questions = await store.listQuestions();
-    const questionById = new Map(questions.map((q) => [q.id, q]));
+    const questionById = new Map(questions.filter((q) => !isProofQuestion(q)).map((q) => [q.id, q]));
     const plan = session.plan as ExamSessionPlan | null;
     return c.json({
       session: {
@@ -1209,7 +1258,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     // سؤال‌های سال ۱۴۰۴ قرنطینه‌اند و در هیچ سنجش عملیاتی شمرده نمی‌شوند
     const questionCountByNode = new Map<string, number>();
     for (const q of state.questions.values()) {
-      if (q.examYear === QUARANTINE_HOLDOUT_YEAR) continue;
+      if (isProofQuestion(q)) continue;
       questionCountByNode.set(q.nodeId, (questionCountByNode.get(q.nodeId) ?? 0) + 1);
     }
 
@@ -1280,7 +1329,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const visibleIds = new Set(visible.map((n) => n.id));
     const questionCountByNode = new Map<string, number>();
     for (const q of state.questions.values()) {
-      if (q.examYear === QUARANTINE_HOLDOUT_YEAR) continue; // قرنطینه در هیچ شاخص عملیاتی شمرده نمی‌شود
+      if (isProofQuestion(q)) continue; // قرنطینه در هیچ شاخص عملیاتی شمرده نمی‌شود
       questionCountByNode.set(q.nodeId, (questionCountByNode.get(q.nodeId) ?? 0) + 1);
     }
     const assessableNodes = visible.filter((n) => (questionCountByNode.get(n.id) ?? 0) > 0);
@@ -1403,7 +1452,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       },
       metricCatalog: [
         { key: 'assessedNodeCount', label: 'گره‌های سنجیده‌شده', unit: 'count', source: 'user_node_mastery ∩ گره‌های دارای سؤال (بدون ۱۴۰۴)', definition: 'گره‌هایی که شاهد پاسخ واقعی دارند؛ مقدار پیش‌فرض ۵۰ به‌عنوان سنجش شمرده نمی‌شود.' },
-        { key: 'assessableNodeCount', label: 'گره‌های قابل‌سنجش', unit: 'count', source: 'knowledge_nodes + questions (examYear ≠ 1404)', definition: 'گره‌های دیدنی گرایش‌های فعال که دست‌کم یک سؤال غیرقرنطینه دارند.' },
+        { key: 'assessableNodeCount', label: 'گره‌های قابل‌سنجش', unit: 'count', source: 'knowledge_nodes + questions (practice access)', definition: 'گره‌های دیدنی گرایش‌های فعال که دست‌کم یک سؤال غیرقرنطینه دارند.' },
         { key: 'diagnosticCoverageRatio', label: 'پوشش تشخیصی', unit: 'ratio', source: 'assessedNodeCount / assessableNodeCount', definition: 'سهم گره‌های قابل‌سنجش که واقعاً سنجیده شده‌اند؛ بدون گره قابل‌سنجش null.' },
         { key: 'masteryDistribution', label: 'توزیع تسلط', unit: 'count', source: 'mastery فقط برای گره‌های سنجیده‌شده', definition: 'weak<40، unstable<60، learning<85، mastered≥85 — فقط روی گره‌های سنجیده.' },
         { key: 'meanMasteryAssessed', label: 'میانگین تسلط سنجیده', unit: 'score', source: 'میانگین mastery گره‌های سنجیده', definition: 'گره‌های ناسنجیده در مخرج نیستند؛ بدون شاهد null.' },
@@ -1538,12 +1587,24 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       return result;
     };
 
-    // امتیازدهی و فیلتر commute داخل builder و پیش از اعمال سقف candidate انجام می‌شود.
+    const canScheduleProof = (nodeId: string) => {
+      const skill = skillForNode(nodeId);
+      return skill ? state.skillStates?.get(skill.id)?.coverageStatus === 'needs_proof' : false;
+    };
+    // Filter invalid persisted cards before ranking or issuing attempts.
+    const canScheduleCard = (card: ReviewCard) => {
+      if (!isConceptualNode(card.nodeId)) return false;
+      if (!card.questionId) return !card.isProof;
+      const question = state.questions.get(card.questionId);
+      if (!question || question.nodeId !== card.nodeId) return false;
+      if (isProofQuestion(question)) return card.isProof === true && canScheduleProof(card.nodeId);
+      return !card.isProof;
+    };
     const buildScoredQueue = () =>
       buildDailyQueue(state, engineUser, {
         limit: 50,
         now,
-        includeCard: (card) => isConceptualNode(card.nodeId),
+        includeCard: canScheduleCard,
         priorityScore: (card) => scoreQueueCard(card).priority,
       });
 
@@ -1559,7 +1620,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         (q) =>
           allowed(q.nodeId) &&
           !seenQuestionIds.has(q.id) &&
-          q.examYear !== QUARANTINE_HOLDOUT_YEAR &&
+          !isProofQuestion(q) &&
           isConceptualNode(q.nodeId),
       );
       const newCards: ReviewCard[] = [];
@@ -1594,9 +1655,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     for (const st of (state.skillStates ?? new Map()).values()) {
       if (st.coverageStatus !== 'needs_proof') continue;
       const meta = (state.skills ?? new Map()).get(st.skillId);
-      if (!meta) continue;
+      const node = meta ? state.nodes.get(meta.nodeId) : undefined;
+      if (!node || (node.track !== 'common' && !user.activeTracks.includes(node.track))) continue;
+      if (!isConceptualNode(node.id)) continue;
       const proofQuestion = [...state.questions.values()].find(
-        (q) => q.nodeId === meta.nodeId && q.examYear === QUARANTINE_HOLDOUT_YEAR,
+        (q) => q.nodeId === node.id && isProofQuestion(q),
       );
       if (!proofQuestion) continue;
       const proofCardId = questionCardId(user.id, proofQuestion.id);
@@ -1877,6 +1940,11 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
           : null;
     if (!attemptType) {
       return c.json({ error: 'نوع این تلاش هنوز در موتور یادگیری پشتیبانی نمی‌شود.' }, 400);
+    }
+
+    if (isProofQuestion(question) !== (attemptType === 'proof')) {
+      await auditRejected('content_access_changed');
+      return c.json({ error: 'دسترسی این سؤال تغییر کرده است؛ صف را تازه‌سازی کنید.' }, 409);
     }
 
     const engineUser = { userId: user.id, activeTracks: user.activeTracks };
@@ -2229,7 +2297,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     // ترتیب‌های میانی را ترجیح می‌دهد.
     const shuffled = wrongIds
       .map((id) => questionMap.get(id))
-      .filter((q): q is NonNullable<typeof q> => !!q);
+      .filter((q): q is Question => !!q && !isProofQuestion(q));
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       const tmp = shuffled[i]!;

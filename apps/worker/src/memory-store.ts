@@ -401,7 +401,6 @@ export class MemoryStore implements DataStore {
     if (ticket.userId !== input.userId) throw new Error('Attempt ticket belongs to another user');
     if (ticket.questionId !== input.questionId) throw new Error('Attempt ticket question mismatch');
     if (ticket.attemptType !== 'exam_simulation') throw new Error('Attempt ticket is not an exam simulation ticket');
-    if (ticket.consumedAt) throw new Error('Attempt ticket already consumed');
     if (ticket.expiresAt <= Date.now()) throw new Error('Attempt ticket expired');
 
     const item = this.examSessionItems.find(
@@ -409,9 +408,12 @@ export class MemoryStore implements DataStore {
     );
     if (!item) throw new Error('Question is not part of this exam session');
     if (item.attemptId !== input.attemptId) throw new Error('Attempt ticket does not match session item');
-    if (this.examSessionResponses.some((r) => r.sessionId === input.sessionId && r.questionId === input.questionId)) {
+    const existing = this.examSessionResponses.find((r) => r.sessionId === input.sessionId && r.questionId === input.questionId);
+    if (existing) {
+      if (ticket.consumedAt && existing.selectedOption === input.selectedOption) return;
       throw new Error('Question already answered in this exam session');
     }
+    if (ticket.consumedAt) throw new Error('Attempt ticket already consumed');
 
     const question = this.questions.find((candidate) => candidate.id === input.questionId);
     if (!question) throw new Error('Question not found');
@@ -439,11 +441,24 @@ export class MemoryStore implements DataStore {
     return this.examSessionResponses.filter((r) => r.sessionId === sessionId);
   }
 
-  async submitExamSimulationSession(sessionId: string, report: unknown): Promise<void> {
+  async beginExamSimulationSubmission(userId: string, sessionId: string): Promise<import('./store').ExamSimulationSessionRow> {
     const session = this.examSessions.get(sessionId);
-    if (!session) throw new Error('Exam session not found');
-    session.status = 'scored';
-    session.report = report;
-    session.submittedAt = new Date().toISOString();
+    if (!session || session.userId !== userId) throw new Error('Exam session not found');
+    if (session.status === 'active') {
+      session.status = 'submitted';
+      session.submittedAt = new Date().toISOString();
+    }
+    return session;
+  }
+
+  async submitExamSimulationSession(userId: string, sessionId: string, report: unknown): Promise<unknown> {
+    const session = this.examSessions.get(sessionId);
+    if (!session || session.userId !== userId) throw new Error('Exam session not found');
+    if (session.status === 'submitted') {
+      session.status = 'scored';
+      session.report = report;
+    }
+    if (session.status !== 'scored') throw new Error('Exam session is not submitted');
+    return session.report;
   }
 }

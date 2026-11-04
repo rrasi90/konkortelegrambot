@@ -42,10 +42,19 @@
     nightMode: false,
     home: null,
     startTime: null,
+    learnerId: null,
   };
+
+  var learning = window.AELLearning && window.AELLearning.mount(el('ael-learning-root'), {
+    overview: function () { return API.get('/api/learning-paths'); },
+    start: function (input) { return API.post('/api/learning-quiz/start', input); },
+    answer: function (input) { return API.post('/api/learning-quiz/answer', input); },
+    finish: function (input) { return API.post('/api/learning-quiz/finish', input); },
+  });
 
   /* ---------- مدیریت نمایش و صفحات ---------- */
   function showView(id) {
+    if (id !== 'view-app') learning?.close();
     ['view-login', 'view-tracks', 'view-app'].forEach(function (v) {
       var viewEl = el(v);
       if (viewEl) viewEl.hidden = v !== id;
@@ -59,11 +68,18 @@
       var panel = el('tab-' + t);
       if (panel) panel.hidden = t !== tab;
       var btn = document.querySelector('.nav-btn[data-tab="' + t + '"]');
-      if (btn) btn.classList.toggle('active', t === tab);
+      if (btn) {
+        btn.classList.toggle('active', t === tab);
+        btn.setAttribute('aria-selected', String(t === tab));
+        btn.setAttribute('aria-controls', 'tab-' + t);
+      }
     });
     if (tab === 'home') loadHome();
     if (tab === 'today') loadQueue();
-    if (tab === 'lessons') loadLessons();
+    if (tab === 'lessons') {
+      learning?.open(state.learnerId || 'temporary');
+      loadLessons();
+    }
     if (tab === 'map') loadMap();
     if (tab === 'settings') renderSettings();
   }
@@ -159,6 +175,7 @@
   }
 
   function onAuthed(data) {
+    state.learnerId = data.user?.id || null;
     localStorage.setItem('session_token', data.token);
     state.tracks = (data.user && data.user.activeTracks) || ['common'];
     // اگر داوطلب هنوز گرایشی انتخاب نکرده (یا فقط common دارد)، صفحهٔ انتخاب چندگانه گرایش نمایش داده می‌شود
@@ -253,7 +270,10 @@
       .map(function (t) { return TRACK_NAMES[t] || t; });
     var trackTitle = activeTrackTitles.length > 0 ? activeTrackTitles.join(' + ') : 'هستهٔ مشترک';
 
-    var html = '';
+    var html = '<section class="dash-card lesson-card"><div class="lesson-num">شروع سریع</div>' +
+      '<div class="lesson-title">یک درس کوتاه، بعد چند تست</div>' +
+      '<p class="lesson-sub">در مسیر یادگیری می‌توانی درس، سنجش شروع یا آزمون زمان‌دار را انتخاب کنی.</p>' +
+      '<button id="btn-open-learning" class="btn primary full">باز کردن مسیر یادگیری</button></section>';
 
     // کارت همراه (ماسکات) + پیام منتور
     html +=
@@ -304,13 +324,15 @@
         '<section class="dash-card night-card">' +
         '<div class="night-badge">🌙 کوییز شبانه</div>' +
         '<div class="night-title">تثبیت پاسخ‌های غلط امروز (' + wrongCount + ' سؤال)</div>' +
-        '<p class="night-sub">مرور دوباره قبل از خواب باعث تثبیت عصبی مفاهیم در حافظه بلندمدت می‌شود.</p>' +
+        '<p class="night-sub">ابتدا بدون نگاه‌کردن به توضیح جواب بده و سپس پاسخ را بررسی کن.</p>' +
         '<button id="btn-start-night" class="btn secondary full">شروع کوییز شبانه</button>' +
         '</section>';
     }
 
     container.innerHTML = html;
 
+    var btnLearning = el('btn-open-learning');
+    if (btnLearning) btnLearning.onclick = function () { showTab('lessons'); };
     var btnToday = el('btn-start-today');
     if (btnToday) btnToday.onclick = function () { showTab('today'); };
 
@@ -381,6 +403,7 @@
 
     var qText = question ? question.text : (card.trapNote || 'مرور این مفهوم در برنامه است.');
     el('q-text').textContent = qText;
+    el('q-progress').textContent = 'کارت ' + (state.currentIndex + 1) + ' از ' + state.queue.length;
 
     el('q-course').textContent = item.courseTitle || item.course || (card.cardType === 'comparison_card' ? 'مقایسهٔ مفاهیم' : 'کنکور دکتری');
     el('q-chapter').textContent = item.chapterTitle || item.chapter || (card.isRepair ? 'کارت ترمیمی' : '');
@@ -395,7 +418,7 @@
     if (proofLabel) {
       if (item.attemptType === 'proof') {
         proofLabel.hidden = false;
-        proofLabel.textContent = '🎯 سؤال اثبات تسلط (۱۴۰۴)';
+        proofLabel.textContent = 'سؤال اثبات تسلط';
       } else {
         proofLabel.hidden = true;
       }
@@ -435,6 +458,7 @@
     // پاک‌سازی بازخورد سؤال قبلی
     var feedback = el('answer-feedback');
     if (feedback) feedback.hidden = true;
+    el('feedback-source').open = false;
     ['feedback-comparison', 'feedback-self-report', 'feedback-proof-ready'].forEach(function (id) {
       var node = el(id);
       if (node) { node.hidden = true; node.innerHTML = ''; }
@@ -452,7 +476,7 @@
     };
 
     // غیرفعال کردن گزینه‌ها حین ارسال
-    var optionBtns = document.querySelectorAll('.option');
+    var optionBtns = el('q-options').querySelectorAll('.option');
     optionBtns.forEach(function (b) { b.disabled = true; });
 
     API.post('/api/answers', body).then(function (res) {
@@ -465,6 +489,18 @@
   }
 
   function showFeedback(item, res, selectedIdx) {
+    var q = item.question;
+    var originLabels = {
+      official_booklet: 'منشأ ثبت‌شده: دفترچهٔ رسمی',
+      synthetic_demo: 'تمرین نمایشی',
+      textbook_designed: 'تمرین طراحی‌شده بر اساس درس',
+    };
+    el('feedback-source-text').textContent = [
+      q?.id ? 'شناسهٔ سؤال: ' + q.id : 'شناسهٔ سؤال در دسترس نیست.',
+      q?.examYear ? 'سال ثبت‌شده: ' + q.examYear : '',
+      originLabels[q?.contentOrigin] || 'منشأ دقیق یا شمارهٔ دفترچه در این داده ثبت نشده است.',
+    ].filter(Boolean).join(' · ');
+
     var feedbackBox = el('answer-feedback');
     feedbackBox.hidden = false;
 
@@ -476,7 +512,7 @@
     var lesson = res.lesson;
 
     // استایل گزینه‌ها
-    var optionBtns = document.querySelectorAll('.option');
+    var optionBtns = el('q-options').querySelectorAll('.option');
     if (optionBtns[correctOption]) optionBtns[correctOption].classList.add('correct');
     if (!wasCorrect && optionBtns[selectedIdx]) optionBtns[selectedIdx].classList.add('wrong');
 
@@ -962,6 +998,7 @@
   /* ---------- راه‌اندازی اولیه و ورود خودکار ---------- */
   if (localStorage.getItem('session_token')) {
     API.get('/api/me').then(function (data) {
+      state.learnerId = data.user?.id || null;
       state.tracks = (data.user && data.user.activeTracks) || ['common'];
       if (state.tracks.length <= 1) {
         initTracksSelection();

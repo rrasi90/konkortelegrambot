@@ -204,20 +204,19 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
     if (!activeBook) return [];
     const ownNodes = new Set<string>(chapters.flatMap((ch) => ch.nodes));
     if (activeBook.linkedNodeId) ownNodes.add(activeBook.linkedNodeId);
-    return questions.filter((q) => ownNodes.has(q.nodeId));
+    const chapterIds = new Set(chapters.map(({ id }) => id));
+    return questions.filter((question) => !question.isQuarantinedProof &&
+      (ownNodes.has(question.nodeId) || chapterIds.has(question.referenceChapterId ?? ''))
+    );
   }, [activeBook, chapters, questions]);
 
-  // تست‌های هر فصل = همهٔ تست‌های مباحث همان فصل (ممکن است بین فصل‌های هم‌مبحث مشترک باشد)
   const bookQuestionCount = ownQuestions.length;
-
-  const questionsForChapter = (chapter: BookChapter) =>
-    chapter.nodes.length === 0 ? [] : ownQuestions.filter((q) => chapter.nodes.includes(q.nodeId));
-
-  // گروه‌بندی بدون تکرار برای فهرست پیش‌فرض تب تست‌ها
   const groups = useMemo(
     () => (activeBook ? groupBookQuestionsByChapter(activeBook.id, ownQuestions) : []),
     [activeBook, ownQuestions]
   );
+  const questionsForChapter = (chapter: BookChapter) =>
+    groups.find((group) => group.chapter?.id === chapter.id)?.questions ?? [];
 
   const openBook = (id: string) => {
     setOpenBookId(id);
@@ -712,9 +711,8 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
             ? [
                 {
                   chapter: chapters.find((c) => c.id === chapterFilter) ?? null,
-                  questions: chapters
-                    .filter((c) => c.id === chapterFilter)
-                    .flatMap((c) => questionsForChapter(c)),
+                  questions: groups.find((group) => group.chapter?.id === chapterFilter)?.questions ?? [],
+                  sharedWith: undefined,
                 },
               ]
             : groups
@@ -724,7 +722,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
               <div key={g.chapter?.id ?? 'rest'} className="space-y-2.5">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-slate-900 dark:text-white">
-                    {g.chapter ? g.chapter.title : 'سایر مباحث این کتاب'}
+                    {g.chapter ? g.chapter.title : 'سؤال‌های بدون انتساب قطعی به فصل'}
                   </span>
                   <span className="text-[10px] text-slate-500 dark:text-slate-400">
                     {fa(g.questions.length)} تست
@@ -740,6 +738,11 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                   )}
                 </div>
 
+                {g.sharedWith && (
+                  <p className="text-[11px] text-slate-600 dark:text-slate-400">
+                    فصل‌های احتمالی برای سؤال‌های مشترک: {chapters.filter((chapter) => g.sharedWith?.includes(chapter.id)).map(({ title }) => title).join('، ')}
+                  </p>
+                )}
                 <div className="space-y-2.5">
                   {g.questions.map((q) => (
                     <QuestionCard

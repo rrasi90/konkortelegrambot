@@ -532,181 +532,94 @@ export function applyLessonUnderstandingRating(params: {
   delta: MasteryDeltaWithTitle;
 } {
   const { nodeId, rating, nodes, dependencies, questions } = params;
-  const now = new Date();
-  let nextNodeStates: Record<string, LearnerSixDState> = JSON.parse(
-    JSON.stringify(params.nodeStates)
-  );
-  const nextCards: ReviewCard[] = JSON.parse(JSON.stringify(params.cards));
-  const nextStats: UserStats = JSON.parse(JSON.stringify(params.stats));
-
-  const node = nodes.find((n) => n.id === nodeId) ?? nodes[0];
-  if (!nextNodeStates[node.id]) {
-    nextNodeStates[node.id] = {
-      nodeId: node.id,
-      masteryScore: 0,
-      proficiencyProbability: 0,
-      memoryStability: 0,
-      retrievability: 0,
-      speedFluency: 0,
-      coverageStatus: 'unseen',
-      evidenceCount: 0,
-      isUnlockedInFrontier: true,
-      hasLeechCard: false,
-      rippleAlert: null,
+  const node = nodes.find((item) => item.id === nodeId);
+  const state = params.nodeStates[nodeId];
+  if (!node || !state) {
+    return {
+      nextNodeStates: params.nodeStates,
+      nextCards: params.cards,
+      nextStats: params.stats,
+      scheduleSummary: 'شناسهٔ مبحث معتبر نیست یا در مسیر یادگیری شما وجود ندارد.',
+      delta: {
+        nodeId, topicTitle: '', courseTitle: '', before: 0, after: 0, delta: 0,
+        reason: 'lesson_self_rating',
+      },
     };
   }
-  const st = nextNodeStates[node.id];
-  const before = st.masteryScore;
 
-  // حذف کارت درسنامه فعلی اگر در صف بود
-  const remCardId = `card.remedial.${node.id}`;
-  // PR#3 port (30e7935): خوداظهاری درسنامه نباید شکاف تشخیص‌داده‌شده را پاک کند؛
-  // فقط اولویت کارت remedial کاهش می‌یابد تا شواهد عملکردی آن را حل کند.
-  if (rating >= 3) {
-    const remedialCard = nextCards.find((card) => card.id === remCardId);
-    if (remedialCard) remedialCard.priorityScore = Math.min(remedialCard.priorityScore, 40);
-  }
-
-  let intervalDays = 1;
-  let scheduleSummary = '';
+  const before = state.masteryScore;
+  const nextNodeStates = {
+    ...params.nodeStates,
+    [nodeId]: { ...state, selfReportedUnderstanding: rating, lastLessonSelfRating: rating },
+  };
+  const st = nextNodeStates[nodeId];
+  const nextCards = [...params.cards];
+  const now = new Date();
+  let scheduleSummary = 'خودارزیابی ثبت شد. تسلط با پاسخ‌های مستقل سنجیده می‌شود.';
 
   if (rating === 1) {
-    // امتیاز ۱: اصلاً متوجه نشدم -> فعال‌سازی پیش‌نیاز + نگه داشتن درسنامه در صدر صف امروز
-    intervalDays = 0;
-    st.coverageStatus = 'weak';
-    st.rippleAlert = 'probe_queued';
-
-    // جلو انداختن پیش‌نیازهای این درس
-    const prereqs = dependencies.filter((d) => d.source === node.id);
-    for (const edge of prereqs) {
-      const pNode = nodes.find((n) => n.id === edge.target);
-      if (pNode) {
-        const probeId = `card.remedial.${pNode.id}`;
-        if (!nextCards.some((c) => c.id === probeId)) {
-          nextCards.unshift({
-            id: probeId,
-            nodeId: pNode.id,
-            cardType: 'remedial_lesson',
-            dueAt: now.toISOString(),
-            priorityScore: 99,
-            attemptType: 'diagnostic',
-            fsrs: initFSRS(now),
-          });
-        }
-      }
+    for (const edge of dependencies) {
+      if (edge.source !== nodeId || edge.relation !== 'prerequisite') continue;
+      const prerequisite = nodes.find((item) => item.id === edge.target);
+      if (!prerequisite) continue;
+      const id = `card.remedial.${prerequisite.id}`;
+      if (nextCards.some((card) => card.id === id)) continue;
+      nextCards.unshift({
+        id, nodeId: prerequisite.id, cardType: 'remedial_lesson',
+        dueAt: now.toISOString(), priorityScore: 99, attemptType: 'diagnostic',
+        fsrs: initFSRS(now),
+      });
+      scheduleSummary = 'خودارزیابی ثبت شد و مرور پیش‌نیاز به برنامه اضافه شد.';
     }
-    scheduleSummary = `امتیاز ۱ ثبت شد: تست‌های سخت «${node.topic}» فعلاً متوقف شدند و درسنامه پیش‌نیاز مستقیم آن در اولویت اول برنامه امروز قرار گرفت.`;
   } else if (rating === 2) {
-    // امتیاز ۲: ابهام دارم -> افزودن کارت مقایسه و کارت دام طراح قبل از تست چهارگزینه‌ای
-    intervalDays = 1;
-    st.coverageStatus = 'weak';
-    st.rippleAlert = 'needs_remediation';
-
-    const comp = COMPARISON_TABLES[node.id];
-    if (comp) {
-      const compId = `card.comp.${comp.id}`;
-      if (!nextCards.some((c) => c.id === compId)) {
+    const comparison = COMPARISON_TABLES[nodeId];
+    if (comparison) {
+      const id = `card.comp.${comparison.id}`;
+      if (!nextCards.some((card) => card.id === id)) {
         nextCards.unshift({
-          id: compId,
-          nodeId: node.id,
-          cardType: 'comparison_card',
-          comparisonId: comp.id,
-          dueAt: now.toISOString(),
-          priorityScore: 97,
-          attemptType: 'diagnostic',
+          id, nodeId, cardType: 'comparison_card', comparisonId: comparison.id,
+          dueAt: now.toISOString(), priorityScore: 97, attemptType: 'diagnostic',
           fsrs: initFSRS(now),
         });
+        scheduleSummary = 'خودارزیابی ثبت شد و کارت مقایسهٔ مفاهیم به برنامه اضافه شد.';
       }
     }
-    scheduleSummary = `امتیاز ۲ ثبت شد: «جدول مقایسه مفاهیم متشابه» برای رفع ابهام به ابتدای برنامه امروز اضافه شد. تسلط تغییر نکرد؛ برای ثبت تسلط باید تست بزنی.`;
-  } else if (rating === 3) {
-    // امتیاز ۳: درک متوسط -> باز شدن تست‌های استاندارد با فاصله مرور ۲ روزه
-    intervalDays = 2;
-    st.coverageStatus = 'learning';
-    st.rippleAlert = null;
-    st.hasLeechCard = false;
-
-    const nodeQs = questions.filter((q) => q.nodeId === node.id && !q.isQuarantinedProof);
-    for (const q of nodeQs) {
-      const qCardIdx = nextCards.findIndex((c) => c.questionId === q.id);
-      if (qCardIdx !== -1) {
-        nextCards[qCardIdx].priorityScore = 93;
-        nextCards[qCardIdx].isLeech = false;
-      } else {
-        nextCards.unshift({
-          id: `card.q.${q.id}`,
-          nodeId: node.id,
-          cardType: 'question',
-          questionId: q.id,
-          dueAt: now.toISOString(),
-          priorityScore: 93,
-          attemptType: 'practice',
-          fsrs: initFSRS(now),
-        });
-      }
-    }
-    scheduleSummary = `امتیاز ۳ ثبت شد: تست‌های استاندارد «${node.topic}» در صف امروز فعال شدند. تسلط از صفر شروع می‌شود و با پاسخ درست تو ساخته می‌شود.`;
-  } else if (rating === 4) {
-    // امتیاز ۴: یادگیری خوب -> تسلط ۶۸٪، باز شدن لایه بعدی درخت دانش و فاصله ۴ روزه
-    intervalDays = 4;
-    st.coverageStatus = 'learning';
-    st.rippleAlert = null;
-    st.hasLeechCard = false;
-    scheduleSummary = `امتیاز ۴ ثبت شد: پایداری مرور روی ۴ روز تنظیم شد و مباحث وابسته در درخت مهارت بازگشایی شدند. تسلط پس از تست‌های همین مبحث ثبت می‌شود.`;
   } else {
-    // امتیاز ۵: فهم کامل -> باز شدن مستقیم تست قرنطینه برای اثبات (تسلط فقط با پاسخ درست ثبت می‌شود)
-    intervalDays = 7;
-    st.coverageStatus = 'needs_proof';
-    st.rippleAlert = null;
-    st.hasLeechCard = false;
-
-    const proofQ = questions.find((q) => q.nodeId === node.id && q.isQuarantinedProof);
-    if (proofQ) {
-      const proofCardId = `card.proof.${proofQ.id}`;
-      if (!nextCards.some((c) => c.id === proofCardId)) {
-        nextCards.unshift({
-          id: proofCardId,
-          nodeId: node.id,
-          cardType: 'proof_1404',
-          questionId: proofQ.id,
-          dueAt: now.toISOString(),
-          priorityScore: 99,
-          attemptType: 'proof',
-          fsrs: initFSRS(now),
-        });
-      }
+    const hasPractice = nextCards.some((card) =>
+      card.nodeId === nodeId && card.cardType === 'question' && card.attemptType === 'practice'
+    );
+    const question = hasPractice ? undefined : questions.find((item) =>
+      item.nodeId === nodeId && !item.isQuarantinedProof && !item.isDiagnosticProbe &&
+      !nextCards.some((card) => card.questionId === item.id)
+    );
+    if (question) {
+      nextCards.unshift({
+        id: `card.q.${question.id}`, nodeId, cardType: 'question', questionId: question.id,
+        dueAt: now.toISOString(), priorityScore: 93, attemptType: 'practice', fsrs: initFSRS(now),
+      });
+      scheduleSummary = 'خودارزیابی ثبت شد و یک سؤال تمرینی به برنامه اضافه شد.';
     }
-    scheduleSummary = `امتیاز ۵ ثبت شد: قفل «تست قرنطینه» برای اثبات نهایی تسلط در صدر صف امروز باز شد. تسلطت فقط با پاسخ درست به همین تست‌ها اندازه‌گیری می‌شود.`;
   }
 
-  // خودارزیابی، شاهد تسلط نیست. خواندن درس‌نامه امتیاز تسلط را بالا نمی‌برد؛
-  // فقط وضعیت آمادگی/مسیر مطالعه را ثبت می‌کند. تسلط صرفاً با پاسخ مستقل
-  // به سؤال تغییر می‌کند (applyQuestionAttempt).
-  st.masteryScore = before;
-  st.proficiencyProbability = Number((before / 100).toFixed(2));
-  st.selfReportedUnderstanding = rating;
-  // Memory stability/retrievability change only after an actual review event.
-  st.lastLessonSelfRating = rating;
-
-  // بروزرسانی مرز دانش (Knowledge Frontier)
-  nextNodeStates = recomputeKnowledgeFrontier(nextNodeStates, nodes, dependencies);
-
-  // آپدیت آمار کاربر و مأموریت روزانه
-  nextStats.isZeroStateNewUser = false;
-  nextStats.lessonsRatedCount += 1;
-  nextStats.xp += 25;
-  nextStats.coins += 8;
-  if (nextStats.streakDays === 0) nextStats.streakDays = 1;
-
-  nextStats.dailyQuests = nextStats.dailyQuests.map((q) => {
-    if (q.id === 'quest.lesson_rate' && !q.completed) {
-      const nextCurr = q.current + 1;
-      const done = nextCurr >= q.target;
-      if (done) nextStats.xp += q.xpReward;
-      return { ...q, current: nextCurr, completed: done };
-    }
-    return q;
-  });
+  // Repeat ratings may change study preferences but must never mint rewards again.
+  const firstRating = state.lastLessonSelfRating === undefined && state.selfReportedUnderstanding === undefined;
+  const nextStats = firstRating ? {
+    ...params.stats,
+    isZeroStateNewUser: false,
+    lessonsRatedCount: params.stats.lessonsRatedCount + 1,
+    xp: params.stats.xp + 25,
+    coins: params.stats.coins + 8,
+    streakDays: Math.max(1, params.stats.streakDays),
+  } : params.stats;
+  if (firstRating) {
+    nextStats.dailyQuests = nextStats.dailyQuests.map((quest) => {
+      if (quest.id !== 'quest.lesson_rate' || quest.completed) return quest;
+      const current = quest.current + 1;
+      const completed = current >= quest.target;
+      if (completed) nextStats.xp += quest.xpReward;
+      return { ...quest, current, completed };
+    });
+  }
 
   return {
     nextNodeStates,
@@ -783,6 +696,13 @@ export function analyzeMultiYearExamFrequency(
 /* 5. Answer Evaluation + MathAcademy FIRe + Anki Leech Detector      */
 /* ------------------------------------------------------------------ */
 
+export function findLegacyCardQuestion(card: ReviewCard, questions: QuestionItem[]): QuestionItem | undefined {
+  if (card.cardType === 'proof_1404' || card.attemptType === 'proof') return undefined;
+  return questions.find((question) =>
+    question.id === card.questionId && question.nodeId === card.nodeId && !question.isQuarantinedProof
+  );
+}
+
 export function evaluateAnswerAndRipple(params: {
   card: ReviewCard;
   selectedOption: number | null;
@@ -814,6 +734,11 @@ export function evaluateAnswerAndRipple(params: {
     lessons,
     isNightVerification,
   } = params;
+  const node = nodes.find((item) => item.id === card.nodeId);
+  const question = findLegacyCardQuestion(card, questions);
+  if (!node || !question || (card.cardType !== 'question' && card.cardType !== 'diagnostic_probe')) {
+    throw new Error('Invalid or unavailable question card');
+  }
   const now = new Date();
   const attemptId = `att_${now.getTime()}`;
 
@@ -832,11 +757,6 @@ export function evaluateAnswerAndRipple(params: {
   nextStats.isZeroStateNewUser = false;
   if (nextStats.streakDays === 0) nextStats.streakDays = 1;
 
-  const node = nodes.find((n) => n.id === card.nodeId) ?? nodes[0];
-  const question =
-    questions.find((q) => q.id === card.questionId) ??
-    questions.find((q) => q.nodeId === node.id) ??
-    questions[0];
   if (!nextNodeStates[node.id]) {
     nextNodeStates[node.id] = {
       nodeId: node.id,
@@ -859,12 +779,11 @@ export function evaluateAnswerAndRipple(params: {
 
   const masteryDeltas: MasteryDeltaWithTitle[] = [];
   const spawnedCards: RippleReport['spawnedCards'] = [];
-  let proofUnlocked: RippleReport['proofUnlocked'] | undefined;
 
   // ۱. حالت «نزده (Skip)»
   if (wasSkipped) {
     const before = currentSixD.masteryScore;
-    const after = before === 0 ? 15 : Math.max(15, Math.round(before - 2));
+    const after = Math.max(0, Math.round(before - 2));
     currentSixD.masteryScore = after;
     currentSixD.proficiencyProbability = Number((after / 100).toFixed(2));
     currentSixD.coverageStatus = 'weak';
@@ -950,46 +869,10 @@ export function evaluateAnswerAndRipple(params: {
     currentSixD.rippleAlert = null;
     currentSixD.hasLeechCard = false;
 
-    if (card.cardType === 'proof_1404' || card.attemptType === 'proof') {
-      currentSixD.coverageStatus = 'proven';
-    } else if (after >= 85 && currentSixD.coverageStatus === 'proven') {
-      currentSixD.coverageStatus = 'mastered';
-    } else if (
-      after >= 75 &&
-      currentSixD.coverageStatus !== 'proven' &&
-      currentSixD.coverageStatus !== 'mastered'
-    ) {
-      currentSixD.coverageStatus = 'needs_proof';
-      const proofQ = questions.find((q) => q.nodeId === node.id && q.isQuarantinedProof);
-      if (proofQ) {
-        const proofCardId = `card.proof.${proofQ.id}`;
-        if (!nextCards.some((c) => c.id === proofCardId)) {
-          nextCards.unshift({
-            id: proofCardId,
-            nodeId: node.id,
-            cardType: 'proof_1404',
-            questionId: proofQ.id,
-            dueAt: now.toISOString(),
-            priorityScore: 99,
-            attemptType: 'proof',
-            fsrs: initFSRS(now),
-          });
-        }
-        proofUnlocked = {
-          nodeId: node.id,
-          nodeTitle: node.topic,
-          questionId: proofQ.id,
-        };
-        spawnedCards.push({
-          id: proofCardId,
-          cardType: 'proof_1404',
-          nodeId: node.id,
-          nodeTitle: node.topic,
-          reason: 'بازگشایی تست قرنطینه کنکور ۱۴۰۴ برای اثبات نهایی تسلط (عبور از مرز ۷۵٪)',
-        });
-      }
+    if (currentSixD.coverageStatus === 'proven' || currentSixD.coverageStatus === 'mastered') {
+      if (after >= 85) currentSixD.coverageStatus = 'mastered';
     } else {
-      currentSixD.coverageStatus = 'learning';
+      currentSixD.coverageStatus = after >= 75 ? 'needs_proof' : 'learning';
     }
 
     const topicDelta: MasteryDeltaWithTitle = {
@@ -1099,7 +982,6 @@ export function evaluateAnswerAndRipple(params: {
         topicDelta,
         masteryDeltas,
         spawnedCards,
-        proofUnlocked,
         mentorMessage,
         canRollbackAsSlip: false,
       },
@@ -1690,6 +1572,7 @@ export interface AgentContentPackage {
     examYear: number;
     sourceReference: string;
     isQuarantinedProof?: boolean;
+    referenceChapterId?: string;
     text: string;
     options: [string, string, string, string];
     correctOption: 0 | 1 | 2 | 3;

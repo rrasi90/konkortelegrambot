@@ -99,9 +99,9 @@ for (const [S, D, elapsed] of bases) {
   }
 }
 
-// ---------- Seam 2: retrievability model (6 scenarios) ----------
+// ---------- Seam 2: retrievability model (12 scenarios) ----------
 for (const S of [1.5, 3, 7]) {
-  for (const t of [1, 4]) {
+  for (const t of [0, 1, 4, 45]) {
     const shared = calculateRetrievability(S, t);
     const react = calculateCardRetrievability(S, t);
     rec({
@@ -109,7 +109,7 @@ for (const S of [1.5, 3, 7]) {
       seam: 'retrievability', input: `S=${S} elapsedDays=${t}`,
       react: react.toFixed(3), shared: shared.toFixed(3),
       verdict: near(react, shared) ? 'MATCHED' : 'DIVERGED',
-      note: 'React ignores elapsed time (power curve absent)',
+      note: 'Includes the immediate review and long-gap boundaries.',
     });
   }
 }

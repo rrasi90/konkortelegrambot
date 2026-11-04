@@ -12,6 +12,7 @@ import {
   RippleReport,
   SnapshotForRollback,
   MultiYearFrequencyInsight,
+  findLegacyCardQuestion,
 } from '../engine/aelEngine';
 import { MathText } from './MathText';
 import { SessionReport } from './SessionReportView';
@@ -50,7 +51,7 @@ interface StudySessionViewProps {
   }) => { report: RippleReport; snapshot: SnapshotForRollback };
   onRollbackSlip: (snapshot: SnapshotForRollback, report: RippleReport) => RippleReport;
   onRateLessonInSession: (nodeId: string, rating: 1 | 2 | 3 | 4 | 5) => string;
-  onDismissNonQuestionCard: (cardId: string, nodeId: string, bonusScore?: number) => void;
+  onDismissNonQuestionCard: (cardId: string) => void;
   onExitSession: () => void;
   onOpenLessonNode: (nodeId: string) => void;
   onOpenMistakeNotebook: () => void;
@@ -166,13 +167,20 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
     );
   }
 
-  const node = nodes.find((n) => n.id === currentCard.nodeId) ?? nodes[0];
+  const node = nodes.find((item) => item.id === currentCard.nodeId);
+  const question = findLegacyCardQuestion(currentCard, questions);
+  const requiresQuestion = currentCard.cardType !== 'remedial_lesson' && currentCard.cardType !== 'comparison_card';
+  if (!node || (requiresQuestion && !question)) {
+    return (
+      <div role="status" className="bento-card glass-panel p-5 space-y-3">
+        <p>این فعالیت در این نسخه در دسترس نیست.</p>
+        <button type="button" onClick={() => setCurrentIndex((index) => index + 1)}>فعالیت بعدی</button>
+        <button type="button" onClick={onExitSession}>بازگشت به میز کار</button>
+      </div>
+    );
+  }
   const lesson = lessons[node.id];
   const freqInsight = examFrequencyMap[node.id];
-  const question =
-    questions.find((q) => q.id === currentCard.questionId) ??
-    questions.find((q) => q.nodeId === node.id) ??
-    questions[0];
   const compTable =
     (currentCard.comparisonId &&
       Object.values(COMPARISON_TABLES).find((c) => c.id === currentCard.comparisonId)) ||
@@ -566,7 +574,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
             <button
               type="button"
               onClick={() => {
-                onDismissNonQuestionCard(currentCard.id, node.id, 5);
+                onDismissNonQuestionCard(currentCard.id);
                 handleNextCard();
               }}
               className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition-colors cursor-pointer"
@@ -578,7 +586,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
       )}
 
       {/* ج) کارت مرور دام طراح */}
-      {currentCard.cardType === 'trap_note' && (
+      {currentCard.cardType === 'trap_note' && question && (
         <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-6 shadow-xs space-y-5">
           <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-200/70 dark:border-slate-800">
             <span className={`text-xs font-bold px-3 py-1 rounded-lg border ${badge.tone}`}>
@@ -605,7 +613,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
             <button
               type="button"
               onClick={() => {
-                onDismissNonQuestionCard(currentCard.id, node.id, 4);
+                onDismissNonQuestionCard(currentCard.id);
                 handleNextCard();
               }}
               className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold transition-colors cursor-pointer"
@@ -617,9 +625,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
       )}
 
       {/* د) کارت سؤال چهارگزینه‌ای */}
-      {(currentCard.cardType === 'question' ||
-        currentCard.cardType === 'diagnostic_probe' ||
-        currentCard.cardType === 'proof_1404') && (
+      {question && (currentCard.cardType === 'question' || currentCard.cardType === 'diagnostic_probe') && (
         <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 sm:p-6 shadow-xs space-y-5">
           <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200/70 dark:border-slate-800">
             <span className={`text-xs font-bold px-3 py-1 rounded-lg border ${badge.tone}`}>

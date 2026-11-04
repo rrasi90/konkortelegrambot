@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 export interface ClientBundleFinding {
   asset: string;
-  field: 'correctOption' | 'correctIndex';
+  field: 'correctOption' | 'correctIndex' | 'answerIndex';
   count: number;
 }
 
@@ -20,6 +20,10 @@ const ANSWER_KEY_PATTERNS: Array<{
   {
     field: 'correctIndex',
     pattern: /["']?correctIndex["']?\s*:\s*[0-1]\b/g,
+  },
+  {
+    field: 'answerIndex',
+    pattern: /["']?answerIndex["']?\s*:\s*\d+\b/g,
   },
 ];
 
@@ -105,9 +109,29 @@ export async function auditClientBundle(
   return findClientAnswerKeyLeaks(assets);
 }
 
+export async function assertPublicPagesAssets(root: string): Promise<void> {
+  const entries = await readdir(root, { withFileTypes: true });
+  if (entries.length !== 2 ||
+      !entries.some((entry) => entry.name === 'index.html' && entry.isFile()) ||
+      !entries.some((entry) => entry.name === 'assets' && entry.isDirectory())) {
+    throw new Error('Pages release must contain only index.html and its bundled assets.');
+  }
+  const bundled = await readdir(join(root, 'assets'), { withFileTypes: true });
+  if (!bundled.some((entry) => entry.name.endsWith('.js')) ||
+      bundled.some((entry) => !entry.isFile() || !/^index-[A-Za-z0-9_-]+\.(js|css)$/.test(entry.name))) {
+    throw new Error('Pages release assets must be hashed JS/CSS bundles; archives and raw sources are prohibited.');
+  }
+}
+
 async function runAudit(root: string): Promise<void> {
   if (resolve(root) === resolve(process.cwd(), 'apps/miniapp')) {
     await assertWorkerAssetsConfiguration(undefined, root);
+    const files = await readdir(root, { withFileTypes: true });
+    if (files.length !== 4 || files.some((entry) =>
+      !entry.isFile() || !['index.html', 'app.js', 'styles.css', 'learning.js'].includes(entry.name)
+    )) {
+      throw new Error('Worker asset directory must contain only the four audited Mini App files.');
+    }
   }
   const findings = await auditClientBundle(root);
   if (findings.length > 0) {
@@ -122,6 +146,9 @@ async function runAudit(root: string): Promise<void> {
         'Do not bypass this guard for a production deployment.',
       ].join('\n'),
     );
+  }
+  if (resolve(root) === resolve(process.cwd(), 'dist')) {
+    await assertPublicPagesAssets(root);
   }
   process.stdout.write('Client bundle security audit: PASS (no embedded answer-key literals).\n');
 }

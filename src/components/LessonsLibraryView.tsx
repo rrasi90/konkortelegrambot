@@ -83,13 +83,13 @@ const RATING_OPTIONS: {
   {
     rating: 1,
     label: '۱ — اصلاً متوجه نشدم',
-    desc: 'نیاز به بازخوانی پیش‌نیاز پایه (تعلیق تست‌های سخت)',
+    desc: 'پیشنهاد مرور پیش‌نیازهای مبحث',
     colorClass: 'hover:border-rose-500 data-[active=true]:bg-rose-600 data-[active=true]:text-white',
   },
   {
     rating: 2,
     label: '۲ — ابهام دارم',
-    desc: 'افزودن جدول مقایسه و دام طراح پیش از تست',
+    desc: 'پیشنهاد کارت مقایسه در صورت وجود',
     colorClass: 'hover:border-orange-500 data-[active=true]:bg-orange-500 data-[active=true]:text-white',
   },
   {
@@ -101,13 +101,13 @@ const RATING_OPTIONS: {
   {
     rating: 4,
     label: '۴ — خوب یاد گرفتم',
-    desc: 'باز شدن لایه بعدی درخت مهارت + مرور ۴ روزه',
+    desc: 'ثبت نظر شما و پیشنهاد تمرین',
     colorClass: 'hover:border-blue-500 data-[active=true]:bg-blue-600 data-[active=true]:text-white',
   },
   {
     rating: 5,
     label: '۵ — کاملاً فهمیدم',
-    desc: 'باز شدن فوری تست قرنطینه برای اثبات تسلط',
+    desc: 'ثبت نظر شما و پیشنهاد تمرین',
     colorClass: 'hover:border-emerald-500 data-[active=true]:bg-emerald-600 data-[active=true]:text-white',
   },
 ];
@@ -212,10 +212,10 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
     return matchesTrack && matchesSearch && lessons[node.id];
   });
 
-  const activeNode =
-    nodes.find((n) => n.id === activeNodeId) ??
-    filteredNodes[0] ??
-    nodes[0];
+  const activeNode = nodes.find((node) => node.id === activeNodeId);
+  if (!activeNode) {
+    return <p role="status">مبحث انتخاب‌شده در کتابخانه موجود نیست.</p>;
+  }
   const activeLesson = lessons[activeNode.id];
   const activeDive = getLessonDeepDive(activeNode.id);
   const activeDiveWords = getDeepDiveWordCount(activeDive);
@@ -670,10 +670,10 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
-                    مخزن متمرکز پوشش ۱۰۰+ صفحه‌ای هر درس در konkorData.ts (ارشد کد ۱۱۴۲ و دکتری تخصصی)
+                    مجموعهٔ درسنامه‌ها و تمرین‌های منتخب
                   </h3>
-                  <span className="px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold">
-                    تضمین پوشش ۱۰۰٪ ده تا پانزده سال اخیر
+                  <span className="px-2 py-0.5 rounded-md bg-amber-500/15 text-amber-800 dark:text-amber-300 text-[10px] font-bold">
+                    پوشش کامل دفترچه‌های رسمی تأیید نشده است
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
@@ -1353,14 +1353,6 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                       >
                         <Play className="w-3.5 h-3.5" />
                         <span>حل تست‌های این مبحث</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => onStartPracticeNode(activeNode.id, 'proof')}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-colors cursor-pointer"
-                      >
-                        <Target className="w-3.5 h-3.5" />
-                        <span>آزمون قرنطینه ۱۴۰۴</span>
                       </button>
                     </div>
                   </div>

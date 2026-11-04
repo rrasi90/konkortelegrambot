@@ -260,7 +260,7 @@ async function main() {
     await shot('e2e-05-map.png');
 
     // 6) lessons render from /api/lessons
-    await evaluate(`document.querySelector('.nav-btn[data-tab="lessons"]').click(); true`);
+    await evaluate(`document.querySelector('.nav-btn[data-tab="lessons"]').click(); document.querySelector('.learn-library').open = true; true`);
     await waitFor(
       `document.querySelector('#lessons-container') && !document.querySelector('#lessons-container').innerText.includes('در حال دریافت') && document.querySelector('#lessons-container').children.length > 1`,
       20000,

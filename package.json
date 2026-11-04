@@ -8,9 +8,9 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "vite --port=3000 --host=0.0.0.0",
+    "dev": "vite --port=3000 --host=127.0.0.1",
     "build": "vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --outDir dist",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
@@ -20,9 +20,13 @@
     "validate:content": "node scripts/validate-content.mjs --all",
     "test": "vitest run",
     "validate:phase1": "node scripts/validate-phase-1-foundation.mjs",
-    "audit:client-bundle": "tsx scripts/audit-client-bundle.ts",
-    "audit:miniapp": "tsx scripts/audit-client-bundle.ts apps/miniapp",
-    "dev:miniapp": "tsx scripts/dev-server.mjs"
+    "audit:client-bundle": "node --import tsx scripts/audit-client-bundle.ts",
+    "audit:miniapp": "node --import tsx scripts/audit-client-bundle.ts apps/miniapp",
+    "dev:miniapp": "node --import tsx scripts/dev-server.mjs",
+    "build:legacy": "vite build --mode legacy",
+    "test:db": "node scripts/db-test-embedded.mjs",
+    "build:offline": "node scripts/build-ael-offline.mjs",
+    "validate:learning": "node --import tsx scripts/validate-learning-courses.ts && node scripts/verify-source-audit.mjs && node scripts/extract-learning-recurrence.mjs 1405 --check && node scripts/build-question-index.mjs --check"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -45,6 +49,7 @@
     "vite": "^8.3.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.15",
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
     "@types/react": "^19.3.0",

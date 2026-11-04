@@ -29,6 +29,13 @@ describe('public client bundle answer-key guard', () => {
     ]);
   });
 
+  it('detects authored formative keys but permits feedback property reads', () => {
+    expect(findClientAnswerKeyLeaks({
+      'offline.html': '<script>const bank=[{"answerIndex":2}];</script>',
+      'client.js': 'show(result.answerIndex);',
+    })).toEqual([{ asset: 'offline.html', field: 'answerIndex', count: 1 }]);
+  });
+
   it('does not flag safe property reads or answer values returned after a submit', () => {
     const findings = findClientAnswerKeyLeaks({
       'assets/app.js': 'const key=q.correctOption; const answer=payload.correctOption; submitAnswer(selectedOption);',

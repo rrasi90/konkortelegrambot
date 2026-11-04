@@ -1,0 +1,943 @@
+{
+  "schemaVersion": 1,
+  "id": "financial-management",
+  "version": "1.1.0",
+  "title": "مدیریت مالی",
+  "status": "authored_pilot",
+  "description": "مبانی مدیریت مالی در ۸ درس کوتاه، با مثال حل‌شده و تمرین تألیفی.",
+  "scopeNote": "مسیر پایه و آزمایشی. تمرین‌ها تألیفی و در انتظار بازبینی متخصص درس‌اند.",
+  "sources": [
+    {
+      "id": "os.finance.ratios",
+      "title": "Principles of Finance | OpenStax",
+      "locator": "فصل ۶، بخش‌های ۶٫۲، ۶٫۳ و ۶٫۶",
+      "url": "https://openstax.org/books/principles-finance/pages/6-summary",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "os.finance.tvm",
+      "title": "Principles of Finance | OpenStax",
+      "locator": "فصل ۷، ارزش فعلی و ارزش آتی",
+      "url": "https://openstax.org/books/principles-finance/pages/7-summary",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "os.finance.bonds",
+      "title": "Principles of Finance | OpenStax",
+      "locator": "فصل ۱۰، قیمت اوراق بدهی و رابطه با بازده",
+      "url": "https://openstax.org/books/principles-finance/pages/10-summary",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "os.finance.stock",
+      "title": "Principles of Finance | OpenStax",
+      "locator": "فصل ۱۱، مدل تنزیل سود تقسیمی",
+      "url": "https://openstax.org/books/principles-finance/pages/11-summary",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "os.finance.risk",
+      "title": "Principles of Finance | OpenStax",
+      "locator": "فصل ۱۵، بازده مورد انتظار، تنوع‌بخشی و CAPM",
+      "url": "https://openstax.org/books/principles-finance/pages/15-summary",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "os.finance.npv",
+      "title": "Principles of Finance | OpenStax",
+      "locator": "فصل ۱۶، NPV، IRR و دورهٔ بازگشت",
+      "url": "https://openstax.org/books/principles-finance/pages/16-summary",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "os.finance.wacc",
+      "title": "Principles of Finance | OpenStax",
+      "locator": "فصل ۱۷، هزینهٔ سرمایه و ساختار سرمایه",
+      "url": "https://openstax.org/books/principles-finance/pages/17-summary",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    },
+    {
+      "id": "os.finance.wc",
+      "title": "Principles of Finance | OpenStax",
+      "locator": "فصل ۱۹، مدیریت سرمایه در گردش و چرخه تبدیل وجه نقد",
+      "url": "https://openstax.org/books/principles-finance/pages/19-summary",
+      "kind": "concept_reference",
+      "checkedOn": "2026-11-04"
+    }
+  ],
+  "topics": [
+    {
+      "id": "fm.ratios",
+      "title": "صورت‌های مالی و نسبت‌ها",
+      "objective": "نقدینگی را با سودآوری اشتباه نگیریم و نسبت درست را از داده انتخاب کنیم.",
+      "minutes": 4,
+      "prerequisites": [],
+      "concepts": [
+        "نسبت جاری، ظرفیت پوشش بدهی جاری را در یک مقطع نشان می‌دهد.",
+        "حاشیه سود خالص، سهم سود خالص از فروش را نشان می‌دهد.",
+        "برای گردش موجودی از بهای تمام‌شده و میانگین موجودی استفاده می‌کنیم."
+      ],
+      "formula": "Current ratio = Current assets ÷ Current liabilities  |  Net margin = Net income ÷ Sales",
+      "workedExample": "دارایی جاری ۲۴۰ و بدهی جاری ۱۶۰ است. نسبت جاری ۲۴۰ ÷ ۱۶۰ = ۱٫۵ برابر است. اگر فروش ۵۰۰ و سود خالص ۵۰ باشد، حاشیه سود ۱۰٪ است.",
+      "commonError": "نسبت جاری بر حسب «برابر» است. حاشیهٔ سود را با درصد بیان کن و مخرج‌ها را جابه‌جا نکن.",
+      "sourceIds": [
+        "os.finance.ratios"
+      ]
+    },
+    {
+      "id": "fm.tvm",
+      "title": "ارزش زمانی پول",
+      "objective": "مبلغ‌ها را روی یک خط زمان به تاریخ مشترک تبدیل کنیم.",
+      "minutes": 4,
+      "prerequisites": [],
+      "concepts": [
+        "زمان صفر امروز است.",
+        "نرخ باید مربوط به همان دوره‌ای باشد که تعداد دوره‌ها را می‌شماری.",
+        "مبلغ‌های دوره‌های متفاوت را پس از هم‌تاریخ‌کردن با هم جمع کن."
+      ],
+      "formula": "FV = PV × (1 + r)^n  |  PV = FV ÷ (1 + r)^n",
+      "workedExample": "۱۰۰ واحد با نرخ مؤثر سالانه ۱۰٪ در پایان دو سال ۱۰۰ × ۱٫۱ × ۱٫۱ = ۱۲۱ واحد می‌شود.",
+      "commonError": "با نرخ مرکب، سود سال دوم روی اصل و سود سال اول حساب می‌شود.",
+      "sourceIds": [
+        "os.finance.tvm"
+      ]
+    },
+    {
+      "id": "fm.bonds",
+      "title": "ارزش‌گذاری اوراق بدهی",
+      "objective": "کوپن، ارزش اسمی و بازده مورد انتظار را از هم تشخیص دهیم.",
+      "minutes": 4,
+      "prerequisites": [
+        "fm.tvm"
+      ],
+      "concepts": [
+        "کوپن از ارزش اسمی و نرخ کوپن به دست می‌آید.",
+        "قیمت، ارزش فعلی کوپن‌ها و بازپرداخت اسمی است.",
+        "برای جریان ثابت، قیمت با افزایش بازده مورد انتظار کاهش می‌یابد."
+      ],
+      "formula": "Bond price = Σ Coupon_t ÷ (1 + y)^t + Face value ÷ (1 + y)^n",
+      "workedExample": "اوراق یک‌ساله با ارزش اسمی ۱۰۰۰ و کوپن ۸۰، با بازده ۸٪ دقیقاً ۱۰۰۰ ارزش دارد. اگر بازده ۱۰٪ شود، قیمت ۱۰۸۰ ÷ ۱٫۱ ≈ ۹۸۱٫۸ است.",
+      "commonError": "بازده مورد انتظار را در مخرج قرار بده. نرخ کوپن مبلغ جریان نقدی را تعیین می‌کند.",
+      "sourceIds": [
+        "os.finance.bonds"
+      ]
+    },
+    {
+      "id": "fm.stock",
+      "title": "ارزش‌گذاری سهام",
+      "objective": "سود تقسیمی دوره بعد و شرط اعتبار رشد ثابت را تشخیص دهیم.",
+      "minutes": 4,
+      "prerequisites": [
+        "fm.tvm"
+      ],
+      "concepts": [
+        "D₀ آخرین سود پرداخت‌شده و D₁ سود مورد انتظار دوره بعد است.",
+        "مدل رشد ثابت برای افق بلندمدت به k > g نیاز دارد.",
+        "با ثابت‌بودن D₁ و g، افزایش نرخ بازده مورد انتظار ارزش را کم می‌کند."
+      ],
+      "formula": "P₀ = D₁ ÷ (k − g)  |  D₁ = D₀ × (1 + g)  |  k > g",
+      "workedExample": "اگر D₀ برابر ۴۰، رشد ۵٪ و بازده مورد انتظار ۱۵٪ باشد، D₁ برابر ۴۲ و ارزش نظری ۴۲ ÷ ۰٫۱۰ = ۴۲۰ است.",
+      "commonError": "D₀ را مستقیم در صورت نگذار و با k ≤ g از فرمول استفاده نکن.",
+      "sourceIds": [
+        "os.finance.stock"
+      ]
+    },
+    {
+      "id": "fm.risk",
+      "title": "ریسک، بازده و CAPM",
+      "objective": "بازده مورد انتظار و صرف ریسک بازار را از داده درست محاسبه کنیم.",
+      "minutes": 4,
+      "prerequisites": [
+        "fm.tvm"
+      ],
+      "concepts": [
+        "بازده مورد انتظار سناریوها با احتمال‌ها وزن داده می‌شود.",
+        "تنوع‌بخشی می‌تواند ریسک ویژه را کاهش دهد.",
+        "بتا حساسیت به ریسک بازار را در مدل CAPM بیان می‌کند."
+      ],
+      "formula": "E(R) = Σ pᵢRᵢ  |  CAPM: E(Rᵢ) = Rf + βᵢ × [E(Rm) − Rf]",
+      "workedExample": "نرخ بدون ریسک ۵٪، بازده مورد انتظار بازار ۱۳٪ و بتا ۱٫۲۵ است. صرف ریسک ۸٪ و بازده مورد انتظار ۱۵٪ است.",
+      "commonError": "بتا را در صرف ریسک بازار ضرب کن، نه در کل بازده بازار.",
+      "sourceIds": [
+        "os.finance.risk"
+      ]
+    },
+    {
+      "id": "fm.npv",
+      "title": "بودجه‌بندی سرمایه‌ای",
+      "objective": "از جریان نقدی افزایشی و نرخ مناسب برای تصمیم پروژه استفاده کنیم.",
+      "minutes": 4,
+      "prerequisites": [
+        "fm.tvm"
+      ],
+      "concepts": [
+        "هزینهٔ اولیه در زمان صفر با علامت منفی می‌آید.",
+        "NPV ارزش افزوده به واحد پول است. IRR نرخ است.",
+        "دورهٔ بازگشت ساده، ارزش زمانی و جریان‌های بعد از نقطهٔ بازگشت را کامل نمی‌بیند."
+      ],
+      "formula": "NPV = CF₀ + Σ CFₜ ÷ (1 + r)^t  |  IRR: NPV = 0",
+      "workedExample": "پرداخت ۱۰۰ امروز و دریافت ۱۲۱ دو سال بعد با نرخ ۱۰٪، NPV برابر صفر دارد، چون ۱۲۱ ÷ ۱٫۱² = ۱۰۰.",
+      "commonError": "سود حسابداری را به‌جای جریان نقدی پروژه نگذار و سرمایه‌گذاری زمان صفر را دوباره تنزیل نکن.",
+      "sourceIds": [
+        "os.finance.npv"
+      ]
+    },
+    {
+      "id": "fm.wacc",
+      "title": "هزینه و ساختار سرمایه",
+      "objective": "هزینهٔ موزون را با وزن‌های سازگار و بدهی پس از مالیات حساب کنیم.",
+      "minutes": 4,
+      "prerequisites": [
+        "fm.risk",
+        "fm.npv"
+      ],
+      "concepts": [
+        "وزن‌های ارزش بازار باید به ۱ جمع شوند.",
+        "با فرض امکان کسر بهره، هزینه بدهی پس از مالیات kd × (1 − T) است.",
+        "WACC شرکت برای پروژه‌ای با ریسک مشابه مناسب‌تر است."
+      ],
+      "formula": "WACC = wD × kD × (1 − T) + wE × kE",
+      "workedExample": "۴۰٪ بدهی با هزینه ۱۰٪، ۶۰٪ حقوق صاحبان سهام با هزینه ۱۵٪ و مالیات ۲۵٪ داریم. WACC برابر ۳٪ + ۹٪ = ۱۲٪ است.",
+      "commonError": "مالیات در این فرمول به هزینهٔ بدهی اعمال می‌شود. هزینهٔ سهام را بدون دلیل پس از مالیات نکن.",
+      "sourceIds": [
+        "os.finance.wacc"
+      ]
+    },
+    {
+      "id": "fm.wc",
+      "title": "سرمایه در گردش و چرخه نقد",
+      "objective": "اثر موجودی، مطالبات و پرداختنی را روی نقدینگی تفسیر کنیم.",
+      "minutes": 4,
+      "prerequisites": [
+        "fm.ratios"
+      ],
+      "concepts": [
+        "سرمایه در گردش خالص برابر دارایی جاری منهای بدهی جاری است.",
+        "چرخه نقد، زمان تقریبی بین پرداخت به عرضه‌کننده و وصول وجه فروش است.",
+        "کاهش روزهای وصول یا موجودی، با ثابت‌بودن سایر عوامل، چرخه را کوتاه می‌کند."
+      ],
+      "formula": "NWC = CA − CL  |  Cash conversion cycle = DIO + DSO − DPO",
+      "workedExample": "۴۵ روز موجودی، ۳۰ روز وصول و ۲۰ روز پرداختنی یعنی چرخه نقد ۴۵ + ۳۰ − ۲۰ = ۵۵ روز.",
+      "commonError": "روزهای پرداختنی کم می‌شوند. پرداخت دیرتر در این محاسبه چرخه را کوتاه می‌کند، ولی هزینه و رابطهٔ تجاری هم مهم‌اند.",
+      "sourceIds": [
+        "os.finance.wc"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "fm.ratios.q01",
+      "topicId": "fm.ratios",
+      "difficulty": "basic",
+      "prompt": "دارایی جاری ۳۰۰ و بدهی جاری ۲۰۰ میلیون ریال است. نسبت جاری چند برابر است؟",
+      "choices": [
+        "۰٫۶۷",
+        "۱٫۵",
+        "۲",
+        "۱۰۰"
+      ],
+      "answerIndex": 1,
+      "explanation": "۳۰۰ ÷ ۲۰۰ = ۱٫۵ برابر.",
+      "optionReasons": [
+        "صورت و مخرج جابه‌جا شده‌اند.",
+        "تقسیم دارایی جاری بر بدهی جاری درست است.",
+        "از اعداد مسئله به دست نمی‌آید.",
+        "۱۰۰ سرمایه در گردش است."
+      ],
+      "sourceIds": [
+        "os.finance.ratios"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 0
+      }
+    },
+    {
+      "id": "fm.ratios.q02",
+      "topicId": "fm.ratios",
+      "difficulty": "basic",
+      "prompt": "فروش ۸۰۰ و سود خالص ۶۴ میلیون ریال است. حاشیه سود خالص چند درصد است؟",
+      "choices": [
+        "۱۲٫۵٪",
+        "۶۴٪",
+        "۸٪",
+        "۰٫۸٪"
+      ],
+      "answerIndex": 2,
+      "explanation": "۶۴ ÷ ۸۰۰ = ۰٫۰۸ یعنی ۸٪.",
+      "optionReasons": [
+        "۱۲٫۵ حاصل تقسیم فروش بر سود است.",
+        "۶۴ مقدار پولی سود است.",
+        "نسبت سود خالص به فروش درست است.",
+        "برای تبدیل ۰٫۰۸ به درصد باید در ۱۰۰ ضرب کرد."
+      ],
+      "sourceIds": [
+        "os.finance.ratios"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 1
+      }
+    },
+    {
+      "id": "fm.ratios.q03",
+      "topicId": "fm.ratios",
+      "difficulty": "applied",
+      "prompt": "بهای تمام‌شدهٔ سالانه ۷۲۰ است. موجودی ابتدای دوره ۱۰۰ و پایان دوره ۱۴۰ است. گردش موجودی چند بار است؟",
+      "choices": [
+        "۶",
+        "۵٫۱۴",
+        "۷٫۲",
+        "۱۸"
+      ],
+      "answerIndex": 0,
+      "explanation": "میانگین موجودی (۱۰۰ + ۱۴۰) ÷ ۲ = ۱۲۰ است. گردش ۷۲۰ ÷ ۱۲۰ = ۶ بار.",
+      "optionReasons": [
+        "میانگین دو مقطع مخرج درست است.",
+        "فقط موجودی پایان دوره را به کار برده است.",
+        "فقط موجودی ابتدای دوره را به کار برده است.",
+        "مخرج باید میانگین موجودی باشد، نه تغییر آن."
+      ],
+      "sourceIds": [
+        "os.finance.ratios"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 2
+      }
+    },
+    {
+      "id": "fm.tvm.q01",
+      "topicId": "fm.tvm",
+      "difficulty": "basic",
+      "prompt": "اگر امروز ۲۰۰ واحد با نرخ مؤثر سالانه ۱۰٪ کنار گذاشته شود، ارزش پایان دو سال چقدر است؟",
+      "choices": [
+        "۲۲۰",
+        "۲۴۰",
+        "۲۴۲",
+        "۲۶۰"
+      ],
+      "answerIndex": 2,
+      "explanation": "۲۰۰ × ۱٫۱² = ۲۴۲.",
+      "optionReasons": [
+        "تنها یک سال رشد را حساب کرده است.",
+        "بهرهٔ ساده را به کار برده است.",
+        "دو دوره رشد مرکب لحاظ شده است.",
+        "به نرخ داده‌شده سازگار نیست."
+      ],
+      "sourceIds": [
+        "os.finance.tvm"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "workedExample"
+      }
+    },
+    {
+      "id": "fm.tvm.q02",
+      "topicId": "fm.tvm",
+      "difficulty": "basic",
+      "prompt": "۱۲۰ واحد یک سال دیگر دریافت می‌شود. نرخ تنزیل ۲۰٪ است. ارزش امروز چیست؟",
+      "choices": [
+        "۱۰۰",
+        "۹۶",
+        "۱۲۰",
+        "۱۴۴"
+      ],
+      "answerIndex": 0,
+      "explanation": "۱۲۰ ÷ ۱٫۲ = ۱۰۰.",
+      "optionReasons": [
+        "با ضریب یک‌ساله درست تنزیل شده است.",
+        "کم‌کردن مستقیم ۲۰٪ از مبلغ آینده معادل تنزیل مرکب نیست.",
+        "زمان را لحاظ نکرده است.",
+        "این محاسبه سرمایه‌گذاری به جلو است."
+      ],
+      "sourceIds": [
+        "os.finance.tvm"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "fm.tvm.q03",
+      "topicId": "fm.tvm",
+      "difficulty": "applied",
+      "prompt": "دو دریافت ۱۱۰ واحد در پایان سال اول و ۱۲۱ واحد در پایان سال دوم داریم. با نرخ ۱۰٪ ارزش امروز مجموع چقدر است؟",
+      "choices": [
+        "۲۳۱",
+        "۲۱۰",
+        "۱۹۱",
+        "۲۰۰"
+      ],
+      "answerIndex": 3,
+      "explanation": "۱۱۰ ÷ ۱٫۱ = ۱۰۰ و ۱۲۱ ÷ ۱٫۱² = ۱۰۰. مجموع ۲۰۰ است.",
+      "optionReasons": [
+        "مبلغ‌های ناهم‌زمان بدون تنزیل جمع شده‌اند.",
+        "هر دریافت باید جدا و در دورهٔ درست تنزیل شود.",
+        "دریافت اول را نباید دو دوره تنزیل کرد.",
+        "هر دو دریافت به زمان صفر منتقل شده‌اند."
+      ],
+      "sourceIds": [
+        "os.finance.tvm"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 2
+      }
+    },
+    {
+      "id": "fm.bonds.q01",
+      "topicId": "fm.bonds",
+      "difficulty": "basic",
+      "prompt": "ارزش اسمی ۱۰۰۰ و نرخ کوپن سالانه ۹٪ است. کوپن سالانه چقدر است؟",
+      "choices": [
+        "۹",
+        "۹۰",
+        "۹۰۰",
+        "۱۰۹۰"
+      ],
+      "answerIndex": 1,
+      "explanation": "۱۰۰۰ × ۰٫۰۹ = ۹۰.",
+      "optionReasons": [
+        "نرخ درصدی را با مبلغ اشتباه گرفته است.",
+        "ضرب نرخ در ارزش اسمی درست است.",
+        "نرخ باید ۰٫۰۹ باشد.",
+        "۱۰۹۰ کوپن به‌علاوهٔ اصل است."
+      ],
+      "sourceIds": [
+        "os.finance.bonds"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 0
+      }
+    },
+    {
+      "id": "fm.bonds.q02",
+      "topicId": "fm.bonds",
+      "difficulty": "basic",
+      "prompt": "با ثابت‌بودن جریان‌های اوراق، افزایش بازده مورد انتظار چه اثری بر قیمت دارد؟",
+      "choices": [
+        "کاهش قیمت",
+        "افزایش قیمت",
+        "بدون تغییر",
+        "افزایش کوپن"
+      ],
+      "answerIndex": 0,
+      "explanation": "نرخ تنزیل بیشتر، ارزش فعلی همان جریان‌های نقدی را کاهش می‌دهد.",
+      "optionReasons": [
+        "اثر تنزیل درست است.",
+        "جهت اثر وارونه است.",
+        "جریان ثابت است ولی ارزش فعلی تغییر می‌کند.",
+        "مبلغ کوپن قراردادی ثابت است."
+      ],
+      "sourceIds": [
+        "os.finance.bonds"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 2
+      }
+    },
+    {
+      "id": "fm.bonds.q03",
+      "topicId": "fm.bonds",
+      "difficulty": "applied",
+      "prompt": "اوراق یک‌ساله با ارزش اسمی ۱۰۰۰ و کوپن پایانی ۱۰۰، با بازده مورد انتظار ۱۰٪ چه قیمتی دارد؟",
+      "choices": [
+        "۹۰۹٫۱",
+        "۱۱۰۰",
+        "۱۰۰۰",
+        "۱۱۰"
+      ],
+      "answerIndex": 2,
+      "explanation": "جریان پایان سال ۱۱۰۰ است. ۱۱۰۰ ÷ ۱٫۱ = ۱۰۰۰.",
+      "optionReasons": [
+        "فقط اصل تنزیل شده است.",
+        "جریان آینده هنوز تنزیل نشده است.",
+        "اصل و کوپن با هم تنزیل شده‌اند.",
+        "فقط بخشی از جریان را در نظر گرفته است."
+      ],
+      "sourceIds": [
+        "os.finance.bonds"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "workedExample"
+      }
+    },
+    {
+      "id": "fm.stock.q01",
+      "topicId": "fm.stock",
+      "difficulty": "basic",
+      "prompt": "سود دورهٔ بعد ۳۰، بازده مورد انتظار ۱۲٪ و رشد ثابت ۶٪ است. ارزش نظری چقدر است؟",
+      "choices": [
+        "۲۵۰",
+        "۵۰۰",
+        "۱۶۶٫۷",
+        "۱۸۰"
+      ],
+      "answerIndex": 1,
+      "explanation": "۳۰ ÷ (۰٫۱۲ − ۰٫۰۶) = ۵۰۰.",
+      "optionReasons": [
+        "رشد را از نرخ بازده کم نکرده است.",
+        "صورت و فاصلهٔ نرخ‌ها درست‌اند.",
+        "نرخ بازده و رشد نباید با هم جمع شوند.",
+        "ضرب در اختلاف نرخ جای تقسیم را نمی‌گیرد."
+      ],
+      "sourceIds": [
+        "os.finance.stock"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "fm.stock.q02",
+      "topicId": "fm.stock",
+      "difficulty": "applied",
+      "prompt": "آخرین سود تقسیمی ۲۰ است. نرخ رشد ۱۰٪ و بازده مورد انتظار ۱۵٪ است. ارزش نظری چقدر است؟",
+      "choices": [
+        "۴۰۰",
+        "۱۴۶٫۷",
+        "۴۴۰",
+        "۲۰۰"
+      ],
+      "answerIndex": 2,
+      "explanation": "ابتدا D₁ = ۲۲. سپس ۲۲ ÷ (۰٫۱۵ − ۰٫۱۰) = ۴۴۰.",
+      "optionReasons": [
+        "از D₀ استفاده کرده است.",
+        "رشد را از نرخ بازده کم نکرده است.",
+        "تبدیل سود دوره و محاسبه درست است.",
+        "مخرج را با نرخ رشد اشتباه گرفته است."
+      ],
+      "sourceIds": [
+        "os.finance.stock"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "workedExample"
+      }
+    },
+    {
+      "id": "fm.stock.q03",
+      "topicId": "fm.stock",
+      "difficulty": "basic",
+      "prompt": "اگر بازده مورد انتظار ۸٪ و رشد ثابت ۱۰٪ باشد، برای مدل رشد ثابت چه کنیم؟",
+      "choices": [
+        "قیمت منفی گزارش کنیم",
+        "قدر مطلق مخرج بگیریم",
+        "رشد را صفر فرض کنیم",
+        "مدل رشد ثابت را در این فرض‌ها به کار نبریم"
+      ],
+      "answerIndex": 3,
+      "explanation": "مدل برای k > g مشتق می‌شود و در این فرض‌ها معتبر نیست.",
+      "optionReasons": [
+        "قیمت منفی پاسخ معتبر این مدل نیست.",
+        "قدر مطلق مشکل اعتبار فرض را رفع نمی‌کند.",
+        "تغییر خودسرانه فرض راه‌حل نیست.",
+        "شرط اعتبار مدل رعایت نشده است."
+      ],
+      "sourceIds": [
+        "os.finance.stock"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 1
+      }
+    },
+    {
+      "id": "fm.risk.q01",
+      "topicId": "fm.risk",
+      "difficulty": "basic",
+      "prompt": "بازده در دو سناریو ۲۰٪ با احتمال ۰٫۲۵ و ۴٪ با احتمال ۰٫۷۵ است. بازده مورد انتظار چیست؟",
+      "choices": [
+        "۱۲٪",
+        "۲۴٪",
+        "۸٪",
+        "۵٪"
+      ],
+      "answerIndex": 2,
+      "explanation": "۰٫۲۵ × ۲۰٪ + ۰٫۷۵ × ۴٪ = ۸٪.",
+      "optionReasons": [
+        "میانگین ساده را به‌جای وزن‌دهی گرفته است.",
+        "بازده‌ها بدون وزن جمع شده‌اند.",
+        "وزن هر سناریو درست اعمال شده است.",
+        "فقط سناریوی اول لحاظ شده است."
+      ],
+      "sourceIds": [
+        "os.finance.risk"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 0
+      }
+    },
+    {
+      "id": "fm.risk.q02",
+      "topicId": "fm.risk",
+      "difficulty": "applied",
+      "prompt": "نرخ بدون ریسک ۴٪، بازده بازار ۱۲٪ و بتا ۱٫۵ است. CAPM چه بازدهی می‌دهد؟",
+      "choices": [
+        "۱۶٪",
+        "۱۸٪",
+        "۲۲٪",
+        "۱۲٪"
+      ],
+      "answerIndex": 0,
+      "explanation": "۴٪ + ۱٫۵ × (۱۲٪ − ۴٪) = ۱۶٪.",
+      "optionReasons": [
+        "صرف ریسک درست محاسبه شده است.",
+        "بتا در کل بازده بازار ضرب شده است.",
+        "نرخ بدون ریسک روی حاصل ضرب نادرست اضافه شده است.",
+        "صرف ریسک تعدیل‌شده بدون نرخ پایه است."
+      ],
+      "sourceIds": [
+        "os.finance.risk"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "workedExample"
+      }
+    },
+    {
+      "id": "fm.risk.q03",
+      "topicId": "fm.risk",
+      "difficulty": "basic",
+      "prompt": "تنوع‌بخشی میان دارایی‌های مختلف در مدل پایه عمدتاً کدام ریسک را کاهش می‌دهد؟",
+      "choices": [
+        "همهٔ ریسک بازار",
+        "ریسک ویژهٔ شرکت",
+        "نرخ بدون ریسک",
+        "بازده مورد انتظار بازار"
+      ],
+      "answerIndex": 1,
+      "explanation": "ریسک خاص شرکت‌ها با تنوع کاهش می‌یابد. ریسک مشترک بازار باقی می‌ماند.",
+      "optionReasons": [
+        "ریسک مشترک بازار لزوماً با تنوع حذف نمی‌شود.",
+        "این همان ریسک غیرسیستماتیک است.",
+        "نرخ بدون ریسک یک پارامتر مدل است.",
+        "بازده بازار از ترکیب انتخاب فرد نتیجه نمی‌شود."
+      ],
+      "sourceIds": [
+        "os.finance.risk"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 1
+      }
+    },
+    {
+      "id": "fm.npv.q01",
+      "topicId": "fm.npv",
+      "difficulty": "applied",
+      "prompt": "پروژه امروز ۱۰۰ هزینه دارد و پایان سال اول ۱۲۱ دریافت می‌کند. با نرخ ۱۰٪، NPV چند است؟",
+      "choices": [
+        "۲۱",
+        "۱۰",
+        "۱۱۰",
+        "۰"
+      ],
+      "answerIndex": 1,
+      "explanation": "۱۲۱ ÷ ۱٫۱ − ۱۰۰ = ۱۰.",
+      "optionReasons": [
+        "ارزش زمانی پول حذف شده است.",
+        "تنزیل و کسر هزینه درست است.",
+        "فقط ارزش فعلی ورودی گزارش شده است.",
+        "جریان داده‌شده NPV مثبت دارد."
+      ],
+      "sourceIds": [
+        "os.finance.npv"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "fm.npv.q02",
+      "topicId": "fm.npv",
+      "difficulty": "basic",
+      "prompt": "IRR در تعریف پایه چه نرخی است؟",
+      "choices": [
+        "نرخ بدون ریسک",
+        "نرخ برابر حاشیه سود",
+        "نرخی که NPV را صفر می‌کند",
+        "نرخ کوپن پروژه"
+      ],
+      "answerIndex": 2,
+      "explanation": "IRR نرخ تنزیلی است که NPV جریان‌های پروژه را صفر می‌کند.",
+      "optionReasons": [
+        "معیار نرخ پایه است، نه تعریف IRR.",
+        "سود حسابداری معیار IRR نیست.",
+        "این تعریف درست است.",
+        "کوپن به ابزار بدهی مربوط است."
+      ],
+      "sourceIds": [
+        "os.finance.npv"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "fm.npv.q03",
+      "topicId": "fm.npv",
+      "difficulty": "applied",
+      "prompt": "پروژه امروز ۲۰۰ هزینه دارد و یک سال دیگر ۲۲۰ بازمی‌گرداند. اگر نرخ لازم ۱۵٪ باشد، تصمیم بر اساس NPV چیست؟",
+      "choices": [
+        "رد، چون NPV منفی است",
+        "قبول، چون دریافت اسمی بیشتر است",
+        "قبول، چون NPV صفر است",
+        "اطلاعات برای محاسبه کافی نیست"
+      ],
+      "answerIndex": 0,
+      "explanation": "۲۲۰ ÷ ۱٫۱۵ ≈ ۱۹۱٫۳ است. NPV تقریباً ۸٫۷− است.",
+      "optionReasons": [
+        "ارزش فعلی دریافتی کمتر از هزینه است.",
+        "مقایسهٔ اسمی اثر زمان را حذف می‌کند.",
+        "NPV صفر فقط در نرخ ۱۰٪ رخ می‌دهد.",
+        "همهٔ داده‌های مثال داده شده‌اند."
+      ],
+      "sourceIds": [
+        "os.finance.npv"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "fm.wacc.q01",
+      "topicId": "fm.wacc",
+      "difficulty": "basic",
+      "prompt": "هزینهٔ قبل از مالیات بدهی ۱۲٪ و نرخ مالیات ۲۵٪ است. هزینهٔ پس از مالیات چیست؟",
+      "choices": [
+        "۳٪",
+        "۱۲٪",
+        "۱۵٪",
+        "۹٪"
+      ],
+      "answerIndex": 3,
+      "explanation": "۱۲٪ × ۰٫۷۵ = ۹٪.",
+      "optionReasons": [
+        "۳٪ مقدار سپر مالیاتی است.",
+        "مالیات لحاظ نشده است.",
+        "اثر مالیات به جهت نادرست اعمال شده است.",
+        "ضریب بعد از مالیات درست است."
+      ],
+      "sourceIds": [
+        "os.finance.wacc"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "fm.wacc.q02",
+      "topicId": "fm.wacc",
+      "difficulty": "applied",
+      "prompt": "وزن بدهی و سهام هر کدام ۵۰٪، هزینه بدهی پس از مالیات ۸٪ و هزینه سهام ۱۴٪ است. WACC چیست؟",
+      "choices": [
+        "۱۱٪",
+        "۲۲٪",
+        "۸٪",
+        "۱۴٪"
+      ],
+      "answerIndex": 0,
+      "explanation": "۰٫۵ × ۸٪ + ۰٫۵ × ۱۴٪ = ۱۱٪.",
+      "optionReasons": [
+        "هر هزینه با وزن خودش وارد شده است.",
+        "جمع نرخ‌ها بدون وزن است.",
+        "فقط بدهی لحاظ شده است.",
+        "فقط سهام لحاظ شده است."
+      ],
+      "sourceIds": [
+        "os.finance.wacc"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "fm.wacc.q03",
+      "topicId": "fm.wacc",
+      "difficulty": "applied",
+      "prompt": "پروژه‌ای از فعالیت معمول شرکت بسیار پرریسک‌تر است. آیا WACC فعلی را مستقیم به کار ببریم؟",
+      "choices": [
+        "بله، برای همهٔ پروژه‌ها یکسان است",
+        "بله، اگر تعداد سال‌ها کمتر باشد",
+        "ابتدا نرخ متناسب با ریسک پروژه را برآورد کنیم",
+        "تنزیل را حذف کنیم"
+      ],
+      "answerIndex": 2,
+      "explanation": "نرخ تنزیل باید با ریسک جریان‌های پروژه سازگار باشد. WACC شرکت ممکن است برای پروژهٔ متفاوت مناسب نباشد.",
+      "optionReasons": [
+        "ریسک متفاوت می‌تواند نرخ متفاوت بخواهد.",
+        "تعداد سال‌ها مسئلهٔ تفاوت ریسک را رفع نمی‌کند.",
+        "انتخاب نرخ متناسب با ریسک درست است.",
+        "ارزش زمانی پول همچنان وجود دارد."
+      ],
+      "sourceIds": [
+        "os.finance.wacc"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 2
+      }
+    },
+    {
+      "id": "fm.wc.q01",
+      "topicId": "fm.wc",
+      "difficulty": "basic",
+      "prompt": "دارایی جاری ۵۰۰ و بدهی جاری ۳۵۰ است. سرمایه در گردش خالص چیست؟",
+      "choices": [
+        "۸۵۰",
+        "۱٫۴۳",
+        "۱۵۰",
+        "۳۵۰"
+      ],
+      "answerIndex": 2,
+      "explanation": "۵۰۰ − ۳۵۰ = ۱۵۰.",
+      "optionReasons": [
+        "دو جزء را نباید جمع کرد.",
+        "این تقریب نسبت جاری است.",
+        "تفاضل دو جزء درست است.",
+        "فقط بدهی جاری را گزارش می‌کند."
+      ],
+      "sourceIds": [
+        "os.finance.wc"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "fm.wc.q02",
+      "topicId": "fm.wc",
+      "difficulty": "applied",
+      "prompt": "روزهای موجودی ۴۰، وصول ۲۵ و پرداختنی ۳۰ است. چرخه تبدیل وجه نقد چند روز است؟",
+      "choices": [
+        "۹۵",
+        "۳۵",
+        "۶۵",
+        "۱۵"
+      ],
+      "answerIndex": 1,
+      "explanation": "۴۰ + ۲۵ − ۳۰ = ۳۵ روز.",
+      "optionReasons": [
+        "پرداختنی باید کم شود.",
+        "علامت هر سه جزء درست است.",
+        "پرداختنی حذف شده است.",
+        "هر سه جزء با علامت درست وارد نشده‌اند."
+      ],
+      "sourceIds": [
+        "os.finance.wc"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "formula"
+      }
+    },
+    {
+      "id": "fm.wc.q03",
+      "topicId": "fm.wc",
+      "difficulty": "basic",
+      "prompt": "با ثابت‌بودن سایر عوامل، وصول مطالبات از ۳۰ به ۲۰ روز می‌رسد. چرخه نقد چه تغییری دارد؟",
+      "choices": [
+        "۱۰ روز کوتاه‌تر",
+        "۱۰ روز طولانی‌تر",
+        "۲۰ روز کوتاه‌تر",
+        "بدون تغییر"
+      ],
+      "answerIndex": 0,
+      "explanation": "روزهای وصول ۱۰ واحد کم شده و با علامت مثبت در چرخه است، بنابراین چرخه ۱۰ روز کوتاه‌تر می‌شود.",
+      "optionReasons": [
+        "جهت و مقدار تغییر درست است.",
+        "علامت روزهای وصول مثبت است.",
+        "۲۰ مقدار جدید است، نه اندازهٔ تغییر.",
+        "یکی از اجزای چرخه تغییر کرده است."
+      ],
+      "sourceIds": [
+        "os.finance.wc"
+      ],
+      "origin": "authored",
+      "rights": "original_ael",
+      "review": "pending_sme",
+      "readingBlock": {
+        "type": "concept",
+        "index": 2
+      }
+    }
+  ]
+}

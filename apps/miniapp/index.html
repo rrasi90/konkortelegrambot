@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>آموزش کنکور — یادگیری تطبیقی</title>
-  <link rel="stylesheet" href="styles.css?v=3" />
+  <link rel="stylesheet" href="styles.css?v=4" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -114,11 +114,13 @@
           <span id="q-card-type" class="chip warn">نکتهٔ دام</span>
           <span id="q-proof-label" class="chip proof" hidden></span>
         </div>
+        <p id="q-progress" class="hint"></p>
         <h2 id="q-text"></h2>
         <div id="q-options" class="options"></div>
         <div id="answer-feedback" hidden>
           <div id="feedback-head" class="feedback-head"></div>
           <p id="feedback-explanation"></p>
+          <details id="feedback-source"><summary>ارجاع و مشخصات سؤال</summary><p id="feedback-source-text"></p></details>
           <div id="feedback-trap" class="trap-box" hidden></div>
           <div id="feedback-comparison" class="comparison-box" hidden></div>
           <div id="feedback-self-report" class="self-report-box" hidden></div>
@@ -144,12 +146,15 @@
 
     <!-- تب آموزش درس -->
     <main id="tab-lessons" class="tab-panel" hidden>
+      <section id="ael-learning-root" aria-label="مسیرهای یادگیری"></section>
+      <details class="learn-library"><summary>کتابخانهٔ درس‌های موجود</summary>
       <div class="lessons-header">
         <h2>آموزش سرفصل‌ها و درس‌نامه‌های کنکور دکتری</h2>
-        <p class="subtitle">تدوین‌شده بر اساس تست‌های کنکورهای اخیر و نکات طلایی طراحان</p>
+        <p class="subtitle">جست‌وجوی درس‌نامه‌ها، مباحث و کلیدواژه‌ها</p>
         <input type="text" id="lesson-search-input" class="lesson-search" placeholder="🔍 جستجو در مباحث، فصول یا کلیدواژه‌ها..." />
       </div>
       <div id="lessons-container" class="lessons-list"></div>
+      </details>
     </main>
 
     <!-- تب مسیر -->
@@ -219,6 +224,7 @@
     </nav>
   </section>
 
-  <script src="app.js?v=3"></script>
+  <script src="learning.js?v=1"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

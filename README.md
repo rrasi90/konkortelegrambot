@@ -19,6 +19,9 @@
 
 ---
 
+
+راهنمای مسیر یادگیری، مدیریت مالی، آزمون و فایل آفلاین در [docs/ael-next/00_START_HERE_FA.md](docs/ael-next/00_START_HERE_FA.md) قرار دارد.
+
 ## 🎯 دربارهٔ پروژه
 
 **AEL (Adaptive Exam Learning)** یک سامانهٔ آموزشی و تمرین تطبیقی برای داوطلبان کنکور مدیریت است. هدف آن فقط نمایش تست نیست؛ سامانه تلاش می‌کند بر اساس پاسخ‌های واقعی داوطلب، نقاط ضعف را پیدا کند، مرورها را اولویت‌بندی کند و مسیر یادگیری بعدی را پیشنهاد دهد.
@@ -381,8 +384,8 @@ AEL نباید به این موارد تبدیل شود یا چنین ادعاه
 | Mini App | روی Worker سرو می‌شود | فایل‌های `apps/miniapp` به‌عنوان Static Assets استفاده می‌شوند و `/api/*` به Worker می‌رود. |
 | ذخیره‌سازی پایدار | **مسدود / تکمیل‌نشده** | اتصال Production به Supabase و اجرای Migration شمارهٔ ۰۰۱۵ در Runbook انجام‌نشده ثبت شده است؛ Worker در وضعیت گزارش‌شده از MemoryStore استفاده می‌کند و دادهٔ کاربر پایداری Production ندارد. |
 | Telegram | **فعال‌سازی کامل تأیید نشده** | Secretهای Worker در فهرست Secrets گزارش شده‌اند، اما تنظیم دکمهٔ منو و اتصال نهایی تجربهٔ کاربر به دلیل در دسترس نبودن توکن در محیط اجرای محلی تکمیل نشده است. وضعیت زندهٔ Webhook باید جداگانه بررسی شود. |
-| GitHub Pages | **عمداً مسدود** | Bundle اپ React هنوز شامل فیلدهای کلید پاسخ است؛ اسکنر امنیتی اجازهٔ انتشار عمومی نمی‌دهد. |
-| اپ React | مسیر محلی/Legacy | رابط و داده‌های گسترده‌تری دارد، اما تا مهاجرت امن مصرف‌کنندگان و حذف کلید پاسخ از Bundle نباید عمومی منتشر شود. |
+| صفحهٔ ورودی عمومی | آمادهٔ آزمون محلی | بیلد جداگانه به نشانی تأییدشدهٔ Worker پیوند می‌دهد. انتشار به تأیید Release Gate وابسته است. |
+| اپ React | مسیر محلی/Legacy | داده‌های آفلاین و کلیدها را در بیلد خصوصی نگه می‌دارد. از `npm run dev` یا `npm run build:legacy` استفاده کنید. |
 | یکپارچگی محتوا و Engine | در حال تکمیل | محتوای React و Worker هنوز کاملاً یک منبع حقیقت مشترک ندارند؛ Parity Harness فقط سناریوهای مشخص را مقایسه می‌کند. |
 | Rate Limit سراسری | مسدود در زیرساخت | محدودسازی فعلی per-isolate است؛ راهکار سراسری نیازمند Durable Objects و مجوز مناسب Cloudflare است. |
 | آمادگی عرضهٔ عمومی محصول | **NO-GO / DEFER** | Worker زنده است، اما پایلوت واقعی، بازبینی SME، Supabase پایدار، E2E میزبانی‌شدهٔ تلگرام، مانیتورینگ و بازبینی حریم خصوصی هنوز Gateهای باز هستند. |
@@ -527,7 +530,11 @@ Vite روی پورت **۳۰۰۰** اجرا می‌شود:
 
 `http://localhost:3000`
 
-> این رابط مسیر Legacy/محلی است. تا زمانی که ممیزی Bundle کلید پاسخ را رد می‌کند، آن را به‌عنوان نسخهٔ قابل‌انتشار عمومی استفاده نکنید.
+خروجی `npm run build:legacy` در `dist-legacy/` قرار می‌گیرد و برای استفادهٔ محلی است. برای اجرای همان خروجی با سرور محلی، `DEV_SURFACE=react npm run dev:miniapp` را اجرا کنید.
+
+### بیلد ورودی عمومی
+
+`npm run build` تنها صفحهٔ ورود به Worker را در `dist/` می‌سازد. نشانی تأییدشدهٔ محیط یادگیری را با `VITE_AEL_APP_URL` به بیلد بدهید. برای پیش‌نمایش از `npm run preview` و برای بررسی از `npm run audit:client-bundle` استفاده کنید. آموزش، آزمون، احراز هویت و دریافت بازخورد در محیط Worker انجام می‌شود.
 
 ---
 
@@ -543,9 +550,9 @@ Vite روی پورت **۳۰۰۰** اجرا می‌شود:
 | `npm run validate:content` | اعتبارسنجی بسته‌های محتوایی |
 | `npm run build:worker` | Build/Typecheck مربوط به Worker |
 | `npm run audit:miniapp` | اسکن Assetهای واقعی Mini App و بررسی تنظیمات Wrangler |
-| `npm run audit:client-bundle` | اسکن Bundle اپ React از نظر نشت کلید پاسخ |
+| `npm run audit:client-bundle` | اسکن خروجی عمومی و کنترل حضور فایل‌های مجاز |
 | `npx --yes wrangler deploy --dry-run --config apps/worker/wrangler.jsonc` | اعتبارسنجی بستهٔ Worker بدون انتشار |
-| `node scripts/db-test-embedded.mjs` | اجرای Migration، Seed و تست یکپارچگی روی PostgreSQL توکار |
+| `npm run test:db` | اجرای تازه، Replay با Ledger، کنترل Drift و Backup/Restore روی PostgreSQL توکار |
 | `node scripts/e2e-miniapp.mjs` | اجرای سناریوهای E2E با Chrome؛ ابتدا سرور محلی را در ترمینال جداگانه با `npm run dev:miniapp` اجرا کنید. |
 
 ### آزمون مرورگر E2E
@@ -566,10 +573,12 @@ node scripts/e2e-miniapp.mjs
 
 Workflow اصلی در `.github/workflows/ci.yml` دو مسیر دارد:
 
-1. **Quality:** نصب با `npm ci`، Typecheck، تست‌ها، Engine Parity، اعتبارسنجی محتوا، Build Worker، اسکن Mini App و Wrangler Dry Run.
+1. **Quality:** نصب، Typecheck، تست‌ها، DB توکار، Engine Parity، اعتبارسنجی محتوا، بیلد و اسکن ورودی عمومی، Build Worker، اسکن Mini App و Wrangler Dry Run.
 2. **Database:** اجرای Migrationها و تست‌های یکپارچگی PostgreSQL در سرویس CI.
 
-Workflow مربوط به GitHub Pages در `.github/workflows/deploy-pages.yml` عمداً قبل از Upload و Deployment، Bundle را اسکن می‌کند. شکست این Guard در برابر کلید پاسخ، یک کنترل امنیتی است و نباید با حذف یا تضعیف تست برطرف شود.
+مسیر انتشار صفحهٔ ورودی اجرای دستی، تأیید `AEL_PAGES_RELEASE_APPROVED`، نشانی معتبر `AEL_APP_URL` و عبور از اسکن Bundle و فهرست فایل‌های مجاز را لازم دارد.
+
+پیش از انتشار Worker، Migration شمارهٔ `0016` باید از مسیر Migration Ledger خود Supabase تأیید و اعمال شود. کاتالوگ خصوصی `v_worker_question_access` برای Worker لازم است. تست Replay از Ledger مستقل محیط آزمایشی استفاده می‌کند و Migrationهای قدیمی را تغییر نمی‌دهد.
 
 ---
 

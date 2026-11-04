@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "reviewedOn": "2026-11-04",
+  "scope": "تطبیق دیداری با فایل‌های تصویری موجود در بسته، بدون تأیید مستقل اصالت فایل یا کلید رسمی",
+  "items": [
+    {"id":"q.k1396.99","result":"conflict","file":"public/assets/aistudio/________________________________1396_7ba65778.pdf","sha256":"7ba65778910c112d74fcdf84afda971c80d3e6e743921f0a8e07172f6a13ec28","pdfPage":16,"printedPage":16,"note":"گزینهٔ سوم فایل تصویری منفی ۱۰ تقسیم بر ۱۵ است، در بانک منفی ۵ تقسیم بر ۱۵ نوشته شده است. صورت مسئله از نظر تابع و قیمت با فایل خوانده‌شده منطبق است. کلید رسمی بررسی نشده است."},
+    {"id":"q.k1400.96","result":"image_match_pending_key","file":"public/assets/aistudio/________________________________1400_36819d02.pdf","sha256":"3c521df44d520f60d741741914fbdfe6daf7fa5da58cf25375b41575ce6043e0","pdfPage":15,"printedPage":15,"note":"صورت و گزینه‌های رکورد با تصویر خوانده‌شده تطبیق دارند. اصالت فایل و کلید رسمی بررسی نشده است."},
+    {"id":"q.k1405.87","result":"conflict","file":"public/assets/aistudio/1405-_______f08c886c.pdf","sha256":"f08c886c1d2b8079d7fbc577b7229394780eee706281ea8373dd2c95691b10de","pdfPage":15,"printedPage":15,"note":"در فایل تصویری علامت تابع P=14+0.5Q دیده می‌شود، در بانک P=14-0.5Q ثبت شده است. اصالت فایل و کلید رسمی بررسی نشده است."},
+    {"id":"q.k1402.185","result":"image_match_pending_key","file":"public/assets/aistudio/arshd_modiriat-1402_4bad2af3.pdf","sha256":"4bad2af354b1d8006842c2df8066cf37b87cd4765aaf8901529098e8288932b8","pdfPage":28,"printedPage":28,"note":"صورت و گزینه‌های رکورد با تصویر خوانده‌شده تطبیق دارند. اصالت فایل و کلید رسمی بررسی نشده است."},
+    {"id":"q.k1405.188","result":"image_match_pending_key","file":"public/assets/aistudio/1405-_______f08c886c.pdf","sha256":"f08c886c1d2b8079d7fbc577b7229394780eee706281ea8373dd2c95691b10de","pdfPage":29,"printedPage":29,"note":"صورت و گزینه‌های رکورد با تصویر خوانده‌شده تطبیق دارند. اصالت فایل و کلید رسمی بررسی نشده است."}
+  ]
+}

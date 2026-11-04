@@ -652,6 +652,24 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
     expect(home.stats.daysLeft).toBeGreaterThanOrEqual(77);
     expect(home.stats.daysLeft).toBeLessThanOrEqual(79);
   });
+  it('marks answer responses and authorization errors as non-cacheable', async () => {
+    const unauthenticated = await app.request('/api/answers', { method: 'POST' });
+    expect(unauthenticated.headers.get('Cache-Control')).toBe('no-store');
+
+    const token = await login();
+    const queueResponse = await app.request('/api/queue', authed(token));
+    expect(queueResponse.headers.get('Cache-Control')).toBe('no-store');
+    const queue = await json(queueResponse);
+    const item = queue.items.find((entry: { question?: unknown }) => entry.question);
+    const response = await app.request('/api/answers', authed(token, {
+      method: 'POST',
+      body: JSON.stringify({ questionId: item.question.id, attemptId: item.attemptId, selectedOption: 0 }),
+    }));
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(typeof (await json(response)).correctOption).toBe('number');
+  });
+
   it('محیط پروداکشن: شکست در صورت عدم وجود کلید یا مغایرت تنظیمات (Fail-Closed)', () => {
     // 1. کلید پیش‌فرض یا کوتاه در پروداکشن
     expect(() => {
@@ -709,6 +727,49 @@ describe('worker API — داشبورد خانه و کوییز شبانه (وا�
     expect(badReplay.status).toBe(400);
     const errBody = await json(badReplay);
     expect(errBody.error).toContain('شناسه تلاش قبلاً برای سؤال دیگری ثبت شده است');
+  });
+
+  it('keeps explicitly reserved items out of diagnosis and old practice cards', async () => {
+    const token = await login();
+    const me = await json(await app.request('/api/me', authed(token)));
+    const userId = me.user.id as string;
+    const reserved = {
+      ...store.questions[0],
+      id: 'reserved-1399',
+      examYear: 1399,
+      accessType: 'proof' as const,
+    };
+    store.questions.push(reserved);
+    await store.upsertCards([{
+      id: 'old-reserved-card',
+      userId,
+      nodeId: reserved.nodeId,
+      cardType: 'question',
+      questionId: reserved.id,
+      dueAt: new Date(0).toISOString(),
+      intervalDays: 1,
+      ease: 2.5,
+      isRepair: false,
+      timesSeen: 0,
+      timesCorrect: 0,
+    }]);
+
+    for (const path of ['/api/queue?limit=50', '/api/diagnostic?count=20']) {
+      const response = await app.request(path, authed(token));
+      expect(response.status).toBe(200);
+      const payload = await json(response);
+      expect(JSON.stringify(payload)).not.toContain(reserved.id);
+    }
+
+    await store.issueAttemptTickets(userId, [{
+      attemptId: 'old-reserved-ticket', questionId: reserved.id, attemptType: 'practice',
+    }]);
+    const answer = await app.request('/api/answers', authed(token, {
+      method: 'POST',
+      body: JSON.stringify({ questionId: reserved.id, attemptId: 'old-reserved-ticket', selectedOption: 0 }),
+    }));
+    expect(answer.status).toBe(409);
+    expect(await json(answer)).not.toHaveProperty('correctOption');
   });
 
   it('قرنطینهٔ سؤالات هولدآوت: سؤالات سال ۱۴۰۴ در صف تمرین روزمره قرار نمی‌گیرند', async () => {

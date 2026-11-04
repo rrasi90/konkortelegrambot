@@ -78,6 +78,8 @@ export interface Question {
   /** نکتهٔ دام تستی — منبع کارت‌های لایهٔ ۱ */
   trapNote?: string;
   isVerified?: boolean;
+  /** Classification from the server-side question catalog. */
+  accessType?: 'practice' | 'proof';
   /** زمان موردانتظار پاسخ‌گویی (میلی‌ثانیه) — مبنای روانی اجرا */
   expectedTimeMs?: number;
   /** سطح آزمونِ منبع سؤال؛ بدون تطابق سطح، سؤال وارد جلسهٔ شبیه‌سازی آن سطح نمی‌شود */
@@ -91,6 +93,7 @@ export interface PublicQuestion {
   id: string;
   nodeId: string;
   examYear?: number;
+  contentOrigin?: QuestionContentOrigin;
   text: string;
   options: string[];
   isVerified?: boolean;

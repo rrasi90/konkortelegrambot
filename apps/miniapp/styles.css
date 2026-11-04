@@ -850,3 +850,61 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
   border-radius: 4px;
   font-weight: 500;
 }
+
+/* BEGIN AEL LEARNING UI — shared with the offline file. */
+.learn-app {
+  --learn-ink: #172b3b;
+  --learn-muted: #466073;
+  --learn-paper: #fff;
+  --learn-line: #c9d9df;
+  --learn-accent: #086454;
+  --learn-tint: #e9f6f1;
+  display: grid;
+  gap: 12px;
+  color: var(--learn-ink);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.learn-app[hidden] { display: none; }
+.learn-heading { padding: 10px 2px 4px; }
+.learn-heading h2, .learn-card h3, .learn-feedback h3 { margin: 0 0 .4rem; line-height: 1.45; color: var(--learn-ink); }
+.learn-heading h2 { font-size: clamp(1.3rem, 5vw, 1.8rem); }
+.learn-app p { margin: .35rem 0 .65rem; }
+.learn-eyebrow { font-size: .85rem; font-weight: 700; color: var(--learn-accent); }
+.learn-muted { color: var(--learn-muted); }
+.learn-card { min-width: 0; padding: clamp(12px, 3vw, 19px); border: 1px solid var(--learn-line); border-radius: 16px; background: var(--learn-paper); }
+.learn-app ul, .learn-app ol { padding-inline-start: 1.4rem; }
+.learn-app li + li { margin-block-start: .4rem; }
+.learn-note, .learn-warning { background: var(--learn-tint); border-inline-start: 4px solid var(--learn-accent); padding: .6rem .8rem; border-radius: 8px; }
+.learn-warning { background: #fff1e7; border-color: #a74315; color: #712c0c; }
+.learn-formula { padding: .6rem .8rem; border-radius: 8px; background: #edf2f7; font-family: ui-monospace, monospace; }
+.learn-app .learn-button {
+  color: var(--learn-ink); background: var(--learn-paper); border: 1px solid var(--learn-line);
+  border-radius: 10px; padding: .54rem .82rem; min-height: 44px; margin: .25rem 0 .25rem .35rem;
+  cursor: pointer; font: inherit; font-weight: 600; text-align: right; max-width: 100%;
+}
+.learn-app .learn-primary { color: #fff; background: var(--learn-accent); border-color: var(--learn-accent); }
+.learn-app .learn-button:disabled { opacity: .54; cursor: default; }
+.learn-app .learn-button:focus-visible, .learn-app a:focus-visible, .learn-app summary:focus-visible,
+.learn-app textarea:focus-visible { outline: 3px solid #0d7c99; outline-offset: 2px; }
+.learn-app .learn-topic, .learn-app .learn-option { width: 100%; display: block; }
+.learn-app [hidden] { display: none !important; }
+.learn-app .learn-option[aria-pressed="true"], .learn-app .learn-answered { background: var(--learn-tint); border-color: var(--learn-accent); }
+.learn-options, .learn-actions { display: grid; gap: .35rem; }
+.learn-actions { grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr)); }
+.learn-question-grid { display: flex; flex-wrap: wrap; gap: .25rem; margin: .4rem 0; }
+.learn-question-grid .learn-button { min-width: 44px; text-align: center; }
+.learn-question-grid [aria-current="step"] { border: 2px solid #0d7c99; }
+.learn-clock, .learn-score { font-weight: 700; }
+.learn-feedback { border-block-start: 1px solid var(--learn-line); margin-block: .75rem; padding-block: .75rem .25rem; }
+.learn-feedback .learn-result-correct { color: #126245; }
+.learn-feedback .learn-result-incorrect { color: #9e321f; }
+.learn-feedback .learn-result-skipped { color: #5d526e; }
+.learn-details { padding: .45rem 0; }
+.learn-details summary { cursor: pointer; font-weight: 700; min-height: 34px; }
+.learn-address, .learn-source-list a { display: block; font-size: .85rem; }
+.learn-issue textarea { width: 100%; display: block; min-height: 76px; resize: vertical; font: inherit; margin-block: .4rem; }
+@media (min-width: 500px) {
+  .learn-heading { padding-top: 12px; }
+}
+/* END AEL LEARNING UI */

@@ -1,8 +1,6 @@
-name: Deploy Mini-App to GitHub Pages
+name: Deploy AEL public entry to GitHub Pages
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -16,6 +14,7 @@ concurrency:
 
 jobs:
   build-and-deploy:
+    if: vars.AEL_PAGES_RELEASE_APPROVED == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -31,13 +30,14 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm ci
 
-      - name: Build Vite App
+      - name: Build public entry
+        env:
+          VITE_AEL_APP_URL: ${{ vars.AEL_APP_URL }}
+          REQUIRE_AEL_APP_URL: '1'
         run: npm run build
 
-      # Fail closed: the legacy React bundle currently contains exam answer keys.
-      # Keep this gate until the UI is migrated to authenticated Worker answer endpoints.
       - name: Reject public bundles containing answer keys
         run: npm run audit:client-bundle
 

@@ -215,20 +215,19 @@ export const SkillTreeGraph: React.FC<SkillTreeGraphProps> = ({
     [nodeStates]
   );
 
-  const selectedNode = nodes.find((n) => n.id === selectedNodeId) ?? nodes[0];
-  const selectedState = getSafeState(selectedNode.id);
-  const selectedRoi = roiRankings.find((r) => r.node.id === selectedNode.id);
-  const selectedFreq = examFrequencyMap[selectedNode.id];
+  const selectedNode = nodes.find((n) => n.id === selectedNodeId);
+  const selectedState = getSafeState(selectedNodeId);
+  const selectedRoi = roiRankings.find((r) => r.node.id === selectedNodeId);
+  const selectedFreq = examFrequencyMap[selectedNodeId];
 
-  const popoverNode =
-    nodes.find((n) => n.id === popoverState.nodeId) ?? selectedNode;
-  const popoverNodeState = getSafeState(popoverNode.id);
-  const popoverNodeRoi = roiRankings.find((r) => r.node.id === popoverNode.id);
-  const popoverNodeFreq = examFrequencyMap[popoverNode.id];
+  const popoverNode = nodes.find((n) => n.id === popoverState.nodeId);
+  const popoverNodeState = getSafeState(popoverState.nodeId);
+  const popoverNodeRoi = roiRankings.find((r) => r.node.id === popoverState.nodeId);
+  const popoverNodeFreq = examFrequencyMap[popoverState.nodeId];
 
   const nodeMap = new Map<string, KnowledgeNode>(nodes.map((n) => [n.id, n]));
-  const incomingEdges = dependencies.filter((d) => d.source === selectedNode.id);
-  const outgoingEdges = dependencies.filter((d) => d.target === selectedNode.id);
+  const incomingEdges = dependencies.filter((d) => d.source === selectedNodeId);
+  const outgoingEdges = dependencies.filter((d) => d.target === selectedNodeId);
 
   // Build Cytoscape elements from nodes and dependencies
   const buildCyElements = useCallback((): ElementDefinition[] => {
@@ -570,6 +569,8 @@ export const SkillTreeGraph: React.FC<SkillTreeGraphProps> = ({
     });
   };
 
+  if (!selectedNode) return <p role="status">مبحث انتخاب‌شده در نقشهٔ مهارت موجود نیست.</p>;
+
   return (
     <div className="bento-grid items-start">
       {/* بوم گراف تعاملی درخت مهارت با Cytoscape.js (8 ستون بنتو) */}
@@ -847,7 +848,7 @@ export const SkillTreeGraph: React.FC<SkillTreeGraphProps> = ({
           />
 
           {/* پاپ‌آور ۶بعدی گره هنگام کلیک روی گره در Cytoscape */}
-          {popoverState.visible && (
+          {popoverState.visible && popoverNode && (
             <div
               role="dialog"
               aria-label={`6D Learner State Popover - ${popoverNode.topic}`}
@@ -978,12 +979,7 @@ export const SkillTreeGraph: React.FC<SkillTreeGraphProps> = ({
                   onClick={() => {
                     tmaHaptic.impact('medium');
                     setPopoverState((prev) => ({ ...prev, visible: false }));
-                    onStartPracticeNode(
-                      popoverNode.id,
-                      popoverNodeState.coverageStatus === 'needs_proof'
-                        ? 'proof'
-                        : 'practice'
-                    );
+                    onStartPracticeNode(popoverNode.id, 'practice');
                   }}
                   className="flex-1 py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
                 >
@@ -1284,31 +1280,17 @@ export const SkillTreeGraph: React.FC<SkillTreeGraphProps> = ({
             <span>۱. مطالعه درسنامه گام‌به‌گام و ثبت امتیاز ۱ تا ۵</span>
           </button>
 
-          {selectedState.coverageStatus === 'needs_proof' ? (
-            <button
-              type="button"
-              onClick={() => {
-                tmaHaptic.impact('heavy');
-                onStartPracticeNode(selectedNode.id, 'proof');
-              }}
-              className="min-h-[42px] w-full py-2.5 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-colors duration-200 shadow-xs cursor-pointer"
-            >
-              <Target className="w-4 h-4" />
-              <span>۲. شروع تست قرنطینه ۱۴۰۴ (Start Practice - اثبات تسلط)</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                tmaHaptic.impact('medium');
-                onStartPracticeNode(selectedNode.id, 'practice');
-              }}
-              className="min-h-[42px] w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors duration-200 cursor-pointer"
-            >
-              <Play className="w-4 h-4 text-blue-500" />
-              <span>۲. شروع تمرین و حل تست استاندارد (Start Practice)</span>
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => {
+              tmaHaptic.impact('medium');
+              onStartPracticeNode(selectedNode.id, 'practice');
+            }}
+            className="min-h-[42px] w-full py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors duration-200 cursor-pointer"
+          >
+            <Play className="w-4 h-4 text-blue-500" />
+            <span>۲. شروع تمرین و حل تست استاندارد (Start Practice)</span>
+          </button>
         </div>
       </div>
     </div>

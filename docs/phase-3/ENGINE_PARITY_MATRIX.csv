@@ -10,13 +10,19 @@ fsrs-08-S8-g2,fsrs-interval,S=8 D=6 elapsed=5d rating=2,10,10,MATCHED,exact
 fsrs-09-S8-g3,fsrs-interval,S=8 D=6 elapsed=5d rating=3,18,18,MATCHED,exact
 fsrs-10-S8-g4,fsrs-interval,S=8 D=6 elapsed=5d rating=4,39,39,MATCHED,exact
 fsrs-11-S8-lapse,fsrs-interval,lapse at S=8 elapsed=5d,2,2,MATCHED,relearn after failure
-ret-12-S1.5-t1,retrievability,S=1.5 elapsedDays=1,0.930,0.930,MATCHED,React ignores elapsed time (power curve absent)
-ret-13-S1.5-t4,retrievability,S=1.5 elapsedDays=4,0.784,0.784,MATCHED,React ignores elapsed time (power curve absent)
-ret-14-S3-t1,retrievability,S=3 elapsedDays=1,0.963,0.963,MATCHED,React ignores elapsed time (power curve absent)
-ret-15-S3-t4,retrievability,S=3 elapsedDays=4,0.873,0.873,MATCHED,React ignores elapsed time (power curve absent)
-ret-16-S7-t1,retrievability,S=7 elapsedDays=1,0.984,0.984,MATCHED,React ignores elapsed time (power curve absent)
-ret-17-S7-t4,retrievability,S=7 elapsedDays=4,0.939,0.939,MATCHED,React ignores elapsed time (power curve absent)
-urg-18-R0.9,urgency,retrievability=0.9,urgency=0.100 (multiplied as 1+x),riskTerm=1.100 (== 1+urgency),MATCHED,R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)
-urg-19-R0.7,urgency,retrievability=0.7,urgency=0.300 (multiplied as 1+x),riskTerm=1.300 (== 1+urgency),MATCHED,R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)
-urg-20-R0.4,urgency,retrievability=0.4,urgency=0.600 (multiplied as 1+x),riskTerm=1.600 (== 1+urgency),MATCHED,R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)
+ret-12-S1.5-t0,retrievability,S=1.5 elapsedDays=0,1.000,1.000,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-13-S1.5-t1,retrievability,S=1.5 elapsedDays=1,0.930,0.930,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-14-S1.5-t4,retrievability,S=1.5 elapsedDays=4,0.784,0.784,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-15-S1.5-t45,retrievability,S=1.5 elapsedDays=45,0.353,0.353,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-16-S3-t0,retrievability,S=3 elapsedDays=0,1.000,1.000,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-17-S3-t1,retrievability,S=3 elapsedDays=1,0.963,0.963,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-18-S3-t4,retrievability,S=3 elapsedDays=4,0.873,0.873,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-19-S3-t45,retrievability,S=3 elapsedDays=45,0.470,0.470,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-20-S7-t0,retrievability,S=7 elapsedDays=0,1.000,1.000,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-21-S7-t1,retrievability,S=7 elapsedDays=1,0.984,0.984,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-22-S7-t4,retrievability,S=7 elapsedDays=4,0.939,0.939,MATCHED,Includes the immediate review and long-gap boundaries.
+ret-23-S7-t45,retrievability,S=7 elapsedDays=45,0.631,0.631,MATCHED,Includes the immediate review and long-gap boundaries.
+urg-24-R0.9,urgency,retrievability=0.9,urgency=0.100 (multiplied as 1+x),riskTerm=1.100 (== 1+urgency),MATCHED,R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)
+urg-25-R0.7,urgency,retrievability=0.7,urgency=0.300 (multiplied as 1+x),riskTerm=1.300 (== 1+urgency),MATCHED,R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)
+urg-26-R0.4,urgency,retrievability=0.4,urgency=0.600 (multiplied as 1+x),riskTerm=1.600 (== 1+urgency),MATCHED,R-011: single canonical formula; React 1+(1−R) == computePriorityV3 (1+forgettingRisk)
 urg-04-engine-order,urgency,"two due cards, higher-priority card due later",queue:high>queue:low,queue:high>queue:low,MATCHED,The shared queue builder ranks all eligible candidates using the canonical ROI callback before slicing the requested limit
