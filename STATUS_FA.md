@@ -12,7 +12,7 @@
 | کنترل | فرمان | نتیجه |
 |---|---|---|
 | نصب تمیز | `npm ci` | ✅ موفق — Node v24.18.0، npm 12.0.1، lockfile نسخهٔ ۳ |
-| تست‌ها | `npm test` | ✅ ۳۹۲ تست در ۲۹ فایل (پس از SEC-02) |
+| تست‌ها | `npm test` | ✅ ۴۰۱ تست در ۳۰ فایل (پس از DATA-02) |
 | تایپ | `npm run typecheck` | ✅ |
 | محتوای یادگیری | `npm run validate:learning` | ✅ ۸ مبحث/۲۴ سؤال مالی + ۲ مبحث/۵ سؤال آمار، ۱۰ منبع، ممیزی ۵ شاهد، ۱۶۸ شناسه |
 | فایل آفلاین | `npm run build:offline` | ✅ تولید `tools/offline/AEL_OFFLINE.html` |
@@ -40,7 +40,7 @@
 5. **دقت `--check` پس از اصلاح:** چک‌های تازگی فقط CRLF/LF را تحمل می‌کنند؛ هر ویرایش دستی واقعی در فایل‌های تولیدی همچنان شکست می‌خورد (رفتار مطلوب).
 6. **کاربر واقعی:** پایلوت، آزمون تلگرام واقعی و سنجش یادگیری انجام نشده‌اند (QA-03، OPS-02).
 7. **دامنهٔ پایلوت (GOV-02):** پیش‌فرض موقت ثبت شد ([docs/ael-next/13_PILOT_SCOPE_FA.md](docs/ael-next/13_PILOT_SCOPE_FA.md)) — تصمیم نهایی با مالک محصول.
-8. **مدل داده (DATA-01):** جدول نگاشت به مدل هدف ثبت شد ([docs/ael-next/12_DATA_MODEL_MAPPING_FA.md](docs/ael-next/12_DATA_MODEL_MAPPING_FA.md)) — پیاده‌سازی با DATA-02/03.
+8. **مدل داده (DATA-01/02/03):** نگاشت، اعتبارسنج نسخه‌بندی و dry-run کامل شد ([12](docs/ael-next/12_DATA_MODEL_MAPPING_FA.md)، [14](docs/ael-next/14_MIGRATION_DRYRUN_FA.md)) — تبدیل واقعی باقی است. ماتریس حقوق SRC-02 آمادهٔ تصمیم است ([15](docs/ael-next/15_RIGHTS_MATRIX_FA.md)).
 
 ## ۴. اشکالات شناخته‌شدهٔ این نسخه
 
