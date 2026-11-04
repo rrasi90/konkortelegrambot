@@ -843,3 +843,5 @@ export * from './exam-simulation';
 export * from './formative-quiz';
 
 export * from './data-versioning';
+
+export * from './multi-course-quiz';

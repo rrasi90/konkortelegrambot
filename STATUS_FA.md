@@ -12,7 +12,7 @@
 | کنترل | فرمان | نتیجه |
 |---|---|---|
 | نصب تمیز | `npm ci` | ✅ موفق — Node v24.18.0، npm 12.0.1، lockfile نسخهٔ ۳ |
-| تست‌ها | `npm test` | ✅ ۴۰۱ تست در ۳۰ فایل (پس از DATA-02) |
+| تست‌ها | `npm test` | ✅ ۴۲۱ تست در ۳۲ فایل (پس از EX/UX) |
 | تایپ | `npm run typecheck` | ✅ |
 | محتوای یادگیری | `npm run validate:learning` | ✅ ۸ مبحث/۲۴ سؤال مالی + ۲ مبحث/۵ سؤال آمار، ۱۰ منبع، ممیزی ۵ شاهد، ۱۶۸ شناسه |
 | فایل آفلاین | `npm run build:offline` | ✅ تولید `tools/offline/AEL_OFFLINE.html` |
@@ -23,7 +23,7 @@
 
 ## ۲. کارکردهای موجود (با مرز ادعا)
 
-- **آزمون تألیفی:** انتخاب چند مبحث از یک بستهٔ درس، سهمیه، ظرفیت، تصادفی بدون تکرار، شناسهٔ بازپخش، عدم افشای کلید قبل از پایان آزمون زمان‌دار. موتور: [packages/learning-engine/src/formative-quiz.ts](packages/learning-engine/src/formative-quiz.ts). محدودیت فعلی: ۱ تا ۱۲ سؤال و یک بستهٔ درس؛ گروه‌بندی هم‌ارز (`variantGroup`) در داده فعلاً استفاده نشده.
+- **آزمون تألیفی:** انتخاب چند مبحث از یک بستهٔ درس، سهمیه، ظرفیت، تصادفی بدون تکرار، شناسهٔ بازپخش، عدم افشای کلید قبل از پایان آزمون زمان‌دار. موتور: [packages/learning-engine/src/formative-quiz.ts](packages/learning-engine/src/formative-quiz.ts). **بستهٔ ۴:** آزمون چندبسته‌ای با سهمیهٔ بین درس‌ها و پیش‌نمایش نسخه‌pin ([multi-course-quiz.ts](packages/learning-engine/src/multi-course-quiz.ts))، عملیات تکرارپذیر نشست تألیفی و تمرین انتقالی سرتاسری. گروه‌بندی هم‌ارز در داده فعلاً استفاده نشده.
 - **محتوای پایلوت:** مالی (۸ مبحث، ۲۴ سؤال) و آمار (۲ مبحث، ۵ سؤال شامل ۱ تشریحی با روبریک). همه `origin: authored`، `rights: original_ael`، `review: pending_sme` — بازبینی متخصص انجام نشده است.
 - **شناسنامه‌ها:** ۱۶۸ رکورد در [content/learning-evidence/question-index.json](content/learning-evidence/question-index.json) = ۱۳۹ رکورد کنکور + ۲۹ تمرین تألیفی؛ فهرست [docs/ael-next/11_SOURCE_INVENTORY_FA.md](docs/ael-next/11_SOURCE_INVENTORY_FA.md). شمار نشان‌دهندهٔ پوشش کل کنکورها نیست.
 - **خطای ← مطالعه:** پیوند هر تمرین تألیفی به نکته/فرمول/مثال (`readingBlock`)؛ ارتباط با صفحهٔ کتاب کنکور تأیید نشده.

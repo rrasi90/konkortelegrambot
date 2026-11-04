@@ -46,7 +46,7 @@ import {
   isExamLevel,
   LATEST_EXAM_YEAR,
 } from '@ael/contracts';
-import { answerLearningQuiz, finishLearningQuiz, learningOverview, startLearningQuiz } from './learning-paths';
+import { answerLearningQuiz, finishLearningQuiz, learningOverview, startLearningQuiz, startTransferQuiz } from './learning-paths';
 import { FormativeQuizError } from '@ael/engine';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
 import type { AppUser, DataStore, UserStats } from './store';
@@ -480,8 +480,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   });
 
   app.use('/api/learning-quiz/*', (c, next) => rateLimit(c, next));
-  const learningActions = { start: startLearningQuiz, answer: answerLearningQuiz, finish: finishLearningQuiz } as const;
-  for (const action of ['start', 'answer', 'finish'] as const) {
+  const learningActions = { start: startLearningQuiz, answer: answerLearningQuiz, finish: finishLearningQuiz, transfer: startTransferQuiz } as const;
+  for (const action of ['start', 'answer', 'finish', 'transfer'] as const) {
     app.post(`/api/learning-quiz/${action}`, async (c) => {
       const user = await currentUser(c);
       if (!user) return authError(c);

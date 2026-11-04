@@ -404,6 +404,23 @@
       });
     }
 
+    /** UX-03: تمرین انتقالی پس از غلط — سؤال مستقل از همان مبحث (خارج از گروه هم‌ارزی). */
+    function beginTransfer(questionId) {
+      const current = active();
+      if (current && !current.summary && current.questions.length &&
+          !window.confirm('جلسهٔ قبلی هنوز باز است. جلسهٔ تازه جای آن را بگیرد؟')) return;
+      run(async isCurrent => {
+        const session = await api.transfer({ courseId: course.id, questionId });
+        if (!isCurrent()) return;
+        state.active = { ...session,
+          deviceDeadline: session.challenge.deadline === null ? null : Date.now() + session.challenge.deadline - session.challenge.startedAt,
+          index: 0, answers: {}, results: {}, marked: [], summary: null,
+          questionShownAt: Date.now(), spentMs: {} };
+        screen = 'quiz';
+        save();
+      });
+    }
+
     function run(task) {
       if (busy) return;
       busy = true;
@@ -544,6 +561,10 @@
           lessonReturn = screen;
           go('lesson');
         }));
+      }
+      if (result.status === 'incorrect') {
+        // UX-03 (بخش ۱۵٫۳): پیشنهاد سؤال تازه از همان مهارت؛ اگر نمونهٔ مستقل نبود پیام صادقانه می‌آید.
+        box.append(button('تمرین هم‌مفهوم با سؤال تازه', 'transfer-' + result.id, () => beginTransfer(result.id)));
       }
       parent.append(box);
     }

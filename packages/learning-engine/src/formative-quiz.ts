@@ -101,6 +101,27 @@ export function projectFormativeQuestion(question: LearningQuestion) {
   return { id, topicId, difficulty, prompt, choices, sourceIds, origin, review, kind: kind ?? 'mcq' };
 }
 
+/**
+ * UX-03 (بخش ۱۵٫۳): سؤال هم‌مهارت با دادهٔ تازه برای تمرین انتقالی پس از غلط.
+ * از همان مبحث و خارج از گروه هم‌ارزیِ سؤال جاری انتخاب می‌شود؛ اگر نمونهٔ
+ * مستقلی وجود نداشته باشد null برمی‌گردد — هیچ چیزی تأییدشده جلوه داده نمی‌شود.
+ */
+export function findTransferQuestion(
+  course: LearningCourse,
+  questionId: string,
+  options: { excludeIds?: string[] } = {},
+): LearningQuestion | null {
+  const current = course.questions.find(q => q.id === questionId);
+  if (!current) return null;
+  const exclude = new Set(options.excludeIds ?? []);
+  const sameTopic = course.questions.filter(q =>
+    q.topicId === current.topicId && q.id !== current.id && !exclude.has(q.id) && (q.kind ?? 'mcq') === (current.kind ?? 'mcq'));
+  const independent = sameTopic.filter(q => variantKey(q) !== variantKey(current));
+  const candidates = independent.length ? independent : sameTopic;
+  if (!candidates.length) return null;
+  return candidates[0]!;
+}
+
 export function createQuiz(course: LearningCourse, input: QuizInput, now = Date.now(), random = Math.random) {
   const { mode, topicId, reviewIds, topicIds, requireCount } = input;
   if (mode !== 'practice' && mode !== 'diagnostic' && mode !== 'timed') {

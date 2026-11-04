@@ -554,6 +554,27 @@ main{max-width:760px;margin:auto;padding:18px clamp(12px,4vw,30px) 40px}
           save();
         });
       }
+      function beginTransfer(questionId) {
+        const current = active();
+        if (current && !current.summary && current.questions.length && !window.confirm("\u062C\u0644\u0633\u0647\u0654 \u0642\u0628\u0644\u06CC \u0647\u0646\u0648\u0632 \u0628\u0627\u0632 \u0627\u0633\u062A. \u062C\u0644\u0633\u0647\u0654 \u062A\u0627\u0632\u0647 \u062C\u0627\u06CC \u0622\u0646 \u0631\u0627 \u0628\u06AF\u06CC\u0631\u062F\u061F")) return;
+        run(async (isCurrent) => {
+          const session = await api.transfer({ courseId: course.id, questionId });
+          if (!isCurrent()) return;
+          state.active = {
+            ...session,
+            deviceDeadline: session.challenge.deadline === null ? null : Date.now() + session.challenge.deadline - session.challenge.startedAt,
+            index: 0,
+            answers: {},
+            results: {},
+            marked: [],
+            summary: null,
+            questionShownAt: Date.now(),
+            spentMs: {}
+          };
+          screen = "quiz";
+          save();
+        });
+      }
       function run(task) {
         if (busy) return;
         busy = true;
@@ -703,6 +724,9 @@ main{max-width:760px;margin:auto;padding:18px clamp(12px,4vw,30px) 40px}
             lessonReturn = screen;
             go("lesson");
           }));
+        }
+        if (result.status === "incorrect") {
+          box.append(button("\u062A\u0645\u0631\u06CC\u0646 \u0647\u0645\u200C\u0645\u0641\u0647\u0648\u0645 \u0628\u0627 \u0633\u0624\u0627\u0644 \u062A\u0627\u0632\u0647", "transfer-" + result.id, () => beginTransfer(result.id)));
         }
         parent.append(box);
       }
@@ -5733,6 +5757,16 @@ main{max-width:760px;margin:auto;padding:18px clamp(12px,4vw,30px) 40px}
     const { id, topicId, difficulty, prompt, choices, sourceIds, origin, review, kind } = question;
     return { id, topicId, difficulty, prompt, choices, sourceIds, origin, review, kind: kind ?? "mcq" };
   }
+  function findTransferQuestion(course, questionId, options = {}) {
+    const current = course.questions.find((q) => q.id === questionId);
+    if (!current) return null;
+    const exclude = new Set(options.excludeIds ?? []);
+    const sameTopic = course.questions.filter((q) => q.topicId === current.topicId && q.id !== current.id && !exclude.has(q.id) && (q.kind ?? "mcq") === (current.kind ?? "mcq"));
+    const independent = sameTopic.filter((q) => variantKey(q) !== variantKey(current));
+    const candidates = independent.length ? independent : sameTopic;
+    if (!candidates.length) return null;
+    return candidates[0];
+  }
   function createQuiz(course, input, now = Date.now(), random = Math.random) {
     const { mode, topicId, reviewIds, topicIds, requireCount } = input;
     if (mode !== "practice" && mode !== "diagnostic" && mode !== "timed") {
@@ -6018,10 +6052,25 @@ main{max-width:760px;margin:auto;padding:18px clamp(12px,4vw,30px) 40px}
       const session = createQuiz(courseFor(input.courseId), input);
       return { ...session, token: session.challenge };
     },
+    transfer: async (input) => {
+      const course = courseFor(input.courseId);
+      const transfer = findTransferQuestion(course, input.questionId);
+      if (!transfer) throw new FormativeQuizError("\u062F\u0631 \u0627\u06CC\u0646 \u0645\u0628\u062D\u062B \u0641\u0639\u0644\u0627\u064B \u0633\u0624\u0627\u0644 \u0645\u0633\u062A\u0642\u0644 \u062F\u06CC\u06AF\u0631\u06CC \u0628\u0631\u0627\u06CC \u062A\u0645\u0631\u06CC\u0646 \u0627\u0646\u062A\u0642\u0627\u0644\u06CC \u0646\u06CC\u0633\u062A.");
+      const session = createQuiz(course, { mode: "practice", count: 1, reviewIds: [transfer.id], seed: transferSeed(transfer.id) });
+      return { ...session, token: session.challenge, transferOf: input.questionId };
+    },
     answer: async (input) => gradeFormativeAnswer(courseFor(input.token.courseId), input.token, input.questionId, input.selected),
     finish: async (input) => gradeFormativeQuiz(courseFor(input.token.courseId), input.token, input.answers),
     restoreBackup
   }, { offline: true, scope: "offline-demo" }).open();
+  function transferSeed(text) {
+    let hash = 2166136261;
+    for (let i = 0; i < text.length; i++) {
+      hash ^= text.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
 })();
 </script>
 </body>

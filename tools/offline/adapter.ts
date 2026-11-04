@@ -2,7 +2,7 @@ import '../../apps/miniapp/learning.js';
 import { learningCourses } from '../../apps/worker/src/learning-catalog';
 import recurrence from '../../content/learning-evidence/recurrence.json';
 import questionIndex from '../../content/learning-evidence/question-index.json';
-import { courseOverview, createQuiz, gradeFormativeAnswer, gradeFormativeQuiz, projectFormativeQuestion } from '../../packages/learning-engine/src/formative-quiz';
+import { courseOverview, createQuiz, findTransferQuestion, FormativeQuizError, gradeFormativeAnswer, gradeFormativeQuiz, projectFormativeQuestion } from '../../packages/learning-engine/src/formative-quiz';
 import type { QuizChallenge, QuizInput } from '../../packages/learning-engine/src/formative-quiz';
 
 function courseFor(id: string) {
@@ -89,9 +89,25 @@ widget.mount(document.getElementById('offline-root'), {
     const session = createQuiz(courseFor(input.courseId), input);
     return { ...session, token: session.challenge };
   },
+  transfer: async (input: { courseId: string; questionId: string }) => {
+    const course = courseFor(input.courseId);
+    const transfer = findTransferQuestion(course, input.questionId);
+    if (!transfer) throw new FormativeQuizError('در این مبحث فعلاً سؤال مستقل دیگری برای تمرین انتقالی نیست.');
+    const session = createQuiz(course, { mode: 'practice', count: 1, reviewIds: [transfer.id], seed: transferSeed(transfer.id) });
+    return { ...session, token: session.challenge, transferOf: input.questionId };
+  },
   answer: async (input: { token: QuizChallenge; questionId: string; selected: unknown }) =>
     gradeFormativeAnswer(courseFor(input.token.courseId), input.token, input.questionId, input.selected),
   finish: async (input: { token: QuizChallenge; answers: unknown }) =>
     gradeFormativeQuiz(courseFor(input.token.courseId), input.token, input.answers),
   restoreBackup,
 }, { offline: true, scope: 'offline-demo' }).open();
+
+function transferSeed(text: string): number {
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i++) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
