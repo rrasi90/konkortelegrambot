@@ -12,7 +12,7 @@
 | کنترل | فرمان | نتیجه |
 |---|---|---|
 | نصب تمیز | `npm ci` | ✅ موفق — Node v24.18.0، npm 12.0.1، lockfile نسخهٔ ۳ |
-| تست‌ها | `npm test` | ✅ ۴۲۱ تست در ۳۲ فایل (پس از EX/UX) |
+| تست‌ها | `npm test` | ✅ ۴۲۶ تست در ۳۳ فایل (پس از SRC/QA) |
 | تایپ | `npm run typecheck` | ✅ |
 | محتوای یادگیری | `npm run validate:learning` | ✅ ۸ مبحث/۲۴ سؤال مالی + ۲ مبحث/۵ سؤال آمار، ۱۰ منبع، ممیزی ۵ شاهد، ۱۶۸ شناسه |
 | فایل آفلاین | `npm run build:offline` | ✅ تولید `tools/offline/AEL_OFFLINE.html` |
