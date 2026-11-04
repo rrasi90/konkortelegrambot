@@ -102,6 +102,82 @@ export function projectFormativeQuestion(question: LearningQuestion) {
 }
 
 /**
+ * EX-06 — ثبت تصحیح انسانی تشریحی: پاسخ «در انتظار» با تصحیح، «ارزیابی‌شده»
+ * می‌شود اما هرگز خودکار درست/غلط شمرده نمی‌شود؛ هویت مصحح و زمان جدا ثبت و
+ * نتیجهٔ قبلی حفظ می‌شود (AT-17/AT-18). این تابع فقط قرارداد ثبت است؛ نقش و
+ * مجوز مصحح در لایهٔ سرور کنترل می‌شود (ADMIN-01).
+ */
+export function recordEssayEvaluation(
+  evaluated: { id: string; status: string; kind?: string },
+  grade: { graderId: unknown; score?: unknown; verdict: 'acceptable' | 'needs_review'; note?: string },
+  gradedAt = Date.now(),
+) {
+  if (evaluated.kind !== 'essay' || evaluated.status !== 'pending') {
+    throw new FormativeQuizError('فقط پاسخ تشریحیِ در انتظار قابل تصحیح انسانی است.');
+  }
+  if (typeof grade.graderId !== 'string' || !grade.graderId.trim()) {
+    throw new FormativeQuizError('شناسهٔ مصحح لازم است.');
+  }
+  if (grade.score !== undefined && (typeof grade.score !== 'number' || !Number.isFinite(grade.score) || grade.score < 0 || grade.score > 100)) {
+    throw new FormativeQuizError('نمرهٔ تشریحی باید عددی بین ۰ تا ۱۰۰ باشد یا ثبت نشود.');
+  }
+  if (grade.verdict !== 'acceptable' && grade.verdict !== 'needs_review') {
+    throw new FormativeQuizError('نتیجهٔ تصحیح باید «قابل قبول» یا «نیاز به مرور» باشد.');
+  }
+  return {
+    ...evaluated,
+    status: 'evaluated',
+    evaluation: {
+      graderId: grade.graderId,
+      verdict: grade.verdict,
+      score: grade.score ?? null,
+      note: typeof grade.note === 'string' ? grade.note.slice(0, 2000) : null,
+      gradedAt,
+      version: 1,
+    },
+  };
+}
+
+/**
+ * LEARN-03 — پیشنهاد توضیح‌پذیر فعالیت بعدی (بخش ۱۰٫۱): ترتیب پیش‌فرض
+ * غلط‌های دارای مقصد ← موارد موعددار ← مبحث خوانده‌نشده با پیش‌نیاز در دسترس.
+ * با دادهٔ کم برچسب «اطلاعات ناکافی» می‌دهد؛ پیشنهاد قابل رد است و هیچ ادعای
+ * تسلط/رتبه نمی‌سازد. تابع خالص است و UI فقط نمایش می‌دهد.
+ */
+export interface RecommendationState {
+  /** شناسه‌های مبحث با غلط تازه و مقصد مطالعهٔ تأییدشده */
+  wrongs?: Array<{ topicId: string; destination: string | null; count?: number }>;
+  /** موارد موعددار مرور */
+  dueReviews?: Array<{ id: string; topicId?: string }>;
+  /** مباحث خوانده‌نشده با پیش‌نیازهای خوانده‌شده */
+  unreadReady?: string[];
+}
+
+export function recommendNextActivity(state: RecommendationState, minutes: 5 | 10 | 20 = 10): Array<{ kind: 'remediate' | 'review' | 'study'; target: string; reason: string }> {
+  const suggestions: Array<{ kind: 'remediate' | 'review' | 'study'; target: string; reason: string }> = [];
+  const wrongs = state.wrongs ?? [];
+  const due = state.dueReviews ?? [];
+  const unread = state.unreadReady ?? [];
+  if (!wrongs.length && !due.length && !unread.length) {
+    return [{ kind: 'study', target: '*', reason: 'اطلاعات ناکافی: هنوز پاسخ یا مطالعه‌ای ثبت نشده است. یک درس را آزاد انتخاب کنید.' }];
+  }
+  const withDestination = wrongs.filter((wrong) => wrong.destination);
+  if (withDestination.length) {
+    const top = withDestination.reduce((a, b) => ((b.count ?? 1) > (a.count ?? 1) ? b : a));
+    suggestions.push({ kind: 'remediate', target: top.destination!, reason: `${top.count ?? 1} پاسخ نادرست تازه در این مبحث؛ مطالعهٔ بخش مرتبط پیشنهاد می‌شود. امکان رد دارد.` });
+  }
+  if (due.length) {
+    suggestions.push({ kind: 'review', target: due[0].id, reason: `${due.length} مورد موعددار؛ مرور کوتاه پیشنهاد می‌شود.` });
+  }
+  if (unread.length) {
+    suggestions.push({ kind: 'study', target: unread[0], reason: 'مبحث خوانده‌نشده با پیش‌نیازهای در دسترس؛ ادامهٔ مسیر.' });
+  }
+  if (minutes === 5) return suggestions.slice(0, 1);
+  if (minutes === 10) return suggestions.slice(0, 2);
+  return suggestions;
+}
+
+/**
  * UX-03 (بخش ۱۵٫۳): سؤال هم‌مهارت با دادهٔ تازه برای تمرین انتقالی پس از غلط.
  * از همان مبحث و خارج از گروه هم‌ارزیِ سؤال جاری انتخاب می‌شود؛ اگر نمونهٔ
  * مستقلی وجود نداشته باشد null برمی‌گردد — هیچ چیزی تأییدشده جلوه داده نمی‌شود.
