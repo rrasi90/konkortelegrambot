@@ -13,3 +13,4 @@ public/assets/aistudio/konkortelegrambot-main_*.zip
 apps/worker/.wrangler/
 .dev.vars
 apps/worker/.dev.vars
+.zcode/

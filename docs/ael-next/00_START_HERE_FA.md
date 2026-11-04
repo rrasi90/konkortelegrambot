@@ -22,5 +22,8 @@ npm run dev:miniapp
 | [07_FINANCIAL_MANAGEMENT_FA.md](07_FINANCIAL_MANAGEMENT_FA.md) | آموزش مدیریت مالی و نقشهٔ گسترش درس |
 | [08_OFFLINE_QA_FA.md](08_OFFLINE_QA_FA.md) | چک‌لیست آزمون دستی و تولید فایل HTML |
 | [09_VERIFICATION_FA.md](09_VERIFICATION_FA.md) | نتایج و مرز راستی‌آزمایی |
+| [10_EXECUTION_STATUS_FA.md](10_EXECUTION_STATUS_FA.md) | **وضعیت فعلی اجرا (مرجع روزآمد)** |
+
+برای وضعیت کل پروژه، فهرست کارهای باز و تصمیم‌ها، از ریشهٔ مخزن [STATUS_FA.md](../../STATUS_FA.md)، [BACKLOG_FA.md](../../BACKLOG_FA.md) و [DECISIONS_FA.md](../../DECISIONS_FA.md) را ببینید. فهرست منابع و حقوق در [11_SOURCE_INVENTORY_FA.md](11_SOURCE_INVENTORY_FA.md) ثبت شده است.
 
 نسخهٔ نمایشی از سؤال‌های تألیفی مدیریت مالی استفاده می‌کند. پاسخ‌های آن برای اجرای آفلاین داخل همان فایل‌اند و فایل فقط برای آزمون محلی طراحی شده است. مسیر آنلاین پاسخ‌ها را در Worker نگه می‌دارد. بازبینی علمی و حقوق مجموعهٔ تاریخی و آزمون تلگرام واقعی هنوز Gate انتشار عمومی‌اند.

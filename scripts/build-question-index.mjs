@@ -66,7 +66,9 @@ async function main() {
   const output = JSON.stringify(buildQuestionIndex(banks, nodes, courses, audit), null, 2) + '\n';
   const target = new URL('content/learning-evidence/question-index.json', root);
   if (process.argv.includes('--check')) {
-    if (await readFile(target, 'utf8') !== output) throw new Error('Question index is out of date.');
+    // Editors and autocrlf checkouts may store CRLF; only line endings may differ, not content.
+    const onDisk = (await readFile(target, 'utf8')).replace(/\r\n/g, '\n');
+    if (onDisk !== output) throw new Error('Question index is out of date.');
   } else {
     await writeFile(target, output);
   }

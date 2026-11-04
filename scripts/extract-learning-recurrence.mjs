@@ -62,7 +62,9 @@ if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) 
   const serialized = JSON.stringify(evidence, null, 2) + '\n';
   const destination = new URL('content/learning-evidence/recurrence.json', root);
   if (process.argv.includes('--check')) {
-    if (serialized !== await readFile(destination, 'utf8')) throw new Error('Recurrence output needs regeneration.');
+    // Editors and autocrlf checkouts may store CRLF; only line endings may differ, not content.
+    const onDisk = (await readFile(destination, 'utf8')).replace(/\r\n/g, '\n');
+    if (serialized !== onDisk) throw new Error('Recurrence output needs regeneration.');
   } else {
     await writeFile(destination, serialized);
   }
