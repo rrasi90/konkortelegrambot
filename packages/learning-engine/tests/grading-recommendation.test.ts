@@ -53,3 +53,88 @@ describe('LEARN-03 — پیشنهاد توضیح‌پذیر', () => {
     expect(suggestions[0].reason).toContain('اطلاعات ناکافی');
   });
 });
+
+describe('AEL-BASE-02 — مقاوم‌سازی recommendNextActivity', () => {
+  it('آرایه‌های خالی صریح = حالت دادهٔ کم', () => {
+    const empty = recommendNextActivity({ wrongs: [], dueReviews: [], unreadReady: [] }, 20);
+    expect(empty).toHaveLength(1);
+    expect(empty[0].reason).toContain('اطلاعات ناکافی');
+  });
+
+  it('مقصد نامعتبر (رشتهٔ خالی) همانند نبود مقصد است؛ null و undefined هم', () => {
+    const invalid = recommendNextActivity({
+      wrongs: [
+        { topicId: 'a', destination: '' },
+        { topicId: 'b', destination: null },
+        { topicId: 'c', destination: undefined as unknown as string },
+      ],
+    }, 20);
+    expect(invalid).toHaveLength(0);
+  });
+
+  it('count منفی/صفر به حداقل ۱ محدود می‌شود و عدد غلط ساختگی نمی‌سازد', () => {
+    const zero = recommendNextActivity({ wrongs: [{ topicId: 'a', destination: 'a.b', count: 0 }] }, 5);
+    expect(zero[0].reason).toContain('1 پاسخ نادرست');
+    const negative = recommendNextActivity({ wrongs: [{ topicId: 'a', destination: 'a.b', count: -3 }] }, 5);
+    expect(negative[0].reason).toContain('1 پاسخ نادرست');
+    expect(negative[0].reason).not.toContain('-3');
+  });
+
+  it('تساوی countها: اولین عنصر ورودی انتخاب می‌شود (ترتیب پایدار)', () => {
+    const tie = recommendNextActivity({
+      wrongs: [
+        { topicId: 'x', destination: 'x.block-1', count: 2 },
+        { topicId: 'y', destination: 'y.block-2', count: 2 },
+      ],
+    }, 5);
+    expect(tie[0].target).toBe('x.block-1');
+    const reversed = recommendNextActivity({
+      wrongs: [
+        { topicId: 'y', destination: 'y.block-2', count: 2 },
+        { topicId: 'x', destination: 'x.block-1', count: 2 },
+      ],
+    }, 5);
+    expect(reversed[0].target).toBe('y.block-2');
+  });
+
+  it('count بالاتر غالب می‌شود؛ تعادل between با بالاترین شمار', () => {
+    const dominated = recommendNextActivity({
+      wrongs: [
+        { topicId: 'x', destination: 'x.block-1', count: 1 },
+        { topicId: 'y', destination: 'y.block-2', count: 4 },
+      ],
+    }, 5);
+    expect(dominated[0].target).toBe('y.block-2');
+    expect(dominated[0].reason).toContain('4');
+  });
+
+  it('بودجه‌های ۵/۱۰/۲۰ دقیقه: ۱/۲/۳ فعالیت', () => {
+    const full = {
+      wrongs: [{ topicId: 'a', destination: 'a.b', count: 2 }],
+      dueReviews: [{ id: 'q.1' }, { id: 'q.2' }],
+      unreadReady: ['c', 'd'],
+    };
+    expect(recommendNextActivity(full, 5)).toHaveLength(1);
+    expect(recommendNextActivity(full, 10)).toHaveLength(2);
+    expect(recommendNextActivity(full, 20)).toHaveLength(3);
+  });
+
+  it('ترتیب پایدار خروجی: remediate ← review ← study', () => {
+    const ordered = recommendNextActivity({
+      wrongs: [{ topicId: 'a', destination: 'a.b' }],
+      dueReviews: [{ id: 'q.1' }],
+      unreadReady: ['c'],
+    }, 20);
+    expect(ordered.map((s) => s.kind)).toEqual(['remediate', 'review', 'study']);
+  });
+
+  it('مقصد null در میان مقصدهای معتبر: فقط معتبرها وارد رقابت می‌شوند', () => {
+    const mixed = recommendNextActivity({
+      wrongs: [
+        { topicId: 'bad', destination: null, count: 9 },
+        { topicId: 'good', destination: 'good.block', count: 1 },
+      ],
+    }, 5);
+    expect(mixed[0].target).toBe('good.block');
+  });
+});

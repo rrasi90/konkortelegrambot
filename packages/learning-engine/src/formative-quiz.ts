@@ -161,16 +161,23 @@ export function recommendNextActivity(state: RecommendationState, minutes: 5 | 1
   if (!wrongs.length && !due.length && !unread.length) {
     return [{ kind: 'study', target: '*', reason: 'اطلاعات ناکافی: هنوز پاسخ یا مطالعه‌ای ثبت نشده است. یک درس را آزاد انتخاب کنید.' }];
   }
-  const withDestination = wrongs.filter((wrong) => wrong.destination);
+  // مقصد فقط وقتی معتبر است که رشتهٔ غیرخالی باشد؛ مقدار null/خالی حدس زده نمی‌شود.
+  const withDestination = wrongs.filter(
+    (wrong): wrong is { topicId: string; destination: string; count?: number } =>
+      typeof wrong.destination === 'string' && wrong.destination.length > 0,
+  );
   if (withDestination.length) {
     const top = withDestination.reduce((a, b) => ((b.count ?? 1) > (a.count ?? 1) ? b : a));
-    suggestions.push({ kind: 'remediate', target: top.destination!, reason: `${top.count ?? 1} پاسخ نادرست تازه در این مبحث؛ مطالعهٔ بخش مرتبط پیشنهاد می‌شود. امکان رد دارد.` });
+    const topCount = Math.max(1, top.count ?? 1);
+    suggestions.push({ kind: 'remediate', target: top.destination, reason: `${topCount} پاسخ نادرست تازه در این مبحث؛ مطالعهٔ بخش مرتبط پیشنهاد می‌شود. امکان رد دارد.` });
   }
-  if (due.length) {
-    suggestions.push({ kind: 'review', target: due[0].id, reason: `${due.length} مورد موعددار؛ مرور کوتاه پیشنهاد می‌شود.` });
+  const nextDue = due[0];
+  if (nextDue) {
+    suggestions.push({ kind: 'review', target: nextDue.id, reason: `${due.length} مورد موعددار؛ مرور کوتاه پیشنهاد می‌شود.` });
   }
-  if (unread.length) {
-    suggestions.push({ kind: 'study', target: unread[0], reason: 'مبحث خوانده‌نشده با پیش‌نیازهای در دسترس؛ ادامهٔ مسیر.' });
+  const nextUnread = unread[0];
+  if (nextUnread !== undefined) {
+    suggestions.push({ kind: 'study', target: nextUnread, reason: 'مبحث خوانده‌نشده با پیش‌نیازهای در دسترس؛ ادامهٔ مسیر.' });
   }
   if (minutes === 5) return suggestions.slice(0, 1);
   if (minutes === 10) return suggestions.slice(0, 2);
@@ -194,8 +201,8 @@ export function findTransferQuestion(
     q.topicId === current.topicId && q.id !== current.id && !exclude.has(q.id) && (q.kind ?? 'mcq') === (current.kind ?? 'mcq'));
   const independent = sameTopic.filter(q => variantKey(q) !== variantKey(current));
   const candidates = independent.length ? independent : sameTopic;
-  if (!candidates.length) return null;
-  return candidates[0]!;
+  const candidate = candidates[0];
+  return candidate ?? null;
 }
 
 export function createQuiz(course: LearningCourse, input: QuizInput, now = Date.now(), random = Math.random) {
