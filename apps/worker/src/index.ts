@@ -820,7 +820,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   });
 
   // ---------- Phase 7: API فیدبک برای پنل ----------
-  app.get('/admin-api/feedback', async (c) => {
+  app.get('/api/panel/feedback', async (c) => {
     const identity = await adminIdentify(c);
     if (!identity) return Response.json({ error: 'نشست مدیریتی معتبر نیست.' }, { status: 401 });
     if (!hasPermission(identity.roles, 'user:read_limited')) return Response.json({ error: 'مجوز feedback:read لازم است.' }, { status: 403 });
@@ -832,7 +832,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     return c.json({ threads });
   });
 
-  app.get('/admin-api/feedback/:id/messages', async (c) => {
+  app.get('/api/panel/feedback/:id/messages', async (c) => {
     const identity = await adminIdentify(c);
     if (!identity) return Response.json({ error: 'نشست مدیریتی معتبر نیست.' }, { status: 401 });
     if (!hasPermission(identity.roles, 'user:read_limited')) return Response.json({ error: 'مجوز کافی ندارید.' }, { status: 403 });
@@ -842,7 +842,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     return c.json({ messages: await (store as { listFeedbackMessages: (threadId: string) => Promise<unknown[]> }).listFeedbackMessages(c.req.param('id')) });
   });
 
-  app.post('/admin-api/feedback/:id/reply', async (c) => {
+  app.post('/api/panel/feedback/:id/reply', async (c) => {
     const identity = await adminIdentify(c);
     if (!identity) return Response.json({ error: 'نشست مدیریتی معتبر نیست.' }, { status: 401 });
     if (!hasPermission(identity.roles, 'user:read_limited')) return Response.json({ error: 'مجوز feedback:reply لازم است.' }, { status: 403 });

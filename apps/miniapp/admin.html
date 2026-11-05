@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AEL — پنل مدیریت</title>
+<style>
+  :root { --bg:#0f1420; --card:#1a2130; --line:#2a3348; --txt:#e8ecf4; --mut:#93a0b8; --acc:#4f8cff; --ok:#38b26a; --warn:#d99a2b; --err:#d9534f; }
+  * { box-sizing:border-box; font-family:Tahoma, "Segoe UI", sans-serif; }
+  body { background:var(--bg); color:var(--txt); margin:0; padding:12px; font-size:14px; }
+  h1 { font-size:18px; } h2 { font-size:15px; margin:14px 0 6px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px; margin-bottom:12px; }
+  button { background:var(--acc); border:0; color:#fff; padding:8px 14px; border-radius:8px; cursor:pointer; font-size:13px; }
+  button.secondary { background:var(--line); }
+  button:disabled { opacity:.5; }
+  input, select, textarea { background:#111726; color:var(--txt); border:1px solid var(--line); border-radius:8px; padding:8px; width:100%; margin:4px 0; }
+  textarea { min-height:140px; font-family:monospace; direction:rtl; text-align:right; }
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th, td { border-bottom:1px solid var(--line); padding:6px 4px; text-align:right; }
+  th { color:var(--mut); }
+  .badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; }
+  .b-ok { background:#123a24; color:var(--ok); } .b-warn { background:#3a2f12; color:var(--warn); } .b-err { background:#3a1414; color:var(--err); }
+  .muted { color:var(--mut); font-size:12px; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .error { color:var(--err); font-size:12px; margin:6px 0; }
+  nav { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+  nav button { font-size:12px; padding:6px 10px; }
+  nav button.active { background:#fff; color:#000; }
+  pre { white-space:pre-wrap; background:#111726; padding:10px; border-radius:8px; font-size:12px; }
+</style>
+</head>
+<body>
+<h1>🛡 پنل مدیریت AEL</h1>
+<div id="state"></div>
+
+<!-- ورود با Launch Ticket (فقط مسیر #ticket از دکمهٔ تلگرام) -->
+<div id="loginBox" class="card">
+  <h2>ورود با Ticket تلگرام</h2>
+  <p class="muted">این صفحه از دکمهٔ «ورود به پنل مدیریت» در چت ربات باز شده است. دکمهٔ زیر Ticket یک‌بارمصرف را با initData تلگرام به سرور می‌فرستد.</p>
+  <button id="launchBtn">ورود به پنل</button>
+  <div id="loginErr" class="error"></div>
+</div>
+
+<div id="panel" style="display:none">
+  <nav>
+    <button data-view="overview" class="active">نمای کلی</button>
+    <button data-view="structure">ساختار آموزشی</button>
+    <button data-view="content">محتوا و انتشار</button>
+    <button data-view="feedback">بازخورد</button>
+    <button data-view="export">خروجی Markdown</button>
+  </nav>
+  <div id="view"></div>
+  <p class="muted">Session: <span id="sessInfo"></span></p>
+  <button class="secondary" id="logoutBtn">خروج</button>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var TOKEN = null;
+  var API = '';
+
+  function el(id) { return document.getElementById(id); }
+  function esc(value) { var div = document.createElement('div'); div.textContent = String(value == null ? '' : value); return div.innerHTML; }
+
+  // ---------- ورود: Ticket از URL Fragment (هرگز در Query/Log نمی‌رود) ----------
+  var hash = location.hash || '';
+  var ticketMatch = hash.match(/ticket=([0-9a-f]{64})/);
+  if (!ticketMatch) {
+    el('loginErr').textContent = 'Ticket یافت نشد. این صفحه باید از دکمهٔ تلگرام باز شود.';
+    el('launchBtn').disabled = true;
+  }
+  history.replaceState(null, '', location.pathname); // Ticket از URL پاک می‌شود
+
+  el('launchBtn').addEventListener('click', function () {
+    var initData = (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) || '';
+    if (!initData) {
+      el('loginErr').textContent = 'initData در دسترس نیست — این صفحه باید داخل Telegram Mini App باز شود.';
+      return;
+    }
+    fetch(API + '/api/admin/session/launch', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticket: ticketMatch[1], initData: initData }),
+    }).then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+      .then(function (result) {
+        if (!result.ok) { el('loginErr').textContent = result.data.error || 'ورود ناموفق.'; return; }
+        TOKEN = result.data.token;
+        el('sessInfo').textContent = result.data.user.displayName + ' (' + (result.data.roles.map(function (r) { return r.roleCode; }).join('، ')) + ')';
+        el('loginBox').style.display = 'none';
+        el('panel').style.display = '';
+        loadOverview();
+      })
+      .catch(function () { el('loginErr').textContent = 'خطای شبکه.'; });
+  });
+
+  el('logoutBtn').addEventListener('click', function () {
+    fetch(API + '/api/admin/logout', { method: 'POST', headers: { Authorization: 'Bearer ' + TOKEN } });
+    TOKEN = null; location.reload();
+  });
+
+  function api(path, options) {
+    options = options || {};
+    options.headers = Object.assign({ Authorization: 'Bearer ' + TOKEN, 'Content-Type': 'application/json' }, options.headers || {});
+    if (options.body && typeof options.body !== 'string') options.body = JSON.stringify(options.body);
+    return fetch(API + path, options).then(function (res) {
+      if (res.status === 401) { TOKEN = null; el('panel').style.display = 'none'; el('loginBox').style.display = ''; throw new Error('نشست منقضی شد — دوباره وارد شوید.'); }
+      return res.json().then(function (data) {
+        if (!res.ok) throw new Error(data.error || ('خطا ' + res.status));
+        return data;
+      });
+    });
+  }
+
+  // ---------- ناوبری ----------
+  var views = { overview: loadOverview, structure: loadStructure, content: loadContent, feedback: loadFeedback, export: loadExport };
+  document.querySelectorAll('nav button').forEach(function (button) {
+    button.addEventListener('click', function () {
+      document.querySelectorAll('nav button').forEach(function (b) { b.classList.remove('active'); });
+      button.classList.add('active');
+      views[button.dataset.view]();
+    });
+  });
+
+  function loadOverview() {
+    el('view').innerHTML = '<div class="card">در حال بارگذاری…</div>';
+    Promise.all([
+      api('/api/admin/coverage'),
+      api('/api/admin/domain/books'),
+      api('/api/admin/domain/book_editions'),
+      api('/api/admin/domain/question_chapter_mappings'),
+      api('/api/admin/ingestion/jobs'),
+    ]).then(function (results) {
+      var coverage = results[0];
+      var rows = coverage.ratios.map(function (ratio) {
+        var percent = (ratio.numerator === 'unknown' || ratio.denominator === 'unknown')
+          ? '<span class="badge b-warn">unknown</span>'
+          : Math.round(100 * ratio.numerator / ratio.denominator) + '٪';
+        return '<tr><td>' + esc(ratio.id) + '</td><td>' + esc(ratio.numerator) + ' / ' + esc(ratio.denominator) + '</td><td>' + percent + '</td></tr>';
+      }).join('');
+      el('view').innerHTML =
+        '<div class="card"><h2>پوشش (مخرج صریح — ADR-008)</h2><table><tr><th>شاخص</th><th>صورت / مخرج</th><th>درصد</th></tr>' + rows + '</table>' +
+        '<p class="muted">صف بازبینی باز: ' + esc(coverage.openReviewTasks) + ' · محاسبه: ' + esc(coverage.computedAt) + '</p></div>' +
+        '<div class="card"><h2>دادهٔ ساختاری</h2><p>کتاب‌ها: ' + esc(results[1].rows.length) + ' · ویرایش‌ها: ' + esc(results[2].rows.length) + ' · نگاشت‌ها: ' + esc(results[3].rows.length) + ' · Jobهای ورود: ' + esc(results[4].jobs.length) + '</p></div>';
+    }).catch(function (error) { el('view').innerHTML = '<div class="card"><div class="error">' + esc(error.message) + '</div></div>'; });
+  }
+
+  function loadStructure() {
+    el('view').innerHTML = '<div class="card"><h2>کتاب تازه</h2>' +
+      '<div class="row"><input id="bkSlug" placeholder="slug (انگلیسی)"><input id="bkTitle" placeholder="عنوان فارسی"></div>' +
+      '<button id="bkSave">ایجاد کتاب</button><div id="bkErr" class="error"></div></div><div id="bkList"></div>';
+    var refresh = function () {
+      api('/api/admin/domain/books').then(function (data) {
+        el('bkList').innerHTML = '<div class="card"><h2>کتاب‌ها (' + data.rows.length + ')</h2><table><tr><th>عنوان</th><th>slug</th><th>نویسنده</th></tr>' +
+          data.rows.map(function (row) { return '<tr><td>' + esc(row.title) + '</td><td>' + esc(row.slug) + '</td><td>' + esc(row.authors || '—') + '</td></tr>'; }).join('') + '</table></div>';
+      });
+    };
+    el('bkSave').addEventListener('click', function () {
+      var slug = el('bkSlug').value.trim();
+      var title = el('bkTitle').value.trim();
+      if (!slug || !title) { el('bkErr').textContent = 'slug و عنوان الزامی است.'; return; }
+      api('/api/admin/domain/books', { method: 'POST', body: { slug: slug, title: title, language: 'fa' } })
+        .then(function () { el('bkErr').textContent = ''; refresh(); })
+        .catch(function (error) { el('bkErr').textContent = error.message; });
+    });
+    refresh();
+  }
+
+  function loadContent() {
+    el('view').innerHTML = '<div class="card"><h2>Releaseها</h2><div id="relList" class="muted">در حال بارگذاری…</div></div>';
+    api('/api/admin/releases').then(function (data) {
+      el('relList').innerHTML = '<table><tr><th>کد</th><th>وضعیت</th></tr>' + data.releases.map(function (row) {
+        var badge = row.status === 'published' ? 'b-ok' : row.status === 'staged' ? 'b-warn' : 'b-err';
+        return '<tr><td>' + esc(row.code) + '</td><td><span class="badge ' + badge + '">' + esc(row.status) + '</span>' +
+          (row.id === data.activeReleaseId ? ' <span class="badge b-ok">فعال</span>' : '') + '</td></tr>';
+      }).join('') + '</table><p class="muted">انتشار دانش‌آموز فقط از Release فعال و تأییدشده انجام می‌شود.</p>';
+    });
+  }
+
+  function loadFeedback() {
+    el('view').innerHTML = '<div class="card">در حال بارگذاری…</div>';
+    api('/api/panel/feedback').then(function (data) {
+      if (!data.threads.length) {
+        el('view').innerHTML = '<div class="card"><p class="muted">فیدبکی ثبت نشده است. پیام متنی کاربران در چت ربات اینجا می‌آید.</p></div>';
+        return;
+      }
+      el('view').innerHTML = '<div class="card"><table><tr><th>#</th><th>دسته</th><th>وضعیت</th><th>عملیات</th></tr>' +
+        data.threads.map(function (row, index) {
+          return '<tr><td>' + (index + 1) + '</td><td>' + esc(row.category) + '</td><td><span class="badge ' + (row.status === 'new' ? 'b-warn' : 'b-ok') + '">' + esc(row.status) + '</span></td>' +
+            '<td><button data-thread="' + esc(row.id) + '">باز کردن</button></td></tr>';
+        }).join('') + '</table></div>';
+      document.querySelectorAll('[data-thread]').forEach(function (button) {
+        button.addEventListener('click', function () { openThread(button.dataset.thread); });
+      });
+    });
+  }
+
+  function openThread(threadId) {
+    api('/api/panel/feedback/' + threadId + '/messages').then(function (data) {
+      var timeline = data.messages.map(function (msg) {
+        return '<p><b>' + (msg.author_kind === 'admin' ? 'پشتیبانی' : 'کاربر') + (msg.is_internal_note ? ' (یادداشت داخلی)' : '') + ':</b> ' + esc(msg.body) + '</p>';
+      }).join('');
+      el('view').innerHTML = '<div class="card"><h2>گفت‌وگو</h2>' + timeline +
+        '<textarea id="replyBody" placeholder="پاسخ به دانشجو (به چت خصوصی او ارسال می‌شود)"></textarea>' +
+        '<div class="row"><button id="sendReply">ارسال پاسخ</button><button class="secondary" id="addNote">ثبت یادداشت داخلی</button></div>' +
+        '<div id="replyErr" class="error"></div></div>';
+      el('sendReply').addEventListener('click', function () {
+        api('/api/panel/feedback/' + threadId + '/reply', { method: 'POST', body: { reply: el('replyBody').value } })
+          .then(function (result) { el('replyErr').textContent = result.status === 'sent' ? '✅ ارسال شد (message ' + result.telegramMessageId + ')' : 'وضعیت: ' + result.status; })
+          .catch(function (error) { el('replyErr').textContent = error.message; });
+      });
+      el('addNote').addEventListener('click', function () {
+        api('/api/panel/feedback/' + threadId + '/reply', { method: 'POST', body: { reply: el('replyBody').value, internalNote: true } })
+          .then(function () { el('replyErr').textContent = 'یادداشت داخلی ثبت شد (برای کاربر ارسال نمی‌شود).'; });
+      });
+    });
+  }
+
+  function loadExport() {
+    el('view').innerHTML = '<div class="card"><h2>خروجی Markdown</h2><p class="muted">بر اساس کتاب — ZIP فقط شامل فایل‌های .md</p><div id="expList">در حال بارگذاری…</div></div>';
+    api('/api/admin/domain/books').then(function (data) {
+      el('expList').innerHTML = data.rows.map(function (row) {
+        return '<div class="row"><span>' + esc(row.title) + '</span>' +
+          '<button data-exp="' + esc(row.id) + '">JSON</button>' +
+          '<button class="secondary" data-expzip="' + esc(row.id) + '">ZIP</button></div>';
+      }).join('') || '<p class="muted">کتابی ثبت نشده است.</p>';
+      document.querySelectorAll('[data-exp]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          api('/api/admin/panel/export/book/' + button.dataset.exp).then(function (bundle) {
+            el('view').innerHTML = '<div class="card"><h2>پیش‌نمایش Export</h2><pre>' + esc(bundle.files.map(function (f) { return f.content; }).join('\n\n----\n\n')) + '</pre></div>';
+          });
+        });
+      });
+      document.querySelectorAll('[data-expzip]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          window.open(API + '/api/admin/panel/export/book/' + button.dataset.expzip + '?bundle=zip', '_blank');
+          el('view').insertAdjacentHTML('beforeend', '<p class="muted">توجه: دانلود ZIP به Authorization header نیاز دارد — از JSON Export در مرورگر استفاده کنید یا لینک امضاشدهٔ کوتاه‌عمر (SIGNED URL) که در نقشهٔ راه عملیات ثبت شده است.</p>');
+        });
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

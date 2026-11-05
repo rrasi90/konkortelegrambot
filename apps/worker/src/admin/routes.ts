@@ -948,7 +948,7 @@ export function createAdminRouter(deps: AdminDeps) {
 
   // ==================== مأموریت v2 Phase 6 — Markdown Export/Import ====================
 
-  app.get('/admin-api/export/book/:id', async (c) => {
+  app.get('/panel/export/book/:id', async (c) => {
     const guard = await requirePermission(c, 'registry:read');
     if (guard instanceof Response) return guard;
     const bookId = c.req.param('id');
@@ -983,7 +983,7 @@ export function createAdminRouter(deps: AdminDeps) {
 
 
   /** Import Dry-run — پیش‌فرض بدون نوشتن (M-08/M-09) */
-  app.post('/admin-api/import/preview', async (c) => {
+  app.post('/panel/import/preview', async (c) => {
     const guard = await requirePermission(c, 'registry:read');
     if (guard instanceof Response) return guard;
     const body = await c.req.json().catch(() => null) as { files?: unknown } | null;

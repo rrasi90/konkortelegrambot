@@ -139,7 +139,7 @@ describe('Phase 6 — API واقعی Export/Import', () => {
       headers: { Authorization: `Bearer ${ownerToken}` },
     })).json() as { rows: Array<{ id: string }> }).rows[0]!.id;
 
-    const jsonRes = await app.request(`/api/admin/admin-api/export/book/${bookId}`, {
+    const jsonRes = await app.request(`/api/admin/panel/export/book/${bookId}`, {
       headers: { Authorization: `Bearer ${ownerToken}` },
     });
     expect(jsonRes.status).toBe(200);
@@ -147,7 +147,7 @@ describe('Phase 6 — API واقعی Export/Import', () => {
     expect(data.files.length).toBeGreaterThan(0);
     expect(data.manifest).toContain('MANIFEST');
 
-    const zipRes = await app.request(`/api/admin/admin-api/export/book/${bookId}?bundle=zip`, {
+    const zipRes = await app.request(`/api/admin/panel/export/book/${bookId}?bundle=zip`, {
       headers: { Authorization: `Bearer ${ownerToken}` },
     });
     expect(zipRes.headers.get('Content-Type')).toBe('application/zip');
@@ -156,7 +156,7 @@ describe('Phase 6 — API واقعی Export/Import', () => {
   });
 
   it('M-08: Import preview از مسیر API — Dry-run بدون نوشتن', async () => {
-    const res = await app.request('/api/admin/admin-api/import/preview', {
+    const res = await app.request('/api/admin/panel/import/preview', {
       method: 'POST', headers: { Authorization: `Bearer ${ownerToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ files: [{ path: 'a.md', content: '---\nformat: ael-markdown-export-v2\nentity_id: new-entity\nentity_type: book\ntitle: تست\n---\n' }] }),
     });
