@@ -1,0 +1,1327 @@
+{
+ "result": {
+  "batchId": "ael003-dryrun-2026-11-05",
+  "mode": "dry-run",
+  "totalRecords": 187,
+  "ledger": {
+   "inserted": 187,
+   "updatedOrReplayed": 0
+  },
+  "statusCounts": {
+   "quarantined": 17,
+   "migrated_needs_review": 170
+  },
+  "reconciliationPassed": true,
+  "stagedCounts": null,
+  "promise": "هیچ رکورد مبدأ بی‌سرنوشت نمانده است (§0.1)"
+ },
+ "records": [
+  {
+   "sourceRef": "course:financial-management",
+   "key": "course:financial-management",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management"
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.ratios.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.ratios.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.ratios.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.ratios.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.ratios.q03",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.ratios.q03",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.tvm.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.tvm.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.tvm.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.tvm.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.tvm.q03",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.tvm.q03",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.bonds.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.bonds.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.bonds.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.bonds.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.bonds.q03",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.bonds.q03",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.stock.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.stock.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.stock.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.stock.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.stock.q03",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.stock.q03",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.risk.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.risk.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.risk.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.risk.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.risk.q03",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.risk.q03",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.npv.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.npv.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.npv.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.npv.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.npv.q03",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.npv.q03",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.wacc.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.wacc.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.wacc.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.wacc.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.wacc.q03",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.wacc.q03",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.wc.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.wc.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.wc.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.wc.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:financial-management",
+   "key": "question:fm.wc.q03",
+   "status": "migrated_needs_review",
+   "target": "course-pack-financial-management#fm.wc.q03",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:statistics-foundations",
+   "key": "course:statistics-foundations",
+   "status": "migrated_needs_review",
+   "target": "course-pack-statistics-foundations"
+  },
+  {
+   "sourceRef": "course:statistics-foundations",
+   "key": "question:stat.center.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-statistics-foundations#stat.center.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:statistics-foundations",
+   "key": "question:stat.center.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-statistics-foundations#stat.center.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:statistics-foundations",
+   "key": "question:stat.conditional.q01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-statistics-foundations#stat.conditional.q01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:statistics-foundations",
+   "key": "question:stat.conditional.q02",
+   "status": "migrated_needs_review",
+   "target": "course-pack-statistics-foundations#stat.conditional.q02",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "course:statistics-foundations",
+   "key": "question:stat.center.essay01",
+   "status": "migrated_needs_review",
+   "target": "course-pack-statistics-foundations#stat.center.essay01",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1391.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1391.1@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1391.31",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1391.31@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1391.32",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1391.32@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1391.49",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1391.49@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1391.60",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1391.60@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1391.167",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1391.167@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1391.201",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1391.201@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1391.222",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1391.222@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1391.306",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1391.306@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.1@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.31",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.31@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.35",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.35@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.47",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.47@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.48",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.48@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.76",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.76@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.189",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.189@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.201",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.201@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.225",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.225@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1392.309",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1392.309@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1393.34",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1393.34@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1393.69",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1393.69@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1393.81",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1393.81@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1393.134",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1393.134@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1393.168",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1393.168@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1393.181",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1393.181@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1394.44",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1394.44@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1394.51",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1394.51@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1394.84",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1394.84@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1394.128",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1394.128@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1394.173",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1394.173@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1394.190",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1394.190@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1395.32",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1395.32@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1395.46",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1395.46@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1395.69",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1395.69@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1395.105",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1395.105@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1395.197",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1395.197@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1396.38",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1396.38@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1396.65",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1396.65@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1396.95",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1396.95@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1396.99",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1396.99@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1396.176",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1396.176@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1397.39",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1397.39@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1397.92",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1397.92@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1397.111",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1397.111@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1397.180",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1397.180@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1398.10",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1398.10@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1398.83",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1398.83@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1398.110",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1398.110@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1398.177",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1398.177@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1399.55",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1399.55@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1399.76",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1399.76@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1399.77",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1399.77@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1399.198",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1399.198@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1400.38",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1400.38@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1400.77",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1400.77@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1400.96",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1400.96@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1400.180",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1400.180@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1400.191",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1400.191@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1401.77",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1401.77@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1401.101",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1401.101@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1401.148",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1401.148@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1401.187",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1401.187@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1402.49",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1402.49@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1402.79",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1402.79@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1402.84",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1402.84@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1402.185",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1402.185@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1403.52",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1403.52@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1403.84",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1403.84@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1403.93",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1403.93@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1403.101",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1403.101@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1403.186",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1403.186@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1404.41",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1404.41@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1404.53",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1404.53@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1404.66",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1404.66@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1404.94",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1404.94@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1404.170",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1404.170@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1405.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1405.1@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1405.26",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1405.26@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1405.41",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1405.41@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1405.66",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1405.66@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1405.87",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1405.87@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1405.136",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1405.136@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1405.166",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1405.166@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1405.188",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1405.188@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.k1405.192",
+   "status": "migrated_needs_review",
+   "target": "staged:q.k1405.192@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.bus.eng.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.bus.eng.1@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.bus.econ.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.bus.econ.1@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.bus.math.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.bus.math.1@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.bus.islamic.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.bus.islamic.1@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.mkt.plc.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mkt.plc.2@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.mb.struct.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mb.struct.2@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.mb.cont.3",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mb.cont.3@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.ind.or.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.ind.or.2@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.ind.or.3",
+   "status": "migrated_needs_review",
+   "target": "staged:q.ind.or.3@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.ind.pom.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.ind.pom.2@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.ind.pom.3",
+   "status": "migrated_needs_review",
+   "target": "staged:q.ind.pom.3@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.bus.econ.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.bus.econ.2@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.bus.econ.3",
+   "status": "migrated_needs_review",
+   "target": "staged:q.bus.econ.3@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.bus.math.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.bus.math.2@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.bus.islamic.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.bus.islamic.2@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_arshad",
+   "key": "question:q.bus.eng.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.bus.eng.2@bank-official_traced_arshad",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1394.201",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1394.201@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1395.202",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1395.202@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1396.203",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1396.203@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1397.204",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1397.204@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1398.205",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1398.205@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1399.206",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1399.206@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1400.207",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1400.207@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1401.208",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1401.208@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1402.209",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1402.209@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1403.210",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1403.210@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.phd1404.211",
+   "status": "migrated_needs_review",
+   "target": "staged:q.phd1404.211@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mb.struct.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mb.struct.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mb.cont.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mb.cont.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.sm.vc.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.sm.vc.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.sm.rbv.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.sm.rbv.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.sm.port.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.sm.port.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.sm.dyn.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.sm.dyn.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.stats.scale.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.stats.scale.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.stats.anova.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.stats.anova.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.stats.reg.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.stats.reg.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.rm.val.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.rm.val.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mb.cult.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mb.cult.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mkt.plc.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mkt.plc.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mkt.brand.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mkt.brand.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mkt.cons.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mkt.cons.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.inno.scurve.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.inno.scurve.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.inno.ambi.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.inno.ambi.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.ind.or.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.ind.or.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.ind.pom.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.ind.pom.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.inno.tidd.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.inno.tidd.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.ind.mcdm.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.ind.mcdm.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.inno.open.1",
+   "status": "migrated_needs_review",
+   "target": "staged:q.inno.open.1@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mkt.plc.3",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mkt.plc.3@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mkt.brand.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mkt.brand.2@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mkt.cons.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mkt.cons.2@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.mb.cont.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.mb.cont.2@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.stats.anova.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.stats.anova.2@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-official_traced_phd",
+   "key": "question:q.stats.scales.2",
+   "status": "migrated_needs_review",
+   "target": "staged:q.stats.scales.2@bank-official_traced_phd",
+   "quarantineReason": null
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.mb.struct.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.mb.struct.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.mb.cont.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.mb.cont.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.sm.vc.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.sm.vc.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.sm.rbv.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.sm.rbv.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.sm.port.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.sm.port.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.stats.anova.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.stats.anova.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.stats.reg.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.stats.reg.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.mkt.brand.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.mkt.brand.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.ind.or.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.ind.or.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.ind.pom.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.ind.pom.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.inno.tidd.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.inno.tidd.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.ind.mcdm.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.ind.mcdm.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.inno.open.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.inno.open.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.bus.eng.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.bus.eng.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.bus.econ.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.bus.econ.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.bus.math.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.bus.math.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  },
+  {
+   "sourceRef": "questions:bank-quarantine",
+   "key": "question:q.bus.islamic.proof.1404",
+   "status": "quarantined",
+   "target": "staged:q.bus.islamic.proof.1404@bank-quarantine",
+   "quarantineReason": "SOURCE_QUARANTINE_BANK"
+  }
+ ]
+}

@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-11-05T19:24:46.628Z",
+  "sourceCount": 38,
+  "totalRawRecords": 573,
+  "byProvenance": {
+    "real_candidate": 32,
+    "unknown_origin": 1,
+    "derived_evidence": 4,
+    "synthetic": 1
+  },
+  "missingSources": []
+}
