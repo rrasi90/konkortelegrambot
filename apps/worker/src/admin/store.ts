@@ -92,6 +92,11 @@ export interface AdminStore {
   setActiveRelease(releaseId: string, updatedBy: string): Promise<void>;
   upsertPublishedSnapshot(releaseId: string, contentHash: string, snapshot: unknown): Promise<void>;
   getPublishedSnapshot(releaseId: string): Promise<Row | null>;
+
+  /* ---------- مأموریت v2 Phase 2 — CRUD دامنهٔ آموزشی (فهرست‌سفید در routes) ---------- */
+  upsertDomainRow(table: string, row: Row): Promise<Row>;
+  listDomainRows(table: string, filters: Array<{ column: string; value: string }>, limit: number): Promise<Row[]>;
+  updateDomainRow(table: string, filters: Array<{ column: string; value: string }>, patch: Row): Promise<Row[]>;
 }
 
 export async function sha256Hex(value: string): Promise<string> {
@@ -616,6 +621,26 @@ export class SupabaseAdminStore implements AdminStore {
     const rows = await this.request('GET', 'published_snapshots', undefined, `?release_id=eq.${releaseId}&limit=1`) as Row[] | null;
     return rows?.length ? rows[0]! : null;
   }
+
+  /* ---------- مأموریت v2 Phase 2 ---------- */
+
+  async upsertDomainRow(table: string, row: Row): Promise<Row> {
+    const rows = await this.request('POST', table, row) as Row[] | null;
+    if (!rows?.length) throw new Error(`${table} upsert failed`);
+    return rows[0]!;
+  }
+
+  async listDomainRows(table: string, filters: Array<{ column: string; value: string }>, limit: number): Promise<Row[]> {
+    const query = `?${filters.map(f => `${f.column}=eq.${encodeURIComponent(f.value)}`).join('&')}${filters.length ? '&' : ''}limit=${Math.min(1000, Math.max(1, limit))}`;
+    const rows = await this.request('GET', table, undefined, query) as Row[] | null;
+    return rows ?? [];
+  }
+
+  async updateDomainRow(table: string, filters: Array<{ column: string; value: string }>, patch: Row): Promise<Row[]> {
+    const clause = filters.map(f => `${f.column}=eq.${encodeURIComponent(f.value)}`).join('&');
+    const rows = await this.request('PATCH', `${table}?${clause}`, patch) as Row[] | null;
+    return rows ?? [];
+  }
 }
 
 interface MemoryRoleEntry {
@@ -1058,5 +1083,62 @@ export class MemoryAdminStore implements AdminStore {
 
   async getPublishedSnapshot(releaseId: string): Promise<Row | null> {
     return this.snapshots.get(releaseId) ?? null;
+  }
+
+  /* ---------- مأموریت v2 Phase 2 ---------- */
+
+  private domainTables = new Map<string, Map<string, Row>>();
+  private domainRowSeq = 1;
+
+  private domainTable(name: string): Map<string, Row> {
+    const table = this.domainTables.get(name) ?? new Map<string, Row>();
+    this.domainTables.set(name, table);
+    return table;
+  }
+
+  async upsertDomainRow(table: string, row: Row): Promise<Row> {
+    const store = this.domainTable(table);
+    const key = String(row.id ?? row.slug ?? `row-${this.domainRowSeq++}`);
+    // تقلید گاردهای Trigger مهاجرت 0025 برای mapping (E-09 و SoD)
+    if (table === 'question_chapter_mappings') {
+      const mappedBy = row.mapped_by ?? null;
+      if (row.review_status === 'approved' && row.relation_kind === 'direct_source_verified' && !row.evidence_id) {
+        throw new Error('MAPPING_EVIDENCE_REQUIRED');
+      }
+      if (row.review_status === 'approved' && row.reviewed_by && mappedBy && row.reviewed_by === mappedBy) {
+        throw new Error('MAPPING_SELF_APPROVAL');
+      }
+    }
+    const existing = store.get(key);
+    const merged: Row = { ...existing, ...row, id: key, updated_at: new Date().toISOString() };
+    store.set(key, merged);
+    return merged;
+  }
+
+  async listDomainRows(table: string, filters: Array<{ column: string; value: string }>, limit: number): Promise<Row[]> {
+    return [...this.domainTable(table).values()]
+      .filter(row => filters.every(f => String(row[f.column]) === f.value))
+      .slice(0, limit);
+  }
+
+  async updateDomainRow(table: string, filters: Array<{ column: string; value: string }>, patch: Row): Promise<Row[]> {
+    const store = this.domainTable(table);
+    const updated: Row[] = [];
+    for (const [key, row] of store.entries()) {
+      if (filters.every(f => String(row[f.column]) === f.value)) {
+        const next: Row = { ...row, ...patch, updated_at: new Date().toISOString() };
+        if (table === 'question_chapter_mappings') {
+          if (next.review_status === 'approved' && next.relation_kind === 'direct_source_verified' && !next.evidence_id) {
+            throw new Error('MAPPING_EVIDENCE_REQUIRED');
+          }
+          if (next.review_status === 'approved' && next.reviewed_by && next.mapped_by && next.reviewed_by === next.mapped_by) {
+            throw new Error('MAPPING_SELF_APPROVAL');
+          }
+        }
+        store.set(key, next);
+        updated.push(next);
+      }
+    }
+    return updated;
   }
 }

@@ -618,7 +618,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const update = (await c.req.json().catch(() => null)) as {
       update_id?: number;
       message?: { chat?: { id?: number; type?: string }; from?: { id?: number }; text?: string };
-      edited_message?: { chat?: { id?: number }; from?: { id?: number }; text?: string };
+      edited_message?: { chat?: { id?: number; type?: string }; from?: { id?: number }; text?: string };
       callback_query?: { id?: number };
     } | null;
     if (!update || typeof update.update_id !== 'number') return c.json({ ok: false }, 400);

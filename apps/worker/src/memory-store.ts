@@ -597,6 +597,62 @@ export class MemoryStore implements DataStore {
     return this.feedbackMessages.filter(row => row.thread_id === threadId);
   }
 
+  /* ---------- مأموریت v2 Phase 2 ---------- */
+
+  private domainTables = new Map<string, Map<string, Record<string, unknown>>>();
+  private domainRowId = 1;
+
+  private domainTable(name: string): Map<string, Record<string, unknown>> {
+    const table = this.domainTables.get(name) ?? new Map<string, Record<string, unknown>>();
+    this.domainTables.set(name, table);
+    return table;
+  }
+
+  async upsertDomainRow(table: string, row: Record<string, unknown>): Promise<Record<string, unknown>> {
+    const store = this.domainTable(table);
+    const key = String(row.id ?? row.slug ?? `row-${this.domainRowId++}`);
+    // تقلید گاردهای Trigger مهاجرت 0025 برای mapping (آزمون E-09 و SoD)
+    if (table === 'question_chapter_mappings') {
+      const mappedBy = row.mapped_by ?? null;
+      if (row.review_status === 'approved' && row.relation_kind === 'direct_source_verified' && !row.evidence_id) {
+        throw new Error('MAPPING_EVIDENCE_REQUIRED');
+      }
+      if (row.review_status === 'approved' && row.reviewed_by && mappedBy && row.reviewed_by === mappedBy) {
+        throw new Error('MAPPING_SELF_APPROVAL');
+      }
+    }
+    const merged = { ...row, id: key, updated_at: new Date().toISOString() };
+    store.set(key, merged);
+    return merged;
+  }
+
+  async listDomainRows(table: string, filters: Array<{ column: string; value: string }>, limit: number): Promise<Array<Record<string, unknown>>> {
+    return [...this.domainTable(table).values()]
+      .filter(row => filters.every(f => String(row[f.column]) === f.value))
+      .slice(0, limit);
+  }
+
+  async updateDomainRow(table: string, filters: Array<{ column: string; value: string }>, patch: Record<string, unknown>): Promise<Array<Record<string, unknown>>> {
+    const store = this.domainTable(table);
+    const updated: Array<Record<string, unknown>> = [];
+    for (const [key, row] of store.entries()) {
+      if (filters.every(f => String(row[f.column]) === f.value)) {
+        const next: Record<string, unknown> = { ...row, ...patch, updated_at: new Date().toISOString() };
+        if (table === 'question_chapter_mappings') {
+          if (next.review_status === 'approved' && next.relation_kind === 'direct_source_verified' && !next.evidence_id) {
+            throw new Error('MAPPING_EVIDENCE_REQUIRED');
+          }
+          if (next.review_status === 'approved' && next.reviewed_by && next.mapped_by && next.reviewed_by === next.mapped_by) {
+            throw new Error('MAPPING_SELF_APPROVAL');
+          }
+        }
+        store.set(key, next);
+        updated.push(next);
+      }
+    }
+    return updated;
+  }
+
   /** فقط برای تست/ممیزی */
   debugTopicMastery(userId: string): Array<{ key: string; mastery: number; correct: number; wrong: number }> {
     return [...this.topicMastery.entries()]

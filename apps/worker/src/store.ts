@@ -288,6 +288,11 @@ export interface DataStore {
   addFeedbackMessage?(input: { threadId: string; authorKind: 'user' | 'admin'; authorId: string | null; body: string; isInternalNote: boolean }): Promise<void>;
   listFeedbackThreads?(input: { status: string | null; limit: number }): Promise<unknown[]>;
   listFeedbackMessages?(threadId: string): Promise<unknown[]>;
+
+  /* ---------- مأموریت v2 Phase 2 — CRUD عمومی دامنهٔ آموزشی (فهرست‌سفید در routes) ---------- */
+  upsertDomainRow?(table: string, row: Record<string, unknown>): Promise<Record<string, unknown>>;
+  listDomainRows?(table: string, filters: Array<{ column: string; value: string }>, limit: number): Promise<Array<Record<string, unknown>>>;
+  updateDomainRow?(table: string, filters: Array<{ column: string; value: string }>, patch: Record<string, unknown>): Promise<Array<Record<string, unknown>>>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1303,6 +1308,26 @@ export class SupabaseStore implements DataStore {
 
   async listFeedbackMessages(threadId: string): Promise<unknown[]> {
     const rows = await this.request('GET', 'feedback_messages', undefined, `?thread_id=eq.${threadId}&order=created_at.asc`) as unknown[] | null;
+    return rows ?? [];
+  }
+
+  /* ---------- مأموریت v2 Phase 2 ---------- */
+
+  async upsertDomainRow(table: string, row: Record<string, unknown>): Promise<Record<string, unknown>> {
+    const rows = await this.request('POST', table, row) as Array<Record<string, unknown>> | null;
+    if (!rows?.length) throw new Error(`${table} upsert failed`);
+    return rows[0]!;
+  }
+
+  async listDomainRows(table: string, filters: Array<{ column: string; value: string }>, limit: number): Promise<Array<Record<string, unknown>>> {
+    const query = `?${filters.map(f => `${f.column}=eq.${encodeURIComponent(f.value)}`).join('&')}${filters.length ? '&' : ''}limit=${Math.min(1000, Math.max(1, limit))}`;
+    const rows = await this.request('GET', table, undefined, query) as Array<Record<string, unknown>> | null;
+    return rows ?? [];
+  }
+
+  async updateDomainRow(table: string, filters: Array<{ column: string; value: string }>, patch: Record<string, unknown>): Promise<Array<Record<string, unknown>>> {
+    const clause = filters.map(f => `${f.column}=eq.${encodeURIComponent(f.value)}`).join('&');
+    const rows = await this.request('PATCH', `${table}?${clause}`, patch) as Array<Record<string, unknown>> | null;
     return rows ?? [];
   }
 }

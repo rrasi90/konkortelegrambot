@@ -824,7 +824,129 @@ export function createAdminRouter(deps: AdminDeps) {
     return c.json({ release, items: items.length, hasSnapshot: !!snapshot, contentHash: snapshot ? String(snapshot.content_hash) : null });
   });
 
-  // ==================== AEL-701 — Coverage با Denominator صریح ====================
+  // ==================== مأموریت v2 Phase 2/4 — دامنهٔ آموزشی ====================
+
+  // فهرست‌سفید دامنه — ستون‌های مجاز صریح (Mass Assignment ممنوع، سند ۱۶٫۲)
+  const DOMAIN_TABLES: Record<string, { pk: string; columns: string[]; permission: string }> = {
+    books: { pk: 'slug', columns: ['slug', 'title', 'title_fa', 'authors', 'translators', 'publisher', 'isbn', 'language', 'biblio_note', 'merge_status', 'created_by'], permission: 'registry:write' },
+    book_editions: { pk: 'slug', columns: ['slug', 'book_id', 'edition_number', 'print_number', 'publication_year', 'validity_from', 'validity_until', 'source_file_hash', 'source_url', 'rights_status', 'diff_note', 'created_by'], permission: 'registry:write' },
+    book_structure_nodes: { pk: 'id', columns: ['id', 'edition_id', 'parent_id', 'node_kind', 'display_number', 'title', 'alternate_title', 'position', 'page_start', 'page_end', 'source_locator', 'structure_status', 'reviewed_by', 'created_by'], permission: 'registry:write' },
+    subject_book_relations: { pk: 'id', columns: ['id', 'subject_code', 'book_id', 'edition_id', 'relation_kind', 'program_code', 'valid_from_year', 'valid_until_year', 'evidence_id', 'evidence_locator', 'decision_status', 'rationale', 'created_by'], permission: 'registry:write' },
+    question_appearances: { pk: 'id', columns: ['id', 'question_id', 'event_version_id', 'year_label', 'booklet_code', 'question_number', 'section_label', 'source_id', 'source_version_id', 'entry_status', 'created_by'], permission: 'registry:write' },
+    question_chapter_mappings: { pk: 'id', columns: ['id', 'appearance_id', 'node_id', 'topic_id', 'skill_id', 'edition_id', 'edition_known', 'relation_kind', 'review_status', 'similarity_score', 'scientific_confidence', 'evidence_id', 'evidence_locator', 'evidence_note', 'mapped_by'], permission: 'registry:write' },
+  };
+
+  for (const [entity, spec] of Object.entries(DOMAIN_TABLES)) {
+    app.post(`/domain/${entity}`, async (c) => {
+      const guard = await requirePermission(c, spec.permission);
+      if (guard instanceof Response) return guard;
+      const body = await c.req.json().catch(() => null) as Record<string, unknown> | null;
+      if (!body || typeof body !== 'object' || Array.isArray(body)) return badRequest('رکورد باید شیء باشد.');
+      const filtered: Record<string, unknown> = {};
+      for (const column of spec.columns) if (column in body) filtered[column] = body[column];
+      if (!Object.keys(filtered).length) return badRequest('هیچ فیلد مجازی ارسال نشده است.');
+      try {
+        const row = await deps.adminStore!.upsertDomainRow?.(entity, filtered);
+        await deps.adminStore!.logAdminAction({
+          actorId: guard.identity.userId, action: `domain.${entity}.upsert`,
+          entityType: entity, entityId: String(row.id ?? row.slug ?? ''),
+          after: { fields: Object.keys(filtered) }, reason: null,
+        });
+        return c.json({ ok: true, row });
+      } catch (error) {
+        const message = (error as Error).message;
+        if (message.includes('MAPPING_EVIDENCE_REQUIRED')) {
+          return Response.json({ error: 'منشأ مستقیم بدون Evidence تأیید نمی‌شود (E-09).' }, { status: 422 });
+        }
+        if (message.includes('MAPPING_SELF_APPROVAL')) {
+          return Response.json({ error: 'نگاشت‌دهنده و بازبین باید متفاوت باشند.' }, { status: 403 });
+        }
+        throw error;
+      }
+    });
+
+    app.get(`/domain/${entity}`, async (c) => {
+      const guard = await requirePermission(c, 'registry:read');
+      if (guard instanceof Response) return guard;
+      const filters: Array<{ column: string; value: string }> = [];
+      for (const column of spec.columns) {
+        const value = c.req.query(column);
+        if (value) filters.push({ column, value });
+      }
+      const rows = (await deps.adminStore!.listDomainRows?.(entity, filters, Number(c.req.query('limit') ?? 200))) ?? [];
+      return c.json({ rows });
+    });
+  }
+
+  /** تصمیم بازبینی نگاشت — مجوز review:mapping:approve + SoD (نگاشت‌دهنده ≠ بازبین) */
+  app.post('/domain/question_chapter_mappings/:id/decide', async (c) => {
+    const guard = await requirePermission(c, 'review:mapping:approve');
+    if (guard instanceof Response) return guard;
+    const body = await c.req.json().catch(() => null) as { reviewStatus?: unknown; note?: unknown } | null;
+    if (!body || typeof body.reviewStatus !== 'string' || !['approved', 'needs_changes', 'rejected', 'conflicted'].includes(body.reviewStatus)) {
+      return badRequest('تصمیم معتبر نیست.');
+    }
+    const mappings = (await deps.adminStore!.listDomainRows?.('question_chapter_mappings', [], 1000)) ?? [];
+    const mapping = mappings.find(row => String(row.id) === c.req.param('id'));
+    if (!mapping) return Response.json({ error: 'نگاشت پیدا نشد.' }, { status: 404 });
+    if (String(mapping.mapped_by) === guard.identity.userId) {
+      return forbidden('بازبین نمی‌تواند نگاشت خودش را تأیید کند (SoD).');
+    }
+    const updated = await deps.adminStore!.updateDomainRow?.('question_chapter_mappings', [{ column: 'id', value: c.req.param('id') }], {
+      review_status: body.reviewStatus,
+      reviewed_by: guard.identity.userId,
+      reviewed_at: new Date().toISOString(),
+      evidence_note: typeof body.note === 'string' ? body.note : null,
+    });
+    if (!updated.length) return Response.json({ error: 'به‌روزرسانی ناموفق (گاردهای Evidence/SoD).' }, { status: 422 });
+    await deps.adminStore!.logAdminAction({
+      actorId: guard.identity.userId, action: 'mapping.decide',
+      entityType: 'question_chapter_mappings', entityId: c.req.param('id'),
+      after: { reviewStatus: body.reviewStatus }, reason: typeof body.note === 'string' ? body.note : null,
+    });
+    return c.json({ ok: true, mapping: updated[0] });
+  });
+
+  /**
+   * آمار یک فصل/مبحث — شمارش Appearanceهای مرتبط به تفکیک سال
+   * با کنترل دوبرابرشماری: «تعداد ارتباط‌ها» ≠ «تعداد Appearance یکتا» (سند ۶٫۵).
+   */
+  app.get('/domain/book_structure_nodes/:id/stats', async (c) => {
+    const guard = await requirePermission(c, 'registry:read');
+    if (guard instanceof Response) return guard;
+    const nodeId = c.req.param('id');
+    const mappings = (await deps.adminStore!.listDomainRows?.('question_chapter_mappings', [{ column: 'node_id', value: nodeId }], 1000)) ?? [];
+    const appearances = (await deps.adminStore!.listDomainRows?.('question_appearances', [], 1000)) ?? [];
+    const byId = new Map(appearances.map(row => [String(row.id), row]));
+    const related = mappings.map(row => ({ mapping: row, appearance: byId.get(String(row.appearance_id)) })).filter(row => row.appearance);
+    const uniqueAppearanceIds = new Set(related.map(row => String(row.appearance!.id)));
+    const byYear: Record<string, { appearances: number; mappings: number; verified: number; pending: number; conflicted: number }> = {};
+    for (const row of related) {
+      const year = String(row.appearance!.year_label ?? 'unknown');
+      const bucket = byYear[year] ?? { appearances: 0, mappings: 0, verified: 0, pending: 0, conflicted: 0 };
+      bucket.mappings += 1;
+      if (row.mapping.review_status === 'approved') bucket.verified += 1;
+      else if (row.mapping.review_status === 'conflicted') bucket.conflicted += 1;
+      else bucket.pending += 1;
+      byYear[year] = bucket;
+    }
+    for (const [year, bucket] of Object.entries(byYear)) {
+      bucket.appearances = new Set(related.filter(row => String(row.appearance!.year_label ?? 'unknown') === year).map(row => String(row.appearance!.id))).size;
+      void year;
+    }
+    return c.json({
+      nodeId,
+      uniqueAppearances: uniqueAppearanceIds.size,
+      totalMappingLinks: related.length,
+      note: 'تعداد ارتباط‌ها می‌تواند بیش از سؤال یکتا باشد (یک سؤال چند فصل) — دوبرابرشماری در جمع کل آزمون مجاز نیست.',
+      byYear,
+      multiChapterAppearanceIds: [...uniqueAppearanceIds].filter(id =>
+        mappings.filter(row => String(row.appearance_id) === id).length > 1),
+    });
+  });
+
+  void bootstrapGuard;
+  return app;
 
   app.get('/coverage', async (c) => {
     const guard = await requirePermission(c, 'coverage:read');
