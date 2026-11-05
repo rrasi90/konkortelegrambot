@@ -302,3 +302,17 @@
 | AEL-801..808 | P0/P1 | Reliability, Pilot & Release (۸ بسته) | AEL-806 **پایه آماده** (SEC-01/02)؛ بقیه انجام‌نشده — AEL-807/808 مسدود به کاربر واقعی |
 
 **Gate P0:** ۶ از ۷ آیتم آمادهٔ بازبینی؛ فقط AEL-002 به مجوز GitHub مسدود است. تأیید CI روی مقصد (HUMAN-1) پیش از اعلام عبور Gate الزامی است.
+
+
+---
+
+# Work Packageهای AEL-PDF-ARCHIVE-001 (ثبت‌شده توسط مأموریت 313/REPAIR)
+
+| شناسه | عنوان | وضعیت واقعی |
+|---|---|---|
+| AEL-313 | Local PDF Inbox, Classification & Pairing | **هسته PASS** — ۳۱ PDF ثبت، ۱۶ کلید OCR، طبقه‌بندی Evidence-based؛ OCR دفترچه‌ها در جریان؛ Pairing نهایی پس از آن |
+| AEL-314 | Contextual Course Registry & Taxonomy Mappings | NOT_STARTED (نیازمند بازبینی انسانی Offeringها) |
+| AEL-315 | Markdown/Structured Archive Publisher & PDF Guard | **هسته PASS** — Archive محلی + Guard Fail-Closed در CI؛ Signed URL باز |
+| AEL-316 | Golden Dataset & Regression | PARTIAL — ۱۸ تست قرارداد؛ Golden واقعی پس از OCR کامل |
+| AEL-317 | Dynamic Course Catalog & Learner Retrieval | NOT_STARTED (Catalog پویای مأموریت 002 مبناست؛ RET-01..20 باز) |
+| AEL-318 | Legacy Backfill & Parity | NOT_STARTED |

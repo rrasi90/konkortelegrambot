@@ -62,3 +62,12 @@
 ## ۷. مأموریت AEL-implementation (P0 — ۵ نوامبر ۲۰۲۶)
 
 سند مادر v2.1 به مخزن منتقل شد ([docs/ael-implementation/](docs/ael-implementation/)). P0 انجام شد: CI fix (کامیت 68c6c45)، ایمن‌سازی importer و حذف تب توهمی (0fd2271)، آشتی PR/شاخه با ۱۸ تگ آرشیو (454709b). ممیزی کامل: [BASELINE_AUDIT.md](docs/ael-implementation/BASELINE_AUDIT.md). باقی‌ماندهٔ انسانی: تأیید CI روی مقصد، Branch Protection، بستن PRها، امضاهای محتوا. فازهای ۱–۸ در BACKLOG ثبت و پس از Gate P0 نوبت‌بندی می‌شوند.
+
+
+---
+
+# وضعیت AEL-PDF-ARCHIVE-001 (۶ نوامبر ۲۰۲۶)
+- خط ورود PDF فعال: Scanner/Registry/MinerU 4.1.7 local/Classifier/Pairing/Archive محلی/Guard Fail-Closed در CI.
+- ۱۶ کلید پاسخ OCR کامل (middle_json)؛ ۱۵ دفترچه در صف OCR (قابل ازسرگیری: `npm run ael:pdf:ocr`).
+- **Rights: همه pending_review — متن کامل فقط محلی.** تصمیم مالک برای انتشار = HUMAN_REQUIRED.
+- Merge به main: `08a1293` (تأییدشده). گزارش کامل: `docs/ael-implementation/AEL_313_REPAIR_AND_MERGE_REPORT.md`
