@@ -530,7 +530,7 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
   });
 
   it('وب‌هوک تلگرام پیام /start را با یک ارسال واحد و دکمهٔ MiniApp پردازش می‌کند (رفع دو پیام — مأموریت v2)', async () => {
-    ENV.TELEGRAM_BOT_TOKEN = ENV.TELEGRAM_BOT_TOKEN ?? '123456:worker-test-bot';
+    (ENV as { TELEGRAM_BOT_TOKEN?: string }).TELEGRAM_BOT_TOKEN ??= '123456:worker-test-bot';
     // ارسال واقعی به Telegram mock می‌شود؛ پاسخ webhook دیگر {method:sendMessage} نیست
     const sent: Array<Record<string, unknown>> = [];
     const realFetch = globalThis.fetch;
