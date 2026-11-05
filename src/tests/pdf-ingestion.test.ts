@@ -99,3 +99,72 @@ describe('AEL-313 Pairing چندشواهدی (سند §6 Stage 7)', () => {
     expect(pairs[0].pairing_status).toBe('unresolved');
   });
 });
+
+import { extractMetadata } from '../import/pdf/metadata.mjs';
+import { reconstructPagesFromMiddleJson } from '../import/pdf/pages.mjs';
+
+describe('AEL-313 P0 — Metadata Extraction بدون Hardcode (سند §3)', () => {
+  it('کد رشته امتحانی (1142) = Exam Set Code است، نه Combination (§3.2)', () => {
+    const pages = [{ pageNumber: 1, extraction_method: 'mineru', text: '<table><tr><td>گروه امتحانی</td><td>شماره پاسخنامه</td><td>نوع دفترچه</td><td>نام رشته امتحانی</td><td>کد رشته امتحانی</td></tr><tr><td>علوم انساني</td><td>1</td><td>A</td><td>مجموعه مديريت</td><td>1142</td></tr></table>' }];
+    const meta = extractMetadata('k.pdf', pages);
+    expect(meta.exam_set_code.value).toBe('1142');
+    expect(meta.exam_set_code.status).toBe('proposed');
+    expect(meta.combination_code.status).toBe('unknown'); // جداست و حدس نمی‌شود
+    expect(meta.booklet_code.value).toBe('A');
+    expect(meta.field_title_fa.value).toContain('مدیریت');
+    expect(meta.exam_level.value).toBeNull(); // این سربرگ سطح را نگفته — unknown صادقانه
+  });
+
+  it('بدون جدول سربرگ = همه unknown؛ هیچ Hardcode master/business/1142/A وجود ندارد', () => {
+    const meta = extractMetadata('whatever.pdf', [{ pageNumber: 1, text: '' }]);
+    expect(meta.exam_family.status).toBe('unknown');
+    expect(meta.exam_level.status).toBe('unknown');
+    expect(meta.exam_set_code.status).toBe('unknown');
+    expect(meta.booklet_code.status).toBe('unknown');
+    expect(meta.track_id.status).toBe('unknown');
+  });
+
+  it('سطح از متن سربرگ: دکتری ≠ ارشد (T: فایل دکتری ارشد ثبت نمی‌شود)', () => {
+    const meta = extractMetadata('phd.pdf', [{ pageNumber: 1, text: 'آزمون ورودی دوره دکتری سال 1404' }]);
+    expect(meta.exam_level.value).toBe('phd');
+    expect(meta.exam_family.value).toBe('phd_admission');
+    expect(meta.exam_year.value).toBe(1404);
+  });
+
+  it('سال چاپ ≠ سال آزمون', () => {
+    const meta = extractMetadata('book.pdf', [{ pageNumber: 1, text: 'چاپ 1395' }]);
+    expect(meta.exam_year.value).toBeNull();
+  });
+
+  it('Metadata بدون Evidence قابل انتشار نیست — status همیشه همراه evidence است', () => {
+    const meta = extractMetadata('k.pdf', [{ pageNumber: 1, extraction_method: 'mineru', text: '<table><tr><td>گروه امتحانی</td><td>شماره پاسخنامه</td><td>نوع دفترچه</td><td>نام رشته امتحانی</td><td>کد رشته امتحانی</td></tr><tr><td>علوم انسانی</td><td>1</td><td>A</td><td>مجموعه مدیریت</td><td>1142</td></tr></table>' }]);
+    for (const key of ['exam_set_code', 'booklet_code'] as const) {
+      expect(meta[key].status).toBe('proposed');
+      expect(meta[key].evidence.length).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe('AEL-313 P0 — Page Reconstruction از middle_json (سند §4.1)', () => {
+  it('شماره صفحه از خروجی واقعی parser می‌آید؛ raw/normalized جدا', () => {
+    const middle = { pdf_info: [
+      { para_blocks: [{ type: 'text', bbox: [0, 0, 10, 10], lines: [{ spans: [{ content: 'مديريت ۱۴۰۴' }] }] }] },
+      { para_blocks: [{ type: 'table', bbox: [0, 0, 10, 10], lines: [{ spans: [{ content: '<table>1</table>' }] }] }] },
+    ] };
+    const pages = reconstructPagesFromMiddleJson(middle, 'src-x');
+    expect(pages).toHaveLength(2);
+    expect(pages[0]!.page_number).toBe(1);
+    expect(pages[1]!.page_number).toBe(2);
+    expect(pages[0]!.extraction_method).toBe('mineru');
+    expect(pages[0]!.blocks[0]!.source_locator).toContain('page:1/block:1');
+    expect(pages[0]!.text_normalized).toBe('مدیریت 1404');
+    expect(pages[0]!.text).toBe('مديريت ۱۴۰۴'); // Raw حفظ
+    expect(pages[1]!.tables).toHaveLength(1);
+  });
+
+  it('صفحه بدون بلوک = خالی ثبت می‌شود، حذف نمی‌شود', () => {
+    const pages = reconstructPagesFromMiddleJson({ pdf_info: [{ para_blocks: [] }, { para_blocks: [{ type: 'text', lines: [{ spans: [{ content: 'x' }] }] }] }] }, 's');
+    expect(pages).toHaveLength(2);
+    expect(pages[0]!.quality.has_text).toBe(false);
+  });
+});

@@ -21,6 +21,7 @@ jobs:
       - run: npm run test:db
       - run: npm run build
       - run: npm run audit:client-bundle
+      - run: npm run ael:pdf:check  # AEL-313: no PDF may enter commits
       - run: npx tsx scripts/engine-parity-harness.mts
       - run: npm run validate:content
       - run: npm run validate:learning
