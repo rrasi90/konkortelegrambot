@@ -26,7 +26,8 @@
     "build:legacy": "vite build --mode legacy",
     "test:db": "node scripts/db-test-embedded.mjs",
     "build:offline": "node scripts/build-ael-offline.mjs",
-    "validate:learning": "node --import tsx scripts/validate-learning-courses.ts && node scripts/verify-source-audit.mjs && node scripts/extract-learning-recurrence.mjs 1405 --check && node scripts/build-question-index.mjs --check"
+    "validate:learning": "node --import tsx scripts/validate-learning-courses.ts && node scripts/verify-source-audit.mjs && node scripts/extract-learning-recurrence.mjs 1405 --check && node scripts/build-question-index.mjs --check",
+    "import:registry": "tsx scripts/import-registry.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
