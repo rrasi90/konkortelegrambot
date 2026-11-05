@@ -46,7 +46,7 @@ async function publishPilotCatalog(): Promise<MemoryAdminStore> {
       versions.push({ ...qVersion, slug: course.id, kind: question.kind === 'essay' ? 'essay' : 'mcq' });
     }
   }
-  const snapshot = buildCatalogSnapshot('test-release-1', versions as never);
+  const snapshot = await buildCatalogSnapshot('test-release-1', versions as never);
   await adminStore.updateRelease(String(release.id), { status: 'staged', stagedAt: true });
   await adminStore.updateRelease(String(release.id), { status: 'published', publishedAt: true, publishedBy: 'test' });
   await adminStore.setActiveRelease(String(release.id), 'test');

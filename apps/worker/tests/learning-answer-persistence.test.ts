@@ -39,7 +39,7 @@ async function publishedAdminStore(): Promise<MemoryAdminStore> {
     await adminStore.addReleaseItem(String(release.id), String(qVersion.id), 'test');
     versions.push({ ...qVersion, slug: course.id, kind: question.kind === 'essay' ? 'essay' : 'mcq' });
   }
-  const snapshot = buildCatalogSnapshot('persist-test-1', versions as never);
+  const snapshot = await buildCatalogSnapshot('persist-test-1', versions as never);
   await adminStore.updateRelease(String(release.id), { status: 'staged', stagedAt: true });
   await adminStore.updateRelease(String(release.id), { status: 'published', publishedAt: true, publishedBy: 'test' });
   await adminStore.setActiveRelease(String(release.id), 'test');

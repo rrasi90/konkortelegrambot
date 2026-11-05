@@ -765,7 +765,7 @@ export function createAdminRouter(deps: AdminDeps) {
     // اعتبارسنجی Snapshot — درسی معتبر بسازد
     let snapshot;
     try {
-      snapshot = buildCatalogSnapshot(String(release.code), versions);
+      snapshot = await buildCatalogSnapshot(String(release.code), versions);
     } catch (error) {
       if (error instanceof CatalogValidationError) return Response.json({ error: error.message }, { status: 422 });
       throw error;

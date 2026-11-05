@@ -3,7 +3,6 @@
  * منبع حقیقت Runtime = Release فعال از DB؛ Static Registry فقط Legacy/Offline است.
  */
 import type { LearningCourse, LearningQuestion, LearningSource, LearningTopic } from '@ael/engine';
-import { createHash } from 'node:crypto';
 import type { AdminStore } from '../admin/store';
 
 type Row = Record<string, unknown>;
@@ -91,11 +90,16 @@ export function validateQuestionBody(body: unknown): LearningQuestion {
   };
 }
 
+async function sha256HexWeb(value: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
 /** ساخت Snapshot کاتالوگ از Versionهای یک Release — درسی بدون ماده → خطا (نه حدس). */
-export function buildCatalogSnapshot(
+export async function buildCatalogSnapshot(
   releaseCode: string,
   versions: Array<Row>,
-): { schemaVersion: 1; releaseCode: string; courses: LearningCourse[]; warnings: string[]; contentHash: string } {
+): Promise<{ schemaVersion: 1; releaseCode: string; courses: LearningCourse[]; warnings: string[]; contentHash: string }> {
   const warnings: string[] = [];
   const courseBodies = new Map<string, { body: ReturnType<typeof validateCourseBody>; sources: LearningSource[] }>();
   const questions = new Map<string, LearningQuestion[]>();
@@ -144,7 +148,7 @@ export function buildCatalogSnapshot(
     });
   }
   if (courses.length === 0) throw new CatalogValidationError('Release بدون هیچ درسی قابل انتشار نیست.');
-  const contentHash = createHash('sha256').update(JSON.stringify(courses)).digest('hex');
+  const contentHash = await sha256HexWeb(JSON.stringify(courses));
   return { schemaVersion: 1, releaseCode, courses, warnings, contentHash };
 }
 
