@@ -138,7 +138,7 @@ describe('Phase 2/4 — E و Q', () => {
 
     // SoD: بازبین نمی‌تواند نگاشت خودش را تأیید کند
     await post('question_chapter_mappings', { appearance_id: a2, node_id: ch2, relation_kind: 'candidate_ai_or_editor', review_status: 'pending_review', mapped_by: reviewerId });
-    const mappings = (await (await get('question_chapter_mappings')).json()) as { rows: Array<{ id: string; mapped_by: string }> };
+    const mappings = (await (await get('question_chapter_mappings')).json()) as { rows: Array<{ id: string; mapped_by: string; review_status: string }> };
     const selfMapping = mappings.rows.find(row => row.mapped_by === reviewerId)!;
     const selfDecide = await app.request(`/api/admin/domain/question_chapter_mappings/${selfMapping.id}/decide`, {
       method: 'POST', headers: { Authorization: `Bearer ${reviewerToken}`, 'Content-Type': 'application/json' },

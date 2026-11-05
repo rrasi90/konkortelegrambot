@@ -529,7 +529,18 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
     expect(requestBody).not.toHaveProperty('drop_pending_updates');
   });
 
-  it('وب‌هوک تلگرام پیام /start را با دکمه باز کردن MiniApp پاسخ می‌دهد', async () => {
+  it('وب‌هوک تلگرام پیام /start را با یک ارسال واحد و دکمهٔ MiniApp پردازش می‌کند (رفع دو پیام — مأموریت v2)', async () => {
+    ENV.TELEGRAM_BOT_TOKEN = ENV.TELEGRAM_BOT_TOKEN ?? '123456:worker-test-bot';
+    // ارسال واقعی به Telegram mock می‌شود؛ پاسخ webhook دیگر {method:sendMessage} نیست
+    const sent: Array<Record<string, unknown>> = [];
+    const realFetch = globalThis.fetch;
+    vi.stubGlobal('fetch', vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      if (String(input).includes('api.telegram.org')) {
+        sent.push(JSON.parse(String(init?.body ?? '{}')) as Record<string, unknown>);
+        return new Response(JSON.stringify({ ok: true, result: { message_id: 777 } }), { status: 200 });
+      }
+      return realFetch(input as never, init);
+    }));
     const res = await app.request('/api/telegram/webhook', {
       method: 'POST',
       headers: {
@@ -537,17 +548,24 @@ describe('worker API — حلقهٔ کامل یادگیری', () => {
         'X-Telegram-Bot-Api-Secret-Token': ENV.TELEGRAM_WEBHOOK_SECRET,
       },
       body: JSON.stringify({
+        update_id: 901,
         message: {
-          chat: { id: 987654 },
+          chat: { id: 987654, type: 'private' },
+          from: { id: 987654 },
           text: '/start',
         },
       }),
     });
     expect(res.status).toBe(200);
     const data = (await json(res)) as any;
-    expect(data.method).toBe('sendMessage');
-    expect(data.chat_id).toBe(987654);
-    expect(data.reply_markup.inline_keyboard[0][0].web_app.url).toBeTruthy();
+    expect(data.ok).toBe(true);
+    expect(data.status).toBe('sent');
+    // ریشهٔ دو پیام: بدنهٔ پاسخ دیگر method تلگرامی ندارد
+    expect(data).not.toHaveProperty('method');
+    expect(sent).toHaveLength(1);
+    expect(sent[0]!.chat_id).toBe(987654);
+    expect((sent[0]!.reply_markup as { inline_keyboard: unknown[][] }).inline_keyboard[0]![0]).toHaveProperty('web_app');
+    vi.unstubAllGlobals();
   });
 
   it('سؤال ناشناخته ۴۰۴ می‌دهد', async () => {
