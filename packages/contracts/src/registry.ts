@@ -550,3 +550,42 @@ export function findDuplicateKeys(bundle: RegistryImportBundle): RegistryFieldEr
   scan('examBooklets', bundle.examBooklets);
   return errors;
 }
+
+// ---------- نگهداشت موجودیت → جدول مقصد (Migration 0019) ----------
+/** فقط این موجودیت‌ها از مسیر API/Import قابل نوشتن‌اند (فهرست‌سفید دفاعی). */
+export const REGISTRY_ENTITY_TABLES = {
+  authorities: 'education_authorities',
+  systems: 'education_systems',
+  levels: 'education_levels',
+  stages: 'education_stages',
+  tracks: 'education_tracks',
+  fields: 'fields_of_study',
+  majors: 'majors',
+  subfields: 'subfields',
+  institutions: 'institutions',
+  faculties: 'faculties',
+  programs: 'programs',
+  programVersions: 'program_versions',
+  academicYears: 'academic_years',
+  curricula: 'curricula',
+  curriculumVersions: 'curriculum_versions',
+  courseDefinitions: 'course_definitions',
+  courseOfferings: 'course_offerings',
+  courseUnits: 'course_units',
+  syllabusNodes: 'syllabus_nodes',
+  learningOutcomes: 'learning_outcomes',
+  curriculumCourses: 'curriculum_courses',
+  prerequisiteEdges: 'prerequisite_edges',
+  examFamilies: 'exam_families',
+  examEvents: 'exam_events',
+  examEventVersions: 'exam_event_versions',
+  examSubjects: 'exam_subjects',
+  examSets: 'exam_sets',
+  examCombinations: 'exam_combinations',
+  examFieldSubjectAssignments: 'exam_field_subject_assignments',
+  admissionRules: 'admission_rules',
+  assessmentComponents: 'assessment_components',
+  assessmentRubrics: 'assessment_rubrics',
+  examBooklets: 'exam_booklets',
+} as const;
+export type RegistryEntityKey = keyof typeof REGISTRY_ENTITY_TABLES;

@@ -31,42 +31,9 @@ export interface ImportReport {
 const CAMEL_RE = /([a-z0-9])([A-Z])/g;
 const toSnake = (field: string): string => field.replace(CAMEL_RE, '$1_$2').toLowerCase();
 
-// entity → جدول مقصد در Migration 0019
-export const ENTITY_TABLES: Record<string, string> = {
-  authorities: 'education_authorities',
-  systems: 'education_systems',
-  levels: 'education_levels',
-  stages: 'education_stages',
-  tracks: 'education_tracks',
-  fields: 'fields_of_study',
-  majors: 'majors',
-  subfields: 'subfields',
-  institutions: 'institutions',
-  faculties: 'faculties',
-  programs: 'programs',
-  programVersions: 'program_versions',
-  academicYears: 'academic_years',
-  curricula: 'curricula',
-  curriculumVersions: 'curriculum_versions',
-  courseDefinitions: 'course_definitions',
-  courseOfferings: 'course_offerings',
-  courseUnits: 'course_units',
-  syllabusNodes: 'syllabus_nodes',
-  learningOutcomes: 'learning_outcomes',
-  curriculumCourses: 'curriculum_courses',
-  prerequisiteEdges: 'prerequisite_edges',
-  examFamilies: 'exam_families',
-  examEvents: 'exam_events',
-  examEventVersions: 'exam_event_versions',
-  examSubjects: 'exam_subjects',
-  examSets: 'exam_sets',
-  examCombinations: 'exam_combinations',
-  examFieldSubjectAssignments: 'exam_field_subject_assignments',
-  admissionRules: 'admission_rules',
-  assessmentComponents: 'assessment_components',
-  assessmentRubrics: 'assessment_rubrics',
-  examBooklets: 'exam_booklets',
-};
+// نگاشت موجودیت → جدول از قرارداد مشترک (@ael/contracts) می‌آید تا با API پنل هم‌سانی داشته باشد.
+import { REGISTRY_ENTITY_TABLES } from '@ael/contracts';
+export { REGISTRY_ENTITY_TABLES as ENTITY_TABLES } from '@ael/contracts';
 
 const PK_FIELD: Record<string, 'id' | 'code'> = {
   authorities: 'code', systems: 'code', levels: 'code', stages: 'code', tracks: 'code',
@@ -220,7 +187,7 @@ function sqlString(value: unknown): string {
 export function buildUpsertSql(bundle: RegistryImportBundle): string {
   const statements: string[] = ['-- تولیدشده توسط scripts/import-registry.mts (AEL-107)'];
   statements.push('begin;');
-  for (const [entity, table] of Object.entries(ENTITY_TABLES)) {
+  for (const [entity, table] of Object.entries(REGISTRY_ENTITY_TABLES)) {
     const list = bundle[entity as keyof RegistryImportBundle] as unknown[];
     if (!Array.isArray(list) || list.length === 0) continue;
     const pk = PK_FIELD[entity] ?? 'id';

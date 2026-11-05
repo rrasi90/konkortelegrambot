@@ -60,6 +60,8 @@ import {
   calculateExpectedBenefit,
 } from '@ael/utils';
 import type { LearnerSkillState } from '@ael/contracts';
+import { createAdminRouter } from './admin/routes';
+import { MemoryAdminStore, SupabaseAdminStore, type AdminStore } from './admin/store';
 
 export interface Env {
   ENVIRONMENT?: string;
@@ -92,6 +94,8 @@ export interface CreateAppOptions {
   store?: DataStore;
   /** برای تست: شمارندهٔ مستقل محدودکنندهٔ نرخ */
   rateLimits?: Map<string, { count: number; resetAt: number }>;
+  /** AEL-202: لایهٔ دادهٔ RBAC مدیریتی (پیش‌فرض: Supabase یا حافظهٔ موقت در dev) */
+  adminStore?: AdminStore;
 }
 
 export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Variables: { store: DataStore; secret: string; allowDemoAuth: boolean } }> {
@@ -149,6 +153,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   // SEC-02 (کمربند-و-آویز): حتی اگر گارد بالایی به هر دلیلی رد شود، مسیرهای دمو
   // در پروداکشن در سطح درخواست هم بی‌اثرند؛ پرچم صرفاً در محیط اعلان‌شدهٔ dev اثر دارد.
   const allowDemoAuth = !isProduction && env.ALLOW_DEMO_AUTH === 'true';
+
+  // AEL-202: لایهٔ دادهٔ RBAC — در Production بدون Supabase fail می‌کنیم (AEL-801 هم‌راستا).
+  const adminStore: AdminStore | null =
+    options.adminStore ??
+    (env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
+      ? new SupabaseAdminStore(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
+      : isProduction
+        ? null
+        : new MemoryAdminStore());
 
   app.use('*', async (c, next) => {
     c.set('store', store);
@@ -2411,6 +2424,14 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     await store.upsertStats(stats);
     return c.json({ ok: true, examDate: stats.examDate });
   });
+
+  /* ---------- AEL-201..209: Admin API با RBAC سمت سرور ---------- */
+  app.route('/api/admin', createAdminRouter({
+    adminStore,
+    botToken: env.TELEGRAM_BOT_TOKEN,
+    bootstrapToken: env.ADMIN_API_TOKEN,
+    isProduction,
+  }));
 
   /* ---------- خطاها و مسیرهای ناشناخته ---------- */
   app.onError((err, c) => {
