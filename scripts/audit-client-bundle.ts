@@ -127,10 +127,18 @@ async function runAudit(root: string): Promise<void> {
   if (resolve(root) === resolve(process.cwd(), 'apps/miniapp')) {
     await assertWorkerAssetsConfiguration(undefined, root);
     const files = await readdir(root, { withFileTypes: true });
-    if (files.length !== 4 || files.some((entry) =>
-      !entry.isFile() || !['index.html', 'app.js', 'styles.css', 'learning.js'].includes(entry.name)
+    // مأموریت v2: admin.html به‌عنوان فایل ممیزی‌شدهٔ پنجم اضافه شد — پنل ادمین بدون Secret،
+    // فقط کلاینتِ API (نشست با Bearer در حافظه؛ هیچ توکنی در LocalStorage/HTML ذخیره نمی‌شود).
+    if (files.length !== 5 || files.some((entry) =>
+      !entry.isFile() || !['index.html', 'app.js', 'styles.css', 'learning.js', 'admin.html'].includes(entry.name)
     )) {
-      throw new Error('Worker asset directory must contain only the four audited Mini App files.');
+      throw new Error('Worker asset directory must contain only the five audited files (Mini App + admin panel).');
+    }
+    const adminHtml = await readFile(join(root, 'admin.html'), 'utf8');
+    for (const forbidden of ['ADMIN_API_TOKEN', 'ADMIN_ENTRY_CODE', 'localStorage.setItem', 'eval(']) {
+      if (adminHtml.includes(forbidden)) {
+        throw new Error(`ADMIN PANEL REJECTED: admin.html contains forbidden pattern "${forbidden}".`);
+      }
     }
   }
   const findings = await auditClientBundle(root);

@@ -3,6 +3,10 @@ import { defaultSeed } from './default-seed';
 import type { LearnerSkillState, ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
 import type { AttemptTicket, AnswerEvent, AppUser, AuditEventInput, DailyQueueItemRow, DataStore, ExamSelection, MasteryHistoryRow } from './store';
 
+function makeRowId(): string {
+  return `row-${crypto.randomUUID()}`;
+}
+
 export class MemoryStore implements DataStore {
   users = new Map<string, AppUser>();
   private tgIndex = new Map<number, string>();
@@ -460,5 +464,199 @@ export class MemoryStore implements DataStore {
     }
     if (session.status !== 'scored') throw new Error('Exam session is not submitted');
     return session.report;
+  }  /* ---------- AEL-610/612 + ADR-011 — ثبت پایدار پاسخ تألیفی (شبیه‌سازی RPC اتمیک) ---------- */
+
+  private learningAttempts = new Map<string, { userId: string; courseId: string; courseVersion: string; questionIds: string[]; expiresAt: number; status: string }>();
+  private learningAnswers = new Map<string, { isCorrect: boolean; selected: number | null }>();
+  private topicMastery = new Map<string, { mastery: number; correct: number; wrong: number }>();
+
+  async createLearningAttempt(input: {
+    attemptId: string; userId: string; courseId: string; courseVersion: string;
+    releaseId: string | null; mode: string; questionIds: string[]; expiresAt: string;
+  }): Promise<void> {
+    this.learningAttempts.set(input.attemptId, {
+      userId: input.userId, courseId: input.courseId, courseVersion: input.courseVersion,
+      questionIds: [...input.questionIds], expiresAt: new Date(input.expiresAt).getTime(), status: 'open',
+    });
+  }
+
+  async submitLearningAnswerAtomic(input: {
+    userId: string; attemptId: string; questionId: string; selected: number | null;
+    operationId: string; isCorrect: boolean; topicId: string; mastery: number;
+    fsrs: { stability: number; difficulty: number; dueDays: number } | null;
+  }): Promise<{ replay: boolean } | null> {
+    const attempt = this.learningAttempts.get(input.attemptId);
+    // امنیت: بلیت متعلق به همین کاربر و باز باشد (شبیه‌سازی گاردهای RPC)
+    if (!attempt || attempt.userId !== input.userId || attempt.status !== 'open') return null;
+    if (Date.now() > attempt.expiresAt) { attempt.status = 'expired'; return null; }
+    if (!attempt.questionIds.includes(input.questionId)) return null;
+    const key = `${input.userId}:${input.operationId}`;
+    const existing = this.learningAnswers.get(key);
+    if (existing) {
+      if (existing.isCorrect !== input.isCorrect || existing.selected !== input.selected) {
+        throw new Error('OPERATION_CONFLICT');
+      }
+      return { replay: true };
+    }
+    this.learningAnswers.set(key, { isCorrect: input.isCorrect, selected: input.selected });
+    const mKey = `${input.userId}:${attempt.courseId}:${input.topicId}`;
+    const current = this.topicMastery.get(mKey) ?? { mastery: 50, correct: 0, wrong: 0 };
+    this.topicMastery.set(mKey, {
+      mastery: input.mastery,
+      correct: current.correct + (input.isCorrect ? 1 : 0),
+      wrong: current.wrong + (input.isCorrect ? 0 : 1),
+    });
+    return { replay: false };
+  }
+
+  /* ---------- مأموریت v2 ---------- */
+
+  private telegramUpdates = new Set<string>();
+  private replyEffects = new Map<string, { status: string; telegramMessageId: number | null; lastError: string | null }>();
+  private loginAttempts: Array<{ telegramUserId: number; success: boolean; at: number }> = [];
+  private launchTickets = new Map<string, { adminUserId: string; telegramUserId: number; expiresAt: number; consumed: boolean }>();
+  private feedbackThreads: Array<Record<string, unknown>> = [];
+  private feedbackMessages: Array<Record<string, unknown>> = [];
+  private nextRowId = 1;
+
+  async claimTelegramUpdate(input: { botId: string; updateId: number; chatId: number | null; senderTelegramId: number | null; isEdit: boolean; kind: string }): Promise<'claimed' | 'duplicate'> {
+    const key = `${input.botId}:${input.updateId}`;
+    if (this.telegramUpdates.has(key)) return 'duplicate';
+    this.telegramUpdates.add(key);
+    return 'claimed';
+  }
+
+  async recordReplyEffect(input: { botId: string; updateId: number; intentKey: string; chatId: number }): Promise<'created' | 'existing'> {
+    const key = `${input.botId}:${input.updateId}:${input.intentKey}`;
+    if (this.replyEffects.has(key)) return 'existing';
+    this.replyEffects.set(key, { status: 'pending', telegramMessageId: null, lastError: null });
+    return 'created';
+  }
+
+  async finishReplyEffect(input: { botId: string; updateId: number; intentKey: string; status: 'sent' | 'retryable_rejected' | 'failed_permanent' | 'delivery_uncertain'; telegramMessageId?: number | null; lastError?: string | null; retryAfterSeconds?: number | null }): Promise<void> {
+    const key = `${input.botId}:${input.updateId}:${input.intentKey}`;
+    const row = this.replyEffects.get(key);
+    if (row) {
+      row.status = input.status;
+      row.telegramMessageId = input.telegramMessageId ?? null;
+      row.lastError = input.lastError ?? null;
+    }
+  }
+
+  async recordAdminLoginAttempt(input: { telegramUserId: number; success: boolean }): Promise<void> {
+    this.loginAttempts.push({ telegramUserId: input.telegramUserId, success: input.success, at: Date.now() });
+  }
+
+  async countRecentFailedAdminLogins(input: { telegramUserId: number; sinceIso: string }): Promise<number> {
+    const since = new Date(input.sinceIso).getTime();
+    return this.loginAttempts.filter(row => row.telegramUserId === input.telegramUserId && !row.success && row.at >= since).length;
+  }
+
+  async createAdminLaunchTicket(input: { tokenHash: string; adminUserId: string; telegramUserId: number; expiresAt: string }): Promise<void> {
+    this.launchTickets.set(input.tokenHash, { adminUserId: input.adminUserId, telegramUserId: input.telegramUserId, expiresAt: new Date(input.expiresAt).getTime(), consumed: false });
+  }
+
+  async consumeAdminLaunchTicket(input: { tokenHash: string; nowIso: string }): Promise<{ adminUserId: string; telegramUserId: number } | null> {
+    const row = this.launchTickets.get(input.tokenHash);
+    if (!row || row.consumed) return null;
+    if (row.expiresAt <= new Date(input.nowIso).getTime()) return null;
+    row.consumed = true;
+    return { adminUserId: row.adminUserId, telegramUserId: row.telegramUserId };
+  }
+
+  async createFeedbackThread(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string }): Promise<string> {
+    const id = makeRowId();
+    this.feedbackThreads.push({
+      id, user_id: input.userId, telegram_user_id: input.telegramUserId, chat_id: input.chatId,
+      category: input.category, severity: 'normal', status: 'new',
+      assignee: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    });
+    this.feedbackMessages.push({
+      id: makeRowId(), thread_id: id, author_kind: 'user',
+      author_id: input.telegramUserId === null ? null : String(input.telegramUserId),
+      body: input.body, is_internal_note: false, created_at: new Date().toISOString(),
+    });
+    return id;
+  }
+
+  async addFeedbackMessage(input: { threadId: string; authorKind: 'user' | 'admin'; authorId: string | null; body: string; isInternalNote: boolean }): Promise<void> {
+    this.feedbackMessages.push({
+      id: makeRowId(), thread_id: input.threadId, author_kind: input.authorKind,
+      author_id: input.authorId, body: input.body, is_internal_note: input.isInternalNote,
+      created_at: new Date().toISOString(),
+    });
+  }
+
+  async listFeedbackThreads(input: { status: string | null; limit: number }): Promise<unknown[]> {
+    return this.feedbackThreads
+      .filter(row => !input.status || row.status === input.status)
+      .slice(0, input.limit);
+  }
+
+  async listFeedbackMessages(threadId: string): Promise<unknown[]> {
+    return this.feedbackMessages.filter(row => row.thread_id === threadId);
+  }
+
+  /* ---------- مأموریت v2 Phase 2 ---------- */
+
+  private domainTables = new Map<string, Map<string, Record<string, unknown>>>();
+  private domainRowId = 1;
+
+  private domainTable(name: string): Map<string, Record<string, unknown>> {
+    const table = this.domainTables.get(name) ?? new Map<string, Record<string, unknown>>();
+    this.domainTables.set(name, table);
+    return table;
+  }
+
+  async upsertDomainRow(table: string, row: Record<string, unknown>): Promise<Record<string, unknown>> {
+    const store = this.domainTable(table);
+    const key = String(row.id ?? row.slug ?? `row-${this.domainRowId++}`);
+    // تقلید گاردهای Trigger مهاجرت 0025 برای mapping (آزمون E-09 و SoD)
+    if (table === 'question_chapter_mappings') {
+      const mappedBy = row.mapped_by ?? null;
+      if (row.review_status === 'approved' && row.relation_kind === 'direct_source_verified' && !row.evidence_id) {
+        throw new Error('MAPPING_EVIDENCE_REQUIRED');
+      }
+      if (row.review_status === 'approved' && row.reviewed_by && mappedBy && row.reviewed_by === mappedBy) {
+        throw new Error('MAPPING_SELF_APPROVAL');
+      }
+    }
+    const merged = { ...row, id: key, updated_at: new Date().toISOString() };
+    store.set(key, merged);
+    return merged;
+  }
+
+  async listDomainRows(table: string, filters: Array<{ column: string; value: string }>, limit: number): Promise<Array<Record<string, unknown>>> {
+    return [...this.domainTable(table).values()]
+      .filter(row => filters.every(f => String(row[f.column]) === f.value))
+      .slice(0, limit);
+  }
+
+  async updateDomainRow(table: string, filters: Array<{ column: string; value: string }>, patch: Record<string, unknown>): Promise<Array<Record<string, unknown>>> {
+    const store = this.domainTable(table);
+    const updated: Array<Record<string, unknown>> = [];
+    for (const [key, row] of store.entries()) {
+      if (filters.every(f => String(row[f.column]) === f.value)) {
+        const next: Record<string, unknown> = { ...row, ...patch, updated_at: new Date().toISOString() };
+        if (table === 'question_chapter_mappings') {
+          if (next.review_status === 'approved' && next.relation_kind === 'direct_source_verified' && !next.evidence_id) {
+            throw new Error('MAPPING_EVIDENCE_REQUIRED');
+          }
+          if (next.review_status === 'approved' && next.reviewed_by && next.mapped_by && next.reviewed_by === next.mapped_by) {
+            throw new Error('MAPPING_SELF_APPROVAL');
+          }
+        }
+        store.set(key, next);
+        updated.push(next);
+      }
+    }
+    return updated;
+  }
+
+  /** فقط برای تست/ممیزی */
+  debugTopicMastery(userId: string): Array<{ key: string; mastery: number; correct: number; wrong: number }> {
+    return [...this.topicMastery.entries()]
+      .filter(([key]) => key.startsWith(`${userId}:`))
+      .map(([key, value]) => ({ key, ...value }));
   }
 }

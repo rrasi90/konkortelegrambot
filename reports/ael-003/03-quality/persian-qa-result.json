@@ -1,0 +1,1628 @@
+{
+ "items_checked": 156,
+ "errors": 99,
+ "warnings": 58,
+ "info": 113,
+ "findings": [
+  {
+   "name": "bank-official_traced_arshad:q.k1391.49",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 36 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.49",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 105 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.60",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: max، Z، x_1، x_2، x_1",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.60",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.167",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: lim_، x، to، x، ln",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.167",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.201",
+   "level": "هشدار",
+   "issue": "پسوند «ها» چسبیده در موقعیت 73 بدون نیم‌فاصله",
+   "fix": "نیم‌فاصله U+200C («…‌ها»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.201",
+   "level": "هشدار",
+   "issue": "پسوند «ها» چسبیده در موقعیت 129 بدون نیم‌فاصله",
+   "fix": "نیم‌فاصله U+200C («…‌ها»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.201",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.222",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Cellular، Manufacturing",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.222",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.306",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: PLC، Reminder، Advertising",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1391.306",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1392.35",
+   "level": "هشدار",
+   "issue": "«أ» (U+0623) عربی‌محور است",
+   "fix": "در فارسی معمولاً آ/ا"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1392.48",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1392.76",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: n، n",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1392.76",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1392.189",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: x_i، i، dots، n، CV",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1392.189",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 43 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1392.189",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1392.225",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Q",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1392.225",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1393.34",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 36 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1393.81",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Q، P",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1393.134",
+   "level": "هشدار",
+   "issue": "«أ» (U+0623) عربی‌محور است",
+   "fix": "در فارسی معمولاً آ/ا"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1393.134",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: max، Z، x_1، x_2، x_1",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1393.134",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1393.168",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Q",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1393.168",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1393.181",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: BCG",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1393.181",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1394.44",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1394.51",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Horizontal، Differentiation",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1394.51",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1394.84",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1394.128",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1394.173",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: SMED",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1394.173",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1395.46",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: x_i، a، sum، x_i، a",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1395.105",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Q، L، L، L",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1395.105",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1395.197",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Shell، Directional، Policy، Matrix",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1395.197",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1396.38",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1396.65",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: A، begin، bmatrix، end، bmatrix",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1396.65",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1396.95",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1396.99",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: P، Q، P",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1396.176",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: A، B، C، D، E",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1396.176",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1397.39",
+   "level": "هشدار",
+   "issue": "«أ» (U+0623) عربی‌محور است",
+   "fix": "در فارسی معمولاً آ/ا"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1397.39",
+   "level": "هشدار",
+   "issue": "«إ» (U+0625) عربی‌محور است",
+   "fix": "در فارسی معمولاً ا"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1397.39",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1397.111",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: G، C، Y_d، I، T",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1397.111",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1397.180",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Q، frac، Q",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1397.180",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1398.83",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: BSC",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1398.83",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1398.110",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 136 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1398.177",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: M، M، P_0",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1398.177",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1399.55",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: d، Z_",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1399.55",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 46 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1399.55",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1399.76",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Technostructure",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1399.76",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1400.77",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Behavioral، Theory، of، Decision، Making",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1400.77",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1400.96",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: P، frac، Q، P",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1400.96",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1400.180",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: e_t، MAD، MSE",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1400.180",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1400.191",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 0 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1400.191",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1401.77",
+   "level": "هشدار",
+   "issue": "«أ» (U+0623) عربی‌محور است",
+   "fix": "در فارسی معمولاً آ/ا"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1401.77",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Gangplank",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1401.77",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1401.101",
+   "level": "هشدار",
+   "issue": "«أ» (U+0623) عربی‌محور است",
+   "fix": "در فارسی معمولاً آ/ا"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1401.101",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 51 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1401.148",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: min، Z، x",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1401.187",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Kano، Model، Must-be، Basic، Requirements",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1401.187",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1402.49",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1402.185",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Boston، BCG، Cash، Cow",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1402.185",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.52",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: n، p",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.52",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.84",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Goal، Displacement",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.84",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.93",
+   "level": "هشدار",
+   "issue": "ارقام لاتین در متن فارسی",
+   "fix": "ارقام فارسی"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.93",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.101",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: rr",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.101",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.186",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Promoters، Passives، Detractors، NPS",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1403.186",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1404.41",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۰",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1404.41",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۲۵۰",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1404.66",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Hygiene، Factors",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1404.66",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1404.94",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: AFC، ATC",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1404.170",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: T",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1404.170",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.41",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.66",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.87",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: P، Q، P",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.136",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: A، B، A، B، x_j",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.136",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.166",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Number، of، Tardy، Jobs",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.166",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.188",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: BCG، Stars",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.188",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.192",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Skimming",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.k1405.192",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.econ.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: IS-LM، Liquidity، Trap، Delta، G",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.econ.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.math.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: A_، times، A، A، I",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.math.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.islamic.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.mb.struct.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Professional، Bureaucracy",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.mb.struct.2",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 32 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.mb.struct.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.mb.cont.3",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: M_3، R_3",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.mb.cont.3",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.or.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: max، Z، Non-basic، variable، z_j",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.or.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.or.3",
+   "level": "هشدار",
+   "issue": "«أ» (U+0623) عربی‌محور است",
+   "fix": "در فارسی معمولاً آ/ا"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.or.3",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: m، n، MODI",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.or.3",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.pom.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: EOQ، D_2، D_1، S، H",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.pom.2",
+   "level": "هشدار",
+   "issue": "پسوند «ها» چسبیده در موقعیت 107 بدون نیم‌فاصله",
+   "fix": "نیم‌فاصله U+200C («…‌ها»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.pom.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.pom.3",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: A، B، C، D، E",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.pom.3",
+   "level": "هشدار",
+   "issue": "پسوند «ها» چسبیده در موقعیت 106 بدون نیم‌فاصله",
+   "fix": "نیم‌فاصله U+200C («…‌ها»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.pom.3",
+   "level": "هشدار",
+   "issue": "پسوند «ها» چسبیده در موقعیت 318 بدون نیم‌فاصله",
+   "fix": "نیم‌فاصله U+200C («…‌ها»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.ind.pom.3",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.econ.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: X، E_d، TR، P، times",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.econ.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.econ.3",
+   "level": "هشدار",
+   "issue": "«أ» (U+0623) عربی‌محور است",
+   "fix": "در فارسی معمولاً آ/ا"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.econ.3",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: C، Y_d، Delta، G، Delta",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.econ.3",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 99 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.econ.3",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 122 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.econ.3",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.math.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: f، x، y، x، y",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_arshad:q.bus.math.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1394.201",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Burrell، Morgan، Subjectivism، Regulation",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1394.201",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1395.202",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: n، SST، SSE، F",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1395.202",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1396.203",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Dynamic، Capabilities، Teece",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1396.203",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1397.204",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: DEA، BCC، CCR",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1397.204",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1398.205",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Henderson، Clark",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1398.205",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1399.206",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: External، Validity",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1399.206",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1400.207",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: DiMaggio، Powell، Institutional، Isomorphism",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1400.207",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1401.208",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Absorptive، Capacity، Potential، Absorptive، Capacity",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1401.208",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۲۰۰۲",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1401.208",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1402.209",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: M، M، rho، frac، lambda",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1402.209",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 112 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1402.209",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 163 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1402.209",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1403.210",
+   "level": "هشدار",
+   "issue": "«أ» (U+0623) عربی‌محور است",
+   "fix": "در فارسی معمولاً آ/ا"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1403.210",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Service-Dominant، Logic، Vargo، Lusch",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1403.210",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1404.211",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: SEM، Convergent، Validity",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.phd1404.211",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mb.cont.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.sm.vc.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Support، Activities",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.sm.vc.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.sm.rbv.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: VRIO",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.sm.port.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: BCG",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.sm.port.1",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 118 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_phd:q.sm.port.1",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 194 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_phd:q.sm.port.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.sm.dyn.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.scale.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.anova.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: One-Way، ANOVA، k، n، SST",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.anova.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.reg.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: p، n، R، bar، R",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.reg.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.rm.val.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: AVE، CR",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.rm.val.1",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 32 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_phd:q.rm.val.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.brand.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: CBBE، Who، are، you",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.brand.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) ?",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.cons.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: ELM",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.cons.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.inno.scurve.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: S",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.inno.scurve.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.inno.ambi.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Structural، Ambidexterity، Exploitation، Exploration",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.inno.ambi.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.ind.or.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: x_1",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.ind.pom.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: EPQ، I_، max",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.ind.pom.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.inno.tidd.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: P، Ryanair",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.inno.tidd.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.ind.mcdm.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: M، M، L_s، P_0",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.ind.mcdm.1",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 193 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_phd:q.ind.mcdm.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.inno.open.1",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Open، Innovation، False، Negative، PARC",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.inno.open.1",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.plc.3",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Maturity",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.plc.3",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.brand.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: CBBE، Brand، Performance، Brand، Imagery",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.brand.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.cons.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Henry، Assael",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mkt.cons.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mb.cont.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Charles، Perrow",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.mb.cont.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.anova.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: One-Way، ANOVA، SST، SSW، F",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.anova.2",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 60 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.anova.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( )",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.scales.2",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: bar، x، s، y_i، x_i",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.scales.2",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 42 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-official_traced_phd:q.stats.scales.2",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.mb.struct.proof.1404",
+   "level": "هشدار",
+   "issue": "«أ» (U+0623) عربی‌محور است",
+   "fix": "در فارسی معمولاً آ/ا"
+  },
+  {
+   "name": "bank-quarantine:q.mb.struct.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Authority",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.mb.struct.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.mb.struct.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.mb.cont.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.mb.cont.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.sm.vc.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.sm.vc.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.sm.rbv.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: RBV",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.sm.rbv.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.sm.rbv.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.sm.port.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: BCG، GE",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.sm.port.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.sm.port.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.stats.anova.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Two-Way، ANOVA، A، B، r",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.stats.anova.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.stats.anova.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.stats.reg.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Heteroscedasticity، OLS",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.stats.reg.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.stats.reg.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.mkt.brand.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: CBBE، Breadth، Depth",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.mkt.brand.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.mkt.brand.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.ind.or.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: C_B، B، begin، bmatrix، end",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.ind.or.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.ind.or.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ] { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.ind.pom.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: USL، LSL، sigma، C_، pk",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.ind.pom.proof.1404",
+   "level": "هشدار",
+   "issue": "«می» چسبیده در موقعیت 168 بدون نیم‌فاصله (اگر واژهٔ مثل «میگو/میز» است، دستی تأیید شود)",
+   "fix": "نیم‌فاصله U+200C («می‌…»)"
+  },
+  {
+   "name": "bank-quarantine:q.ind.pom.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.ind.pom.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ] { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.inno.tidd.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.inno.tidd.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.ind.mcdm.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: times، AHP، lambda_، max، n",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.ind.mcdm.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.ind.mcdm.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ] { }",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.inno.open.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Absorptive، Capacity، Potential، Absorptive، Capacity",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.inno.open.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.inno.open.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۹۹۰",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.inno.open.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۲۰۰۲",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.inno.open.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: ( ) [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.bus.eng.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: Not، until، the، board، of",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.bus.eng.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.bus.eng.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.bus.econ.proof.1404",
+   "level": "خطا",
+   "issue": "توکن لاتین در متن فارسی UI: TC، Q، Q، Q",
+   "fix": "حذف، فارسی‌سازی، یا افزودن به allowlist با تأیید"
+  },
+  {
+   "name": "bank-quarantine:q.bus.econ.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.bus.econ.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.bus.math.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.bus.math.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  },
+  {
+   "name": "bank-quarantine:q.bus.islamic.proof.1404",
+   "level": "هشدار",
+   "issue": "عدد بلند بدون جداکنندهٔ هزارگان: ۱۴۰۴",
+   "fix": "جداکنندهٔ «٬» U+066C مثل «۱٬۲۳۴٬۵۶۷»"
+  },
+  {
+   "name": "bank-quarantine:q.bus.islamic.proof.1404",
+   "level": "اطلاع",
+   "issue": "علامت/پرانتز لاتین در متن راست‌به‌چپ: [ ]",
+   "fix": "ترتیب نمایش باید بصری بررسی شود"
+  }
+ ]
+}

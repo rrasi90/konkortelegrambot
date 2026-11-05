@@ -254,7 +254,11 @@ export function createQuiz(course: LearningCourse, input: QuizInput, now = Date.
       throw new FormativeQuizError('مجموع سهمیه‌ها باید برابر تعداد سؤال باشد.');
     }
   }
+  // AEL (B سند Playbook / AT-AEL-20): سؤال تأییدشدهٔ علمی نیست مگر با انتخاب صریحِ
+  // سمت سرور (reviewIds = صف مرور FSRS) قابل آزمون باشد؛ pending_sme هرگز از مسیر
+  // عمومی وارد استخر نمی‌شود. این Gate موقت پیش از سیستم انتشار است.
   const pool = course.questions.filter(q =>
+    (q.review === 'reviewed' || reviewIds?.includes(q.id)) &&
     (topicId === undefined || q.topicId === topicId) &&
     (input.kind === undefined || (q.kind ?? 'mcq') === input.kind) &&
     (topicIds === undefined || topicIds.includes(q.topicId)) &&

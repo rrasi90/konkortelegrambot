@@ -407,3 +407,9 @@ export interface UserSkillState {
   uncoveredGaps: string[];
   progressPercent: number; // 0-100, clearly labeled
 }
+
+// AEL فاز ۱ — رجیستری آموزشی نسخه‌دار (AEL-101..108)
+export * from './registry';
+
+// AEL فاز ۳ — Source Library و Ingestion (AEL-301..312)
+export * from './ingestion';

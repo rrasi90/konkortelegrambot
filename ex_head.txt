@@ -1,0 +1,17 @@
+import { describe, expect, it } from 'vitest';
+import { answerLearningQuiz, finishLearningQuiz, startLearningQuiz } from '../src/learning-paths';
+import { MemoryStore } from '../src/memory-store';
+import { issueSessionToken } from '../src/auth';
+
+/**
+ * EX-03/EX-04 — نشست پایدار مسیر تألیفی: عملیات تکرارپذیر، زمان مرجع سرور،
+ * نسخهٔ بانک و جداسازی کاربر (AT-12/AT-15/AT-16/AT-28).
+ */
+
+const secret = 'ex-session-tests-secret';
+const baseNow = 1_700_000_000_000;
+
+function store() {
+  return new MemoryStore();
+}
+

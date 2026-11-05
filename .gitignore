@@ -14,3 +14,10 @@ apps/worker/.wrangler/
 .dev.vars
 apps/worker/.dev.vars
 .zcode/
+
+# AEL-313: local source PDFs — never commit (input folder only)
+/pdf/**
+!/pdf/.gitkeep
+
+# AEL-313: local PDF processing state (registry, MinerU cache, quarantine)
+/.ael-work/

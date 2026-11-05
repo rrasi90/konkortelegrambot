@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "authorities": [
+    { "code": "auth-ir-highed", "name": "وزارت علوم، تحقیقات و فناوری", "kind": "government", "status": "active" },
+    { "code": "auth-ir-sanjesh", "name": "سازمان سنجش آموزش کشور", "kind": "agency", "status": "active" },
+    { "code": "auth-ir-edu", "name": "وزارت آموزش و پرورش", "kind": "government", "status": "active" }
+  ],
+  "systems": [
+    { "code": "sys-ir-secondary", "authorityCode": "auth-ir-edu", "name": "نظام آموزشی متوسطه دوم", "status": "active" },
+    { "code": "sys-ir-highed", "authorityCode": "auth-ir-highed", "name": "نظام آموزش عالی", "status": "active" }
+  ],
+  "levels": [
+    { "code": "lvl-secondary", "systemCode": "sys-ir-secondary", "name": "متوسطه دوم", "levelOrder": 3, "status": "active" },
+    { "code": "lvl-bachelor", "systemCode": "sys-ir-highed", "name": "کارشناسی", "levelOrder": 10, "status": "active" },
+    { "code": "lvl-master", "systemCode": "sys-ir-highed", "name": "کارشناسی ارشد", "levelOrder": 20, "status": "active" },
+    { "code": "lvl-doctorate", "systemCode": "sys-ir-highed", "name": "دکتری", "levelOrder": 30, "status": "active" }
+  ],
+  "stages": [
+    { "code": "stg-grade-10", "levelCode": "lvl-secondary", "name": "پایه دهم", "status": "active" },
+    { "code": "stg-grade-11", "levelCode": "lvl-secondary", "name": "پایه یازدهم", "status": "active" },
+    { "code": "stg-grade-12", "levelCode": "lvl-secondary", "name": "پایه دوازدهم", "status": "active" }
+  ],
+  "tracks": [
+    { "code": "trk-theoretical", "levelCode": "lvl-secondary", "name": "شاخه نظری", "status": "active" },
+    { "code": "trk-mgmt", "levelCode": "lvl-master", "name": "مدیریت", "status": "active" }
+  ],
+  "fields": [
+    { "code": "fld-math", "trackCode": "trk-theoretical", "name": "ریاضی و فیزیک", "aliases": ["ریاضی"], "status": "active" },
+    { "code": "fld-management", "trackCode": "trk-mgmt", "name": "مدیریت", "aliases": ["مدیریت کسب‌وکار", "Business Administration"], "status": "active" }
+  ],
+  "majors": [
+    { "code": "mj-mgmt", "fieldCode": "fld-management", "name": "مدیریت", "status": "active" }
+  ],
+  "subfields": [
+    { "code": "sf-finmgmt", "majorCode": "mj-mgmt", "name": "مدیریت مالی", "examCode": "6168", "status": "active" },
+    { "code": "sf-indmgmt", "majorCode": "mj-mgmt", "name": "مدیریت صنعتی", "examCode": "6169", "status": "active" }
+  ],
+  "institutions": [
+    { "code": "inst-example-u", "name": "دانشگاه نمونهٔ آزمایشی", "kind": "university", "status": "active" }
+  ],
+  "faculties": [
+    { "code": "fac-mgmt-example", "institutionCode": "inst-example-u", "name": "دانشکده مدیریت", "status": "active" }
+  ],
+  "programs": [
+    { "code": "prog-secondary-theoretical", "institutionCode": "inst-example-u", "levelCode": "lvl-secondary", "fieldCode": "fld-math", "majorCode": null, "name": "دبیرستان نظری — ریاضی و فیزیک", "status": "active" },
+    { "code": "prog-bachelor-ind", "institutionCode": "inst-example-u", "levelCode": "lvl-bachelor", "fieldCode": "fld-management", "majorCode": "mj-mgmt", "name": "کارشناسی مدیریت صنعتی", "status": "active" },
+    { "code": "prog-masters-mgmt", "institutionCode": "inst-example-u", "levelCode": "lvl-master", "fieldCode": "fld-management", "majorCode": "mj-mgmt", "name": "کارشناسی ارشد مدیریت", "status": "active" },
+    { "code": "prog-phd-mgmt", "institutionCode": "inst-example-u", "levelCode": "lvl-doctorate", "fieldCode": "fld-management", "majorCode": "mj-mgmt", "name": "دکتری مدیریت", "status": "active" }
+  ],
+  "academicYears": [
+    { "id": "ay-1403-1404", "yearLabel": "۱۴۰۳–۱۴۰۴", "startsOn": "2024-09-22", "endsOn": "2025-06-21" },
+    { "id": "ay-1404-1405", "yearLabel": "۱۴۰۴–۱۴۰۵", "startsOn": "2025-09-22", "endsOn": "2026-06-21" }
+  ],
+  "programVersions": [
+    { "id": "pv-mgm-1404", "programCode": "prog-masters-mgmt", "versionNumber": 1, "status": "published", "effectiveFrom": "2024-09-22", "effectiveUntil": "2025-06-21", "contentHash": null, "previousVersionId": null, "changeReason": "نسخهٔ اولیهٔ آزمایشی (Seed اثبات مدل)", "sourceIds": [], "createdBy": "seed" },
+    { "id": "pv-ind-bachelor-1404", "programCode": "prog-bachelor-ind", "versionNumber": 1, "status": "published", "effectiveFrom": "2024-09-22", "effectiveUntil": null, "contentHash": null, "previousVersionId": null, "changeReason": "نسخهٔ اولیهٔ آزمایشی", "sourceIds": [], "createdBy": "seed" },
+    { "id": "pv-sec-theory-1404", "programCode": "prog-secondary-theoretical", "versionNumber": 1, "status": "published", "effectiveFrom": "2024-09-22", "effectiveUntil": null, "contentHash": null, "previousVersionId": null, "changeReason": "ساختار سه‌پایهٔ متوسطه دوم", "sourceIds": [], "createdBy": "seed" }
+  ],
+  "curricula": [
+    { "code": "curr-mgm-1404", "programVersionId": "pv-mgm-1404", "name": "چارت درسی ارشد مدیریت ۱۴۰۴", "status": "approved" },
+    { "code": "curr-ind-bachelor-1404", "programVersionId": "pv-ind-bachelor-1404", "name": "چارت کارشناسی مدیریت صنعتی", "status": "approved" }
+  ],
+  "curriculumVersions": [
+    { "id": "cv-mgm-1404-v1", "curriculumCode": "curr-mgm-1404", "versionNumber": 1, "status": "published", "effectiveFrom": "2024-09-22", "effectiveUntil": null, "contentHash": null, "previousVersionId": null, "changeReason": "نسخهٔ اولیه", "sourceIds": [], "createdBy": "seed" },
+    { "id": "cv-ind-bachelor-1404-v1", "curriculumCode": "curr-ind-bachelor-1404", "versionNumber": 1, "status": "published", "effectiveFrom": "2024-09-22", "effectiveUntil": null, "contentHash": null, "previousVersionId": null, "changeReason": "نسخهٔ اولیه", "sourceIds": [], "createdBy": "seed" }
+  ],
+  "courseDefinitions": [
+    { "code": "crs-finmgmt", "name": "مدیریت مالی", "aliases": ["مدیریت مالی پیشرفته", "Financial Management"], "status": "approved", "createdBy": "seed" },
+    { "code": "crs-statistics", "name": "آمار و احتمال", "aliases": ["آمار مقدماتی"], "status": "approved", "createdBy": "seed" },
+    { "code": "crs-research-methods", "name": "روش تحقیق پیشرفته", "aliases": [], "status": "approved", "createdBy": "seed" },
+    { "code": "crs-industrial-econ", "name": "اقتصاد صنعت", "aliases": [], "status": "approved", "createdBy": "seed" }
+  ],
+  "courseOfferings": [
+    { "id": "off-finmgmt-1404", "definitionCode": "crs-finmgmt", "programVersionId": "pv-mgm-1404", "academicYearId": "ay-1404-1405", "status": "published" },
+    { "id": "off-ind-econ-1404", "definitionCode": "crs-industrial-econ", "programVersionId": "pv-ind-bachelor-1404", "academicYearId": "ay-1404-1405", "status": "published" }
+  ],
+  "courseUnits": [
+    { "id": "unit-finmgmt-lecture", "definitionCode": "crs-finmgmt", "unitKind": "lecture", "hours": 2, "position": 1 },
+    { "id": "unit-stat-lecture", "definitionCode": "crs-statistics", "unitKind": "lecture", "hours": 2, "position": 1 },
+    { "id": "unit-stat-lab", "definitionCode": "crs-statistics", "unitKind": "lab", "hours": 1, "position": 2 }
+  ],
+  "syllabusNodes": [
+    { "id": "sn-finmgmt-ch1", "definitionCode": "crs-finmgmt", "parentId": null, "position": 1, "title": "ارزش زمانی پول", "nodeKind": "chapter", "officiality": "official", "status": "approved", "knowledgeNodeId": null },
+    { "id": "sn-finmgmt-tp-tvm", "definitionCode": "crs-finmgmt", "parentId": "sn-finmgmt-ch1", "position": 1, "title": "ارزش آتی و حالی", "nodeKind": "topic", "officiality": "official", "status": "approved", "knowledgeNodeId": null },
+    { "id": "sn-finmgmt-tp-annuity", "definitionCode": "crs-finmgmt", "parentId": "sn-finmgmt-ch1", "position": 2, "title": "سری‌های سالانه", "nodeKind": "topic", "officiality": "official", "status": "approved", "knowledgeNodeId": null },
+    { "id": "sn-finmgmt-ch2", "definitionCode": "crs-finmgmt", "parentId": null, "position": 2, "title": "بودجهٔ سرمایه‌ای", "nodeKind": "chapter", "officiality": "official", "status": "approved", "knowledgeNodeId": null },
+    { "id": "sn-finmgmt-tp-npv", "definitionCode": "crs-finmgmt", "parentId": "sn-finmgmt-ch2", "position": 1, "title": "NPV و IRR", "nodeKind": "topic", "officiality": "official", "status": "approved", "knowledgeNodeId": null },
+    { "id": "sn-stat-ch1", "definitionCode": "crs-statistics", "parentId": null, "position": 1, "title": "آمار توصیفی", "nodeKind": "chapter", "officiality": "official", "status": "approved", "knowledgeNodeId": null },
+    { "id": "sn-ind-econ-ch1", "definitionCode": "crs-industrial-econ", "parentId": null, "position": 1, "title": "تقاضا و عرضهٔ صنعت", "nodeKind": "chapter", "officiality": "official", "status": "approved", "knowledgeNodeId": null }
+  ],
+  "learningOutcomes": [
+    { "id": "lo-finmgmt-tvm", "definitionCode": "crs-finmgmt", "statement": "محاسبهٔ ارزش حالی و آتی جریان‌های نقدی با نرخ تنزیل مشخص", "bloomLevel": 3, "competencyCode": "comp-tvm", "status": "approved" },
+    { "id": "lo-finmgmt-npv", "definitionCode": "crs-finmgmt", "statement": "مقایسهٔ پروژه‌ها با NPV و IRR و تفسیر نتیجه", "bloomLevel": 4, "competencyCode": "comp-capital-budgeting", "status": "approved" }
+  ],
+  "curriculumCourses": [
+    { "id": "cc-mgm-finmgmt", "curriculumVersionId": "cv-mgm-1404-v1", "definitionCode": "crs-finmgmt", "term": 1, "isElective": false, "position": 1 },
+    { "id": "cc-mgm-statistics", "curriculumVersionId": "cv-mgm-1404-v1", "definitionCode": "crs-statistics", "term": 1, "isElective": false, "position": 2 },
+    { "id": "cc-mgm-research", "curriculumVersionId": "cv-mgm-1404-v1", "definitionCode": "crs-research-methods", "term": 2, "isElective": false, "position": 3 },
+    { "id": "cc-ind-econ", "curriculumVersionId": "cv-ind-bachelor-1404-v1", "definitionCode": "crs-industrial-econ", "term": 1, "isElective": false, "position": 1 },
+    { "id": "cc-ind-statistics", "curriculumVersionId": "cv-ind-bachelor-1404-v1", "definitionCode": "crs-statistics", "term": 2, "isElective": true, "position": 2 }
+  ],
+  "prerequisiteEdges": [
+    { "id": "pe-stat-finmgmt", "sourceKind": "course", "sourceId": "crs-statistics", "targetKind": "course", "targetId": "crs-finmgmt", "edgeKind": "prerequisite", "scope": "prog-masters-mgmt", "status": "approved" }
+  ],
+  "examFamilies": [
+    { "code": "fam-bachelor-entrance", "name": "پذیرش کارشناسی (کنکور سراسری)", "status": "active" },
+    { "code": "fam-masters-mgmt", "name": "کارشناسی ارشد مجموعه مدیریت", "status": "active" },
+    { "code": "fam-phd-mgmt", "name": "دکتری مجموعه مدیریت", "status": "active" }
+  ],
+  "examEvents": [
+    { "id": "evt-bach-1404", "familyCode": "fam-bachelor-entrance", "academicYearId": "ay-1404-1405", "yearLabel": "1404", "session": 1, "name": "کنکور کارشناسی ۱۴۰۴", "status": "published" },
+    { "id": "evt-mgm-m-1404", "familyCode": "fam-masters-mgmt", "academicYearId": "ay-1404-1405", "yearLabel": "1404", "session": 1, "name": "ارشد مدیریت ۱۴۰۴ نوبت اول", "status": "published" },
+    { "id": "evt-mgm-p-1404", "familyCode": "fam-phd-mgmt", "academicYearId": "ay-1404-1405", "yearLabel": "1404", "session": 1, "name": "دکتری مدیریت ۱۴۰۴ نوبت اول", "status": "published" }
+  ],
+  "examEventVersions": [
+    { "id": "eev-bach-1404-v1", "eventId": "evt-bach-1404", "versionNumber": 1, "status": "published", "effectiveFrom": "2024-09-22", "effectiveUntil": null, "contentHash": null, "previousVersionId": null, "changeReason": "مقررات اولیهٔ آزمون کارشناسی", "sourceIds": [], "createdBy": "seed" },
+    { "id": "eev-mgm-m-1404-v1", "eventId": "evt-mgm-m-1404", "versionNumber": 1, "status": "superseded", "effectiveFrom": "2024-09-22", "effectiveUntil": "2025-03-20", "contentHash": null, "previousVersionId": null, "changeReason": "مقررات اولیهٔ ارشد مدیریت", "sourceIds": [], "createdBy": "seed" },
+    { "id": "eev-mgm-m-1404-v2", "eventId": "evt-mgm-m-1404", "versionNumber": 2, "status": "published", "effectiveFrom": "2025-03-21", "effectiveUntil": null, "contentHash": null, "previousVersionId": "eev-mgm-m-1404-v1", "changeReason": "اصلاح ضریب آمار و افزودن قاعدهٔ سوابق", "sourceIds": [], "createdBy": "seed" },
+    { "id": "eev-mgm-p-1404-v1", "eventId": "evt-mgm-p-1404", "versionNumber": 1, "status": "published", "effectiveFrom": "2024-09-22", "effectiveUntil": null, "contentHash": null, "previousVersionId": null, "changeReason": "مقررات اولیهٔ دکتری", "sourceIds": [], "createdBy": "seed" }
+  ],
+  "examSubjects": [
+    { "code": "subj-finmgmt", "name": "مدیریت مالی", "status": "active" },
+    { "code": "subj-statistics", "name": "آمار", "status": "active" },
+    { "code": "subj-math", "name": "ریاضیات عمومی", "status": "active" },
+    { "code": "subj-physics", "name": "فیزیک", "status": "active" },
+    { "code": "subj-mgmt-specialized", "name": "مواد تخصصی مدیریت", "status": "active" }
+  ],
+  "examSets": [
+    { "id": "es-bach-1404", "eventVersionId": "eev-bach-1404-v1", "code": "grp-math", "name": "گروه آزمایشی علوم ریاضی" },
+    { "id": "es-mgm-1404", "eventVersionId": "eev-mgm-m-1404-v2", "code": "set-mgmt", "name": "مجموعهٔ امتحانی مدیریت" },
+    { "id": "es-phd-1404", "eventVersionId": "eev-mgm-p-1404-v1", "code": "set-phd", "name": "مجموعهٔ امتحانی دکتری مدیریت" }
+  ],
+  "examCombinations": [
+    { "id": "ec-bach-math", "eventVersionId": "eev-bach-1404-v1", "code": "comb-bach-math", "name": "ترکیب گروه ریاضی", "subfieldCode": null },
+    { "id": "ec-mgm-6168", "eventVersionId": "eev-mgm-m-1404-v2", "code": "6168", "name": "کد ضریب ۶۱۶۸ (مدیریت مالی)", "subfieldCode": "sf-finmgmt" },
+    { "id": "ec-mgm-6169", "eventVersionId": "eev-mgm-m-1404-v2", "code": "6169", "name": "کد ضریب ۶۱۶۹ (مدیریت صنعتی)", "subfieldCode": "sf-indmgmt" },
+    { "id": "ec-phd-mgmt", "eventVersionId": "eev-mgm-p-1404-v1", "code": "comb-phd-mgmt", "name": "ترکیب مواد تخصصی دکتری مدیریت", "subfieldCode": null }
+  ],
+  "examFieldSubjectAssignments": [
+    { "id": "efa-bach-math", "combinationId": "ec-bach-math", "subjectCode": "subj-math", "coefficient": 4, "weight": 0, "negativeMarking": "per_question", "timeLimitMinutes": null, "position": 1 },
+    { "id": "efa-bach-physics", "combinationId": "ec-bach-math", "subjectCode": "subj-physics", "coefficient": 3, "weight": 0, "negativeMarking": "per_question", "timeLimitMinutes": null, "position": 2 },
+    { "id": "efa-6168-finmgmt", "combinationId": "ec-mgm-6168", "subjectCode": "subj-finmgmt", "coefficient": 2, "weight": 0, "negativeMarking": "per_question", "timeLimitMinutes": null, "position": 1 },
+    { "id": "efa-6168-statistics", "combinationId": "ec-mgm-6168", "subjectCode": "subj-statistics", "coefficient": 1, "weight": 0, "negativeMarking": "per_question", "timeLimitMinutes": null, "position": 2 },
+    { "id": "efa-6169-finmgmt", "combinationId": "ec-mgm-6169", "subjectCode": "subj-finmgmt", "coefficient": 3, "weight": 0, "negativeMarking": "per_question", "timeLimitMinutes": null, "position": 1 },
+    { "id": "efa-6169-statistics", "combinationId": "ec-mgm-6169", "subjectCode": "subj-statistics", "coefficient": 2, "weight": 0, "negativeMarking": "per_question", "timeLimitMinutes": null, "position": 2 },
+    { "id": "efa-phd-specialized", "combinationId": "ec-phd-mgmt", "subjectCode": "subj-mgmt-specialized", "coefficient": 1, "weight": 0, "negativeMarking": "per_question", "timeLimitMinutes": null, "position": 1 }
+  ],
+  "admissionRules": [
+    { "id": "ar-mgm-1404-v1", "eventVersionId": "eev-mgm-m-1404-v1", "ruleJson": { "quotaEnabled": false, "recordsShare": 0, "note": "نسخهٔ اولیه بدون قاعدهٔ سوابق" }, "status": "superseded", "sourceIds": [] },
+    { "id": "ar-mgm-1404-v2", "eventVersionId": "eev-mgm-m-1404-v2", "ruleJson": { "quotaEnabled": true, "recordsShare": 0.2, "note": "افزودن سهم سوابق تحصیلی به نسخهٔ دوم" }, "status": "published", "sourceIds": [] },
+    { "id": "ar-bach-1404-v1", "eventVersionId": "eev-bach-1404-v1", "ruleJson": { "quotaEnabled": true, "recordsShare": 0.5 }, "status": "published", "sourceIds": [] }
+  ],
+  "assessmentComponents": [
+    { "id": "ac-phd-exam", "eventVersionId": "eev-mgm-p-1404-v1", "kind": "exam", "weight": 0.5, "config": { "materials": ["subj-mgmt-specialized"] } },
+    { "id": "ac-phd-records", "eventVersionId": "eev-mgm-p-1404-v1", "kind": "records", "weight": 0.2, "config": {} },
+    { "id": "ac-phd-interview", "eventVersionId": "eev-mgm-p-1404-v1", "kind": "interview", "weight": 0.3, "config": { "mode": "structured" } }
+  ],
+  "assessmentRubrics": [
+    { "id": "rub-phd-interview-v1", "componentId": "ac-phd-interview", "versionNumber": 1, "criteria": [
+      { "criterion": "مهارت پژوهشی", "maxScore": 40, "definition": "عمق آشنایی با روش‌های پژوهش و تحلیل" },
+      { "criterion": "تسلط موضوعی", "maxScore": 40, "definition": "دانش تخصصی در حوزهٔ مدیریت" },
+      { "criterion": "توان ارائه", "maxScore": 20, "definition": "روان‌بودن و ساختار پاسخ‌ها" }
+    ], "status": "approved" }
+  ],
+  "examBooklets": [
+    { "id": "bk-mgm-m-1404-f1", "eventVersionId": "eev-mgm-m-1404-v2", "code": "bk-mgm-m-1404", "form": 1, "status": "published" },
+    { "id": "bk-phd-1404-f1", "eventVersionId": "eev-mgm-p-1404-v1", "code": "bk-phd-1404", "form": 1, "status": "published" }
+  ]
+}

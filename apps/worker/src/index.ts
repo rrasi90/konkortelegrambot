@@ -47,6 +47,9 @@ import {
   LATEST_EXAM_YEAR,
 } from '@ael/contracts';
 import { answerLearningQuiz, finishLearningQuiz, learningOverview, startLearningQuiz, startTransferQuiz } from './learning-paths';
+import { learningCourses } from './learning-catalog';
+import { initializeFSRSState, Rating, scheduleNextFSRS } from '@ael/engine';
+import type { LearningCourse } from '@ael/engine';
 import { FormativeQuizError } from '@ael/engine';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
 import type { AppUser, DataStore, UserStats } from './store';
@@ -60,6 +63,10 @@ import {
   calculateExpectedBenefit,
 } from '@ael/utils';
 import type { LearnerSkillState } from '@ael/contracts';
+import { createAdminRouter } from './admin/routes';
+import { loadPublishedCatalog } from './catalog/service';
+import { MemoryAdminStore, SupabaseAdminStore, sha256Hex, type AdminStore } from './admin/store';
+import { hasPermission } from './admin/rbac';
 
 export interface Env {
   ENVIRONMENT?: string;
@@ -69,6 +76,8 @@ export interface Env {
   TELEGRAM_BOT_TOKEN?: string;
   TELEGRAM_WEBHOOK_SECRET?: string;
   ADMIN_API_TOKEN?: string;
+  /** مأموریت v2 — کد ده‌رقمی ورود ادمین (فقط Secret Store، هرگز در کد Seed نشود) */
+  ADMIN_ENTRY_CODE?: string;
   APP_URL?: string;
   ALLOW_DEMO_AUTH?: string;
 }
@@ -92,6 +101,8 @@ export interface CreateAppOptions {
   store?: DataStore;
   /** برای تست: شمارندهٔ مستقل محدودکنندهٔ نرخ */
   rateLimits?: Map<string, { count: number; resetAt: number }>;
+  /** AEL-202: لایهٔ دادهٔ RBAC مدیریتی (پیش‌فرض: Supabase یا حافظهٔ موقت در dev) */
+  adminStore?: AdminStore;
 }
 
 export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Variables: { store: DataStore; secret: string; allowDemoAuth: boolean } }> {
@@ -150,6 +161,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   // در پروداکشن در سطح درخواست هم بی‌اثرند؛ پرچم صرفاً در محیط اعلان‌شدهٔ dev اثر دارد.
   const allowDemoAuth = !isProduction && env.ALLOW_DEMO_AUTH === 'true';
 
+  // AEL-202: لایهٔ دادهٔ RBAC — در Production بدون Supabase fail می‌کنیم (AEL-801 هم‌راستا).
+  const adminStore: AdminStore | null =
+    options.adminStore ??
+    (env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
+      ? new SupabaseAdminStore(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
+      : isProduction
+        ? null
+        : new MemoryAdminStore());
+
   app.use('*', async (c, next) => {
     c.set('store', store);
     c.set('secret', secret);
@@ -178,6 +198,21 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       difference |= expected.charCodeAt(i) ^ provided.charCodeAt(i);
     }
     return difference === 0;
+  }
+
+  const depsBotToken = env.TELEGRAM_BOT_TOKEN;
+
+  async function adminIdentify(c: { req: { header(name: string): string | undefined } }): Promise<{ userId: string; displayName: string; roles: { roleCode: string; scope: Record<string, unknown> | null }[] } | null> {
+    if (!adminStore) return null;
+    const authorization = c.req.header('Authorization') ?? '';
+    if (!authorization.startsWith('Bearer ')) return null;
+    const token = authorization.slice(7);
+    if (!token || token.length > 128) return null;
+    const session = await adminStore.getActiveSessionByTokenHash(await sha256Hex(token), new Date().toISOString());
+    if (!session) return null;
+    const user = await adminStore.getAdminUserById(session.adminUserId);
+    if (!user || !user.isActive) return null;
+    return { userId: user.id, displayName: user.displayName, roles: await adminStore.listUserRoles(user.id) };
   }
 
   function isAdminAuthorized(c: AppContext): boolean {
@@ -474,9 +509,37 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.use('/api/diagnostic', (c, next) => rateLimit(c, next));
   app.use('/api/exam-simulation*', (c, next) => rateLimit(c, next));
 
+  // AEL-509 (AT-AEL-18): منبع حقیقت Runtime کاتالوگ = Release فعال DB.
+  // Legacy static فقط تا پیش از انتشار اولین Release باقی است (ADR-003) و برچسب legacy دارد.
+  const resolveCatalogCourses = async (): Promise<{ courses: LearningCourse[]; catalogSource: 'published' | 'legacy_static' }> => {
+    const published = adminStore ? await loadPublishedCatalog(adminStore).catch(() => null) : null;
+    if (published && published.length) return { courses: published, catalogSource: 'published' };
+    return { courses: learningCourses, catalogSource: 'legacy_static' };
+  };
+
+  /**
+   * AEL-610/612 + ADR-010/011 — قاعدهٔ تسلط مبحث تألیفی (Engine-authoritative):
+   * یک قاعدهٔ واحد و قابل تست؛ SQL الگوریتم دوم ندارد و فقط ثبت می‌کند.
+   */
+  const AUTHORED_MASTERY = { correctStep: 10, wrongStep: 15, floor: 0, ceiling: 100, initial: 50 } as const;
+  function nextAuthoredMastery(previous: number | undefined, isCorrect: boolean): number {
+    const base = previous ?? AUTHORED_MASTERY.initial;
+    const next = base + (isCorrect ? AUTHORED_MASTERY.correctStep : -AUTHORED_MASTERY.wrongStep);
+    return Math.max(AUTHORED_MASTERY.floor, Math.min(AUTHORED_MASTERY.ceiling, next));
+  }
+
+  function fsrsUpdateFor(isCorrect: boolean, now: number): { stability: number; difficulty: number; dueDays: number } {
+    const rating = isCorrect ? Rating.Good : Rating.Again;
+    const next = scheduleNextFSRS(initializeFSRSState(rating, new Date(now)), rating, new Date(now));
+    const dueDays = Math.max(0, Math.round((new Date(next.dueAt).getTime() - now) / 86_400_000));
+    return { stability: next.stability, difficulty: next.difficulty, dueDays };
+  }
+
   app.get('/api/learning-paths', async (c) => {
     const user = await currentUser(c);
-    return user ? c.json(learningOverview()) : authError(c);
+    if (!user) return authError(c);
+    const { courses, catalogSource } = await resolveCatalogCourses();
+    return c.json({ ...learningOverview(courses), catalogSource });
   });
 
   app.use('/api/learning-quiz/*', (c, next) => rateLimit(c, next));
@@ -490,7 +553,39 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         return c.json({ error: 'درخواست آزمون معتبر نیست.' }, 400);
       }
       try {
-        return c.json(await learningActions[action](user.id, secret, body));
+        const { courses } = await resolveCatalogCourses();
+        const result = await learningActions[action](user.id, secret, body, Date.now(), courses) as Record<string, unknown>;
+        // ADR-011: نشست تألیفی پایدار — بلیت سمت سرور، نه حافظهٔ Isolate
+        if (action === 'start' && result.challenge && typeof store.createLearningAttempt === 'function') {
+          const challenge = result.challenge as { courseId: string; version: string; mode: string; ids: string[]; deadline: number | null };
+          const attemptId = crypto.randomUUID();
+          const expiresAt = new Date(Date.now() + 24 * 60 * 60_000).toISOString();
+          await store.createLearningAttempt({
+            attemptId, userId: user.id, courseId: challenge.courseId, courseVersion: challenge.version,
+            releaseId: adminStore ? await adminStore.getActiveReleaseId().catch(() => null) : null,
+            mode: challenge.mode, questionIds: challenge.ids, expiresAt,
+          });
+          result.attemptId = attemptId;
+        }
+        // ثبت پایدار و اتمیک پاسخ تمرین (practice هر سؤال جدا ثبت می‌شود)
+        if (action === 'answer' && typeof body.attemptId === 'string' && typeof store.submitLearningAnswerAtomic === 'function') {
+          const status = String((result as { status?: string }).status ?? '');
+          if (status === 'correct' || status === 'incorrect') {
+            const operationId = typeof body.operationId === 'string' && body.operationId ? body.operationId : crypto.randomUUID();
+            const isCorrect = status === 'correct';
+            const persisted = await store.submitLearningAnswerAtomic({
+              userId: user.id, attemptId: body.attemptId, questionId: String(body.questionId),
+              selected: typeof body.selected === 'number' ? body.selected : null,
+              operationId, isCorrect,
+              topicId: String((result as { topicId?: string }).topicId ?? ''),
+              mastery: nextAuthoredMastery(undefined, isCorrect),
+              fsrs: fsrsUpdateFor(isCorrect, Date.now()),
+            });
+            result.persisted = !!persisted;
+            result.replay = persisted?.replay === true;
+          }
+        }
+        return c.json(result);
       } catch (error) {
         if (error instanceof FormativeQuizError) return c.json({ error: error.message }, 400);
         throw error;
@@ -500,6 +595,16 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
   app.get('/api/lessons', (c) => c.json({ courses: COURSES_LESSONS }));
 
+  /**
+   * مأموریت v2 — Phase 1/3/7:
+   * ریشهٔ دو پیام (اثبات: index.ts قدیمی) — هر Update دو effect داشت:
+   *   (۱) fetch مستقیم به api.telegram.org/sendMessage
+   *   (۲) بدنهٔ پاسخ webhook = {"method":"sendMessage", ...} که تلگرام اجرا می‌کند
+   *       (Telegram Bot API — Webhook responses).
+   * رفع: فقط یک مسیر ارسال + ثبت Update در Inbox پایدار (UNIQUE bot+update_id)
+   * + یک Reply Intent یکتا (UNIQUE update+intent) + ثبت وضعیت ارسال.
+   * ادعای Exactly-once ممنوع؛ ابهام ارسال = delivery_uncertain بدون Retry کور.
+   */
   app.post('/api/telegram/webhook', async (c) => {
     const webhookSecret = env.TELEGRAM_WEBHOOK_SECRET;
     if (!isValidTelegramWebhookSecret(webhookSecret)) {
@@ -511,57 +616,277 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     }
 
     const update = (await c.req.json().catch(() => null)) as {
-      message?: { chat?: { id?: number }; text?: string };
-      edited_message?: { chat?: { id?: number }; text?: string };
+      update_id?: number;
+      message?: { chat?: { id?: number; type?: string }; from?: { id?: number }; text?: string };
+      edited_message?: { chat?: { id?: number; type?: string }; from?: { id?: number }; text?: string };
+      callback_query?: { id?: number };
     } | null;
-    if (!update) return c.json({ ok: false }, 400);
+    if (!update || typeof update.update_id !== 'number') return c.json({ ok: false }, 400);
 
-    const message = update.message || update.edited_message;
-    if (!message || !message.chat?.id) return c.json({ ok: true });
-
-    const chatId = message.chat.id;
-    const text = (message.text || '').trim();
-
-    const url = new URL(c.req.url);
-    const appUrl = env.APP_URL || (url.origin + '/?v=' + Date.now());
-
-    const replyText = text.startsWith('/start')
-      ? 'سلام! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nسامانهٔ هوشمند سنجش و تثبیت تسلط بر سرفصل‌های آزمون دکتری مدیریت.\n\nبرای شروع تمرین و ارزیابی هوشمند، روی دکمهٔ زیر بزنید:'
-      : 'برای تمرین و یادگیری تطبیقی، لطفاً از دکمهٔ زیر استفاده کنید:';
-
-    const replyMarkup = {
-      inline_keyboard: [
-        [
-          {
-            text: '🚀 باز کردن آموزش کنکور',
-            web_app: { url: appUrl },
-          },
-        ],
-      ],
-    };
-
-    if (env.TELEGRAM_BOT_TOKEN) {
-      try {
-        await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: replyText,
-            reply_markup: replyMarkup,
-          }),
-        });
-      } catch (e) {
-        console.error('Failed to send telegram message directly:', e);
-      }
+    const botId = 'default';
+    type TelegramInbox = Required<
+      Pick<DataStore, 'claimTelegramUpdate' | 'recordReplyEffect' | 'finishReplyEffect' | 'recordAdminLoginAttempt' | 'countRecentFailedAdminLogins' | 'createAdminLaunchTicket' | 'createFeedbackThread'>
+    >;
+    const inbox: TelegramInbox | null =
+      typeof store.claimTelegramUpdate === 'function' && typeof store.recordReplyEffect === 'function' &&
+      typeof store.finishReplyEffect === 'function' && typeof store.createFeedbackThread === 'function'
+        ? store as unknown as TelegramInbox
+        : null;
+    if (!inbox) {
+      // بدون Inbox پایدار، پردازش Update اجرا نمی‌شود (TG-02/03 — Dedup سمت DB اجباری)
+      return c.json({ ok: true, skipped: 'no_durable_inbox' });
     }
 
-    return c.json({
-      method: 'sendMessage',
-      chat_id: chatId,
-      text: replyText,
-      reply_markup: replyMarkup,
+    const updateId: number = update.update_id;
+    const message = update.message ?? update.edited_message;
+    const isEdit = !update.message && !!update.edited_message;
+    const chatId = message?.chat?.id ?? null;
+    const senderId = message?.from?.id ?? null;
+    const text = (message?.text ?? '').trim();
+
+    const claim = await inbox.claimTelegramUpdate({
+      botId, updateId, chatId, senderTelegramId: senderId,
+      isEdit, kind: update.message ? 'message' : update.edited_message ? 'edited_message' : 'other',
     });
+    if (claim === 'duplicate') {
+      // TG-02/03: همان update_id — فقط Ack؛ هیچ effect جدیدی
+      return c.json({ ok: true, duplicate: true });
+    }
+    // پیام ویرایش‌شده: پاسخ تازه نمی‌سازد (یک Update منطقی، یک پاسخ)
+    if (isEdit || !chatId) {
+      return c.json({ ok: true });
+    }
+
+    const url = new URL(c.req.url);
+    const appUrl = env.APP_URL || url.origin;
+
+    const sendTelegram = async (payload: Record<string, unknown>): Promise<{ ok: boolean; messageId?: number; uncertain: boolean; retryAfter?: number; error?: string }> => {
+      if (!env.TELEGRAM_BOT_TOKEN) return { ok: false, uncertain: false, error: 'bot token missing' };
+      try {
+        const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (res.status === 429) {
+          let retryAfter: number | undefined;
+          try { retryAfter = ((await res.json()) as { parameters?: { retry_after?: number } }).parameters?.retry_after; } catch { /* بدنهٔ 429 اختیاری است */ }
+          return { ok: false, uncertain: false, retryAfter, error: 'rate_limited' };
+        }
+        if (!res.ok) {
+          // 4xx قطعی (به‌جز 429) — Retry بی‌معنا؛ سایر خطاها مبهم‌اند
+          const uncertain = res.status >= 500 || res.status === 0;
+          return { ok: false, uncertain, error: `telegram_${res.status}` };
+        }
+        const data = await res.json() as { ok?: boolean; result?: { message_id?: number } };
+        if (data.ok && data.result?.message_id) return { ok: true, messageId: data.result.message_id, uncertain: false };
+        return { ok: false, uncertain: true, error: 'unexpected_response' };
+      } catch (error) {
+        // Timeout/شبکه: معلوم نیست تلگرام پیام را پذیرفته یا نه → مبهم
+        return { ok: false, uncertain: true, error: (error as Error).message.slice(0, 120) };
+      }
+    };
+
+    const deliverOnce = async (intentKey: string, payload: Record<string, unknown>): Promise<Response> => {
+      const effect = await inbox.recordReplyEffect({ botId, updateId, intentKey, chatId });
+      if (effect === 'existing') {
+        // TG-02: intent قبلاً ساخته شده — هیچ ارسال تازه‌ای انجام نمی‌شود
+        return c.json({ ok: true, replayed: true });
+      }
+      const outcome = await sendTelegram(payload);
+      const status = outcome.ok ? 'sent'
+        : outcome.uncertain ? 'delivery_uncertain'
+        : outcome.retryAfter ? 'retryable_rejected'
+        : 'failed_permanent';
+      await inbox.finishReplyEffect({
+        botId, updateId, intentKey, status,
+        telegramMessageId: outcome.messageId ?? null,
+        lastError: outcome.error ?? null,
+        retryAfterSeconds: outcome.retryAfter ?? null,
+      });
+      return c.json({ ok: outcome.ok, status });
+    };
+
+    // ---------- Phase 3: کد ده‌رقمی ادمین (فقط چت خصوصی) ----------
+    const normalizeDigits = (value: string): string => {
+      const fa = '۰۱۲۳۴۵۶۷۸۹';
+      const ar = '٠١٢٣٤٥٦٧٨٩';
+      return value.replace(/[۰-۹٠-٩]/g, d => {
+        const faIdx = fa.indexOf(d);
+        return String(faIdx >= 0 ? faIdx : ar.indexOf(d));
+      });
+    };
+    const normalized = normalizeDigits(text);
+    const entryCode = env.ADMIN_ENTRY_CODE;
+    // سند ۹٫۳: کد فقط در Private Chat بررسی شود؛ در گروه/کانال به‌عنوان رمز تعبیر نمی‌شود
+    if (/^\d{10}$/.test(normalized) && entryCode && senderId !== null && message?.chat?.type === 'private') {
+      // فقط کاربری که از قبل Admin فعالِ دارای نقش است وارد بررسی کد می‌شود (سند ۹٫۳)
+      const adminUser = adminStore ? await adminStore.getAdminUserByTelegramId(senderId).catch(() => null) : null;
+      const hasRole = adminUser && adminStore ? (await adminStore.listUserRoles(adminUser.id)).length > 0 : false;
+      const failed = adminStore
+        ? await inbox.countRecentFailedAdminLogins({ telegramUserId: senderId, sinceIso: new Date(Date.now() - 15 * 60_000).toISOString() })
+        : 0;
+      if (!adminUser || !adminUser.isActive || !hasRole || failed >= 5) {
+        // پیام خطا وجود/عدم وجود Admin ID را آشکار نمی‌کند
+        await inbox.recordAdminLoginAttempt({ telegramUserId: senderId, success: false }).catch(() => null);
+        return deliverOnce('admin_entry_denied', { chat_id: chatId, text: 'ورود در دسترس نیست.' });
+      }
+      if (!constantTimeTokenEqual(entryCode, normalized)) {
+        await inbox.recordAdminLoginAttempt({ telegramUserId: senderId, success: false }).catch(() => null);
+        return deliverOnce('admin_entry_denied', { chat_id: chatId, text: 'کد معتبر نیست. بعد از ۵ تلاش ناموفق در ۱۵ دقیقه، ورود موقتاً قفل می‌شود.' });
+      }
+      await inbox.recordAdminLoginAttempt({ telegramUserId: senderId, success: true }).catch(() => null);
+      // Launch Ticket — ۲۵۶ بیتی، Hash در DB، ۱۲۰ ثانیه، یک‌بارمصرف (سند ۹٫۵)
+      const ticketBytes = new Uint8Array(32);
+      crypto.getRandomValues(ticketBytes);
+      const ticket = [...ticketBytes].map(byte => byte.toString(16).padStart(2, '0')).join('');
+      if (adminStore) {
+        await inbox.createAdminLaunchTicket({
+          tokenHash: await sha256Hex(ticket), adminUserId: adminUser.id,
+          telegramUserId: senderId, expiresAt: new Date(Date.now() + 120_000).toISOString(),
+        });
+      }
+      const launchUrl = `${appUrl}/admin.html#ticket=${ticket}`;
+      return deliverOnce('admin_entry_granted', {
+        chat_id: chatId,
+        text: 'ورود تأیید شد. دکمهٔ زیر تا ۲ دقیقه معتبر است:',
+        reply_markup: { inline_keyboard: [[{ text: '🛡 ورود به پنل مدیریت', web_app: { url: launchUrl } }]] },
+      });
+    }
+
+    // ---------- /start و پاسخ عمومی (یک intent منطقی) ----------
+    if (text.startsWith('/start')) {
+      return deliverOnce('start_welcome', {
+        chat_id: chatId,
+        text: 'سلام! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nبرای شروع تمرین و ارزیابی هوشمند، روی دکمهٔ زیر بزنید:',
+        reply_markup: { inline_keyboard: [[{ text: '🚀 باز کردن آموزش کنکور', web_app: { url: appUrl } }]] },
+      });
+    }
+
+    // ---------- Phase 7: متن آزاد خصوصی = Feedback ----------
+    if (text && senderId !== null && typeof inbox.createFeedbackThread === 'function') {
+      const appUser = chatId ? await store.getUserByTelegramId(senderId).catch(() => null) : null;
+      await inbox.createFeedbackThread({
+        userId: appUser?.id ?? null, telegramUserId: senderId, chatId,
+        category: 'general', body: text.slice(0, 4000),
+      });
+      return deliverOnce('feedback_ack', {
+        chat_id: chatId,
+        text: 'پیام شما ثبت شد ✅ در اسرع وقت پاسخ می‌دهیم. برای تمرین از دکمهٔ زیر استفاده کنید:',
+        reply_markup: { inline_keyboard: [[{ text: '🚀 باز کردن آموزش کنکور', web_app: { url: appUrl } }]] },
+      });
+    }
+
+    return deliverOnce('fallback_help', {
+      chat_id: chatId,
+      text: 'برای تمرین و یادگیری تطبیقی، لطفاً از دکمهٔ زیر استفاده کنید:',
+      reply_markup: { inline_keyboard: [[{ text: '🚀 باز کردن آموزش کنکور', web_app: { url: appUrl } }]] },
+    });
+  });
+
+  // ---------- Phase 3: مصرف Launch Ticket و ساخت Session ادمین ----------
+  app.post('/api/admin/session/launch', async (c) => {
+    if (!adminStore) return Response.json({ error: 'لایهٔ دادهٔ مدیریتی در دسترس نیست.' }, { status: 503 });
+    if (!depsBotToken) return Response.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده است.' }, { status: 400 });
+    const body = await c.req.json().catch(() => null) as { ticket?: unknown; initData?: unknown } | null;
+    if (!body || typeof body.ticket !== 'string' || typeof body.initData !== 'string') {
+      return Response.json({ error: 'ticket و initData الزامی‌اند.' }, { status: 400 });
+    }
+    // initData باید امضا و تازگی (۱۰ دقیقه) داشته باشد و user.id با Ticket بخواند
+    const verified = await verifyTelegramInitData(body.initData, depsBotToken, 600);
+    if (!verified.ok) return Response.json({ error: 'initData معتبر نیست.' }, { status: 401 });
+    const ticketHash = await sha256Hex(body.ticket);
+    const ticket = typeof (store as { consumeAdminLaunchTicket?: unknown }).consumeAdminLaunchTicket === 'function'
+      ? await (store as { consumeAdminLaunchTicket: (input: { tokenHash: string; nowIso: string }) => Promise<{ adminUserId: string; telegramUserId: number } | null> })
+          .consumeAdminLaunchTicket({ tokenHash: ticketHash, nowIso: new Date().toISOString() })
+      : null;
+    if (!ticket) return Response.json({ error: 'Ticket نامعتبر، منقضی یا مصرف‌شده است.' }, { status: 401 });
+    if (ticket.telegramUserId !== verified.userId) {
+      return Response.json({ error: 'Ticket متعلق به این هویت تلگرام نیست.' }, { status: 403 });
+    }
+    const adminUser = await adminStore.getAdminUserById(ticket.adminUserId);
+    if (!adminUser || !adminUser.isActive) return Response.json({ error: 'این مدیر فعال نیست.' }, { status: 403 });
+    const roles = await adminStore.listUserRoles(adminUser.id);
+    if (!roles.length) return Response.json({ error: 'هیچ نقشی به این مدیر اختصاص نیافته است.' }, { status: 403 });
+    const token = [...crypto.getRandomValues(new Uint8Array(32))].map(byte => byte.toString(16).padStart(2, '0')).join('');
+    const expiresAt = new Date(Date.now() + 8 * 60 * 60_000).toISOString();
+    await adminStore.createAdminSession(adminUser.id, await sha256Hex(token), expiresAt);
+    await adminStore.logAdminAction({
+      actorId: adminUser.id, action: 'admin.session.launch',
+      entityType: 'admin_session', entityId: adminUser.id,
+      after: { via: 'telegram_launch_ticket' }, reason: null,
+    });
+    return c.json({ token, expiresAt, user: { id: adminUser.id, displayName: adminUser.displayName }, roles });
+  });
+
+  // ---------- Phase 7: API فیدبک برای پنل ----------
+  app.get('/api/panel/feedback', async (c) => {
+    const identity = await adminIdentify(c);
+    if (!identity) return Response.json({ error: 'نشست مدیریتی معتبر نیست.' }, { status: 401 });
+    if (!hasPermission(identity.roles, 'user:read_limited')) return Response.json({ error: 'مجوز feedback:read لازم است.' }, { status: 403 });
+    if (typeof (store as { listFeedbackThreads?: unknown }).listFeedbackThreads !== 'function') {
+      return Response.json({ error: 'لایهٔ فیدبک در دسترس نیست.' }, { status: 503 });
+    }
+    const threads = await (store as { listFeedbackThreads: (input: { status: string | null; limit: number }) => Promise<unknown[]> })
+      .listFeedbackThreads({ status: c.req.query('status') || null, limit: Number(c.req.query('limit') ?? 100) });
+    return c.json({ threads });
+  });
+
+  app.get('/api/panel/feedback/:id/messages', async (c) => {
+    const identity = await adminIdentify(c);
+    if (!identity) return Response.json({ error: 'نشست مدیریتی معتبر نیست.' }, { status: 401 });
+    if (!hasPermission(identity.roles, 'user:read_limited')) return Response.json({ error: 'مجوز کافی ندارید.' }, { status: 403 });
+    if (typeof (store as { listFeedbackMessages?: unknown }).listFeedbackMessages !== 'function') {
+      return Response.json({ error: 'لایهٔ فیدبک در دسترس نیست.' }, { status: 503 });
+    }
+    return c.json({ messages: await (store as { listFeedbackMessages: (threadId: string) => Promise<unknown[]> }).listFeedbackMessages(c.req.param('id')) });
+  });
+
+  app.post('/api/panel/feedback/:id/reply', async (c) => {
+    const identity = await adminIdentify(c);
+    if (!identity) return Response.json({ error: 'نشست مدیریتی معتبر نیست.' }, { status: 401 });
+    if (!hasPermission(identity.roles, 'user:read_limited')) return Response.json({ error: 'مجوز feedback:reply لازم است.' }, { status: 403 });
+    if (!env.TELEGRAM_BOT_TOKEN) return Response.json({ error: 'TELEGRAM_BOT_TOKEN تنظیم نشده است.' }, { status: 503 });
+    const body = await c.req.json().catch(() => null) as { reply?: unknown; internalNote?: unknown } | null;
+    if (!body || typeof body.reply !== 'string' || !body.reply.trim()) return Response.json({ error: 'متن پاسخ الزامی است.' }, { status: 400 });
+    if (typeof (store as { addFeedbackMessage?: unknown }).addFeedbackMessage !== 'function') {
+      return Response.json({ error: 'لایهٔ فیدبک در دسترس نیست.' }, { status: 503 });
+    }
+    const feedback = store as {
+      addFeedbackMessage: (input: { threadId: string; authorKind: 'user' | 'admin'; authorId: string | null; body: string; isInternalNote: boolean }) => Promise<void>;
+      listFeedbackThreads: (input: { status: string | null; limit: number }) => Promise<Array<Record<string, unknown>>>;
+    };
+    const threads = await feedback.listFeedbackThreads({ status: null, limit: 200 });
+    const thread = threads.find(row => String(row.id) === c.req.param('id'));
+    if (!thread) return Response.json({ error: 'Feedback پیدا نشد.' }, { status: 404 });
+    if (body.internalNote === true) {
+      // یادداشت داخلی هرگز به کاربر ارسال نمی‌شود (سند ۱۳٫۴/۱۷٫۴)
+      await feedback.addFeedbackMessage({ threadId: String(thread.id), authorKind: 'admin', authorId: identity.userId, body: body.reply, isInternalNote: true });
+      return c.json({ ok: true, internal: true });
+    }
+    const chatId = Number(thread.chat_id);
+    if (!Number.isFinite(chatId)) return Response.json({ error: 'Chat مقصد معتبر نیست.' }, { status: 409 });
+    const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text: body.reply.slice(0, 4000) }),
+    });
+    let status = 'delivery_uncertain';
+    let messageId: number | null = null;
+    try {
+      const data = await res.json() as { ok?: boolean; result?: { message_id?: number } };
+      if (res.ok && data.ok && data.result?.message_id) { status = 'sent'; messageId = data.result.message_id; }
+      else if (res.status < 500) status = 'failed_permanent';
+    } catch { /* uncertain */ }
+    await feedback.addFeedbackMessage({
+      threadId: String(thread.id), authorKind: 'admin', authorId: identity.userId,
+      body: body.reply.slice(0, 4000), isInternalNote: false,
+    });
+    if (adminStore) await adminStore.logAdminAction({
+      actorId: identity.userId, action: 'feedback.reply',
+      entityType: 'feedback_thread', entityId: String(thread.id),
+      after: { status, telegramMessageId: messageId }, reason: null,
+    });
+    return c.json({ ok: status === 'sent', status, telegramMessageId: messageId });
   });
 
   // استعلام وضعیت وب‌هوک تلگرام (جهت عیب‌یابی و پایش اتصال)
@@ -2411,6 +2736,14 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     await store.upsertStats(stats);
     return c.json({ ok: true, examDate: stats.examDate });
   });
+
+  /* ---------- AEL-201..209: Admin API با RBAC سمت سرور ---------- */
+  app.route('/api/admin', createAdminRouter({
+    adminStore,
+    botToken: env.TELEGRAM_BOT_TOKEN,
+    bootstrapToken: env.ADMIN_API_TOKEN,
+    isProduction,
+  }));
 
   /* ---------- خطاها و مسیرهای ناشناخته ---------- */
   app.onError((err, c) => {

@@ -845,3 +845,6 @@ export * from './formative-quiz';
 export * from './data-versioning';
 
 export * from './multi-course-quiz';
+
+// AEL-405/406 — تحلیل محتوا (تشخیص تکرار و کلید)
+export * from './analysis';
