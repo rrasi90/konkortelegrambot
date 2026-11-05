@@ -57,6 +57,7 @@
     "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.28.2",
+    "pdfjs-dist": "^6.5.438",
     "tailwindcss": "^4.3.3",
     "ts-fsrs": "6.0.0",
     "tsx": "^4.21.0",
