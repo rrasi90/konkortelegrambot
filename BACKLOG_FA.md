@@ -271,3 +271,34 @@
 اقدام بعدی و مسئول: امضاهای انسانی (مالک/متخصص/مشاور) سپس پایلوت
 تاریخ: ۵ نوامبر ۲۰۲۶
 ```
+
+## مأموریت AEL-implementation (سند مادر v2.1 — docs/ael-implementation/)
+
+ثبت در ۵ نوامبر ۲۰۲۶ پس از ممیزی BASELINE. شناسه‌ها از بخش ۱۲ سند مادر.
+
+| شناسه | اولویت | خروجی | وضعیت |
+|---|---|---|---|
+| AEL-000 | P0 | Snapshot و Baseline Audit | **آمادهٔ بازبینی** (docs/ael-implementation/BASELINE_AUDIT.md) |
+| AEL-001 | P0 | Fix TypeScript Worker build | **آمادهٔ بازبینی** — کامیت 68c6c45؛ ماتریس محلی ۱۱/۱۱ سبز؛ تأیید Actions = HUMAN-1 |
+| AEL-002 | P0 | Branch Protection | BLOCKED_BY_GITHUB_PERMISSION — HUMAN-2 |
+| AEL-003 | P0 | PR/Branch reconciliation | **آمادهٔ بازبینی** — PR#1/#3/#4 تصمیم‌گرفته؛ ۱۸ تگ آرشیو؛ بستن PRها = HUMAN-3 |
+| AEL-004 | P0 | Secure legacy importer | **آمادهٔ بازبینی** — src/import/import-policy.mjs + ۵ تست |
+| AEL-005 | P0 | Deprecate local-only ingestion illusion | **آمادهٔ بازبینی** — تب حذف شد؛ کامیت 0fd2271 |
+| AEL-006 | P0 | Security baseline | **آمادهٔ بازبینی** — منفی‌تست‌های auth/demo/fail-closed سبز (SEC-01/02 قبلی) |
+| AEL-101 | P0/P1 | Research Iran education/admission sources | انجام‌نشده |
+| AEL-102 | P0/P1 | Education taxonomy model | انجام‌نشده |
+| AEL-103 | P0/P1 | Curriculum model | انجام‌نشده |
+| AEL-104 | P0/P1 | Exam & Admission model | انجام‌نشده |
+| AEL-105 | P0/P1 | Data Dictionary + JSON Schema | انجام‌نشده |
+| AEL-106 | P0/P1 | Initial Iran seed packs | انجام‌نشده |
+| AEL-107 | P0/P1 | Curriculum/Exam import CLI | انجام‌نشده |
+| AEL-108 | P0/P1 | Regulatory version manager | انجام‌نشده |
+| AEL-201..209 | P1 | Admin Console & RBAC (۹ بسته) | انجام‌نشده — طراحی در docs/ael-next/20 |
+| AEL-301..312 | P1 | Source Library & Ingestion Core (۱۲ بسته) | AEL-311 (dry-run import) **آمادهٔ بازبینی** (src/import/pipeline.mjs)؛ AEL-312 (مهاجرت از JSON فعلی) پس از DATA-03 آماده؛ بقیه انجام‌نشده |
+| AEL-401..409 | P1 | Analysis, Mapping & Knowledge Graph (۹ بسته) | انجام‌نشده |
+| AEL-501..509 | P1 | Review Workflow, Authoring & Release (۹ بسته) | AEL-506 (تصحیح تشریحی) **قرارداد آماده** (EX-06)؛ بقیه انجام‌نشده |
+| AEL-601..612 | P1/P2 | Student Learning & Exam UX (۱۲ بسته) | AEL-604 (Explainable Next Activity) **موتور آماده** (LEARN-03)؛ AEL-611 (FSRS migration decision) **سند آماده** (سند ۱۹)؛ بقیه انجام‌نشده |
+| AEL-701..706 | P1/P2 | Coverage, Reports & Analytics (۶ بسته) | AEL-701/703 **پایه آماده** (SRC-05 coverage-report با مخرج)؛ بقیه انجام‌نشده |
+| AEL-801..808 | P0/P1 | Reliability, Pilot & Release (۸ بسته) | AEL-806 **پایه آماده** (SEC-01/02)؛ بقیه انجام‌نشده — AEL-807/808 مسدود به کاربر واقعی |
+
+**Gate P0:** ۶ از ۷ آیتم آمادهٔ بازبینی؛ فقط AEL-002 به مجوز GitHub مسدود است. تأیید CI روی مقصد (HUMAN-1) پیش از اعلام عبور Gate الزامی است.
