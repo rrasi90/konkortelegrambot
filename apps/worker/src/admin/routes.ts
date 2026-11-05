@@ -824,6 +824,62 @@ export function createAdminRouter(deps: AdminDeps) {
     return c.json({ release, items: items.length, hasSnapshot: !!snapshot, contentHash: snapshot ? String(snapshot.content_hash) : null });
   });
 
+  // ==================== AEL-701 — Coverage با Denominator صریح ====================
+
+  app.get('/coverage', async (c) => {
+    const guard = await requirePermission(c, 'coverage:read');
+    if (guard instanceof Response) return guard;
+    const computedAt = new Date().toISOString();
+    const ratios: Array<{ id: string; numerator: number | 'unknown'; denominator: number | 'unknown'; scope: string; computedAt: string }> = [];
+
+    // ۱) پوشش علمی: نسخه‌های تأییدشده از کل نسخه‌های محتوا
+    const versions = await deps.adminStore!.listContentVersions(null, 1000);
+    const approved = versions.filter(row => ['approved', 'published'].includes(String(row.status))).length;
+    if (versions.length === 0) {
+      ratios.push({ id: 'content_scientific_approval', numerator: 'unknown', denominator: 'unknown', scope: 'content_versions', computedAt });
+    } else {
+      ratios.push({ id: 'content_scientific_approval', numerator: approved, denominator: versions.length, scope: 'content_versions', computedAt });
+    }
+
+    // ۲) پوشش حقوق: نسخه‌های منبع با حداقل یک تصمیم authorized
+    const sources = await deps.adminStore!.listSources(1000);
+    if (sources.length === 0) {
+      ratios.push({ id: 'source_rights_authorized', numerator: 'unknown', denominator: 'unknown', scope: 'sources', computedAt });
+    } else {
+      let authorized = 0;
+      for (const source of sources) {
+        const rights = await deps.adminStore!.listRights(String(source.id));
+        if (rights.some(row => String(row.status) === 'authorized')) authorized += 1;
+      }
+      ratios.push({ id: 'source_rights_authorized', numerator: authorized, denominator: sources.length, scope: 'sources', computedAt });
+    }
+
+    // ۳) پوشش کاتالوگ: درس‌های منتشرشده در Release فعال
+    const items = await deps.adminStore!.listContentItems(1000);
+    const courseItems = items.filter(row => String(row.kind) === 'course');
+    const activeReleaseId = await deps.adminStore!.getActiveReleaseId();
+    let publishedCourses = 0;
+    if (activeReleaseId) {
+      const snapshot = await deps.adminStore!.getPublishedSnapshot(activeReleaseId);
+      const courses = (snapshot?.snapshot as { courses?: unknown[] } | null)?.courses ?? [];
+      publishedCourses = courses.length;
+    }
+    if (courseItems.length === 0) {
+      ratios.push({ id: 'catalog_published_courses', numerator: 'unknown', denominator: 'unknown', scope: 'content_items(kind=course)', computedAt });
+    } else {
+      ratios.push({ id: 'catalog_published_courses', numerator: Math.min(publishedCourses, courseItems.length), denominator: courseItems.length, scope: 'content_items(kind=course)', computedAt });
+    }
+
+    // ۴) صف بازبینی باز — مخرجش «کار باقی‌مانده» است، نه نسبت
+    const openTasks = await deps.adminStore!.listReviewTasks(null, 'pending', 1000);
+    return c.json({
+      computedAt,
+      note: 'مخرج نامعلوم هرگز درصد نمی‌شود (ADR-008) — با unknown گزارش می‌شود.',
+      ratios,
+      openReviewTasks: openTasks.length,
+    });
+  });
+
   void bootstrapGuard;
   return app;
 }
