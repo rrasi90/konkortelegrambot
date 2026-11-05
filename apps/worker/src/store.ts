@@ -275,6 +275,19 @@ export interface DataStore {
     operationId: string; isCorrect: boolean; topicId: string; mastery: number;
     fsrs: { stability: number; difficulty: number; dueDays: number } | null;
   }): Promise<{ replay: boolean } | null>;
+
+  /* ---------- مأموریت v2 — Telegram Inbox/Outbox، Launch Ticket و Feedback (اختیاری) ---------- */
+  claimTelegramUpdate?(input: { botId: string; updateId: number; chatId: number | null; senderTelegramId: number | null; isEdit: boolean; kind: string }): Promise<'claimed' | 'duplicate'>;
+  recordReplyEffect?(input: { botId: string; updateId: number; intentKey: string; chatId: number }): Promise<'created' | 'existing'>;
+  finishReplyEffect?(input: { botId: string; updateId: number; intentKey: string; status: 'sent' | 'retryable_rejected' | 'failed_permanent' | 'delivery_uncertain'; telegramMessageId?: number | null; lastError?: string | null; retryAfterSeconds?: number | null }): Promise<void>;
+  recordAdminLoginAttempt?(input: { telegramUserId: number; success: boolean }): Promise<void>;
+  countRecentFailedAdminLogins?(input: { telegramUserId: number; sinceIso: string }): Promise<number>;
+  createAdminLaunchTicket?(input: { tokenHash: string; adminUserId: string; telegramUserId: number; expiresAt: string }): Promise<void>;
+  consumeAdminLaunchTicket?(input: { tokenHash: string; nowIso: string }): Promise<{ adminUserId: string; telegramUserId: number } | null>;
+  createFeedbackThread?(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string }): Promise<string>;
+  addFeedbackMessage?(input: { threadId: string; authorKind: 'user' | 'admin'; authorId: string | null; body: string; isInternalNote: boolean }): Promise<void>;
+  listFeedbackThreads?(input: { status: string | null; limit: number }): Promise<unknown[]>;
+  listFeedbackMessages?(threadId: string): Promise<unknown[]>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1174,5 +1187,122 @@ export class SupabaseStore implements DataStore {
       p_fsrs_due_days: input.fsrs?.dueDays ?? null,
     }) as { replay?: boolean } | null;
     return { replay: result?.replay === true };
+  }
+
+  /* ---------- مأموریت v2 ---------- */
+
+  async claimTelegramUpdate(input: { botId: string; updateId: number; chatId: number | null; senderTelegramId: number | null; isEdit: boolean; kind: string }): Promise<'claimed' | 'duplicate'> {
+    const res = await fetch(`${this.url}/rest/v1/telegram_updates`, {
+      method: 'POST',
+      headers: {
+        apikey: this.serviceRoleKey,
+        Authorization: `Bearer ${this.serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'resolution=ignore-duplicates,return=representation',
+      },
+      body: JSON.stringify({
+        bot_id: input.botId, update_id: input.updateId, chat_id: input.chatId,
+        sender_telegram_id: input.senderTelegramId, is_edit: input.isEdit, kind: input.kind,
+      }),
+    });
+    if (!res.ok) throw new Error(`Supabase POST telegram_updates: ${res.status}`);
+    const rows = (await res.json()) as unknown[];
+    return rows.length ? 'claimed' : 'duplicate';
+  }
+
+  async recordReplyEffect(input: { botId: string; updateId: number; intentKey: string; chatId: number }): Promise<'created' | 'existing'> {
+    const res = await fetch(`${this.url}/rest/v1/telegram_reply_effects`, {
+      method: 'POST',
+      headers: {
+        apikey: this.serviceRoleKey,
+        Authorization: `Bearer ${this.serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'resolution=ignore-duplicates,return=representation',
+      },
+      body: JSON.stringify({
+        bot_id: input.botId, update_id: input.updateId, intent_key: input.intentKey,
+        chat_id: input.chatId, status: 'pending',
+      }),
+    });
+    if (!res.ok) throw new Error(`Supabase POST telegram_reply_effects: ${res.status}`);
+    const rows = (await res.json()) as unknown[];
+    return rows.length ? 'created' : 'existing';
+  }
+
+  async finishReplyEffect(input: { botId: string; updateId: number; intentKey: string; status: 'sent' | 'retryable_rejected' | 'failed_permanent' | 'delivery_uncertain'; telegramMessageId?: number | null; lastError?: string | null; retryAfterSeconds?: number | null }): Promise<void> {
+    const body: Record<string, unknown> = { status: input.status, updated_at: new Date().toISOString() };
+    if (input.telegramMessageId != null) body.telegram_message_id = input.telegramMessageId;
+    if (input.lastError != null) body.last_error = String(input.lastError).slice(0, 300);
+    if (input.retryAfterSeconds != null) body.retry_after_seconds = input.retryAfterSeconds;
+    if (input.status === 'sent') body.sent_at = new Date().toISOString();
+    await this.request('PATCH', 'telegram_reply_effects', body, `?bot_id=eq.${input.botId}&update_id=eq.${input.updateId}&intent_key=eq.${input.intentKey}`);
+  }
+
+  async recordAdminLoginAttempt(input: { telegramUserId: number; success: boolean }): Promise<void> {
+    await this.request('POST', 'admin_login_attempts', { telegram_user_id: input.telegramUserId, success: input.success });
+  }
+
+  async countRecentFailedAdminLogins(input: { telegramUserId: number; sinceIso: string }): Promise<number> {
+    const rows = await this.request('GET', 'admin_login_attempts', undefined,
+      `?telegram_user_id=eq.${input.telegramUserId}&success=eq.false&attempted_at=gte.${input.sinceIso}&select=id`) as unknown[] | null;
+    return rows?.length ?? 0;
+  }
+
+  async createAdminLaunchTicket(input: { tokenHash: string; adminUserId: string; telegramUserId: number; expiresAt: string }): Promise<void> {
+    await this.request('POST', 'admin_launch_tickets', {
+      token_hash: input.tokenHash, admin_user_id: input.adminUserId,
+      telegram_user_id: input.telegramUserId, expires_at: input.expiresAt,
+    });
+  }
+
+  async consumeAdminLaunchTicket(input: { tokenHash: string; nowIso: string }): Promise<{ adminUserId: string; telegramUserId: number } | null> {
+    const res = await fetch(
+      `${this.url}/rest/v1/admin_launch_tickets?token_hash=eq.${input.tokenHash}&consumed_at=is.null&expires_at=gt.${input.nowIso}`,
+      {
+        method: 'PATCH',
+        headers: {
+          apikey: this.serviceRoleKey,
+          Authorization: `Bearer ${this.serviceRoleKey}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
+        body: JSON.stringify({ consumed_at: new Date().toISOString() }),
+      });
+    if (!res.ok) return null;
+    const rows = (await res.json()) as Array<Record<string, unknown>>;
+    return rows.length ? { adminUserId: String(rows[0]!.admin_user_id), telegramUserId: Number(rows[0]!.telegram_user_id) } : null;
+  }
+
+  async createFeedbackThread(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string }): Promise<string> {
+    const rows = await this.request('POST', 'feedback_threads', {
+      user_id: input.userId, telegram_user_id: input.telegramUserId, chat_id: input.chatId,
+      category: input.category, status: 'new',
+    }) as Array<Record<string, unknown>> | null;
+    const threadId = String(rows?.[0]!.id);
+    await this.request('POST', 'feedback_messages', {
+      thread_id: threadId, author_kind: 'user', author_id: input.telegramUserId === null ? null : String(input.telegramUserId),
+      body: input.body, is_internal_note: false,
+    });
+    return threadId;
+  }
+
+  async addFeedbackMessage(input: { threadId: string; authorKind: 'user' | 'admin'; authorId: string | null; body: string; isInternalNote: boolean }): Promise<void> {
+    await this.request('POST', 'feedback_messages', {
+      thread_id: input.threadId, author_kind: input.authorKind, author_id: input.authorId,
+      body: input.body, is_internal_note: input.isInternalNote,
+    });
+  }
+
+  async listFeedbackThreads(input: { status: string | null; limit: number }): Promise<unknown[]> {
+    const query = input.status
+      ? `?status=eq.${input.status}&order=updated_at.desc&limit=${Math.min(200, Math.max(1, input.limit))}`
+      : `?order=updated_at.desc&limit=${Math.min(200, Math.max(1, input.limit))}`;
+    const rows = await this.request('GET', 'feedback_threads', undefined, query) as unknown[] | null;
+    return rows ?? [];
+  }
+
+  async listFeedbackMessages(threadId: string): Promise<unknown[]> {
+    const rows = await this.request('GET', 'feedback_messages', undefined, `?thread_id=eq.${threadId}&order=created_at.asc`) as unknown[] | null;
+    return rows ?? [];
   }
 }

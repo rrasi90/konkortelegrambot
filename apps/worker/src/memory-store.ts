@@ -3,6 +3,10 @@ import { defaultSeed } from './default-seed';
 import type { LearnerSkillState, ReviewCard, TrackId, UserNodeMastery } from '@ael/contracts';
 import type { AttemptTicket, AnswerEvent, AppUser, AuditEventInput, DailyQueueItemRow, DataStore, ExamSelection, MasteryHistoryRow } from './store';
 
+function makeRowId(): string {
+  return `row-${crypto.randomUUID()}`;
+}
+
 export class MemoryStore implements DataStore {
   users = new Map<string, AppUser>();
   private tgIndex = new Map<number, string>();
@@ -503,6 +507,94 @@ export class MemoryStore implements DataStore {
       wrong: current.wrong + (input.isCorrect ? 0 : 1),
     });
     return { replay: false };
+  }
+
+  /* ---------- مأموریت v2 ---------- */
+
+  private telegramUpdates = new Set<string>();
+  private replyEffects = new Map<string, { status: string; telegramMessageId: number | null; lastError: string | null }>();
+  private loginAttempts: Array<{ telegramUserId: number; success: boolean; at: number }> = [];
+  private launchTickets = new Map<string, { adminUserId: string; telegramUserId: number; expiresAt: number; consumed: boolean }>();
+  private feedbackThreads: Array<Record<string, unknown>> = [];
+  private feedbackMessages: Array<Record<string, unknown>> = [];
+  private nextRowId = 1;
+
+  async claimTelegramUpdate(input: { botId: string; updateId: number; chatId: number | null; senderTelegramId: number | null; isEdit: boolean; kind: string }): Promise<'claimed' | 'duplicate'> {
+    const key = `${input.botId}:${input.updateId}`;
+    if (this.telegramUpdates.has(key)) return 'duplicate';
+    this.telegramUpdates.add(key);
+    return 'claimed';
+  }
+
+  async recordReplyEffect(input: { botId: string; updateId: number; intentKey: string; chatId: number }): Promise<'created' | 'existing'> {
+    const key = `${input.botId}:${input.updateId}:${input.intentKey}`;
+    if (this.replyEffects.has(key)) return 'existing';
+    this.replyEffects.set(key, { status: 'pending', telegramMessageId: null, lastError: null });
+    return 'created';
+  }
+
+  async finishReplyEffect(input: { botId: string; updateId: number; intentKey: string; status: 'sent' | 'retryable_rejected' | 'failed_permanent' | 'delivery_uncertain'; telegramMessageId?: number | null; lastError?: string | null; retryAfterSeconds?: number | null }): Promise<void> {
+    const key = `${input.botId}:${input.updateId}:${input.intentKey}`;
+    const row = this.replyEffects.get(key);
+    if (row) {
+      row.status = input.status;
+      row.telegramMessageId = input.telegramMessageId ?? null;
+      row.lastError = input.lastError ?? null;
+    }
+  }
+
+  async recordAdminLoginAttempt(input: { telegramUserId: number; success: boolean }): Promise<void> {
+    this.loginAttempts.push({ telegramUserId: input.telegramUserId, success: input.success, at: Date.now() });
+  }
+
+  async countRecentFailedAdminLogins(input: { telegramUserId: number; sinceIso: string }): Promise<number> {
+    const since = new Date(input.sinceIso).getTime();
+    return this.loginAttempts.filter(row => row.telegramUserId === input.telegramUserId && !row.success && row.at >= since).length;
+  }
+
+  async createAdminLaunchTicket(input: { tokenHash: string; adminUserId: string; telegramUserId: number; expiresAt: string }): Promise<void> {
+    this.launchTickets.set(input.tokenHash, { adminUserId: input.adminUserId, telegramUserId: input.telegramUserId, expiresAt: new Date(input.expiresAt).getTime(), consumed: false });
+  }
+
+  async consumeAdminLaunchTicket(input: { tokenHash: string; nowIso: string }): Promise<{ adminUserId: string; telegramUserId: number } | null> {
+    const row = this.launchTickets.get(input.tokenHash);
+    if (!row || row.consumed) return null;
+    if (row.expiresAt <= new Date(input.nowIso).getTime()) return null;
+    row.consumed = true;
+    return { adminUserId: row.adminUserId, telegramUserId: row.telegramUserId };
+  }
+
+  async createFeedbackThread(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string }): Promise<string> {
+    const id = makeRowId();
+    this.feedbackThreads.push({
+      id, user_id: input.userId, telegram_user_id: input.telegramUserId, chat_id: input.chatId,
+      category: input.category, severity: 'normal', status: 'new',
+      assignee: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    });
+    this.feedbackMessages.push({
+      id: makeRowId(), thread_id: id, author_kind: 'user',
+      author_id: input.telegramUserId === null ? null : String(input.telegramUserId),
+      body: input.body, is_internal_note: false, created_at: new Date().toISOString(),
+    });
+    return id;
+  }
+
+  async addFeedbackMessage(input: { threadId: string; authorKind: 'user' | 'admin'; authorId: string | null; body: string; isInternalNote: boolean }): Promise<void> {
+    this.feedbackMessages.push({
+      id: makeRowId(), thread_id: input.threadId, author_kind: input.authorKind,
+      author_id: input.authorId, body: input.body, is_internal_note: input.isInternalNote,
+      created_at: new Date().toISOString(),
+    });
+  }
+
+  async listFeedbackThreads(input: { status: string | null; limit: number }): Promise<unknown[]> {
+    return this.feedbackThreads
+      .filter(row => !input.status || row.status === input.status)
+      .slice(0, input.limit);
+  }
+
+  async listFeedbackMessages(threadId: string): Promise<unknown[]> {
+    return this.feedbackMessages.filter(row => row.thread_id === threadId);
   }
 
   /** فقط برای تست/ممیزی */
