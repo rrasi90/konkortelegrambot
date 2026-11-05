@@ -2,7 +2,7 @@
   "name": "adaptive-exam-worker",
   "main": "src/index.ts",
   "compatibility_date": "2026-01-01",
-  "vars": { "ENVIRONMENT": "production" },
+  "vars": { "ENVIRONMENT": "development" },
   "assets": {
     "directory": "../../apps/miniapp",
     "not_found_handling": "single-page-application",
