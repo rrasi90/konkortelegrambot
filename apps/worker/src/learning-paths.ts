@@ -41,18 +41,19 @@ function assertUniqueOperation(userId: string, operationId: unknown, payload: un
   }
 }
 
-export function learningOverview() {
-  return { courses: courses.map(courseOverview), recurrence, questionIndex };
+/** AEL-509: کاتالوگ تزریق‌شدنی — پیش‌فرض Legacy static فقط تا ثبت Release اول (ADR-003). */
+export function learningOverview(coursesOverride?: LearningCourse[]) {
+  return { courses: (coursesOverride ?? courses).map(courseOverview), recurrence, questionIndex };
 }
 
-function lookupCourse(id: unknown): LearningCourse {
-  const course = courses.find(item => item.id === id);
+function lookupCourse(id: unknown, coursesOverride?: LearningCourse[]): LearningCourse {
+  const course = (coursesOverride ?? courses).find(item => item.id === id);
   if (!course) throw new FormativeQuizError('درس مورد نظر موجود نیست.');
   return course;
 }
 
-export async function startLearningQuiz(userId: string, secret: string, input: QuizInput & { courseId?: unknown }, now = Date.now()) {
-  const course = lookupCourse(input.courseId);
+export async function startLearningQuiz(userId: string, secret: string, input: QuizInput & { courseId?: unknown }, now = Date.now(), coursesOverride?: LearningCourse[]) {
+  const course = lookupCourse(input.courseId, coursesOverride);
   const { challenge, questions } = createQuiz(course, input, now);
   const signed: SignedChallenge = {
     ...challenge, userId, expires: challenge.deadline === null ? now + lifetime : challenge.deadline + submitGrace,
@@ -66,8 +67,8 @@ export async function startLearningQuiz(userId: string, secret: string, input: Q
 /** UX-03: تمرین انتقالی پس از غلط — سؤال مستقل از همان مبحث، خارج از گروه هم‌ارزی. */
 export async function startTransferQuiz(userId: string, secret: string, input: {
   courseId?: unknown; questionId?: unknown;
-}, now = Date.now()) {
-  const course = lookupCourse(input.courseId);
+}, now = Date.now(), coursesOverride?: LearningCourse[]) {
+  const course = lookupCourse(input.courseId, coursesOverride);
   if (typeof input.questionId !== 'string' || !input.questionId) {
     throw new FormativeQuizError('شناسهٔ سؤال معتبر نیست.');
   }
@@ -95,7 +96,7 @@ function deterministicSeed(text: string): number {
   return hash >>> 0;
 }
 
-async function readChallenge(userId: string, secret: string, token: unknown, now: number) {
+async function readChallenge(userId: string, secret: string, token: unknown, now: number, coursesOverride?: LearningCourse[]) {
   if (typeof token !== 'string' || token.length > 4000) {
     throw new FormativeQuizError('شناسهٔ جلسه معتبر نیست.');
   }
@@ -104,15 +105,15 @@ async function readChallenge(userId: string, secret: string, token: unknown, now
   const challenge = JSON.parse(payload) as SignedChallenge;
   if (challenge.userId !== userId) throw new FormativeQuizError('این جلسه متعلق به این کاربر نیست.');
   if (now >= challenge.expires) throw new FormativeQuizError('زمان ثبت این جلسه پایان یافته است. یک جلسهٔ تازه شروع کنید.');
-  const course = lookupCourse(challenge.courseId);
+  const course = lookupCourse(challenge.courseId, coursesOverride);
   if (course.version !== challenge.version) throw new FormativeQuizError('نسخهٔ درس عوض شده است. یک جلسهٔ تازه شروع کنید.');
   return { course, challenge };
 }
 
 export async function answerLearningQuiz(userId: string, secret: string, input: {
   token?: unknown; questionId?: unknown; selected?: unknown; operationId?: unknown;
-}, now = Date.now()) {
-  const { course, challenge } = await readChallenge(userId, secret, input.token, now);
+}, now = Date.now(), coursesOverride?: LearningCourse[]) {
+  const { course, challenge } = await readChallenge(userId, secret, input.token, now, coursesOverride);
   if (challenge.mode !== 'practice') throw new FormativeQuizError('پاسخ‌نامه پس از ثبت نهایی نمایش داده می‌شود.');
   assertUniqueOperation(userId, input.operationId, { token: input.token, questionId: input.questionId, selected: input.selected }, now);
   return gradeFormativeAnswer(course, challenge, input.questionId, input.selected);
@@ -120,8 +121,8 @@ export async function answerLearningQuiz(userId: string, secret: string, input: 
 
 export async function finishLearningQuiz(userId: string, secret: string, input: {
   token?: unknown; answers?: unknown; operationId?: unknown;
-}, now = Date.now()) {
-  const { course, challenge } = await readChallenge(userId, secret, input.token, now);
+}, now = Date.now(), coursesOverride?: LearningCourse[]) {
+  const { course, challenge } = await readChallenge(userId, secret, input.token, now, coursesOverride);
   if (challenge.mode === 'practice') throw new FormativeQuizError('در تمرین، هر سؤال جداگانه ثبت می‌شود.');
   assertUniqueOperation(userId, input.operationId, { token: input.token, answers: input.answers }, now);
   return gradeFormativeQuiz(course, challenge, input.answers);

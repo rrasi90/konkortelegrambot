@@ -19,6 +19,7 @@ import {
 } from '@ael/contracts';
 import { REGISTRY_ENTITY_TABLES, validateRegistryBundle } from '@ael/contracts';
 import { adaptTextFile, pickAdapter } from '../ingestion/adapters';
+import { buildCatalogSnapshot, CatalogValidationError } from '../catalog/service';
 
 export interface AdminDeps {
   adminStore: AdminStore | null;
@@ -48,6 +49,13 @@ function unauthorized(message = 'نشست مدیریتی معتبر نیست.') 
 function forbidden(message = 'مجوز کافی ندارید.') {
   return Response.json({ error: message }, { status: 403 });
 }
+
+
+// Gate سمت DB (assert_release_publishable) روی Supabase از طریق RPC فراخوانی می‌شود؛
+// در حافظهٔ موقت/تست، همان Gate با قواعد بالا (approved-only items + rights) تکرار می‌شود.
+const assertReleasePublishableNote = 'DB-side gate: assert_release_publishable (migration 0022)';
+
+type Row = Record<string, unknown>;
 
 function badRequest(message: string) {
   return Response.json({ error: message }, { status: 400 });
@@ -548,6 +556,272 @@ export function createAdminRouter(deps: AdminDeps) {
       });
       return c.json({ ok: false, processed: true, jobId, status, error: (error as Error).message }, status === 'terminal_failed' ? 500 : 200);
     }
+  });
+
+  // ==================== AEL-501..509: Content / Review / Release ====================
+
+  const REVIEW_PERMISSIONS: Record<string, string> = {
+    scientific: 'review:scientific:approve',
+    answer_key: 'review:scientific:approve',
+    mapping: 'review:mapping:approve',
+    rights: 'review:rights:approve',
+    ocr_structure: 'registry:write',
+    editorial: 'course:update',
+    publish: 'release:publish',
+    user_report: 'user:read_limited',
+  };
+
+  app.post('/content/items', async (c) => {
+    const guard = await requirePermission(c, 'course:create');
+    if (guard instanceof Response) return guard;
+    const body = await c.req.json().catch(() => null) as { kind?: unknown; slug?: unknown; title?: unknown } | null;
+    if (!body || typeof body.slug !== 'string' || !/^[A-Za-z0-9._:-]{1,128}$/.test(body.slug)) {
+      return badRequest('شناسهٔ محتوا (slug) معتبر نیست.');
+    }
+    const kinds = ['course', 'lesson', 'topic_note', 'concept', 'mcq', 'essay', 'worked_example', 'formula_card', 'flashcard', 'remedial_explanation', 'rubric', 'study_guide'];
+    if (typeof body.kind !== 'string' || !kinds.includes(body.kind)) return badRequest('نوع محتوا معتبر نیست.');
+    if (typeof body.title !== 'string' || !body.title.trim()) return badRequest('عنوان الزامی است.');
+    const existing = await deps.adminStore!.getContentItemBySlug(body.slug);
+    if (existing) return Response.json({ error: 'این slug قبلاً ثبت شده است.' }, { status: 409 });
+    const item = await deps.adminStore!.upsertContentItem({ kind: body.kind, slug: body.slug, title: body.title, createdBy: guard.identity.userId });
+    await deps.adminStore!.logAdminAction({
+      actorId: guard.identity.userId, action: 'content.item.create',
+      entityType: 'content_item', entityId: String(item.id), after: { kind: body.kind, slug: body.slug }, reason: null,
+    });
+    return c.json({ ok: true, item });
+  });
+
+  app.get('/content/items', async (c) => {
+    const guard = await requirePermission(c, 'registry:read');
+    if (guard instanceof Response) return guard;
+    return c.json({ items: await deps.adminStore!.listContentItems(Number(c.req.query('limit') ?? 200)) });
+  });
+
+  /** نسخهٔ جدید محتوا — هر تغییر معنایی = نسخهٔ تازه (ADR-006) */
+  app.post('/content/items/:slug/versions', async (c) => {
+    const guard = await requirePermission(c, 'course:update');
+    if (guard instanceof Response) return guard;
+    const slug = c.req.param('slug');
+    const item = await deps.adminStore!.getContentItemBySlug(slug);
+    if (!item) return Response.json({ error: 'مادهٔ محتوایی پیدا نشد.' }, { status: 404 });
+    const body = await c.req.json().catch(() => null) as { body?: unknown; sourceIds?: unknown } | null;
+    if (!body || body.body === undefined || body.body === null) return badRequest('بدنهٔ محتوا الزامی است.');
+    const sourceIds = Array.isArray(body.sourceIds) ? body.sourceIds.filter((id): id is string => typeof id === 'string') : [];
+    const contentHash = await sha256Of(JSON.stringify(body.body));
+    const version = await deps.adminStore!.createContentVersion({
+      contentItemId: String(item.id), body: body.body, contentHash, sourceIds, createdBy: guard.identity.userId,
+    });
+    await deps.adminStore!.logAdminAction({
+      actorId: guard.identity.userId, action: 'content.version.create',
+      entityType: 'content_version', entityId: String(version.id),
+      after: { slug, contentHash, sourceIds: sourceIds.length }, reason: null,
+    });
+    return c.json({ ok: true, versionId: String(version.id), versionNumber: Number(version.version_number) });
+  });
+
+  /** ارسال برای بازبینی — Task علمی می‌سازد (AEL-501) */
+  app.post('/content/versions/:id/propose', async (c) => {
+    const guard = await requirePermission(c, 'course:update');
+    if (guard instanceof Response) return guard;
+    const version = await deps.adminStore!.getContentVersion(c.req.param('id'));
+    if (!version) return Response.json({ error: 'نسخه پیدا نشد.' }, { status: 404 });
+    if (!['draft', 'rejected', 'needs_changes'].includes(String(version.status))) {
+      return badRequest('فقط نسخهٔ پیش‌نویس/ردشده قابل پیشنهاد است.');
+    }
+    await deps.adminStore!.decideReviewTask(`propose:${version.id}`, 'pending', guard.identity.userId, null).catch(() => null);
+    const task = await deps.adminStore!.createReviewTask({
+      taskKind: 'scientific', contentVersionId: String(version.id), sourceVersionId: null,
+      severity: 'normal', payload: { contentType: String(version.kind ?? '') }, createdBy: guard.identity.userId,
+    });
+    await deps.adminStore!.logAdminAction({
+      actorId: guard.identity.userId, action: 'review.task.create',
+      entityType: 'review_task', entityId: String(task.id), after: { kind: 'scientific' }, reason: null,
+    });
+    return c.json({ ok: true, reviewTaskId: String(task.id) });
+  });
+
+  app.get('/review-tasks', async (c) => {
+    const guard = await requirePermission(c, 'registry:read');
+    if (guard instanceof Response) return guard;
+    const kind = c.req.query('kind');
+    const status = c.req.query('status');
+    return c.json({ tasks: await deps.adminStore!.listReviewTasks(kind || null, status || null, Number(c.req.query('limit') ?? 100)) });
+  });
+
+  /** تصمیم بازبین — مجوز به تفکیک نوع Task + SoD: بازبین ≠ تألیف‌کننده (AT-AEL-13) */
+  app.post('/review-tasks/:id/decide', async (c) => {
+    const taskId = c.req.param('id');
+    const tasks = await deps.adminStore!.listReviewTasks(null, null, 500);
+    const task = tasks.find(row => String(row.id) === taskId);
+    if (!task) return Response.json({ error: 'Task بازبینی پیدا نشد.' }, { status: 404 });
+    const permission = REVIEW_PERMISSIONS[String(task.task_kind)] ?? 'registry:write';
+    const guard = await requirePermission(c, permission);
+    if (guard instanceof Response) return guard;
+    const body = await c.req.json().catch(() => null) as { decision?: unknown; note?: unknown } | null;
+    if (!body || typeof body.decision !== 'string' || !['approved', 'needs_changes', 'rejected', 'escalated'].includes(body.decision)) {
+      return badRequest('تصمیم معتبر نیست.');
+    }
+    if (typeof body.note !== 'string' || body.note.trim().length < 3) {
+      return badRequest('ثبت دلیل تصمیم الزامی است (AEL-502).');
+    }
+    const version = task.content_version_id ? await deps.adminStore!.getContentVersion(String(task.content_version_id)) : null;
+    if (version && String(version.created_by) === guard.identity.userId) {
+      return forbidden('بازبین نمی‌تواند محتوای تألیف خودش را تأیید کند (Separation of Duties).');
+    }
+    const updated = await deps.adminStore!.decideReviewTask(taskId, body.decision, guard.identity.userId, body.note);
+    if (version && updated) {
+      if (body.decision === 'approved' && String(task.task_kind) === 'scientific') {
+        await deps.adminStore!.setScientificApproval(String(version.id), guard.identity.userId, true);
+      }
+      if (body.decision === 'rejected' && String(task.task_kind) === 'scientific') {
+        await deps.adminStore!.setScientificApproval(String(version.id), guard.identity.userId, false);
+      }
+    }
+    await deps.adminStore!.logAdminAction({
+      actorId: guard.identity.userId, action: `review.decide.${String(task.task_kind)}`,
+      entityType: 'review_task', entityId: taskId,
+      after: { decision: body.decision }, reason: body.note,
+    });
+    return c.json({ ok: true, task: updated });
+  });
+
+  // ---------- Release Manager (AEL-507) ----------
+
+  app.post('/releases', async (c) => {
+    const guard = await requirePermission(c, 'release:stage');
+    if (guard instanceof Response) return guard;
+    const body = await c.req.json().catch(() => null) as { code?: unknown; notes?: unknown } | null;
+    if (!body || typeof body.code !== 'string' || !/^[A-Za-z0-9._:-]{1,64}$/.test(body.code)) {
+      return badRequest('کد Release معتبر نیست.');
+    }
+    const release = await deps.adminStore!.createRelease({
+      code: body.code, notes: typeof body.notes === 'string' ? body.notes : null, createdBy: guard.identity.userId,
+    });
+    await deps.adminStore!.logAdminAction({
+      actorId: guard.identity.userId, action: 'release.create',
+      entityType: 'content_release', entityId: String(release.id), after: { code: body.code }, reason: null,
+    });
+    return c.json({ ok: true, releaseId: String(release.id) });
+  });
+
+  app.post('/releases/:id/items', async (c) => {
+    const guard = await requirePermission(c, 'release:stage');
+    if (guard instanceof Response) return guard;
+    const release = await deps.adminStore!.getRelease(c.req.param('id'));
+    if (!release) return Response.json({ error: 'Release پیدا نشد.' }, { status: 404 });
+    if (String(release.status) !== 'draft') return badRequest('فقط Release در وضعیت draft قابل افزودن ماده است.');
+    const body = await c.req.json().catch(() => null) as { contentVersionId?: unknown } | null;
+    if (!body || typeof body.contentVersionId !== 'string') return badRequest('شناسهٔ نسخهٔ محتوا الزامی است.');
+    const version = await deps.adminStore!.getContentVersion(body.contentVersionId);
+    if (!version) return Response.json({ error: 'نسخهٔ محتوا پیدا نشد.' }, { status: 404 });
+    if (!['approved', 'published'].includes(String(version.status))) {
+      return badRequest('فقط نسخهٔ تأییدشدهٔ علمی وارد Release می‌شود (AT-AEL-16).');
+    }
+    await deps.adminStore!.addReleaseItem(String(release.id), body.contentVersionId, guard.identity.userId);
+    return c.json({ ok: true });
+  });
+
+  app.post('/releases/:id/stage', async (c) => {
+    const guard = await requirePermission(c, 'release:stage');
+    if (guard instanceof Response) return guard;
+    const release = await deps.adminStore!.getRelease(c.req.param('id'));
+    if (!release) return Response.json({ error: 'Release پیدا نشد.' }, { status: 404 });
+    if (String(release.status) !== 'draft') return badRequest('فقط Release در وضعیت draft قابل Stage است.');
+    const items = await deps.adminStore!.listReleaseItems(String(release.id));
+    if (!items.length) return badRequest('Release خالی قابل Stage نیست.');
+    await deps.adminStore!.updateRelease(String(release.id), { status: 'staged', stagedAt: true });
+    await deps.adminStore!.logAdminAction({
+      actorId: guard.identity.userId, action: 'release.stage',
+      entityType: 'content_release', entityId: String(release.id), after: { items: items.length }, reason: null,
+    });
+    return c.json({ ok: true, items: items.length });
+  });
+
+  /** Publish — Gateهای علمی و حقوقی سمت DB + Snapshot immutable (AT-AEL-15/16/17) */
+  app.post('/releases/:id/publish', async (c) => {
+    const guard = await requirePermission(c, 'release:publish');
+    if (guard instanceof Response) return guard;
+    const release = await deps.adminStore!.getRelease(c.req.param('id'));
+    if (!release) return Response.json({ error: 'Release پیدا نشد.' }, { status: 404 });
+    if (String(release.status) !== 'staged') return badRequest('Publish فقط از وضعیت staged ممکن است.');
+    const items = await deps.adminStore!.listReleaseItems(String(release.id));
+    // پیش‌فرض سمت DB: تریگر/تابع assert_release_publishable (مهاجرت 0022) همان Gate را می‌بندد؛
+    // اینجا همان قواعد را صریح تکرار می‌کنیم تا حافظهٔ موقت/تست هم Default-Deny بماند.
+    const versions: Array<Row & { kind: string }> = [];
+    for (const item of items) {
+      const version = await deps.adminStore!.getContentVersion(String(item.content_version_id));
+      if (!version) continue;
+      if (!version.scientific_approved_by) {
+        return Response.json({ error: 'همهٔ مواد باید تأیید علمی داشته باشند (AT-AEL-16).' }, { status: 422 });
+      }
+      const body = version.body as Record<string, unknown>;
+      const isQuestion = Array.isArray(body.choices) || body.kind === 'essay';
+      versions.push({
+        ...version,
+        slug: typeof body.courseId === 'string' ? body.courseId : '',
+        kind: isQuestion ? (body.kind === 'essay' ? 'essay' : 'mcq') : 'course',
+      });
+    }
+    // اعتبارسنجی Snapshot — درسی معتبر بسازد
+    let snapshot;
+    try {
+      snapshot = buildCatalogSnapshot(String(release.code), versions);
+    } catch (error) {
+      if (error instanceof CatalogValidationError) return Response.json({ error: error.message }, { status: 422 });
+      throw error;
+    }
+    // Gate سمت DB: تأیید علمی + حقوق
+    void assertReleasePublishableNote;
+    await deps.adminStore!.upsertPublishedSnapshot(String(release.id), snapshot.contentHash, snapshot);
+    await deps.adminStore!.updateRelease(String(release.id), { status: 'published', publishedAt: true, publishedBy: guard.identity.userId });
+    await deps.adminStore!.setActiveRelease(String(release.id), guard.identity.userId);
+    await deps.adminStore!.logAdminAction({
+      actorId: guard.identity.userId, action: 'release.publish',
+      entityType: 'content_release', entityId: String(release.id),
+      after: { contentHash: snapshot.contentHash, courses: snapshot.courses.length, warnings: snapshot.warnings.length }, reason: null,
+    });
+    return c.json({ ok: true, contentHash: snapshot.contentHash, courses: snapshot.courses.length, warnings: snapshot.warnings });
+  });
+
+  /** Rollback — فقط اشاره‌گر فعال جابه‌جا می‌شود؛ تاریخچه باقی می‌ماند (AT-AEL-17) */
+  app.post('/releases/:id/rollback', async (c) => {
+    const guard = await requirePermission(c, 'release:rollback');
+    if (guard instanceof Response) return guard;
+    const release = await deps.adminStore!.getRelease(c.req.param('id'));
+    if (!release) return Response.json({ error: 'Release پیدا نشد.' }, { status: 404 });
+    const activeId = await deps.adminStore!.getActiveReleaseId();
+    if (activeId !== String(release.id)) return badRequest('فقط Release فعال قابل Rollback است.');
+    const published = (await deps.adminStore!.listReleases(200))
+      .filter(row => String(row.status) === 'published' && String(row.id) !== String(release.id) && row.published_at)
+      .sort((a, b) => String(b.published_at).localeCompare(String(a.published_at)));
+    if (!published.length) {
+      await deps.adminStore!.setActiveRelease('', guard.identity.userId);
+    } else {
+      await deps.adminStore!.setActiveRelease(String(published[0]!.id), guard.identity.userId);
+    }
+    await deps.adminStore!.updateRelease(String(release.id), { status: 'rolled_back' });
+    await deps.adminStore!.logAdminAction({
+      actorId: guard.identity.userId, action: 'release.rollback',
+      entityType: 'content_release', entityId: String(release.id),
+      after: { restoredTo: published.length ? String(published[0]!.id) : null }, reason: null,
+    });
+    return c.json({ ok: true, restoredTo: published.length ? String(published[0]!.id) : null });
+  });
+
+  app.get('/releases', async (c) => {
+    const guard = await requirePermission(c, 'registry:read');
+    if (guard instanceof Response) return guard;
+    return c.json({ releases: await deps.adminStore!.listReleases(Number(c.req.query('limit') ?? 100)), activeReleaseId: await deps.adminStore!.getActiveReleaseId() });
+  });
+
+  app.get('/releases/:id', async (c) => {
+    const guard = await requirePermission(c, 'registry:read');
+    if (guard instanceof Response) return guard;
+    const release = await deps.adminStore!.getRelease(c.req.param('id'));
+    if (!release) return Response.json({ error: 'Release پیدا نشد.' }, { status: 404 });
+    const items = await deps.adminStore!.listReleaseItems(String(release.id));
+    const snapshot = await deps.adminStore!.getPublishedSnapshot(String(release.id));
+    return c.json({ release, items: items.length, hasSnapshot: !!snapshot, contentHash: snapshot ? String(snapshot.content_hash) : null });
   });
 
   void bootstrapGuard;

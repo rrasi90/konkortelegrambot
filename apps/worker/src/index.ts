@@ -47,6 +47,8 @@ import {
   LATEST_EXAM_YEAR,
 } from '@ael/contracts';
 import { answerLearningQuiz, finishLearningQuiz, learningOverview, startLearningQuiz, startTransferQuiz } from './learning-paths';
+import { learningCourses } from './learning-catalog';
+import type { LearningCourse } from '@ael/engine';
 import { FormativeQuizError } from '@ael/engine';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
 import type { AppUser, DataStore, UserStats } from './store';
@@ -61,6 +63,7 @@ import {
 } from '@ael/utils';
 import type { LearnerSkillState } from '@ael/contracts';
 import { createAdminRouter } from './admin/routes';
+import { loadPublishedCatalog } from './catalog/service';
 import { MemoryAdminStore, SupabaseAdminStore, type AdminStore } from './admin/store';
 
 export interface Env {
@@ -487,9 +490,19 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.use('/api/diagnostic', (c, next) => rateLimit(c, next));
   app.use('/api/exam-simulation*', (c, next) => rateLimit(c, next));
 
+  // AEL-509 (AT-AEL-18): منبع حقیقت Runtime کاتالوگ = Release فعال DB.
+  // Legacy static فقط تا پیش از انتشار اولین Release باقی است (ADR-003) و برچسب legacy دارد.
+  const resolveCatalogCourses = async (): Promise<{ courses: LearningCourse[]; catalogSource: 'published' | 'legacy_static' }> => {
+    const published = adminStore ? await loadPublishedCatalog(adminStore).catch(() => null) : null;
+    if (published && published.length) return { courses: published, catalogSource: 'published' };
+    return { courses: learningCourses, catalogSource: 'legacy_static' };
+  };
+
   app.get('/api/learning-paths', async (c) => {
     const user = await currentUser(c);
-    return user ? c.json(learningOverview()) : authError(c);
+    if (!user) return authError(c);
+    const { courses, catalogSource } = await resolveCatalogCourses();
+    return c.json({ ...learningOverview(courses), catalogSource });
   });
 
   app.use('/api/learning-quiz/*', (c, next) => rateLimit(c, next));
@@ -503,7 +516,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         return c.json({ error: 'درخواست آزمون معتبر نیست.' }, 400);
       }
       try {
-        return c.json(await learningActions[action](user.id, secret, body));
+        const { courses } = await resolveCatalogCourses();
+        return c.json(await learningActions[action](user.id, secret, body, Date.now(), courses));
       } catch (error) {
         if (error instanceof FormativeQuizError) return c.json({ error: error.message }, 400);
         throw error;

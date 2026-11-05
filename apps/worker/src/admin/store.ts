@@ -70,6 +70,28 @@ export interface AdminStore {
   insertDocumentPages(sourceVersionId: string, pages: Array<{ pageNumber: number; confidence: number; quarantined: boolean; quarantineReason: string | null; segments: Array<{ kind: string; ordinal: number; text: string; locator: unknown; confidence: number }> }>): Promise<void>;
   listDocumentPages(sourceVersionId: string, limit: number): Promise<Row[]>;
   countDocumentSegments(sourceVersionId: string): Promise<number>;
+
+  /* ---------- AEL-501..509 — Content, Review, Release, Catalog ---------- */
+  upsertContentItem(input: { kind: string; slug: string; title: string; createdBy: string }): Promise<Row>;
+  listContentItems(limit: number): Promise<Row[]>;
+  getContentItemBySlug(slug: string): Promise<Row | null>;
+  createContentVersion(input: { contentItemId: string; body: unknown; contentHash: string; sourceIds: string[]; createdBy: string }): Promise<Row>;
+  getContentVersion(id: string): Promise<Row | null>;
+  listContentVersions(status: string | null, limit: number): Promise<Row[]>;
+  setScientificApproval(versionId: string, approverId: string, approve: boolean): Promise<void>;
+  createReviewTask(input: { taskKind: string; contentVersionId: string | null; sourceVersionId: string | null; severity: string; payload: Record<string, unknown>; createdBy: string }): Promise<Row>;
+  listReviewTasks(kind: string | null, status: string | null, limit: number): Promise<Row[]>;
+  decideReviewTask(id: string, status: string, decidedBy: string, note: string | null): Promise<Row | null>;
+  createRelease(input: { code: string; notes: string | null; createdBy: string }): Promise<Row>;
+  addReleaseItem(releaseId: string, contentVersionId: string, addedBy: string): Promise<void>;
+  listReleaseItems(releaseId: string): Promise<Row[]>;
+  getRelease(id: string): Promise<Row | null>;
+  listReleases(limit: number): Promise<Row[]>;
+  updateRelease(id: string, patch: { status?: string; stagedAt?: boolean; publishedAt?: boolean; publishedBy?: string }): Promise<void>;
+  getActiveReleaseId(): Promise<string | null>;
+  setActiveRelease(releaseId: string, updatedBy: string): Promise<void>;
+  upsertPublishedSnapshot(releaseId: string, contentHash: string, snapshot: unknown): Promise<void>;
+  getPublishedSnapshot(releaseId: string): Promise<Row | null>;
 }
 
 export async function sha256Hex(value: string): Promise<string> {
@@ -420,6 +442,180 @@ export class SupabaseAdminStore implements AdminStore {
     const pages = await this.listDocumentPages(sourceVersionId, 2000);
     return pages.map(page => String(page.id)).join(',') || '00000000-0000-0000-0000-000000000000';
   }
+
+  /* ---------- AEL-501..509 ---------- */
+
+  async upsertContentItem(input: { kind: string; slug: string; title: string; createdBy: string }): Promise<Row> {
+    const rows = await this.request('POST', 'content_items', {
+      kind: input.kind, slug: input.slug, title: input.title,
+      status: 'draft', created_by: input.createdBy,
+    }) as Row[] | null;
+    if (!rows?.length) throw new Error('content_items upsert failed');
+    return rows[0]!;
+  }
+
+  async listContentItems(limit: number): Promise<Row[]> {
+    const rows = await this.request('GET', 'content_items', undefined, `?order=created_at.desc&limit=${Math.min(500, Math.max(1, limit))}`) as Row[] | null;
+    return rows ?? [];
+  }
+
+  async getContentItemBySlug(slug: string): Promise<Row | null> {
+    const rows = await this.request('GET', 'content_items', undefined, `?slug=eq.${slug}&limit=1`) as Row[] | null;
+    return rows?.length ? rows[0]! : null;
+  }
+
+  async createContentVersion(input: { contentItemId: string; body: unknown; contentHash: string; sourceIds: string[]; createdBy: string }): Promise<Row> {
+    const existing = await this.request('GET', 'content_versions', undefined, `?content_item_id=eq.${input.contentItemId}&select=version_number&order=version_number.desc&limit=1`) as Row[] | null;
+    const versionNumber = existing?.length ? Number(existing[0]!.version_number) + 1 : 1;
+    const rows = await this.request('POST', 'content_versions', {
+      content_item_id: input.contentItemId, version_number: versionNumber,
+      status: 'draft', body: input.body, content_hash: input.contentHash,
+      source_ids: input.sourceIds, created_by: input.createdBy,
+    }) as Row[] | null;
+    if (!rows?.length) throw new Error('content_versions insert failed');
+    return rows[0]!;
+  }
+
+  async getContentVersion(id: string): Promise<Row | null> {
+    const rows = await this.request('GET', 'content_versions', undefined, `?id=eq.${id}&limit=1`) as Row[] | null;
+    return rows?.length ? rows[0]! : null;
+  }
+
+  async listContentVersions(status: string | null, limit: number): Promise<Row[]> {
+    const query = status
+      ? `?status=eq.${status}&order=created_at.desc&limit=${Math.min(500, Math.max(1, limit))}`
+      : `?order=created_at.desc&limit=${Math.min(500, Math.max(1, limit))}`;
+    const rows = await this.request('GET', 'content_versions', undefined, query) as Row[] | null;
+    return rows ?? [];
+  }
+
+  async setScientificApproval(versionId: string, approverId: string, approve: boolean): Promise<void> {
+    const body: Row = approve
+      ? { status: 'approved', scientific_approved_by: approverId, scientific_approved_at: new Date().toISOString(), updated_at: new Date().toISOString() }
+      : { status: 'rejected', updated_at: new Date().toISOString() };
+    const res = await fetch(`${this.url}/rest/v1/content_versions?id=eq.${versionId}`, {
+      method: 'PATCH',
+      headers: {
+        apikey: this.serviceRoleKey,
+        Authorization: `Bearer ${this.serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(`Supabase PATCH content_versions: ${res.status} ${await res.text()}`);
+  }
+
+  async createReviewTask(input: { taskKind: string; contentVersionId: string | null; sourceVersionId: string | null; severity: string; payload: Record<string, unknown>; createdBy: string }): Promise<Row> {
+    const rows = await this.request('POST', 'review_tasks', {
+      task_kind: input.taskKind, content_version_id: input.contentVersionId,
+      source_version_id: input.sourceVersionId, status: 'pending',
+      severity: input.severity, payload: input.payload, created_by: input.createdBy,
+    }) as Row[] | null;
+    if (!rows?.length) throw new Error('review_tasks insert failed');
+    return rows[0]!;
+  }
+
+  async listReviewTasks(kind: string | null, status: string | null, limit: number): Promise<Row[]> {
+    const clauses: string[] = [];
+    if (kind) clauses.push(`task_kind=eq.${kind}`);
+    if (status) clauses.push(`status=eq.${status}`);
+    const query = `?${clauses.length ? clauses.join('&') + '&' : ''}order=created_at.desc&limit=${Math.min(500, Math.max(1, limit))}`;
+    const rows = await this.request('GET', 'review_tasks', undefined, query) as Row[] | null;
+    return rows ?? [];
+  }
+
+  async decideReviewTask(id: string, status: string, decidedBy: string, note: string | null): Promise<Row | null> {
+    const res = await fetch(`${this.url}/rest/v1/review_tasks?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        apikey: this.serviceRoleKey,
+        Authorization: `Bearer ${this.serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=representation',
+      },
+      body: JSON.stringify({
+        status, decided_by: decidedBy, decision_note: note, decided_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+      }),
+    });
+    if (!res.ok) throw new Error(`Supabase PATCH review_tasks: ${res.status} ${await res.text()}`);
+    const rows = (await res.json()) as Row[];
+    return rows.length ? rows[0]! : null;
+  }
+
+  async createRelease(input: { code: string; notes: string | null; createdBy: string }): Promise<Row> {
+    const rows = await this.request('POST', 'content_releases', {
+      code: input.code, notes: input.notes, status: 'draft', created_by: input.createdBy,
+    }) as Row[] | null;
+    if (!rows?.length) throw new Error('content_releases insert failed');
+    return rows[0]!;
+  }
+
+  async addReleaseItem(releaseId: string, contentVersionId: string, addedBy: string): Promise<void> {
+    await this.request('POST', 'release_items', { release_id: releaseId, content_version_id: contentVersionId, added_by: addedBy });
+  }
+
+  async listReleaseItems(releaseId: string): Promise<Row[]> {
+    const rows = await this.request('GET', 'release_items', undefined, `?release_id=eq.${releaseId}`) as Row[] | null;
+    return rows ?? [];
+  }
+
+  async getRelease(id: string): Promise<Row | null> {
+    const rows = await this.request('GET', 'content_releases', undefined, `?id=eq.${id}&limit=1`) as Row[] | null;
+    return rows?.length ? rows[0]! : null;
+  }
+
+  async listReleases(limit: number): Promise<Row[]> {
+    const rows = await this.request('GET', 'content_releases', undefined, `?order=created_at.desc&limit=${Math.min(200, Math.max(1, limit))}`) as Row[] | null;
+    return rows ?? [];
+  }
+
+  async updateRelease(id: string, patch: { status?: string; stagedAt?: boolean; publishedAt?: boolean; publishedBy?: string }): Promise<void> {
+    const body: Row = { updated_at: new Date().toISOString() };
+    if (patch.status !== undefined) body.status = patch.status;
+    if (patch.stagedAt) body.staged_at = new Date().toISOString();
+    if (patch.publishedAt) body.published_at = new Date().toISOString();
+    if (patch.publishedBy !== undefined) body.published_by = patch.publishedBy;
+    const res = await fetch(`${this.url}/rest/v1/content_releases?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: {
+        apikey: this.serviceRoleKey,
+        Authorization: `Bearer ${this.serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error(`Supabase PATCH content_releases: ${res.status} ${await res.text()}`);
+  }
+
+  async getActiveReleaseId(): Promise<string | null> {
+    const rows = await this.request('GET', 'catalog_state', undefined, '?id=eq.1&limit=1') as Row[] | null;
+    return rows?.length && rows[0]!.active_release_id ? String(rows[0]!.active_release_id) : null;
+  }
+
+  async setActiveRelease(releaseId: string, updatedBy: string): Promise<void> {
+    const res = await fetch(`${this.url}/rest/v1/catalog_state?id=eq.1`, {
+      method: 'POST',
+      headers: {
+        apikey: this.serviceRoleKey,
+        Authorization: `Bearer ${this.serviceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'resolution=merge-duplicates,return=minimal',
+      },
+      body: JSON.stringify({ id: 1, active_release_id: releaseId, updated_at: new Date().toISOString(), updated_by: updatedBy }),
+    });
+    if (!res.ok) throw new Error(`Supabase upsert catalog_state: ${res.status} ${await res.text()}`);
+  }
+
+  async upsertPublishedSnapshot(releaseId: string, contentHash: string, snapshot: unknown): Promise<void> {
+    await this.request('POST', 'published_snapshots', { release_id: releaseId, content_hash: contentHash, snapshot });
+  }
+
+  async getPublishedSnapshot(releaseId: string): Promise<Row | null> {
+    const rows = await this.request('GET', 'published_snapshots', undefined, `?release_id=eq.${releaseId}&limit=1`) as Row[] | null;
+    return rows?.length ? rows[0]! : null;
+  }
 }
 
 interface MemoryRoleEntry {
@@ -451,6 +647,14 @@ export class MemoryAdminStore implements AdminStore {
   private artifacts: Row[] = [];
   private documentPages = new Map<string, Row>();
   private documentSegments: Row[] = [];
+  private contentItems = new Map<string, Row>();
+  private contentVersions = new Map<string, Row>();
+  private reviewTasks: Row[] = [];
+  private releases = new Map<string, Row>();
+  private releaseItems: Row[] = [];
+  private activeReleaseId: string | null = null;
+  private activeReleaseUpdatedBy: string | null = null;
+  private snapshots = new Map<string, Row>();
   private nextId = 1;
 
   private generateId(): string {
@@ -715,5 +919,144 @@ export class MemoryAdminStore implements AdminStore {
     const pages = await this.listDocumentPages(sourceVersionId, 2000);
     const pageIds = new Set(pages.map(page => String(page.id)));
     return this.documentSegments.filter(seg => pageIds.has(String(seg.page_id))).length;
+  }
+
+  /* ---------- AEL-501..509 ---------- */
+
+  async upsertContentItem(input: { kind: string; slug: string; title: string; createdBy: string }): Promise<Row> {
+    const existing = this.contentItems.get(input.slug);
+    if (existing) {
+      existing.title = input.title;
+      existing.kind = input.kind;
+      return existing;
+    }
+    const row: Row = {
+      id: this.generateId(), kind: input.kind, slug: input.slug, title: input.title,
+      status: 'draft', created_by: input.createdBy,
+      created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    };
+    this.contentItems.set(input.slug, row);
+    return row;
+  }
+
+  async listContentItems(limit: number): Promise<Row[]> {
+    return [...this.contentItems.values()].slice(0, limit);
+  }
+
+  async getContentItemBySlug(slug: string): Promise<Row | null> {
+    return this.contentItems.get(slug) ?? null;
+  }
+
+  async createContentVersion(input: { contentItemId: string; body: unknown; contentHash: string; sourceIds: string[]; createdBy: string }): Promise<Row> {
+    const all = [...this.contentVersions.values()].filter(row => String(row.content_item_id) === input.contentItemId);
+    const versionNumber = all.length ? Math.max(...all.map(row => Number(row.version_number))) + 1 : 1;
+    const row: Row = {
+      id: this.generateId(), content_item_id: input.contentItemId, version_number: versionNumber,
+      status: 'draft', body: input.body, content_hash: input.contentHash,
+      previous_version_id: null, change_reason: null, source_ids: input.sourceIds,
+      scientific_approved_by: null, scientific_approved_at: null, created_by: input.createdBy,
+      created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    };
+    this.contentVersions.set(String(row.id), row);
+    return row;
+  }
+
+  async getContentVersion(id: string): Promise<Row | null> {
+    return this.contentVersions.get(id) ?? null;
+  }
+
+  async listContentVersions(status: string | null, limit: number): Promise<Row[]> {
+    return [...this.contentVersions.values()]
+      .filter(row => !status || String(row.status) === status)
+      .slice(0, limit);
+  }
+
+  async setScientificApproval(versionId: string, approverId: string, approve: boolean): Promise<void> {
+    const row = this.contentVersions.get(versionId);
+    if (!row) throw new Error('content_version not found');
+    row.status = approve ? 'approved' : 'rejected';
+    row.scientific_approved_by = approve ? approverId : null;
+    row.scientific_approved_at = approve ? new Date().toISOString() : null;
+    row.updated_at = new Date().toISOString();
+  }
+
+  async createReviewTask(input: { taskKind: string; contentVersionId: string | null; sourceVersionId: string | null; severity: string; payload: Record<string, unknown>; createdBy: string }): Promise<Row> {
+    const row: Row = {
+      id: this.generateId(), task_kind: input.taskKind, content_version_id: input.contentVersionId,
+      source_version_id: input.sourceVersionId, status: 'pending', severity: input.severity,
+      payload: input.payload, assigned_to: null, decided_by: null, decision_note: null, decided_at: null,
+      created_by: input.createdBy, created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    };
+    this.reviewTasks.push(row);
+    return row;
+  }
+
+  async listReviewTasks(kind: string | null, status: string | null, limit: number): Promise<Row[]> {
+    return this.reviewTasks
+      .filter(row => (!kind || String(row.task_kind) === kind) && (!status || String(row.status) === status))
+      .slice(0, limit);
+  }
+
+  async decideReviewTask(id: string, status: string, decidedBy: string, note: string | null): Promise<Row | null> {
+    const row = this.reviewTasks.find(item => String(item.id) === id);
+    if (!row) return null;
+    row.status = status;
+    row.decided_by = decidedBy;
+    row.decision_note = note;
+    row.decided_at = new Date().toISOString();
+    row.updated_at = new Date().toISOString();
+    return row;
+  }
+
+  async createRelease(input: { code: string; notes: string | null; createdBy: string }): Promise<Row> {
+    const row: Row = {
+      id: this.generateId(), code: input.code, status: 'draft', notes: input.notes,
+      created_by: input.createdBy, staged_at: null, published_at: null, published_by: null,
+      created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+    };
+    this.releases.set(String(row.id), row);
+    return row;
+  }
+
+  async addReleaseItem(releaseId: string, contentVersionId: string, addedBy: string): Promise<void> {
+    this.releaseItems.push({ release_id: releaseId, content_version_id: contentVersionId, added_by: addedBy, added_at: new Date().toISOString() });
+  }
+
+  async listReleaseItems(releaseId: string): Promise<Row[]> {
+    return this.releaseItems.filter(row => String(row.release_id) === releaseId);
+  }
+
+  async getRelease(id: string): Promise<Row | null> {
+    return this.releases.get(id) ?? null;
+  }
+
+  async listReleases(limit: number): Promise<Row[]> {
+    return [...this.releases.values()].slice(0, limit);
+  }
+
+  async updateRelease(id: string, patch: { status?: string; stagedAt?: boolean; publishedAt?: boolean; publishedBy?: string }): Promise<void> {
+    const row = this.releases.get(id);
+    if (!row) throw new Error('release not found');
+    if (patch.status !== undefined) row.status = patch.status;
+    if (patch.stagedAt) row.staged_at = new Date().toISOString();
+    if (patch.publishedAt) { row.published_at = new Date().toISOString(); row.published_by = patch.publishedBy ?? null; }
+    row.updated_at = new Date().toISOString();
+  }
+
+  async getActiveReleaseId(): Promise<string | null> {
+    return this.activeReleaseId;
+  }
+
+  async setActiveRelease(releaseId: string, updatedBy: string): Promise<void> {
+    this.activeReleaseId = releaseId;
+    this.activeReleaseUpdatedBy = updatedBy;
+  }
+
+  async upsertPublishedSnapshot(releaseId: string, contentHash: string, snapshot: unknown): Promise<void> {
+    this.snapshots.set(releaseId, { release_id: releaseId, content_hash: contentHash, snapshot, created_at: new Date().toISOString() });
+  }
+
+  async getPublishedSnapshot(releaseId: string): Promise<Row | null> {
+    return this.snapshots.get(releaseId) ?? null;
   }
 }
