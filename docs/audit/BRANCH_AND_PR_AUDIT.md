@@ -2,6 +2,38 @@
 
 Baseline: `main = d7c8dd0` (2026-11-01). Fetch: `git fetch origin --prune` at 18:32 local.
 
+> **به‌روزرسانی — AEL-BASE-03، ۵ نوامبر ۲۰۲۶:** این سند با ممیزی جدید روی `main = b01b3fe` (بازنویسی‌شده با اصلاح ایمیل نویسنده، ۱۰۷ کامیت) تکمیل شد. خلاصهٔ تصمیم‌ها در انتهای سند؛ جدول تاریخی بالا حفظ شده است.
+
+## به‌روزرسانی ۲۰۲۶-۱۱-۰۵ — ممیزی مجدد و تصمیم نهایی
+
+ممیزی جدید هر شاخه (ahead/behind نسبت به `b01b3fe`):
+
+| Branch | Head | Ahead | تصمیم نهایی | شاهد |
+|---|---|---|---|---|
+| `feat/adaptive-engine-foundation` (PR#1) | 110a504 | 8 | **بستن بدون merge**؛ ۳ سند یکتا منتقل شد + ۲ مادهٔ خام تحقیق | `docs/testing/acceptance-scenarios.md`، `docs/security/content-delivery.md`، `docs/roadmap/TODO.md`، `docs/source-materials/*.txt` با سربرگ منشأ؛ اسکلت pnpm/`packages/domain` قدیمی وارد نشد |
+| `fix/critical-learning-integrity-20261101` (PR#3) | a2fb50d | 88 | **بستن بدون merge** — هر ۵ خوشهٔ اصلاحی از قبل در main است | self-rating جداسازی: `src/engine/aelEngine.ts:518,553` + `src/tests/lessonRatingEvidence.test.ts`؛ نگاشت فصل: `src/data/bookChaptersRepo.ts:88` + `missionP0.test.ts:77`؛ گیت پیش‌بینی دکتری: `konkorRankPredictor.ts` + `claimHonesty.test.ts`؛ fallback نامعتبر node: غیبت `nodes[0]` در main؛ ادعای پوشش ۱۰۰٪: حذف‌شده |
+| `phase-1/scientific-foundation` (PR#4) | 3cce67b | 50 (فقط ۸ کامیت خودش) | **بستن بدون merge** — اسنادش در main (765dc4a)؛ نسخهٔ validator main بلندتر (۲۴۹ در برابر ۱۹۴ خط)؛ کدش fallback خطرناک `nodes[0]` دارد (خطوط ۵۵۶/۸۴۸) | مقایسهٔ `scripts/validate-phase-1-foundation.mjs` بین دو نسخه |
+| `fix/adaptive-core-hardening-2026-10-29` | 9e38e16 | 0 | کاملاً merge — حذف با تگ | tag `archive/fix-adaptive-core-hardening-2026-10-29` |
+| سایر شاخه‌های PRهای merged (#2، #5..#12) | — | — | حذف با تگ آرشیوی | ۱۸ تگ `archive/*` push شد |
+| `fix/adaptive-engine-hardening-20261029` | 867e039 | 91 | نسل معماری قدیمی — حذف با تگ؛ بدون محتوای منحصربه‌فرد قابل‌پورت | tag `archive/fix-adaptive-engine-hardening-20261029` |
+| `fix/complete-audit-and-security-hardening` | 32cc35a | 14 | جایگزین‌شده در PRهای بعدی — حذف با تگ | tag `archive/fix-complete-audit-and-security-hardening` |
+| `fix/a19-replayable-migrations` | 56d3149 | 97 | **نگه داشته شد** — کار A19 (replay-safe migrations) هنوز باید طبق §۵ مأموریت port شود | ثبت در BACKLOG_FA.md |
+
+## اجرای تصمیم‌ها (۲۰۲۶-۱۱-۰۵)
+
+- **تگ‌های آرشیو:** ۱۸ تگ `archive/*` روی head SHA هر شاخه ساخته و push شد → همهٔ کامیت‌ها قابل‌دسترس می‌مانند.
+- **حذف شاخه‌های ریموت:** ۱۸ شاخهٔ بالا حذف شدند. باقی‌مانده روی ریموت: `main` + `fix/a19-replayable-migrations`.
+- **حذف شاخه‌های لوکال:** ۹ شاخهٔ لوکال منسوخ حذف شد (کامیت‌ها از طریق تگ‌ها قابل‌دسترس‌اند).
+- **بدون force push** — همهٔ عملیات push/tag/delete عادی بود.
+
+## HUMAN_REQUIRED — اقدامات سمت GitHub (بدون gh auth)
+
+1. **بستن PR #1** با کامنت: «اسناد یکتا منتقل شد (docs/testing، docs/security/content-delivery، docs/roadmap/TODO، docs/source-materials)؛ اسکلت معماری قدیمی pnpm وارد نشد؛ شاخه با تگ archive/feat-adaptive-engine-foundation آرشیو شد.»
+2. **بستن PR #3** با کامنت: «هر پنج خوشهٔ اصلاحی (جداسازی self-rating، نگاشت referenceChapterId، گیت پیش‌بینی دکتری، رفع fallback node نامعتبر، حذف ادعای پوشش ۱۰۰٪) با تست در main موجود است؛ merge کل شاخه ممنوع بود؛ تگ archive/fix-critical-learning-integrity-20261101 ایجاد شد.»
+3. **بستن PR #4** با کامنت: «اسناد phase-1 در main موجود و نسخهٔ validator آن کامل‌تر است؛ کد شاخه fallback ناامن nodes[0] دارد؛ تگ archive/phase-1-scientific-foundation ایجاد شد.»
+4. **Branch Protection برای main:** Require PR، required status checks (quality + database)، ممنوعیت force push و حذف، conversation resolution. وضعیت فعلی: BLOCKED_BY_GITHUB_PERMISSION.
+5. **تأیید CI سبز** روی SHA پس از push (`68c6c45` به بعد) در تب Actions.
+
 ## Remote branches (ahead/behind vs main)
 
 | Branch | Head | Ahead | Behind | Assessment |
