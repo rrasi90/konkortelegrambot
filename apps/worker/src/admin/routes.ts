@@ -20,6 +20,7 @@ import {
 import { REGISTRY_ENTITY_TABLES, validateRegistryBundle } from '@ael/contracts';
 import { adaptTextFile, pickAdapter } from '../ingestion/adapters';
 import { buildCatalogSnapshot, CatalogValidationError } from '../catalog/service';
+import { buildFrontMatter, buildZip, MARKDOWN_EXPORT_SCHEMA, previewImport, renderBookBundle } from '../export/markdown';
 
 export interface AdminDeps {
   adminStore: AdminStore | null;
@@ -943,6 +944,57 @@ export function createAdminRouter(deps: AdminDeps) {
       multiChapterAppearanceIds: [...uniqueAppearanceIds].filter(id =>
         mappings.filter(row => String(row.appearance_id) === id).length > 1),
     });
+  });
+
+  // ==================== مأموریت v2 Phase 6 — Markdown Export/Import ====================
+
+  app.get('/admin-api/export/book/:id', async (c) => {
+    const guard = await requirePermission(c, 'registry:read');
+    if (guard instanceof Response) return guard;
+    const bookId = c.req.param('id');
+    if (!deps.adminStore) return Response.json({ error: 'لایهٔ داده در دسترس نیست.' }, { status: 503 });
+    const books = await deps.adminStore.listDomainRows('books', [{ column: 'id', value: bookId }], 1);
+    if (!books.length) return Response.json({ error: 'کتاب پیدا نشد.' }, { status: 404 });
+    const editions = await deps.adminStore.listDomainRows('book_editions', [{ column: 'book_id', value: bookId }], 500);
+    const nodes = await deps.adminStore.listDomainRows('book_structure_nodes', [], 2000);
+    const materials = await deps.adminStore.listDomainRows('content_items', [], 2000);
+    const bundle = renderBookBundle({ book: books[0]!, editions, nodes, materials, exportedAt: new Date().toISOString() });
+    const manifestLines = [
+      buildFrontMatter({
+        format: MARKDOWN_EXPORT_SCHEMA, entity_type: 'export_manifest', entity_id: `book-${bookId}`,
+        title: 'MANIFEST', language: 'fa-IR', status: 'manifest', rights_export: 'allowed',
+        exported_at: new Date().toISOString(),
+      }),
+      '',
+      ...bundle.files.map(file => `- ${file.path}`),
+      '',
+      ...bundle.warnings.map(warning => `- WARNING: ${warning}`),
+      '',
+    ];
+    const manifest = manifestLines.join('\n');
+    if (c.req.query('bundle') === 'zip') {
+      const zip = buildZip([...bundle.files, { path: 'MANIFEST.md', content: manifest }]);
+      return new Response(new Uint8Array(zip), {
+        headers: { 'Content-Type': 'application/zip', 'Content-Disposition': `attachment; filename="ael-book-${bookId}.zip"` },
+      });
+    }
+    return c.json({ files: bundle.files, manifest, warnings: bundle.warnings });
+  });
+
+
+  /** Import Dry-run — پیش‌فرض بدون نوشتن (M-08/M-09) */
+  app.post('/admin-api/import/preview', async (c) => {
+    const guard = await requirePermission(c, 'registry:read');
+    if (guard instanceof Response) return guard;
+    const body = await c.req.json().catch(() => null) as { files?: unknown } | null;
+    if (!body || !Array.isArray(body.files)) return badRequest('فهرست فایل‌ها الزامی است.');
+    const files = body.files
+      .filter((file): file is { path: string; content: string } =>
+        !!file && typeof file === 'object' && typeof (file as { path?: unknown }).path === 'string' && typeof (file as { content?: unknown }).content === 'string');
+    if (!deps.adminStore) return Response.json({ error: 'لایهٔ داده در دسترس نیست.' }, { status: 503 });
+    const books = await deps.adminStore.listDomainRows('books', [], 1000);
+    const existingIds = new Set(books.map(row => String(row.id)));
+    return c.json(previewImport(files, existingIds));
   });
 
   void bootstrapGuard;
