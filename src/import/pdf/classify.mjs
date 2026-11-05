@@ -25,14 +25,20 @@ export function extractExamYearFromText(pages) {
   for (const page of pages) {
     const text = normalizePersian(page.text ?? '');
     // الگوهای «آزمون سال 1404»، «کنکور سال ۱۴۰۴»، «سال ۱۴۰۴»
-    const matches = text.matchAll(/(?:آزمون|کنکور|دوره)[^\n]{0,40}?سال\s*([1-4]\d{3})/g);
-    for (const match of matches) {
-      const year = Number(match[1]);
-      if (year >= 1370 && year <= 1420) {
-        candidates.push({
-          value: year, score: 0.95, status: 'proposed',
-          evidence: [{ pdf_page: page.pageNumber, locator: `doc:/page:${page.pageNumber}`, quote: match[0].slice(0, 120), method: 'native_text' }],
-        });
+    // الگوی مستقیم (آزمون…سال X) + الگوی معکوس RTL — OCR ترتیب را جابه‌جا می‌کند
+    const yearPatterns = [
+      /(?:آزمون|کنکور|دوره|دکتری|ارشد)[^\n]{0,40}?سال\s*([1-4]\d{3})/g,
+      /سال\s*([1-4]\d{3})[^\n]{0,30}?(?:آزمون|کنکور|دکتری|ارشد)/g,
+    ];
+    for (const pattern of yearPatterns) {
+      for (const match of text.matchAll(pattern)) {
+        const year = Number(match[1]);
+        if (year >= 1370 && year <= 1420) {
+          candidates.push({
+            value: year, score: 0.9, status: 'proposed',
+            evidence: [{ pdf_page: page.pageNumber, locator: `doc:/page:${page.pageNumber}`, quote: match[0].slice(0, 120), method: 'native_text' }],
+          });
+        }
       }
     }
   }
