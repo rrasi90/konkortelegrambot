@@ -1,5 +1,13 @@
 # AEL-BASE-01 — ممیزی مبنا (Baseline Audit)
 
+> **Snapshot مأموریت `AEL-AGENT-MISSION-001` (بخش ۰ سند Playbook) — ۵ نوامبر ۲۰۲۶:**
+> - `git fetch origin` + مقایسه: `main` و `origin/main` دقیقاً هم‌سطح (`0 0`)، working tree تمیز، SHA شروع مأموریت: `5864c9c9b68a537899de1f0cc0548c512090f582`.
+> - شاخه‌های محلی/ریموت: `main` + `fix/a19-replayable-migrations`. PR باز: نامشخص با API (به‌روزرسانی: `gh` بدون احراز هویت — ثبت به‌عنوان `BLOCKED_BY_GITHUB_PERMISSION` برای Branch Protection و مشاهده PR/CI؛ کار مستقل ادامه دارد).
+> - محیط محلی: Node `v24.18.0`، npm `12.0.1`، Windows 10 x64، Git Bash.
+> - پایگاه داده: ۱۸ Migration موجود (`0001_init` … `0018_exam_response_retry`). موتور تست DB محلی: pglite (`scripts/db-test-embedded.mjs`) + harness `supabase/tests/run.sh` با `AEL_DISPOSABLE_DB=1`.
+> - راستی‌آزمایی مجدد مشکلات سند Playbook در کد: (A) رجیستری ثابت `learning-catalog.ts` = Import مستقیم دو JSON — تأیید. (B) `createQuiz` فیلتر مؤثر `review: 'pending_sme'` ندارد — تأیید. (C) پاسخ مسیر تألیفی (`learning-paths.ts`) فقط in-memory/امضاشده است؛ به `answer_events`/FSRS وصل نیست — تأیید. (D) فقط `ADMIN_API_TOKEN` — تأیید. (E) Pipeline ورود محدود — تأیید. (F) مدل Course محدود — تأیید.
+> - CI روی SHA مبنا طبق کامیت قبلی هر دو Job موفق اعلام شده (تأیید مجدد UI نیازمند دسترسی — HUMAN-1 قبلی پابرجاست).
+
 - **تاریخ:** ۵ نوامبر ۲۰۲۶ / ۱۴ آبان ۱۴۰۵
 - **مأموریت حاکم:** [AEL_MASTER_EXECUTION_PLAN.md](AEL_MASTER_EXECUTION_PLAN.md) نسخهٔ ۲٫۱ + [AEL_SYSTEM_BLUEPRINT.md](AEL_SYSTEM_BLUEPRINT.md) + [README_AGENT_MISSION.txt](README_AGENT_MISSION.txt) — هر سه در همین پوشه نگهداری می‌شوند.
 - **SHA شروع مأموریت:** `b01b3fe` (main) — **SHA پس از P0:** `454709b` + این کامیت.
