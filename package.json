@@ -27,7 +27,11 @@
     "test:db": "node scripts/db-test-embedded.mjs",
     "build:offline": "node scripts/build-ael-offline.mjs",
     "validate:learning": "node --import tsx scripts/validate-learning-courses.ts && node scripts/verify-source-audit.mjs && node scripts/extract-learning-recurrence.mjs 1405 --check && node scripts/build-question-index.mjs --check",
-    "import:registry": "tsx scripts/import-registry.ts"
+    "import:registry": "tsx scripts/import-registry.ts",
+    "ael:pdf:scan": "node scripts/ael-pdf-scan.mjs",
+    "ael:pdf:ingest": "node scripts/ael-pdf-ingest.mjs",
+    "ael:pdf:ocr": "node scripts/ael-pdf-ocr.mjs",
+    "ael:pdf:check": "node scripts/ael-pdf-guard.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
