@@ -460,5 +460,55 @@ export class MemoryStore implements DataStore {
     }
     if (session.status !== 'scored') throw new Error('Exam session is not submitted');
     return session.report;
+  }  /* ---------- AEL-610/612 + ADR-011 — ثبت پایدار پاسخ تألیفی (شبیه‌سازی RPC اتمیک) ---------- */
+
+  private learningAttempts = new Map<string, { userId: string; courseId: string; courseVersion: string; questionIds: string[]; expiresAt: number; status: string }>();
+  private learningAnswers = new Map<string, { isCorrect: boolean; selected: number | null }>();
+  private topicMastery = new Map<string, { mastery: number; correct: number; wrong: number }>();
+
+  async createLearningAttempt(input: {
+    attemptId: string; userId: string; courseId: string; courseVersion: string;
+    releaseId: string | null; mode: string; questionIds: string[]; expiresAt: string;
+  }): Promise<void> {
+    this.learningAttempts.set(input.attemptId, {
+      userId: input.userId, courseId: input.courseId, courseVersion: input.courseVersion,
+      questionIds: [...input.questionIds], expiresAt: new Date(input.expiresAt).getTime(), status: 'open',
+    });
+  }
+
+  async submitLearningAnswerAtomic(input: {
+    userId: string; attemptId: string; questionId: string; selected: number | null;
+    operationId: string; isCorrect: boolean; topicId: string; mastery: number;
+    fsrs: { stability: number; difficulty: number; dueDays: number } | null;
+  }): Promise<{ replay: boolean } | null> {
+    const attempt = this.learningAttempts.get(input.attemptId);
+    // امنیت: بلیت متعلق به همین کاربر و باز باشد (شبیه‌سازی گاردهای RPC)
+    if (!attempt || attempt.userId !== input.userId || attempt.status !== 'open') return null;
+    if (Date.now() > attempt.expiresAt) { attempt.status = 'expired'; return null; }
+    if (!attempt.questionIds.includes(input.questionId)) return null;
+    const key = `${input.userId}:${input.operationId}`;
+    const existing = this.learningAnswers.get(key);
+    if (existing) {
+      if (existing.isCorrect !== input.isCorrect || existing.selected !== input.selected) {
+        throw new Error('OPERATION_CONFLICT');
+      }
+      return { replay: true };
+    }
+    this.learningAnswers.set(key, { isCorrect: input.isCorrect, selected: input.selected });
+    const mKey = `${input.userId}:${attempt.courseId}:${input.topicId}`;
+    const current = this.topicMastery.get(mKey) ?? { mastery: 50, correct: 0, wrong: 0 };
+    this.topicMastery.set(mKey, {
+      mastery: input.mastery,
+      correct: current.correct + (input.isCorrect ? 1 : 0),
+      wrong: current.wrong + (input.isCorrect ? 0 : 1),
+    });
+    return { replay: false };
+  }
+
+  /** فقط برای تست/ممیزی */
+  debugTopicMastery(userId: string): Array<{ key: string; mastery: number; correct: number; wrong: number }> {
+    return [...this.topicMastery.entries()]
+      .filter(([key]) => key.startsWith(`${userId}:`))
+      .map(([key, value]) => ({ key, ...value }));
   }
 }

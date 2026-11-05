@@ -263,6 +263,18 @@ export interface DataStore {
 
   /** بستن جلسه و ذخیرهٔ گزارش نمره */
   submitExamSimulationSession(userId: string, sessionId: string, report: unknown): Promise<unknown>;
+
+  /* ---------- AEL-610/612 + ADR-011 — ثبت پایدار پاسخ تألیفی (اختیاری برای فیک‌های تست) ---------- */
+  createLearningAttempt?(input: {
+    attemptId: string; userId: string; courseId: string; courseVersion: string;
+    releaseId: string | null; mode: string; questionIds: string[]; expiresAt: string;
+  }): Promise<void>;
+
+  submitLearningAnswerAtomic?(input: {
+    userId: string; attemptId: string; questionId: string; selected: number | null;
+    operationId: string; isCorrect: boolean; topicId: string; mastery: number;
+    fsrs: { stability: number; difficulty: number; dueDays: number } | null;
+  }): Promise<{ replay: boolean } | null>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1130,5 +1142,37 @@ export class SupabaseStore implements DataStore {
     return this.request('POST', 'rpc/finalize_exam_simulation_submission', {
       p_user_id: userId, p_session_id: sessionId, p_report: report,
     });
+  }  /* ---------- AEL-610/612 + ADR-011 — ثبت پایدار پاسخ تألیفی ---------- */
+
+  async createLearningAttempt(input: {
+    attemptId: string; userId: string; courseId: string; courseVersion: string;
+    releaseId: string | null; mode: string; questionIds: string[]; expiresAt: string;
+  }): Promise<void> {
+    await this.request('POST', 'learning_quiz_attempts', {
+      id: input.attemptId, user_id: input.userId, course_id: input.courseId,
+      course_version: input.courseVersion, release_id: input.releaseId, mode: input.mode,
+      question_ids: input.questionIds, expires_at: input.expiresAt, status: 'open',
+    });
+  }
+
+  async submitLearningAnswerAtomic(input: {
+    userId: string; attemptId: string; questionId: string; selected: number | null;
+    operationId: string; isCorrect: boolean; topicId: string; mastery: number;
+    fsrs: { stability: number; difficulty: number; dueDays: number } | null;
+  }): Promise<{ replay: boolean } | null> {
+    // RPC اتمیک سمت DB — تراکنش واحد: رخداد + تسلط + کارت FSRS
+    const result = await this.request('POST', 'rpc/submit_learning_answer_secure', {
+      p_attempt_id: input.attemptId,
+      p_question_id: input.questionId,
+      p_selected: input.selected,
+      p_operation_id: input.operationId,
+      p_is_correct: input.isCorrect,
+      p_topic_id: input.topicId,
+      p_mastery: input.mastery,
+      p_fsrs_stability: input.fsrs?.stability ?? null,
+      p_fsrs_difficulty: input.fsrs?.difficulty ?? null,
+      p_fsrs_due_days: input.fsrs?.dueDays ?? null,
+    }) as { replay?: boolean } | null;
+    return { replay: result?.replay === true };
   }
 }

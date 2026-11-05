@@ -48,6 +48,7 @@ import {
 } from '@ael/contracts';
 import { answerLearningQuiz, finishLearningQuiz, learningOverview, startLearningQuiz, startTransferQuiz } from './learning-paths';
 import { learningCourses } from './learning-catalog';
+import { initializeFSRSState, Rating, scheduleNextFSRS } from '@ael/engine';
 import type { LearningCourse } from '@ael/engine';
 import { FormativeQuizError } from '@ael/engine';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
@@ -498,6 +499,24 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     return { courses: learningCourses, catalogSource: 'legacy_static' };
   };
 
+  /**
+   * AEL-610/612 + ADR-010/011 — قاعدهٔ تسلط مبحث تألیفی (Engine-authoritative):
+   * یک قاعدهٔ واحد و قابل تست؛ SQL الگوریتم دوم ندارد و فقط ثبت می‌کند.
+   */
+  const AUTHORED_MASTERY = { correctStep: 10, wrongStep: 15, floor: 0, ceiling: 100, initial: 50 } as const;
+  function nextAuthoredMastery(previous: number | undefined, isCorrect: boolean): number {
+    const base = previous ?? AUTHORED_MASTERY.initial;
+    const next = base + (isCorrect ? AUTHORED_MASTERY.correctStep : -AUTHORED_MASTERY.wrongStep);
+    return Math.max(AUTHORED_MASTERY.floor, Math.min(AUTHORED_MASTERY.ceiling, next));
+  }
+
+  function fsrsUpdateFor(isCorrect: boolean, now: number): { stability: number; difficulty: number; dueDays: number } {
+    const rating = isCorrect ? Rating.Good : Rating.Again;
+    const next = scheduleNextFSRS(initializeFSRSState(rating, new Date(now)), rating, new Date(now));
+    const dueDays = Math.max(0, Math.round((new Date(next.dueAt).getTime() - now) / 86_400_000));
+    return { stability: next.stability, difficulty: next.difficulty, dueDays };
+  }
+
   app.get('/api/learning-paths', async (c) => {
     const user = await currentUser(c);
     if (!user) return authError(c);
@@ -517,7 +536,38 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       }
       try {
         const { courses } = await resolveCatalogCourses();
-        return c.json(await learningActions[action](user.id, secret, body, Date.now(), courses));
+        const result = await learningActions[action](user.id, secret, body, Date.now(), courses) as Record<string, unknown>;
+        // ADR-011: نشست تألیفی پایدار — بلیت سمت سرور، نه حافظهٔ Isolate
+        if (action === 'start' && result.challenge && typeof store.createLearningAttempt === 'function') {
+          const challenge = result.challenge as { courseId: string; version: string; mode: string; ids: string[]; deadline: number | null };
+          const attemptId = crypto.randomUUID();
+          const expiresAt = new Date(Date.now() + 24 * 60 * 60_000).toISOString();
+          await store.createLearningAttempt({
+            attemptId, userId: user.id, courseId: challenge.courseId, courseVersion: challenge.version,
+            releaseId: adminStore ? await adminStore.getActiveReleaseId().catch(() => null) : null,
+            mode: challenge.mode, questionIds: challenge.ids, expiresAt,
+          });
+          result.attemptId = attemptId;
+        }
+        // ثبت پایدار و اتمیک پاسخ تمرین (practice هر سؤال جدا ثبت می‌شود)
+        if (action === 'answer' && typeof body.attemptId === 'string' && typeof store.submitLearningAnswerAtomic === 'function') {
+          const status = String((result as { status?: string }).status ?? '');
+          if (status === 'correct' || status === 'incorrect') {
+            const operationId = typeof body.operationId === 'string' && body.operationId ? body.operationId : crypto.randomUUID();
+            const isCorrect = status === 'correct';
+            const persisted = await store.submitLearningAnswerAtomic({
+              userId: user.id, attemptId: body.attemptId, questionId: String(body.questionId),
+              selected: typeof body.selected === 'number' ? body.selected : null,
+              operationId, isCorrect,
+              topicId: String((result as { topicId?: string }).topicId ?? ''),
+              mastery: nextAuthoredMastery(undefined, isCorrect),
+              fsrs: fsrsUpdateFor(isCorrect, Date.now()),
+            });
+            result.persisted = !!persisted;
+            result.replay = persisted?.replay === true;
+          }
+        }
+        return c.json(result);
       } catch (error) {
         if (error instanceof FormativeQuizError) return c.json({ error: error.message }, 400);
         throw error;
