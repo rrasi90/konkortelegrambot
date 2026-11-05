@@ -87,3 +87,13 @@
 - [ ] **تأیید CI روی GitHub** — HUMAN-1
 - [ ] **Branch Protection** — HUMAN-2 (مسدود به مجوز)
 - [ ] **بستن PRها** — HUMAN-3
+
+---
+
+## ۶. Snapshot پایان مأموریت `AEL-AGENT-MISSION-001`
+
+- **شاخه:** `feat/ael-000-mission-baseline` (push شده) — `main` دست‌نخورده؛ ادغام از مسیر PR = HUMAN.
+- **Migrationها:** ۱۸ → **۲۳** (رجیستری، RBAC، منابع/ورود، بازبینی/انتشار/کاتالوگ، پاسخ پایدار).
+- **تست‌ها:** ۴۴۵ → **۵۱۲** سبز؛ test:db `FRESH_PASS migrations=23`.
+- **Gateهای اثبات‌شده:** `GATE_P1_PASS`، `RPC_ATOMIC_PASS`، معادل CI کامل محلی سبز.
+- **گزارش کامل و وضعیت واقعی هر WP + NO-GO:** [MISSION_EXECUTION_REPORT_FA.md](MISSION_EXECUTION_REPORT_FA.md)
