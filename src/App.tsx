@@ -20,7 +20,6 @@ import {
   LearnerSixDState,
   UserStats,
   MultiYearFrequencyInsight,
-  AgentContentPackage,
 } from './engine/aelEngine';
 import {
   INITIAL_KNOWLEDGE_NODES,
@@ -48,7 +47,6 @@ import { StudySessionView } from './components/StudySessionView';
 import { SkillTreeGraph } from './components/SkillTreeGraph';
 import { LessonsLibraryView } from './components/LessonsLibraryView';
 import { PlacementModal } from './components/PlacementModal';
-import { ContentIngestionStudio } from './components/ContentIngestionStudio';
 import { CodePatchesView } from './components/CodePatchesView';
 import { TelegramBotSimulatorModal } from './components/TelegramBotSimulatorModal';
 import { YearlyKonkorExamView } from './components/YearlyKonkorExamView';
@@ -70,7 +68,6 @@ import {
   Moon,
   Play,
   RotateCcw,
-  FilePlus2,
   Bot,
   Smartphone,
   Monitor,
@@ -93,7 +90,6 @@ type ActiveTab =
   | 'lessons'
   | 'subject_hub'
   | 'notebook'
-  | 'ingest'
   | 'patches';
 
 const LEGACY_PRACTICE_BANK = INITIAL_QUESTION_BANK.filter((question) => !question.isQuarantinedProof);
@@ -399,135 +395,6 @@ export default function App() {
     setActiveTab('study');
   };
 
-  // هندلر ورود بسته محتوای جدید توسط ایجنت یا کاربر (با جلوگیری از ایجاد گره/سؤال تکراری)
-  const handleIngestNewContentPackage = (pkg: AgentContentPackage) => {
-    const targetLayer = pkg.node.layer ?? 1;
-    const colInLayer = nodes.filter(
-      (n) => n.graphPos.layer === targetLayer && n.id !== pkg.node.id
-    ).length;
-
-    const newNode: KnowledgeNode = {
-      id: pkg.node.id,
-      track: pkg.node.track,
-      course: pkg.node.course,
-      chapter: pkg.node.chapter,
-      topic: pkg.node.topic,
-      sourceBookCitation: pkg.node.sourceBookCitation,
-      examYearsAppeared: pkg.node.examYearsAppeared,
-      examCoefficient: pkg.node.examCoefficient || 5,
-      historicalWeight: pkg.node.historicalWeight || 9,
-      estimatedStudyHours: pkg.node.estimatedStudyHours || 2.5,
-      graphPos: { layer: targetLayer, col: colInLayer },
-      confusableWith: [],
-    };
-
-    const newDeps: NodeDependency[] = (pkg.node.prerequisiteNodeIds || []).map(
-      (prereqId) => ({
-        source: pkg.node.id,
-        target: prereqId,
-        relation: 'prerequisite',
-        weight: 0.9,
-        description: `پیش‌نیاز ثبت‌شده برای ${pkg.node.topic}`,
-      })
-    );
-
-    const newLesson: InteractiveLesson = {
-      nodeId: pkg.node.id,
-      course: pkg.node.course,
-      chapter: pkg.node.chapter,
-      topic: pkg.node.topic,
-      sourceBookCitation: pkg.node.sourceBookCitation,
-      examYearsAppeared: pkg.node.examYearsAppeared,
-      konkoorWeightLabel: `ضریب ${pkg.node.examCoefficient || 5} — افزوده‌شده`,
-      frequencyLabel: `تکرار در ${pkg.node.examYearsAppeared.length} دوره کنکور`,
-      summary: pkg.lesson.summary,
-      microSteps: pkg.lesson.microSteps,
-      conceptDescriptors: pkg.lesson.conceptDescriptors,
-      konkoorTips: pkg.lesson.konkoorTips,
-      keyTerms: pkg.lesson.keyTerms,
-      conceptCheck: pkg.lesson.conceptCheck,
-    };
-
-    const newQuestions: QuestionItem[] = pkg.questions.filter((q) => !q.isQuarantinedProof).map((q) => ({
-      id: q.id,
-      nodeId: pkg.node.id,
-      examYear: q.examYear,
-      sourceReference: q.sourceReference,
-      referenceChapterId: q.referenceChapterId,
-      isQuarantinedProof: q.isQuarantinedProof,
-      text: q.text,
-      options: q.options,
-      correctOption: q.correctOption,
-      explanation: q.explanation,
-      trapNote: q.trapNote,
-      expectedTimeMs: 45000,
-    }));
-
-    setNodes((prev) => [...prev.filter((n) => n.id !== newNode.id), newNode]);
-    setDependencies((prev) => [
-      ...prev.filter((d) => d.source !== pkg.node.id),
-      ...newDeps,
-    ]);
-    setLessons((prev) => ({ ...prev, [pkg.node.id]: newLesson }));
-    setQuestions((prev) => [
-      ...prev.filter((q) => !newQuestions.some((nq) => nq.id === q.id)),
-      ...newQuestions,
-    ]);
-
-    const now = new Date();
-    const isUnlockedInFrontier =
-      pkg.node.layer === 0 ||
-      newDeps.every((d) => (nodeStates[d.target]?.masteryScore ?? 0) >= 45);
-
-    setNodeStates((prev) => ({
-      ...prev,
-      [pkg.node.id]: prev[pkg.node.id] ?? {
-        nodeId: pkg.node.id,
-        masteryScore: 0,
-        proficiencyProbability: 0,
-        memoryStability: 0,
-        retrievability: 0,
-        speedFluency: 0,
-        coverageStatus: 'unseen',
-        evidenceCount: 0,
-        isUnlockedInFrontier,
-        hasLeechCard: false,
-        rippleAlert: null,
-      },
-    }));
-
-    const newCards: ReviewCard[] = [
-      {
-        id: `card.remedial.${pkg.node.id}`,
-        nodeId: pkg.node.id,
-        cardType: 'remedial_lesson',
-        dueAt: now.toISOString(),
-        priorityScore: 98,
-        attemptType: 'practice',
-        fsrs: initFSRS(now),
-      },
-      ...newQuestions
-        .filter((q) => !q.isQuarantinedProof)
-        .map((q) => ({
-          id: `card.q.${q.id}`,
-          nodeId: pkg.node.id,
-          cardType: 'question' as const,
-          questionId: q.id,
-          dueAt: now.toISOString(),
-          priorityScore: 91,
-          attemptType: 'practice' as const,
-          fsrs: initFSRS(now),
-        })),
-    ];
-
-    setCards((prev) => [
-      ...newCards,
-      ...prev.filter((c) => !newCards.some((nc) => nc.id === c.id)),
-    ]);
-    setSelectedLessonNodeId(pkg.node.id);
-    setActiveTab('lessons');
-  };
-
   // هندلر شروع جلسه روزانه استاندارد
   const handleStartDailySession = () => {
     tmaHaptic.impact('medium');
@@ -731,7 +598,6 @@ export default function App() {
               { id: 'map', label: 'درخت مهارت' },
               { id: 'lessons', label: 'درسنامه‌ها و منابع' },
               { id: 'notebook', label: 'دفتر خطا' },
-              { id: 'ingest', label: 'افزودن محتوا' },
             ].map((item) => (
               <a
                 key={item.id}
@@ -742,8 +608,7 @@ export default function App() {
                   setActiveTab(item.id as ActiveTab);
                 }}
                 className={`transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 ${
-                  activeTab === item.id ||
-                  (item.id === 'ingest' && activeTab === 'patches')
+                  activeTab === item.id
                     ? 'text-blue-600 dark:text-blue-400 border-blue-600 dark:border-blue-400 font-bold'
                     : 'border-transparent hover:text-slate-900 dark:hover:text-white'
                 }`}
@@ -1156,15 +1021,6 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'ingest' && (
-          <ContentIngestionStudio
-            existingNodeIds={nodes.map((n) => n.id)}
-            onIngestValidatedPackage={(pkg) => {
-              handleIngestNewContentPackage(pkg);
-            }}
-          />
-        )}
-
         {activeTab === 'patches' && <CodePatchesView />}
       </main>
 
@@ -1214,7 +1070,7 @@ export default function App() {
             aria-expanded={isMoreMenuOpen}
             aria-haspopup="menu"
             className={`flex flex-col items-center justify-center py-1.5 rounded-lg text-[10px] font-medium transition-all active:scale-95 cursor-pointer ${
-              ['subject_hub', 'map', 'notebook', 'ingest', 'patches'].includes(activeTab)
+              ['subject_hub', 'map', 'notebook', 'patches'].includes(activeTab)
                 ? 'text-blue-700 dark:text-blue-300 font-bold bg-blue-500/10'
                 : 'text-slate-500 dark:text-slate-400'
             }`}
@@ -1250,7 +1106,6 @@ export default function App() {
               { id: 'subject_hub' as ActiveTab, label: 'مطالعه تفکیکی درس‌به‌درس', icon: Sparkles },
               { id: 'map' as ActiveTab, label: 'درخت مهارت و نقشه تسلط', icon: Layers },
               { id: 'notebook' as ActiveTab, label: 'دفتر خطا و مرور اشتباه‌ها', icon: BookMarked },
-              { id: 'ingest' as ActiveTab, label: 'افزودن بستهٔ محتوا', icon: FilePlus2 },
             ].map((item) => {
               const Icon = item.icon;
               return (

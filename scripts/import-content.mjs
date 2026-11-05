@@ -5,16 +5,28 @@
  * حالت‌ها:
  *  - node scripts/import-content.mjs <pack.json> --sql
  *      خروجی SQL قابل اجرا روی PostgreSQL/Supabase (stdout)
- *  - node scripts/import-content.mjs <pack.json>
- *      درون‌ریزی مستقیم از طریق REST Supabase (نیازمند SUPABASE_URL و SUPABASE_SERVICE_ROLE_KEY)
+ *  - node scripts/import-content.mjs <pack.json> --write
+ *      درون‌ریزی مستقیم از طریق REST Supabase (نیازمند SUPABASE_URL و
+ *      SUPABASE_SERVICE_ROLE_KEY؛ هرگز روی ENVIRONMENT=production مجاز نیست)
+ *
+ * AEL-004: بدون --write هیچ نوشتنی انجام نمی‌شود (پیش‌فرض امن). وضعیت‌های
+ * published/authorized/verified هرگز از غیبت نشانه‌ها استنتاج نمی‌شوند —
+ * سیاست در src/import/import-policy.mjs و تست‌های آن.
  */
 import { readFileSync, existsSync } from 'node:fs';
+import {
+  assertDirectWriteAllowed,
+  deriveExamPackRightsStatus,
+  deriveExamPackStatus,
+  deriveQuestionVerificationStatus,
+} from '../src/import/import-policy.mjs';
 
 const args = process.argv.slice(2);
 const path = args[0];
 const modeSql = args.includes('--sql');
+const writeFlag = args.includes('--write');
 if (!path) {
-  console.error('کاربرد: import-content.mjs <pack.json> [--sql]');
+  console.error('کاربرد: import-content.mjs <pack.json> [--sql | --write]');
   process.exit(2);
 }
 
@@ -46,11 +58,15 @@ function generateSql() {
   lines.push('');
 
   // 1. ثبت بستهٔ آزمون در exam_packs
+  // AEL-004: بستهٔ تازه‌وارد هرگز published/authorized/active نیست؛ انتشار از
+  // مسیر Gateهای بازبینی/حقوق است، نه از این اسکریپت.
   const packId = pack.meta?.name ?? 'unknown-pack';
+  const packStatus = deriveExamPackStatus(pack.meta);
+  const packRightsStatus = deriveExamPackRightsStatus(pack.meta);
   lines.push(
     `INSERT INTO exam_packs (id, name, version, track, syllabus_version, is_active, status, rights_status) ` +
-    `VALUES (${sqlStr(packId)}, ${sqlStr(pack.meta?.name)}, ${sqlStr(pack.meta?.version ?? '1.0.0')}, 'common', '1.0.0', true, 'published', 'authorized') ` +
-    `ON CONFLICT (id) DO UPDATE SET is_active = true, status = 'published';`
+    `VALUES (${sqlStr(packId)}, ${sqlStr(pack.meta?.name)}, ${sqlStr(pack.meta?.version ?? '1.0.0')}, 'common', '1.0.0', false, ${sqlStr(packStatus)}, ${sqlStr(packRightsStatus)}) ` +
+    `ON CONFLICT (id) DO UPDATE SET status = EXCLUDED.status, rights_status = EXCLUDED.rights_status;`
   );
   lines.push('');
 
@@ -95,8 +111,8 @@ function generateSql() {
     lines.push('');
   }
 
-  // 5. سؤال‌ها
-  const status = pack.meta?.synthetic ? 'demo' : 'verified';
+  // 5. سؤال‌ها — AEL-004: غیبت synthetic به verified تبدیل نمی‌شود.
+  const status = deriveQuestionVerificationStatus(pack.meta);
   for (const q of pack.questions ?? []) {
     lines.push(
       `INSERT INTO questions (id, node_id, exam_year, question_text, options, correct_option, explanation, trap_note, verification_status, exam_pack_id, exam_level, content_origin) ` +
@@ -153,6 +169,14 @@ if (modeSql) {
   process.exit(0);
 }
 
+// AEL-004: نوشتن مستقیم پایگاه داده فقط با --write و هرگز روی production.
+try {
+  assertDirectWriteAllowed({ writeFlag, environment: process.env.ENVIRONMENT });
+} catch (error) {
+  console.error(String(error instanceof Error ? error.message : error));
+  process.exit(2);
+}
+
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!url || !key) {
@@ -198,7 +222,7 @@ await upsert(
     correct_option: x.correctOption,
     explanation: x.explanation ?? null,
     trap_note: x.trapNote ?? null,
-    verification_status: pack.meta?.synthetic ? 'demo' : 'verified',
+    verification_status: deriveQuestionVerificationStatus(pack.meta),
     exam_pack_id: pack.meta?.name ?? null,
     exam_level: questionExamLevel(x) ?? null,
     content_origin: questionContentOrigin(x) ?? null,

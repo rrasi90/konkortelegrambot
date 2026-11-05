@@ -69,7 +69,7 @@ interface DashboardViewProps {
   onOpenLessonNode: (nodeId: string) => void;
   onOpenYearlyExam: (year?: number) => void;
   onNavigateTab: (
-    tab: 'study' | 'exams' | 'map' | 'lessons' | 'subject_hub' | 'notebook' | 'ingest' | 'patches'
+    tab: 'study' | 'exams' | 'map' | 'lessons' | 'subject_hub' | 'notebook' | 'patches'
   ) => void;
   onSelectSubject?: (subjectId: KonkorCourseSectionId) => void;
   onResetToZeroState: () => void;
