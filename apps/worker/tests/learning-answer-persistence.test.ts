@@ -70,7 +70,7 @@ describe('AEL-610/612 + ADR-011 — ثبت پایدار و اتمیک پاسخ �
       body: JSON.stringify({ courseId: course.id, mode: 'practice', count: 1, reviewIds: [first.id], seed: 7 }),
     });
     expect(start.status).toBe(200);
-    const session = await start.json() as { attemptId?: string; questions: Array<{ id: string }> };
+    const session = await start.json() as { attemptId?: string; token: string; questions: Array<{ id: string }> };
     expect(session.attemptId).toBeDefined();
 
     const answer = async (operationId: string, selected: number) => app.request('/api/learning-quiz/answer', {
