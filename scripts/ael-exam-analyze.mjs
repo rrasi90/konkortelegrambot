@@ -23,6 +23,7 @@ import {
   parseSubjectRanges,
   mapQuestionToRange,
   scorePairingEvidence,
+  selectPairingCandidate,
 } from './ael-exam-utils.mjs';
 
 const root = process.cwd();
@@ -335,10 +336,10 @@ function buildPairing() {
         }),
       }))
       .filter((c) => c.score > 0 || c.conflicts.length);
-    // conflict-free candidates rank above conflicted ones; score breaks ties
-    scored.sort((a, b) => (b.conflicts.length === 0) - (a.conflicts.length === 0) || b.score - a.score);
-    const best = scored[0] ?? null;
-    const paired = best && (best.conflicts.length === 0 || !scored.some((c) => c.conflicts.length === 0 && c.score > 0));
+    // A known contradiction must never produce a pairing FK, even when it
+    // is the only candidate. Keep the best conflicted candidate for quarantine
+    // and diagnostics, but materialize a relationship only when conflict-free.
+    const { best, paired } = selectPairingCandidate(scored);
     results.push({
       key_source_id: key.source_id,
       key_file: key.filename,
