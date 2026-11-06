@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/design-tokens.css";
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -59,27 +60,7 @@
   --brand: #116b5f;
   --highlight: #c98e2a;
 
-  /* AEL Visual Language — Warm Charcoal (docs/design/AEL_VISUAL_LANGUAGE_SPEC.md) */
-  --app-bg: #1b1a17;
-  --app-bg-deep: #141312;
-  --ael-surface-primary: #262524;
-  --ael-surface-secondary: #2e2d2b;
-  --ael-surface-elevated: #3a3937;
-  --ael-border-subtle: rgba(255,255,255,0.07);
-  --ael-border-active: rgba(255,255,255,0.14);
-  --ael-text-primary: #f4f3f1;
-  --ael-text-secondary: #b1b0b0;
-  --ael-text-muted: #7a7a7c;
-  --ael-accent-teal: #36c4bd;
-  --ael-accent-blue: #658ff2;
-  --ael-accent-purple: #9274dc;
-  --ael-accent-green: #55b995;
-  --ael-accent-amber: #d6a45f;
-  --ael-accent-orange: #dc805d;
-  --radius-card-lg: 24px;
-  --radius-card-md: 20px;
-  --radius-card-sm: 16px;
-  --radius-pill: 999px;
+  /* Warm Charcoal توکن‌ها از ./styles/design-tokens.css می‌آیند (منبع واحد) */
 
   font-family: 'Vazirmatn FD', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }

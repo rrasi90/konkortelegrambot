@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { SectionHeader } from './ui';
 import {
   YEARLY_KONKOR_BOOKLETS,
   YEARLY_KONKOR_QUESTIONS,
@@ -256,6 +257,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
 
   return (
     <div className="space-y-4 pb-20">
+      <SectionHeader title="آرشیو کنکورها" accent="var(--ael-accent-blue)" />
       {/* ۱. پنل یکپارچه انتخاب سال (۱۳۹۱ تا ۱۴۰۵)، گرایش و ابزارهای دفترچه */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">

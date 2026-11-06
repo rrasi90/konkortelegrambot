@@ -2,13 +2,17 @@ import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 
 type Accent = 'teal' | 'blue' | 'purple' | 'green' | 'amber' | 'orange';
 type Size = 'lg' | 'md' | 'sm';
+type Tag = 'article' | 'div' | 'section' | 'a' | 'button';
 
-interface AelCardProps extends HTMLAttributes<HTMLElement> {
+interface AelCardProps extends Omit<HTMLAttributes<HTMLElement>, 'onClick'> {
   children: ReactNode;
   accent?: Accent;
   size?: Size;
+  /** فقط روی <a>/<button> یا با onClick=true */
   clickable?: boolean;
-  as?: 'article' | 'button' | 'div' | 'a' | 'section';
+  as?: Tag;
+  onClick?: () => void;
+  href?: string;
   style?: CSSProperties;
 }
 
@@ -21,27 +25,47 @@ const accentVar: Record<Accent, string> = {
   orange: 'var(--ael-accent-orange)',
 };
 
-export function AelCard({ children, accent = 'teal', size = 'md', clickable = false, as = 'article', style, className, ...rest }: AelCardProps) {
-  const Tag = as as 'article';
+/**
+ * کارت پایهٔ AEL — همهٔ Variantها از این ارث می‌برند.
+ * - کارت غیرتعاملی: as=article/div/section و بدون onClick → ظاهر کلیک ندارد (ael-card--static)
+ * - کارت تعاملی: as=a/button یا clickable → Keyboard Accessible با focus-visible و role/button
+ */
+export function AelCard({ children, accent = 'teal', size = 'md', clickable = false, as, onClick, href, style, className, ...rest }: AelCardProps) {
+  const tag: Tag = as ?? (href ? 'a' : onClick || clickable ? 'button' : 'article');
+  const isInteractive = tag === 'a' || tag === 'button' || Boolean(onClick) || Boolean(clickable);
   const radius = size === 'lg' ? 'var(--radius-card-lg)' : size === 'sm' ? 'var(--radius-card-sm)' : 'var(--radius-card-md)';
   const padding = size === 'lg' ? '20px' : size === 'sm' ? '14px' : '16px';
+  const TagEl = tag as 'article';
+
+  const shared = {
+    className: [className, 'ael-card', size === 'lg' ? 'ael-card--lg' : size === 'sm' ? 'ael-card--sm' : '', isInteractive ? 'ael-card--clickable' : 'ael-card--static'].filter(Boolean).join(' '),
+    'data-accent': accent,
+    style: {
+      borderRadius: radius,
+      padding,
+      ['--accent' as string]: accentVar[accent],
+      ...style,
+    } as CSSProperties,
+    ...(isInteractive && tag === 'div' ? ({ role: 'button', tabIndex: 0 } as const) : {}),
+  };
+
+  if (tag === 'a') {
+    return (
+      <a href={href} onClick={onClick} {...shared} {...rest}>
+        {children}
+      </a>
+    );
+  }
+  if (tag === 'button') {
+    return (
+      <button type="button" onClick={onClick} {...shared} {...rest}>
+        {children}
+      </button>
+    );
+  }
   return (
-    <Tag
-      className={className}
-      data-accent={accent}
-      style={{
-        background: 'var(--ael-surface-primary)',
-        border: '1px solid var(--ael-border-subtle)',
-        borderRadius: radius,
-        padding,
-        boxShadow: '0 8px 24px rgba(0,0,0,0.28)',
-        minWidth: 0,
-        ['--accent' as string]: accentVar[accent],
-        ...style,
-      }}
-      {...rest}
-    >
+    <TagEl onClick={onClick} {...shared} onKeyDown={isInteractive ? (e) => { if ((e.key === 'Enter' || e.key === ' ') && onClick) { e.preventDefault(); onClick(); } } : undefined} {...rest}>
       {children}
-    </Tag>
+    </TagEl>
   );
 }

@@ -261,6 +261,10 @@
     strategy: 'مدیریت استراتژیک و آینده‌پژوهی',
   };
 
+  function toFa(n) {
+    return String(n).replace(/[0-9]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[Number(d)]; });
+  }
+
   function renderHome(h) {
     var container = el('home-container');
     if (!container) return;
@@ -270,64 +274,67 @@
       .map(function (t) { return TRACK_NAMES[t] || t; });
     var trackTitle = activeTrackTitles.length > 0 ? activeTrackTitles.join(' + ') : 'هستهٔ مشترک';
 
-    var html = '<section class="dash-card lesson-card"><div class="lesson-num">شروع سریع</div>' +
-      '<div class="lesson-title">یک درس کوتاه، بعد چند تست</div>' +
-      '<p class="lesson-sub">در مسیر یادگیری می‌توانی درس، سنجش شروع یا آزمون زمان‌دار را انتخاب کنی.</p>' +
-      '<button id="btn-open-learning" class="btn primary full">باز کردن مسیر یادگیری</button></section>';
+    // Hero — مرور امروز (مرجع: Featured Card گرادیانی)
+    // داده‌ها واقعی: reviewDue از سرور؛ بدون Mock.
+    var hero = '';
+    hero += '<section class="dash-card ael-card ael-card--lg hero" data-accent="teal">';
+    hero += '<div class="hero-top"><span class="label">صف هوشمند امروز</span>';
+    if (typeof h.reviewDue === 'number') {
+      hero += '<span class="chip"><b>' + toFa(h.reviewDue) + '</b> تست در نوبت مرور</span>';
+    }
+    hero += '</div>';
+    hero += '<h3 class="hero-title">' + escapeHtml(h.mentorMessage || 'یک درس کوتاه، بعد چند تست') + '</h3>';
+    hero += '<p class="hero-sub">در مسیر یادگیری می‌توانی درس، سنجش شروع یا آزمون زمان‌دار را انتخاب کنی.</p>';
+    hero += '<div class="hero-cta"><button id="btn-start-today" class="btn primary full">شروع تمرین امروز</button>';
+    hero += '<button id="btn-open-learning" class="btn ghost full">باز کردن مسیر یادگیری</button></div>';
+    hero += '</section>';
 
-    // کارت همراه (ماسکات) + پیام منتور
-    html +=
-      '<section class="dash-card mascot-card">' +
-      '<div class="mascot" aria-hidden="true">' +
-      '<svg viewBox="0 0 64 64" width="56" height="56">' +
-      '<circle cx="32" cy="32" r="30" fill="var(--primary-soft)"/>' +
-      '<path d="M18 34a14 14 0 0 1 28 0" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>' +
-      '<circle cx="24" cy="30" r="3" fill="var(--primary)"/>' +
-      '<circle cx="40" cy="30" r="3" fill="var(--primary)"/>' +
-      '<path d="M26 42c2 2 4 3 6 3s4-1 6-3" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>' +
-      '</svg></div>' +
-      '<div class="mascot-text"><strong>همراه هوشمند شما</strong>' +
-      '<p>' + escapeHtml(h.mentorMessage) + '</p></div></section>';
-
-    // کارت هدف: شمارش معکوس + پیشرفت کل مسیر
+    // Progress — تسلط سرفصل‌ها (مرجع: Progress Summary Card با رینگ)
     // سرور برای «بی‌شاهد» مقدار null می‌دهد؛ نمایش ۰٪ ادعای ساختگی است.
     var hasEvidence = typeof h.progress.overall === 'number';
     var overallProgress = hasEvidence ? h.progress.overall : 0;
-    var progressLabel = hasEvidence
-      ? overallProgress + '٪'
-      : 'هنوز سنجیده نشده';
-    html += '<section class="dash-card goal-card">';
+    var progressLabel = hasEvidence ? toFa(overallProgress) + '٪' : 'هنوز سنجیده نشده';
+    var progress = '';
+    progress += '<section class="dash-card ael-card" data-accent="teal">';
+    progress += '<div class="section-head"><h2>پیشرفت تسلط سرفصل‌ها</h2><span class="chip">' + escapeHtml(trackTitle) + '</span></div>';
     if (h.stats.daysLeft !== null && h.stats.daysLeft >= 0) {
-      html +=
-        '<div class="goal-countdown"><span class="count-num">' + h.stats.daysLeft + '</span>' +
-        '<span class="count-label">روز تا آزمون کنکور</span></div>';
+      progress += '<div class="goal-countdown"><span class="count-num">' + toFa(h.stats.daysLeft) + '</span><span class="count-label">روز تا آزمون کنکور</span></div>';
     }
-    html +=
-      '<div class="goal-title">گرایش‌های فعال: ' + escapeHtml(trackTitle) + '</div>' +
-      '<div class="labels"><span>پیشرفت تسلط سرفصل‌ها</span><span>' + progressLabel + '</span></div>' +
-      '<div class="bar"><div class="fill" style="width:' + (hasEvidence ? overallProgress : 0) + '%"></div></div>' +
-      '</section>';
+    progress += '<div class="labels"><span>تسلط کل مسیر</span><span>' + progressLabel + '</span></div>';
+    progress += '<div class="bar"><div class="fill" style="width:' + (hasEvidence ? overallProgress : 0) + '%"></div></div>';
+    progress += '</section>';
 
-    // کارت کوییز امروز
-    html +=
-      '<section class="dash-card lesson-card">' +
-      '<div class="lesson-num">برنامهٔ امروز</div>' +
-      '<div class="lesson-title">' + (h.today.answered > 0 ? (h.today.answered + ' پاسخ ثبت‌شده امروز') : 'آغاز جلسه مطالعه') + '</div>' +
-      '<p class="lesson-sub">' + (h.reviewDue > 0 ? (h.reviewDue + ' تست در نوبت مرور فاصله دار') : 'آماده برای تست‌های هدفمند') + '</p>' +
-      '<button id="btn-start-today" class="btn primary full">شروع تمرین امروز</button>' +
-      '</section>';
+    // Daily Learning — برنامهٔ امروز (مرجع: Daily Task Card)
+    var daily = '';
+    daily += '<section class="dash-card ael-card" data-accent="blue">';
+    daily += '<div class="section-head"><h2>برنامهٔ امروز</h2></div>';
+    daily += '<div class="lesson-title">' + (h.today.answered > 0 ? (toFa(h.today.answered) + ' پاسخ ثبت‌شده امروز') : 'آغاز جلسه مطالعه') + '</div>';
+    daily += '<p class="lesson-sub">' + (typeof h.reviewDue === 'number' && h.reviewDue > 0 ? (toFa(h.reviewDue) + ' تست در نوبت مرور فاصله‌دار') : 'آماده برای تست‌های هدفمند') + '</p>';
+    daily += '<button id="btn-start-today-2" class="btn primary full">شروع تمرین امروز</button>';
+    daily += '</section>';
 
-    // کارت کوییز شبانه (سؤالات غلط امروز)
+    // Metric Cards (مرجع: Small Metric Cards جفتی) — فقط آمار واقعی
+    var metrics = '';
+    if (typeof h.stats.streakDays === 'number' || typeof h.stats.coins === 'number') {
+      metrics += '<div class="metric-pair">';
+      metrics += '<article class="dash-card ael-card ael-card--sm metric" data-accent="green"><div class="big">' + toFa(h.stats.streakDays || 0) + '</div><small>روز پیوسته</small></article>';
+      metrics += '<article class="dash-card ael-card ael-card--sm metric" data-accent="amber"><div class="big">' + toFa(h.stats.coins || 0) + '</div><small>سکه</small></article>';
+      metrics += '</div>';
+    }
+
+    // کوییز شبانه (سؤالات غلط امروز) — رویداد واقعی
+    var night = '';
     if (h.nightQuiz && h.nightQuiz.available) {
       var wrongCount = h.nightQuiz.wrongCount || h.nightQuiz.wrongAnswersCount || 0;
-      html +=
-        '<section class="dash-card night-card">' +
-        '<div class="night-badge">🌙 کوییز شبانه</div>' +
-        '<div class="night-title">تثبیت پاسخ‌های غلط امروز (' + wrongCount + ' سؤال)</div>' +
-        '<p class="night-sub">ابتدا بدون نگاه‌کردن به توضیح جواب بده و سپس پاسخ را بررسی کن.</p>' +
-        '<button id="btn-start-night" class="btn secondary full">شروع کوییز شبانه</button>' +
-        '</section>';
+      night += '<section class="dash-card ael-card night-card" data-accent="orange">';
+      night += '<div class="night-badge">کوییز شبانه</div>';
+      night += '<div class="night-title">تثبیت پاسخ‌های غلط امروز (' + toFa(wrongCount) + ' سؤال)</div>';
+      night += '<p class="night-sub">ابتدا بدون نگاه‌کردن به توضیح جواب بده و سپس پاسخ را بررسی کن.</p>';
+      night += '<button id="btn-start-night" class="btn secondary full">شروع کوییز شبانه</button>';
+      night += '</section>';
     }
+
+    var html = hero + progress + daily + metrics + night;
 
     container.innerHTML = html;
 
@@ -335,6 +342,8 @@
     if (btnLearning) btnLearning.onclick = function () { showTab('lessons'); };
     var btnToday = el('btn-start-today');
     if (btnToday) btnToday.onclick = function () { showTab('today'); };
+    var btnToday2 = el('btn-start-today-2');
+    if (btnToday2) btnToday2.onclick = function () { showTab('today'); };
 
     var btnNight = el('btn-start-night');
     if (btnNight) {

@@ -1,20 +1,43 @@
-/* AEL Visual Language — Warm Charcoal Card-Based (Mission: Vajerah-inspired)
-   استخراج‌شده از docs/design/AEL_VISUAL_LANGUAGE_SPEC.md
-   تاریک دائمی برای مینی‌اپ تلگرام؛ Accent معنادار بر اساس دسته */
+/* AEL Visual Language — Warm Charcoal Card-Based
+   منبع کانویکال توکن‌ها: src/styles/design-tokens.css (این فایل نسخهٔ درون‌خطی همان است
+   چون آدیت Worker دقیقاً روی ۵ فایل قفل است: index.html/app.js/styles.css/learning.js/admin.html)
+   تاریک دائمی؛ هرگز با prefers-color-scheme روشن نمی‌شود. */
 :root {
   --app-bg: #1b1a17;
   --app-bg-deep: #141312;
-  --surface-primary: #262524;
-  --surface-secondary: #2e2d2b;
-  --surface-elevated: #3a3937;
+  --ael-surface-primary: #262524;
+  --ael-surface-secondary: #2e2d2b;
+  --ael-surface-elevated: #3a3937;
+  --ael-border-subtle: rgba(255,255,255,0.07);
+  --ael-border-active: rgba(255,255,255,0.14);
+  --ael-text-primary: #f4f3f1;
+  --ael-text-secondary: #b1b0b0;
+  --ael-text-muted: #7a7a7c;
+  --ael-accent-teal: #36c4bd;
+  --ael-accent-blue: #658ff2;
+  --ael-accent-purple: #9274dc;
+  --ael-accent-green: #55b995;
+  --ael-accent-amber: #d6a45f;
+  --ael-accent-orange: #dc805d;
+  --radius-card-lg: 24px;
+  --radius-card-md: 20px;
+  --radius-card-sm: 16px;
+  --radius-pill: 999px;
+  --ael-shadow-card: 0 8px 24px rgba(0,0,0,0.28);
+  --ael-shadow-raised: 0 12px 32px rgba(0,0,0,0.45);
+  --ael-font: 'Vazirmatn', 'IRANSans', 'Segoe UI', system-ui, sans-serif;
+  /* --- aliases legacy برای باالای همین فایل (همان مقادیر بالا) --- */
+  --surface-primary: var(--ael-surface-primary);
+  --surface-secondary: var(--ael-surface-secondary);
+  --surface-elevated: var(--ael-surface-elevated);
   --bg: var(--app-bg);
-  --surface: var(--surface-primary);
-  --ink: #f4f3f1;
-  --ink-soft: #b1b0b0;
-  --ink-muted: #7a7a7c;
-  --line: rgba(255,255,255,0.07);
-  --line-active: rgba(255,255,255,0.14);
-  --primary: #36c4bd; /* اقدام اصلی */
+  --surface: var(--ael-surface-primary);
+  --ink: var(--ael-text-primary);
+  --ink-soft: var(--ael-text-secondary);
+  --ink-muted: var(--ael-text-muted);
+  --line: var(--ael-border-subtle);
+  --line-active: var(--ael-border-active);
+  --primary: var(--ael-accent-teal);
   --primary-soft: rgba(54,196,189,0.13);
   --primary-glow: rgba(54,196,189,0.18);
   --primary-deep: #2aa79f;
@@ -23,17 +46,13 @@
   --accent-green: #55b995;
   --accent-amber: #d6a45f;
   --accent-orange: #dc805d;
-  --ok: var(--accent-green);
+  --ok: #55b995;
   --ok-soft: rgba(85,185,149,0.12);
-  --warn: var(--accent-amber);
+  --warn: #d6a45f;
   --warn-soft: rgba(214,164,95,0.1);
   --bad: #ef6351;
   --bad-soft: rgba(239,99,81,0.1);
   --proof: linear-gradient(135deg, #d6a45f, #dc805d);
-  --radius-card-lg: 24px;
-  --radius-card-md: 20px;
-  --radius-card-sm: 16px;
-  --radius-pill: 999px;
   --radius: var(--radius-card-md);
   --radius-sm: var(--radius-card-sm);
   --shadow: 0 8px 24px rgba(0,0,0,0.28);
@@ -423,8 +442,20 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
   box-shadow: var(--shadow-card);
   padding: 16px;
   margin-bottom: 12px;
+  min-width: 0;
 }
-.dash-card.hero { border-radius: var(--radius-card-lg); background: linear-gradient(135deg, rgba(54,196,189,0.12), rgba(101,143,242,0.08) 55%, var(--surface-secondary)); }
+.dash-card.hero { border-radius: var(--radius-card-lg); background: linear-gradient(135deg, rgba(54,196,189,0.12), rgba(101,143,242,0.08) 55%, var(--surface-secondary)); position: relative; overflow: hidden; }
+.hero-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.hero-top .label { font-size: 11px; color: var(--ink-soft); }
+.hero-title { font-size: 18px; line-height: 1.6; margin: 10px 0 6px; }
+.hero-sub { font-size: 12.5px; color: var(--ink-soft); line-height: 1.9; margin: 0; }
+.hero-cta { display: grid; gap: 8px; margin-top: 14px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.section-head h2 { font-size: 13px; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 8px; }
+.section-head h2::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
+.metric-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.metric .big { font-size: 28px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.metric small { font-size: 11px; color: var(--ink-soft); }
 .mascot-card { display: flex; align-items: center; gap: 12px; }
 .mascot { flex: 0 0 auto; }
 .mascot-text strong { font-size: 13px; }
@@ -437,7 +468,10 @@ h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; 
 .goal-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
 
 .lesson-head { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; }
-.lesson-sub { color: var(--ink-soft); font-size: 12px; margin: 6px 0 12px; }
+.lesson-title { font-size: 14px; font-weight: 800; line-height: 1.7; margin: 4px 0; }
+.lesson-sub { color: var(--ink-soft); font-size: 12px; margin: 6px 0 12px; line-height: 1.9; }
+.btn.full { width: 100%; }
+.btn.secondary { background: var(--surface-secondary); color: var(--ink); border: 1px solid var(--line-active); }
 .btn.small { padding: 9px 16px; font-size: 12.5px; width: auto; display: inline-block; }
 
 .night-card { border: 1px dashed var(--line); box-shadow: none; }

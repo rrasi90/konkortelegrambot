@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { SectionHeader } from './ui';
 import {
   KnowledgeNode,
   InteractiveLesson,
@@ -239,6 +240,7 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
 
   return (
     <div className="space-y-5">
+      <SectionHeader title="درسنامه‌ها" accent="var(--ael-accent-blue)" />
       {/* نوار ۴ تبی بخش‌بندی تمیز کتابخانه و منابع */}
       <div className="bento-card glass-panel p-3.5 flex flex-wrap items-center justify-between gap-3">
         <div className="tab-strip" role="tablist" aria-label="بخش‌های درسنامه‌ها و منابع">

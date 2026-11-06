@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { SectionHeader } from './ui';
 import confetti from 'canvas-confetti';
 import {
   KnowledgeNode,
@@ -305,6 +306,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
 
   return (
     <div className="w-full max-w-3xl mx-auto pb-24 min-w-0">
+      <SectionHeader title="جلسهٔ تست" accent="var(--ael-accent-teal)" />
       {/* ۱. هدر جلسه با نوار پیشرفت */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 mb-4 shadow-xs">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-3">

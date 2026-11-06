@@ -1,8 +1,10 @@
 # AEL Visual Implementation Report — Crouton Alpha
 
-**برنچ:** `design/ael-visual-card-redesign`  
+**برنچ:** `design/ael-visual-card-redesign` → یکپارچه‌سازی روی `feat/ael-design-integration`  
 **تاریخ:** ۱۴۰۵-۰۸-۱۶ (2026-11-06)  
 **هدف:** انتقال زبان بصری تنها از تصویر مرجع به کل سیستم AEL — نه فقط یک صفحهٔ زیبا.
+
+> **به‌روزرسانی Integration (002):** این گزارش پس از یکپارچه‌سازی با `origin/main` (`c3f8949`) به‌روزرسانی شد — توکن مشترک، پیاده‌سازی واقعی در `apps/miniapp` و `src/`، و QA روی بیلد واقعی (نه فقط Prototype). جزئیات در §9 تا §12.
 
 ---
 
@@ -18,10 +20,12 @@
 | 6 | `docs/design/prototypes/ael-lessons-v1.html` | درسنامه‌ها — جستجو، فصل‌های طلایی، CTA واقعی |
 | 7 | `docs/design/prototypes/ael-study-v1.html` | جلسهٔ تست — سؤال، فیدبک، دام طراح |
 | 8 | `docs/design/screenshots/ael-*-320..430.png` | ۱۵ اسکرین‌شات QA (۳ صفحه × ۵ عرض) |
-| 9 | `src/components/ui/AelCard.tsx` | کارت پایهٔ Reusable (React) |
+| 9 | `src/components/ui/AelCard.tsx` | کارت پایهٔ Reusable (React) — Type-safe + Keyboard Accessible |
 | 10 | `src/components/ui/AppShell.tsx` | اسل پس‌زمینهٔ گرادیانی |
-| 11 | `src/components/ui/SectionHeader.tsx` | هدر بخش با نقطهٔ رنگی (ដូច مرجع) |
+| 11 | `src/components/ui/SectionHeader.tsx` | هدر بخش با نقطهٔ رنگی (مثل مرجع) |
 | 12 | `src/components/ui/index.ts` | Export |
+| 13 | `src/styles/design-tokens.css` | منبع واحد توکن‌ها (React) — `@import` در `src/index.css` |
+| 14 | `docs/design/screenshots/product-v2/*.png` | ۱۵ اسکرین بیلد واقعی (Home/Lessons/Study × ۵ عرض) |
 
 **تغییرات پورت به کد واقعی (بدون تغییر منطق):**
 - `apps/miniapp/styles.css` — توکن‌های Warm Charcoal (`--app-bg #1b1a17`، Radius ۲۴/۲۰/۱۶، Accentهای معنادار)، پس‌زمینه گرادیانی، Bottom Nav شناور (`bottom:12px; border-radius:24px; backdrop-blur`)، `.dash-card.hero` گرادیانی
@@ -148,3 +152,68 @@
 3. **آواتار کاربر** — به‌علت نبود دادهٔ پروفایل واقعی تلگرام در این محیط، از حرف اول استفاده شد.
 
 > **گام بعدی برای Merge:** این برنچ `design/ael-visual-card-redesign` را با `main` مقایسه کنید (فقط CSS/UI)، تست‌ها را دوباره اجرا کنید و از فرآیند امن Repository برای ورود به `main` استفاده کنید.
+
+---
+
+## 9. Integration (002) — چه چیزی واقعاً در Runtime استفاده می‌شود؟
+
+| صفحهٔ واقعی | استفاده از Design System | شواهد |
+|---|---|---|
+| `DashboardView` (Home) | `SectionHeader` + `AelCard` برای کوئیست‌های روزانه؛ Hero/Progress با Radius و Surface جدید؛ Bottom Nav شناور | `src/components/DashboardView.tsx`؛ اسکرین `product-v2/home-*.png` |
+| `LessonsLibraryView` | `SectionHeader` در ریشه + توکن‌های Warm Charcoal از `design-tokens.css`؛ کارت‌های `bento-card` با Radius ۲۰ | `product-v2/lessons-*.png` |
+| `StudySessionView` | `SectionHeader` + همان Base کارت؛ فیدبک و گزینه‌ها با Accent سبز/قرمز معنادار | `product-v2/study-*.png` |
+| `YearlyKonkorExamView` (Exams Archive) | `SectionHeader` + توکن مشترک | بیلد پاس؛ صفحات با همان Base |
+| `SubjectDedicatedHubView` (Course Hub) | `SectionHeader` + توکن مشترک | بیلد پاس |
+| `MistakeNotebookView` (دفتر خطا) | `SectionHeader` (کهربایی) + توکن مشترک | بیلد پاس |
+| `SkillTreeGraph` / `MasteryVelocityChart` / `KonkorScoreSimulatorCard` (Progress) | از طریق `bento-card`/`glass-panel` با Surface جدید | بیلد پاس |
+| `apps/miniapp` (Header/User Summary/Hero/Daily/Progress/Metric/Activity/Night/Section/Header/Rails/Bottom Nav) | `renderHome` در `app.js` بازطراحی شد؛ همهٔ داده‌ها از `/api/home` واقعی؛ Handlerهای `btn-open-learning` / `btn-start-today` / `btn-start-night` حفظ شدند؛ نیوبار شناور با توکن مشترک | `apps/miniapp/app.js`, `apps/miniapp/styles.css` |
+
+**Prototype در برابر Runtime:**
+- Prototype (فقط برای تکرار بصری): `docs/design/prototypes/*.html` — مستقل، بدون اتصال به API.
+- Runtime (محصول واقعی): هر دو قالب (`apps/miniapp` و `src/`) که در بالا فهرست شدند — با دادهٔ واقعی، تست‌شده با Playwright روی Dev Server واقعی (`http://127.0.0.1:3000`).
+
+---
+
+## 10. توکن مشترک واحد
+
+- منبع کانویکال React: `src/styles/design-tokens.css` — `@import` در `src/index.css`.
+- Mini App (Static): چون آدیت Worker (`scripts/audit-client-bundle.ts`) دقیقاً روی ۵ فایل (`index.html/app.js/styles.css/learning.js/admin.html`) قفل است، نسخهٔ درون‌خطی همان توکن‌ها در ابتدای `apps/miniapp/styles.css` قرار گرفت (با کامنت ارجاع به منبع).Warm Charcoal هر دو قالب یکسان است (`#1B1A17`، `#262524`، `#36C4BD`، Radius `24/20/16`). Mini App همیشه تاریک است؛ `prefers-color-scheme` به حالت روشن برنمی‌گردد.
+
+---
+
+## 11. Product-wide QA روی بیلد واقعی
+
+ابزار: Playwright Python `1.64.1` + Chromium `1248` روی Dev Server واقعی (`npm run dev`, `http://127.0.0.1:3000`) — نه فایل Prototype.
+
+| صفحه | ۳۲۰px | ۳۶۰px | ۳۷۵px | ۳۹۰px | ۴۳۰px | Overflow | Console |
+|---|---|---|---|---|---|---|---|
+| Home | ✅ | ✅ | ✅ | ✅ | ✅ | ۰ در هر ۵ عرض | فقط هشدار CloudStorage تلگرام (خارج از تلگرام) |
+| Lessons | ✅ | ✅ | ✅ | ✅ | ✅ | ۰ | — |
+| Study | ✅ | ✅ | ✅ | ✅ | ✅ | ۰ | — |
+
+اسکرین‌ها: `docs/design/screenshots/product-v2/` (۱۵ فایل: `home/lessons/study × 320/360/375/390/430.png`).
+
+**مقایسهٔ کیفی با تصویر مرجع (بدون ادعای «۸۵٪»):** پس‌زمینهٔ چارتری گرم، سطوح لایه‌ای کارت‌ها، ریتم عمودی با هدرهای بخش رنگی، تراکم کارت، جداسازی بخش‌ها، تنوع اندازه‌ها (Hero تمام‌عرض، Metric جفتی، کارت‌های میانبر)، توزیع Accent معنادار و Bottom Nav شناور — همه قابل مشاهده و مشابه منطق مرجع هستند؛ هیچ برند/نام/لوگو/محتوای Vajerah کپی نشده و هویت آکادمیک AEL حفظ شده است.
+
+**Responsive:** در هر ۵ عرض (`320/360/375/390/430`) Overflow افقی صفر؛ `dir=rtl`، ارقام فارسی در HTML/JS، Logical Properties و Safe Area با `env(safe-area-inset-bottom)` رعایت شده است. Keyborad: کارت تعاملی `AelCard` با `button`/`a` و `focus-visible`؛ Reduced Motion با `@media (prefers-reduced-motion)` در `design-tokens.css`.
+
+> **یادداشت:** ادعای تست واقعی Telegram Android مطرح نمی‌شود — این محیط دستگاه فیزیکی تلگرام نیست. بیلد مینی‌اپ و Back Button روی دستگاه باید توسط کاربر تأیید شود.
+
+---
+
+## 12. تست‌های کامل و وضعیت PR/Main
+
+| تست | نتیجه |
+|---|---|
+| `npm ci` | ✅ |
+| `npm run typecheck` | ✅ EXIT 0 |
+| `npm test` (vitest) | ✅ ۴۷ فایل — ۵۵۷ تست پاس |
+| `npm run validate:learning` | ✅ (۸ topics، ۲۴ authored items) |
+| `npm run build` (React) | ✅ `dist/assets/index-BmiSvY12.js 220.23 kB` |
+| `npm run audit:client-bundle` | ✅ PASS |
+| `npm run audit:miniapp` | ✅ PASS (پس از اینلاین‌کردن توکن در `styles.css`) |
+| `npm run build:worker` | ✅ |
+| Playwright Visual Regression (product-v2) | ✅ ۱۵ اسکرین، Overflow ۰ |
+
+**PR:** مستقل روی `feat/ael-design-integration` — فقط فایل‌های طراحی (CSS/TSX/Docs/Screenshots/package Playwright)؛ بدون PDF و بدون AEL-313 (برنچ تمیز از `origin/main c3f8949` + cherry-pick `5db8186` از فایل‌های طراحی).  
+**SHA نهایی `main` پس از Merge (در زمان این گزارش):** در GitHub قابل مشاهده است (PR باید CI سبز شود سپس Merge). تا Merge انجام نشود، `main` همان `c3f8949` می‌ماند.

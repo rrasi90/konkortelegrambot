@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { SectionHeader } from './ui';
 import { KnowledgeNode } from '../data/konkorData';
 import { MathText } from './MathText';
 import {
@@ -66,6 +67,7 @@ export const MistakeNotebookView: React.FC<MistakeNotebookViewProps> = ({
 
   return (
     <div className="space-y-4 pb-24">
+      <SectionHeader title="دفتر خطا" accent="var(--ael-accent-amber)" />
       <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 shadow-xs">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { SectionHeader } from './ui';
 import type { KonkorCourseSectionId } from '../data/yearlyKonkorExams';
 import type { KnowledgeNode, QuestionItem, InteractiveLesson } from '../data/konkorData';
 import {
@@ -136,6 +137,7 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
 
   return (
     <div className="space-y-6 pb-20 w-full min-w-0 overflow-x-hidden">
+      <SectionHeader title="مطالعهٔ تفکیکی درس‌به‌درس" accent="var(--ael-accent-purple)" />
       {/* ۱. نوار هوشمند و ریسپانسیو انتخاب درس (۸ درس رسمی کنکور مدیریت) */}
       <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-xs space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
