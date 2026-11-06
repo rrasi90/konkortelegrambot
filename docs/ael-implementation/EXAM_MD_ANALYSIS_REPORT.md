@@ -129,7 +129,7 @@ stems/options need the repair pass before authoring.
 | ۱۴۰۵ | 157 (107) | ? | 0 (جدول خراب) | کلید نیاز به OCR مجدد |
 
 **Answer to the coverage question:** no — the per-year *test counts are not yet
-matched*. Key side: 1390–1394 and 1403 keys are complete; 1395–1402/1404 keys each
+matched*. Key side: 1391, 1393, 1394 and 1403 keys are complete; 1395–1402/1404 keys each
 lost 1–4 answer columns (48–84 numbers) and 1405 is unusable. Paper side: structural
 extraction carries 37–60% of each year's numbering span as `ok`, the rest is recorded
 as `needs_review` appearances. Nothing is published; the missing blocks map 1:1 to
