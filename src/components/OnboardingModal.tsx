@@ -75,6 +75,12 @@ export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => vo
             <p className="text-xs text-slate-400 leading-5">
               روز شمار تا آزمون بالای صفحه می‌ماند تا هر روز دقیقاً بدانید چقدر وقت دارید. بعداً از تب تنظیمات قابل تغییر است.
             </p>
+            {track === 'phd_all' && (
+              <p className="rounded-xl bg-amber-500/10 border border-amber-500/30 px-3 py-2 text-[11px] leading-5 text-amber-200">
+                نکتهٔ مهم: در آزمون دکتری، «مجموعه دروس کارشناسی» (مبانی سازمان، آمار، اسلام و…) بخش رسمی دفترچه است —
+                یعنی مسیر دکتری به‌طور کامل شامل پوشش مباحث سطح ارشد هم می‌شود و صف مرور شما ترکیبی چیده خواهد شد.
+              </p>
+            )}
             <input
               type="date"
               value={examDate}

@@ -5,6 +5,7 @@
  */
 
 import { YEARLY_KONKOR_QUESTIONS } from './yearlyKonkorExams';
+import { PHD_EXPANSION_NODES, PHD_EXPANSION_QUESTIONS } from './phdExpansionContent';
 
 export type TrackId = 'common' | 'business' | 'industrial' | 'technology' | 'strategy';
 export type DependencyRelation = 'prerequisite' | 'cross_course';
@@ -502,6 +503,7 @@ export const INITIAL_KNOWLEDGE_NODES: KnowledgeNode[] = [
     graphPos: { layer: 3, col: 6 },
     confusableWith: ['mb.culture', 'mb.contingency'],
   },
+  ...PHD_EXPANSION_NODES,
 ];
 
 export const INITIAL_NODE_DEPENDENCIES: NodeDependency[] = [
@@ -3104,6 +3106,8 @@ export const INITIAL_QUESTION_BANK: QuestionItem[] = [
   },
   // ۳۲. کل بانک سؤالات شناسنامه‌دار کنکورهای سراسری سال‌های ۱۳۹۱ تا ۱۴۰۵ (به ترتیب شماره دفترچه و تفکیک درس)
   ...YEARLY_KONKOR_QUESTIONS,
+  // ۳۳. گسترش محتوای دکتری: دروس غایب بسته‌های رسمی (مدیریت دولتی، سیاست‌گذاری، MIS/مدیریت دانش، مالی، روش تحقیق، HR، زبان، آمار)
+  ...PHD_EXPANSION_QUESTIONS,
 ];
 
 /**

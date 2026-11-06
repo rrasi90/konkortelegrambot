@@ -15,6 +15,7 @@ import {
   analyzeMultiYearExamFrequency,
   classifyNodeCourseCategory,
   getNodeEffectiveBranchCoefficient,
+  getMultiBranchEffectiveCoefficient,
   initFSRS,
   ReviewCard,
   LearnerSixDState,
@@ -287,13 +288,17 @@ export default function App() {
   // ساخت صف روزانه هوشمند بر اساس مسیر شخصی داوطلب (تعداد تست روزانه، گرایش و نوع درس انتخابی)
   const dailyQueue = useMemo(() => {
     const branch = stats.selectedMajorBranch || 'business';
+    const branches = stats.selectedMajorBranches ?? [];
     const category = stats.preferredCourseCategory || 'all';
     const targetCount = stats.dailyTargetQuestions || 20;
 
     const filteredCards = cards.filter((c) => {
       const node = nodes.find((n) => n.id === c.nodeId);
       if (!node) return true;
-      if (getNodeEffectiveBranchCoefficient(node, branch) === 0) return false;
+      // چندتخصصی: درسی در صف می‌ماند که در «حداقل یکی» از گرایش‌های انتخاب‌شده ضریب مؤثر داشته باشد
+      if (branches.length > 0) {
+        if (getMultiBranchEffectiveCoefficient(node, branches) === 0) return false;
+      } else if (getNodeEffectiveBranchCoefficient(node, branch) === 0) return false;
       if (category !== 'all' && classifyNodeCourseCategory(node) !== category) {
         return false;
       }

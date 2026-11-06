@@ -65,6 +65,7 @@ interface DashboardViewProps {
     dailyTargetQuestions?: number;
     preferredCourseCategory?: StudyCourseCategory;
     selectedMajorBranch?: MajorExamBranch;
+    selectedMajorBranches?: MajorExamBranch[];
   }) => void;
   onToggleTrack: (track: TrackId) => void;
   onUseStreakFreeze: () => void;
@@ -157,6 +158,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     stats.totalAnswered === 0 ? 0 : Math.round((rawScoreWithNegative / rawDenominator) * 100);
 
   const activeBranch = stats.selectedMajorBranch || 'business';
+  const selectedBranches = stats.selectedMajorBranches ?? [];
   const activeCategory = stats.preferredCourseCategory || 'all';
   const activeHours = stats.dailyStudyHours || 4;
   const activeTargetQ = stats.dailyTargetQuestions || 20;
@@ -866,7 +868,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {/* ۱. انتخاب گرایش */}
               <div className="glass-subcard p-4 space-y-2.5">
                 <label className="block font-bold text-slate-800 dark:text-slate-200">
-                  ۱. گرایش هدف شما در کنکور چیست؟
+                  ۱. گرایش(های) هدف شما؟ — انتخاب همزمان چند تخصص مجاز است
                 </label>
                 <div className="grid grid-cols-1 gap-1.5">
                   {[
@@ -875,15 +877,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     { id: 'technology', label: 'ارشد مدیریت تکنولوژی (تئوری و زبان ضریب ۳)' },
                     { id: 'phd_all', label: 'دکتری تخصصی مدیریت (همه گرایش‌ها)' },
                   ].map((b) => {
-                    const active = activeBranch === b.id;
+                    const active = selectedBranches.includes(b.id as MajorExamBranch) || (!selectedBranches.length && activeBranch === b.id);
                     return (
                       <button
                         key={b.id}
                         type="button"
                         onClick={() => {
                           tmaHaptic.selection();
+                          const bid = b.id as MajorExamBranch;
+                          // چندتخصصی: انتخاب همزمان چند گرایش مجاز است (دکتری همه‌گرایشی انحصاری است)
+                          if (bid === 'phd_all') {
+                            onUpdateStudyPreferences({ selectedMajorBranch: 'phd_all', selectedMajorBranches: [] });
+                            return;
+                          }
+                          const current = (selectedBranches.length ? selectedBranches : [activeBranch as MajorExamBranch]).filter((x) => x !== 'phd_all');
+                          const next = current.includes(bid)
+                            ? current.filter((x) => x !== bid)
+                            : [...current, bid];
+                          const fallback = next.length ? next : [activeBranch as MajorExamBranch];
                           onUpdateStudyPreferences({
-                            selectedMajorBranch: b.id as MajorExamBranch,
+                            selectedMajorBranch: fallback[fallback.length - 1],
+                            selectedMajorBranches: next,
                           });
                         }}
                         className={`p-2.5 rounded-xl border text-right transition-all cursor-pointer ${
