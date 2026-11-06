@@ -38,6 +38,7 @@ import {
   SlidersHorizontal,
   GraduationCap,
   Network,
+  CalendarClock,
   Sparkles,
   Activity,
   Calculator,
@@ -47,6 +48,7 @@ import { KonkorScoreSimulatorCard } from './KonkorScoreSimulatorCard';
 import { AelCard, SectionHeader } from './ui';
 
 interface DashboardViewProps {
+  examDate: string | null;
   nodes: KnowledgeNode[];
   stats: UserStats;
   nodeStates: Record<string, LearnerSixDState>;
@@ -63,6 +65,7 @@ interface DashboardViewProps {
     dailyTargetQuestions?: number;
     preferredCourseCategory?: StudyCourseCategory;
     selectedMajorBranch?: MajorExamBranch;
+    selectedMajorBranches?: MajorExamBranch[];
   }) => void;
   onToggleTrack: (track: TrackId) => void;
   onUseStreakFreeze: () => void;
@@ -92,7 +95,24 @@ const CATEGORY_LABELS: Record<StudyCourseCategory, string> = {
   language: 'زبان عمومی و تخصصی',
 };
 
+
+// ارقام فارسی + برچسب شمارش معکوس آزمون (الگوی اپ‌های شمارش معکوس: عدد روز = فوریت + افق برنامه‌ریزی)
+const FA_D = '۰۱۲۳۴۵۶۷۸۹';
+const toFaDigits = (n: number | string) => String(n).replace(/[0-9]/g, (d) => FA_D[Number(d)]);
+function examCountdownLabel(iso: string): string {
+  const target = new Date(iso + 'T00:00:00');
+  if (Number.isNaN(target.getTime())) return '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const days = Math.round((target.getTime() - today.getTime()) / 86400000);
+  if (days < 0) return `آزمون برگزار شد (${toFaDigits(Math.abs(days))} روز پیش)`;
+  if (days === 0) return 'امروز روز آزمون است — موفق باشی!';
+  if (days === 1) return 'فردا روز آزمون است';
+  return `${toFaDigits(days)} روز تا آزمون`;
+}
+
 export const DashboardView: React.FC<DashboardViewProps> = ({
+  examDate,
   nodes,
   stats,
   nodeStates,
@@ -138,6 +158,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     stats.totalAnswered === 0 ? 0 : Math.round((rawScoreWithNegative / rawDenominator) * 100);
 
   const activeBranch = stats.selectedMajorBranch || 'business';
+  const selectedBranches = stats.selectedMajorBranches ?? [];
   const activeCategory = stats.preferredCourseCategory || 'all';
   const activeHours = stats.dailyStudyHours || 4;
   const activeTargetQ = stats.dailyTargetQuestions || 20;
@@ -243,9 +264,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <span className="glass-subcard px-3 py-1.5 font-bold text-slate-900 dark:text-white tabular-nums inline-flex items-center gap-1.5">
             <Flame className="w-3.5 h-3.5 text-amber-500" />
             <span>
-              {stats.streakDays} روز پیوسته · {stats.xp} XP
+              {toFaDigits(stats.streakDays)} روز پیوسته · {toFaDigits(stats.xp)} XP
             </span>
           </span>
+          {examDate && (
+            <span className="glass-subcard px-3 py-1.5 font-bold inline-flex items-center gap-1.5 text-blue-700 dark:text-blue-300 tabular-nums">
+              <CalendarClock className="w-3.5 h-3.5" />
+              <span>{examCountdownLabel(examDate)}</span>
+            </span>
+          )}
           <span className="hidden sm:inline tabular-nums">
             هدف روزانه:{' '}
             <strong className="text-slate-900 dark:text-white">
@@ -297,7 +324,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-white/8 backdrop-blur-md border border-white/12">
-                  <div className="text-[11px] text-slate-300">تست اثبات ۱۴۰۴</div>
+                  <div className="text-[11px] text-slate-300">آزمونک نمونهٔ ۱۴۰۴</div>
                   <div className="text-base font-bold text-amber-400 mt-0.5 tabular-nums">
                     {queue.filter((c) => c.cardType === 'proof_1404').length} آزمون
                   </div>
@@ -841,7 +868,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               {/* ۱. انتخاب گرایش */}
               <div className="glass-subcard p-4 space-y-2.5">
                 <label className="block font-bold text-slate-800 dark:text-slate-200">
-                  ۱. گرایش هدف شما در کنکور چیست؟
+                  ۱. گرایش(های) هدف شما؟ — انتخاب همزمان چند تخصص مجاز است
                 </label>
                 <div className="grid grid-cols-1 gap-1.5">
                   {[
@@ -850,15 +877,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     { id: 'technology', label: 'ارشد مدیریت تکنولوژی (تئوری و زبان ضریب ۳)' },
                     { id: 'phd_all', label: 'دکتری تخصصی مدیریت (همه گرایش‌ها)' },
                   ].map((b) => {
-                    const active = activeBranch === b.id;
+                    const active = selectedBranches.includes(b.id as MajorExamBranch) || (!selectedBranches.length && activeBranch === b.id);
                     return (
                       <button
                         key={b.id}
                         type="button"
                         onClick={() => {
                           tmaHaptic.selection();
+                          const bid = b.id as MajorExamBranch;
+                          // چندتخصصی: انتخاب همزمان چند گرایش مجاز است (دکتری همه‌گرایشی انحصاری است)
+                          if (bid === 'phd_all') {
+                            onUpdateStudyPreferences({ selectedMajorBranch: 'phd_all', selectedMajorBranches: [] });
+                            return;
+                          }
+                          const current = (selectedBranches.length ? selectedBranches : [activeBranch as MajorExamBranch]).filter((x) => x !== 'phd_all');
+                          const next = current.includes(bid)
+                            ? current.filter((x) => x !== bid)
+                            : [...current, bid];
+                          const fallback = next.length ? next : [activeBranch as MajorExamBranch];
                           onUpdateStudyPreferences({
-                            selectedMajorBranch: b.id as MajorExamBranch,
+                            selectedMajorBranch: fallback[fallback.length - 1],
+                            selectedMajorBranches: next,
                           });
                         }}
                         className={`p-2.5 rounded-xl border text-right transition-all cursor-pointer ${

@@ -185,6 +185,8 @@ export interface UserStats {
   preferredCourseCategory: StudyCourseCategory;
   /** گرایش هدف کنکور (کد ۱۱۴۲ ارشد یا جامع دکتری) برای اعمال ضرایب دقیق */
   selectedMajorBranch: MajorExamBranch;
+  /** چندتخصصی: گرایش‌های همزمان انتخاب‌شده — خالی یعنی فقط selectedMajorBranch */
+  selectedMajorBranches?: MajorExamBranch[];
   dailyQuests: DailyQuest[];
 }
 
@@ -461,6 +463,7 @@ export function hydrateAndReconcileSavedState(
     dailyTargetQuestions: saved.stats.dailyTargetQuestions || 20,
     preferredCourseCategory: saved.stats.preferredCourseCategory || 'all',
     selectedMajorBranch: saved.stats.selectedMajorBranch || 'business',
+    selectedMajorBranches: saved.stats.selectedMajorBranches ?? [],
     dailyQuests:
       Array.isArray(saved.stats.dailyQuests) && saved.stats.dailyQuests.length > 0
         ? saved.stats.dailyQuests
@@ -1354,6 +1357,16 @@ export function getNodeEffectiveBranchCoefficient(
   return node.examCoefficient;
 }
 
+/** چندتخصصی: مؤثرترین ضریب یک مبحث در «اتحاد» گرایش‌های انتخاب‌شده (max؛ صفر فقط وقتی همه صفر است). */
+export function getMultiBranchEffectiveCoefficient(
+  node: KnowledgeNode,
+  branches: MajorExamBranch[]
+): number | null {
+  if (!branches.length) return null;
+  const values = branches.map((b) => getNodeEffectiveBranchCoefficient(node, b));
+  return Math.max(...values);
+}
+
 export function calculateROIRankings(
   nodeStates: Record<string, LearnerSixDState>,
   activeTracks: TrackId[],
@@ -1361,6 +1374,7 @@ export function calculateROIRankings(
   questions: QuestionItem[],
   studyPrefs?: {
     branch?: MajorExamBranch;
+    branches?: MajorExamBranch[];
     category?: StudyCourseCategory;
     dailyStudyHours?: number;
   }
@@ -1372,7 +1386,10 @@ export function calculateROIRankings(
   const filteredNodes = nodes.filter((n) => {
     const trackMatch = n.track === 'common' || activeTracks.includes(n.track);
     if (!trackMatch) return false;
-    const effCoeff = getNodeEffectiveBranchCoefficient(n, branch);
+    const effCoeff =
+      studyPrefs?.branches && studyPrefs.branches.length
+        ? getMultiBranchEffectiveCoefficient(n, studyPrefs.branches) ?? 0
+        : getNodeEffectiveBranchCoefficient(n, branch);
     if (effCoeff === 0) return false; // حذف دروس ضریب صفر گرایش انتخابی از برنامه مطالعه
     if (category !== 'all' && classifyNodeCourseCategory(n) !== category) {
       return false;
@@ -1383,7 +1400,11 @@ export function calculateROIRankings(
   const nodesToRank =
     filteredNodes.length > 0
       ? filteredNodes
-      : nodes.filter((n) => getNodeEffectiveBranchCoefficient(n, branch) > 0);
+      : nodes.filter((n) =>
+          studyPrefs?.branches && studyPrefs.branches.length
+            ? (getMultiBranchEffectiveCoefficient(n, studyPrefs.branches) ?? 0) > 0
+            : getNodeEffectiveBranchCoefficient(n, branch) > 0,
+        );
 
   return nodesToRank
     .map((node) => {

@@ -5,6 +5,7 @@
  */
 
 import { YEARLY_KONKOR_QUESTIONS } from './yearlyKonkorExams';
+import { PHD_EXPANSION_NODES, PHD_EXPANSION_QUESTIONS } from './phdExpansionContent';
 
 export type TrackId = 'common' | 'business' | 'industrial' | 'technology' | 'strategy';
 export type DependencyRelation = 'prerequisite' | 'cross_course';
@@ -502,6 +503,7 @@ export const INITIAL_KNOWLEDGE_NODES: KnowledgeNode[] = [
     graphPos: { layer: 3, col: 6 },
     confusableWith: ['mb.culture', 'mb.contingency'],
   },
+  ...PHD_EXPANSION_NODES,
 ];
 
 export const INITIAL_NODE_DEPENDENCIES: NodeDependency[] = [
@@ -1761,7 +1763,7 @@ export const INITIAL_INTERACTIVE_LESSONS: Record<string, InteractiveLesson> = {
     konkoorWeightLabel: 'ضریب ۳ ارشد مدیریت بازرگانی — ۳۰ تست سرنوشت‌ساز (۱۵ عمومی + ۱۵ تخصصی)',
     frequencyLabel: 'تکرار در تمامی ادوار کنکور ارشد و دکتری',
     summary:
-      'درس زبان با ضریب ۳ در کنکور ارشد مدیریت بازرگانی ترازسازترین درس برای کسب رتبه‌های تک‌رقمی است. ترکیب واژگان پرتکرار «زیر ذره‌بین» و اصطلاحات تخصصی «آرمان اشراقی» پوشش ۱۰۰ درصدی سوالات را تضمین می‌کند.',
+      'درس زبان با ضریب ۳ در کنکور ارشد مدیریت بازرگانی ترازسازترین درس برای کسب رتبه‌های تک‌رقمی است. ترکیب واژگان پرتکرار «زیر ذره‌بین» و اصطلاحات تخصصی «آرمان اشراقی» پوشش قابل‌اتکایی از پرتکرارترین الگوهای واژگانی این درس می‌دهد؛ ادعای پوشش ۱۰۰٪ فقط با مستند رسمی قابل تأیید است.',
     microSteps: [
       {
         stepNumber: 1,
@@ -3104,6 +3106,8 @@ export const INITIAL_QUESTION_BANK: QuestionItem[] = [
   },
   // ۳۲. کل بانک سؤالات شناسنامه‌دار کنکورهای سراسری سال‌های ۱۳۹۱ تا ۱۴۰۵ (به ترتیب شماره دفترچه و تفکیک درس)
   ...YEARLY_KONKOR_QUESTIONS,
+  // ۳۳. گسترش محتوای دکتری: دروس غایب بسته‌های رسمی (مدیریت دولتی، سیاست‌گذاری، MIS/مدیریت دانش، مالی، روش تحقیق، HR، زبان، آمار)
+  ...PHD_EXPANSION_QUESTIONS,
 ];
 
 /**

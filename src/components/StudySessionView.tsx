@@ -339,7 +339,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
             </div>
             <button
               type="button"
-              onClick={onExitSession}
+              onClick={() => setIsFinished(true)}
               className="text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
             >
               پایان جلسه

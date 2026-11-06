@@ -66,18 +66,15 @@ export const TelegramBotSimulatorModal: React.FC<TelegramBotSimulatorModalProps>
       sender: 'bot',
       time: '۲۱:۴۵',
       text:
-        `سلام داوطلب گرامی! به ربات تلگرام «سامانه یادگیری تطبیقی کنکور دکتری (AEL v3.0)» خوش آمدید.\n\n` +
-        `وضعیت فعلی پروفایل شما:\n` +
-        `• وضعیت حساب: ${
-          stats.isZeroStateNewUser ? 'کاربر جدید (رکوردهای کاملاً صفر 0%)' : 'فعال و کالیبره‌شده'
-        }\n` +
-        `• پاسخ‌های ثبت‌شده: ${stats.totalAnswered} تست | درسنامه‌های امتیازدهی‌شده: ${stats.lessonsRatedCount}\n` +
-        `• پیوستگی: ${stats.streakDays} روز | امتیاز: ${stats.xp} XP\n\n` +
-        `می‌توانید هم از داخل چت تلگرام به درسنامه‌ها امتیاز ۱ تا ۵ بدهید و هم با دکمه‌های شیشه‌ای زیر مستقیماً وارد بخش مورد نظر در مینی‌اپ شوید:`,
+        `سلام! آماده‌ای مسیر مرور تا روز کنکورت را بر اساس سطحت بچینیم؟ 🎯\n\n` +
+        `وضعیت امروز شما:\n` +
+        `• پیوستگی: ${stats.streakDays} روز | امتیاز: ${stats.xp} XP\n` +
+        `• تست‌های پاسخ‌داده‌شده: ${stats.totalAnswered} | درسنامه‌های خوانده‌شده: ${stats.lessonsRatedCount}\n\n` +
+        `از دکمه‌های زیر شروع کن؛ دستورهای /lesson و /radar هم در چت کار می‌کنند.`,
       inlineButtons: [
         [
           {
-            label: 'باز کردن درسنامه پایه (لایه ۰) در مینی‌اپ',
+            label: '📖 شروع از درسنامهٔ پایه',
             variant: 'link',
             onClick: () => {
               tmaHaptic.impact('medium');
@@ -87,21 +84,11 @@ export const TelegramBotSimulatorModal: React.FC<TelegramBotSimulatorModalProps>
         ],
         [
           {
-            label: 'آزمون تعیین سطح تطبیقی (۵ سؤال گلوگاهی)',
+            label: '🎯 ۵ سؤال تعیین سطح (۵ دقیقه)',
             variant: 'link',
             onClick: () => {
               tmaHaptic.impact('medium');
               onTriggerDeepLink({ type: 'placement' });
-            },
-          },
-        ],
-        [
-          {
-            label: 'ریست کامل رکوردها به وضعیت صفر (Zero-State)',
-            variant: 'primary',
-            onClick: () => {
-              tmaHaptic.notify('warning');
-              onTriggerDeepLink({ type: 'zero_reset' });
             },
           },
         ],

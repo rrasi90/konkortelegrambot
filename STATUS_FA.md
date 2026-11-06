@@ -28,6 +28,7 @@
 - **شناسنامه‌ها:** ۱۶۸ رکورد در [content/learning-evidence/question-index.json](content/learning-evidence/question-index.json) = ۱۳۹ رکورد کنکور + ۲۹ تمرین تألیفی؛ فهرست [docs/ael-next/11_SOURCE_INVENTORY_FA.md](docs/ael-next/11_SOURCE_INVENTORY_FA.md). شمار نشان‌دهندهٔ پوشش کل کنکورها نیست.
 - **خطای ← مطالعه:** پیوند هر تمرین تألیفی به نکته/فرمول/مثال (`readingBlock`)؛ ارتباط با صفحهٔ کتاب کنکور تأیید نشده.
 - **شواهد تاریخی:** یک الگوی کاندید BCG (۱۴۰۲/818C/185 و ۱۴۰۵/319A/188) با وضعیت `trace_pending_review`؛ دو رکورد کشش تقاضا به‌دلیل تعارض از استخراج کنار گذاشته شدند ([content/learning-evidence/source-audit.json](content/learning-evidence/source-audit.json)).
+- **بازیابی کلیدهای تاریخی (۲۰۲۶-۱۱-۰۷):** اتحاد OCR + لایهٔ متن PDF، ۴۴۴۹ ورودی کلید (از ۳۸۶۸)؛ پوشش کامل کلید ۱۲ از ۱۵ سال؛ شواهد فقط محلی؛ [MISSING_ANSWER_RECOVERY_REPORT.md](docs/ael-implementation/MISSING_ANSWER_RECOVERY_REPORT.md) و [DATA_QUALITY_DASHBOARD.md](docs/ael-implementation/DATA_QUALITY_DASHBOARD.md)
 - **شبیه‌ساز استخری سرور:** با بستن اتمیک و تلاش مجدد (مهاجرت‌های 0017 و 0018، اعمال روی محیط مقصد جداست)؛ `contentOfficiality: scaled_pool` — بازسازی رسمی دفترچه ادعا نمی‌شود.
 - **آفلاین:** فایل HTML مستقل با ذخیره/پشتیبان/بازیابی نسخه‌دار؛ کلید تمرین‌های تألیفی داخل فایل است و برای آزمون محرمانه مناسب نیست.
 

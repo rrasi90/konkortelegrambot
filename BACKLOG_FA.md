@@ -316,3 +316,4 @@
 | AEL-316 | Golden Dataset & Regression | PARTIAL — ۱۸ تست قرارداد؛ Golden واقعی پس از OCR کامل |
 | AEL-317 | Dynamic Course Catalog & Learner Retrieval | NOT_STARTED (Catalog پویای مأموریت 002 مبناست؛ RET-01..20 باز) |
 | AEL-318 | Legacy Backfill & Parity | NOT_STARTED |
+| AEL-320 | Historical Exam Recovery & Verification (مأموریت 002) | **هسته PASS** — بازیابی ۵۸۱ پاسخ کلید از لایهٔ متن PDF (۹۰٫۷٪ گپ‌ها)، حل ۸ ورودی مشکوک ۱۴۰۴، ۱۰ گروه تکرار دقیق بین‌سال + ۱۶ جفت نزدیک، ۱۳ سند گزارش در docs/ael-implementation؛ مسدود: کلید ۱۴۰۵ (کیفیت اسکن/اعتبارنامه سنجش)، ۶۳ گپ ۱۴۰۰/۱۴۰۲، PhD صفر، ۲۲۷۸ گپ سؤال دفترچه‌ها (OCR-level) |

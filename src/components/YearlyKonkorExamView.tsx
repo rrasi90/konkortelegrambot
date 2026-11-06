@@ -60,6 +60,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
 
   // تایمر شبیه‌ساز جلسه کنکور
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+  // تایمر متناسب با تعداد سؤال‌های بانک این سال (~۸۰ ثانیه/سؤال — نسبت واقعی کنکور)، نه زمان کل دفترچهٔ ۲۸۵ سؤالی
   const [remainingSeconds, setRemainingSeconds] = useState<number>(150 * 60);
 
   useEffect(() => {
@@ -78,8 +79,10 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
 
   useEffect(() => {
     setIsTimerRunning(false);
-    setRemainingSeconds((currentBooklet.durationMinutes || 150) * 60);
-  }, [currentBooklet]);
+    // نسبت زمان به تعداد سؤال‌های واقعی بانک (~۸۰ ثانیه/سؤال) — تایمر تمرینی، نه شبیه‌سازی زمان کل دفترچه
+    const bankCount = YEARLY_KONKOR_QUESTIONS.filter((q) => q.examYear === selectedYear && !q.isQuarantinedProof).length;
+    setRemainingSeconds(Math.max(5 * 60, bankCount * 80));
+  }, [currentBooklet, selectedYear]);
 
   useEffect(() => {
     if (!isTimerRunning) return;
@@ -230,7 +233,9 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
     setRevealedQuestions(nextRevealed);
     setActiveQuestionIndex(0);
     setIsTimerRunning(false);
-    setRemainingSeconds((currentBooklet.durationMinutes || 150) * 60);
+    // نسبت زمان به تعداد سؤال‌های واقعی بانک (~۸۰ ثانیه/سؤال) — تایمر تمرینی، نه شبیه‌سازی زمان کل دفترچه
+    const bankCount = YEARLY_KONKOR_QUESTIONS.filter((q) => q.examYear === selectedYear && !q.isQuarantinedProof).length;
+    setRemainingSeconds(Math.max(5 * 60, bankCount * 80));
   };
 
   const handleViewYearBookletSummary = () => {
