@@ -236,7 +236,7 @@ describe('AEL subject-range parsing — fine topic mapping', () => {
   });
 
   it('flags count mismatch (declared != to-from+1) as needs_review without guessing', () => {
-    expect(ranges[3].issues.some((i) => i.kind === 'count_mismatch')).toBe(true);
+    expect(ranges[3].issues.some((i: { kind: string }) => i.kind === 'count_mismatch')).toBe(true);
     expect(ranges[3].status).toBe('needs_review');
   });
 
@@ -244,7 +244,7 @@ describe('AEL subject-range parsing — fine topic mapping', () => {
     const unmatched = ranges.find((r) => r.material_raw === 'پزاریلی');
     if (unmatched.sectionId === null) {
       expect(unmatched.status).toBe('needs_review');
-      expect(unmatched.issues.some((i) => i.kind === 'material_unmatched')).toBe(true);
+      expect(unmatched.issues.some((i: { kind: string }) => i.kind === 'material_unmatched')).toBe(true);
     } else {
       // acceptable only via explicit pattern in the dictionary (no hidden guessing)
       expect(unmatched.basis).toBe('pattern');
