@@ -204,6 +204,10 @@ function pushEvidence(evidence, rule, quote, weight) {
  * - Weak evidence only → 'unknown', 'low'.
  * - Contradicting degree words with no strong tie → 'unknown', status 'ambiguous'.
  */
+/**
+ * @param {string} enText
+ * @param {{ setCode?: string | null, filename?: string, materialsEvidence?: boolean, collectionName?: string | null }} [options]
+ */
 export function detectExamLevel(enText, { setCode = null, filename = '', materialsEvidence = false, collectionName = null } = {}) {
   const text = normalizeNumText(enText);
   const evidence = [];
