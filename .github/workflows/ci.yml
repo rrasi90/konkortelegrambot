@@ -10,7 +10,10 @@ jobs:
     name: Typecheck, Unit & Integration Tests
     runs-on: ubuntu-latest
     steps:
+      # The PDF guard compares against origin/main; fetch full history so the base ref exists.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
