@@ -1,0 +1,94 @@
+/* AEL Design Tokens — SINGLE SOURCE OF TRUTH
+   مرجع: docs/design/AEL_VISUAL_LANGUAGE_SPEC.md
+   مصرف‌کننده‌ها:
+     - React/Vite: از طریق @import در src/index.css
+     - Mini App (static): کپی همگام در apps/miniapp/design-tokens.css
+       (سورس کانویکال همین فایل است؛ در صورت تغییر، کپی مینی‌اپ باید همان شود)
+   قانون: Warm Charcoal دائمی برای Mini App؛ هرگز با prefers-color-scheme روشن نمی‌شود.
+   اعداد: ارقام فارسی در HTML/JS، نه در این فایل. */
+
+:root {
+  /* Background */
+  --app-bg: #1b1a17;
+  --app-bg-deep: #141312;
+
+  /* Surfaces (Warm Charcoal ده) */
+  --ael-surface-primary: #262524;
+  --ael-surface-secondary: #2e2d2b;
+  --ael-surface-elevated: #3a3937;
+
+  /* Borders */
+  --ael-border-subtle: rgba(255, 255, 255, 0.07);
+  --ael-border-active: rgba(255, 255, 255, 0.14);
+
+  /* Text */
+  --ael-text-primary: #f4f3f1;
+  --ael-text-secondary: #b1b0b0;
+  --ael-text-muted: #7a7a7c;
+
+  /* Accents — معنای ثابت:
+     teal = اقدام اصلی / مرور امروز
+     blue = آزمون
+     purple = مرور / FSRS
+     green = تسلط / صحیح
+     amber = هشدار / دفتر خطا
+     orange = رویداد / کوییز شبانه */
+  --ael-accent-teal: #36c4bd;
+  --ael-accent-blue: #658ff2;
+  --ael-accent-purple: #9274dc;
+  --ael-accent-green: #55b995;
+  --ael-accent-amber: #d6a45f;
+  --ael-accent-orange: #dc805d;
+
+  /* Radius (4px Grid) */
+  --radius-card-lg: 24px;
+  --radius-card-md: 20px;
+  --radius-card-sm: 16px;
+  --radius-pill: 999px;
+
+  /* Elevation — Shadow نرم + Border ظریف + اختلاف روشنایی */
+  --ael-shadow-card: 0 8px 24px rgba(0, 0, 0, 0.28);
+  --ael-shadow-raised: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+  /* Typography */
+  --ael-font: 'Vazirmatn FD', 'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Spacing (4px Grid) */
+  --ael-space-1: 4px;
+  --ael-space-2: 8px;
+  --ael-space-3: 12px;
+  --ael-space-4: 16px;
+  --ael-space-5: 20px;
+  --ael-space-6: 24px;
+  --ael-space-8: 32px;
+}
+
+/* ساختار پایه کارت — همه Variantها از این ارث می‌برند */
+.ael-card {
+  background: var(--ael-surface-primary);
+  border: 1px solid var(--ael-border-subtle);
+  border-radius: var(--radius-card-md);
+  padding: var(--ael-space-4);
+  box-shadow: var(--ael-shadow-card);
+  min-width: 0; /* ضد Overflow در 320px */
+}
+.ael-card--lg { border-radius: var(--radius-card-lg); padding: var(--ael-space-5); }
+.ael-card--sm { border-radius: var(--radius-card-sm); padding: 14px; }
+
+/* کارت تعاملی — Keyboard Accessible واقعی */
+.ael-card--clickable {
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 180ms ease, background 180ms ease;
+}
+.ael-card--clickable:hover { border-color: var(--ael-border-active); transform: translateY(-1px); }
+.ael-card--clickable:active { transform: scale(0.98); }
+.ael-card--clickable:focus-visible {
+  outline: 2px solid var(--ael-accent-teal);
+  outline-offset: 2px;
+}
+/* کارت غیرتعاملی نباید ظاهر کلیک داشته باشد */
+.ael-card--static { cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ael-card--clickable { transition: none; }
+}

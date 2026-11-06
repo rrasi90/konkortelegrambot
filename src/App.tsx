@@ -1024,13 +1024,13 @@ export default function App() {
         {activeTab === 'patches' && <CodePatchesView />}
       </main>
 
-      {/* نوار ناوبری پایین موبایل — حداکثر ۵ مقصد اصلی (رهنمود ناوبری موبایل) */}
+      {/* نوار ناوبری پایین موبایل — شناور Warm Charcoal (AEL Visual Language) */}
       <nav
         className={`${
           isTmaMobileFrame
-            ? 'sticky bottom-0 max-w-[440px] mx-auto w-full rounded-b-[20px]'
-            : 'fixed bottom-0 inset-x-0 md:hidden w-full'
-        } z-40 bg-[#fffdf8]/96 dark:bg-[#171512]/96 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800/90 px-1.5 sm:px-2 py-1 sm:py-1.5 pb-safe`}
+            ? 'sticky bottom-[12px] max-w-[440px] mx-auto w-[calc(100%-24px)] rounded-[24px]'
+            : 'fixed bottom-[12px] inset-x-[12px] md:hidden w-[calc(100%-24px)] max-w-[560px] mx-auto rounded-[24px]'
+        } z-40 bg-[#262524]/92 dark:bg-[#262524]/92 backdrop-blur-xl border border-white/14 shadow-2xl px-2 py-2 pb-safe`}
       >
         <div className="grid grid-cols-5 gap-1">
           {[
@@ -1050,10 +1050,10 @@ export default function App() {
                   setIsMoreMenuOpen(false);
                   setActiveTab(item.id as ActiveTab);
                 }}
-                className={`flex flex-col items-center justify-center py-1.5 rounded-lg text-[10px] font-medium transition-all active:scale-95 cursor-pointer ${
+                className={`flex flex-col items-center justify-center py-1.5 rounded-2xl text-[10px] font-medium transition-all active:scale-95 cursor-pointer min-h-[52px] ${
                   isActive
-                    ? 'text-blue-700 dark:text-blue-300 font-bold bg-blue-500/10'
-                    : 'text-slate-500 dark:text-slate-400'
+                    ? 'text-[#36c4bd] dark:text-[#36c4bd] font-bold bg-[#36c4bd]/13'
+                    : 'text-slate-500 dark:text-[#b1b0b0]'
                 }`}
               >
                 <Icon className="w-4 h-4 mb-0.5" />
@@ -1069,10 +1069,10 @@ export default function App() {
             }}
             aria-expanded={isMoreMenuOpen}
             aria-haspopup="menu"
-            className={`flex flex-col items-center justify-center py-1.5 rounded-lg text-[10px] font-medium transition-all active:scale-95 cursor-pointer ${
+            className={`flex flex-col items-center justify-center py-1.5 rounded-2xl text-[10px] font-medium transition-all active:scale-95 cursor-pointer min-h-[52px] ${
               ['subject_hub', 'map', 'notebook', 'patches'].includes(activeTab)
-                ? 'text-blue-700 dark:text-blue-300 font-bold bg-blue-500/10'
-                : 'text-slate-500 dark:text-slate-400'
+                ? 'text-[#36c4bd] dark:text-[#36c4bd] font-bold bg-[#36c4bd]/13'
+                : 'text-slate-500 dark:text-[#b1b0b0]'
             }`}
           >
             <MoreHorizontal className="w-4 h-4 mb-0.5" />

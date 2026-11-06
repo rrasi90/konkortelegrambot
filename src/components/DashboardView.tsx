@@ -44,6 +44,7 @@ import {
 } from 'lucide-react';
 import { MasteryVelocityChart } from './MasteryVelocityChart';
 import { KonkorScoreSimulatorCard } from './KonkorScoreSimulatorCard';
+import { AelCard, SectionHeader } from './ui';
 
 interface DashboardViewProps {
   nodes: KnowledgeNode[];
@@ -264,7 +265,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* تب ۱: برنامه و مرور امروز (صفحه اول خلوت، متمرکز و بدون شلوغی) */}
       {/* =================================================================== */}
       {activeSubTab === 'today' && (
-        <div className="bento-grid">
+        <>
+          <SectionHeader title="مرور امروز" accent="var(--ael-accent-teal)" actionLabel="نقشه راه" onAction={() => setActiveSubTab('priorities')} />
+          <div className="bento-grid">
           {/* ۱. کاشی بنتو اصلی شروع مرور تطبیقی امروز (۷ ستون - Glass Hero) */}
           <div className="bento-span-7 glass-card-hero p-6 text-white flex flex-col justify-between">
             <div className="space-y-4">
@@ -440,7 +443,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-200/60 dark:border-slate-800/80 space-y-1.5">
+            <AelCard as="div" size="sm" accent="teal" className="pt-3 border-t border-slate-200/60 dark:border-slate-800/80 space-y-1.5" style={{ background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 }}>
               {stats.dailyQuests.map((q) => (
                 <div
                   key={q.id}
@@ -467,7 +470,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </span>
                 </div>
               ))}
-            </div>
+            </AelCard>
           </div>
 
           {/* ۳. سه کارت میانبر سریع و مینیمال به بخش‌های اصلی (هر کدام ۴ ستون بنتو) */}
@@ -593,7 +596,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               ))}
             </div>
           </div>
-        </div>
+          </div>
+          </>
       )}
 
       {/* =================================================================== */}
