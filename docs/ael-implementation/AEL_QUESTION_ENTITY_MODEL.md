@@ -29,20 +29,21 @@ Question 1───* Explanation            (پاسخ علمی نسخه‌بند
 | `stem_raw` | text | متن خام استخراج‌شده (حفظ همیشه) |
 | `options` | jsonb | چهار گزینه: `{label, text_raw, text_normalized}` |
 | `answer_option` | enum(1..4) | پاسخ علمی نهایی — فقط با Authoring+SME پر می‌شود، از کلید رسمی کپی نمی‌شود |
-| `answer_conflict_with_official_key` | bool + detail | اگر پاسخ علمی با کلید رسمی هر ظهور اختلاف دارد |
 | `content_hash` | sha256 | مبنای Deduplication (بخش 4) |
 | `verification_status` | draft/needs_review/sme_approved/published | Gate مستقل |
 | `rights_status` | unknown/pending_official_check/authorized | Gate حقوق (H-CONK/SRC-02) |
 
 - سؤالِ بدون ظهور آزمونی مجاز است (سؤال دست‌ساز در آینده).
-- `answer_option` هرگز از `AnswerKeyEntry` باقی‌مانده‌ی کپی نمی‌شود؛ اختلاف با کلید
-  یک دادهٔ ارزشمند است نه خطا.
+- `answer_option` هرگز از `AnswerKeyEntry` کپی نمی‌شود؛ اختلاف با کلید یک دادهٔ ارزشمند است نه خطا.
+- اختلاف پاسخ علمی و کلید، ویژگی ثابت `Question` نیست؛ باید در رابطه/موجودیت
+  `KeyDisagreement` با ارجاع به `appearance_id` و `answer_key_entry_id` ثبت شود.
+  یک سؤال تکراری ممکن است در دو سال کلیدهای متفاوت یا اصلاحیه داشته باشد.
 
 ### 2.2 QuestionAppearance — ظهور تاریخی
 
 | فیلد | نوع | یادداشت |
 |---|---|---|
-| `appearance_id` | id | مثلا `qa-<source_id>-<num>-p<page>` (مطابق خروجی فعلی تحلیل ساختاری) |
+| `appearance_id` | id | شناسه پایدار مبتنی بر source/version + page + line/block + occurrence؛ شماره سؤال به‌تنهایی کافی نیست |
 | `question_id` | FK → Question | بعد از Dedup مقدار می‌گیرد |
 | `exam_document_id` | FK → ExamDocument | دفترچهٔ حاوی ظهور |
 | `exam_year` / `exam_level` / `exam_set_code` / `booklet_code` | متادیتا | کپی از سند با Evidence و status (proposed/needs_review) — منبع حقیقت، ExamDocument است |
@@ -50,6 +51,7 @@ Question 1───* Explanation            (پاسخ علمی نسخه‌بند
 | `topic_candidates` | jsonb | کاندیداهای بخش/درس از جدول مواد امتحانی + status |
 | `source_locator` | jsonb | صفحه/خط MD و صفحهٔ PDF |
 | `ocr_issues` | jsonb | `short_stem` / `options_not_4` / `no_options_found` / … |
+| `context_links` | relation → `QuestionContext` | متن مشترک، جدول، شکل، نمودار یا قطعهٔ صفحهٔ مجاور موردنیاز برای فهم سؤال |
 
 - ظهورها هرگز به هم merge نمی‌شوند؛ Dedup فقط `question_id` را به چند ظهور وصل می‌کند.
 - در فاز فعلی، سؤال‌های استخراج‌شده (`questions-*.jsonl`) فقط «ظهور» هستند؛ تا قبل از
@@ -82,7 +84,7 @@ Question 1───* Explanation            (پاسخ علمی نسخه‌بند
 | `solution_method` | text | روش حل گام‌به‌گام |
 | `references` | jsonb | منابع علمی و ارجاعات |
 | `difficulty_level` | enum | آسان/متوسط/دشوار (SME تأیید می‌کند) |
-| `key_disagreement` | jsonb | اختلاف با کلید رسمی هر ظهور + توضیح |
+| `key_disagreement` | relation → `KeyDisagreement` | اختلاف با کلید رسمی، به‌ازای هر ظهور/نسخه کلید؛ نه یک فیلد مبهم در Explanation |
 | `sme_review_status` | draft/pending_review/approved/rejected | هویت بازبین ثبت می‌شود |
 | `published_status` | draft/published | انتشار کنترل‌شده، Gate جدا |
 
@@ -90,12 +92,52 @@ Question 1───* Explanation            (پاسخ علمی نسخه‌بند
   (با نسخه‌ها) سه ظهور را پوشش می‌دهد و `key_disagreement` می‌تواند به‌ازای هر ظهور
   کلید متفاوت را ثبت کند.
 
+
+### 2.5 QuestionContext — زمینهٔ مشترک یا مرجع سؤال
+
+| فیلد | نوع | یادداشت |
+|---|---|---|
+| `context_id` | id | شناسه پایدار قطعه زمینه |
+| `context_type` | passage/table/figure/chart/formula/other | نوع زمینه |
+| `raw_content` | text/jsonb | متن خام یا توصیف ساختاری؛ تصویر/فایل در Storage با ارجاع نگهداری می‌شود |
+| `source_locator` | jsonb | سند، نسخه، صفحه، بلوک/خط و محدوده |
+| `extraction_status` | proposed/needs_review/approved | استخراج زمینه به‌تنهایی تأیید علمی نیست |
+
+- یک قطعه زمینه می‌تواند به چند QuestionAppearance متصل باشد؛ برای مثال یک متن درک مطلب
+  ممکن است مرجع سه سؤال باشد.
+- اگر زمینه از صفحه قبل یا بعد می‌آید، اتصال باید صریح و قابل ردیابی باشد.
+- سؤال بدون زمینهٔ ضروری، حتی اگر stem و گزینه‌هایش استخراج شده باشند، برای Authoring
+  و انتشار آماده نیست.
+
+### 2.6 KeyDisagreement — اختلاف پاسخ علمی و کلید
+
+| فیلد | نوع | یادداشت |
+|---|---|---|
+| `disagreement_id` | id | |
+| `appearance_id` | FK → QuestionAppearance | ظهور دقیق آزمونی |
+| `answer_key_entry_id` | FK → AnswerKeyEntry | نسخه دقیق کلید مورد مقایسه |
+| `scientific_answer` | enum(1..4) | پاسخ علمی تأییدشده در نسخه Explanation |
+| `official_option` | enum(1..4) | مقدار رسمی از AnswerKeyEntry؛ کپی مستقل نشود |
+| `classification` | extraction_error/key_revision/official_key_error/ambiguous/unresolved | علت اختلاف؛ تا زمان بررسی می‌تواند unresolved باشد |
+| `evidence` | jsonb | استدلال، منبع، تصمیم و بازبین |
+
+- اختلاف فقط پس از وجود پاسخ علمی مستقل قابل ثبت است.
+- اختلاف کلید اولیه و نهایی باید با دو AnswerKeyEntry جدا و ارتباط با نسخه سند حفظ شود.
+
+### 2.7 SourceCitation و ReviewDecision — شواهد و ممیزی
+
+هر ارجاع علمی باید حداقل عنوان، نویسنده/سازمان، ویرایش، سال، ناشر، شناسه پایدار
+(ISBN/DOI/URL در صورت وجود)، فصل/صفحه و ادعایی را که پشتیبانی می‌کند ثبت کند.
+نام کتاب بدون محل ارجاع، شاهد کافی برای تأیید پاسخ نیست.
+
+هر تصمیم بازبینی باید reviewer identity، نقش، زمان، وضعیت قبل/بعد، دلیل، شواهد،
+نسخه محتوا و در صورت رد، reason code داشته باشد. هویت بازبین نباید از روی نقش فنی
+یا دسترسی ادمین استنتاج شود.
+
 ## 3. مسیر داده از تحلیل ساختاری تا این مدل
 
-1. خروجی فعلی `questions-<source_id>.jsonl` → **QuestionAppearance** (یک‌به‌یک موقت با Question).
-2. خروجی `key-<source_id>.jsonl` + `pairing-results.jsonl` → **AnswerKeyEntry** روی
-   ظهورهای همان سند جفت‌شده (فقط pairing با وضعیت `candidate_multi_evidence` یا
-   تصمیم انسانی؛ `needs_review`/`unresolved` قرنطینه).
+1. خروجی فعلی `questions-<source_id>.jsonl` → **QuestionAppearance**؛ `question_id` فعلی فقط provisional/staging identity است و تا Dedup نباید به‌عنوان هویت علمی پایدار تلقی شود.
+2. خروجی `key-<source_id>.jsonl` + `pairing-results.jsonl` → **AnswerKeyEntry** فقط وقتی pairing بدون تعارض باشد و وضعیت آن `candidate_multi_evidence` یا تصمیم انسانیِ ثبت‌شده باشد؛ `needs_review`، `unresolved` و هر pairing دارای `conflicts` قرنطینه می‌شوند و FK اتصال نمی‌گیرند.
 3. مرحلهٔ Deduplication → ادغام هویت علمی، چند ظهور → یک Question.
 4. مرحلهٔ Authoring + SME → Explanation.
 
@@ -114,3 +156,22 @@ Question 1───* Explanation            (پاسخ علمی نسخه‌بند
 - تکرارهای هر سالِ یکسان در همان دفترچه (دو ظهور با شمارهٔ متفاوت) دستهٔ جدا دارند
   («تکرار درون‌دفترچه‌ای») و با Evidence گزارش می‌شوند.
 - هیچ ادغامی خودکار نیست؛ خروجی، فهرست کاندیداست و تصمیم با SME است.
+
+## 5. قیود یکپارچگی تکمیلی پیش از Migration
+
+1. یکتایی `(exam_document_version_id, source_locator, occurrence_index)` برای ظهور؛
+   یکتایی صرفاً بر اساس `question_number` یا `page + question_number` کافی نیست.
+2. هر `AnswerKeyEntry` باید به یک `QuestionAppearance` و یک نسخه `ExamDocument`
+   از نوع answer_key متصل شود؛ نوع سند و pairing باید در سطح سرویس اعتبارسنجی شود.
+3. `official_option` و `scientific_answer` دو مفهوم مستقل‌اند؛ هیچ trigger یا importer
+   نباید یکی را به دیگری کپی کند.
+4. `QuestionContext` می‌تواند چند ظهور را پوشش دهد؛ حذف یا اصلاح زمینه نباید سابقه
+   appearanceها را بازنویسی کند.
+5. گزینه‌ها در لایه استخراج می‌توانند ناقص یا بیش از چهار مورد باشند و با وضعیت
+   بازبینی ذخیره شوند؛ محدودیت نهایی نوع آزمون در مرحله تأیید اعمال می‌شود، نه با
+   truncate خاموش گزینه‌ها.
+6. هیچ وضعیت `ok` استخراجی به معنی `sme_approved`، `rights_authorized` یا
+   `published` نیست.
+7. پیش از ساخت Migration، این طراحی باید با جدول `questions` فعلی، قراردادهای
+   importer، Data Dictionary و §3.2 سند مادر تطبیق داده شود؛ این سند به‌تنهایی
+   مجوز ایجاد schema موازی نیست.
