@@ -447,6 +447,27 @@ export function mapQuestionToRange(ranges, questionNumber) {
 }
 
 // ---------------------------------------------------------------------------
+// Pairing selection — conflicts are never materialized as a relationship
+// ---------------------------------------------------------------------------
+
+/**
+ * Select the best candidate for reporting while allowing a definitive
+ * candidate link only when there is no known contradiction.
+ * A conflicted best candidate remains visible for review, but paired=false.
+ */
+export function selectPairingCandidate(scored) {
+  const ranked = [...scored].sort(
+    (a, b) => (b.conflicts.length === 0) - (a.conflicts.length === 0) || b.score - a.score,
+  );
+  const best = ranked[0] ?? null;
+  return {
+    best,
+    paired: Boolean(best && best.conflicts.length === 0),
+    ranked,
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Multi-evidence paper ↔ key pairing
 // ---------------------------------------------------------------------------
 
