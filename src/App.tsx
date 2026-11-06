@@ -278,6 +278,7 @@ export default function App() {
       nodeStates,
       stats.activeTracks,
       stats.selectedMajorBranch,
+      stats.selectedMajorBranches,
       stats.preferredCourseCategory,
       stats.dailyStudyHours,
       nodes,
@@ -313,6 +314,7 @@ export default function App() {
     nodes,
     stats.dailyTargetQuestions,
     stats.selectedMajorBranch,
+    stats.selectedMajorBranches,
     stats.preferredCourseCategory,
   ]);
 
