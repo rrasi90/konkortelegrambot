@@ -1,0 +1,17 @@
+exam_level,exam_year,exam_code,booklet,paper_present,paper_extracted,key_present,union_key_entries,union_key_span,union_key_holes,key_disputed,correction_notice,paper_source,key_source,paper_sha256,key_sha256,rights_status,verification_status,remaining_gap
+msc_management,1390,1142,,no,,yes,320,320,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1391,1142,,yes,119,yes,320,320,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1392,1142,,yes,149,yes,320,320,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1393,1142,,yes,126,yes,295,295,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1394,1142,,yes,186,yes,310,310,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1395,1142,,yes,237,yes,310,310,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1396,1142,,yes,209,yes,310,310,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1397,1142,,yes,226,yes,295,295,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1398,1142,,yes,216,yes,295,295,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1399,1142,,yes,183,yes,295,295,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1400,1142,,yes,162,yes,236,284,48,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1401,1142,,yes,190,yes,295,295,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1402,1142,,no,,yes,270,285,15,0,not_found,local-archive (corrupted) + mastertest download (no text layer),local-archive,,,pending_official_check,pending_review
+msc_management,1403,1142,,yes,171,yes,285,285,0,0,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1404,1142,,yes,181,yes,293,285,0,8,not_found,local-archive,local-archive,,,pending_official_check,pending_review
+msc_management,1405,1142,,yes,157,yes,0,None,,0,not_found,local-archive,local-archive (unusable scan) + official sanjesh system (needs credentials),,,pending_official_check,pending_review

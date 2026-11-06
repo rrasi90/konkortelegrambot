@@ -202,6 +202,9 @@ function extractQuestions(source, mdText, subjectRanges) {
     if (!qtext || qtext.length < 4) issues.push('short_stem');
     if (opts.length > 0 && opts.length < 4) issues.push('options_not_4');
     if (opts.length === 0) issues.push('no_options_found');
+    // cloze/passage items: the numbered line IS the four options (stem is the shared
+    // passage above) — honest classification, not a parser failure
+    if (/^\s*\(?\s*1\s*\)/.test(qtext || '') && opts.length >= 4) issues.push('cloze_options_only_item');
     // topic candidate from the validated subject-range table (never a guess)
     const rng = mapQuestionToRange(subjectRanges ?? [], num);
     const topicCandidates = rng
@@ -245,9 +248,18 @@ function extractQuestions(source, mdText, subjectRanges) {
       const line = lines[li];
       // --- table rows ---
       if (line.includes('<tr>') || line.includes('<td')) {
+        let colspanStem = '';
         for (const rm of line.matchAll(/<tr>([\s\S]*?)<\/tr>/g)) {
           const cells = [...rm[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((c) => cellText(c[1]));
           if (cells.length < 2) continue;
+          // a wide colspan cell holding only text is the stem of the next numbered row
+          const stemCell = rm[1].match(/<td[^>]*colspan[^>]*>([\s\S]*?)<\/td>/);
+          if (stemCell) {
+            const cand = cellText(stemCell[1]);
+            if (cand.length > 20 && !/\(?\s*[1-4]\s*\)/.test(toEn(cand)) && !/^\d+\s*$/.test(toEn(cand))) {
+              colspanStem = cand;
+            }
+          }
           const first = toEn(cells[0]);
           const qm = first.match(/^([0-9]{1,3})\s*-?\s*$/);
           if (!qm) continue; // continuation / header rows
@@ -268,8 +280,10 @@ function extractQuestions(source, mdText, subjectRanges) {
             }
           }
           opts = opts.slice(0, 4);
-          // stem may be in a colspan cell on previous row; we record what we have
-          pushQ(qm[1], num, '', opts, pg.page, li + 1, true);
+          // stem may be in a colspan cell on a previous row; we record what we have
+          const stem = colspanStem || '';
+          colspanStem = '';
+          pushQ(qm[1], num, stem, opts, pg.page, li + 1, true);
         }
         continue;
       }
@@ -414,6 +428,29 @@ for (const src of sources) {
     totalQ += qs.length;
     topicMapped += qs.filter((q) => q.topic_candidates[0].section_id).length;
     topicNeedsReview += qs.filter((q) => !q.topic_candidates[0].section_id).length;
+    // question-number holes: numbers 1..declared-span never extracted at all.
+    // Span comes from the subject-range table (declared truth); extracted max may
+    // include OCR noise, so it is only a fallback.
+    if (qs.length) {
+      const declaredMax = src.subject_ranges?.ranges?.length
+        ? Math.max(...src.subject_ranges.ranges.map((r) => r.to_question))
+        : src.max_question;
+      const nums = new Set(qs.map((q) => q.question_number));
+      const holes = [];
+      for (let n = 1; n <= declaredMax; n++) if (!nums.has(n)) holes.push(n);
+      src.question_hole_count = holes.length;
+      if (holes.length) {
+        quarantine.push({
+          kind: 'question_number_gaps',
+          file: src.filename,
+          document_id: src.document_id,
+          count: holes.length,
+          span_max: declaredMax,
+          span_basis: src.subject_ranges?.ranges?.length ? 'subject_table' : 'extracted_max',
+          first_holes: holes.slice(0, 60),
+        });
+      }
+    }
     writeJsonl(`questions-${src.source_id}.jsonl`, qs);
   }
   if (src.document_type.value === 'answer_key') {
