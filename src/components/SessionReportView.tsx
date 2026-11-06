@@ -103,10 +103,17 @@ export const SessionReport: React.FC<SessionReportProps> = ({
               <span>کارنامه این جلسه</span>
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-6">
-              {results.length > 0
-                ? 'این گزارش فقط برای همین جلسه است؛ خطاها در دفتر خطا ذخیره شده‌اند تا بعداً مرور شوند.'
-                : 'در این جلسه کارت تستی پاسخ داده نشد (فقط درسنامه یا کارت مفهومی بود).'}
+              {results.length === 0
+                ? 'در این جلسه کارت تستی پاسخ داده نشد (فقط درسنامه یا کارت مفهومی بود).'
+                : results.length < totalCards
+                  ? `جلسه را زودتر بستید؛ ${results.length} گام از ${totalCards} گام انجام شد و همین بخش کارنامه می‌شود. خطاها در دفتر خطا ذخیره شده‌اند.`
+                  : 'این گزارش فقط برای همین جلسه است؛ خطاها در دفتر خطا ذخیره شده‌اند تا بعداً مرور شوند.'}
             </p>
+            {answered.length > 0 && accuracy >= 80 && (
+              <div className="mt-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 px-4 py-2.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                🎉 آفرین! دقت {accuracy}٪ یعنی مسیر مرور امروز درست جلو می‌رود؛ همین ریتم را نگه دارید.
+              </div>
+            )}
           </div>
           <div className="text-left">
             <div className="text-3xl font-bold tabular-nums text-slate-900 dark:text-white">
@@ -207,7 +214,9 @@ export const SessionReport: React.FC<SessionReportProps> = ({
         <div className="text-xs text-slate-500 dark:text-slate-400">
           {retryQuestionIds.length > 0
             ? `${retryQuestionIds.length} سؤال غلط برای تمرین دوباره آماده است.`
-            : 'همه پاسخ‌های این جلسه درست بود؛ برای تثبیت، مرور فردا را از دست ندهید.'}
+            : answered.length > 0
+              ? 'همه پاسخ‌های این جلسه درست بود؛ برای تثبیت، مرور فردا را از دست ندهید.'
+              : 'در این جلسه سؤالی پاسخ داده نشد؛ دفعهٔ بعد چند کارت تستی را هم امتحان کن.'}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {retryQuestionIds.length > 0 && (

@@ -112,6 +112,10 @@ export const PlacementModal: React.FC<PlacementModalProps> = ({
                 </strong>
                 تسلط مباحث پایه و پیش‌نیازها بر اساس پاسخ‌های شما تنظیم گردید.
               </div>
+              <div className="mt-2 text-xs font-bold text-slate-700 dark:text-slate-200">
+                نتیجه: {answers.filter((a) => a.wasCorrect).length} از {answers.length} پاسخ درست
+                {answers.filter((a) => a.wasCorrect).length === answers.length && ' — شروع فوق‌العاده‌ای بود! 🎉'}
+              </div>
             </div>
 
             {/* پاسخ تشریحی سؤالات تعیین سطح */}
@@ -131,7 +135,10 @@ export const PlacementModal: React.FC<PlacementModalProps> = ({
                         ) : (
                           <XCircle className="w-4 h-4 text-rose-500 shrink-0" />
                         )}
-                        <span>سؤال {idx + 1}: کلید گزینه {q.correctOption + 1}</span>
+                        <span>
+                          سؤال {idx + 1}: پاسخ شما گزینه {ans.chosenIdx + 1}
+                          {ans.wasCorrect ? ' (درست)' : ` — کلید: گزینه ${q.correctOption + 1}`}
+                        </span>
                       </span>
                       <span className="text-[11px] text-slate-500">
                         {q.sourceReference}

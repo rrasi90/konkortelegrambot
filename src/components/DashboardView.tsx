@@ -38,6 +38,7 @@ import {
   SlidersHorizontal,
   GraduationCap,
   Network,
+  CalendarClock,
   Sparkles,
   Activity,
   Calculator,
@@ -47,6 +48,7 @@ import { KonkorScoreSimulatorCard } from './KonkorScoreSimulatorCard';
 import { AelCard, SectionHeader } from './ui';
 
 interface DashboardViewProps {
+  examDate: string | null;
   nodes: KnowledgeNode[];
   stats: UserStats;
   nodeStates: Record<string, LearnerSixDState>;
@@ -92,7 +94,24 @@ const CATEGORY_LABELS: Record<StudyCourseCategory, string> = {
   language: 'زبان عمومی و تخصصی',
 };
 
+
+// ارقام فارسی + برچسب شمارش معکوس آزمون (الگوی اپ‌های شمارش معکوس: عدد روز = فوریت + افق برنامه‌ریزی)
+const FA_D = '۰۱۲۳۴۵۶۷۸۹';
+const toFaDigits = (n: number | string) => String(n).replace(/[0-9]/g, (d) => FA_D[Number(d)]);
+function examCountdownLabel(iso: string): string {
+  const target = new Date(iso + 'T00:00:00');
+  if (Number.isNaN(target.getTime())) return '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const days = Math.round((target.getTime() - today.getTime()) / 86400000);
+  if (days < 0) return `آزمون برگزار شد (${toFaDigits(Math.abs(days))} روز پیش)`;
+  if (days === 0) return 'امروز روز آزمون است — موفق باشی!';
+  if (days === 1) return 'فردا روز آزمون است';
+  return `${toFaDigits(days)} روز تا آزمون`;
+}
+
 export const DashboardView: React.FC<DashboardViewProps> = ({
+  examDate,
   nodes,
   stats,
   nodeStates,
@@ -243,9 +262,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <span className="glass-subcard px-3 py-1.5 font-bold text-slate-900 dark:text-white tabular-nums inline-flex items-center gap-1.5">
             <Flame className="w-3.5 h-3.5 text-amber-500" />
             <span>
-              {stats.streakDays} روز پیوسته · {stats.xp} XP
+              {toFaDigits(stats.streakDays)} روز پیوسته · {toFaDigits(stats.xp)} XP
             </span>
           </span>
+          {examDate && (
+            <span className="glass-subcard px-3 py-1.5 font-bold inline-flex items-center gap-1.5 text-blue-700 dark:text-blue-300 tabular-nums">
+              <CalendarClock className="w-3.5 h-3.5" />
+              <span>{examCountdownLabel(examDate)}</span>
+            </span>
+          )}
           <span className="hidden sm:inline tabular-nums">
             هدف روزانه:{' '}
             <strong className="text-slate-900 dark:text-white">
@@ -297,7 +322,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
                 </div>
                 <div className="p-3.5 rounded-xl bg-white/8 backdrop-blur-md border border-white/12">
-                  <div className="text-[11px] text-slate-300">تست اثبات ۱۴۰۴</div>
+                  <div className="text-[11px] text-slate-300">آزمونک نمونهٔ ۱۴۰۴</div>
                   <div className="text-base font-bold text-amber-400 mt-0.5 tabular-nums">
                     {queue.filter((c) => c.cardType === 'proof_1404').length} آزمون
                   </div>

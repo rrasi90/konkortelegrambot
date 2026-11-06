@@ -24,6 +24,12 @@ async function tg(method, body = {}) {
 }
 
 async function startPolling() {
+  await tg('setMyCommands', {
+    commands: [
+      { command: 'start', description: 'شروع / بازکردن سامانه' },
+      { command: 'reminder', description: 'یادآور روزانهٔ مرور' },
+    ],
+  });
   console.log('[Telegram Service] Starting long polling for آموزش کنکور...');
 
   // Ensure webhook is deleted so getUpdates works
@@ -44,26 +50,60 @@ async function startPolling() {
           const msg = update.message || update.edited_message;
           if (!msg || !msg.chat) continue;
 
+          // پاسخ به دکمهٔ «یادآور روزانه» در پیام خوش‌آمد
+          if (update.callback_query?.data === 'reminder_info') {
+            await tg('answerCallbackQuery', { callback_query_id: update.callback_query.id });
+            await tg('sendMessage', {
+              chat_id: update.callback_query.message?.chat?.id ?? chatId,
+              text:
+                '⏰ یادآور روزانه\n\n' +
+                'از داخل مینی‌اپ: تب «تنظیمات» → ساعت مطالعه روزانه را مشخص کنید و یک زمان ثابت برای مرور بگذارید.',
+              reply_markup: {
+                inline_keyboard: [
+                  [{ text: '⚙️ باز کردن تنظیمات', web_app: { url: APP_URL } }],
+                ],
+              },
+            });
+            continue;
+          }
+
           const chatId = msg.chat.id;
           const userFirstName = msg.from?.first_name || 'داوطلب';
           const text = (msg.text || '').trim();
 
           console.log(`[Telegram Service] Message from ${userFirstName} (${chatId}): ${text}`);
 
-          if (text.startsWith('/start')) {
+          if (text.startsWith('/reminder')) {
+            // یادآور روزانه: راهنمای فعال‌سازی؛ زمان‌بندی سروری به نوبت بعدی (worker cron) واگذار می‌شود
             await tg('sendMessage', {
               chat_id: chatId,
-              text: `سلام ${userFirstName} عزیز! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nپروفایل اختصاصی شما ثبت شد. برای ورود و شروع مطالعه، روی دکمهٔ زیر بزنید:`,
+              text: '⏰ یادآور روزانه\n\nبرای اینکه مرور امروز یادتان نرود، از داخل مینی‌اپ: تب «تنظیمات» → ساعت مطالعه روزانه را انتخاب کنید.\nپیشنهاد: یک زمان ثابت انتخاب کنید (مثلاً ۲۱:۰۰) — عادت‌سازی روی زمان ثابت مؤثرتر است.',
+              reply_markup: {
+                inline_keyboard: [
+                  [{ text: '⚙️ تنظیم ساعت مطالعه', web_app: { url: APP_URL } }],
+                ],
+              },
+            });
+          } else if (text.startsWith('/start')) {
+            // بهترین شیوهٔ onboarding: پیام کوتاه + دکمه؛ نه نسخهٔ محصول، نه اصطلاح فنی
+            await tg('sendMessage', {
+              chat_id: chatId,
+              text: `سلام ${userFirstName}! آماده‌ای مسیر مرور تا روز کنکورت را بر اساس سطحت بچینیم؟ 🎯`,
               reply_markup: {
                 inline_keyboard: [
                   [
                     {
-                      text: '🚀 باز کردن آموزش کنکور',
+                      text: '🚀 شروع کن — ۵ سؤال تعیین سطح',
                       web_app: { url: APP_URL },
                     },
                   ],
+                  [{ text: '📅 یادآور روزانه', callback_data: 'reminder_info' }],
                 ],
               },
+            });
+            await tg('sendMessage', {
+              chat_id: chatId,
+              text: 'پ.ن: هر روز فقط ۱۵ دقیقه در این ربات، زنجیرهٔ مطالعه‌ات را زنده نگه می‌دارد.',
             });
           } else {
             await tg('sendMessage', {

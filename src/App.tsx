@@ -47,6 +47,7 @@ import { StudySessionView } from './components/StudySessionView';
 import { SkillTreeGraph } from './components/SkillTreeGraph';
 import { LessonsLibraryView } from './components/LessonsLibraryView';
 import { PlacementModal } from './components/PlacementModal';
+import { OnboardingModal, OnboardingResult } from './components/OnboardingModal';
 import { CodePatchesView } from './components/CodePatchesView';
 import { TelegramBotSimulatorModal } from './components/TelegramBotSimulatorModal';
 import { YearlyKonkorExamView } from './components/YearlyKonkorExamView';
@@ -121,6 +122,7 @@ export default function App() {
   const [stats, setStats] = useState<UserStats>(initialEngineData.stats);
   const [learnerStateHydrated, setLearnerStateHydrated] = useState(false);
   const [storageRecoveryNotice, setStorageRecoveryNotice] = useState<string | null>(null);
+  const cloudNoticeShownRef = useRef(false);
   const resetDuringHydrationRef = useRef(false);
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('home');
@@ -132,6 +134,15 @@ export default function App() {
   });
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState<boolean>(false);
   const [isPlacementOpen, setIsPlacementOpen] = useState<boolean>(false);
+  // onboarding داوطلب جدید: مقطع/گرایش + تاریخ آزمون (ذخیرهٔ محلی؛ کلید شمارش معکوس تا روز کنکور)
+  const [onboarding, setOnboarding] = useState<OnboardingResult | null>(() => {
+    try {
+      const raw = window.localStorage.getItem('ael.onboarding');
+      return raw ? (JSON.parse(raw) as OnboardingResult) : null;
+    } catch {
+      return null;
+    }
+  });
   const [isBotSimulatorOpen, setIsBotSimulatorOpen] = useState<boolean>(false);
   const [isTmaMobileFrame, setIsTmaMobileFrame] = useState<boolean>(false);
   const [isNightQuizMode, setIsNightQuizMode] = useState<boolean>(false);
@@ -208,9 +219,11 @@ export default function App() {
       stats,
       savedAt: new Date().toISOString(),
     }).then((result) => {
-      if (!result.cloudSaved && result.error && !storageRecoveryNotice) {
+      // نویزِ تکراری ممنوع: این وضعیت فقط یک‌بار در طول نشست اطلاع‌رسانی می‌شود
+      if (!result.cloudSaved && result.error && !cloudNoticeShownRef.current) {
+        cloudNoticeShownRef.current = true;
         setStorageRecoveryNotice(
-          'ذخیرهٔ محلی انجام شد، اما پشتیبان ابری ذخیره نشد. اتصال تلگرام را بررسی کنید.',
+          'پیشرفت شما روی همین دستگاه ذخیره شد ✓ (همگام‌سازی ابری این‌بار انجام نشد — مانع مطالعهٔ شما نیست.)',
         );
       }
     });
@@ -555,8 +568,8 @@ export default function App() {
       )}
       {storageRecoveryNotice && learnerStateHydrated && (
         <div
-          role="alert"
-          className="fixed bottom-4 left-4 right-4 z-[90] mx-auto max-w-2xl rounded-xl border border-amber-500/40 bg-amber-50 px-4 py-3 text-sm text-amber-950 shadow-lg dark:bg-amber-950 dark:text-amber-100"
+          role="status"
+          className="fixed top-14 left-4 right-4 z-[90] mx-auto max-w-md rounded-xl border border-amber-500/40 bg-amber-50 px-4 py-2.5 text-xs text-amber-950 shadow-lg dark:bg-amber-950 dark:text-amber-100"
         >
           {storageRecoveryNotice}
           <button
@@ -720,6 +733,7 @@ export default function App() {
 
         {activeTab === 'home' && (
           <DashboardView
+            examDate={onboarding?.examDate ?? null}
             nodes={nodes}
             stats={stats}
             nodeStates={nodeStates}
@@ -1180,6 +1194,27 @@ export default function App() {
             return deltas;
           }}
           onClose={() => setIsPlacementOpen(false)}
+        />
+      )}
+
+      {/* مودال خوش‌آمد داوطلب جدید: مقطع + تاریخ آزمون (شمارش معکوس تا روز کنکور) */}
+      {!onboarding && learnerStateHydrated && (
+        <OnboardingModal
+          onComplete={(r) => {
+            setOnboarding(r);
+            try {
+              window.localStorage.setItem('ael.onboarding', JSON.stringify(r));
+            } catch {
+              /* ذخیرهٔ onboarding نباید تجربه را بشکند */
+            }
+            if (r.track !== (stats.selectedMajorBranch || 'business')) {
+              setStats((prev) => ({
+                ...prev,
+                selectedMajorBranch: r.track,
+              }));
+            }
+            setIsPlacementOpen(true);
+          }}
         />
       )}
 
