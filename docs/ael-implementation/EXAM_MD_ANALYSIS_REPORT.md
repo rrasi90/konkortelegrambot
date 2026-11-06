@@ -81,6 +81,10 @@ Additional corrections found while implementing:
   `topic_candidates`** (section candidate + range + evidence status from §7).
 - Statuses: `ok` 1646, `needs_review` 866 (~34%) — honest, not hidden; none of this
   is production-ready without SME review.
+- Verified by direct reading of extracted samples: `ok` stems/options are genuine exam
+  items; cloze-passage items (e.g. 1393 items 11–13) are correctly extracted as
+  numbered options — their passage context (blank sentences above) is **not yet
+  captured** and must be attached in the authoring phase.
 - Per-paper counts range ~119–237; see local JSONL.
 
 ## 5. Answer-key extraction (`key-<source_id>.jsonl`)
@@ -90,13 +94,46 @@ Additional corrections found while implementing:
 - Persian/Arabic-digit tables now parse: the 1404 key went 0 → full (1040 Persian
   digits were invisible to the previous Latin-only regex).
 - **1 key extracts zero entries:** `جواب 1405` — its single table is OCR-corrupted
-  (booklet-code cell merged into a ~200-digit blob, 15 empty cells; 2156 Persian
-  digits in 9 cells). Recorded as `key_table_corrupted` and quarantined; **re-OCR
-  from the original PDF is required**, no key was guessed.
-- **121 answers genuinely missing** from 8 older keys (OCR lost the last pair-column's
-  answer cells): 1392→30 (151–180), 1393→35 (296–330), 1397→11, 1398→7, 1399/1401/1402→8,
-  1400→14. Each list is in `quarantine.jsonl` (`key_missing_answers`) — these ranges
-  must come from a re-OCR pass or manual entry, never interpolated.
+  (booklet-code cell merged into a ~200-digit blob, 15 empty cells). Recorded as
+  `key_table_corrupted` and quarantined; **re-OCR from the original PDF is required**.
+- **676 key numbers have no entry at all** across 10 keys (`findKeyGaps`, not guessed,
+  not interpolated) — the missing blocks are regular ~20-number columns, i.e. whole
+  OCR-lost pair-columns: 1395→84 (190–210/220–240/250–270/280–300), 1396→76, 1397→57,
+  1398→69, 1399→66, 1400→48, 1401→66, 1402→66, 1392→30 (151–180), 1404→114 (incl. 286–399).
+  All ranges are in `quarantine.jsonl` (`key_missing_numbers`).
+- **8 suspect entries** in the 1404 key (333…399) lie beyond the paper's declared
+  285 questions — flagged `key_out_of_range_entries`; likely misread digits, SME/OCR pass needed.
+
+### 5.1 Per-year coverage (paired, year-verified) — the honest answer to "do we have the real counts?"
+
+Expected count = paired key's numbering span (keys are complete tables where `gaps=0`);
+extraction is a *structural* pass — `needs_review` items are real appearances whose
+stems/options need the repair pass before authoring.
+
+| سال | دفترچه: استخراج (ok) | انتظار از کلید | کلید: entries / گپ | ارزیابی |
+|---|---|---|---|---|
+| ۱۳۹۱ | 119 (46) | 320 | 320 / 0 | کلید کامل؛ دفترچه ~37% |
+| ۱۳۹۲ | 149 (85) | 320 | 290 / 30 | کلید: ستون ۱۵۱–۱۸۰ گم |
+| ۱۳۹۳ | 126 (72) | 295 | 295 / 0 | کلید کامل؛ دفترچه ~43% |
+| ۱۳۹۴ | 186 (129) | 310 | 310 / 0 | کلید کامل؛ دفترچه ~60% |
+| ۱۳۹۵ | 237 (159) | 309 | 225 / 84 | کلید ۴ ستون گم |
+| ۱۳۹۶ | 209 (152) | 310 | 234 / 76 | کلید ناقص |
+| ۱۳۹۷ | 226 (140) | 281 | 224 / 57 | کلید ناقص |
+| ۱۳۹۸ | 216 (144) | 277 | 208 / 69 | کلید ناقص |
+| ۱۳۹۹ | 183 (128) | 278 | 212 / 66 | کلید ناقص |
+| ۱۴۰۰ | 162 (103) | 284 | 236 / 48 | کلید ناقص |
+| ۱۴۰۱ | 190 (130) | 278 | 212 / 66 | کلید ناقص |
+| ۱۴۰۲ | — (سند خراب، قرنطینه) | ~278 | 212 / 66 | دفترچه قابل استفاده نیست |
+| ۱۴۰۳ | 171 (125) | 285 | 285 / 0 | کلید کامل؛ دفترچه ~60% |
+| ۱۴۰۴ | 181 (126) | 285 | 285 / 114 + 8 مشکوک | کلید ارقام فارسی (رفع شد) + گپ ستون‌ها |
+| ۱۴۰۵ | 157 (107) | ? | 0 (جدول خراب) | کلید نیاز به OCR مجدد |
+
+**Answer to the coverage question:** no — the per-year *test counts are not yet
+matched*. Key side: 1390–1394 and 1403 keys are complete; 1395–1402/1404 keys each
+lost 1–4 answer columns (48–84 numbers) and 1405 is unusable. Paper side: structural
+extraction carries 37–60% of each year's numbering span as `ok`, the rest is recorded
+as `needs_review` appearances. Nothing is published; the missing blocks map 1:1 to
+re-OCR-able table columns.
 
 ## 6. Paper ↔ key pairing (`pairing-results.jsonl`)
 
@@ -111,6 +148,24 @@ Multi-evidence scored pairing (never `verified`):
 
 Known-but-different years are recorded as explicit `conflicts` and block promotion
 even when other evidence agrees strongly. Every pairing lists its rules in `evidence`.
+
+### 6.1 Year coverage — ارشد و دکتری (ده سال گذشته)
+
+**ارشد مدیریت (کد مجموعه ۱۱۴۲):**
+
+- **دفترچه‌های موجود:** ۱۳۹۱، ۱۳۹۲، ۱۳۹۳، ۱۳۹۴، ۱۳۹۵، ۱۳۹۶، ۱۳۹۷، ۱۳۹۸، ۱۳۹۹، ۱۴۰۰، ۱۴۰۱، ۱۴۰۳، ۱۴۰۴، ۱۴۰۵ (۱۴ دفترچه).
+- **کلیدهای موجود:** ۱۳۹۰ تا ۱۴۰۴ (۱۵ کلید) + ۱۴۰۵ خراب (غیرقابل استخراج).
+- **ده سال گذشته (۱۳۹۶–۱۴۰۵):** فقط **۱۴۰۲** دفترچهٔ قابل استفاده ندارد (فایل موجود است
+  اما عنوان/جدولش در OCR خراب است و قرنطینه شده) و **۱۴۰۵** کلید قابل استفاده ندارد.
+- **خارج از ده سال:** دفترچهٔ **۱۳۹۰** در آرشیو نیست (کلیدش هست و با تعارض سال ثبت شده).
+
+**دکتری مدیریت (کد مجموعه ۲۱۶۲):**
+
+- **آرشیو PDF فعلی: هیچ سند دکتری وجود ندارد** (۰ دفترچه، ۰ کلید از ۳۱ سند).
+- در بانک اپ (`src/data/yearlyKonkorExams.ts`) فقط **۱۱ سؤال نمونه‌ای منتخب دکتری**
+  با سال‌های ۱۳۹۴–۱۴۰۴ وجود دارد؛ برای **۱۳۹۱–۱۳۹۳ و ۱۴۰۵ دکتری هیچ سؤالی** در بانک نیست.
+- جمع‌بندی: پوشش دکتری در ده سال گذشته عملاً خالی است و به دریافت دفترچه‌ها/کلیدهای
+  رسمی دکتری (حداقل ۱۳۹۶–۱۴۰۵) نیاز دارد.
 
 ## 7. Topic mapping candidates (`topic-mapping-candidates.jsonl`)
 
@@ -130,9 +185,10 @@ even when other evidence agrees strongly. Every pairing lists its rules in `evid
 
 ## 8. Quarantine (`quarantine.jsonl`, local-only)
 
-- 27 records: 1 unknown document, 1 uncertain metadata, 14 subject-table issues,
-  8 key-missing-answers (121 question numbers listed), 1 corrupted 1405 key table,
-  2 pairing year-conflicts.
+- 38 records: 1 unknown document, 1 uncertain metadata, 14 subject-table issues,
+  8 key-missing-answers (unaligned number cells), 10 key-missing-numbers (676 holes,
+  whole lost columns), 1 corrupted 1405 key table, 2 pairing year-conflicts,
+  1 key-out-of-range (8 suspect 1404 entries).
 - Policy preserved: ambiguous/incomplete items stay quarantined; never auto-verified.
 
 ## 9. Gates that remain closed

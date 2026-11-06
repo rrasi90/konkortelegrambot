@@ -148,6 +148,32 @@ function finalizeKey(pairs, anomalies, strategy) {
   };
 }
 
+/**
+ * Analyze coverage holes in extracted key entries: numbers 1..max with no entry
+ * (entire OCR-lost columns produce no anomalies — they are simply absent).
+ * Returns { max, missing_count, ranges: [{from, to}] } — evidence for quarantine,
+ * never interpolated answers.
+ */
+export function findKeyGaps(entries) {
+  if (!entries.length) return { max: null, missing_count: null, ranges: [] };
+  const nums = new Set(entries.map((e) => e.question_number));
+  const max = Math.max(...nums);
+  const ranges = [];
+  let run = null;
+  for (let n = 1; n <= max; n++) {
+    if (!nums.has(n)) {
+      if (run && run.to === n - 1) run.to = n;
+      else {
+        if (run) ranges.push(run);
+        run = { from: n, to: n };
+      }
+    }
+  }
+  if (run) ranges.push(run);
+  const missing_count = ranges.reduce((s, r) => s + (r.to - r.from + 1), 0);
+  return { max, missing_count, ranges };
+}
+
 // ---------------------------------------------------------------------------
 // Exam-level detection (evidence + confidence, never bare filename guess)
 // ---------------------------------------------------------------------------

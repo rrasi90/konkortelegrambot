@@ -6,6 +6,7 @@ import {
   normalizeNumText,
   parseKeyRowPairs,
   extractKeyEntries,
+  findKeyGaps,
   detectExamLevel,
   parseSubjectRanges,
   mapQuestionToRange,
@@ -138,6 +139,21 @@ describe('AEL answer-key parsing — Persian/Arabic digit tables', () => {
     ].join('<table></table>'.replace('<table></table>', ''));
     const { conflicts } = extractKeyEntries(`<table>${md}</table>`);
     expect(conflicts).toEqual([{ question_number: 1, first: 2, second: 3 }]);
+  });
+
+  it('findKeyGaps reports whole OCR-lost ranges without interpolating answers', () => {
+    const entries = [
+      ...Array.from({ length: 20 }, (_, i) => ({ question_number: i + 1, correct_option: (i % 4) + 1 })),
+      ...Array.from({ length: 10 }, (_, i) => ({ question_number: i + 31, correct_option: (i % 4) + 1 })),
+    ];
+    const g = findKeyGaps(entries);
+    expect(g.max).toBe(40);
+    expect(g.missing_count).toBe(10);
+    expect(g.ranges).toEqual([{ from: 21, to: 30 }]);
+  });
+
+  it('findKeyGaps returns nulls for an empty key (never zeros-as-fact)', () => {
+    expect(findKeyGaps([])).toEqual({ max: null, missing_count: null, ranges: [] });
   });
 });
 

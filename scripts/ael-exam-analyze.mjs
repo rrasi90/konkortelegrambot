@@ -15,6 +15,7 @@ import {
   cellText,
   normalizeNumText,
   extractKeyEntries,
+  findKeyGaps,
   extractSetCodeFromTables,
   extractExamCollectionName,
   detectExamLevel,
@@ -442,11 +443,49 @@ for (const src of sources) {
         detail: 'merged digit cells — re-OCR from the original PDF is required; no key guessed',
       });
     }
+    // coverage holes: numbers 1..max with no entry at all (whole OCR-lost columns
+    // produce no anomalies — they are simply absent)
+    const gaps = findKeyGaps(k.entries);
+    src.key_gap_count = gaps.missing_count;
+    src.key_gap_ranges = gaps.ranges.slice(0, 20);
+    if (gaps.missing_count) {
+      quarantine.push({
+        kind: 'key_missing_numbers',
+        file: src.filename,
+        document_id: src.document_id,
+        count: gaps.missing_count,
+        max_question: gaps.max,
+        ranges: gaps.ranges.slice(0, 20),
+      });
+    }
     writeJsonl(`key-${src.source_id}.jsonl`, k.entries);
   }
 }
 // recompute pairing now that key/paper maxima are known
 const pairing2 = buildPairing();
+
+// key entries beyond the paired paper's declared question span are suspect misreads
+for (const p of pairing2) {
+  if (!p.paired_source_id || p.conflicts.length) continue; // conflicted pairs prove nothing
+  const paper = papers.find((s) => s.source_id === p.paired_source_id);
+  const declaredMax = paper?.subject_ranges?.ranges?.length
+    ? Math.max(...paper.subject_ranges.ranges.map((r) => r.to_question))
+    : paper?.max_question ?? null;
+  if (!declaredMax) continue;
+  const out = (keyResults.get(p.key_source_id)?.entries ?? [])
+    .filter((e) => e.question_number > declaredMax)
+    .map((e) => e.question_number);
+  if (out.length) {
+    quarantine.push({
+      kind: 'key_out_of_range_entries',
+      file: p.key_file,
+      document_id: p.key_source_id,
+      paired_paper_max: declaredMax,
+      count: out.length,
+      question_numbers: out.slice(0, 40),
+    });
+  }
+}
 
 const runManifest = {
   run_id: runId,
@@ -480,6 +519,7 @@ const summary = {
   topic_candidates_mapped: topicMapped,
   topic_candidates_needs_review: topicNeedsReview,
   key_entries: [...keyResults.values()].reduce((s, k) => s + k.entries.length, 0),
+  key_missing_numbers_total: sources.filter((s) => s.document_type.value === 'answer_key').reduce((s, k) => s + (k.key_gap_count ?? 0), 0),
   key_conflicts: [...keyResults.values()].reduce((s, k) => s + k.conflicts.length, 0),
   keys_with_entries: [...keyResults.values()].filter((k) => k.entries.length > 0).length,
   keys_zero_entries: [...keyResults.values()].filter((k) => k.entries.length === 0).length,
