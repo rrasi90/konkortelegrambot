@@ -1,0 +1,3242 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/><title>AEL — مینی‌اپ تست واقعی (یک فایل)</title><link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet"/><style>/* AEL Visual Language — Warm Charcoal Card-Based
+   منبع کانویکال توکن‌ها: src/styles/design-tokens.css (این فایل نسخهٔ درون‌خطی همان است
+   چون آدیت Worker دقیقاً روی ۵ فایل قفل است: index.html/app.js/styles.css/learning.js/admin.html)
+   تاریک دائمی؛ هرگز با prefers-color-scheme روشن نمی‌شود. */
+:root {
+  --app-bg: #1b1a17;
+  --app-bg-deep: #141312;
+  --ael-surface-primary: #262524;
+  --ael-surface-secondary: #2e2d2b;
+  --ael-surface-elevated: #3a3937;
+  --ael-border-subtle: rgba(255,255,255,0.07);
+  --ael-border-active: rgba(255,255,255,0.14);
+  --ael-text-primary: #f4f3f1;
+  --ael-text-secondary: #b1b0b0;
+  --ael-text-muted: #7a7a7c;
+  --ael-accent-teal: #36c4bd;
+  --ael-accent-blue: #658ff2;
+  --ael-accent-purple: #9274dc;
+  --ael-accent-green: #55b995;
+  --ael-accent-amber: #d6a45f;
+  --ael-accent-orange: #dc805d;
+  --radius-card-lg: 24px;
+  --radius-card-md: 20px;
+  --radius-card-sm: 16px;
+  --radius-pill: 999px;
+  --ael-shadow-card: 0 8px 24px rgba(0,0,0,0.28);
+  --ael-shadow-raised: 0 12px 32px rgba(0,0,0,0.45);
+  --ael-font: 'Vazirmatn', 'IRANSans', 'Segoe UI', system-ui, sans-serif;
+  /* --- aliases legacy برای باالای همین فایل (همان مقادیر بالا) --- */
+  --surface-primary: var(--ael-surface-primary);
+  --surface-secondary: var(--ael-surface-secondary);
+  --surface-elevated: var(--ael-surface-elevated);
+  --bg: var(--app-bg);
+  --surface: var(--ael-surface-primary);
+  --ink: var(--ael-text-primary);
+  --ink-soft: var(--ael-text-secondary);
+  --ink-muted: var(--ael-text-muted);
+  --line: var(--ael-border-subtle);
+  --line-active: var(--ael-border-active);
+  --primary: var(--ael-accent-teal);
+  --primary-soft: rgba(54,196,189,0.13);
+  --primary-glow: rgba(54,196,189,0.18);
+  --primary-deep: #2aa79f;
+  --accent-blue: #658ff2;
+  --accent-purple: #9274dc;
+  --accent-green: #55b995;
+  --accent-amber: #d6a45f;
+  --accent-orange: #dc805d;
+  --ok: #55b995;
+  --ok-soft: rgba(85,185,149,0.12);
+  --warn: #d6a45f;
+  --warn-soft: rgba(214,164,95,0.1);
+  --bad: #ef6351;
+  --bad-soft: rgba(239,99,81,0.1);
+  --proof: linear-gradient(135deg, #d6a45f, #dc805d);
+  --radius: var(--radius-card-md);
+  --radius-sm: var(--radius-card-sm);
+  --shadow: 0 8px 24px rgba(0,0,0,0.28);
+  --shadow-card: 0 8px 24px rgba(0,0,0,0.28);
+  --shadow-glass: 0 12px 32px rgba(0,0,0,0.45);
+  --font: 'Vazirmatn', 'IRANSans', 'Segoe UI', system-ui, sans-serif;
+  --glass: rgba(38,37,36,0.92);
+}
+
+/* پس‌زمینه گرادیانی ملایم (نه تخت) — Warm Charcoal */
+body {
+  background:
+    radial-gradient(700px 320px at 85% -5%, rgba(54,196,189,0.09), transparent 70%),
+    radial-gradient(500px 260px at 5% 30%, rgba(146,116,220,0.05), transparent 70%),
+    linear-gradient(180deg, var(--app-bg), var(--app-bg-deep)) !important;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+.view {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.view[hidden] { display: none; }
+
+.login-card {
+  width: min(420px, 100%);
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px 28px;
+  text-align: center;
+}
+
+.logo-mark { color: var(--primary); margin-bottom: 8px; }
+h1 { font-size: 22px; margin: 0 0 6px; }
+h2 { font-size: 17px; line-height: 1.7; margin: 14px 0 18px; text-align: right; }
+.subtitle { color: var(--ink-soft); font-size: 13px; margin: 0 0 22px; }
+.hint { color: var(--ink-soft); font-size: 12px; line-height: 1.8; margin-top: 18px; }
+
+.btn {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+.btn:hover { filter: brightness(0.97); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.primary { background: var(--primary); color: #fff; }
+.btn.ghost {
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--line);
+  margin-top: 10px;
+}
+.error { color: var(--bad); font-size: 13px; }
+
+/* انتخاب گرایش */
+.track-options { display: grid; gap: 10px; margin-bottom: 18px; }
+.track-card {
+  text-align: right;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 14px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.track-card strong { display: block; font-size: 15px; color: var(--ink); }
+.track-card span { font-size: 12px; color: var(--ink-soft); }
+.track-card.selected { border-color: var(--primary); background: var(--primary-soft); }
+
+/* هدر اپ */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(244, 246, 249, 0.92);
+  backdrop-filter: blur(8px);
+}
+.tabs {
+  display: flex;
+  max-width: 560px;
+  margin: 0 auto;
+  gap: 4px;
+  padding: 10px 16px;
+}
+.tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding: 8px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.tab.active { background: var(--surface); color: var(--primary); box-shadow: var(--shadow); }
+
+.tab-panel { max-width: 560px; margin: 0 auto; padding: 16px; }
+
+/* کارت سؤال */
+.quiz-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px 20px;
+}
+.quiz-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.chip {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.chip.ghost { background: var(--bg); color: var(--ink-soft); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); }
+
+.options { display: grid; gap: 8px; margin-top: 6px; }
+.option {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  text-align: right;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.12s ease;
+}
+.option:hover:not(:disabled) { border-color: var(--primary); }
+.option:disabled { cursor: default; }
+.option .key {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.option.correct { border-color: var(--ok); background: var(--ok-soft); }
+.option.correct .key { background: var(--ok); color: #fff; }
+.option.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.option.wrong .key { background: var(--bad); color: #fff; }
+
+/* قاعدهٔ display روی مقدار UA برای [hidden] را می‌پوشاند (نقص پیشین:
+   چیپ‌های خالی و باکس خوداظهاری با وجود hidden دیده می‌شدند) */
+.stat-chip[hidden],
+.self-report-box[hidden] { display: none !important; }
+
+/* بازخورد */
+.feedback-head {
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin: 16px 0 10px;
+}
+.feedback-head.ok { background: var(--ok-soft); color: var(--ok); }
+.feedback-head.bad { background: var(--bad-soft); color: var(--bad); }
+#feedback-explanation {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  margin: 0 0 12px;
+}
+.trap-box {
+  background: var(--warn-soft);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--warn);
+  margin-bottom: 12px;
+}
+.mentor-box {
+  background: var(--primary-soft);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--primary);
+  margin-bottom: 12px;
+}
+.ripple-box { margin-bottom: 16px; }
+.ripple-title { font-size: 12px; font-weight: 700; color: var(--ink-soft); margin-bottom: 8px; }
+.mastery-row { margin-bottom: 8px; }
+.mastery-row .labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+  position: relative;
+}
+.bar .fill {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: var(--primary);
+  transition: width 0.4s ease;
+}
+.fill.warn { background: #d97706; }
+.fill.bad { background: var(--bad); }
+.fill.ok { background: var(--ok); }
+
+.empty-state {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+/* نقشهٔ مسیر */
+.course-block {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 16px;
+  margin-bottom: 14px;
+}
+.course-title { font-size: 15px; font-weight: 700; margin: 0 0 4px; }
+.chapter-title { font-size: 13px; color: var(--ink-soft); margin: 14px 0 8px; }
+.node-row { display: grid; gap: 6px; margin-bottom: 10px; }
+.node-row .labels { display: flex; justify-content: space-between; align-items: center; }
+.node-name { font-size: 13px; }
+.status-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.status-badge.weak { background: var(--bad-soft); color: var(--bad); }
+.status-badge.unstable { background: var(--warn-soft); color: var(--warn); }
+.status-badge.learning { background: var(--primary-soft); color: var(--primary); }
+.status-badge.mastered { background: var(--ok-soft); color: var(--ok); }
+
+/* تنظیمات */
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 14px;
+}
+.track-toggle { display: flex; gap: 6px; }
+.toggle {
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.toggle.on { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
+
+@media (max-width: 480px) {
+  .view { padding: 12px; }
+  .tab-panel { padding: 10px; }
+  .quiz-card { padding: 18px 14px; }
+}
+
+/* ---------- پوستهٔ اپ با ناوبری پایین (واژه‌راه-مانند) ---------- */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 0;
+  max-width: 560px;
+  margin: 0 auto;
+  min-height: 100dvh;
+}
+.app-shell .tab-panel { flex: 1; padding: 16px 16px calc(76px + env(safe-area-inset-bottom)); }
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 16px 10px;
+}
+.header-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.app-name { font-weight: 700; font-size: 15px; }
+.stat-chips { display: flex; gap: 6px; }
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--primary);
+  background: var(--primary-soft);
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+}
+.header-greeting { margin: 6px 0 0; color: var(--ink-soft); font-size: 12px; }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-around;
+  background: rgba(38,37,36,0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line-active);
+  border-radius: 24px;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  z-index: 20;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+  max-width: 560px;
+  margin: 0 auto;
+}
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  border: none;
+  background: none;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 16px;
+  min-height: 52px;
+  cursor: pointer;
+}
+.nav-btn.active { color: var(--primary); background: var(--primary-soft); }
+
+/* ---------- کارت‌های داشبورد خانه — AEL Card System ---------- */
+.dash-card {
+  background: var(--surface-primary);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card-md);
+  box-shadow: var(--shadow-card);
+  padding: 16px;
+  margin-bottom: 12px;
+  min-width: 0;
+}
+.dash-card.hero { border-radius: var(--radius-card-lg); background: linear-gradient(135deg, rgba(54,196,189,0.12), rgba(101,143,242,0.08) 55%, var(--surface-secondary)); position: relative; overflow: hidden; }
+.hero-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.hero-top .label { font-size: 11px; color: var(--ink-soft); }
+.hero-title { font-size: 18px; line-height: 1.6; margin: 10px 0 6px; }
+.hero-sub { font-size: 12.5px; color: var(--ink-soft); line-height: 1.9; margin: 0; }
+.hero-cta { display: grid; gap: 8px; margin-top: 14px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.section-head h2 { font-size: 13px; font-weight: 800; margin: 0; display: flex; align-items: center; gap: 8px; }
+.section-head h2::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); flex-shrink: 0; }
+.metric-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.metric .big { font-size: 28px; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.metric small { font-size: 11px; color: var(--ink-soft); }
+.mascot-card { display: flex; align-items: center; gap: 12px; }
+.mascot { flex: 0 0 auto; }
+.mascot-text strong { font-size: 13px; }
+.mascot-text p { margin: 4px 0 0; font-size: 12.5px; color: var(--ink-soft); line-height: 1.8; }
+
+.goal-card .labels { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+.goal-countdown { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.count-num { font-size: 26px; font-weight: 700; color: var(--primary); }
+.count-label { font-size: 12px; color: var(--ink-soft); }
+.goal-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+
+.lesson-head { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; }
+.lesson-title { font-size: 14px; font-weight: 800; line-height: 1.7; margin: 4px 0; }
+.lesson-sub { color: var(--ink-soft); font-size: 12px; margin: 6px 0 12px; line-height: 1.9; }
+.btn.full { width: 100%; }
+.btn.secondary { background: var(--surface-secondary); color: var(--ink); border: 1px solid var(--line-active); }
+.btn.small { padding: 9px 16px; font-size: 12.5px; width: auto; display: inline-block; }
+
+.night-card { border: 1px dashed var(--line); box-shadow: none; }
+.night-card.off { opacity: 0.75; }
+.night-head { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
+.night-head strong { font-size: 13px; }
+.night-head p { margin: 3px 0 0; font-size: 12px; color: var(--ink-soft); line-height: 1.7; }
+.night-icon { color: var(--warn); margin-top: 2px; }
+
+/* ---------- تنظیمات ---------- */
+.settings-card { text-align: right; margin: 0 auto; width: 100%; }
+.exam-date-row { display: flex; gap: 8px; align-items: center; }
+.exam-date-row input {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 13px;
+  background: var(--bg);
+}
+.saved-msg { color: var(--ok); font-size: 12px; margin: 8px 0 0; }
+
+/* ---------- بخش آموزش درس ---------- */
+.lessons-header { margin-bottom: 16px; }
+.lessons-header h2 { font-size: 16px; margin: 0 0 4px; color: var(--ink); }
+.lessons-header .subtitle { font-size: 12px; color: var(--ink-soft); margin: 0; }
+
+.course-box {
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  margin-bottom: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.course-box-header {
+  padding: 14px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.course-box-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+.course-box-sub { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+
+.lesson-item {
+  border-bottom: 1px solid var(--line);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.lesson-item:last-child { border-bottom: none; }
+.lesson-item:hover { background: var(--primary-soft); }
+
+.lesson-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+.lesson-item-title { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.5; }
+.lesson-meta-chips { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.lesson-chip-freq { font-size: 10.5px; padding: 2px 8px; border-radius: 6px; background: #e0f2fe; color: #0284c7; font-weight: 600; }
+.lesson-chip-weight { font-size: 10.5px; padding: 2px 8px; border-radius: 6px; background: #fef3c7; color: #b45309; font-weight: 600; }
+
+.lesson-item-body {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+.lesson-summary-text { white-space: pre-line; margin-bottom: 12px; }
+.lesson-tips-box {
+  background: #fffbeb;
+  border-right: 3px solid #f59e0b;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.lesson-tips-title { font-weight: 700; color: #b45309; margin-bottom: 6px; }
+.lesson-tips-list { margin: 0; padding-right: 18px; }
+.lesson-tips-list li { margin-bottom: 4px; }
+.lesson-terms { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.lesson-term-badge { font-size: 10px; background: var(--bg); border: 1px solid var(--line); padding: 2px 6px; border-radius: 4px; color: var(--ink-soft); direction: ltr; font-family: monospace; }
+
+/* ---------- آموزش کامل مبحث کنکور در فیدبک سوال ---------- */
+.lesson-feedback-card {
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1.5px solid #38bdf8;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.12);
+  text-align: right;
+}
+.lesson-feedback-header {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+.lesson-feedback-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0369a1;
+  background: #e0f2fe;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+.lesson-feedback-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.lesson-feedback-body {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--ink);
+  white-space: pre-line;
+  margin-bottom: 12px;
+}
+.lesson-feedback-tips {
+  background: #fffbeb;
+  border-right: 3px solid #f59e0b;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* ---------- سیم‌کشی نسل دوم ---------- */
+.chip.proof {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  font-weight: 700;
+}
+.comparison-box {
+  background: var(--primary-soft, #eef2ff);
+  border: 1px solid var(--primary, #4f46e5);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin: 8px 0;
+}
+.self-report-box {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+.self-report-btn {
+  flex: 1;
+  border: 1px solid var(--border, #ddd);
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.self-report-btn:active {
+  background: var(--primary-soft, #eef2ff);
+}
+.self-report-done {
+  font-size: 13px;
+  color: var(--ok, #059669);
+}
+.proof-ready-box {
+  background: #fffbeb;
+  border: 1px dashed #d97706;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  margin: 8px 0;
+}
+.study-mode-toggle {
+  display: flex;
+  gap: 6px;
+}
+.study-mode-toggle .toggle {
+  border: 1px solid var(--border, #ddd);
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.study-mode-toggle .toggle.on {
+  background: var(--primary, #4f46e5);
+  color: #fff;
+  border-color: var(--primary, #4f46e5);
+}
+.status-badge.unseen {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+
+/* چرخش انیمیشن اسپینر */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* چک‌باکس چند انتخابی گرایش‌ها */
+.track-card {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  position: relative !important;
+  text-align: right !important;
+  padding: 12px 14px !important;
+}
+.track-card .track-info {
+  flex: 1 !important;
+}
+.track-card .track-checkbox {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 6px !important;
+  border: 1.5px solid var(--line) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: transparent !important;
+  transition: all 0.15s ease !important;
+  flex-shrink: 0 !important;
+}
+.track-card.selected .track-checkbox {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+}
+
+/* آموزش درس و آکاردئون‌ها */
+.lessons-header {
+  margin-bottom: 16px;
+}
+.lessons-header h2 {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.lessons-header .subtitle {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.lesson-search {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 13px;
+  margin-bottom: 14px;
+  box-sizing: border-box;
+}
+.course-accordion {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.course-accordion-header {
+  padding: 14px 16px;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  user-select: none;
+}
+.course-accordion-header:hover {
+  background: var(--primary-soft);
+}
+.course-topics-list {
+  display: none;
+  padding: 0 16px 14px;
+  flex-direction: column;
+  gap: 12px;
+}
+.course-accordion.open .course-topics-list {
+  display: flex;
+}
+.topic-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--bg);
+}
+.topic-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.topic-weight {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* ---------- نقشهٔ تسلط (تب مسیر) ---------- */
+.map-course {
+  margin-bottom: 18px;
+}
+.map-course-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0 0 10px;
+  padding-right: 10px;
+  border-right: 4px solid var(--primary);
+  line-height: 1.4;
+}
+.map-chapter {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-card);
+}
+.map-chapter-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+.map-grid {
+  display: grid;
+  gap: 10px;
+}
+.map-node {
+  display: grid;
+  gap: 6px;
+}
+.map-node .node-topic {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.map-node .node-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg);
+  overflow: hidden;
+}
+.map-node .node-bar .fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary);
+  transition: width 0.25s ease;
+}
+.map-node.bad .node-bar .fill { background: var(--bad); }
+.map-node.warn .node-bar .fill { background: var(--warn); }
+.map-node.ok .node-bar .fill { background: var(--ok); }
+.map-node.unseen .node-bar { background: transparent; border: 1px dashed var(--line); }
+.map-node.unseen .node-bar .fill { background: transparent; }
+.map-node .node-pct {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.map-node.bad .node-pct { color: var(--bad); }
+.map-node.warn .node-pct { color: var(--warn); }
+.map-node.ok .node-pct { color: var(--ok); }
+.map-node.unseen .node-pct { color: var(--ink-soft); font-weight: 500; }
+
+/* دکمهٔ کوچک درون‌خطی */
+.btn.small {
+  display: inline-block;
+  width: auto;
+  padding: 8px 14px;
+  font-size: 13px;
+  margin-top: 0;
+}
+.topic-summary {
+  font-size: 12.5px;
+  color: var(--ink);
+  line-height: 1.8;
+  white-space: pre-line;
+  margin-bottom: 10px;
+}
+.topic-tips {
+  background: #fffbeb;
+  border: 1px dashed #d97706;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+.topic-terms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.lesson-term-badge {
+  font-size: 10.5px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* BEGIN AEL LEARNING UI — shared with the offline file. */
+.learn-app {
+  --learn-ink: #172b3b;
+  --learn-muted: #466073;
+  --learn-paper: #fff;
+  --learn-line: #c9d9df;
+  --learn-accent: #086454;
+  --learn-tint: #e9f6f1;
+  display: grid;
+  gap: 12px;
+  color: var(--learn-ink);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.learn-app[hidden] { display: none; }
+.learn-heading { padding: 10px 2px 4px; }
+.learn-heading h2, .learn-card h3, .learn-feedback h3 { margin: 0 0 .4rem; line-height: 1.45; color: var(--learn-ink); }
+.learn-heading h2 { font-size: clamp(1.3rem, 5vw, 1.8rem); }
+.learn-app p { margin: .35rem 0 .65rem; }
+.learn-eyebrow { font-size: .85rem; font-weight: 700; color: var(--learn-accent); }
+.learn-muted { color: var(--learn-muted); }
+.learn-card { min-width: 0; padding: clamp(12px, 3vw, 19px); border: 1px solid var(--learn-line); border-radius: 16px; background: var(--learn-paper); }
+.learn-app ul, .learn-app ol { padding-inline-start: 1.4rem; }
+.learn-app li + li { margin-block-start: .4rem; }
+.learn-note, .learn-warning { background: var(--learn-tint); border-inline-start: 4px solid var(--learn-accent); padding: .6rem .8rem; border-radius: 8px; }
+.learn-warning { background: #fff1e7; border-color: #a74315; color: #712c0c; }
+.learn-formula { padding: .6rem .8rem; border-radius: 8px; background: #edf2f7; font-family: ui-monospace, monospace; }
+.learn-app .learn-button {
+  color: var(--learn-ink); background: var(--learn-paper); border: 1px solid var(--learn-line);
+  border-radius: 10px; padding: .54rem .82rem; min-height: 44px; margin: .25rem 0 .25rem .35rem;
+  cursor: pointer; font: inherit; font-weight: 600; text-align: right; max-width: 100%;
+}
+.learn-app .learn-primary { color: #fff; background: var(--learn-accent); border-color: var(--learn-accent); }
+.learn-app .learn-button:disabled { opacity: .54; cursor: default; }
+.learn-app .learn-button:focus-visible, .learn-app a:focus-visible, .learn-app summary:focus-visible,
+.learn-app textarea:focus-visible { outline: 3px solid #0d7c99; outline-offset: 2px; }
+.learn-app .learn-topic, .learn-app .learn-option { width: 100%; display: block; }
+.learn-app [hidden] { display: none !important; }
+.learn-app .learn-option[aria-pressed="true"], .learn-app .learn-answered { background: var(--learn-tint); border-color: var(--learn-accent); }
+.learn-options, .learn-actions { display: grid; gap: .35rem; }
+.learn-actions { grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr)); }
+.learn-question-grid { display: flex; flex-wrap: wrap; gap: .25rem; margin: .4rem 0; }
+.learn-question-grid .learn-button { min-width: 44px; text-align: center; }
+.learn-question-grid [aria-current="step"] { border: 2px solid #0d7c99; }
+.learn-clock, .learn-score { font-weight: 700; }
+.learn-feedback { border-block-start: 1px solid var(--learn-line); margin-block: .75rem; padding-block: .75rem .25rem; }
+.learn-feedback .learn-result-correct { color: #126245; }
+.learn-feedback .learn-result-incorrect { color: #9e321f; }
+.learn-feedback .learn-result-skipped { color: #5d526e; }
+.learn-details { padding: .45rem 0; }
+.learn-details summary { cursor: pointer; font-weight: 700; min-height: 34px; }
+.learn-address, .learn-source-list a { display: block; font-size: .85rem; }
+.learn-issue textarea { width: 100%; display: block; min-height: 76px; resize: vertical; font: inherit; margin-block: .4rem; }
+@media (min-width: 500px) {
+  .learn-heading { padding-top: 12px; }
+}
+/* END AEL LEARNING UI */
+</style></head><body><div style="max-width:560px;margin:14px auto 0;padding:0 14px"><div style="background:#2e2d2b;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 14px;font-size:12px;line-height:1.9;color:#b1b0b0">نسخهٔ <b style="color:#f4f3f1">تست واقعی</b> — بدون نیاز به سرور. همهٔ تب‌ها (خانه، امروز، آموزش درس، مسیر، من) با دادهٔ نمونه کار می‌کنند. برای دادهٔ واقعی، همین فایل‌ها را روی Worker اجرا کن: <code dir="ltr">npm run --prefix apps/worker dev</code></div></div>
+  <!-- صفحهٔ ورود و شناسایی خودکار -->
+  <section id="view-login" class="view">
+    <div class="login-card">
+      <div class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="52" height="52">
+          <path d="M8 30c6-14 12-14 16-8s10 6 16-6" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="40" cy="16" r="5" fill="currentColor"/>
+        </svg>
+      </div>
+      <h1>آموزش کنکور</h1>
+      <p class="subtitle">موتور یادگیری تطبیقی کنکور دکتری مدیریت</p>
+
+      <div id="auth-status-container" style="display: flex; flex-direction: column; align-items: center; gap: 14px; margin: 24px 0 16px;">
+        <div class="auth-spinner" style="width: 38px; height: 38px; border: 3.5px solid var(--line); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <p id="auth-status-text" style="font-size: 13px; color: var(--ink-soft); text-align: center; line-height: 1.6;">در حال ورود و بارگذاری پروفایل اختصاصی شما...</p>
+        <button id="btn-relogin" class="btn primary" hidden>ورود دوباره</button>
+      </div>
+
+      <a id="btn-open-telegram" href="https://t.me/AmozeshKonkoorbot" class="btn ghost" style="display: block; text-decoration: none; text-align: center; margin-top: 10px; font-size: 12.5px;">
+        💬 باز کردن در ربات تلگرام (@AmozeshKonkoorbot)
+      </a>
+
+      <p id="login-error" class="error" hidden style="margin-top: 12px;"></p>
+      <p class="hint" style="margin-top: 14px;">هویت شما بر اساس داده‌های تلگرام یا شناسهٔ رمزنگاری‌شدهٔ دستگاه به‌طور خودکار شناسایی می‌شود.</p>
+    </div>
+  </section>
+
+  <!-- انتخاب چندگانهٔ گرایش‌ها -->
+  <section id="view-tracks" class="view" hidden>
+    <div class="login-card">
+      <h1>گرایش‌های تحصیلی خود را انتخاب کنید</h1>
+      <p class="subtitle">می‌توانید یک یا چند گرایش را هم‌زمان انتخاب کنید (هستهٔ مشترک همیشه فعال است)</p>
+      <div class="track-options">
+        <div class="track-card" data-track="business">
+          <div class="track-checkbox">✓</div>
+          <div class="track-info">
+            <strong>مدیریت بازرگانی</strong>
+            <span>بازاریابی پیشرفته، رفتار مصرف‌کننده، برند</span>
+          </div>
+        </div>
+        <div class="track-card" data-track="industrial">
+          <div class="track-checkbox">✓</div>
+          <div class="track-info">
+            <strong>مدیریت صنعتی</strong>
+            <span>تحقیق در عملیات (سیمپلکس)، تصمیم‌گیری چندمعیاره، کنترل موجودی و SCM</span>
+          </div>
+        </div>
+        <div class="track-card" data-track="technology">
+          <div class="track-checkbox">✓</div>
+          <div class="track-info">
+            <strong>مدیریت تکنولوژی و نوآوری</strong>
+            <span>نوآوری، منحنی S فناوری، ظرفیت جذب</span>
+          </div>
+        </div>
+        <div class="track-card" data-track="strategy">
+          <div class="track-checkbox">✓</div>
+          <div class="track-info">
+            <strong>مدیریت استراتژیک و آینده‌پژوهی</strong>
+            <span>استراتژی رقابتی، آینده‌پژوهی، تحلیل محیطی</span>
+          </div>
+        </div>
+      </div>
+      <button id="btn-tracks-save" class="btn primary" disabled>تأیید و شروع یادگیری</button>
+    </div>
+  </section>
+
+  <!-- اپ اصلی -->
+  <section id="view-app" class="view app-shell" hidden>
+    <header class="app-header">
+      <div class="header-title">
+        <span class="app-name">آموزش کنکور</span>
+        <div class="stat-chips">
+          <span id="chip-streak" class="chip stat-chip" hidden>
+            <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M12 2c1 4-3 5-3 9a3 3 0 0 0 6 0c0-2-1-3-1-3s3 1 3 4a5 5 0 0 1-10 0c0-5 4-6 5-10z" fill="currentColor"/></svg>
+            <span id="chip-streak-n"></span>
+          </span>
+          <span id="chip-coins" class="chip stat-chip" hidden>
+            <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v10M9.5 9.5h5M9.5 14.5h5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+            <span id="chip-coins-n"></span>
+          </span>
+        </div>
+      </div>
+      <p id="header-greeting" class="header-greeting" hidden></p>
+    </header>
+
+    <!-- تب خانه -->
+    <main id="tab-home" class="tab-panel" hidden>
+      <div id="home-container"></div>
+    </main>
+
+    <!-- تب امروز -->
+    <main id="tab-today" class="tab-panel" hidden>
+      <div id="queue-empty" class="empty-state" hidden>
+        <p>برای امروز برنامه‌ای نمانده است. خسته نباشید!</p>
+      </div>
+      <article id="quiz-card" class="quiz-card" hidden>
+        <div class="quiz-meta">
+          <span id="q-course" class="chip"></span>
+          <span id="q-chapter" class="chip ghost"></span>
+          <span id="q-verification" class="chip ghost" hidden></span>
+          <span id="q-card-type" class="chip warn">نکتهٔ دام</span>
+          <span id="q-proof-label" class="chip proof" hidden></span>
+        </div>
+        <p id="q-progress" class="hint"></p>
+        <h2 id="q-text"></h2>
+        <div id="q-options" class="options"></div>
+        <div id="answer-feedback" hidden>
+          <div id="feedback-head" class="feedback-head"></div>
+          <p id="feedback-explanation"></p>
+          <details id="feedback-source"><summary>ارجاع و مشخصات سؤال</summary><p id="feedback-source-text"></p></details>
+          <div id="feedback-trap" class="trap-box" hidden></div>
+          <div id="feedback-comparison" class="comparison-box" hidden></div>
+          <div id="feedback-self-report" class="self-report-box" hidden></div>
+          <div id="feedback-proof-ready" class="proof-ready-box" hidden></div>
+          <div id="feedback-mentor" class="mentor-box"></div>
+          <div id="feedback-ripple" class="ripple-box"></div>
+
+          <!-- آموزش کامل مبحث کنکور زیر هر سوال -->
+          <div id="feedback-lesson-card" class="lesson-feedback-card" hidden>
+            <div class="lesson-feedback-header">
+              <span class="lesson-feedback-badge">📖 آموزش کامل مبحث آزمون</span>
+              <h4 id="lesson-feedback-title"></h4>
+            </div>
+            <div id="lesson-feedback-body" class="lesson-feedback-body"></div>
+            <div id="lesson-feedback-tips" class="lesson-feedback-tips" hidden></div>
+            <div id="lesson-feedback-terms" class="lesson-terms" hidden></div>
+          </div>
+
+          <button id="btn-next" class="btn primary">سؤال بعدی</button>
+        </div>
+      </article>
+    </main>
+
+    <!-- تب آموزش درس -->
+    <main id="tab-lessons" class="tab-panel" hidden>
+      <section id="ael-learning-root" aria-label="مسیرهای یادگیری"></section>
+      <details class="learn-library"><summary>کتابخانهٔ درس‌های موجود</summary>
+      <div class="lessons-header">
+        <h2>آموزش سرفصل‌ها و درس‌نامه‌های کنکور دکتری</h2>
+        <p class="subtitle">جست‌وجوی درس‌نامه‌ها، مباحث و کلیدواژه‌ها</p>
+        <input type="text" id="lesson-search-input" class="lesson-search" placeholder="🔍 جستجو در مباحث، فصول یا کلیدواژه‌ها..." />
+      </div>
+      <div id="lessons-container" class="lessons-list"></div>
+      </details>
+    </main>
+
+    <!-- تب مسیر -->
+    <main id="tab-map" class="tab-panel" hidden>
+      <div id="map-container"></div>
+    </main>
+
+    <!-- تب من -->
+    <main id="tab-settings" class="tab-panel" hidden>
+      <div class="login-card settings-card">
+        <h1>من</h1>
+        <div class="settings-row">
+          <span>گرایش‌های فعال</span>
+          <div class="track-toggle">
+            <button class="toggle" data-track="business">بازرگانی</button>
+            <button class="toggle" data-track="industrial">صنعتی</button>
+            <button class="toggle" data-track="technology">تکنولوژی</button>
+            <button class="toggle" data-track="strategy">استراتژی</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <span>حالت مطالعه</span>
+          <div class="study-mode-toggle">
+            <button class="toggle" data-mode="desk" id="mode-desk">🪑 پشت میز</button>
+            <button class="toggle" data-mode="commute" id="mode-commute">🚇 در مسیر</button>
+          </div>
+        </div>
+        <div class="settings-row" style="margin-top:6px;">
+          <span>قفل زنجیره</span>
+          <button id="btn-freeze-streak" class="btn small">🔒 قفل روز پیوسته</button>
+          <span id="freeze-info" style="font-size:11px;color:var(--ink-soft);margin-left:12px;"></span>
+        </div>
+        <div class="settings-row">
+          <span>تاریخ کنکور</span>
+          <div class="exam-date-row">
+            <input id="input-exam-date" type="date" />
+            <button id="btn-save-exam" class="btn small primary">ذخیره</button>
+          </div>
+        </div>
+        <p id="settings-saved" class="saved-msg" hidden>ذخیره شد.</p>
+        <button id="btn-logout" class="btn ghost">خروج</button>
+      </div>
+    </main>
+
+    <!-- ناوبری پایین -->
+    <nav class="bottom-nav" role="tablist">
+      <button class="nav-btn active" data-tab="home" role="tab">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 11 12 4l8 7v9h-5v-6h-6v6H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <span>خانه</span>
+      </button>
+      <button class="nav-btn" data-tab="today" role="tab">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 3v4M16 3v4M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>امروز</span>
+      </button>
+      <button class="nav-btn" data-tab="lessons" role="tab">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 6h10M6 10h10M6 14h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>آموزش درس</span>
+      </button>
+      <button class="nav-btn" data-tab="map" role="tab">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 6l6-2 4 2 6-2v14l-6 2-4-2-6 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 4v14M14 6v14" stroke="currentColor" stroke-width="2"/></svg>
+        <span>مسیر</span>
+      </button>
+      <button class="nav-btn" data-tab="settings" role="tab">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5.5 21c1-4 3.5-6 6.5-6s5.5 2 6.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>من</span>
+      </button>
+    </nav>
+  </section>
+
+  
+<script>
+/* ===== AEL LIVE TEST — Local Mock API (no backend needed) =====
+   This intercepts fetch() for /api/* and returns realistic data
+   shaped exactly like apps/worker/src/index.ts responses. */
+(function () {
+  var origFetch = window.fetch.bind(window);
+  var ANSWERED = 0;
+  var HOME = {
+    user: { displayName: "داوطلب تست", activeTracks: ["common", "business", "industrial"] },
+    stats: { coins: 480, streakDays: 12, dayNumber: 34, examDate: "2026-09-18", daysLeft: 118 },
+    progress: { overall: 62, assessedNodes: 26, nodes: 42 },
+    today: { answered: 10, correct: 7 },
+    reviewDue: 8,
+    nightQuiz: { available: true, wrongCount: 3, wrongAnswersCount: 3 },
+    mentorMessage: "امروز ۸ تست در نوبت مرور توست. اول یک درس کوتاه، بعد چند تست."
+  };
+  var COURSES = [
+    { courseId: "business-marketing", courseTitle: "بازاریابی", description: "آمیخته 4P و STP",
+      topics: [
+        { topic: "آمیخته 4P و 7P، بخش‌بندی STP", chapter: "فصل ۳", konkoorWeight: "ضریب ۴ بازرگانی", frequency: "پرتکرار", summary: "قبل از آمیخته بازاریابی باید بخش‌بندی، هدف‌گیری و جایگاه‌یابی انجام شود.", konkoorTips: ["ماتریس BCG و آنسوف دام ترکیبی هستند"], keyTerms: ["STP", "4P", "BCG"] },
+        { topic: "چرخه عمر محصول PLC", chapter: "فصل ۵", konkoorWeight: "متوسط", summary: "ورود، رشد، بلوغ و افول — استراتژی قیمت و ترویج در هر مرحله متفاوت است.", konkoorTips: [], keyTerms: ["PLC"] }
+      ]},
+    { courseId: "theories", courseTitle: "تئوری‌های مدیریت", description: "ساختار و رهبری",
+      topics: [
+        { topic: "ساختار پنج‌گانه مینتزبرگ", chapter: "فصل ۴", konkoorWeight: "ضریب ۳ ارشد", summary: "هسته عملیاتی، مدیریت راهبردی، میانی، تکنوکرات و پشتیبانی.", konkoorTips: ["با استانداردسازی هماهنگی می‌کنی"], keyTerms: ["Mintzberg"] }
+      ]}
+  ];
+  var MAP = { courses: [
+    { course: "بازاریابی", chapters: [{ chapter: "فصل ۳", nodes: [
+      { topic: "بخش‌بندی STP", mastery: 72 }, { topic: "آمیخته 4P", mastery: 44 }, { topic: "چرخه عمر محصول", mastery: 30 }
+    ]}]},
+    { course: "تئوری‌های مدیریت", chapters: [{ chapter: "فصل ۴", nodes: [
+      { topic: "مینتزبرگ", mastery: 58 }, { topic: "رهبری موقعیتی", mastery: null }
+    ]}]}
+  ]};
+  var QUEUE = [
+    { attemptId: "a1", attemptType: "practice", courseTitle: "بازاریابی", chapterTitle: "فصل ۳",
+      card: { cardType: "question", questionId: "q1" },
+      question: { id: "q1", text: "کدام مورد مهم‌ترین الزام پیش از اجرای آمیخته بازاریابی در بازار جدید است؟",
+        options: ["تعیین بودجه تبلیغات", "بخش‌بندی، هدف‌گیری و جایگاه‌یابی (STP)", "افزایش سبد کالاها", "رقابت قیمتی"],
+        correctOption: 1, explanation: "بدون STP آمیخته هدف ندارد.", trapNote: "بودجه بدون شناخت بازار فقط اتلاف است.", isVerified: true, contentOrigin: "official_booklet", examYear: 1403 } },
+    { attemptId: "a2", attemptType: "practice", courseTitle: "تئوری‌های مدیریت", chapterTitle: "فصل ۴",
+      card: { cardType: "question", questionId: "q2" },
+      question: { id: "q2", text: "در ساختار مینتزبرگ، هماهنگی از طریق استانداردسازی وظایف در کدام ارکان دیده می‌شود؟",
+        options: ["هسته عملیاتی", "تکنوکرات", "میانی", "پشتیبانی"],
+        correctOption: 1, explanation: "تکنوکرات با استانداردسازی هماهنگ می‌کند.", contentOrigin: "textbook_designed", examYear: 1402 } }
+  ];
+  function jsonRes(data, ok) {
+    return Promise.resolve({ ok: ok !== false, status: ok === false ? 400 : 200, json: function () { return Promise.resolve(data); } });
+  }
+  window.fetch = function (input, init) {
+    var url = String(input);
+    var method = (init && init.method) || "GET";
+    if (url.indexOf("/api/") === -1) { return origFetch(input, init); }
+    var body = {};
+    try { body = JSON.parse((init && init.body) || "{}"); } catch (e) {}
+    if (url.indexOf("/api/auth/telegram") > -1) {
+      return jsonRes({ token: "demo-token", user: { id: "demo-1", displayName: "داوطلب تست", activeTracks: ["common", "business", "industrial"] } });
+    }
+    if (url.indexOf("/api/me") > -1) {
+      return jsonRes({ user: { id: "demo-1", displayName: "داوطلب تست", activeTracks: ["common", "business", "industrial"] } });
+    }
+    if (url.indexOf("/api/tracks") > -1) {
+      return jsonRes({ tracks: ["common"].concat(body.tracks || []) });
+    }
+    if (url.indexOf("/api/home") > -1) { return jsonRes(HOME); }
+    if (url.indexOf("/api/queue") > -1) { return jsonRes({ items: QUEUE }); }
+    if (url.indexOf("/api/night-quiz") > -1) { return jsonRes({ items: QUEUE }); }
+    if (url.indexOf("/api/answers") > -1) {
+      var q = QUEUE.filter(function (i) { return i.question.id === body.questionId; })[0];
+      var correct = q ? (body.selectedOption === q.question.correctOption) : false;
+      ANSWERED++;
+      return jsonRes({
+        wasCorrect: correct, correctOption: q ? q.question.correctOption : 0,
+        explanation: q ? q.question.explanation : "",
+        trapNote: q ? q.question.trapNote : "",
+        lesson: { course: "بازاریابی", topic: "بخش‌بندی STP", summary: "STP یعنی: بازار را بخش کن، هدف را انتخاب کن، جایگاه بساز.", konkoorTips: ["BCG و آنسوف ابزار راهبردی‌اند"], keyTerms: ["STP", "4P"] },
+        report: { wasCorrect: correct, mentorMessage: correct ? "آفرین! همین مسیر را ادامه بده." : "نگران نباش؛ قدم به قدم تثبیتش می‌کنیم.", masteryDeltas: [{ topic: "بخش‌بندی STP", nodeId: "n1", before: 44, after: correct ? 58 : 42 }] },
+        proofReady: null, stats: { coins: 480 + ANSWERED, streakDays: 12 }
+      });
+    }
+    if (url.indexOf("/api/self-report") > -1) { return jsonRes({ ok: true, note: "ثبت شد (حالت تست)." }); }
+    if (url.indexOf("/api/lessons") > -1) { return jsonRes({ courses: COURSES }); }
+    if (url.indexOf("/api/map") > -1) { return jsonRes(MAP); }
+    if (url.indexOf("/api/settings") > -1) { return jsonRes({ ok: true }); }
+    if (url.indexOf("/api/streak/freeze") > -1) { return jsonRes({ ok: true, month: "آبان" }); }
+    if (url.indexOf("/api/learning-paths") > -1) { return jsonRes([]); }
+    if (url.indexOf("/api/learning-quiz") > -1) { return jsonRes({ ok: true }); }
+    return jsonRes({ error: "Not found (mock)" }, false);
+  };
+  // Telegram shim so code path stays the same
+  window.Telegram = { WebApp: { initData: "", initDataUnsafe: null, ready: function () {}, expand: function () {} } };
+})();
+</script>
+<script>/* Shared learner interface: the Mini App uses a Worker adapter; the file demo uses a local adapter. */
+(function () {
+  'use strict';
+
+  const day = 86_400_000;
+  const fa = new Intl.NumberFormat('fa-IR');
+  const digits = value => fa.format(value);
+  const labels = {
+    practice: 'تمرین آموزشی', diagnostic: 'سنجش شروع', timed: 'آزمون زمان‌دار',
+    correct: 'درست', incorrect: 'نادرست', skipped: 'نزده', pending: 'در انتظار ارزیابی',
+  };
+
+  function element(tag, text, cls) {
+    const node = document.createElement(tag);
+    if (text != null) node.textContent = text;
+    if (cls) node.className = cls;
+    return node;
+  }
+
+  function mathParagraph(text) {
+    const paragraph = element('p');
+    const arithmetic = /[−-]?[0-9۰-۹٠-٩][0-9۰-۹٠-٩٫.,٪%²³]*(?:\s*[+×÷=−*]\s*[−-]?[0-9۰-۹٠-٩][0-9۰-۹٠-٩٫.,٪%²³]*)+/g;
+    let offset = 0;
+    for (const match of text.matchAll(arithmetic)) {
+      paragraph.append(text.slice(offset, match.index));
+      const expression = element('bdi', match[0]);
+      expression.dir = 'ltr';
+      paragraph.append(expression);
+      offset = match.index + match[0].length;
+    }
+    paragraph.append(text.slice(offset));
+    return paragraph;
+  }
+
+  function button(text, action, handler, style = '') {
+    const node = element('button', text, 'learn-button ' + style);
+    node.type = 'button';
+    node.dataset.action = action;
+    node.addEventListener('click', handler);
+    return node;
+  }
+
+  function details(title, child) {
+    const node = element('details', null, 'learn-details');
+    node.append(element('summary', title), child);
+    return node;
+  }
+
+  function initialState() {
+    return { studied: [], reviews: {}, active: null, issues: [] };
+  }
+
+  function mount(root, api, options = {}) {
+    const offline = options.offline === true;
+    let scope = options.scope || 'local';
+    let data;
+    let course;
+    let screen = 'hub';
+    let selectedTopic;
+    let selectedBlock = null;
+    let selectedTopics = [];
+    let builderCount = '6';
+    let builderMode = 'practice';
+    let builderKind = '';
+    let quotaEnabled = false;
+    let quotaValues = {};
+    let lessonReturn = 'course';
+    let busy = false;
+    let warning = '';
+    let timer;
+    let pending;
+    let storageUnavailable = false;
+    let generation = 0;
+    let state = read();
+
+    function storageKey() { return 'ael.learning.v1.' + scope; }
+    function read() {
+      try {
+        const raw = JSON.parse(localStorage.getItem(storageKey()) || 'null');
+        if (raw && Array.isArray(raw.studied) && Array.isArray(raw.issues) &&
+            raw.reviews && typeof raw.reviews === 'object' && !Array.isArray(raw.reviews)) {
+          if (raw.active && (!Array.isArray(raw.active.questions) || !raw.active.challenge ||
+              !raw.active.answers || !raw.active.results || !Array.isArray(raw.active.marked))) raw.active = null;
+          return raw;
+        }
+      } catch { storageUnavailable = true; }
+      return initialState();
+    }
+
+    function save() {
+      try { localStorage.setItem(storageKey(), JSON.stringify(state)); }
+      catch { storageUnavailable = true; }
+    }
+
+    function heading(title, subtitle) {
+      const header = element('header', null, 'learn-heading');
+      header.append(element('p', offline ? 'آزمایش آفلاین AEL' : 'مسیر یادگیری AEL', 'learn-eyebrow'), element('h2', title));
+      if (subtitle) header.append(element('p', subtitle, 'learn-muted'));
+      root.append(header);
+    }
+
+    function go(next) {
+      warning = '';
+      if (next !== 'lesson') selectedBlock = null;
+      screen = next;
+      render();
+      const block = next === 'lesson' && selectedBlock && [...root.querySelectorAll('[data-learning-block]')]
+        .find(node => node.dataset.learningBlock === selectedBlock);
+      (block || root.querySelector('h2'))?.focus();
+      block?.scrollIntoView({ block: 'center' });
+    }
+
+    function card(parent = root) {
+      const box = element('section', null, 'learn-card');
+      parent.append(box);
+      return box;
+    }
+
+    function mainButton(title, action, handler) { return button(title, action, handler, 'learn-primary'); }
+    function routeButton() { return button('بازگشت به مسیر', 'course', () => go(course ? 'course' : 'hub')); }
+    function active() { return state.active; }
+    function topicFor(id) { return course?.topics.find(topic => topic.id === id); }
+    function incorrectQuestionIds(topicId) {
+      return Object.keys(state.reviews).filter(id => {
+        const review = state.reviews[id];
+        if (!review || review.courseId !== course.id || review.status !== 'incorrect') return false;
+        const topic = review.topicId || data.questionIndex?.entries.find(item =>
+          item.id === id && item.sourceType === 'authored' && item.courseId === course.id)?.topicId;
+        return topic === topicId;
+      });
+    }
+    function normalizeSearch(value) {
+      return value.toLocaleLowerCase('fa').replace(/ي/g, 'ی').replace(/ك/g, 'ک')
+        .replace(/[۰-۹]/g, digit => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit)))
+        .replace(/[٠-٩]/g, digit => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)))
+        .replace(/[\u200c\s]+/g, ' ').trim();
+    }
+    function hasReviewed(id) { return state.reviews[id]?.attempts > 0; }
+
+    function findNextTopic() {
+      return course.topics.find(topic => !state.studied.includes(topic.id) &&
+        topic.prerequisites.every(id => state.studied.includes(id))) || course.topics[0];
+    }
+
+    function sources(ids) {
+      const list = element('ul', null, 'learn-source-list');
+      for (const id of ids || []) {
+        const source = course?.sources.find(item => item.id === id);
+        if (!source) continue;
+        const item = element('li');
+        item.append(element('span', source.title + ' · ' + source.locator));
+        if (!offline) {
+          const url = new URL(source.url);
+          if (url.protocol === 'https:') {
+            const link = element('a', 'باز کردن منبع');
+            link.href = url.href;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            item.append(link);
+          }
+        } else {
+          const address = element('span', source.url, 'learn-address');
+          address.dir = 'ltr';
+          item.append(address);
+        }
+        list.append(item);
+      }
+      if (!list.children.length) list.append(element('li', 'ارجاع تکمیلی برای این مورد ثبت نشده است.'));
+      return list;
+    }
+
+    function renderHub() {
+      heading('از یک درس کوتاه شروع کن', 'یک مبحث، یک مثال و چند تست. مسیر را هر زمان می‌توانی ادامه بدهی.');
+      if (offline) root.append(element('p', 'نسخهٔ شخصی با تمرین تألیفی. کارکرد و گزارش ایراد روی همین دستگاه ذخیره می‌شود.', 'learn-note'));
+      for (const item of data.courses) {
+        const box = card();
+        box.append(element('h3', item.title), element('p', item.description, 'learn-muted'),
+          mainButton('باز کردن مسیر', 'open-course', () => { course = item; go('course'); }));
+      }
+      root.append(button('الگوهای سؤال در ده دوره', 'recurrence', () => go('recurrence')));
+      if (data.questionIndex) root.append(button('شناسنامهٔ سؤال‌های موجود', 'question-index', () => go('questionIndex')));
+      root.append(button('گزارش ایرادهای ثبت‌شده', 'issues', () => go('issues')));
+      if (offline) root.append(button('پشتیبان‌گیری و بازیابی', 'backup', () => go('backup')));
+    }
+
+    function renderCourse() {
+      heading(course.title, course.scopeNote);
+      const next = findNextTopic();
+      const route = card();
+      const completed = course.topics.filter(topic => state.studied.includes(topic.id)).length;
+      route.append(element('p', digits(completed) + ' از ' + digits(course.topics.length) + ' درس مطالعه شده', 'learn-eyebrow'),
+        element('h3', completed === course.topics.length ? 'یک مرور کوتاه' : 'گام پیشنهادی'),
+        element('p', next.title + ' · حدود ' + digits(next.minutes) + ' دقیقه'),
+        mainButton('رفتن به درس', 'next-lesson', () => { selectedTopic = next; lessonReturn = 'course'; go('lesson'); }));
+      const actions = element('div', null, 'learn-actions');
+      const diagnosticCount = Math.min(course.topics.length, 12);
+      const timedCount = Math.min(course.questionCount, 6);
+      actions.append(button('سنجش شروع · ' + digits(diagnosticCount) + ' تست', 'diagnostic', () => begin('diagnostic', undefined, undefined, diagnosticCount)),
+        button('آزمون زمان‌دار · ' + digits(timedCount) + ' تست', 'timed', () => begin('timed', undefined, undefined, timedCount)),
+        button('ساخت آزمون دلخواه', 'custom-exam', () => {
+          selectedTopics = course.topics.map(topic => topic.id);
+          builderCount = '6'; builderMode = 'practice'; builderKind = ''; quotaEnabled = false; quotaValues = {};
+          go('builder');
+        }),
+        button('مرور اشتباه‌ها و نشان‌ها', 'review', () => go('review')));
+      if (active()?.challenge.courseId === course.id && active().challenge.version === course.version && !active().summary) {
+        actions.prepend(mainButton('ادامهٔ جلسهٔ قبلی', 'resume', () => go('quiz')));
+      }
+      root.append(actions);
+      const topicList = card();
+      topicList.append(element('h3', 'درس‌های کوتاه'));
+      const searchLabel = element('label', 'جست‌وجو در درس‌ها ');
+      const search = element('input');
+      search.type = 'search';
+      search.placeholder = 'نام مبحث یا مفهوم';
+      searchLabel.append(search);
+      const sourceLabel = element('label', 'انتخاب مرجع و بخش ');
+      const sourceFilter = element('select');
+      sourceFilter.dataset.action = 'filter-learning-source';
+      const allSources = element('option', 'همهٔ مراجع');
+      allSources.value = '';
+      sourceFilter.append(allSources);
+      for (const source of course.sources) {
+        if (!course.topics.some(topic => (topic.sourceIds || []).includes(source.id))) continue;
+        const option = element('option', source.title + ' · ' + source.locator);
+        option.value = source.id;
+        sourceFilter.append(option);
+      }
+      sourceLabel.append(sourceFilter);
+      const matches = element('div');
+      const empty = element('p', 'مبحثی با این جست‌وجو و مرجع پیدا نشد.', 'learn-muted');
+      empty.hidden = true;
+      topicList.append(searchLabel, sourceLabel, matches, empty);
+      for (const topic of course.topics) {
+        const wrongCount = incorrectQuestionIds(topic.id).length;
+        const title = topic.title + (state.studied.includes(topic.id) ? ' · مطالعه شد' : '') +
+          (wrongCount ? ' · ' + digits(wrongCount) + ' پاسخ نادرست برای مرور' : '');
+        const item = button(title, 'topic-' + topic.id, () => { selectedTopic = topic; lessonReturn = 'course'; go('lesson'); }, 'learn-topic');
+        const topicSources = course.sources.filter(source => (topic.sourceIds || []).includes(source.id));
+        item.dataset.search = normalizeSearch([topic.title, topic.objective, ...topic.concepts,
+          ...topicSources.flatMap(source => [source.title, source.locator])].join(' '));
+        item.dataset.sourceIds = JSON.stringify(topic.sourceIds || []);
+        matches.append(item);
+      }
+      function filterTopics() {
+        const query = normalizeSearch(search.value);
+        let visible = 0;
+        for (const item of matches.children) {
+          item.hidden = !item.dataset.search.includes(query) ||
+            (sourceFilter.value !== '' && !JSON.parse(item.dataset.sourceIds).includes(sourceFilter.value));
+          if (!item.hidden) visible++;
+        }
+        empty.hidden = visible !== 0;
+      }
+      search.addEventListener('input', filterTopics);
+      sourceFilter.addEventListener('change', filterTopics);
+      root.append(button('بازگشت به درس‌ها', 'hub', () => go('hub')));
+    }
+
+    function renderLesson() {
+      const topic = selectedTopic;
+      heading(topic.title, topic.objective);
+      const box = card();
+      const missing = topic.prerequisites.map(topicFor).find(t => t && !state.studied.includes(t.id));
+      if (missing) box.append(button('پیش‌نیاز پیشنهادی: ' + missing.title, 'prerequisite', () => { selectedTopic = missing; selectedBlock = null; go('lesson'); }));
+      box.append(element('h3', 'سه نکته برای حل'));
+      const list = element('ol');
+      topic.concepts.forEach((concept, index) => {
+        const item = element('li', concept);
+        item.tabIndex = -1;
+        item.dataset.learningBlock = 'concept:' + index;
+        list.append(item);
+      });
+      const formula = element('p', topic.formula, 'learn-formula');
+      formula.dir = 'ltr';
+      formula.tabIndex = -1;
+      formula.dataset.learningBlock = 'formula';
+      const example = mathParagraph(topic.workedExample);
+      example.tabIndex = -1;
+      example.dataset.learningBlock = 'workedExample';
+      const commonError = element('p', 'دام رایج: ' + topic.commonError, 'learn-note');
+      commonError.tabIndex = -1;
+      commonError.dataset.learningBlock = 'commonError';
+      box.append(list, formula, element('h3', 'مثال حل‌شده'), example,
+        commonError, details('ارجاع درس', sources(topic.sourceIds)));
+      const count = Math.min(topic.questionCount, 3);
+      box.append(mainButton('تمرین این درس · ' + digits(count) + ' تست', 'practice', () => {
+        if (!state.studied.includes(topic.id)) state.studied.push(topic.id);
+        save();
+        begin('practice', topic.id, undefined, count);
+      }));
+      const incorrectIds = incorrectQuestionIds(topic.id);
+      if (incorrectIds.length) box.append(button('مرور پاسخ‌های نادرست این درس · ' + digits(incorrectIds.length),
+        'practice-topic-errors', () => begin('practice', topic.id, incorrectIds, Math.min(incorrectIds.length, 12))));
+      box.append(button(state.studied.includes(topic.id) ? 'مطالعه‌شده' : 'ثبت مطالعهٔ این درس', 'mark-studied', () => {
+        if (!state.studied.includes(topic.id)) state.studied.push(topic.id);
+        save();
+        render();
+      }));
+      if (lessonReturn === 'quiz' || lessonReturn === 'summary') {
+        box.append(button('بازگشت به پاسخ سؤال', 'return-result', () => go(lessonReturn)));
+      }
+      root.append(routeButton());
+    }
+
+    function renderBuilder() {
+      heading('ساخت آزمون دلخواه', 'مباحث و تعداد سؤال را انتخاب کن.');
+      const box = card();
+      const list = element('fieldset');
+      list.append(element('legend', 'مباحث'));
+      const availability = element('p', '', 'learn-muted');
+      availability.setAttribute('aria-live', 'polite');
+      const quotaFields = new Map();
+      function updateAvailability() {
+        const selected = course.topics.filter(topic => selectedTopics.includes(topic.id));
+        const capacity = topic => kind.value === 'essay' ? topic.essayCount : kind.value === 'mcq'
+          ? (topic.mcqCount ?? topic.questionCount - topic.essayCount) : topic.questionCount;
+        const total = selected.reduce((sum, topic) => sum + capacity(topic), 0);
+        availability.textContent = course.hasVariantGroups
+          ? 'حداکثر ' + digits(total) + ' سؤال در مباحث انتخابی؛ موارد مشابه مشترک هنگام ساخت حذف می‌شوند.'
+          : digits(total) + ' سؤال در مباحث انتخابی موجود است.';
+        for (const [id, field] of quotaFields) field.hidden = !quotaEnabled || !selectedTopics.includes(id);
+        count.disabled = quotaEnabled;
+        if (quotaEnabled) {
+          const requested = selected.reduce((sum, topic) => sum + (Number(normalizeSearch(quotaValues[topic.id])) || 0), 0);
+          count.value = String(requested);
+          availability.textContent += ' سهمیه: ' + selected.map(topic => topic.title + '، موجود ' + digits(capacity(topic))).join(' · ');
+        } else count.value = builderCount;
+      }
+      for (const topic of course.topics) {
+        const label = element('label');
+        const check = element('input');
+        check.type = 'checkbox';
+        check.checked = selectedTopics.includes(topic.id);
+        check.addEventListener('change', () => {
+          selectedTopics = check.checked ? [...selectedTopics, topic.id] : selectedTopics.filter(id => id !== topic.id);
+          updateAvailability();
+        });
+        label.append(check, document.createTextNode(' ' + topic.title + ' · ' + digits(topic.questionCount) + ' سؤال'));
+        const quotaLabel = element('label', ' تعداد از این مبحث ');
+        const quota = element('input');
+        quota.type = 'text'; quota.inputMode = 'numeric'; quota.maxLength = 2;
+        quota.dataset.action = 'quota-' + topic.id;
+        quota.value = quotaValues[topic.id] ?? '1';
+        quotaValues[topic.id] = quota.value;
+        quota.addEventListener('input', () => { quotaValues[topic.id] = quota.value; updateAvailability(); });
+        quotaLabel.append(quota);
+        quotaFields.set(topic.id, quotaLabel);
+        list.append(label, quotaLabel, element('br'));
+      }
+      const countLabel = element('label', 'تعداد سؤال، از ۱ تا ۱۲ ');
+      const count = element('input');
+      count.type = 'number'; count.min = '1'; count.max = '12'; count.value = builderCount;
+      count.addEventListener('input', () => { builderCount = count.value; });
+      countLabel.append(count);
+      const modeLabel = element('label', ' نوع آزمون ');
+      const mode = element('select');
+      for (const [value, title] of [['practice', 'تمرین با پاسخ فوری'], ['diagnostic', 'سنجش'], ['timed', 'زمان‌دار']]) {
+        const option = element('option', title); option.value = value; mode.append(option);
+      }
+      mode.value = builderMode;
+      mode.addEventListener('change', () => { builderMode = mode.value; });
+      modeLabel.append(mode);
+      const kindLabel = element('label', ' نوع سؤال ');
+      const kind = element('select');
+      kind.dataset.action = 'question-kind';
+      for (const [value, title] of [['', 'همهٔ انواع'], ['mcq', 'چهارگزینه‌ای'], ['essay', 'تشریحی']]) {
+        const option = element('option', title); option.value = value; kind.append(option);
+      }
+      kind.value = builderKind;
+      kind.addEventListener('change', () => { builderKind = kind.value; updateAvailability(); });
+      kindLabel.append(kind);
+      const quotaChoice = element('label', ' تعیین تعداد برای هر مبحث ');
+      const quotaToggle = element('input'); quotaToggle.type = 'checkbox';
+      quotaToggle.dataset.action = 'quota-toggle'; quotaToggle.checked = quotaEnabled;
+      quotaToggle.addEventListener('change', () => { quotaEnabled = quotaToggle.checked; updateAvailability(); });
+      quotaChoice.prepend(quotaToggle);
+      updateAvailability();
+      box.append(quotaChoice, list, availability, countLabel, modeLabel, kindLabel,
+        mainButton('شروع آزمون', 'start-custom', () => {
+          if (!selectedTopics.length) { warning = 'دست‌کم یک مبحث انتخاب کن.'; render(); return; }
+          builderCount = quotaEnabled ? builderCount : count.value; builderMode = mode.value; builderKind = kind.value;
+          const topicQuotas = quotaEnabled ? selectedTopics.map(id => ({ topicId: id, count: Number(normalizeSearch(quotaValues[id])) })) : undefined;
+          begin(mode.value, undefined, undefined, Number(count.value), selectedTopics, kind.value || undefined, topicQuotas);
+        }));
+      root.append(routeButton());
+    }
+
+    function begin(mode, topicId, reviewIds, count, topicIds, kind, topicQuotas) {
+      const current = active();
+      if (current && !current.summary && current.questions.length &&
+          !window.confirm('جلسهٔ قبلی هنوز باز است. جلسهٔ تازه جای آن را بگیرد؟')) return;
+      run(async isCurrent => {
+        const session = await api.start({ courseId: course.id, mode, topicId, reviewIds, count,
+          ...(topicIds ? { topicIds, requireCount: true } : {}), ...(kind ? { kind } : {}),
+          ...(topicQuotas ? { topicQuotas } : {}) });
+        if (!isCurrent()) return;
+        state.active = { ...session,
+          deviceDeadline: session.challenge.deadline === null ? null : Date.now() + session.challenge.deadline - session.challenge.startedAt,
+          index: 0, answers: {}, results: {}, marked: [], summary: null,
+          questionShownAt: Date.now(), spentMs: {} };
+        screen = 'quiz';
+        save();
+      });
+    }
+
+    /** UX-03: تمرین انتقالی پس از غلط — سؤال مستقل از همان مبحث (خارج از گروه هم‌ارزی). */
+    function beginTransfer(questionId) {
+      const current = active();
+      if (current && !current.summary && current.questions.length &&
+          !window.confirm('جلسهٔ قبلی هنوز باز است. جلسهٔ تازه جای آن را بگیرد؟')) return;
+      run(async isCurrent => {
+        const session = await api.transfer({ courseId: course.id, questionId });
+        if (!isCurrent()) return;
+        state.active = { ...session,
+          deviceDeadline: session.challenge.deadline === null ? null : Date.now() + session.challenge.deadline - session.challenge.startedAt,
+          index: 0, answers: {}, results: {}, marked: [], summary: null,
+          questionShownAt: Date.now(), spentMs: {} };
+        screen = 'quiz';
+        save();
+      });
+    }
+
+    function run(task) {
+      if (busy) return;
+      busy = true;
+      warning = '';
+      const requestGeneration = generation;
+      render();
+      const isCurrent = () => requestGeneration === generation;
+      Promise.resolve().then(() => task(isCurrent)).catch(error => {
+        if (requestGeneration === generation) warning = error.message || 'عملیات انجام نشد.';
+      }).finally(() => {
+        if (!isCurrent()) return;
+        busy = false;
+        render();
+        root.querySelector('[role="alert"]')?.focus();
+        if (!warning && screen === 'quiz') root.querySelector('.learn-feedback h3')?.focus();
+      });
+    }
+
+    function rememberResult(result) {
+      if (result.status === 'pending') return;
+      const previous = state.reviews[result.id] || {};
+      const streak = result.status === 'correct' ? (previous.streak || 0) + 1 : 0;
+      state.reviews[result.id] = { ...previous, courseId: course.id, topicId: result.topicId, status: result.status, streak,
+        attempts: (previous.attempts || 0) + 1,
+        due: Date.now() + day * (streak >= 2 ? 7 : streak ? 3 : 1) };
+    }
+
+    function setBookmark(id) {
+      const previous = state.reviews[id] || {};
+      state.reviews[id] = { ...previous, courseId: course.id, bookmarked: !previous.bookmarked };
+      save();
+      render();
+      root.querySelector('[data-action="bookmark"]')?.focus();
+    }
+
+    function recordTime(s, q) {
+      s.spentMs[q.id] = (s.spentMs[q.id] || 0) + Math.max(0, Date.now() - s.questionShownAt);
+    }
+
+    function move(index) {
+      const s = active();
+      recordTime(s, s.questions[s.index]);
+      s.index = index;
+      s.questionShownAt = Date.now();
+      save();
+      render();
+      root.querySelector('.learn-question-title')?.focus();
+    }
+
+    function finish() {
+      const s = active();
+      if (!s || s.summary || busy) return;
+      recordTime(s, s.questions[s.index]);
+      s.questionShownAt = Date.now();
+      run(async isCurrent => {
+        const summary = s.challenge.mode === 'practice'
+          ? summarize(s.questions.map(q => s.results[q.id]).filter(Boolean))
+          : await api.finish({ token: s.token, answers: s.answers });
+        if (!isCurrent()) return;
+        if (s.challenge.mode !== 'practice') summary.results.forEach(rememberResult);
+        s.summary = summary;
+        screen = 'summary';
+        save();
+      });
+    }
+
+    function summarize(results) {
+      return { results, total: results.length, correct: results.filter(r => r.status === 'correct').length,
+        incorrect: results.filter(r => r.status === 'incorrect').length,
+        skipped: results.filter(r => r.status === 'skipped').length,
+        pending: results.filter(r => r.status === 'pending').length };
+    }
+
+    function renderTimer(s, element) {
+      if (!s.challenge.deadline) return;
+      const paint = () => {
+        const remaining = Math.max(0, Math.ceil(((s.deviceDeadline ?? s.challenge.deadline) - Date.now()) / 1000));
+        element.textContent = 'زمان باقی‌مانده: ' + digits(Math.floor(remaining / 60)) + ' دقیقه و ' + digits(remaining % 60) + ' ثانیه';
+        if (remaining === 0 && !s.timedOut) {
+          s.timedOut = true;
+          save();
+          queueMicrotask(finish);
+        }
+      };
+      paint();
+      timer = setInterval(paint, 500);
+    }
+
+    function feedback(result, parent) {
+      const box = element('section', null, 'learn-feedback');
+      const resultHeading = element('h3', labels[result.status], 'learn-result-' + result.status);
+      resultHeading.tabIndex = -1;
+      const time = active()?.spentMs?.[result.id];
+      box.append(resultHeading);
+      if (result.kind === 'essay') {
+        box.append(element('p', 'پاسخ تو: ' + (result.selected === null ? 'نزده' : result.selected)),
+          element('p', 'پاسخ نمونه برای خودارزیابی'), mathParagraph(result.explanation));
+        const rubric = element('ul');
+        (result.rubric || []).forEach(item => rubric.append(element('li', item)));
+        box.append(details('معیارهای بررسی پاسخ', rubric));
+        if (result.status === 'pending') {
+          const assessment = active()?.selfAssessments?.[result.id];
+          if (assessment) box.append(element('p', 'ارزیابی شخصی: ' + (assessment === 'complete' ? 'پاسخم کامل است' : 'نیاز به مرور دارم')));
+          for (const [value, title] of [['complete', 'پاسخم کامل است'], ['review', 'نیاز به مرور دارم']]) {
+            box.append(button(title, 'self-assess-' + value, () => {
+              const session = active();
+              session.selfAssessments ||= {};
+              session.selfAssessments[result.id] = value;
+              save();
+              render();
+            }));
+          }
+          box.append(element('p', 'این نظر شخصی است و نمرهٔ تصحیح‌شده محسوب نمی‌شود.', 'learn-muted'));
+        }
+      } else {
+        box.append(element('p', 'پاسخ تو: ' + (result.selected === null ? 'نزده' : result.choices[result.selected])),
+          element('p', 'پاسخ درست: ' + result.choices[result.answerIndex]), mathParagraph(result.explanation));
+      }
+      if (typeof time === 'number') box.append(element('p', 'زمان روی سؤال: ' + digits(Math.round(time / 1000)) + ' ثانیه', 'learn-muted'));
+      const list = element('ol');
+      result.optionReasons.forEach((reason, i) => {
+        list.append(element('li', result.choices[i] + ' · ' + reason));
+      });
+      const reference = element('div');
+      reference.append(element('p', 'شناسه: ' + result.id + ' · نسخهٔ بسته: ' + course.version),
+        element('p', 'تمرین تألیفی · ' + (result.review === 'reviewed' ? 'بازبینی‌شده' : 'در انتظار بازبینی متخصص درس')),
+        sources(result.sourceIds));
+      if (result.kind !== 'essay') box.append(details('تحلیل تک‌تک گزینه‌ها', list));
+      box.append(details('ارجاع و وضعیت سؤال', reference),
+        button(state.reviews[result.id]?.bookmarked ? 'برداشتن نشان' : 'نشان‌کردن سؤال', 'bookmark', () => setBookmark(result.id)),
+        button('گزارش ایراد این سؤال', 'issue-' + result.id, () => renderIssueForm(box, result.id)));
+      const relatedTopic = topicFor(result.topicId);
+      if (result.status === 'incorrect' && relatedTopic) {
+        box.append(button((result.readingBlock ? 'مطالعهٔ بخش مرتبط: ' : 'مطالعهٔ مبحث مرتبط: ') + relatedTopic.title, 'read-related', () => {
+          selectedTopic = relatedTopic;
+          selectedBlock = result.readingBlock?.type === 'concept'
+            ? 'concept:' + result.readingBlock.index : result.readingBlock?.type || null;
+          lessonReturn = screen;
+          go('lesson');
+        }));
+      }
+      if (result.status === 'incorrect') {
+        // UX-03 (بخش ۱۵٫۳): پیشنهاد سؤال تازه از همان مهارت؛ اگر نمونهٔ مستقل نبود پیام صادقانه می‌آید.
+        box.append(button('تمرین هم‌مفهوم با سؤال تازه', 'transfer-' + result.id, () => beginTransfer(result.id)));
+      }
+      parent.append(box);
+    }
+
+    function renderQuiz() {
+      const s = active();
+      if (!s || !s.questions[s.index]) { go('course'); return; }
+      const q = s.questions[s.index];
+      const result = s.results[q.id];
+      const practice = s.challenge.mode === 'practice';
+      const expired = s.challenge.deadline !== null && Date.now() >= (s.deviceDeadline ?? s.challenge.deadline);
+      heading(labels[s.challenge.mode], 'سؤال ' + digits(s.index + 1) + ' از ' + digits(s.questions.length));
+      const box = card();
+      if (s.challenge.deadline) {
+        const clock = element('p', null, 'learn-clock');
+        clock.setAttribute('role', 'timer');
+        box.append(clock);
+        renderTimer(s, clock);
+      }
+      box.append(element('p', [topicFor(q.topicId)?.title, q.difficulty === 'basic' ? 'پایه' : 'کاربردی', 'تألیفی'].filter(Boolean).join(' · '), 'learn-eyebrow'));
+      const prompt = element('h3', q.prompt, 'learn-question-title');
+      prompt.tabIndex = -1;
+      box.append(prompt);
+      const optionGroup = element('div', null, 'learn-options');
+      optionGroup.setAttribute('role', 'group');
+      optionGroup.setAttribute('aria-label', 'گزینه‌های پاسخ');
+      q.choices.forEach((choice, index) => {
+        const option = button(digits(index + 1) + '. ' + choice, 'pick-' + index, () => {
+          s.answers[q.id] = index;
+          save();
+          render();
+          root.querySelector('[data-action="pick-' + index + '"]')?.focus();
+        }, 'learn-option');
+        option.setAttribute('aria-pressed', String(s.answers[q.id] === index));
+        option.disabled = !!result || expired;
+        optionGroup.append(option);
+      });
+      let essayInput;
+      if (q.kind === 'essay') {
+        const label = element('label', 'پاسخ تشریحی');
+        essayInput = element('textarea');
+        essayInput.dataset.action = 'essay-answer';
+        essayInput.maxLength = 5000;
+        essayInput.disabled = !!result || expired;
+        essayInput.value = typeof s.answers[q.id] === 'string' ? s.answers[q.id] : '';
+        essayInput.addEventListener('input', () => {
+          const value = essayInput.value;
+          if (value.trim()) s.answers[q.id] = value;
+          else delete s.answers[q.id];
+          const submit = root.querySelector('[data-action="submit-answer"]');
+          if (submit) submit.disabled = !value.trim();
+          save();
+        });
+        label.append(essayInput);
+        optionGroup.append(label);
+      }
+      box.append(optionGroup);
+      if (practice) {
+        if (result) {
+          feedback(result, box);
+          box.append(mainButton(s.index + 1 < s.questions.length ? 'سؤال بعد' : 'دیدن کارنامه', 'next-question', () =>
+            s.index + 1 < s.questions.length ? move(s.index + 1) : finish()));
+        } else {
+          const send = selected => run(async isCurrent => {
+            const answer = await api.answer({ token: s.token, questionId: q.id, selected });
+            if (!isCurrent()) return;
+            recordTime(s, q);
+            s.questionShownAt = Date.now();
+            s.answers[q.id] = selected;
+            s.results[q.id] = answer;
+            rememberResult(answer);
+            save();
+          });
+          const submit = mainButton('ثبت پاسخ', 'submit-answer', () => send(s.answers[q.id]));
+          submit.disabled = q.kind === 'essay' ? !(typeof s.answers[q.id] === 'string' && s.answers[q.id].trim()) : !Number.isInteger(s.answers[q.id]);
+          box.append(submit, button('رد کردن سؤال', 'skip', () => send(null)));
+        }
+      } else {
+        const marked = s.marked.includes(q.id);
+        const mark = button(marked ? 'برداشتن علامت بازبینی' : 'علامت برای بازبینی', 'mark', () => {
+          s.marked = marked ? s.marked.filter(id => id !== q.id) : [...s.marked, q.id];
+          save();
+          render();
+          root.querySelector('[data-action="mark"]')?.focus();
+        });
+        mark.disabled = expired;
+        box.append(mark);
+        const nav = element('div', null, 'learn-question-grid');
+        nav.setAttribute('aria-label', 'انتخاب شمارهٔ سؤال');
+        s.questions.forEach((question, index) => {
+          const selected = Object.hasOwn(s.answers, question.id) && s.answers[question.id] !== null;
+          const flagged = s.marked.includes(question.id);
+          const b = button(digits(index + 1) + (flagged ? ' ⚑' : ''), 'jump-' + index, () => move(index), selected ? 'learn-answered' : '');
+          b.setAttribute('aria-label', 'سؤال ' + digits(index + 1) + (selected ? '، پاسخ داده شده' : '، بدون پاسخ') + (flagged ? '، علامت‌دار' : ''));
+          if (index === s.index) b.setAttribute('aria-current', 'step');
+          nav.append(b);
+        });
+        const next = button('سؤال بعد', 'next-question', () => move(s.index + 1));
+        next.disabled = s.index + 1 >= s.questions.length;
+        box.append(nav, next, mainButton('ثبت نهایی آزمون', 'finish', () => {
+          if (window.confirm('آزمون ثبت شود؟ بعد از ثبت نهایی پاسخ‌نامه نمایش داده می‌شود.')) finish();
+        }));
+      }
+      root.append(routeButton());
+    }
+
+    function renderSummary() {
+      const summary = active()?.summary;
+      if (!summary) { go('course'); return; }
+      heading('کارنامهٔ تمرینی', 'نتیجهٔ همین جلسه برای انتخاب گام بعدی.');
+      const counts = card();
+      counts.append(element('p', [digits(summary.correct) + ' درست', digits(summary.incorrect) + ' نادرست',
+        digits(summary.skipped) + ' نزده', digits(summary.pending || 0) + ' در انتظار ارزیابی'].join(' · '), 'learn-score'));
+      const topicResults = new Map();
+      for (const result of summary.results) {
+        const totals = topicResults.get(result.topicId) || { correct: 0, incorrect: 0, skipped: 0, pending: 0 };
+        totals[result.status]++;
+        topicResults.set(result.topicId, totals);
+      }
+      const breakdown = card();
+      breakdown.append(element('h3', 'نتیجهٔ هر مبحث'));
+      for (const [topicId, totals] of topicResults) {
+        const topic = topicFor(topicId);
+        if (!topic) continue;
+        breakdown.append(element('p', topic.title + ' · ' + digits(totals.correct) + ' درست · ' +
+          digits(totals.incorrect) + ' نادرست · ' + digits(totals.skipped) + ' نزده · ' + digits(totals.pending) + ' در انتظار ارزیابی'));
+        if (totals.incorrect) breakdown.append(button('مطالعهٔ ' + topic.title, 'summary-topic-' + topicId, () => {
+          selectedTopic = topic;
+          lessonReturn = 'summary';
+          go('lesson');
+        }));
+      }
+      const next = summary.results.find(result => result.status === 'incorrect' || result.status === 'skipped');
+      const topic = topicFor(next?.topicId);
+      if (topic) counts.append(mainButton('مرور پیشنهادی: ' + topic.title, 'review-topic', () => {
+        selectedTopic = topic;
+        lessonReturn = 'summary';
+        go('lesson');
+      }));
+      const list = card();
+      list.append(element('h3', 'بازبینی پاسخ‌ها'));
+      summary.results.forEach(result => {
+        const content = element('div');
+        feedback(result, content);
+        const item = details(labels[result.status] + ' · ' + result.prompt, content);
+        item.dataset.question = result.id;
+        list.append(item);
+      });
+      root.append(routeButton());
+    }
+
+    function renderReview() {
+      heading('مرور و دفتر اشتباه‌ها', 'اول از حافظه جواب بده، بعد دوباره توضیح را بخوان.');
+      const ids = Object.keys(state.reviews).filter(id => state.reviews[id].courseId === course.id &&
+        (state.reviews[id].bookmarked || (hasReviewed(id) && state.reviews[id].status !== 'correct')));
+      const due = Object.keys(state.reviews).filter(id => state.reviews[id].courseId === course.id &&
+        hasReviewed(id) && (state.reviews[id].due || Infinity) <= Date.now());
+      const box = card();
+      box.append(element('p', ids.length || due.length
+        ? digits(ids.length) + ' مورد ذخیره شده · ' + digits(due.length) + ' مورد آمادهٔ مرور'
+        : 'پس از نخستین تمرین، غلط‌ها و سؤال‌های نشان‌دار اینجا دیده می‌شوند.'));
+      if (due.length) box.append(mainButton('شروع مرور آماده', 'due-review', () => begin('practice', undefined, due, 6)));
+      if (ids.length) box.append(button('تمرین از همهٔ موارد', 'review-all', () => begin('practice', undefined, ids, 6)));
+      root.append(routeButton());
+    }
+
+    function renderRecurrence() {
+      const report = data.recurrence;
+      heading('الگوهای سؤال در ده دوره', 'نمونه‌های ردیابی‌شده، در انتظار تطبیق با تصویر و کلید رسمی.');
+      const intro = card();
+      intro.append(element('p', 'بازهٔ ' + digits(report.window.from) + ' تا ' + digits(report.window.through) + ' · شواهد بانک موجود'));
+      for (const row of report.coverage) {
+        intro.append(element('p', row.examLevel + ' · ' + digits(row.traceableRows) + ' سؤال دارای شناسهٔ دفترچه و شماره', 'learn-muted'));
+      }
+      for (const pattern of report.patterns) {
+        const box = card();
+        box.append(element('h3', pattern.title), element('p', pattern.examLevel + ' · ' + digits(pattern.years.length) + ' سال متمایز'),
+          element('p', pattern.summary), element('p', pattern.practicePrompt, 'learn-note'));
+        const list = element('ul');
+        pattern.occurrences.forEach(q => list.append(element('li', 'سال ' + digits(q.year) + ' · دفترچه ' + q.booklet + ' · سؤال ' + digits(q.number))));
+        box.append(details('رد شواهد', list));
+      }
+      root.append(button('بازگشت به درس‌ها', 'hub', () => go('hub')));
+    }
+
+    function renderQuestionIndex() {
+      heading('شناسنامهٔ سؤال‌های موجود', 'سؤال‌های تألیفی و رکوردهای ردیابی‌شده با وضعیت بازبینی جداگانه.');
+      const box = card();
+      const label = element('label', 'جست‌وجو با سال، مقطع، دفترچه یا شناسهٔ مبحث ');
+      const search = element('input');
+      search.type = 'search';
+      label.append(search);
+      const count = element('p', '', 'learn-muted');
+      count.setAttribute('aria-live', 'polite');
+      const list = element('ul');
+      let limit = 30;
+      const more = button('نمایش موارد بیشتر', 'index-more', () => { limit += 30; update(); });
+      function update() {
+        const query = normalizeSearch(search.value);
+        const found = data.questionIndex.entries.filter(item => normalizeSearch(
+          [item.id, item.level, item.year, item.booklet, item.number, item.courseId, item.sectionId, item.topicId,
+            item.sourceType === 'authored' ? 'تألیفی' : 'کنکور ردیابی شده',
+            item.courseTitle, item.chapterTitle, item.topicTitle]
+            .filter(value => value != null).join(' ')).includes(query));
+        count.textContent = digits(found.length) + ' شناسنامه پیدا شد. ' + digits(Math.min(limit, found.length)) + ' مورد نمایش داده می‌شود.';
+        list.replaceChildren();
+        for (const item of found.slice(0, limit)) {
+          const parts = item.sourceType === 'authored'
+            ? ['تألیفی', item.courseTitle || 'درس نامشخص', item.topicTitle || 'مبحث نامشخص']
+            : [item.level || 'مقطع نامشخص', item.year ? digits(item.year) : 'سال نامشخص',
+            item.booklet ? 'دفترچه ' + item.booklet : 'دفترچه نامشخص',
+            item.number ? 'سؤال ' + digits(item.number) : 'شماره نامشخص', item.topicId || 'مبحث نامشخص'];
+          const row = element('li');
+          row.append(element('p', parts.join(' · ')));
+          const detail = element('div');
+          detail.append(element('p', 'شناسهٔ سؤال: ' + item.id),
+            element('p', 'شناسهٔ درس: ' + (item.courseId || 'ثبت نشده')),
+            element('p', 'شناسهٔ بخش: ' + (item.sectionId || 'ثبت نشده')),
+            element('p', 'درس ثبت‌شده: ' + (item.courseTitle || 'نامشخص')),
+            element('p', 'فصل ثبت‌شده: ' + (item.chapterTitle || 'نامشخص')),
+            element('p', 'مبحث ثبت‌شده: ' + (item.topicTitle || 'نامشخص')),
+            element('p', 'نگاشت درس و مبحث نیازمند بازبینی است.'),
+            element('p', item.sourceType === 'authored' ? 'منشأ سؤال: تألیفی' : 'کلید و منبع: در انتظار تطبیق با سند'),
+            element('p', 'وضعیت حقوق: ' + (item.rights === 'pending_review' ? 'در انتظار بررسی' : item.rights === 'original_ael' ? 'تألیفی AEL' : item.rights)),
+            element('p', 'وضعیت بازبینی: ' + (item.review === 'not_reviewed' || item.review === 'pending_sme' ? 'در انتظار بازبینی' : item.review)));
+          if (item.auditStatus === 'conflict') detail.append(element('p', 'تعارض با تصویر موجود پیدا شده است؛ نیازمند بررسی منبع و کلید.', 'learn-warning'));
+          if (item.auditStatus === 'image_match_pending_key') detail.append(element('p', 'صورت و گزینه‌ها با تصویر موجود تطبیق داده شده‌اند. کلید و اصالت فایل بررسی نشده‌اند.', 'learn-muted'));
+          for (const source of item.learningReferences || []) {
+            detail.append(element('p', 'مرجع آموزشی: ' + source.title + ' · ' + source.locator));
+          }
+          row.append(details('جزئیات شناسنامه', detail));
+          list.append(row);
+        }
+        more.hidden = found.length <= limit;
+      }
+      search.addEventListener('input', () => { limit = 30; update(); });
+      box.append(label, count, list, more);
+      update();
+      root.append(button('بازگشت به درس‌ها', 'hub', () => go('hub')));
+    }
+
+    function renderIssueForm(parent, questionId) {
+      if (parent.querySelector('form')) return;
+      const form = element('form', null, 'learn-issue');
+      const label = element('label', 'شرح ایراد (حداکثر ۵۰۰ نویسه)');
+      const field = element('textarea');
+      field.maxLength = 500;
+      field.required = true;
+      label.append(field);
+      const submit = element('button', 'ذخیرهٔ گزارش روی دستگاه', 'learn-button');
+      submit.type = 'submit';
+      form.append(label, submit);
+      form.addEventListener('submit', event => {
+        event.preventDefault();
+        const note = field.value.trim();
+        if (!note) return;
+        state.issues.push({ questionId, note, at: new Date().toISOString() });
+        save();
+        form.replaceChildren(element('p', 'گزارش روی دستگاه ثبت شد.'));
+        if (offline) form.append(button('رفتن به خروجی گزارش', 'issues', () => go('issues')));
+      });
+      parent.append(form);
+      field.focus();
+    }
+
+    function renderIssues() {
+      heading('گزارش ایرادها', 'فایل خروجی را می‌توانی برای بررسی بفرستی.');
+      const box = card();
+      box.append(element('p', digits(state.issues.length) + ' گزارش ثبت شده'));
+      if (state.issues.length) {
+        box.append(mainButton('دانلود گزارش JSON', 'export', () => {
+          const url = URL.createObjectURL(new Blob([JSON.stringify(state.issues, null, 2)], { type: 'application/json' }));
+          const a = element('a');
+          a.href = url;
+          a.download = 'ael-offline-feedback.json';
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }));
+      }
+      root.append(button('بازگشت به درس‌ها', 'hub', () => go('hub')));
+    }
+
+    function renderBackup() {
+      heading('پشتیبان‌گیری و بازیابی', 'فایل را روی دستگاه نگه دار تا مطالعه، مرورها و جلسهٔ جاری را بازیابی کنی.');
+      const box = card();
+      box.append(mainButton('دانلود فایل پشتیبان', 'backup-export', () => {
+        const session = active();
+        if (session && !session.summary && session.questions[session.index]) {
+          recordTime(session, session.questions[session.index]);
+          session.questionShownAt = Date.now();
+          save();
+        }
+        const content = JSON.stringify({ format: 'ael-offline-backup', version: 1, state });
+        const url = URL.createObjectURL(new Blob([content], { type: 'application/json' }));
+        const link = element('a');
+        link.href = url;
+        link.download = 'ael-learning-backup.json';
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }));
+      const label = element('label', 'انتخاب فایل پشتیبان ');
+      const file = element('input');
+      file.type = 'file';
+      file.accept = '.json,application/json';
+      label.append(file);
+      box.append(label, button('بازیابی از فایل', 'backup-import', () => {
+        const selected = file.files?.[0];
+        if (!selected || selected.size > 1_000_000) {
+          warning = 'یک فایل پشتیبان کوچک‌تر از یک مگابایت انتخاب کن.';
+          render();
+          return;
+        }
+        if (!window.confirm('پیشرفت فعلی با اطلاعات فایل جایگزین شود؟')) return;
+        run(async isCurrent => {
+          const backup = JSON.parse(await selected.text());
+          const restored = api.restoreBackup(backup);
+          if (!isCurrent()) return;
+          state = restored;
+          save();
+          screen = 'hub';
+        });
+      }));
+      root.append(button('بازگشت به درس‌ها', 'hub', () => go('hub')));
+    }
+
+    function render() {
+      clearInterval(timer);
+      root.replaceChildren();
+      root.classList.add('learn-app');
+      root.setAttribute('aria-busy', String(busy));
+      if (warning) {
+        const alert = element('p', warning, 'learn-warning');
+        alert.tabIndex = -1;
+        alert.setAttribute('role', 'alert');
+        root.append(alert);
+      }
+      if (!data) {
+        root.append(element('p', pending ? 'در حال بارگذاری مسیرها…' : 'مسیرها آماده نیستند.', 'learn-note'));
+        if (!pending) root.append(button('تلاش دوباره', 'reload', open));
+        return;
+      }
+      const pages = { hub: renderHub, course: renderCourse, lesson: renderLesson, builder: renderBuilder, quiz: renderQuiz, summary: renderSummary,
+        review: renderReview, recurrence: renderRecurrence, questionIndex: renderQuestionIndex, issues: renderIssues, backup: renderBackup };
+      pages[screen]();
+      if (storageUnavailable) root.append(element('p', 'مرورگر ذخیرهٔ محلی را محدود کرده است. تا وقتی این صفحه باز است می‌توانی ادامه بدهی.', 'learn-note'));
+      const title = root.querySelector('h2');
+      if (title) title.tabIndex = -1;
+      if (busy) root.querySelectorAll('button').forEach(b => { b.disabled = true; });
+    }
+
+    function open(nextScope) {
+      if (typeof nextScope === 'string' && nextScope !== scope) {
+        generation += 1;
+        scope = nextScope;
+        state = read();
+        course = undefined;
+        screen = 'hub';
+        busy = false;
+      }
+      if (!data && !pending) {
+        pending = api.overview().then(result => { data = result; }).catch(error => {
+          warning = error.message || 'بارگذاری مسیر ممکن نشد.';
+        }).finally(() => { pending = null; render(); });
+      }
+      render();
+    }
+
+    function close() {
+      clearInterval(timer);
+      generation += 1;
+      busy = false;
+      course = undefined;
+      screen = 'hub';
+    }
+
+    return { open, close };
+  }
+
+  window.AELLearning = { mount };
+})();
+</script><script>/* آموزش کنکور — منطق مینی‌اپ یادگیری تطبیقی کنکور دکتری مدیریت */
+(function () {
+  'use strict';
+
+  var API = {
+    get: function (path) { return request('GET', path); },
+    post: function (path, body) { return request('POST', path, body); },
+    put: function (path, body) { return request('PUT', path, body); },
+  };
+
+  var API_BASE = (typeof window !== 'undefined' && window.AEL_API_BASE) || '';
+
+  function request(method, path, body) {
+    var token = localStorage.getItem('session_token') || '';
+    return fetch(API_BASE + path, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token ? 'Bearer ' + token : '',
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    }).then(function (res) {
+      if (res.status === 401) {
+        localStorage.removeItem('session_token');
+        showView('view-login');
+        throw new Error('ابتدا وارد شوید');
+      }
+      return res.json().then(function (data) {
+        if (!res.ok) throw new Error((data && data.error) || 'خطای سرور');
+        return data;
+      });
+    });
+  }
+
+  var el = function (id) { return document.getElementById(id); };
+  var state = {
+    tracks: ['common'],
+    queue: [],
+    currentIndex: 0,
+    selectedTracks: new Set(),
+    telegram: null,
+    nightMode: false,
+    home: null,
+    startTime: null,
+    learnerId: null,
+  };
+
+  var learning = window.AELLearning && window.AELLearning.mount(el('ael-learning-root'), {
+    overview: function () { return API.get('/api/learning-paths'); },
+    start: function (input) { return API.post('/api/learning-quiz/start', input); },
+    answer: function (input) { return API.post('/api/learning-quiz/answer', input); },
+    finish: function (input) { return API.post('/api/learning-quiz/finish', input); },
+  });
+
+  /* ---------- مدیریت نمایش و صفحات ---------- */
+  function showView(id) {
+    if (id !== 'view-app') learning?.close();
+    ['view-login', 'view-tracks', 'view-app'].forEach(function (v) {
+      var viewEl = el(v);
+      if (viewEl) viewEl.hidden = v !== id;
+    });
+  }
+
+  var TABS = ['home', 'today', 'lessons', 'map', 'settings'];
+  function showTab(tab) {
+    if (tab !== 'today') state.nightMode = false;
+    TABS.forEach(function (t) {
+      var panel = el('tab-' + t);
+      if (panel) panel.hidden = t !== tab;
+      var btn = document.querySelector('.nav-btn[data-tab="' + t + '"]');
+      if (btn) {
+        btn.classList.toggle('active', t === tab);
+        btn.setAttribute('aria-selected', String(t === tab));
+        btn.setAttribute('aria-controls', 'tab-' + t);
+      }
+    });
+    if (tab === 'home') loadHome();
+    if (tab === 'today') loadQueue();
+    if (tab === 'lessons') {
+      learning?.open(state.learnerId || 'temporary');
+      loadLessons();
+    }
+    if (tab === 'map') loadMap();
+    if (tab === 'settings') renderSettings();
+  }
+
+  /* ---------- سرصفحه: خوش‌آمدگویی و آمار ---------- */
+  function renderHeader() {
+    var h = state.home;
+    if (!h) return;
+    var greetingEl = el('header-greeting');
+    if (greetingEl) {
+      greetingEl.hidden = false;
+      greetingEl.textContent = greetingFor() + (h.user.displayName || 'داوطلب گرامی');
+    }
+    el('chip-streak').hidden = false;
+    el('chip-coins').hidden = false;
+    el('chip-streak-n').textContent = h.stats.streakDays + ' روز پیوسته';
+    el('chip-coins-n').textContent = h.stats.coins;
+  }
+
+  function greetingFor() {
+    var hour = new Date().getHours();
+    if (hour < 5) return 'شب بخیر، ';
+    if (hour < 12) return 'صبح بخیر، ';
+    if (hour < 17) return 'وقت‌بخیر، ';
+    if (hour < 21) return 'عصر بخیر، ';
+    return 'شب بخیر، ';
+  }
+
+  function updateStatsChips(stats) {
+    if (!stats) return;
+    if (state.home) {
+      state.home.stats.coins = stats.coins;
+      state.home.stats.streakDays = stats.streakDays;
+    }
+    el('chip-streak-n').textContent = stats.streakDays + ' روز پیوسته';
+    el('chip-coins-n').textContent = stats.coins;
+  }
+
+  /* ---------- شناسایی و ورود خودکار امن (بدون نیاز به آیدی دستی) ---------- */
+  function getOrCreateDeviceToken() {
+    var key = 'ael_device_token';
+    var token = localStorage.getItem(key);
+    if (!token) {
+      token = 'dev_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+      localStorage.setItem(key, token);
+    }
+    return token;
+  }
+
+  function autoAuthenticate() {
+    var statusText = el('auth-status-text');
+    if (statusText) statusText.textContent = 'در حال شناسایی و بارگذاری پروفایل اختصاصی...';
+
+    // ۱. اگر در داخل تلگرام باز شده است: استفاده از دادهٔ معتبر و امضاشدهٔ تلگرام (initData)
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe) {
+      state.telegram = window.Telegram.WebApp;
+      state.telegram.ready();
+      if (state.telegram.expand) state.telegram.expand();
+      var tgUser = state.telegram.initDataUnsafe.user;
+      return API.post('/api/auth/telegram', { initData: state.telegram.initData })
+        .then(function (data) { onAuthed(data); })
+        .catch(function (err) {
+          console.warn('Telegram initData failed, trying stable telegram id:', err);
+          // شناسه پایدار تلگرام: حتی اگر امضا رد شود، id کاربر ثابت است و
+          // سابقهٔ قبلی او بازیابی می‌شود (به‌جای ساخت حساب تازه).
+          if (tgUser && tgUser.id) {
+            var name = tgUser.first_name ? tgUser.first_name + (tgUser.last_name ? ' ' + tgUser.last_name : '') : 'داوطلب دکتری';
+            return API.post('/api/auth/telegram', { telegramUserId: tgUser.id, displayName: name })
+              .then(function (data) { onAuthed(data); })
+              .catch(function () { return loginWithDevice(); });
+          }
+          return loginWithDevice();
+        });
+    }
+
+    // ۲. اگر در وب یا مرورگر باز شده است: ورود خودکار با توکن اختصاصی و دائمی دستگاه داوطلب
+    return loginWithDevice();
+  }
+
+  function loginWithDevice() {
+    var deviceToken = getOrCreateDeviceToken();
+    return API.post('/api/auth/telegram', { deviceToken: deviceToken, displayName: 'داوطلب دکتری مدیریت' })
+      .then(function (data) {
+        onAuthed(data);
+      })
+      .catch(function (err) {
+        var errEl = el('login-error');
+        if (errEl) {
+          errEl.textContent = 'خطا در اتصال به سرور: ' + (err.message || 'لطفاً دوباره تلاش کنید');
+          errEl.hidden = false;
+        }
+      });
+  }
+
+  function onAuthed(data) {
+    state.learnerId = data.user?.id || null;
+    localStorage.setItem('session_token', data.token);
+    state.tracks = (data.user && data.user.activeTracks) || ['common'];
+    // اگر داوطلب هنوز گرایشی انتخاب نکرده (یا فقط common دارد)، صفحهٔ انتخاب چندگانه گرایش نمایش داده می‌شود
+    if (state.tracks.length <= 1) {
+      initTracksSelection();
+      showView('view-tracks');
+    } else {
+      enterApp();
+    }
+  }
+
+  function enterApp() {
+    showView('view-app');
+    showTab('home');
+  }
+
+  /* ---------- انتخاب چندگانهٔ گرایش‌ها ---------- */
+  function initTracksSelection() {
+    state.selectedTracks = new Set(
+      (state.tracks || []).filter(function (t) { return t !== 'common'; })
+    );
+
+    document.querySelectorAll('.track-card').forEach(function (card) {
+      var track = card.dataset.track;
+      card.classList.toggle('selected', state.selectedTracks.has(track));
+      card.onclick = function () {
+        if (state.selectedTracks.has(track)) {
+          state.selectedTracks.delete(track);
+          card.classList.remove('selected');
+        } else {
+          state.selectedTracks.add(track);
+          card.classList.add('selected');
+        }
+        var btnSave = el('btn-tracks-save');
+        if (btnSave) btnSave.disabled = state.selectedTracks.size === 0;
+      };
+    });
+
+    var btnSave = el('btn-tracks-save');
+    if (btnSave) {
+      btnSave.disabled = state.selectedTracks.size === 0;
+      btnSave.onclick = function () {
+        if (state.selectedTracks.size === 0) return;
+        var chosenTracks = Array.from(state.selectedTracks);
+        btnSave.disabled = true;
+        btnSave.textContent = 'در حال ذخیره...';
+        API.put('/api/tracks', { tracks: chosenTracks }).then(function () {
+          state.tracks = ['common'].concat(chosenTracks);
+          btnSave.textContent = 'تأیید و شروع یادگیری';
+          enterApp();
+        }).catch(function (err) {
+          btnSave.disabled = false;
+          btnSave.textContent = 'تأیید و شروع یادگیری';
+          alert('خطا در ذخیره گرایش‌ها: ' + err.message);
+        });
+      };
+    }
+  }
+
+  /* ---------- ناوبری پایین ---------- */
+  document.querySelectorAll('.nav-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { showTab(btn.dataset.tab); });
+  });
+
+  /* ---------- داشبورد خانه ---------- */
+  function loadHome() {
+    API.get('/api/home').then(function (data) {
+      state.home = data;
+      renderHeader();
+      renderHome(data);
+    }).catch(function (err) {
+      var container = el('home-container');
+      if (container) {
+        container.innerHTML = '<div class="dash-card"><p class="error">خطا در بارگذاری داشبورد: ' + escapeHtml(err.message) + '</p></div>';
+      }
+    });
+  }
+
+  var TRACK_NAMES = {
+    business: 'مدیریت بازرگانی',
+    industrial: 'مدیریت صنعتی',
+    technology: 'مدیریت تکنولوژی و نوآوری',
+    strategy: 'مدیریت استراتژیک و آینده‌پژوهی',
+  };
+
+  function toFa(n) {
+    return String(n).replace(/[0-9]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[Number(d)]; });
+  }
+
+  function renderHome(h) {
+    var container = el('home-container');
+    if (!container) return;
+
+    var activeTrackTitles = (h.user.activeTracks || [])
+      .filter(function (t) { return t !== 'common'; })
+      .map(function (t) { return TRACK_NAMES[t] || t; });
+    var trackTitle = activeTrackTitles.length > 0 ? activeTrackTitles.join(' + ') : 'هستهٔ مشترک';
+
+    // Hero — مرور امروز (مرجع: Featured Card گرادیانی)
+    // داده‌ها واقعی: reviewDue از سرور؛ بدون Mock.
+    var hero = '';
+    hero += '<section class="dash-card ael-card ael-card--lg hero" data-accent="teal">';
+    hero += '<div class="hero-top"><span class="label">صف هوشمند امروز</span>';
+    if (typeof h.reviewDue === 'number') {
+      hero += '<span class="chip"><b>' + toFa(h.reviewDue) + '</b> تست در نوبت مرور</span>';
+    }
+    hero += '</div>';
+    hero += '<h3 class="hero-title">' + escapeHtml(h.mentorMessage || 'یک درس کوتاه، بعد چند تست') + '</h3>';
+    hero += '<p class="hero-sub">در مسیر یادگیری می‌توانی درس، سنجش شروع یا آزمون زمان‌دار را انتخاب کنی.</p>';
+    hero += '<div class="hero-cta"><button id="btn-start-today" class="btn primary full">شروع تمرین امروز</button>';
+    hero += '<button id="btn-open-learning" class="btn ghost full">باز کردن مسیر یادگیری</button></div>';
+    hero += '</section>';
+
+    // Progress — تسلط سرفصل‌ها (مرجع: Progress Summary Card با رینگ)
+    // سرور برای «بی‌شاهد» مقدار null می‌دهد؛ نمایش ۰٪ ادعای ساختگی است.
+    var hasEvidence = typeof h.progress.overall === 'number';
+    var overallProgress = hasEvidence ? h.progress.overall : 0;
+    var progressLabel = hasEvidence ? toFa(overallProgress) + '٪' : 'هنوز سنجیده نشده';
+    var progress = '';
+    progress += '<section class="dash-card ael-card" data-accent="teal">';
+    progress += '<div class="section-head"><h2>پیشرفت تسلط سرفصل‌ها</h2><span class="chip">' + escapeHtml(trackTitle) + '</span></div>';
+    if (h.stats.daysLeft !== null && h.stats.daysLeft >= 0) {
+      progress += '<div class="goal-countdown"><span class="count-num">' + toFa(h.stats.daysLeft) + '</span><span class="count-label">روز تا آزمون کنکور</span></div>';
+    }
+    progress += '<div class="labels"><span>تسلط کل مسیر</span><span>' + progressLabel + '</span></div>';
+    progress += '<div class="bar"><div class="fill" style="width:' + (hasEvidence ? overallProgress : 0) + '%"></div></div>';
+    progress += '</section>';
+
+    // Daily Learning — برنامهٔ امروز (مرجع: Daily Task Card)
+    var daily = '';
+    daily += '<section class="dash-card ael-card" data-accent="blue">';
+    daily += '<div class="section-head"><h2>برنامهٔ امروز</h2></div>';
+    daily += '<div class="lesson-title">' + (h.today.answered > 0 ? (toFa(h.today.answered) + ' پاسخ ثبت‌شده امروز') : 'آغاز جلسه مطالعه') + '</div>';
+    daily += '<p class="lesson-sub">' + (typeof h.reviewDue === 'number' && h.reviewDue > 0 ? (toFa(h.reviewDue) + ' تست در نوبت مرور فاصله‌دار') : 'آماده برای تست‌های هدفمند') + '</p>';
+    daily += '<button id="btn-start-today-2" class="btn primary full">شروع تمرین امروز</button>';
+    daily += '</section>';
+
+    // Metric Cards (مرجع: Small Metric Cards جفتی) — فقط آمار واقعی
+    var metrics = '';
+    if (typeof h.stats.streakDays === 'number' || typeof h.stats.coins === 'number') {
+      metrics += '<div class="metric-pair">';
+      metrics += '<article class="dash-card ael-card ael-card--sm metric" data-accent="green"><div class="big">' + toFa(h.stats.streakDays || 0) + '</div><small>روز پیوسته</small></article>';
+      metrics += '<article class="dash-card ael-card ael-card--sm metric" data-accent="amber"><div class="big">' + toFa(h.stats.coins || 0) + '</div><small>سکه</small></article>';
+      metrics += '</div>';
+    }
+
+    // کوییز شبانه (سؤالات غلط امروز) — رویداد واقعی
+    var night = '';
+    if (h.nightQuiz && h.nightQuiz.available) {
+      var wrongCount = h.nightQuiz.wrongCount || h.nightQuiz.wrongAnswersCount || 0;
+      night += '<section class="dash-card ael-card night-card" data-accent="orange">';
+      night += '<div class="night-badge">کوییز شبانه</div>';
+      night += '<div class="night-title">تثبیت پاسخ‌های غلط امروز (' + toFa(wrongCount) + ' سؤال)</div>';
+      night += '<p class="night-sub">ابتدا بدون نگاه‌کردن به توضیح جواب بده و سپس پاسخ را بررسی کن.</p>';
+      night += '<button id="btn-start-night" class="btn secondary full">شروع کوییز شبانه</button>';
+      night += '</section>';
+    }
+
+    var html = hero + progress + daily + metrics + night;
+
+    container.innerHTML = html;
+
+    var btnLearning = el('btn-open-learning');
+    if (btnLearning) btnLearning.onclick = function () { showTab('lessons'); };
+    var btnToday = el('btn-start-today');
+    if (btnToday) btnToday.onclick = function () { showTab('today'); };
+    var btnToday2 = el('btn-start-today-2');
+    if (btnToday2) btnToday2.onclick = function () { showTab('today'); };
+
+    var btnNight = el('btn-start-night');
+    if (btnNight) {
+      btnNight.onclick = function () {
+        state.nightMode = true;
+        showTab('today');
+      };
+    }
+  }
+
+  /* ---------- تب امروز (کوییز تطبیقی) ---------- */
+  function loadQueue() {
+    var commuteMode = localStorage.getItem('study_mode') === 'commute';
+    var path = state.nightMode ? '/api/night-quiz' : ('/api/queue' + (commuteMode ? '?mode=commute' : ''));
+    API.get(path).then(function (data) {
+      state.queue = data.items || [];
+      state.currentIndex = 0;
+      renderCurrent();
+    }).catch(function (err) {
+      var emptyEl = el('queue-empty');
+      var cardEl = el('quiz-card');
+      if (cardEl) cardEl.hidden = true;
+      if (emptyEl) {
+        emptyEl.hidden = false;
+        emptyEl.innerHTML = '<p class="error">خطا در دریافت صف تمرین: ' + escapeHtml(err.message) + '</p>';
+      }
+    });
+  }
+
+  function renderCurrent() {
+    var item = state.queue[state.currentIndex];
+    var emptyEl = el('queue-empty');
+    var cardEl = el('quiz-card');
+
+    if (!item) {
+      if (cardEl) cardEl.hidden = true;
+      if (emptyEl) {
+        emptyEl.hidden = false;
+        emptyEl.innerHTML = state.nightMode
+          ? '<p>🎉 کوییز شبانه تمام شد. فردا با حافظه‌ای تثبیت‌شده برگرد!</p>' +
+            '<button id="btn-night-done" class="btn primary" style="margin-top:12px;">بازگشت به خانه</button>'
+          : '<p>🎉 تمام سؤالات و کارت‌های امروز با موفقیت کامل شد. خسته نباشید!</p>' +
+            '<button id="btn-queue-done" class="btn ghost" style="margin-top:12px;">تازه‌سازی برنامه</button>';
+        var doneBtn = el(state.nightMode ? 'btn-night-done' : 'btn-queue-done');
+        if (doneBtn) {
+          doneBtn.onclick = function () {
+            if (state.nightMode) {
+              state.nightMode = false;
+              showTab('home');
+              return;
+            }
+            // برچسب «تازه‌سازی برنامه» باید برنامه را تازه کند، نه به خانه برگردد
+            loadQueue();
+          };
+        }
+      }
+      return;
+    }
+
+    if (emptyEl) emptyEl.hidden = true;
+    if (cardEl) cardEl.hidden = false;
+
+    var question = item.question;
+    var card = item.card;
+    state.startTime = Date.now();
+
+    var qText = question ? question.text : (card.trapNote || 'مرور این مفهوم در برنامه است.');
+    el('q-text').textContent = qText;
+    el('q-progress').textContent = 'کارت ' + (state.currentIndex + 1) + ' از ' + state.queue.length;
+
+    el('q-course').textContent = item.courseTitle || item.course || (card.cardType === 'comparison_card' ? 'مقایسهٔ مفاهیم' : 'کنکور دکتری');
+    el('q-chapter').textContent = item.chapterTitle || item.chapter || (card.isRepair ? 'کارت ترمیمی' : '');
+
+    var vChip = el('q-verification');
+    if (vChip) {
+      vChip.hidden = !(question && question.isVerified);
+      vChip.textContent = 'سؤال تستی آزمون';
+    }
+
+    var proofLabel = el('q-proof-label');
+    if (proofLabel) {
+      if (item.attemptType === 'proof') {
+        proofLabel.hidden = false;
+        proofLabel.textContent = 'سؤال اثبات تسلط';
+      } else {
+        proofLabel.hidden = true;
+      }
+    }
+
+    var typeChip = el('q-card-type');
+    if (typeChip) {
+      if (card.cardType === 'trap_note') {
+        typeChip.hidden = false;
+        typeChip.textContent = '⚠️ تلهٔ تستی طراح';
+      } else if (card.cardType === 'comparison_card') {
+        typeChip.hidden = false;
+        typeChip.textContent = '⚖️ مقایسهٔ مفاهیم مشابه';
+      } else if (state.nightMode) {
+        typeChip.hidden = false;
+        typeChip.textContent = '🌙 مرور شبانه';
+      } else {
+        typeChip.hidden = true;
+      }
+    }
+
+    // گزینه‌ها
+    var optsContainer = el('q-options');
+    optsContainer.innerHTML = '';
+    var options = (question && question.options) || ['مفهوم را مرور کردم و به حافظه سپردم'];
+
+    options.forEach(function (optText, idx) {
+      var btn = document.createElement('button');
+      btn.className = 'option';
+      btn.innerHTML = '<span class="key">' + (idx + 1) + '</span><span class="text">' + escapeHtml(optText) + '</span>';
+      btn.onclick = function () {
+        submitAnswer(item, idx);
+      };
+      optsContainer.appendChild(btn);
+    });
+
+    // پاک‌سازی بازخورد سؤال قبلی
+    var feedback = el('answer-feedback');
+    if (feedback) feedback.hidden = true;
+    el('feedback-source').open = false;
+    ['feedback-comparison', 'feedback-self-report', 'feedback-proof-ready'].forEach(function (id) {
+      var node = el(id);
+      if (node) { node.hidden = true; node.innerHTML = ''; }
+    });
+  }
+
+  function submitAnswer(item, selectedIdx) {
+    var responseTimeMs = Date.now() - (state.startTime || Date.now());
+    var body = {
+      questionId: item.question ? item.question.id : item.card.questionId,
+      selectedOption: selectedIdx,
+      attemptId: item.attemptId,
+      attemptType: item.attemptType || 'practice',
+      responseTimeMs: responseTimeMs,
+    };
+
+    // غیرفعال کردن گزینه‌ها حین ارسال
+    var optionBtns = el('q-options').querySelectorAll('.option');
+    optionBtns.forEach(function (b) { b.disabled = true; });
+
+    API.post('/api/answers', body).then(function (res) {
+      showFeedback(item, res, selectedIdx);
+      if (res.stats) updateStatsChips(res.stats);
+    }).catch(function (err) {
+      optionBtns.forEach(function (b) { b.disabled = false; });
+      alert('خطا در ثبت پاسخ: ' + err.message);
+    });
+  }
+
+  function showFeedback(item, res, selectedIdx) {
+    var q = item.question;
+    var originLabels = {
+      official_booklet: 'منشأ ثبت‌شده: دفترچهٔ رسمی',
+      synthetic_demo: 'تمرین نمایشی',
+      textbook_designed: 'تمرین طراحی‌شده بر اساس درس',
+    };
+    el('feedback-source-text').textContent = [
+      q?.id ? 'شناسهٔ سؤال: ' + q.id : 'شناسهٔ سؤال در دسترس نیست.',
+      q?.examYear ? 'سال ثبت‌شده: ' + q.examYear : '',
+      originLabels[q?.contentOrigin] || 'منشأ دقیق یا شمارهٔ دفترچه در این داده ثبت نشده است.',
+    ].filter(Boolean).join(' · ');
+
+    var feedbackBox = el('answer-feedback');
+    feedbackBox.hidden = false;
+
+    var report = res.report || {};
+    var wasCorrect = typeof res.wasCorrect === 'boolean'
+      ? res.wasCorrect
+      : report.wasCorrect === true;
+    var correctOption = res.correctOption;
+    var lesson = res.lesson;
+
+    // استایل گزینه‌ها
+    var optionBtns = el('q-options').querySelectorAll('.option');
+    if (optionBtns[correctOption]) optionBtns[correctOption].classList.add('correct');
+    if (!wasCorrect && optionBtns[selectedIdx]) optionBtns[selectedIdx].classList.add('wrong');
+
+    var head = el('feedback-head');
+    head.className = 'feedback-head ' + (wasCorrect ? 'ok' : 'bad');
+    head.textContent = wasCorrect ? '✓ پاسخ کاملاً صحیح بود' : '✕ پاسخ اشتباه است';
+
+    var expEl = el('feedback-explanation');
+    expEl.textContent = res.explanation || (item.question ? item.question.explanation : '') || '';
+
+    // تلهٔ طراح
+    var trapEl = el('feedback-trap');
+    var trapText = res.trapNote || (item.question && item.question.trapNote);
+    if (trapText) {
+      trapEl.hidden = false;
+      trapEl.textContent = '💡 دام طراح کنکور: ' + trapText;
+    } else {
+      trapEl.hidden = true;
+    }
+
+    // پیام منتور
+    var mentorEl = el('feedback-mentor');
+    if (mentorEl) mentorEl.textContent = report.mentorMessage || '';
+
+    // کارت مقایسهٔ مفاهیم متشابه (در صورت تولید توسط موتور)
+    var cmpEl = el('feedback-comparison');
+    if (cmpEl) {
+      var titles = (res.comparison && res.comparison.titles) || [];
+      if (titles.length > 0) {
+        cmpEl.hidden = false;
+        cmpEl.innerHTML =
+          '<strong>⚖️ جدول مقایسهٔ مفاهیم قابل‌خلط:</strong>' +
+          '<div style="margin-top:6px;line-height:1.9;">' +
+          titles.map(function (t) { return '• ' + escapeHtml(t); }).join('<br>') +
+          '</div>';
+      } else {
+        cmpEl.hidden = true;
+      }
+    }
+
+    // آمادگی آزمون اثبات تسلط
+    var proofEl = el('feedback-proof-ready');
+    if (proofEl) {
+      if (res.proofReady && res.proofReady.skillId) {
+        proofEl.hidden = false;
+        proofEl.textContent = '🎯 به آستانهٔ تسلط رسیدی؛ یک سؤال دیده‌نشده برای اثبات در برنامه ثبت شد.';
+      } else {
+        proofEl.hidden = true;
+      }
+    }
+
+    // خوداظهاری نوع خطا (فقط پس از پاسخ غلط)
+    var selfEl = el('feedback-self-report');
+    if (selfEl) {
+      if (!wasCorrect && item.attemptId) {
+        selfEl.hidden = false;
+        selfEl.innerHTML =
+          '<strong>این خطا از چه نوعی بود؟</strong>' +
+          '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">' +
+          '<button type="button" class="btn ghost small" data-report="slip">بی‌دقتی بود</button>' +
+          '<button type="button" class="btn ghost small" data-report="didnt_know">مفهوم را نمی‌دانستم</button>' +
+          '</div>';
+        selfEl.querySelectorAll('button[data-report]').forEach(function (btn) {
+          btn.onclick = function () {
+            var kind = btn.getAttribute('data-report');
+            btn.disabled = true;
+            API.post('/api/self-report', {
+              attemptId: item.attemptId,
+              questionId: item.question ? item.question.id : item.card.questionId,
+              selfReport: kind,
+            }).then(function (out) {
+              selfEl.innerHTML = '<p class="hint">' + escapeHtml(out.note || 'ثبت شد.') + '</p>';
+            }).catch(function (err) {
+              btn.disabled = false;
+              selfEl.innerHTML = '<p class="error">' + escapeHtml(err.message) + '</p>';
+            });
+          };
+        });
+      } else {
+        selfEl.hidden = true;
+      }
+    }
+
+    // نمایش موج تسلط
+    renderRipple(report);
+
+    // آموزش کامل درس زیر هر سؤال (چه کاربر درست پاسخ دهد چه غلط)
+    var lessonBox = el('feedback-lesson-card');
+    if (lessonBox) {
+      if (lesson) {
+        lessonBox.hidden = false;
+        el('lesson-feedback-title').textContent = (lesson.course ? lesson.course + ' — ' : '') + (lesson.topic || '');
+        el('lesson-feedback-body').textContent = lesson.summary || '';
+
+        var tipsBox = el('lesson-feedback-tips');
+        if (tipsBox) {
+          if (lesson.konkoorTips && lesson.konkoorTips.length > 0) {
+            tipsBox.hidden = false;
+            tipsBox.innerHTML = '<strong>💡 نکات طلایی و تله‌های تستی کنکور دکتری:</strong><ul style="margin:6px 0 0;padding-right:16px;">' +
+              lesson.konkoorTips.map(function (tip) { return '<li>' + escapeHtml(tip) + '</li>'; }).join('') +
+              '</ul>';
+          } else {
+            tipsBox.hidden = true;
+          }
+        }
+
+        var termsBox = el('lesson-feedback-terms');
+        if (termsBox) {
+          if (lesson.keyTerms && lesson.keyTerms.length > 0) {
+            termsBox.hidden = false;
+            termsBox.innerHTML = '<span style="font-size:11px;color:var(--ink-soft);margin-left:4px;">اصطلاحات تخصصی:</span>' +
+              lesson.keyTerms.map(function (term) { return '<span class="lesson-term-badge">' + escapeHtml(term) + '</span>'; }).join('');
+          } else {
+            termsBox.hidden = true;
+          }
+        }
+      } else {
+        lessonBox.hidden = true;
+      }
+    }
+
+    el('btn-next').onclick = function () {
+      state.currentIndex += 1;
+      renderCurrent();
+    };
+  }
+
+  function renderRipple(report) {
+    var box = el('feedback-ripple');
+    if (!box) return;
+    var deltas = (report.masteryDeltas || []).filter(function (d) { return d.before !== d.after; });
+    if (deltas.length === 0) {
+      box.innerHTML = '';
+      return;
+    }
+    var html = '<p class="ripple-title">اثر این پاسخ بر نمودار تسلط سرفصل‌ها:</p>';
+    deltas.forEach(function (d) {
+      var pct = Math.round(d.after);
+      var cls = pct < 40 ? 'bad' : pct < 60 ? 'warn' : pct < 85 ? '' : 'ok';
+      html +=
+        '<div class="ripple-row ' + cls + '">' +
+        '<span>' + escapeHtml(d.topic || d.nodeId) + '</span>' +
+        '<span>' + Math.round(d.before) + '٪ ← <strong>' + pct + '٪</strong></span>' +
+        '</div>';
+    });
+    box.innerHTML = html;
+  }
+
+  /* ---------- تب آموزش درس (۸ درس دکتری مدیریت) ---------- */
+  var cachedLessons = null;
+
+  function loadLessons() {
+    var container = el('lessons-container');
+    if (!container) return;
+    if (cachedLessons) {
+      renderLessonsList(cachedLessons);
+      return;
+    }
+    container.innerHTML = '<div style="text-align:center;padding:28px;color:var(--ink-soft);font-size:13px;">در حال دریافت آموزش‌های سرفصل‌های دکتری...</div>';
+    API.get('/api/lessons').then(function (data) {
+      cachedLessons = data && data.courses ? data.courses : [];
+      renderLessonsList(cachedLessons);
+      initLessonsSearch();
+    }).catch(function (err) {
+      container.innerHTML = '<div class="error" style="text-align:center;padding:16px;">خطا در بارگذاری دروس: ' + escapeHtml(err.message) + '</div>';
+    });
+  }
+
+  function initLessonsSearch() {
+    var searchInput = el('lesson-search-input');
+    if (!searchInput || searchInput._bound) return;
+    searchInput._bound = true;
+    searchInput.addEventListener('input', function () {
+      var query = (searchInput.value || '').trim().toLowerCase();
+      renderLessonsList(cachedLessons, query);
+    });
+  }
+
+  function renderLessonsList(courses, filterQuery) {
+    var container = el('lessons-container');
+    if (!container) return;
+    if (!courses || courses.length === 0) {
+      container.innerHTML = '<div class="empty-state"><p>هیچ درسی بارگذاری نشد.</p></div>';
+      return;
+    }
+
+    var html = '';
+    var totalMatches = 0;
+
+    courses.forEach(function (course, cIdx) {
+      var filteredTopics = (course.topics || []).filter(function (t) {
+        if (!filterQuery) return true;
+        var q = filterQuery;
+        var inTitle = (t.topic || '').toLowerCase().includes(q);
+        var inCourse = (t.course || '').toLowerCase().includes(q);
+        var inChapter = (t.chapter || '').toLowerCase().includes(q);
+        var inSummary = (t.summary || '').toLowerCase().includes(q);
+        var inTerms = (t.keyTerms || []).some(function (k) { return k.toLowerCase().includes(q); });
+        return inTitle || inCourse || inChapter || inSummary || inTerms;
+      });
+
+      if (filterQuery && filteredTopics.length === 0) return;
+      totalMatches += filteredTopics.length;
+
+      var isOpen = (!filterQuery && cIdx === 0) || (filterQuery && filteredTopics.length > 0);
+
+      html += '<div class="course-accordion' + (isOpen ? ' open' : '') + '" data-course-id="' + escapeHtml(course.courseId) + '">';
+      html += '<div class="course-accordion-header">';
+      html += '<div><strong>' + escapeHtml(course.courseTitle) + '</strong> <span style="font-size:11.5px;color:var(--ink-soft);font-weight:400;margin-right:6px;">(' + filteredTopics.length + ' مبحث کلیدی)</span></div>';
+      html += '<button class="btn small" data-book-id="' + escapeHtml(course.courseId) + '" style="margin-right:8px;">📖 مطالعه کامل</button>';
+      html += '<span class="accordion-arrow" style="font-size:12px;color:var(--ink-soft);">' + (isOpen ? '▲' : '▼') + '</span>';
+      html += '</div>';
+
+      html += '<div class="course-topics-list">';
+      if (course.description && !filterQuery) {
+        html += '<p style="font-size:12px;color:var(--ink-soft);margin:4px 0 10px;line-height:1.6;">' + escapeHtml(course.description) + '</p>';
+      }
+
+      filteredTopics.forEach(function (topic) {
+        html += '<div class="topic-card">';
+        html += '<div class="topic-title">' + escapeHtml(topic.topic) + '</div>';
+        if (topic.chapter) {
+          html += '<div style="font-size:11.5px;color:var(--ink-soft);margin-bottom:6px;">فصل: ' + escapeHtml(topic.chapter) + '</div>';
+        }
+        if (topic.konkoorWeight) {
+          html += '<span class="topic-weight">🎯 ' + escapeHtml(topic.konkoorWeight) + '</span>';
+        }
+        if (topic.frequency) {
+          html += '<span class="topic-weight" style="background:#e0f2fe;color:#0369a1;margin-right:6px;">📊 ' + escapeHtml(topic.frequency) + '</span>';
+        }
+        if (topic.summary) {
+          html += '<div class="topic-summary">' + escapeHtml(topic.summary) + '</div>';
+        }
+        if (topic.konkoorTips && topic.konkoorTips.length > 0) {
+          html += '<div class="topic-tips"><strong>💡 نکات طلایی و تله‌های کنکور دکتری:</strong><ul style="margin:6px 0 0;padding-right:16px;">';
+          topic.konkoorTips.forEach(function (tip) {
+            html += '<li>' + escapeHtml(tip) + '</li>';
+          });
+          html += '</ul></div>';
+        }
+        if (topic.keyTerms && topic.keyTerms.length > 0) {
+          html += '<div class="topic-terms"><span style="font-size:11px;color:var(--ink-soft);margin-left:4px;">واژگان کلیدی:</span>';
+          topic.keyTerms.forEach(function (term) {
+            html += '<span class="lesson-term-badge">' + escapeHtml(term) + '</span>';
+          });
+          html += '</div>';
+        }
+        html += '</div>';
+      });
+
+      html += '</div></div>';
+    });
+
+    if (filterQuery && totalMatches === 0) {
+      container.innerHTML = '<div class="empty-state"><p>هیچ مبحثی مطابق «' + escapeHtml(filterQuery) + '» پیدا نشد.</p></div>';
+      return;
+    }
+
+    container.innerHTML = html;
+
+    // دکمهٔ مطالعهٔ کامل با listener واقعی؛ دادهٔ سرور هرگز داخل onclick تزریق نمی‌شود
+    container.querySelectorAll('button[data-book-id]').forEach(function (btn) {
+      btn.addEventListener('click', function (ev) {
+        ev.stopPropagation();
+        window.renderFullBook(btn.getAttribute('data-book-id'));
+      });
+    });
+
+    // متصل کردن رویداد کلیک باز/بسته شدن آکاردئون
+    container.querySelectorAll('.course-accordion-header').forEach(function (hdr) {
+      hdr.addEventListener('click', function () {
+        var card = hdr.closest('.course-accordion');
+        var wasOpen = card.classList.contains('open');
+        card.classList.toggle('open', !wasOpen);
+        var arrow = card.querySelector('.accordion-arrow');
+        if (arrow) arrow.textContent = !wasOpen ? '▲' : '▼';
+      });
+    });
+  }
+
+  /* ---------- مطالعه کامل یک کتاب ---------- */
+  window.renderFullBook = function (courseId) {
+    var container = el('lessons-container');
+    if (!container) return;
+    var course = cachedLessons ? cachedLessons.find(function(c){ return c.courseId === courseId; }) : null;
+    if (!course) { container.innerHTML = '<div class="empty-state"><p>کتاب یافت نشد.</p></div>'; return; }
+    var html = '<div style="padding:8px 0;"><button id="btn-book-back" class="btn ghost small">← بازگشت به لیست کتاب‌ها</button></div>';
+    html += '<h2 style="font-size:18px;font-weight:800;color:var(--ink);margin:8px 0 14px;border-right:4px solid var(--primary);padding-right:10px;">📘 ' + escapeHtml(course.courseTitle) + '</h2>';
+    if (course.description) html += '<p style="font-size:13px;color:var(--ink-soft);line-height:1.7;margin-bottom:14px;">' + escapeHtml(course.description) + '</p>';
+    (course.topics || []).forEach(function(t) {
+      html += '<div class="topic-card" style="margin-bottom:14px;border-right:3px solid var(--primary);">';
+      html += '<div class="topic-title" style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px;">' + escapeHtml(t.topic) + '</div>';
+      if (t.chapter) html += '<div style="font-size:11.5px;color:var(--ink-soft);margin-bottom:4px;">فصل: ' + escapeHtml(t.chapter) + '</div>';
+      if (t.summary) html += '<div class="topic-summary">' + escapeHtml(t.summary) + '</div>';
+      if (t.konkoorTips && t.konkoorTips.length) {
+        html += '<div class="topic-tips"><strong>💡 نکات طلایی:</strong><ul style="margin:4px 0 0;padding-right:18px;">' + t.konkoorTips.map(function(tip){ return '<li>'+escapeHtml(tip)+'</li>'; }).join('') + '</ul></div>';
+      }
+      if (t.keyTerms && t.keyTerms.length) {
+        html += '<div class="topic-terms">' + t.keyTerms.map(function(term){ return '<span class="lesson-term-badge">'+escapeHtml(term)+'</span>'; }).join('') + '</div>';
+      }
+      html += '</div>';
+    });
+    container.innerHTML = html;
+    // دکمهٔ بازگشت با listener واقعی (loadLessons در scope همین IIFE است و
+    // مثل قبل داخل onclick تزریق نمی‌شود)
+    var backBtn = el('btn-book-back');
+    if (backBtn) {
+      backBtn.addEventListener('click', function () {
+        loadLessons();
+      });
+    }
+    window.scrollTo(0,0);
+  };
+
+  /* ---------- تب مسیر (Knowledge Map) ---------- */
+  function loadMap() {
+    var container = el('map-container');
+    if (container) {
+      container.innerHTML = '<div style="text-align:center;padding:28px;color:var(--ink-soft);font-size:13px;">در حال ساخت نقشهٔ تسلط...</div>';
+    }
+    API.get('/api/map').then(function (data) {
+      if (!container) return;
+      var courses = data.courses || [];
+      if (courses.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>هنوز گره‌ای برای گرایش‌های فعال شما ثبت نشده است.</p></div>';
+        return;
+      }
+      var html = '';
+      courses.forEach(function (course) {
+        html += '<section class="map-course"><h3 class="map-course-title">' + escapeHtml(course.course) + '</h3>';
+        (course.chapters || []).forEach(function (chapter) {
+          html += '<div class="map-chapter"><div class="map-chapter-title">' + escapeHtml(chapter.chapter) + '</div><div class="map-grid">';
+          (chapter.nodes || []).forEach(function (n) {
+            var isAssessed = typeof n.mastery === 'number';
+            var m = isAssessed ? Math.round(n.mastery) : null;
+            var cls = !isAssessed ? 'unseen' : (m < 40 ? 'bad' : m < 60 ? 'warn' : m < 85 ? '' : 'ok');
+            html +=
+              '<div class="map-node ' + cls + '">' +
+              '<span class="node-topic">' + escapeHtml(n.topic) + '</span>' +
+              '<div class="node-bar"><div class="fill" style="width:' + (isAssessed ? m : 0) + '%"></div></div>' +
+              '<span class="node-pct">' + (isAssessed ? m + '٪' : 'سنجیده‌نشده') + '</span>' +
+              '</div>';
+          });
+          html += '</div></div>';
+        });
+        html += '</section>';
+      });
+      container.innerHTML = html;
+    }).catch(function (err) {
+      if (container) {
+        container.innerHTML = '<div class="error" style="text-align:center;padding:16px;">خطا در دریافت نقشهٔ تسلط: ' + escapeHtml(err.message) + '</div>';
+      }
+    });
+  }
+
+  /* ---------- تب تنظیمات (من) ---------- */
+  function renderSettings() {
+    document.querySelectorAll('.track-toggle .toggle').forEach(function (btn) {
+      var t = btn.dataset.track;
+      btn.classList.toggle('on', state.tracks.includes(t));
+      btn.onclick = function () {
+        var idx = state.tracks.indexOf(t);
+        if (idx === -1) {
+          state.tracks.push(t);
+        } else {
+          state.tracks.splice(idx, 1);
+        }
+        var activeOnly = state.tracks.filter(function (x) { return x !== 'common'; });
+        btn.disabled = true;
+        API.put('/api/tracks', { tracks: activeOnly }).then(function (res) {
+          state.tracks = (res && res.tracks) || ['common'].concat(activeOnly);
+          btn.disabled = false;
+          renderSettings();
+        }).catch(function (err) {
+          btn.disabled = false;
+          alert('خطا در ذخیرهٔ گرایش‌ها: ' + err.message);
+        });
+      };
+    });
+
+    var examInput = el('input-exam-date');
+    if (examInput && state.home && state.home.stats && state.home.stats.examDate) {
+      examInput.value = state.home.stats.examDate;
+    }
+
+    renderStudyMode();
+  }
+
+  function renderStudyMode() {
+    var mode = localStorage.getItem('study_mode') === 'commute' ? 'commute' : 'desk';
+    var deskBtn = el('mode-desk');
+    var commuteBtn = el('mode-commute');
+    if (deskBtn) deskBtn.classList.toggle('on', mode === 'desk');
+    if (commuteBtn) commuteBtn.classList.toggle('on', mode === 'commute');
+  }
+
+  var modeDesk = el('mode-desk');
+  if (modeDesk) {
+    modeDesk.addEventListener('click', function () {
+      localStorage.setItem('study_mode', 'desk');
+      renderStudyMode();
+    });
+  }
+
+  var modeCommute = el('mode-commute');
+  if (modeCommute) {
+    modeCommute.addEventListener('click', function () {
+      localStorage.setItem('study_mode', 'commute');
+      renderStudyMode();
+    });
+  }
+
+  var btnSaveExam = el('btn-save-exam');  if (btnSaveExam) {
+    btnSaveExam.addEventListener('click', function () {
+      var value = el('input-exam-date').value || null;
+      btnSaveExam.disabled = true;
+      API.put('/api/settings', { examDate: value }).then(function () {
+        btnSaveExam.disabled = false;
+        var savedMsg = el('settings-saved');
+        if (savedMsg) {
+          savedMsg.hidden = false;
+          setTimeout(function () { savedMsg.hidden = true; }, 2000);
+        }
+        loadHome();
+      }).catch(function (err) {
+        btnSaveExam.disabled = false;
+        alert('خطا در ذخیرهٔ تاریخ کنکور: ' + err.message);
+      });
+    });
+  }
+
+  var btnLogout = el('btn-logout');
+  function freezeStreak() {
+    var btn = el('btn-freeze-streak');
+    if (!btn) return;
+    btn.disabled = true;
+    API.post('/api/streak/freeze', {}).then(function (res) {
+      btn.disabled = false;
+      var info = el('freeze-info');
+      if (info) info.textContent = (res && res.ok ? 'قفل شد (ماه: ' + (res.month || '') + ')' : '') + ' — ' + (state.home && state.home.stats ? state.home.stats.streakDays + ' روز' : '');
+      loadHome();
+    }).catch(function (err) {
+      btn.disabled = false;
+      alert('خطا در قفل زنجیره: ' + err.message);
+    });
+  }
+  if (btnLogout) {
+    btnLogout.addEventListener('click', function () {
+      localStorage.removeItem('session_token');
+      state.home = null;
+      showView('view-login');
+      // هویت این مینی‌اپ دستگاه-محور است؛ با حذف توکن و فراخوانی مجدد
+      // autoAuthenticate عملاً «ورود» فوری انجام می‌شد و دکمه خروج بی‌اثر
+      // به‌نظر می‌رسید. حالا کاربر صریحاً باید دوباره وارد شود.
+      var spinner = document.querySelector('#auth-status-container .auth-spinner');
+      if (spinner) spinner.style.display = 'none';
+      var statusText = el('auth-status-text');
+      if (statusText) statusText.textContent = 'از جلسه خارج شدید. برای ادامه «ورود دوباره» را بزنید.';
+      var relogin = el('btn-relogin');
+      if (relogin) relogin.hidden = false;
+    });
+  }
+
+  var btnRelogin = el('btn-relogin');
+  if (btnRelogin) {
+    btnRelogin.addEventListener('click', function () {
+      btnRelogin.hidden = true;
+      var spinner = document.querySelector('#auth-status-container .auth-spinner');
+      if (spinner) spinner.style.display = '';
+      autoAuthenticate();
+    });
+  }
+
+  var btnFreeze = el('btn-freeze-streak');
+  if (btnFreeze) btnFreeze.addEventListener('click', freezeStreak);
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&#34;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---------- راه‌اندازی اولیه و ورود خودکار ---------- */
+  if (localStorage.getItem('session_token')) {
+    API.get('/api/me').then(function (data) {
+      state.learnerId = data.user?.id || null;
+      state.tracks = (data.user && data.user.activeTracks) || ['common'];
+      if (state.tracks.length <= 1) {
+        initTracksSelection();
+        showView('view-tracks');
+      } else {
+        enterApp();
+      }
+    }).catch(function () {
+      autoAuthenticate();
+    });
+  } else {
+    autoAuthenticate();
+  }
+})();
+</script></body></html>
