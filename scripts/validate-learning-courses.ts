@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { learningCourses } from '../apps/worker/src/learning-catalog';
-import { validateAcademicFoundationBundle } from '@ael/contracts';
+import { validateAcademicFoundationBundle, validateExamModelBundle } from '@ael/contracts';
 
 const files = (await readdir(new URL('../content/learning-courses/', import.meta.url)))
   .filter(name => name.endsWith('.json')).sort();
@@ -163,6 +163,16 @@ console.log(
   'Academic Foundation: ' + foundation.namespaces.length + ' namespaces, ' +
   foundation.tags.length + ' tags, ' + foundation.questionMappings.length + ' question mappings, ' +
   foundation.unmappedQuestions.length + ' unmapped questions, ' + foundation.lessonMappings.length + ' lesson mappings.'
+);
+
+const examModel = JSON.parse(await readFile(new URL('../content/knowledge/exam-model.v1.json', import.meta.url), 'utf8'));
+const examModelResult = validateExamModelBundle(examModel);
+assert.deepEqual(examModelResult.errors, [], 'Exam Model validation failed: ' + JSON.stringify(examModelResult.errors, null, 2));
+console.log(
+  'Exam Model: ' + examModel.events.length + ' events, ' + examModel.examSets.length + ' sets, ' +
+  examModel.subjects.length + ' subjects, ' + examModel.combinations.length + ' combinations, ' +
+  examModel.targets.length + ' target rows, ' + examModel.coefficientAssignments.length +
+  ' target coefficient vectors, ' + examModel.componentCoefficients.length + ' component coefficients.'
 );
 
 const uniqueIds = (values: string[], label: string) => {
