@@ -42,7 +42,11 @@ for (const course of learningCourses) {
     unique(topic.id);
     assert.ok(topic.prerequisites.every(id => knownTopics.has(id)), 'List prerequisites before dependents: ' + topic.id);
     knownTopics.add(topic.id);
-    text(topic.title, topic.objective, topic.formula, topic.workedExample, topic.commonError, ...topic.concepts);
+    // Objective and concepts are core lesson content; formula/example/commonError are optional blocks.
+    text(topic.title, topic.objective, ...topic.concepts);
+    for (const optionalBlock of [topic.formula, topic.workedExample, topic.commonError]) {
+      assert.equal(typeof optionalBlock, 'string', 'Optional lesson blocks must be strings (empty is allowed): ' + topic.id);
+    }
     assert.ok(Number.isInteger(topic.minutes) && topic.minutes > 0 && topic.minutes <= 10);
     assert.ok(topic.concepts.length >= 2);
     checkSources(topic.sourceIds);
