@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { learningCourses } from '../../../apps/worker/src/learning-catalog';
-import { courseOverview, createQuiz, gradeFormativeAnswer, gradeFormativeQuiz } from '../src/formative-quiz';
+import { courseOverview, createQuiz, gradeFormativeAnswer, gradeFormativeQuiz, normalizeLearningTopicBlocks, projectFormativeQuestion } from '../src/formative-quiz';
 import type { LearningCourse } from '../src/formative-quiz';
 import { extractRecurrence } from '../../../scripts/extract-learning-recurrence.mjs';
 import { buildQuestionIndex } from '../../../scripts/build-question-index.mjs';
@@ -246,5 +246,38 @@ describe('AEL Gate — سؤال تأییدنشده از استخر عمومی خ
     const session = createQuiz(reviewedCourse, { mode: 'practice', count: 3, seed: 1 }, 1);
     expect(session.questions).toHaveLength(3);
     expect(session.questions.every(q => q.review === 'reviewed')).toBe(true);
+  });
+});
+
+
+describe('Layer 1 — lesson blocks and academic metadata compatibility', () => {
+  it('normalizes legacy lesson fields into ordered canonical blocks without mutating the source', () => {
+    const topic = course.topics[0];
+    const blocks = normalizeLearningTopicBlocks(topic);
+    expect(blocks[0]).toMatchObject({ kind: 'learning_objective', content: topic.objective, position: 0 });
+    expect(blocks.some(block => block.kind === 'concept_explanation')).toBe(true);
+    expect(blocks.some(block => block.kind === 'worked_example' && block.content === topic.workedExample)).toBe(true);
+    expect(blocks.some(block => block.kind === 'common_misconception' && block.content === topic.commonError)).toBe(true);
+    expect(topic).not.toHaveProperty('blocks');
+  });
+
+  it('prefers explicitly supplied blocks and sorts them by position', () => {
+    const topic = { ...course.topics[0], blocks: [
+      { id:'topic.block.2',kind:'worked_example' as const,position:2,content:'مثال' },
+      { id:'topic.block.1',kind:'concept_explanation' as const,position:1,content:'مفهوم' },
+    ] };
+    expect(normalizeLearningTopicBlocks(topic).map(block => block.id)).toEqual(['topic.block.1','topic.block.2']);
+  });
+
+  it('projects optional academic question metadata without adding answer data', () => {
+    const question = { ...course.questions[0], skillIds:['skill.example'], learningOutcomeIds:['outcome.example'],
+      tagIds:['discipline.management'], bloomLevel:4 as const, questionFormat:'single_choice' as const,
+      assessmentPurpose:['practice' as const], estimatedTimeSeconds:75 };
+    const projection = projectFormativeQuestion(question);
+    expect(projection).toMatchObject({ skillIds:['skill.example'],learningOutcomeIds:['outcome.example'],
+      tagIds:['discipline.management'],bloomLevel:4,questionFormat:'single_choice',
+      assessmentPurpose:['practice'],estimatedTimeSeconds:75 });
+    expect(projection).not.toHaveProperty('answerIndex');
+    expect(projection).not.toHaveProperty('explanation');
   });
 });
