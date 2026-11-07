@@ -92,7 +92,7 @@ for (const course of learningCourses) {
           'Invalid reading concept for ' + q.id);
       } else assert.equal(q.readingBlock.index, undefined, 'Index only applies to concept: ' + q.id);
     }
-    assert.ok(q.difficulty === 'basic' || q.difficulty === 'applied');
+    assert.ok(['basic','applied','intermediate','advanced','expert'].includes(q.difficulty), 'Invalid difficulty for ' + q.id);
     assert.ok(q.kind === undefined || q.kind === 'mcq' || q.kind === 'essay');
     if (q.variantGroup !== undefined) assert.match(q.variantGroup, pattern, 'Invalid variant group: ' + q.id);
     text(q.prompt, q.explanation);
