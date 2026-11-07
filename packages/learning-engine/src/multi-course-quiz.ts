@@ -9,7 +9,7 @@
  * - AT-12: پیش‌نمایش نسخه‌بانک را pin می‌کند؛ تغییر بانک یعنی پیش‌نمایش تازه لازم است.
  */
 import type { LearningCourse, LearningQuestion, QuizChallenge, QuizInput, QuizMode } from './formative-quiz';
-import { FormativeQuizError } from './formative-quiz';
+import { FormativeQuizError, projectFormativeQuestion } from './formative-quiz';
 
 export type MultiCourseSelectionVersion = 'mulberry32-multi-v1';
 
@@ -405,8 +405,7 @@ export function createMultiCourseQuiz(
   for (const { course } of pools) for (const question of course.questions) questionById.set(question.id, { question, course });
   return { challenge, questions: ids.map(id => {
     const found = questionById.get(id)!;
-    const { id: qid, topicId, difficulty, prompt, choices, sourceIds, origin, review, kind } = found.question;
-    return { id: qid, topicId, difficulty, prompt, choices, sourceIds, origin, review, kind: kind ?? 'mcq', courseId: found.course.id };
+    return { ...projectFormativeQuestion(found.question), courseId: found.course.id };
   }) };
 }
 
