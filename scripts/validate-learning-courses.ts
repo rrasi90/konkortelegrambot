@@ -26,9 +26,12 @@ for (const course of learningCourses) {
   for (const source of course.sources) {
     unique(source.id);
     text(source.title, source.locator);
-    const url = new URL(source.url);
-    assert.equal(url.protocol, 'https:');
-    assert.ok(!url.username && !url.password);
+    if (source.url !== undefined && source.url !== null) {
+      assert.ok(source.url.trim(), 'Missing URL must be null or omitted, not an empty string: ' + source.id);
+      const url = new URL(source.url);
+      assert.equal(url.protocol, 'https:');
+      assert.ok(!url.username && !url.password);
+    }
     assert.match(source.checkedOn, /^\d{4}-\d{2}-\d{2}$/);
     assert.equal(source.kind, 'concept_reference');
   }
