@@ -138,18 +138,20 @@ for (const course of learningCourses) {
  * Layer 1 — validate the shared academic taxonomy and crosswalk against the
  * current skill, syllabus, question and learning-course catalogs.
  */
-const [foundationRaw, syllabusRaw, skillsRaw, examPackRaw, crosswalkRaw] = await Promise.all([
+const [foundationRaw, syllabusRaw, skillsRaw, examPackRaw, crosswalkRaw, syllabusTreeRaw] = await Promise.all([
   readFile(new URL('../content/knowledge/academic-foundation.v1.json', import.meta.url), 'utf8'),
   readFile(new URL('../content/knowledge/syllabus-nodes.json', import.meta.url), 'utf8'),
   readFile(new URL('../content/knowledge/skills.json', import.meta.url), 'utf8'),
   readFile(new URL('../content/knowledge/exam-packs/phd-management-business-v1.json', import.meta.url), 'utf8'),
   readFile(new URL('../content/knowledge/layer1-node-course-crosswalk.v1.json', import.meta.url), 'utf8'),
+  readFile(new URL('../content/knowledge/syllabus-tree-proposal.v1.json', import.meta.url), 'utf8'),
 ]);
 const foundation = JSON.parse(foundationRaw);
 const syllabusNodes = JSON.parse(syllabusRaw);
 const skills = JSON.parse(skillsRaw);
 const examPack = JSON.parse(examPackRaw);
 const layer1Crosswalk = JSON.parse(crosswalkRaw);
+const syllabusTree = JSON.parse(syllabusTreeRaw);
 const academicResult = validateAcademicFoundationBundle(foundation, {
   syllabusNodeIds: new Set(syllabusNodes.map((node: { id: string }) => node.id)),
   skillIds: new Set(skills.map((skill: { id: string }) => skill.id)),
@@ -187,3 +189,42 @@ console.log(
   layer1Crosswalk.skillCrosswalk.length + ' skills, ' +
   layer1Crosswalk.courseTitleCrosswalk.length + ' course-title mappings; unresolved references explicitly retained.'
 );
+
+const treeTopicIds = new Set<string>();
+const treeChapterIds = new Set<string>();
+let treeTopicCount = 0;
+let treeChapterCount = 0;
+for (const group of syllabusTree.courseGroups) {
+  const courseCrosswalk = layer1Crosswalk.courseTitleCrosswalk.find(
+    (entry: {sourceTitle:string}) => entry.sourceTitle === group.sourceCourseTitle,
+  );
+  assert.ok(courseCrosswalk, 'Syllabus tree has no course title crosswalk: ' + group.sourceCourseTitle);
+  assert.equal(group.contentCourseId, courseCrosswalk.contentCourseId, 'Content course ID mismatch: ' + group.sourceCourseTitle);
+  assert.equal(group.contentMatchStatus, courseCrosswalk.contentMatchStatus, 'Content course match status mismatch: ' + group.sourceCourseTitle);
+  assert.equal(group.registryCourseDefinitionCode, null, 'Registry course code must remain unresolved until explicitly mapped.');
+  assert.equal(group.registryMappingStatus, 'not_resolved_against_education_registry');
+  for (const chapter of group.chapterNodes) {
+    assert.ok(chapter.id.startsWith('chapter.'), 'Invalid proposed chapter ID: ' + chapter.id);
+    assert.ok(!treeChapterIds.has(chapter.id), 'Duplicate proposed chapter ID: ' + chapter.id);
+    treeChapterIds.add(chapter.id);
+    treeChapterCount++;
+    assert.equal(chapter.parentId, null, 'Chapter proposals must be roots within the course group.');
+    assert.ok(chapter.children.length > 0, 'Empty chapter proposal: ' + chapter.id);
+    for (const topic of chapter.children) {
+      assert.ok(syllabusNodes.some((node: {id:string}) => node.id === topic.sourceSyllabusNodeId), 'Unknown source syllabus topic: ' + topic.id);
+      assert.equal(topic.id, topic.sourceSyllabusNodeId, 'Legacy topic ID must be preserved.');
+      assert.equal(topic.parentId, chapter.id, 'Topic must point to its proposed chapter.');
+      assert.equal(topic.nodeKind, 'topic');
+      assert.ok(!treeTopicIds.has(topic.id), 'Duplicate syllabus topic ID in tree: ' + topic.id);
+      treeTopicIds.add(topic.id);
+      treeTopicCount++;
+    }
+  }
+}
+assert.equal(syllabusTree.sourceRowCount, syllabusNodes.length);
+assert.equal(syllabusTree.courseGroupCount, syllabusTree.courseGroups.length);
+assert.equal(syllabusTree.chapterCount, treeChapterCount);
+assert.equal(syllabusTree.topicCount, treeTopicCount);
+assert.equal(treeTopicIds.size, syllabusNodes.length, 'Syllabus tree must contain every source topic exactly once.');
+assert.equal(treeTopicCount, syllabusNodes.length);
+console.log('Syllabus proposal: ' + treeChapterCount + ' chapters and ' + treeTopicCount + ' topics; registry codes remain explicitly unresolved.');
