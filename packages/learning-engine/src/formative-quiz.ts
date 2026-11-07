@@ -3,7 +3,7 @@ export type QuizMode = 'practice' | 'diagnostic' | 'timed';
 export interface LearningSource {
   id: string;
   title: string;
-  url: string;
+  url?: string | null;
   locator: string;
   kind: 'concept_reference';
   checkedOn: string;
