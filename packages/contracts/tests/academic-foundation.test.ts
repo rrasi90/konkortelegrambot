@@ -33,6 +33,27 @@ describe('AEL Layer 1 academic foundation', () => {
     expect(bundle.unmappedQuestions.map((q: {questionId:string}) => q.questionId).sort())
       .toEqual(['q-1399-001','q-1400-001','q-1400-002']);
     expect(bundle.lessonMappings).toHaveLength(22);
+    expect(bundle.tags).toHaveLength(49);
+    expect(bundle.assignments.filter((a: {targetKind:string}) => a.targetKind === 'lesson_topic')).toHaveLength(22);
+    expect(bundle.assignments.filter((a: {targetKind:string}) => a.targetKind === 'syllabus_node')).toHaveLength(24);
+    expect(bundle.assignments.filter((a: {targetKind:string}) => a.targetKind === 'question')).toHaveLength(18);
+  });
+
+  it('rejects tag assignments and semantic relations with unresolved targets', () => {
+    const badAssignment = structuredClone(bundle);
+    badAssignment.assignments[0].targetId = 'financial-management/missing-topic';
+    const assignmentResult = validateAcademicFoundationBundle(badAssignment, refs);
+    expect(assignmentResult.errors.some(e => e.code === 'unknown_reference')).toBe(true);
+
+    const badRelation = structuredClone(bundle);
+    badRelation.relations = [{
+      id:'rel-missing-target',
+      fromKind:'skill',fromId:'skill.a',
+      toKind:'syllabus_node',toId:'node.does-not-exist',
+      relation:'related_to',strength:0.5,status:'draft'
+    }];
+    const relationResult = validateAcademicFoundationBundle(badRelation, refs);
+    expect(relationResult.errors.some(e => e.code === 'unknown_reference')).toBe(true);
   });
 
   it('rejects duplicate single-select tags on one content item', () => {
