@@ -251,6 +251,16 @@ export interface ResolvedPreparationSubject {
   }>;
 }
 
+export interface ResolvedPreparationComponent {
+  targetId: string;
+  componentId: string;
+  componentCode: string;
+  componentTitle: string;
+  value: number | null;
+  state: CoefficientValueState;
+  subjectIds: string[];
+}
+
 export interface CandidatePreparationResolution {
   planId: string;
   eventVersionId: string;
@@ -258,6 +268,8 @@ export interface CandidatePreparationResolution {
   targets: Array<{ targetId: string; officialTargetLabel: string; combinationCode: string | null; coefficientCode: string | null }>;
   subjects: ResolvedPreparationSubject[];
   targetSubjectDetails: ResolvedTargetSubject[];
+  /** Component-scoped coefficients are reported once per target/component, never copied into each subject. */
+  componentCoefficients: ResolvedPreparationComponent[];
   studyTrackIds: string[];
   warnings: string[];
   resolutionStatus: 'resolved' | 'partial' | 'blocked';
@@ -296,6 +308,10 @@ const nonEmpty = (v: unknown): v is string => typeof v === 'string' && v.trim().
 const add = (list: ExamModelIssue[], path: string, code: string, message: string) => list.push({path,code,message});
 const duplicate = (list: string[]) => new Set(list).size !== list.length;
 const key = (...parts: string[]) => parts.join('|');
+
+function setSubjectRowsForVersionSubject(eventVersionId:string,subjectId:string,rows:ExamSetSubject[]):boolean {
+  return rows.some(row=>row.eventVersionId===eventVersionId&&row.subjectId===subjectId);
+}
 
 export function validateExamModelBundle(input: unknown): ExamModelValidation {
   const errors: ExamModelIssue[] = [];
@@ -417,10 +433,21 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
     if(!validStatuses.includes(c.status))add(errors,p+'.status','invalid_status','وضعیت ترکیب نامعتبر است.');
   });
 
+  const setSubjectKeys = new Set(setSubjects.map(r=>key(r.examSetId,r.subjectId)));
+  const uniqueSetCodes = new Set<string>();
+  sets.forEach((s,i)=>{
+    const k=key(s.eventVersionId,s.examSetCode);
+    if(uniqueSetCodes.has(k))add(errors,'examSets['+i+'].examSetCode','duplicate_exam_set_code','کد مجموعه در یک نسخه آزمون تکراری است.');
+    uniqueSetCodes.add(k);
+    if(!setSubjects.some(r=>r.examSetId===s.id))warnings.push({path:'examSets['+i+']',code:'set_subjects_missing',message:'ساختار مواد این مجموعه هنوز در داده ثبت نشده است؛ در صورت reported/needs_check بودن، آن را قطعی فرض نکنید.'});
+  });
+
   const comboEdges = new Set<string>();
   combinationSubjects.forEach((r,i)=>{
     const p='combinationSubjects['+i+']';
-    if(!combinationMap.has(r.combinationId)||!subjectMap.has(r.subjectId))add(errors,p,'unknown_reference','ترکیب یا ماده پیدا نشد.');
+    const combo=combinationMap.get(r.combinationId);
+    if(!combo||!subjectMap.has(r.subjectId))add(errors,p,'unknown_reference','ترکیب یا ماده پیدا نشد.');
+    else if(!setSubjectKeys.has(key(combo.examSetId,r.subjectId)))add(errors,p,'subject_not_in_combination_set','ماده در مجموعه والد این ترکیب وجود ندارد.');
     if(!Number.isInteger(r.position)||r.position<1)add(errors,p+'.position','invalid_position','ترتیب ماده در ترکیب نامعتبر است.');
     const edge=key(r.combinationId,r.subjectId);
     if(comboEdges.has(edge))add(errors,p,'duplicate_combination_subject','ماده دوبار در یک ترکیب آمده است.');
@@ -453,6 +480,7 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
       if(v.state==='official_zero'&&v.value!==0)add(errors,p+'.values','zero_state_mismatch','ضریب رسمی صفر باید دقیقاً ۰ باشد.');
       if(v.state==='official_positive'&&(typeof v.value!=='number'||!Number.isFinite(v.value)||v.value<=0))add(errors,p+'.values','positive_state_mismatch','ضریب مثبت باید عددی بزرگ‌تر از صفر باشد.');
       if(v.state==='not_applicable'&&v.value!==null)add(errors,p+'.values','not_applicable_has_value','درس نامرتبط با null ثبت می‌شود.');
+      if(!setSubjectKeys.has(key(a.examSetId,v.subjectId)))add(errors,p+'.values','coefficient_subject_outside_set','بردار ضریب به ماده‌ای خارج از مجموعه اشاره می‌کند.');
     }
     if(!validStatuses.includes(a.verification))add(errors,p+'.verification','invalid_status','وضعیت بردار ضریب نامعتبر است.');
     for(const sid of a.sourceIds??[])if(!sourceIds.has(sid))add(errors,p+'.sourceIds','unknown_source','منبع ضریب یافت نشد: '+sid);
@@ -462,7 +490,10 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
     const p='componentCoefficients['+i+']';
     if(!versionMap.has(a.eventVersionId)||!setMap.has(a.examSetId))add(errors,p,'unknown_reference','نسخه یا مجموعه جزء آزمون پیدا نشد.');
     if(!a.subjectIds.length||duplicate(a.subjectIds))add(errors,p+'.subjectIds','invalid_subject_members','اعضای جزء آزمون باید یکتا و غیرخالی باشند.');
-    for(const subjectId of a.subjectIds)if(!subjectMap.has(subjectId))add(errors,p+'.subjectIds','unknown_subject','ماده عضو جزء آزمون پیدا نشد: '+subjectId);
+    for(const subjectId of a.subjectIds){
+      if(!subjectMap.has(subjectId))add(errors,p+'.subjectIds','unknown_subject','ماده عضو جزء آزمون پیدا نشد: '+subjectId);
+      else if(!setSubjectKeys.has(key(a.examSetId,subjectId)))add(errors,p+'.subjectIds','component_subject_outside_set','ماده جزء آزمون خارج از مجموعه تعریف شده است.');
+    }
     if(a.state==='unknown'&&a.value!==null)add(errors,p+'.value','unknown_has_value','ضریب جزء نامعلوم باید null باشد.');
     if(a.state==='official_zero'&&a.value!==0)add(errors,p+'.value','zero_state_mismatch','ضریب رسمی صفر باید ۰ باشد.');
     if(a.state==='official_positive'&&(typeof a.value!=='number'||a.value<=0))add(errors,p+'.value','positive_state_mismatch','ضریب رسمی مثبت نامعتبر است.');
@@ -472,6 +503,7 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
   courseMappings.forEach((m,i)=>{
     const p='subjectCourseMappings['+i+']';
     if(!versionMap.has(m.eventVersionId)||!subjectMap.has(m.subjectId))add(errors,p,'unknown_reference','نسخه یا ماده برای نگاشت درس پیدا نشد.');
+    if(!setSubjectRowsForVersionSubject(m.eventVersionId,m.subjectId,setSubjects))add(errors,p,'course_mapping_wrong_version','نگاشت درس به ماده‌ای خارج از نسخه آزمون اشاره می‌کند.');
     if(m.courseRefKind==='unresolved'&&m.courseRefId!==null)add(errors,p+'.courseRefId','unresolved_has_id','نگاشت حل‌نشده نباید شناسه قطعی داشته باشد.');
     if(m.courseRefKind!=='unresolved'&&(!nonEmpty(m.courseRefId)||m.mappingStatus==='needs_mapping'))add(errors,p+'.courseRefId','missing_course_reference','نگاشت درس قطعی/نامزد باید شناسه داشته باشد.');
   });
@@ -507,13 +539,14 @@ export function validateCandidateExamRegistration(
   if(!version)add(errors,'eventVersionId','unknown_version','نسخه آزمون برای ثبت‌نام داوطلب وجود ندارد.');
   const policy=bundle.selectionPolicies.find(p=>p.eventVersionId===registration.eventVersionId);
   if(!policy)add(errors,'eventVersionId','missing_selection_policy','سیاست رسمی انتخاب مجموعه برای این سال ثبت نشده است.');
+  else if(policy.status!=='official_verified')warnings.push({path:'eventVersionId',code:'selection_policy_not_final',message:'سقف/نقش‌های ثبت‌نام این سال هنوز قطعی و رسمی تأیید نشده است.'});
   if(!nonEmpty(registration.candidateId))add(errors,'candidateId','missing_candidate','شناسه داوطلب الزامی است.');
   const ids=registration.selections.map(s=>s.examSetId);
   if(duplicate(ids))add(errors,'selections','duplicate_exam_set','یک مجموعه امتحانی دوبار انتخاب شده است.');
   for(const s of registration.selections){
     const examSet=bundle.examSets.find(x=>x.id===s.examSetId);
     if(!examSet||examSet.eventVersionId!==registration.eventVersionId)add(errors,'selections','unknown_exam_set','مجموعه انتخاب‌شده متعلق به نسخه آزمون نیست.');
-    if(policy&&!policy.allowedRoles.includes(s.role))add(errors,'selections','role_not_allowed','نقش انتخاب رسمی مجاز نیست: '+s.role);
+    if(policy?.status==='official_verified'&&!policy.allowedRoles.includes(s.role))add(errors,'selections','role_not_allowed','نقش انتخاب رسمی مجاز نیست: '+s.role);
   }
   if(policy?.maxExamSetSelections!==null&&policy?.maxExamSetSelections!==undefined&&registration.selections.length>policy.maxExamSetSelections){
     add(errors,'selections','selection_limit_exceeded','تعداد مجموعه‌های انتخابی از سقف رسمی بیشتر است.');
@@ -538,7 +571,10 @@ export function validateCandidateStudyPlan(
     if(t.registrationSelectionId&&plan.registrationId===null)warnings.push({path:'targets',code:'registration_link_without_registration',message:'هدف به انتخاب رسمی پیوند داده شده اما شناسه ثبت‌نام موجود نیست.'});
   }
   if(duplicate(plan.studyTrackIds))add(errors,'studyTrackIds','duplicate_study_track','مسیر مطالعاتی تکراری است.');
-  if(duplicate(plan.studyTrackIds.filter(nonEmpty)))add(errors,'studyTrackIds','duplicate_study_track','مسیر مطالعاتی تکراری است.');
+  if(plan.registrationId){
+    const registration=bundle && (plan as CandidateStudyPlan & {__registrations?:CandidateExamRegistration[]}).__registrations?.find(r=>r.id===plan.registrationId);
+    if(!registration)warnings.push({path:'registrationId',code:'registration_not_in_resolver_context',message:'ثبت‌نام رسمی برای این برنامه لینک شده است اما برای اعتبارسنجی مالکیت/انتخاب‌ها باید در لایه سرویس بارگذاری شود.'});
+  }
   return {ok:errors.length===0,errors,warnings};
 }
 
@@ -556,13 +592,14 @@ export function resolveCandidatePreparationPlan(
   const warnings=[...validation.warnings.map(x=>x.message)];
   if(!validation.ok)return {
     planId:plan.id,eventVersionId:plan.eventVersionId,examSetIds:[],targets:[],subjects:[],
-    targetSubjectDetails:[],studyTrackIds:[...plan.studyTrackIds],warnings:validation.errors.map(x=>x.message),
+    targetSubjectDetails:[],componentCoefficients:[],studyTrackIds:[...plan.studyTrackIds],warnings:validation.errors.map(x=>x.message),
     resolutionStatus:'blocked',
   };
 
   const subjectsById=new Map(bundle.subjects.map(s=>[s.id,s]));
   const setSubjectRows=bundle.setSubjects;
   const resolvedTargets:ResolvedTargetSubject[]=[];
+  const resolvedComponents:ResolvedPreparationComponent[]=[];
   const targetSummaries:CandidatePreparationResolution['targets']=[];
   const subjectTargetMap=new Map<string,ResolvedPreparationSubject>();
   const examSetIds=new Set<string>();
@@ -585,6 +622,17 @@ export function resolveCandidatePreparationPlan(
       r.eventVersionId===plan.eventVersionId&&r.examSetId===target.examSetId&&
       (!combinationMemberIds||combinationMemberIds.includes(r.subjectId))
     );
+    const targetComponents=bundle.componentCoefficients.filter(component=>
+      component.eventVersionId===plan.eventVersionId&&component.examSetId===target.examSetId&&
+      component.subjectIds.some(subjectId=>includedSetRows.some(row=>row.subjectId===subjectId))
+    );
+    for(const component of targetComponents){
+      resolvedComponents.push({
+        targetId:target.id,componentId:component.id,componentCode:component.componentCode,
+        componentTitle:component.componentTitle,value:component.value,state:component.state,
+        subjectIds:component.subjectIds.filter(subjectId=>includedSetRows.some(row=>row.subjectId===subjectId))
+      });
+    }
     const coefficientRow=target.coefficientAssignmentId
       ? bundle.coefficientAssignments.find(x=>x.id===target.coefficientAssignmentId)
       : bundle.coefficientAssignments.find(x=>x.targetId===target.id);
@@ -597,13 +645,13 @@ export function resolveCandidatePreparationPlan(
         component.eventVersionId===plan.eventVersionId&&component.examSetId===target.examSetId&&component.subjectIds.includes(row.subjectId)
       );
       const inclusion=membership?'included_by_combination':direct?.state==='unknown'?'unknown_coefficient':'positive_coefficient';
-      resolvedTargets.push({targetId:target.id,subjectId:subject.id,inclusion,directCoefficient:direct,componentCoefficients});
+      resolvedTargets.push({targetId:target.id,subjectId:subject.id,inclusion,directCoefficient:direct,componentCoefficients:[]});
       const old=subjectTargetMap.get(subject.id);
       if(old){
         if(!old.includedInTargetIds.includes(target.id))old.includedInTargetIds.push(target.id);
         old.coefficientsByTarget.push({
           targetId:target.id,value:direct?.value??null,state:direct?.state??'unknown',
-          scope:direct?'exam_subject':componentCoefficients.length?'exam_component':null,
+          scope:direct?'exam_subject':null,
         });
       }else{
         subjectTargetMap.set(subject.id,{
@@ -611,7 +659,7 @@ export function resolveCandidatePreparationPlan(
           includedInTargetIds:[target.id],
           coefficientsByTarget:[{
             targetId:target.id,value:direct?.value??null,state:direct?.state??'unknown',
-            scope:direct?'exam_subject':componentCoefficients.length?'exam_component':null,
+            scope:direct?'exam_subject':null,
           }],
         });
       }
@@ -625,7 +673,7 @@ export function resolveCandidatePreparationPlan(
   return {
     planId:plan.id,eventVersionId:plan.eventVersionId,examSetIds:[...examSetIds],targets:targetSummaries,
     subjects:[...subjectTargetMap.values()].sort((a,b)=>a.subjectNumber-b.subjectNumber),
-    targetSubjectDetails:resolvedTargets,studyTrackIds:[...plan.studyTrackIds],warnings,
+    targetSubjectDetails:resolvedTargets,componentCoefficients:resolvedComponents,studyTrackIds:[...plan.studyTrackIds],warnings,
     resolutionStatus:warnings.some(x=>x.includes('پیدا نشد'))?'partial':'resolved',
   };
 }
