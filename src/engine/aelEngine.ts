@@ -159,7 +159,7 @@ export interface DailyQuest {
 }
 
 export type StudyCourseCategory = 'all' | 'conceptual' | 'quantitative' | 'language';
-export type MajorExamBranch = 'business' | 'industrial' | 'technology' | 'phd_all';
+export type MajorExamBranch = 'business' | 'industrial' | 'technology' | 'phd_all' | 'public' | 'financial' | 'media' | 'foresight' | 'stpolicy' | 'amad';
 
 export interface UserStats {
   isZeroStateNewUser: boolean;
@@ -1351,6 +1351,30 @@ export function getNodeEffectiveBranchCoefficient(
     if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.mcdm_dea_queue') return 2;
     if (node.id === 'ind.pom_eoq_mrp') return 2;
     if (node.id.startsWith('inno.')) return 4;
+    if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
+    return node.examCoefficient;
+  }
+  if (branch === 'public') {
+    if (node.id.startsWith('pa.')) return 4; // نظریه‌های دولتی و خط‌مشی ضریب ۴
+    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp') return 0; // OR و تولید در دولتی ضریب ۰
+    if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
+    return node.examCoefficient;
+  }
+  if (branch === 'financial') {
+    if (node.id.startsWith('fin.')) return 4; // مالی ضریب ۴
+    if (node.id.startsWith('mkt.')) return 0; // بازاریابی در مالی ضریب ۰
+    if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
+    return node.examCoefficient;
+  }
+  if (branch === 'media') {
+    if (node.id.startsWith('mis.')) return 4; // MIS و مدیریت دانش ضریب ۴ در رسانه
+    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp') return 0;
+    if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
+    return node.examCoefficient;
+  }
+  if (branch === 'foresight' || branch === 'stpolicy') {
+    if (node.id.startsWith('inno.')) return 4;
+    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp') return 0;
     if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
     return node.examCoefficient;
   }

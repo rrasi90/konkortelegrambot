@@ -86,6 +86,12 @@ const BRANCH_LABELS: Record<MajorExamBranch, string> = {
   industrial: 'مدیریت صنعتی',
   technology: 'مدیریت تکنولوژی',
   phd_all: 'دکتری تخصصی مدیریت',
+  public: 'مدیریت دولتی',
+  financial: 'مدیریت مالی',
+  media: 'مدیریت رسانه و اطلاعات',
+  foresight: 'آینده‌پژوهی',
+  stpolicy: 'سیاست‌گذاری علم و فناوری',
+  amad: 'آماد و پشتیبانی',
 };
 
 const CATEGORY_LABELS: Record<StudyCourseCategory, string> = {

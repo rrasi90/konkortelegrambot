@@ -300,6 +300,22 @@ export const MANAGEMENT_SUB_GROUPS: ExamSubGroup[] = [
     verification: 'needs_check',
     combinationCodes: ['6'],
   },
+  {
+    id: 'financial',
+    code: null,
+    title: 'مدیریت مالی (مهندسی مالی، بانکداری، بیمه)',
+    fields: ['مهندسی مالی', 'بانکداری', 'بیمه', 'حقوق مالی', 'مالی بین‌المللی'],
+    verification: 'official_verified',
+    combinationCodes: ['7'],
+  },
+  {
+    id: 'amad',
+    code: null,
+    title: 'مدیریت آماد و پشتیبانی',
+    fields: ['لجستیک نظامی', 'پشتیبانی و آماد'],
+    verification: 'official_verified',
+    combinationCodes: ['4'],
+  },
 ];
 
 /* ------------------------------------------------------------------ */

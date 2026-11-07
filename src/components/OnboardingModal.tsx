@@ -9,8 +9,8 @@ import { GraduationCap, CalendarDays, ArrowLeft, Sparkles, CheckSquare, Square }
  */
 
 export interface OnboardingResult {
-  track: 'phd_all' | 'business' | 'industrial' | 'technology';
-  tracks: Array<'phd_all' | 'business' | 'industrial' | 'technology'>;
+  track: 'phd_all' | 'business' | 'industrial' | 'technology' | 'public' | 'financial' | 'media' | 'foresight' | 'stpolicy' | 'amad';
+  tracks: Array<'phd_all' | 'business' | 'industrial' | 'technology' | 'public' | 'financial' | 'media' | 'foresight' | 'stpolicy' | 'amad'>;
   examDate: string | null;
 }
 
@@ -19,6 +19,11 @@ const ALL_TRACKS: Array<{ id: OnboardingResult['track']; title: string; hint: st
   { id: 'business', title: 'ارشد مدیریت بازرگانی', hint: 'بازاریابی ضریب ۴ + تئوری، اقتصاد، OR، زبان', level: 'ارشد' },
   { id: 'industrial', title: 'ارشد مدیریت صنعتی', hint: 'تحقیق در عملیات ضریب ۳ + تولید، آمار، زبان', level: 'ارشد' },
   { id: 'technology', title: 'ارشد مدیریت تکنولوژی', hint: 'تئوری و زبان ضریب ۳ + اقتصاد، OR', level: 'ارشد' },
+  { id: 'public', title: 'ارشد مدیریت دولتی', hint: 'نظریه‌های دولتی، خط‌مشی‌گذاری، حقوق اداری', level: 'ارشد' },
+  { id: 'financial', title: 'ارشد مدیریت مالی', hint: 'ریسک و سرمایه‌گذاری، بازارهای مالی، مهندسی مالی', level: 'ارشد' },
+  { id: 'media', title: 'ارشد مدیریت رسانه و اطلاعات', hint: 'MIS پیشرفته، مدیریت دانش، رسانه دیجیتال', level: 'ارشد' },
+  { id: 'foresight', title: 'ارشد آینده‌پژوهی', hint: 'نظریه‌ها و روش‌های آینده‌پژوهی، سناریو', level: 'ارشد' },
+  { id: 'stpolicy', title: 'ارشد سیاست‌گذاری علم و فناوری', hint: 'سیاست‌گذاری علم، مدیریت فناوری، نوآوری', level: 'ارشد' },
 ];
 
 export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => void }> = ({ onComplete }) => {
