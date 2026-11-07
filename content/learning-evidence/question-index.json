@@ -579,6 +579,654 @@
       ]
     },
     {
+      "id": "phd-exp.q001",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "pa.public_theories",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "نظریه‌های مدیریت دولتی: از NPM تا حکمروایی خوب",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Christopher Hood — A Public Management for All Seasons (1991)",
+          "locator": "Doctrines of NPM"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q002",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "pa.policy_theories",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "خط‌مشی‌گذاری عمومی: مدل‌ها و پنجره‌ها",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "James Anderson — Public Policymaking",
+          "locator": "Policy process & instruments"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q003",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "pa.policy_theories",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "خط‌مشی‌گذاری عمومی: مدل‌ها و پنجره‌ها",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "John Kingdon — Agendas, Alternatives, and Public Policies",
+          "locator": "Policy streams & windows"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q004",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "mis.sims_advanced",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "سیستم‌های اطلاعات مدیریت: سلسله‌مراتب و هوش تجاری",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Laudon & Laudon — Management Information Systems",
+          "locator": "Information systems hierarchy"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q005",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "mis.knowledge_mgmt",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "مدیریت دانش: SECI و نردبان DIKW",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Nonaka & Takeuchi — The Knowledge-Creating Company (1995)",
+          "locator": "SECI model"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q006",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "fin.risk_investment",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "ریسک، تنوع‌بخشی و CAPM",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Bodie, Kane & Marcus — Investments",
+          "locator": "Portfolio theory & CAPM"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q007",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "fin.risk_investment",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "ریسک، تنوع‌بخشی و CAPM",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Bodie, Kane & Marcus — Investments",
+          "locator": "Portfolio theory & CAPM"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q008",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "fin.markets_institutions",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "بازارها و نهادهای مالی: کارایی فاما",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Eugene Fama — Efficient Capital Markets (1970)",
+          "locator": "Three forms of efficiency"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q009",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "rm.research_design",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "طرح تحقیق و نمونه‌گیری",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "دکتر نادرقلی حافظ‌نیا — روش تحقیق در علوم رفتاری (سمت)",
+          "locator": "طرح تحقیق، نمونه‌گیری، سنجش"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q010",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "rm.reliability_forms",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "پایایی و روایی محتوایی",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "دکتر نادرقلی حافظ‌نیا — روش تحقیق در علوم رفتاری (سمت)",
+          "locator": "طرح تحقیق، نمونه‌گیری، سنجش"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q011",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "hr.ob_leadership",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "تئوری‌های رهبری: فیدلر، مسیر-هدف و تحول‌آفرین",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Robbins & Judge — Organizational Behavior",
+          "locator": "Leadership theories"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q012",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "hr.practices_hrm",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "کارکردهای منابع انسانی و مدل اولریچ",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Dave Ulrich — Human Resource Champions (1997)",
+          "locator": "Four HR roles"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q013",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "lang.phd_readings",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "زبان تخصصی مدیریت: واژگان کلیدی متون آکادمیک",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Robbins & Judge — Organizational Behavior",
+          "locator": "Leadership theories"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q014",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "lang.phd_readings",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "زبان تخصصی مدیریت: واژگان کلیدی متون آکادمیک",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Robbins & Judge — Organizational Behavior",
+          "locator": "Leadership theories"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q015",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "stats.nonparametric",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "آمار استنباطی: ناپارامتری‌های پرگار دکتری",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "آذر و مؤمنی — آمار و کاربرد آن در مدیریت (سمت)",
+          "locator": "آزمون‌های ناپارامتری"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q016",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "stats.nonparametric",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "آمار استنباطی: ناپارامتری‌های پرگار دکتری",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "آذر و مؤمنی — آمار و کاربرد آن در مدیریت (سمت)",
+          "locator": "آزمون‌های ناپارامتری"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q017",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "pa.public_theories",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "نظریه‌های مدیریت دولتی: از NPM تا حکمروایی خوب",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Osborne & Gaebler — Reinventing Government (1992)",
+          "locator": "Steering vs Rowing"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q018",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "rm.research_design",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "طرح تحقیق و نمونه‌گیری",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "دکتر نادرقلی حافظ‌نیا — روش تحقیق در علوم رفتاری (سمت)",
+          "locator": "طرح تحقیق، نمونه‌گیری، سنجش"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q019",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "mis.knowledge_mgmt",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "مدیریت دانش: SECI و نردبان DIKW",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Nonaka & Takeuchi — The Knowledge-Creating Company (1995)",
+          "locator": "SECI model"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q020",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "mis.sims_advanced",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "سیستم‌های اطلاعات مدیریت: سلسله‌مراتب و هوش تجاری",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Laudon & Laudon — Management Information Systems",
+          "locator": "Information systems hierarchy"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q021",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "mis.knowledge_mgmt",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "مدیریت دانش: SECI و نردبان DIKW",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Nonaka & Takeuchi — The Knowledge-Creating Company (1995)",
+          "locator": "SECI model"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q022",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "fin.markets_institutions",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "بازارها و نهادهای مالی: کارایی فاما",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Eugene Fama — Efficient Capital Markets (1970)",
+          "locator": "Three forms of efficiency"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q023",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "hr.ob_leadership",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "تئوری‌های رهبری: فیدلر، مسیر-هدف و تحول‌آفرین",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Robbins & Judge — Organizational Behavior",
+          "locator": "Leadership theories"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q024",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "rm.reliability_forms",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "پایایی و روایی محتوایی",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "دکتر نادرقلی حافظ‌نیا — روش تحقیق در علوم رفتاری (سمت)",
+          "locator": "طرح تحقیق، نمونه‌گیری، سنجش"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q025",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "pa.public_theories",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "نظریه‌های مدیریت دولتی: از NPM تا حکمروایی خوب",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Christopher Hood — A Public Management for All Seasons (1991)",
+          "locator": "Doctrines of NPM"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q026",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "pa.policy_theories",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "خط‌مشی‌گذاری عمومی: مدل‌ها و پنجره‌ها",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "James Anderson — Public Policymaking",
+          "locator": "Policy process & instruments"
+        }
+      ]
+    },
+    {
+      "id": "phd-exp.q027",
+      "sourceType": "authored",
+      "level": null,
+      "year": null,
+      "booklet": null,
+      "number": null,
+      "courseId": "phd-management-expansion",
+      "sectionId": null,
+      "topicId": "lang.phd_readings",
+      "courseTitle": "دکتری مدیریت — دروس تکمیلی (دولتی، سیاست‌گذاری، MIS و دانش، مالی، روش تحقیق، منابع انسانی)",
+      "chapterTitle": null,
+      "topicTitle": "زبان تخصصی مدیریت: واژگان کلیدی متون آکادمیک",
+      "verification": "authored",
+      "review": "pending_sme",
+      "rights": "original_ael",
+      "auditStatus": "authored",
+      "learningReferences": [
+        {
+          "title": "Robbins & Judge — Organizational Behavior",
+          "locator": "Leadership theories"
+        }
+      ]
+    },
+    {
       "id": "q.bus.econ.1",
       "sourceType": "exam_trace",
       "level": "ارشد",
