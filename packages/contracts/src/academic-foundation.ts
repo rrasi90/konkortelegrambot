@@ -376,7 +376,7 @@ export function validateAcademicFoundationBundle(input: unknown, refs: AcademicR
   (input.examCourseAssignments as unknown[]).forEach((v,i)=>{
     const p='examCourseAssignments['+i+']';
     if(!record(v)){add(errors,p,'invalid_object','Exam assignment باید شیء باشد.');return;}
-    if(!id(v.id)||!id(v.examSetCode)||!id(v.subjectCode)||!id(v.courseDefinitionCode))add(errors,p,'invalid_ids','شناسه‌های assignment نامعتبر است.');
+    if(!id(v.id)||!examCode(v.examSetCode)||!examCode(v.subjectCode)||!id(v.courseDefinitionCode))add(errors,p,'invalid_ids','شناسه‌های assignment نامعتبر است.');
     if(!['master','doctorate'].includes(v.examLevel))add(errors,p+'.examLevel','invalid_level','مقطع نامعتبر است.');
     if(v.combinationCode!=null&&!examCode(v.combinationCode))add(errors,p+'.combinationCode','invalid_combination','کد ترکیب نامعتبر است.');
     if(!['exam_component','subject','course','learning_only'].includes(v.coefficientScope))add(errors,p+'.coefficientScope','invalid_scope','دامنه ضریب نامعتبر است.');
@@ -385,6 +385,8 @@ export function validateAcademicFoundationBundle(input: unknown, refs: AcademicR
     if(!Number.isInteger(v.validFromYear)||v.validFromYear<1300)add(errors,p+'.validFromYear','invalid_year','سال شروع نامعتبر است.');
     if(v.validUntilYear!=null&&(!Number.isInteger(v.validUntilYear)||v.validUntilYear<v.validFromYear))add(errors,p+'.validUntilYear','invalid_range','بازه سال نامعتبر است.');
     if(!['official_verified','reported','needs_check','proposed'].includes(v.status))add(errors,p+'.status','invalid_status','وضعیت assignment نامعتبر است.');
+    if(v.coefficientScope==='learning_only'&&v.officialCoefficient!=null)add(errors,p+'.officialCoefficient','scope_conflict','وزن یادگیری نباید به‌عنوان ضریب رسمی ذخیره شود.');
+    if(v.status==='official_verified'&&v.officialCoefficient==null)add(errors,p+'.officialCoefficient','missing_official_coefficient','انتساب رسمی تأییدشده باید ضریب رسمی مشخص داشته باشد.');
     if(refs.courseIds&&!refs.courseIds.has(v.courseDefinitionCode))add(errors,p+'.courseDefinitionCode','unknown_course','درس پیدا نشد.');
     if(refs.examSetCodes&&!refs.examSetCodes.has(v.examSetCode))add(errors,p+'.examSetCode','unknown_exam_set','مجموعه آزمون پیدا نشد.');
     if(v.combinationCode&&refs.combinationCodes&&!refs.combinationCodes.has(v.combinationCode))add(errors,p+'.combinationCode','unknown_combination','کد ترکیب پیدا نشد.');
