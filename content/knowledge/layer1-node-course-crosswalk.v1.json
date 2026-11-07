@@ -13,7 +13,13 @@
     "nodesNeedingRegistry": 24,
     "syllabusOnlyNodes": 11,
     "skillsWithMissingNode": 4,
-    "missingSkillReferences": 2
+    "missingSkillReferences": 2,
+    "contentCourseCatalogRows": 6,
+    "syllabusCourseTitles": 7,
+    "courseTitleExactContentMatches": 4,
+    "courseTitleCandidates": 2,
+    "courseTitlesWithoutContentMatch": 1,
+    "registryCourseDefinitionMatches": 0
   },
   "nodeCrosswalk": [
     {
@@ -951,45 +957,59 @@
   "courseTitleCrosswalk": [
     {
       "sourceTitle": "مبانی سازمان و مدیریت",
-      "courseDefinitionCode": "course-org-theory",
-      "status": "exact_name_match",
-      "note": "عنوان یکسان در کاتالوگ موجود."
+      "contentCourseId": "course-org-theory",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
     },
     {
       "sourceTitle": "آمار و کاربرد آن در مدیریت",
-      "courseDefinitionCode": "course-stats",
-      "status": "exact_name_match",
-      "note": "عنوان یکسان در کاتالوگ موجود."
+      "contentCourseId": "course-stats",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
     },
     {
       "sourceTitle": "اصول و مبانی مدیریت از دیدگاه اسلام",
-      "courseDefinitionCode": "course-islamic-mgmt",
-      "status": "exact_name_match",
-      "note": "عنوان یکسان در کاتالوگ موجود."
+      "contentCourseId": "course-islamic-mgmt",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
     },
     {
       "sourceTitle": "مدیریت استراتژیک پیشرفته",
-      "courseDefinitionCode": "course-strategic-mgmt",
-      "status": "exact_name_match",
-      "note": "عنوان یکسان در کاتالوگ موجود."
+      "contentCourseId": "course-strategic-mgmt",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
     },
     {
       "sourceTitle": "بازاریابی پیشرفته",
-      "courseDefinitionCode": "course-marketing",
-      "status": "candidate_needs_review",
-      "note": "عنوان کاتالوگ «بازاریابی و مدیریت بازار پیشرفته» است؛ alias پیشنهادی، نه تطبیق قطعی."
+      "contentCourseId": "course-marketing",
+      "contentMatchStatus": "candidate_needs_review",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
     },
     {
       "sourceTitle": "تئوری‌های نوآوری و فناوری",
-      "courseDefinitionCode": "course-innovation-mgmt",
-      "status": "candidate_needs_review",
-      "note": "عنوان به «تئوری‌های نوآوری و مدیریت فناوری» نزدیک است؛ تطبیق نیازمند بررسی."
+      "contentCourseId": "course-innovation-mgmt",
+      "contentMatchStatus": "candidate_needs_review",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
     },
     {
       "sourceTitle": "مدیریت فناوری و نوآوری",
-      "courseDefinitionCode": null,
-      "status": "no_course_definition",
-      "note": "در کاتالوگ فعلی شناسه مستقل قابل تطبیق یافت نشد."
+      "contentCourseId": null,
+      "contentMatchStatus": "no_content_catalog_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
     }
   ]
 }
