@@ -42,6 +42,35 @@ for (const course of learningCourses) {
     assert.ok(Number.isInteger(topic.minutes) && topic.minutes > 0 && topic.minutes <= 10);
     assert.ok(topic.concepts.length >= 2);
     checkSources(topic.sourceIds);
+    for (const field of ['skillIds', 'learningOutcomeIds', 'tagIds'] as const) {
+      const values = topic[field];
+      if (values !== undefined) {
+        assert.ok(Array.isArray(values) && values.every(id => typeof id === 'string' && id.trim()), 'Invalid ' + field + ' for topic ' + topic.id);
+        assert.equal(new Set(values).size, values.length, 'Duplicate ' + field + ' for topic ' + topic.id);
+      }
+    }
+    if (topic.syllabusNodeId !== undefined && topic.syllabusNodeId !== null) {
+      assert.match(topic.syllabusNodeId, pattern, 'Invalid syllabusNodeId for topic ' + topic.id);
+    }
+    if (topic.blocks !== undefined) {
+      assert.ok(Array.isArray(topic.blocks), 'blocks must be an array for topic ' + topic.id);
+      const blockIds = new Set<string>();
+      const kinds = ['learning_objective','concept_explanation','definition','formula','worked_example','case_study','comparison','common_misconception','summary','retrieval_prompt','practice'];
+      for (const block of topic.blocks) {
+        assert.match(block.id, pattern, 'Invalid block id for topic ' + topic.id);
+        assert.ok(!blockIds.has(block.id), 'Duplicate block id: ' + block.id);
+        blockIds.add(block.id);
+        assert.ok(kinds.includes(block.kind), 'Invalid block kind: ' + block.id);
+        assert.ok(Number.isInteger(block.position) && block.position >= 0, 'Invalid block position: ' + block.id);
+        text(block.content);
+        for (const field of ['sourceIds','relatedNodeIds','skillIds','tagIds'] as const) {
+          if (block[field] !== undefined) {
+            assert.ok(Array.isArray(block[field]) && block[field]!.every(id => typeof id === 'string' && id.trim()), 'Invalid ' + field + ' in block ' + block.id);
+          }
+        }
+      }
+      assert.equal(new Set(topic.blocks.map(block => block.position)).size, topic.blocks.length, 'Duplicate block position in topic ' + topic.id);
+    }
     assert.ok(course.questions.some(q => q.topicId === topic.id), 'Topic has no practice: ' + topic.id);
   }
   for (const q of course.questions) {
@@ -76,6 +105,23 @@ for (const course of learningCourses) {
     assert.equal(q.origin, 'authored');
     assert.equal(q.rights, 'original_ael');
     assert.ok(q.review === 'pending_sme' || q.review === 'reviewed');
+    for (const field of ['skillIds', 'learningOutcomeIds', 'tagIds'] as const) {
+      const values = q[field];
+      if (values !== undefined) {
+        assert.ok(Array.isArray(values) && values.every(id => typeof id === 'string' && id.trim()), 'Invalid ' + field + ' for question ' + q.id);
+        assert.equal(new Set(values).size, values.length, 'Duplicate ' + field + ' for question ' + q.id);
+      }
+    }
+    if (q.bloomLevel !== undefined && q.bloomLevel !== null) assert.ok(Number.isInteger(q.bloomLevel) && q.bloomLevel >= 1 && q.bloomLevel <= 6, 'Invalid Bloom level for ' + q.id);
+    if (q.questionFormat !== undefined) assert.ok(['single_choice','multiple_select','calculation','short_answer','essay','case_analysis','matching','true_false'].includes(q.questionFormat), 'Invalid questionFormat for ' + q.id);
+    if (q.assessmentPurpose !== undefined) {
+      assert.ok(Array.isArray(q.assessmentPurpose) && q.assessmentPurpose.length > 0, 'assessmentPurpose must not be empty for ' + q.id);
+      assert.ok(q.assessmentPurpose.every(p => ['practice','diagnostic','verification','proof','timed_exam'].includes(p)), 'Invalid assessmentPurpose for ' + q.id);
+      assert.equal(new Set(q.assessmentPurpose).size, q.assessmentPurpose.length, 'Duplicate assessmentPurpose for ' + q.id);
+    }
+    if (q.estimatedTimeSeconds !== undefined && q.estimatedTimeSeconds !== null) {
+      assert.ok(Number.isInteger(q.estimatedTimeSeconds) && q.estimatedTimeSeconds > 0, 'Invalid estimatedTimeSeconds for ' + q.id);
+    }
   }
   console.log(course.id + ': ' + course.topics.length + ' topics, ' + course.questions.length + ' authored items, ' + course.sources.length + ' references.');
 }
