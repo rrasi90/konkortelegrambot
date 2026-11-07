@@ -16,10 +16,11 @@ const courses = [
   readJson('../../../content/learning-courses/phd-management-expansion.json'),
 ];
 const refs = {
-  syllabusNodeIds: new Set(nodes.map(n => n.id)),
-  skillIds: new Set(skills.map(s => s.id)),
-  questionIds: new Set(pack.questions.map((q: {id:string}) => q.id)),
-  lessonTopicKeys: new Set(courses.flatMap(c => c.topics.map((t: {id:string}) => c.id + '/' + t.id))),
+  syllabusNodeIds: new Set<string>(nodes.map(n => n.id)),
+  skillIds: new Set<string>(skills.map(s => s.id)),
+  questionIds: new Set<string>((pack.questions as Array<{id:string}>).map(q => q.id)),
+  lessonTopicKeys: new Set<string>((courses as Array<{id:string;topics:Array<{id:string}>}>)
+    .flatMap(c => c.topics.map(t => c.id + '/' + t.id))),
 };
 
 describe('AEL Layer 1 academic foundation', () => {
