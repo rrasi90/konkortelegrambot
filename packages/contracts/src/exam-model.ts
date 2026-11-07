@@ -524,6 +524,7 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
     if(t.coefficientAssignmentId){
       const row=coefficientAssignments.find(a=>a.id===t.coefficientAssignmentId);
       if(!row||row.targetId!==t.id)add(errors,'targets['+i+'].coefficientAssignmentId','broken_coefficient_link','بردار ضریب هدف پیدا نشد یا به هدف دیگری متصل است.');
+      else if(row.coefficientCode!==t.coefficientCode)add(errors,'targets['+i+'].coefficientAssignmentId','coefficient_code_mismatch','کد ضریب هدف و بردار ضرایب یکسان نیستند.');
     }
   });
   return {ok:errors.length===0,errors,warnings};
@@ -641,9 +642,6 @@ export function resolveCandidatePreparationPlan(
       if(!subject)continue;
       const direct=coefficientRow?.values.find(v=>v.subjectId===row.subjectId)??null;
       if(direct?.state==='official_zero'||direct?.state==='not_applicable')continue;
-      const componentCoefficients=bundle.componentCoefficients.filter(component=>
-        component.eventVersionId===plan.eventVersionId&&component.examSetId===target.examSetId&&component.subjectIds.includes(row.subjectId)
-      );
       const inclusion=membership?'included_by_combination':direct?.state==='unknown'?'unknown_coefficient':'positive_coefficient';
       resolvedTargets.push({targetId:target.id,subjectId:subject.id,inclusion,directCoefficient:direct,componentCoefficients:[]});
       const old=subjectTargetMap.get(subject.id);
