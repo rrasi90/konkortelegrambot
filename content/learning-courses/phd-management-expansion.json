@@ -18,7 +18,7 @@
     {
       "id": "osborne.gaebler",
       "title": "Osborne & Gaebler — Reinventing Government (1992)",
-      "url": "",
+      "url": null,
       "locator": "Steering vs Rowing",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
@@ -26,7 +26,7 @@
     {
       "id": "anderson.policy",
       "title": "James Anderson — Public Policymaking",
-      "url": "",
+      "url": null,
       "locator": "Policy process & instruments",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
@@ -34,7 +34,7 @@
     {
       "id": "kingdon.streams",
       "title": "John Kingdon — Agendas, Alternatives, and Public Policies",
-      "url": "",
+      "url": null,
       "locator": "Policy streams & windows",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
@@ -42,7 +42,7 @@
     {
       "id": "laudon.mis",
       "title": "Laudon & Laudon — Management Information Systems",
-      "url": "",
+      "url": null,
       "locator": "Information systems hierarchy",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
@@ -50,7 +50,7 @@
     {
       "id": "nonaka.seci",
       "title": "Nonaka & Takeuchi — The Knowledge-Creating Company (1995)",
-      "url": "",
+      "url": null,
       "locator": "SECI model",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
@@ -58,7 +58,7 @@
     {
       "id": "bodie.capm",
       "title": "Bodie, Kane & Marcus — Investments",
-      "url": "",
+      "url": null,
       "locator": "Portfolio theory & CAPM",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
@@ -74,7 +74,7 @@
     {
       "id": "hafaznia.method",
       "title": "دکتر نادرقلی حافظ‌نیا — روش تحقیق در علوم رفتاری (سمت)",
-      "url": "",
+      "url": null,
       "locator": "طرح تحقیق، نمونه‌گیری، سنجش",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
@@ -82,7 +82,7 @@
     {
       "id": "azarmomeni.stats",
       "title": "آذر و مؤمنی — آمار و کاربرد آن در مدیریت (سمت)",
-      "url": "",
+      "url": null,
       "locator": "آزمون‌های ناپارامتری",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
@@ -90,7 +90,7 @@
     {
       "id": "ulrich.hr",
       "title": "Dave Ulrich — Human Resource Champions (1997)",
-      "url": "",
+      "url": null,
       "locator": "Four HR roles",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
@@ -98,7 +98,7 @@
     {
       "id": "robbins.leadership",
       "title": "Robbins & Judge — Organizational Behavior",
-      "url": "",
+      "url": null,
       "locator": "Leadership theories",
       "kind": "concept_reference",
       "checkedOn": "2026-11-07"
