@@ -1,0 +1,1109 @@
+{
+  "schemaVersion": 1,
+  "namespaces": [
+    {
+      "id": "discipline",
+      "title": "حوزه علمی",
+      "description": "حوزه دانشی که محتوا به آن تعلق دارد.",
+      "selectionMode": "multiple",
+      "applicableTo": [
+        "course",
+        "syllabus_node",
+        "skill",
+        "learning_outcome",
+        "question",
+        "lesson_topic",
+        "flashcard"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "competency-area",
+      "title": "حوزه توانمندی",
+      "description": "حوزه توانمندی؛ جایگزین Skill عملیاتی نیست.",
+      "selectionMode": "multiple",
+      "applicableTo": [
+        "skill",
+        "learning_outcome",
+        "question",
+        "lesson_topic"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "bloom-level",
+      "title": "سطح شناختی بلوم",
+      "description": "سطح شناختی هدف یا سؤال؛ مستقل از دشواری تجربی.",
+      "selectionMode": "single",
+      "applicableTo": [
+        "learning_outcome",
+        "question"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "difficulty",
+      "title": "دشواری طراحی‌شده",
+      "description": "برآورد اولیه دشواری؛ از دشواری تجربی پاسخ‌ها جداست.",
+      "selectionMode": "single",
+      "applicableTo": [
+        "question",
+        "lesson_topic",
+        "flashcard"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "question-format",
+      "title": "قالب سؤال",
+      "description": "ساختار پاسخ مورد انتظار.",
+      "selectionMode": "single",
+      "applicableTo": [
+        "question"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "assessment-purpose",
+      "title": "کارکرد ارزیابی",
+      "description": "نقش سؤال در چرخه یادگیری.",
+      "selectionMode": "multiple",
+      "applicableTo": [
+        "question"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "exam-level",
+      "title": "مقطع آزمون",
+      "description": "مقطع رسمی آزمون، مستقل از سطح آموزشی درس.",
+      "selectionMode": "multiple",
+      "applicableTo": [
+        "course",
+        "question",
+        "exam_event",
+        "exam_combination"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "study-track",
+      "title": "مسیر مطالعه",
+      "description": "مسیر موضوعی محصول؛ نه کد رسمی مجموعه یا ترکیب آزمون.",
+      "selectionMode": "multiple",
+      "applicableTo": [
+        "course",
+        "syllabus_node",
+        "skill",
+        "question",
+        "lesson_topic"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "language",
+      "title": "زبان محتوا",
+      "description": "زبان غالب محتوا.",
+      "selectionMode": "single",
+      "applicableTo": [
+        "course",
+        "syllabus_node",
+        "question",
+        "lesson_topic",
+        "flashcard"
+      ],
+      "status": "active"
+    },
+    {
+      "id": "content-format",
+      "title": "قالب محتوا",
+      "description": "نوع واحد آموزشی مستقل از نوع سؤال.",
+      "selectionMode": "multiple",
+      "applicableTo": [
+        "lesson_topic",
+        "flashcard"
+      ],
+      "status": "active"
+    }
+  ],
+  "tags": [
+    {
+      "id": "discipline.management",
+      "namespaceId": "discipline",
+      "slug": "management",
+      "label": "مدیریت",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "حوزه عمومی مدیریت.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.organizational-theory",
+      "namespaceId": "discipline",
+      "slug": "organizational-theory",
+      "label": "نظریه سازمان",
+      "aliases": [],
+      "parentTagId": "discipline.management",
+      "description": "ساختار، طراحی و نظریه‌های سازمان.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.strategy",
+      "namespaceId": "discipline",
+      "slug": "strategic-management",
+      "label": "مدیریت استراتژیک",
+      "aliases": [],
+      "parentTagId": "discipline.management",
+      "description": "تحلیل و انتخاب راهبرد.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.marketing",
+      "namespaceId": "discipline",
+      "slug": "marketing",
+      "label": "بازاریابی",
+      "aliases": [],
+      "parentTagId": "discipline.management",
+      "description": "بازار، برند و رفتار مصرف‌کننده.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.statistics",
+      "namespaceId": "discipline",
+      "slug": "statistics",
+      "label": "آمار",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "آمار توصیفی و استنباطی.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.research-methods",
+      "namespaceId": "discipline",
+      "slug": "research-methods",
+      "label": "روش تحقیق",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "طراحی پژوهش، سنجش و تحلیل.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.finance",
+      "namespaceId": "discipline",
+      "slug": "finance",
+      "label": "مدیریت مالی",
+      "aliases": [],
+      "parentTagId": "discipline.management",
+      "description": "تصمیم‌های مالی و بازارهای مالی.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.innovation",
+      "namespaceId": "discipline",
+      "slug": "innovation-technology",
+      "label": "نوآوری و مدیریت فناوری",
+      "aliases": [],
+      "parentTagId": "discipline.management",
+      "description": "نوآوری، انتقال و راهبرد فناوری.",
+      "status": "active"
+    },
+    {
+      "id": "competency-area.quantitative",
+      "namespaceId": "competency-area",
+      "slug": "quantitative-reasoning",
+      "label": "استدلال کمی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "محاسبه و تفسیر نتایج عددی.",
+      "status": "active"
+    },
+    {
+      "id": "competency-area.conceptual",
+      "namespaceId": "competency-area",
+      "slug": "conceptual-understanding",
+      "label": "درک مفهومی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "توضیح و تمایز مفاهیم.",
+      "status": "active"
+    },
+    {
+      "id": "competency-area.analytical",
+      "namespaceId": "competency-area",
+      "slug": "analytical-reasoning",
+      "label": "استدلال تحلیلی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "تحلیل روابط و شواهد.",
+      "status": "active"
+    },
+    {
+      "id": "competency-area.application",
+      "namespaceId": "competency-area",
+      "slug": "application",
+      "label": "کاربرد",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "به‌کارگیری دانش در مسئله.",
+      "status": "active"
+    },
+    {
+      "id": "bloom-level.remember",
+      "namespaceId": "bloom-level",
+      "slug": "remember",
+      "label": "یادآوری",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "سطح ۱ بلوم.",
+      "status": "active"
+    },
+    {
+      "id": "bloom-level.understand",
+      "namespaceId": "bloom-level",
+      "slug": "understand",
+      "label": "درک",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "سطح ۲ بلوم.",
+      "status": "active"
+    },
+    {
+      "id": "bloom-level.apply",
+      "namespaceId": "bloom-level",
+      "slug": "apply",
+      "label": "کاربرد",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "سطح ۳ بلوم.",
+      "status": "active"
+    },
+    {
+      "id": "bloom-level.analyze",
+      "namespaceId": "bloom-level",
+      "slug": "analyze",
+      "label": "تحلیل",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "سطح ۴ بلوم.",
+      "status": "active"
+    },
+    {
+      "id": "bloom-level.evaluate",
+      "namespaceId": "bloom-level",
+      "slug": "evaluate",
+      "label": "ارزشیابی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "سطح ۵ بلوم.",
+      "status": "active"
+    },
+    {
+      "id": "bloom-level.create",
+      "namespaceId": "bloom-level",
+      "slug": "create",
+      "label": "آفرینش",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "سطح ۶ بلوم.",
+      "status": "active"
+    },
+    {
+      "id": "difficulty.basic",
+      "namespaceId": "difficulty",
+      "slug": "basic",
+      "label": "پایه",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "دشواری طراحی‌شده پایه.",
+      "status": "active"
+    },
+    {
+      "id": "difficulty.intermediate",
+      "namespaceId": "difficulty",
+      "slug": "intermediate",
+      "label": "متوسط",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "نیازمند ترکیب چند گام آشنا.",
+      "status": "active"
+    },
+    {
+      "id": "difficulty.advanced",
+      "namespaceId": "difficulty",
+      "slug": "advanced",
+      "label": "پیشرفته",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "نیازمند تحلیل چند مفهوم.",
+      "status": "active"
+    },
+    {
+      "id": "difficulty.expert",
+      "namespaceId": "difficulty",
+      "slug": "expert",
+      "label": "تخصصی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "نیازمند استدلال پیچیده.",
+      "status": "active"
+    },
+    {
+      "id": "question-format.single-choice",
+      "namespaceId": "question-format",
+      "slug": "single-choice",
+      "label": "چهارگزینه‌ای تک‌پاسخ",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "انتخاب یک گزینه.",
+      "status": "active"
+    },
+    {
+      "id": "question-format.calculation",
+      "namespaceId": "question-format",
+      "slug": "calculation",
+      "label": "محاسباتی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "حل مسئله عددی.",
+      "status": "active"
+    },
+    {
+      "id": "question-format.essay",
+      "namespaceId": "question-format",
+      "slug": "essay",
+      "label": "تشریحی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "پاسخ متنی با معیار ارزیابی.",
+      "status": "active"
+    },
+    {
+      "id": "question-format.case-analysis",
+      "namespaceId": "question-format",
+      "slug": "case-analysis",
+      "label": "تحلیل مورد",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "تحلیل سناریو.",
+      "status": "active"
+    },
+    {
+      "id": "assessment-purpose.practice",
+      "namespaceId": "assessment-purpose",
+      "slug": "practice",
+      "label": "تمرین",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "تمرین و تثبیت یادگیری.",
+      "status": "active"
+    },
+    {
+      "id": "assessment-purpose.diagnostic",
+      "namespaceId": "assessment-purpose",
+      "slug": "diagnostic",
+      "label": "تشخیصی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "شناسایی سطح و شکاف.",
+      "status": "active"
+    },
+    {
+      "id": "assessment-purpose.verification",
+      "namespaceId": "assessment-purpose",
+      "slug": "verification",
+      "label": "راستی‌آزمایی یادگیری",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "سنجش مستقل پس از آموزش.",
+      "status": "active"
+    },
+    {
+      "id": "assessment-purpose.proof",
+      "namespaceId": "assessment-purpose",
+      "slug": "proof",
+      "label": "اثبات تسلط",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "سنجش مستقل برای اثبات تسلط.",
+      "status": "active"
+    },
+    {
+      "id": "exam-level.master",
+      "namespaceId": "exam-level",
+      "slug": "master",
+      "label": "کارشناسی ارشد",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "مقطع کارشناسی ارشد.",
+      "status": "active"
+    },
+    {
+      "id": "exam-level.doctorate",
+      "namespaceId": "exam-level",
+      "slug": "doctorate",
+      "label": "دکتری",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "مقطع دکتری.",
+      "status": "active"
+    },
+    {
+      "id": "study-track.common",
+      "namespaceId": "study-track",
+      "slug": "common",
+      "label": "هسته مشترک",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "مباحث مشترک میان چند مسیر.",
+      "status": "active"
+    },
+    {
+      "id": "study-track.business",
+      "namespaceId": "study-track",
+      "slug": "business",
+      "label": "بازرگانی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "مسیر موضوعی بازرگانی.",
+      "status": "active"
+    },
+    {
+      "id": "study-track.industrial",
+      "namespaceId": "study-track",
+      "slug": "industrial",
+      "label": "صنعتی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "مسیر موضوعی مدیریت صنعتی.",
+      "status": "active"
+    },
+    {
+      "id": "study-track.technology",
+      "namespaceId": "study-track",
+      "slug": "technology",
+      "label": "فناوری",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "مسیر موضوعی فناوری.",
+      "status": "active"
+    },
+    {
+      "id": "study-track.strategy",
+      "namespaceId": "study-track",
+      "slug": "strategy",
+      "label": "استراتژیک",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "مسیر موضوعی مدیریت استراتژیک.",
+      "status": "active"
+    },
+    {
+      "id": "language.fa",
+      "namespaceId": "language",
+      "slug": "fa",
+      "label": "فارسی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "محتوای فارسی.",
+      "status": "active"
+    },
+    {
+      "id": "language.en",
+      "namespaceId": "language",
+      "slug": "en",
+      "label": "انگلیسی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "محتوای انگلیسی.",
+      "status": "active"
+    },
+    {
+      "id": "content-format.concept",
+      "namespaceId": "content-format",
+      "slug": "concept",
+      "label": "مفهوم",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "واحد توضیح مفهومی.",
+      "status": "active"
+    },
+    {
+      "id": "content-format.formula",
+      "namespaceId": "content-format",
+      "slug": "formula",
+      "label": "فرمول",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "واحد فرمول و روابط.",
+      "status": "active"
+    },
+    {
+      "id": "content-format.example",
+      "namespaceId": "content-format",
+      "slug": "worked-example",
+      "label": "مثال حل‌شده",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "نمونه حل گام‌به‌گام.",
+      "status": "active"
+    },
+    {
+      "id": "content-format.case",
+      "namespaceId": "content-format",
+      "slug": "case-study",
+      "label": "مطالعه موردی",
+      "aliases": [],
+      "parentTagId": null,
+      "description": "موقعیت کاربردی.",
+      "status": "active"
+    }
+  ],
+  "assignments": [],
+  "relations": [],
+  "questionMappings": [
+    {
+      "questionId": "q-1404-001",
+      "primaryNodeId": "mb.contingency",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.mb.contingency.differentiation",
+      "secondarySkillIds": [
+        "skill.mb.structure.mechanic_organic"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1404-002",
+      "primaryNodeId": "mb.decision",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.mb.decision.bounded_rationality",
+      "secondarySkillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 2,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1404-003",
+      "primaryNodeId": "stats.regression",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.stats.regression.r_squared",
+      "secondarySkillIds": [
+        "skill.stats.scales.identify"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 3,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1404-004",
+      "primaryNodeId": "stats.anova",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.stats.anova.parametric_assumptions",
+      "secondarySkillIds": [
+        "skill.stats.scales.identify"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1404-005",
+      "primaryNodeId": "islamic.malik_covenant",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.islamic.malik_covenant.appointees",
+      "secondarySkillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 2,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1404-006",
+      "primaryNodeId": "sm.core_competencies",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.sm.core_competencies.prahalad",
+      "secondarySkillIds": [
+        "skill.sm.rbv.vrio"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1404-007",
+      "primaryNodeId": "sm.rbv",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.sm.rbv.vrio",
+      "secondarySkillIds": [
+        "skill.sm.rbv.isolating_mechanisms"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 5,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1404-008",
+      "primaryNodeId": "mkt.brand",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.mkt.brand.cbbe_pyramid",
+      "secondarySkillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1404-009",
+      "primaryNodeId": "mkt.cobranding",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.mkt.cobranding.strategy",
+      "secondarySkillIds": [
+        "skill.mkt.brand.cbbe_pyramid"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 5,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1403-001",
+      "primaryNodeId": "sm.dynamic_capabilities",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.sm.dynamic_capabilities.reconfiguration",
+      "secondarySkillIds": [
+        "skill.sm.rbv.vrio"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 5,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1403-002",
+      "primaryNodeId": "mkt.plc",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.mkt.plc.stages",
+      "secondarySkillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1403-003",
+      "primaryNodeId": "tech.absorptive",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.tech.absorptive.capacity",
+      "secondarySkillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 3,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1402-001",
+      "primaryNodeId": "sm.portfolio",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.sm.portfolio.bcg_ge",
+      "secondarySkillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 3,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1402-002",
+      "primaryNodeId": "mb.contingency",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.mb.contingency.differentiation",
+      "secondarySkillIds": [
+        "skill.mb.structure.mechanic_organic"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1402-003",
+      "primaryNodeId": "inno.s_curve",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.inno.s_curve.disruption",
+      "secondarySkillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1401-001",
+      "primaryNodeId": "sm.rbv",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.sm.rbv.vrio",
+      "secondarySkillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1401-002",
+      "primaryNodeId": "stats.anova",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.stats.anova.parametric_assumptions",
+      "secondarySkillIds": [
+        "skill.stats.scales.identify"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    },
+    {
+      "questionId": "q-1401-003",
+      "primaryNodeId": "inno.ambidextrous",
+      "secondaryNodeIds": [],
+      "primarySkillId": "skill.inno.ambidextrous.dual_focus",
+      "secondarySkillIds": [
+        "skill.mb.structure.mechanic_organic"
+      ],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "bloomLevel": 4,
+      "difficulty": null,
+      "format": "single_choice",
+      "purpose": [
+        "practice"
+      ],
+      "estimatedTimeSeconds": null,
+      "status": "mapped"
+    }
+  ],
+  "unmappedQuestions": [
+    {
+      "questionId": "q-1400-001",
+      "reason": "no_skill_mapping",
+      "note": "در نگاشت فعلی سؤال→مهارت رکوردی وجود ندارد؛ پس از تعیین مهارت و مرور مفهوم تکمیل شود."
+    },
+    {
+      "questionId": "q-1400-002",
+      "reason": "no_skill_mapping",
+      "note": "در نگاشت فعلی سؤال→مهارت رکوردی وجود ندارد؛ پس از تعیین مهارت و مرور مفهوم تکمیل شود."
+    },
+    {
+      "questionId": "q-1399-001",
+      "reason": "no_skill_mapping",
+      "note": "در نگاشت فعلی سؤال→مهارت رکوردی وجود ندارد؛ پس از تعیین مهارت و مرور مفهوم تکمیل شود."
+    }
+  ],
+  "lessonMappings": [
+    {
+      "coursePackId": "financial-management",
+      "topicId": "fm.ratios",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "financial-management",
+      "topicId": "fm.tvm",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "financial-management",
+      "topicId": "fm.bonds",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "financial-management",
+      "topicId": "fm.stock",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "financial-management",
+      "topicId": "fm.risk",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "financial-management",
+      "topicId": "fm.npv",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "financial-management",
+      "topicId": "fm.wacc",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "financial-management",
+      "topicId": "fm.wc",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "statistics-foundations",
+      "topicId": "stat.center",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "statistics-foundations",
+      "topicId": "stat.conditional",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "pa.public_theories",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "pa.policy_theories",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "mis.sims_advanced",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "mis.knowledge_mgmt",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "fin.risk_investment",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "fin.markets_institutions",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "rm.research_design",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "rm.reliability_forms",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "hr.ob_leadership",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "hr.practices_hrm",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "lang.phd_readings",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    },
+    {
+      "coursePackId": "phd-management-expansion",
+      "topicId": "stats.nonparametric",
+      "syllabusNodeId": null,
+      "skillIds": [],
+      "learningOutcomeIds": [],
+      "tagIds": [],
+      "status": "needs_mapping"
+    }
+  ],
+  "examCourseAssignments": []
+}
