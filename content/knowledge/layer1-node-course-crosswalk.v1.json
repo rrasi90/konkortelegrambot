@@ -7,7 +7,13 @@
     "syllabusNodes": 24,
     "unionNodeIds": 48,
     "skills": 23,
-    "courses": 6
+    "courses": 6,
+    "nodeCrosswalkRows": 48,
+    "exactNodeMatches": 13,
+    "nodesNeedingRegistry": 24,
+    "syllabusOnlyNodes": 11,
+    "skillsWithMissingNode": 4,
+    "missingSkillReferences": 2
   },
   "nodeCrosswalk": [
     {
@@ -658,7 +664,9 @@
       ],
       "confusableSkillIds": [
         "skill.mb.structure.mechanic_organic"
-      ]
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.mb.structure.mechanic_organic",
@@ -666,7 +674,9 @@
       "nodeMappingStatus": "exact_id_match",
       "candidateNodeIds": [],
       "prerequisiteSkillIds": [],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.mb.decision.bounded_rationality",
@@ -674,7 +684,9 @@
       "nodeMappingStatus": "exact_id_match",
       "candidateNodeIds": [],
       "prerequisiteSkillIds": [],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.stats.regression.r_squared",
@@ -684,7 +696,9 @@
       "prerequisiteSkillIds": [
         "skill.stats.scales.identify"
       ],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.stats.anova.parametric_assumptions",
@@ -696,6 +710,10 @@
       ],
       "confusableSkillIds": [
         "skill.stats.nonparam.kruskal"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": [
+        "skill.stats.nonparam.kruskal"
       ]
     },
     {
@@ -704,7 +722,9 @@
       "nodeMappingStatus": "exact_id_match",
       "candidateNodeIds": [],
       "prerequisiteSkillIds": [],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.islamic.malik_covenant.appointees",
@@ -712,7 +732,9 @@
       "nodeMappingStatus": "exact_id_match",
       "candidateNodeIds": [],
       "prerequisiteSkillIds": [],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.sm.rbv.vrio",
@@ -724,7 +746,9 @@
       ],
       "confusableSkillIds": [
         "skill.sm.dynamic_capabilities.reconfiguration"
-      ]
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.sm.value_chain.porter",
@@ -732,7 +756,9 @@
       "nodeMappingStatus": "exact_id_match",
       "candidateNodeIds": [],
       "prerequisiteSkillIds": [],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.sm.core_competencies.prahalad",
@@ -744,7 +770,9 @@
       ],
       "confusableSkillIds": [
         "skill.sm.rbv.vrio"
-      ]
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.sm.dynamic_capabilities.reconfiguration",
@@ -758,7 +786,9 @@
       ],
       "confusableSkillIds": [
         "skill.sm.rbv.vrio"
-      ]
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.mkt.brand.cbbe_pyramid",
@@ -768,7 +798,11 @@
       "prerequisiteSkillIds": [
         "skill.mkt.stp.positioning"
       ],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [
+        "skill.mkt.stp.positioning"
+      ],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.mkt.cobranding.strategy",
@@ -780,7 +814,9 @@
       ],
       "confusableSkillIds": [
         "skill.mkt.brand.cbbe_pyramid"
-      ]
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.inno.s_curve.disruption",
@@ -788,7 +824,9 @@
       "nodeMappingStatus": "exact_id_match",
       "candidateNodeIds": [],
       "prerequisiteSkillIds": [],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.inno.ambidextrous.dual_focus",
@@ -800,7 +838,9 @@
       ],
       "confusableSkillIds": [
         "skill.mb.structure.mechanic_organic"
-      ]
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.tech.absorptive.capacity",
@@ -808,7 +848,9 @@
       "nodeMappingStatus": "exact_id_match",
       "candidateNodeIds": [],
       "prerequisiteSkillIds": [],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.mkt.plc.stages",
@@ -818,7 +860,9 @@
       "prerequisiteSkillIds": [],
       "confusableSkillIds": [
         "skill.mkt.brand.cbbe_pyramid"
-      ]
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.sm.portfolio.bcg_ge",
@@ -830,7 +874,9 @@
       ],
       "confusableSkillIds": [
         "skill.sm.core_competencies.prahalad"
-      ]
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.sm.rbv.isolating_mechanisms",
@@ -842,7 +888,9 @@
       ],
       "confusableSkillIds": [
         "skill.sm.core_competencies.prahalad"
-      ]
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.ind.or_simplex",
@@ -854,7 +902,9 @@
       "prerequisiteSkillIds": [
         "skill.stats.scales.identify"
       ],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.ind.mcdm",
@@ -866,7 +916,9 @@
       "prerequisiteSkillIds": [
         "skill.ind.or_simplex"
       ],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.ind.production_inv",
@@ -878,7 +930,9 @@
       "prerequisiteSkillIds": [
         "skill.ind.or_simplex"
       ],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     },
     {
       "skillId": "skill.ind.supply_chain",
@@ -889,7 +943,9 @@
         "skill.ind.production_inv",
         "skill.sm.value_chain.porter"
       ],
-      "confusableSkillIds": []
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
     }
   ],
   "courseTitleCrosswalk": [
