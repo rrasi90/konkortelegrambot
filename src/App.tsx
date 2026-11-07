@@ -1216,13 +1216,12 @@ export default function App() {
             } catch {
               /* ذخیرهٔ onboarding نباید تجربه را بشکند */
             }
-            if (r.track !== (stats.selectedMajorBranch || 'business')) {
-              setStats((prev) => ({
-                ...prev,
-                selectedMajorBranch: r.track,
-              }));
-            }
-            setIsPlacementOpen(true);
+            // گرایش‌های انتخاب‌شده را به stats اعمال کن — تعیین سطح اختیاری است
+            setStats((prev) => ({
+              ...prev,
+              selectedMajorBranch: r.track,
+              selectedMajorBranches: r.tracks ?? [],
+            }));
           }}
         />
       )}

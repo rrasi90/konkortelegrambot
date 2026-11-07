@@ -1,4 +1,4 @@
-import '../../apps/miniapp/learning.js';
+// learning.js removed — miniapp replaced with React build (flashcard + onboarding)
 import { learningCourses } from '../../apps/worker/src/learning-catalog';
 import recurrence from '../../content/learning-evidence/recurrence.json';
 import questionIndex from '../../content/learning-evidence/question-index.json';
