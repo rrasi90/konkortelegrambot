@@ -1,5 +1,7 @@
-import type { LessonBlock } from '@ael/contracts';
+import type { AcademicDifficulty, LessonBlock } from '@ael/contracts';
 export type QuizMode = 'practice' | 'diagnostic' | 'timed';
+/** `applied` remains a legacy authoring label; new content uses the shared four-band difficulty vocabulary. */
+export type LearningQuestionDifficulty = AcademicDifficulty | 'applied';
 export interface LearningSource {
   id: string;
   title: string;
@@ -30,7 +32,7 @@ export interface LearningTopic {
 export interface LearningQuestion {
   id: string;
   topicId: string;
-  difficulty: 'basic' | 'applied';
+  difficulty: LearningQuestionDifficulty;
   prompt: string;
   choices: string[];
   answerIndex: number;
