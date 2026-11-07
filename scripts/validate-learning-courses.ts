@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
-import { readdir } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { learningCourses } from '../apps/worker/src/learning-catalog';
+import { validateAcademicFoundationBundle } from '@ael/contracts';
 
 const files = (await readdir(new URL('../content/learning-courses/', import.meta.url)))
   .filter(name => name.endsWith('.json')).sort();
@@ -125,3 +126,30 @@ for (const course of learningCourses) {
   }
   console.log(course.id + ': ' + course.topics.length + ' topics, ' + course.questions.length + ' authored items, ' + course.sources.length + ' references.');
 }
+
+/**
+ * Layer 1 — validate the shared academic taxonomy and crosswalk against the
+ * current skill, syllabus, question and learning-course catalogs.
+ */
+const [foundationRaw, syllabusRaw, skillsRaw, examPackRaw] = await Promise.all([
+  readFile(new URL('../content/knowledge/academic-foundation.v1.json', import.meta.url), 'utf8'),
+  readFile(new URL('../content/knowledge/syllabus-nodes.json', import.meta.url), 'utf8'),
+  readFile(new URL('../content/knowledge/skills.json', import.meta.url), 'utf8'),
+  readFile(new URL('../content/knowledge/exam-packs/phd-management-business-v1.json', import.meta.url), 'utf8'),
+]);
+const foundation = JSON.parse(foundationRaw);
+const syllabusNodes = JSON.parse(syllabusRaw);
+const skills = JSON.parse(skillsRaw);
+const examPack = JSON.parse(examPackRaw);
+const academicResult = validateAcademicFoundationBundle(foundation, {
+  syllabusNodeIds: new Set(syllabusNodes.map((node: { id: string }) => node.id)),
+  skillIds: new Set(skills.map((skill: { id: string }) => skill.id)),
+  questionIds: new Set(examPack.questions.map((question: { id: string }) => question.id)),
+  lessonTopicKeys: new Set(learningCourses.flatMap(course => course.topics.map(topic => course.id + '/' + topic.id))),
+});
+assert.deepEqual(academicResult.errors, [], 'Academic Foundation validation failed: ' + JSON.stringify(academicResult.errors, null, 2));
+console.log(
+  'Academic Foundation: ' + foundation.namespaces.length + ' namespaces, ' +
+  foundation.tags.length + ' tags, ' + foundation.questionMappings.length + ' question mappings, ' +
+  foundation.unmappedQuestions.length + ' unmapped questions, ' + foundation.lessonMappings.length + ' lesson mappings.'
+);
