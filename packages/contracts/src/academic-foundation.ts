@@ -163,6 +163,7 @@ const ENTITY = new Set<string>(ACADEMIC_ENTITY_KINDS);
 const add = (errors: AcademicFoundationIssue[], path: string, code: string, message: string) => errors.push({path,code,message});
 const record = (v: unknown): v is Record<string, any> => typeof v === 'object' && v !== null && !Array.isArray(v);
 const id = (v: unknown): v is string => typeof v === 'string' && ID.test(v);
+const compoundLessonTopicId = (v: unknown): v is string => typeof v === 'string' && v.split('/').length === 2 && v.split('/').every(part => ID.test(part));
 const examCode = (v: unknown): v is string => typeof v === 'string' && (ID.test(v) || /^[0-9]{1,4}$/.test(v));
 const stringList = (v: unknown): v is string[] => Array.isArray(v) && v.every(x => typeof x === 'string' && x.trim().length > 0);
 const duplicate = (v: readonly string[]) => new Set(v).size !== v.length;
@@ -268,7 +269,8 @@ export function validateAcademicFoundationBundle(input: unknown, refs: AcademicR
     const tag=tagMap.get(v.tagId);
     const ns=tag?namespaceMap.get(tag.namespaceId):undefined;
     if(!tag)add(errors,p+'.tagId','unknown_tag','تگ پیدا نشد.');
-    if(!ENTITY.has(v.targetKind)||!id(v.targetId))add(errors,p,'invalid_target','نوع یا شناسه هدف نامعتبر است.');
+    const validTargetId = v.targetKind === 'lesson_topic' ? compoundLessonTopicId(v.targetId) : id(v.targetId);
+    if(!ENTITY.has(v.targetKind)||!validTargetId)add(errors,p,'invalid_target','نوع یا شناسه هدف نامعتبر است.');
     if(ns && !ns.applicableTo.includes(v.targetKind))add(errors,p+'.targetKind','inapplicable_target','این namespace برای نوع هدف مجاز نیست.');
     const k=v.targetKind+'/'+v.targetId+'/'+v.tagId;
     if(assignKeys.has(k))add(errors,p,'duplicate_assignment','تگ تکراری به همان موجودیت متصل شده است.');
@@ -279,6 +281,10 @@ export function validateAcademicFoundationBundle(input: unknown, refs: AcademicR
       if(count>1)add(errors,p,'single_select_overflow','برای namespace تک‌انتخابی بیش از یک تگ ثبت شده است.');
     }
     if(v.targetKind==='syllabus_node'&&refs.syllabusNodeIds&&!refs.syllabusNodeIds.has(v.targetId))add(errors,p+'.targetId','unknown_reference','گره سرفصل پیدا نشد.');
+    if(v.targetKind==='question'&&refs.questionIds&&!refs.questionIds.has(v.targetId))add(errors,p+'.targetId','unknown_reference','سؤال هدف پیدا نشد.');
+    if(v.targetKind==='skill'&&refs.skillIds&&!refs.skillIds.has(v.targetId))add(errors,p+'.targetId','unknown_reference','مهارت هدف پیدا نشد.');
+    if(v.targetKind==='course'&&refs.courseIds&&!refs.courseIds.has(v.targetId))add(errors,p+'.targetId','unknown_reference','درس هدف پیدا نشد.');
+    if(v.targetKind==='lesson_topic'&&refs.lessonTopicKeys&&!refs.lessonTopicKeys.has(v.targetId))add(errors,p+'.targetId','unknown_reference','مبحث درسنامه‌ای هدف پیدا نشد.');
   });
 
   const relationIds=new Set<string>(), relationKeys=new Set<string>();
