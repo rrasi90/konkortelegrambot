@@ -1020,6 +1020,144 @@
       "targetKind": "question",
       "targetId": "q-1404-005",
       "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "skill",
+      "targetId": "skill.mb.contingency.differentiation",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "skill",
+      "targetId": "skill.mb.structure.mechanic_organic",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "skill",
+      "targetId": "skill.mb.decision.bounded_rationality",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "skill",
+      "targetId": "skill.stats.regression.r_squared",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "skill",
+      "targetId": "skill.stats.anova.parametric_assumptions",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "skill",
+      "targetId": "skill.stats.scales.identify",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.islamic-management",
+      "targetKind": "skill",
+      "targetId": "skill.islamic.malik_covenant.appointees",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "skill",
+      "targetId": "skill.sm.rbv.vrio",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "skill",
+      "targetId": "skill.sm.value_chain.porter",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "skill",
+      "targetId": "skill.sm.core_competencies.prahalad",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "skill",
+      "targetId": "skill.sm.dynamic_capabilities.reconfiguration",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "skill",
+      "targetId": "skill.mkt.brand.cbbe_pyramid",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "skill",
+      "targetId": "skill.mkt.cobranding.strategy",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.innovation",
+      "targetKind": "skill",
+      "targetId": "skill.inno.s_curve.disruption",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.innovation",
+      "targetKind": "skill",
+      "targetId": "skill.inno.ambidextrous.dual_focus",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.innovation",
+      "targetKind": "skill",
+      "targetId": "skill.tech.absorptive.capacity",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "skill",
+      "targetId": "skill.mkt.plc.stages",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "skill",
+      "targetId": "skill.sm.portfolio.bcg_ge",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "skill",
+      "targetId": "skill.sm.rbv.isolating_mechanisms",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.industrial-management",
+      "targetKind": "skill",
+      "targetId": "skill.ind.or_simplex",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.industrial-management",
+      "targetKind": "skill",
+      "targetId": "skill.ind.mcdm",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.industrial-management",
+      "targetKind": "skill",
+      "targetId": "skill.ind.production_inv",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.industrial-management",
+      "targetKind": "skill",
+      "targetId": "skill.ind.supply_chain",
+      "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
     }
   ],
   "relations": [],
