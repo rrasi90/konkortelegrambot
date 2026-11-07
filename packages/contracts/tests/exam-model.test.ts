@@ -94,7 +94,8 @@ describe('AEL comprehensive exam model', () => {
     expect(english.includedInTargetIds).toEqual(['m1405.business.marketing','m1405.public.public-policy']);
     expect(english.coefficientsByTarget.map(x=>x.value)).toEqual([3,3]);
     expect(english.coefficientsByTarget).toHaveLength(2);
-    expect(resolved.subjects.find(s=>s.subjectId==='master.1142.s8')?.includedInTargetIds).toEqual(['m1405.business.marketing']);
+    expect(resolved.subjects.find(s=>s.subjectId==='master.1142.s8')?.includedInTargetIds)
+      .toEqual(['m1405.business.marketing','m1405.public.public-policy']);
   });
 
   it('resolves doctorate targets by official combinations and preserves component-level weighting', () => {
@@ -113,8 +114,18 @@ describe('AEL comprehensive exam model', () => {
     expect(resolved.subjects.map(s=>s.subjectNumber)).toEqual([1,2,3,7]);
     const specialized=resolved.subjects.find(s=>s.subjectId==='phd.2162.s7')!;
     expect(specialized.coefficientsByTarget).toEqual([
-      {targetId:'p1406.foresight',value:5,state:'official_positive',scope:'exam_component'}
+      {targetId:'p1406.foresight',value:null,state:'unknown',scope:null}
     ]);
+    const specializationWeight=resolved.componentCoefficients.find(c=>
+      c.targetId==='p1406.foresight'&&c.componentCode==='specialized'
+    );
+    expect(specializationWeight).toMatchObject({
+      value:5,state:'official_positive',scope:undefined,
+      subjectIds:['phd.2162.s2','phd.2162.s7']
+    });
+    expect(resolved.componentCoefficients.some(c=>
+      c.targetId==='p1406.foresight'&&c.componentCode==='language'&&c.value===1
+    )).toBe(true);
     expect(resolved.subjects.find(s=>s.subjectId==='phd.2162.s3')?.includedInTargetIds).toEqual(['p1406.business']);
     expect(resolved.subjects.find(s=>s.subjectId==='phd.2162.s2')?.includedInTargetIds).toEqual(['p1406.business','p1406.foresight']);
   });
