@@ -694,6 +694,92 @@ export function validateRegistryBundle(input: unknown): { ok: true } | { ok: fal
     list.forEach((item, index) => spec.validate(item, errors, index));
   }
   if (errors.length > 0) return { ok: false, errors };
+
+  // Cross-entity validation is performed when the corresponding collections
+  // are present in this import. Partial imports remain supported.
+  const rows = (key: string): Array<Record<string, any>> | undefined =>
+    Array.isArray(bundle[key]) ? bundle[key] as Array<Record<string, any>> : undefined;
+  const sets = rows('examSets');
+  const combinations = rows('examCombinations');
+  const setCombinationMappings = rows('examSetCombinationMappings');
+  const combinationSubfields = rows('examCombinationSubfields');
+  const subfields = rows('subfields');
+  const subjects = rows('examSubjects');
+  const courses = rows('courseDefinitions');
+  const subjectCourseMappings = rows('examSubjectCourseMappings');
+  const eventVersions = rows('examEventVersions');
+  const policies = rows('examSelectionPolicies');
+  const assignments = rows('examFieldSubjectAssignments');
+
+  const byId = (items: Array<Record<string, any>> | undefined) =>
+    new Map((items ?? []).filter(item => typeof item.id === 'string').map(item => [item.id, item]));
+  const setById = byId(sets);
+  const combinationById = byId(combinations);
+  const subfieldByCode = new Map((subfields ?? []).filter(item => typeof item.code === 'string').map(item => [item.code, item]));
+  const subjectByCode = new Map((subjects ?? []).filter(item => typeof item.code === 'string').map(item => [item.code, item]));
+  const courseByCode = new Map((courses ?? []).filter(item => typeof item.code === 'string').map(item => [item.code, item]));
+  const eventVersionById = byId(eventVersions);
+
+  if (setCombinationMappings && sets && combinations) {
+    const seen = new Set<string>();
+    setCombinationMappings.forEach((mapping, index) => {
+      const set = setById.get(mapping.examSetId);
+      const combination = combinationById.get(mapping.combinationId);
+      if (!set) errors.push({ entity: 'examSetCombinationMappings', index, field: 'examSetId', code: 'unknown_exam_set', message: 'مجموعهٔ مرجع این نگاشت پیدا نشد.', severity: 'error' });
+      if (!combination) errors.push({ entity: 'examSetCombinationMappings', index, field: 'combinationId', code: 'unknown_combination', message: 'کد ترکیب مرجع این نگاشت پیدا نشد.', severity: 'error' });
+      if (set && combination && set.eventVersionId !== combination.eventVersionId) {
+        errors.push({ entity: 'examSetCombinationMappings', index, field: null, code: 'event_version_mismatch', message: 'مجموعه و ترکیب باید به یک نسخهٔ رویداد تعلق داشته باشند.', severity: 'error' });
+      }
+      const key = String(mapping.examSetId) + '|' + String(mapping.combinationId);
+      if (seen.has(key)) errors.push({ entity: 'examSetCombinationMappings', index, field: null, code: 'duplicate_mapping', message: 'رابطهٔ مجموعه/ترکیب تکراری است.', severity: 'error' });
+      seen.add(key);
+    });
+  }
+
+  if (combinationSubfields && combinations && subfields) {
+    const seen = new Set<string>();
+    combinationSubfields.forEach((mapping, index) => {
+      if (!combinationById.has(mapping.combinationId)) errors.push({ entity: 'examCombinationSubfields', index, field: 'combinationId', code: 'unknown_combination', message: 'ترکیب مرجع زیررشته پیدا نشد.', severity: 'error' });
+      if (!subfieldByCode.has(mapping.subfieldCode)) errors.push({ entity: 'examCombinationSubfields', index, field: 'subfieldCode', code: 'unknown_subfield', message: 'زیررشتهٔ مرجع پیدا نشد.', severity: 'error' });
+      const key = String(mapping.combinationId) + '|' + String(mapping.subfieldCode);
+      if (seen.has(key)) errors.push({ entity: 'examCombinationSubfields', index, field: null, code: 'duplicate_mapping', message: 'رابطهٔ ترکیب/زیررشته تکراری است.', severity: 'error' });
+      seen.add(key);
+    });
+  }
+
+  if (subjectCourseMappings && subjects && courses) {
+    const seen = new Set<string>();
+    subjectCourseMappings.forEach((mapping, index) => {
+      if (!subjectByCode.has(mapping.subjectCode)) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'subjectCode', code: 'unknown_subject', message: 'مادهٔ مرجع نگاشت به درس پیدا نشد.', severity: 'error' });
+      if (!courseByCode.has(mapping.courseDefinitionCode)) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'courseDefinitionCode', code: 'unknown_course', message: 'تعریف درس مرجع پیدا نشد.', severity: 'error' });
+      const key = String(mapping.subjectCode) + '|' + String(mapping.courseDefinitionCode) + '|' + String(mapping.mappingKind);
+      if (seen.has(key)) errors.push({ entity: 'examSubjectCourseMappings', index, field: null, code: 'duplicate_mapping', message: 'نگاشت ماده/درس/نوع رابطه تکراری است.', severity: 'error' });
+      seen.add(key);
+    });
+  }
+
+  if (assignments && combinations && subjects) {
+    assignments.forEach((assignment, index) => {
+      if (!combinationById.has(assignment.combinationId)) errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'combinationId', code: 'unknown_combination', message: 'ترکیب مرجع مادهٔ امتحانی پیدا نشد.', severity: 'error' });
+      if (!subjectByCode.has(assignment.subjectCode)) errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'subjectCode', code: 'unknown_subject', message: 'مادهٔ امتحانی پیدا نشد.', severity: 'error' });
+      if (assignment.officialCoefficient != null && assignment.coefficientScope === 'unknown') {
+        errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'coefficientScope', code: 'coefficient_scope_required', message: 'برای ضریب رسمی عددی، دامنهٔ ضریب نمی‌تواند unknown باشد.', severity: 'error' });
+      }
+    });
+  }
+
+  if (policies && eventVersions) {
+    const seen = new Set<string>();
+    policies.forEach((policy, index) => {
+      if (!eventVersionById.has(policy.eventVersionId)) errors.push({ entity: 'examSelectionPolicies', index, field: 'eventVersionId', code: 'unknown_event_version', message: 'نسخهٔ رویداد policy پیدا نشد.', severity: 'error' });
+      if (policy.examSetId != null && sets && !setById.has(policy.examSetId)) errors.push({ entity: 'examSelectionPolicies', index, field: 'examSetId', code: 'unknown_exam_set', message: 'مجموعهٔ محدودشده در policy پیدا نشد.', severity: 'error' });
+      const key = String(policy.eventVersionId) + '|' + String(policy.examSetId ?? '*') + '|' + String(policy.purpose);
+      if (seen.has(key)) errors.push({ entity: 'examSelectionPolicies', index, field: null, code: 'duplicate_policy', message: 'برای این نسخه/مجموعه/هدف، policy تکراری است.', severity: 'error' });
+      seen.add(key);
+    });
+  }
+
+  if (errors.length > 0) return { ok: false, errors };
   return { ok: true };
 }
 
