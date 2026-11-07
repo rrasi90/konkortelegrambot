@@ -9,7 +9,7 @@
  * exam set code != doctorate combination code != master coefficient code
  * != target display code != booklet code != AEL study-track id.
  */
-import type { ExamLevel, ExamVerification } from './exam-structure';
+import type { ExamLevel } from './exam-structure';
 
 export const EXAM_MODEL_SCHEMA_VERSION = 1 as const;
 export type ExamModelStatus = 'official_verified' | 'reported' | 'needs_check' | 'draft';
@@ -521,6 +521,7 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
   // Cross-table semantic guard: a master coefficient row belongs to a target/profile,
   // while doctorate combinations use membership and component-scoped coefficients.
   targets.forEach((t,i)=>{
+    if(t.coefficientCode!==null&&!t.coefficientAssignmentId)add(errors,'targets['+i+'].coefficientAssignmentId','missing_coefficient_assignment','هدف دارای کد ضریب است اما بردار ضریب به آن متصل نشده است.');
     if(t.coefficientAssignmentId){
       const row=coefficientAssignments.find(a=>a.id===t.coefficientAssignmentId);
       if(!row||row.targetId!==t.id)add(errors,'targets['+i+'].coefficientAssignmentId','broken_coefficient_link','بردار ضریب هدف پیدا نشد یا به هدف دیگری متصل است.');
@@ -540,7 +541,11 @@ export function validateCandidateExamRegistration(
   if(!version)add(errors,'eventVersionId','unknown_version','نسخه آزمون برای ثبت‌نام داوطلب وجود ندارد.');
   const policy=bundle.selectionPolicies.find(p=>p.eventVersionId===registration.eventVersionId);
   if(!policy)add(errors,'eventVersionId','missing_selection_policy','سیاست رسمی انتخاب مجموعه برای این سال ثبت نشده است.');
-  else if(policy.status!=='official_verified')warnings.push({path:'eventVersionId',code:'selection_policy_not_final',message:'سقف/نقش‌های ثبت‌نام این سال هنوز قطعی و رسمی تأیید نشده است.'});
+  else {
+    const event=version?bundle.events.find(e=>e.id===version.eventId):undefined;
+    if(event&&event.examLevel!==policy.examLevel)add(errors,'eventVersionId','selection_policy_level_mismatch','مقطع سیاست انتخاب با مقطع آزمون سازگار نیست.');
+    if(policy.status!=='official_verified')warnings.push({path:'eventVersionId',code:'selection_policy_not_final',message:'سقف/نقش‌های ثبت‌نام این سال هنوز قطعی و رسمی تأیید نشده است.'});
+  }
   if(!nonEmpty(registration.candidateId))add(errors,'candidateId','missing_candidate','شناسه داوطلب الزامی است.');
   const ids=registration.selections.map(s=>s.examSetId);
   if(duplicate(ids))add(errors,'selections','duplicate_exam_set','یک مجموعه امتحانی دوبار انتخاب شده است.');
@@ -558,6 +563,7 @@ export function validateCandidateExamRegistration(
 export function validateCandidateStudyPlan(
   plan: CandidateStudyPlan,
   bundle: ExamModelBundle,
+  registrations: CandidateExamRegistration[] = [],
 ): ExamModelValidation {
   const errors: ExamModelIssue[] = [];
   const warnings: ExamModelIssue[] = [];
@@ -573,8 +579,19 @@ export function validateCandidateStudyPlan(
   }
   if(duplicate(plan.studyTrackIds))add(errors,'studyTrackIds','duplicate_study_track','مسیر مطالعاتی تکراری است.');
   if(plan.registrationId){
-    const registration=bundle && (plan as CandidateStudyPlan & {__registrations?:CandidateExamRegistration[]}).__registrations?.find(r=>r.id===plan.registrationId);
-    if(!registration)warnings.push({path:'registrationId',code:'registration_not_in_resolver_context',message:'ثبت‌نام رسمی برای این برنامه لینک شده است اما برای اعتبارسنجی مالکیت/انتخاب‌ها باید در لایه سرویس بارگذاری شود.'});
+    const registration=registrations.find(r=>r.id===plan.registrationId);
+    if(!registration)warnings.push({path:'registrationId',code:'registration_not_loaded',message:'ثبت‌نام رسمی به برنامه متصل شده اما هنگام اعتبارسنجی بارگذاری نشده است.'});
+    else {
+      if(registration.candidateId!==plan.candidateId)add(errors,'registrationId','candidate_mismatch','ثبت‌نام متعلق به داوطلب دیگری است.');
+      if(registration.eventVersionId!==plan.eventVersionId)add(errors,'registrationId','registration_version_mismatch','ثبت‌نام به نسخه آزمون دیگری تعلق دارد.');
+      for(const target of plan.targets){
+        if(!target.registrationSelectionId)continue;
+        const selection=registration.selections.find(s=>s.registrationReference===target.registrationSelectionId);
+        const mapping=bundle.targets.find(t=>t.id===target.targetId);
+        if(!selection)add(errors,'targets.registrationSelectionId','unknown_registration_selection','انتخاب ثبت‌نام رسمی برای هدف پیدا نشد.');
+        else if(mapping&&selection.examSetId!==mapping.examSetId)add(errors,'targets.registrationSelectionId','selection_set_mismatch','هدف مطالعاتی به انتخاب مجموعه رسمی دیگری پیوند خورده است.');
+      }
+    }
   }
   return {ok:errors.length===0,errors,warnings};
 }
@@ -668,10 +685,19 @@ export function resolveCandidatePreparationPlan(
     if(mapping?.admissionStatus==='not_guaranteed_by_exam_table')warnings.push('فهرست آزمون، پذیرش قطعی رشته‌محل «'+mapping.officialTargetLabel+'» را تضمین نمی‌کند.');
     if(mapping?.admissionStatus==='restricted'&&mapping.admissionRestriction)warnings.push(mapping.admissionRestriction);
   }
+  const hasUnverifiedStructure = plan.targets.some(selected => {
+    const target=bundle.targets.find(t=>t.id===selected.targetId);
+    const version=bundle.eventVersions.find(v=>v.id===plan.eventVersionId);
+    const assignment=target?.coefficientAssignmentId
+      ? bundle.coefficientAssignments.find(a=>a.id===target.coefficientAssignmentId) : undefined;
+    return !target || target.verification!=='official_verified' ||
+      version?.status!=='official_verified' ||
+      (assignment!==undefined && assignment.verification!=='official_verified');
+  });
   return {
     planId:plan.id,eventVersionId:plan.eventVersionId,examSetIds:[...examSetIds],targets:targetSummaries,
     subjects:[...subjectTargetMap.values()].sort((a,b)=>a.subjectNumber-b.subjectNumber),
     targetSubjectDetails:resolvedTargets,componentCoefficients:resolvedComponents,studyTrackIds:[...plan.studyTrackIds],warnings,
-    resolutionStatus:warnings.some(x=>x.includes('پیدا نشد'))?'partial':'resolved',
+    resolutionStatus:hasUnverifiedStructure||warnings.some(x=>x.includes('پیدا نشد'))?'partial':'resolved',
   };
 }
