@@ -556,9 +556,322 @@
       "parentTagId": null,
       "description": "موقعیت کاربردی.",
       "status": "active"
+    },
+    {
+      "id": "discipline.public-administration",
+      "namespaceId": "discipline",
+      "slug": "public-administration",
+      "label": "مدیریت دولتی و خط‌مشی عمومی",
+      "aliases": [
+        "Public Administration",
+        "Public Policy"
+      ],
+      "parentTagId": "discipline.management",
+      "description": "نظریه‌های مدیریت دولتی، حکمروایی و خط‌مشی‌گذاری عمومی.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.information-systems",
+      "namespaceId": "discipline",
+      "slug": "information-systems",
+      "label": "سیستم‌های اطلاعاتی و مدیریت دانش",
+      "aliases": [
+        "MIS",
+        "Information Systems",
+        "Knowledge Management"
+      ],
+      "parentTagId": "discipline.management",
+      "description": "سیستم‌های اطلاعات مدیریت، هوش تجاری و مدیریت دانش.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.human-resources",
+      "namespaceId": "discipline",
+      "slug": "human-resources",
+      "label": "مدیریت منابع انسانی",
+      "aliases": [
+        "HRM",
+        "Human Resource Management"
+      ],
+      "parentTagId": "discipline.management",
+      "description": "مدیریت منابع انسانی، رهبری و رفتار سازمانی مرتبط.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.industrial-management",
+      "namespaceId": "discipline",
+      "slug": "industrial-management",
+      "label": "مدیریت صنعتی و عملیات",
+      "aliases": [
+        "Industrial Management",
+        "Operations Management"
+      ],
+      "parentTagId": "discipline.management",
+      "description": "تحقیق در عملیات، تولید، موجودی و زنجیره تأمین.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.islamic-management",
+      "namespaceId": "discipline",
+      "slug": "islamic-management",
+      "label": "مدیریت اسلامی",
+      "aliases": [
+        "Islamic Management"
+      ],
+      "parentTagId": "discipline.management",
+      "description": "مبانی، اصول و اندیشه مدیریت از دیدگاه اسلام.",
+      "status": "active"
+    },
+    {
+      "id": "discipline.management-english",
+      "namespaceId": "discipline",
+      "slug": "management-english",
+      "label": "زبان تخصصی مدیریت",
+      "aliases": [
+        "Business English",
+        "Management English"
+      ],
+      "parentTagId": "discipline.management",
+      "description": "واژگان و درک متون تخصصی مدیریت.",
+      "status": "active"
     }
   ],
-  "assignments": [],
+  "assignments": [
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "financial-management/fm.ratios",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "financial-management/fm.tvm",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "financial-management/fm.bonds",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "financial-management/fm.stock",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "financial-management/fm.risk",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "financial-management/fm.npv",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "financial-management/fm.wacc",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "financial-management/fm.wc",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "lesson_topic",
+      "targetId": "statistics-foundations/stat.center",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "lesson_topic",
+      "targetId": "statistics-foundations/stat.conditional",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.public-administration",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/pa.public_theories",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.public-administration",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/pa.policy_theories",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.information-systems",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/mis.sims_advanced",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.information-systems",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/mis.knowledge_mgmt",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/fin.risk_investment",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.finance",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/fin.markets_institutions",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.research-methods",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/rm.research_design",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.research-methods",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/rm.reliability_forms",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.human-resources",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/hr.ob_leadership",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.human-resources",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/hr.practices_hrm",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.management-english",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/lang.phd_readings",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "lesson_topic",
+      "targetId": "phd-management-expansion/stats.nonparametric",
+      "note": "طبقه‌بندی حوزه علمی بر اساس بسته درس و شناسه مبحث."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "question",
+      "targetId": "q-1404-001",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "question",
+      "targetId": "q-1404-002",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "question",
+      "targetId": "q-1404-003",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "question",
+      "targetId": "q-1404-004",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "question",
+      "targetId": "q-1404-006",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "question",
+      "targetId": "q-1404-007",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "question",
+      "targetId": "q-1404-008",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "question",
+      "targetId": "q-1404-009",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "question",
+      "targetId": "q-1403-001",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "question",
+      "targetId": "q-1403-002",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.innovation",
+      "targetKind": "question",
+      "targetId": "q-1403-003",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "question",
+      "targetId": "q-1402-001",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "question",
+      "targetId": "q-1402-002",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.innovation",
+      "targetKind": "question",
+      "targetId": "q-1402-003",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "question",
+      "targetId": "q-1401-001",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "question",
+      "targetId": "q-1401-002",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.innovation",
+      "targetKind": "question",
+      "targetId": "q-1401-003",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    }
+  ],
   "relations": [],
   "questionMappings": [
     {
@@ -570,7 +883,9 @@
         "skill.mb.structure.mechanic_organic"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.organizational-theory"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -587,7 +902,9 @@
       "primarySkillId": "skill.mb.decision.bounded_rationality",
       "secondarySkillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.organizational-theory"
+      ],
       "bloomLevel": 2,
       "difficulty": null,
       "format": "single_choice",
@@ -606,7 +923,9 @@
         "skill.stats.scales.identify"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.statistics"
+      ],
       "bloomLevel": 3,
       "difficulty": null,
       "format": "single_choice",
@@ -625,7 +944,9 @@
         "skill.stats.scales.identify"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.statistics"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -661,7 +982,9 @@
         "skill.sm.rbv.vrio"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.strategy"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -680,7 +1003,9 @@
         "skill.sm.rbv.isolating_mechanisms"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.strategy"
+      ],
       "bloomLevel": 5,
       "difficulty": null,
       "format": "single_choice",
@@ -697,7 +1022,9 @@
       "primarySkillId": "skill.mkt.brand.cbbe_pyramid",
       "secondarySkillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.marketing"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -716,7 +1043,9 @@
         "skill.mkt.brand.cbbe_pyramid"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.marketing"
+      ],
       "bloomLevel": 5,
       "difficulty": null,
       "format": "single_choice",
@@ -735,7 +1064,9 @@
         "skill.sm.rbv.vrio"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.strategy"
+      ],
       "bloomLevel": 5,
       "difficulty": null,
       "format": "single_choice",
@@ -752,7 +1083,9 @@
       "primarySkillId": "skill.mkt.plc.stages",
       "secondarySkillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.marketing"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -769,7 +1102,9 @@
       "primarySkillId": "skill.tech.absorptive.capacity",
       "secondarySkillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.innovation"
+      ],
       "bloomLevel": 3,
       "difficulty": null,
       "format": "single_choice",
@@ -786,7 +1121,9 @@
       "primarySkillId": "skill.sm.portfolio.bcg_ge",
       "secondarySkillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.strategy"
+      ],
       "bloomLevel": 3,
       "difficulty": null,
       "format": "single_choice",
@@ -805,7 +1142,9 @@
         "skill.mb.structure.mechanic_organic"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.organizational-theory"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -822,7 +1161,9 @@
       "primarySkillId": "skill.inno.s_curve.disruption",
       "secondarySkillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.innovation"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -839,7 +1180,9 @@
       "primarySkillId": "skill.sm.rbv.vrio",
       "secondarySkillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.strategy"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -858,7 +1201,9 @@
         "skill.stats.scales.identify"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.statistics"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -877,7 +1222,9 @@
         "skill.mb.structure.mechanic_organic"
       ],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.innovation"
+      ],
       "bloomLevel": 4,
       "difficulty": null,
       "format": "single_choice",
@@ -912,7 +1259,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -921,7 +1270,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -930,7 +1281,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -939,7 +1292,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -948,7 +1303,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -957,7 +1314,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -966,7 +1325,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -975,7 +1336,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -984,7 +1347,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.statistics"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -993,7 +1358,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.statistics"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1002,7 +1369,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.public-administration"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1011,7 +1380,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.public-administration"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1020,7 +1391,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.information-systems"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1029,7 +1402,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.information-systems"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1038,7 +1413,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1047,7 +1424,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.finance"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1056,7 +1435,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.research-methods"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1065,7 +1446,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.research-methods"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1074,7 +1457,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.human-resources"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1083,7 +1468,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.human-resources"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1092,7 +1479,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.management-english"
+      ],
       "status": "needs_mapping"
     },
     {
@@ -1101,7 +1490,9 @@
       "syllabusNodeId": null,
       "skillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.statistics"
+      ],
       "status": "needs_mapping"
     }
   ],
