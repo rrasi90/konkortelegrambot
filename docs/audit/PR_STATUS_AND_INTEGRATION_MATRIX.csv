@@ -1,0 +1,14 @@
+number,title,state,head_branch,merged_at,base,contains_in_main,ci_on_head,disposition
+13,fix(ael): prevent conflicted exam pairing and harden question model,MERGED,feat/ael-question-explanations-001,2026-11-06T23:28:42Z,main,yes (merge commit 0976b18),success (e86f8ca era + main 718c54c),CLOSED-MERGED
+12,docs(readme): complete and redesign project README,MERGED,docs/comprehensive-readme-20261103,2026-11-03T19:44:03Z,main,yes,CLOSED-MERGED
+11,fix(security): harden Telegram webhooks and publish audited Worker Mini App,MERGED,fix/secure-worker-miniapp-release-20261102,2026-11-02T15:48:42Z,main,yes,CLOSED-MERGED
+10,chore: align CI and deployment workflows on Node 24,MERGED,chore/ci-node24-runtime-20261102,2026-11-02T12:49:42Z,main,yes,CLOSED-MERGED
+9,security: block publishing React bundles with embedded answer keys,MERGED,fix/client-answer-key-deploy-guard-20261102,2026-11-02T12:43:12Z,main,yes,CLOSED-MERGED
+8,fix: restore complete learner progress from Telegram CloudStorage,MERGED,fix/telegram-cloud-snapshot-20261102,2026-11-02T11:06:52Z,main,yes,CLOSED-MERGED
+7,fix: prioritize all eligible cards before queue limit,MERGED,fix/phase5-priority-before-limit-20261102,2026-11-02T10:51:36Z,main,yes,CLOSED-MERGED
+6,fix: converge React FSRS on canonical learning engine,MERGED,fix/phase5-fsrs-convergence-20261102,2026-11-02T10:41:23Z,main,yes,CLOSED-MERGED
+5,fix: close critical exam mastery and data-integrity defects,MERGED,fix/mission-remediation-20261101,2026-11-02T09:56:49Z,main,yes,CLOSED-MERGED
+4,docs(phase-1): establish PhD management exam foundation,CLOSED,phase-1/scientific-foundation,,main,unverified (branch deleted),unknown,NO-PR-EVIDENCE: content superseded by examStructure.ts contracts (R-001) — treat as SUPERSEDED
+3,Fix learning evidence FSRS scheduling and secure answer attempts,CLOSED,fix/critical-learning-integrity-20261101,,main,unverified (branch deleted),unknown,NO-PR-EVIDENCE: successor PRs #5/#6/#7/#8 merged the same themes — treat as SUPERSEDED
+2,feat: telegram integration konkoor lessons curriculum and clean profile registration,MERGED,deploy/free-telegram-mvp,2026-10-29T22:34:51Z,main,yes,CLOSED-MERGED
+1,feat: record adaptive learning product decisions and foundation,CLOSED,feat/adaptive-engine-foundation,,main,unverified (branch deleted),unknown,NO-PR-EVIDENCE: docs/decisions exist in main; treat as SUPERSEDED
