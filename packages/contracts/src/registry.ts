@@ -92,15 +92,115 @@ export interface PrerequisiteEdge {
 
 // ---------- آزمون و پذیرش ----------
 export interface ExamFamily { code: string; name: string; status: RegistryLifecycleStatus }
-export interface ExamEvent { id: string; familyCode: string; academicYearId: string | null; yearLabel: string; session: number; name: string; status: RegistryVersionStatus }
+export interface ExamEvent {
+  id: string;
+  familyCode: string;
+  /** سطح آزمون؛ مثال master یا doctorate. برای رویدادهای قدیمی اختیاری است. */
+  levelCode?: string | null;
+  academicYearId: string | null;
+  yearLabel: string;
+  session: number;
+  name: string;
+  status: RegistryVersionStatus;
+}
 export type ExamEventVersion = VersionedEntityBase & { eventId: string; rulesHash: string | null };
 export interface RegistryExamSubject { code: string; name: string; status: RegistryLifecycleStatus }
-export interface RegistryExamSet { id: string; eventVersionId: string; code: string; name: string }
-export interface RegistryExamCombination { id: string; eventVersionId: string; code: string; name: string; subfieldCode: string | null }
+export type ExamSetSelectionCategory = 'main' | 'floating' | 'independent' | 'unknown';
+export interface RegistryExamSet {
+  id: string;
+  eventVersionId: string;
+  code: string;
+  name: string;
+  /** دستهٔ انتخاب در همان سال/نوبت؛ از سال دیگر به ارث نمی‌رسد. */
+  selectionCategory?: ExamSetSelectionCategory;
+  /** آیا برای فعال‌سازی این مجموعه باید یک کد ترکیب مشخص شود؟ */
+  requiresCombinationSelection?: boolean;
+}
+export interface RegistryExamCombination {
+  id: string;
+  eventVersionId: string;
+  code: string;
+  name: string;
+  /** سازگاری قدیمی؛ رابطهٔ چندبه‌چند canonical در examCombinationSubfields است. */
+  subfieldCode: string | null;
+}
+export interface ExamSetCombinationMapping {
+  id: string;
+  examSetId: string;
+  combinationId: string;
+  status: RegistryVersionStatus;
+  sourceIds: string[];
+}
+export type SubfieldEligibility = 'eligible' | 'conditional' | 'restricted' | 'not_available' | 'needs_check';
+export interface ExamCombinationSubfieldMapping {
+  id: string;
+  combinationId: string;
+  subfieldCode: string;
+  eligibility: SubfieldEligibility;
+  restrictionCode: string | null;
+  note: string | null;
+  status: RegistryVersionStatus;
+  sourceIds: string[];
+}
+export type ExamSubjectCourseMappingKind = 'exact' | 'covers' | 'partial' | 'supplementary';
+export interface ExamSubjectCourseMapping {
+  id: string;
+  subjectCode: string;
+  courseDefinitionCode: string;
+  mappingKind: ExamSubjectCourseMappingKind;
+  /** سهم پوشش این درس از مادهٔ امتحانی، فقط در صورت داشتن مبنای مستند. */
+  coverageWeight: number | null;
+  status: RegistryVersionStatus;
+  sourceIds: string[];
+}
+export type ExamSubjectRole = 'shared' | 'specialized' | 'elective' | 'conditional' | 'unknown';
+export type ExamCoefficientScope = 'exam_component' | 'subject' | 'course' | 'unknown';
 export interface ExamFieldSubjectAssignment {
-  id: string; combinationId: string; subjectCode: string;
-  coefficient: number; weight: number;
-  negativeMarking: NegativeMarkingKind; timeLimitMinutes: number | null; position: number;
+  id: string;
+  combinationId: string;
+  subjectCode: string;
+  /** فیلد قدیمی؛ برای سازگاری Import باقی مانده و مرجع canonical نیست. */
+  coefficient: number;
+  /** فیلد قدیمی؛ وزن رسمی آزمون را با اولویت مطالعه یکی نکنید. */
+  weight: number;
+  negativeMarking: NegativeMarkingKind;
+  timeLimitMinutes: number | null;
+  position: number;
+  /** ضریب رسمی با دامنهٔ صریح؛ null یعنی در منبع تعیین نشده، نه ضریب صفر. */
+  officialCoefficient?: number | null;
+  coefficientScope?: ExamCoefficientScope;
+  /** وزن داخلی برنامه‌ریزی مطالعه؛ هرگز جایگزین ضریب رسمی نیست. */
+  learningPriorityWeight?: number | null;
+  subjectRole?: ExamSubjectRole;
+  verification?: 'official_verified' | 'reported' | 'needs_check';
+  sourceIds?: string[];
+}
+export interface ExamSelectionCategoryLimit {
+  category: ExamSetSelectionCategory;
+  minSelections: number;
+  maxSelections: number | null;
+}
+export type ExamSelectionPurpose = 'study_plan' | 'registration_intent' | 'official_registration';
+export type ExamSelectionMode = 'single' | 'primary_plus_secondary' | 'multiple' | 'unverified';
+export interface ExamSelectionPolicy {
+  id: string;
+  eventVersionId: string;
+  /** null = policy برای کل رویداد؛ در غیر این صورت فقط همان مجموعه. */
+  examSetId: string | null;
+  purpose: ExamSelectionPurpose;
+  mode: ExamSelectionMode;
+  minSelections: number | null;
+  maxSelections: number | null;
+  maxCombinationsPerSet: number | null;
+  allowMultipleCombinationsPerSet: boolean;
+  requiresPrimarySelection: boolean;
+  categoryLimits: ExamSelectionCategoryLimit[];
+  /** منشأ policy محصولی است یا ادعای مقررات رسمی دارد. */
+  policyOrigin: 'official' | 'reported' | 'product';
+  verification: 'official_verified' | 'reported' | 'needs_check';
+  status: RegistryVersionStatus;
+  sourceIds: string[];
+  note: string | null;
 }
 export interface AdmissionRule { id: string; eventVersionId: string; ruleJson: Record<string, unknown>; status: RegistryVersionStatus; sourceIds: string[] }
 export interface AssessmentComponent { id: string; eventVersionId: string; kind: AssessmentComponentKind; weight: number; config: Record<string, unknown> }
@@ -140,6 +240,11 @@ export interface RegistryImportBundle {
   examSubjects: RegistryExamSubject[];
   examSets: RegistryExamSet[];
   examCombinations: RegistryExamCombination[];
+  /** Additive v1-import fields; omitted arrays are treated as empty. */
+  examSetCombinationMappings?: ExamSetCombinationMapping[];
+  examCombinationSubfields?: ExamCombinationSubfieldMapping[];
+  examSubjectCourseMappings?: ExamSubjectCourseMapping[];
+  examSelectionPolicies?: ExamSelectionPolicy[];
   examFieldSubjectAssignments: ExamFieldSubjectAssignment[];
   admissionRules: AdmissionRule[];
   assessmentComponents: AssessmentComponent[];
@@ -154,7 +259,8 @@ export const EMPTY_REGISTRY_BUNDLE: RegistryImportBundle = {
   curricula: [], curriculumVersions: [], courseDefinitions: [], courseOfferings: [], courseUnits: [],
   syllabusNodes: [], learningOutcomes: [], curriculumCourses: [], prerequisiteEdges: [],
   examFamilies: [], examEvents: [], examEventVersions: [], examSubjects: [], examSets: [],
-  examCombinations: [], examFieldSubjectAssignments: [], admissionRules: [], assessmentComponents: [],
+  examCombinations: [], examSetCombinationMappings: [], examCombinationSubfields: [],
+  examSubjectCourseMappings: [], examSelectionPolicies: [], examFieldSubjectAssignments: [], admissionRules: [], assessmentComponents: [],
   assessmentRubrics: [], examBooklets: [],
 };
 
