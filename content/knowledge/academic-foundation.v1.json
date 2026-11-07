@@ -870,6 +870,156 @@
       "targetKind": "question",
       "targetId": "q-1401-003",
       "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "syllabus_node",
+      "targetId": "mb.contingency",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "syllabus_node",
+      "targetId": "mb.structure",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "syllabus_node",
+      "targetId": "mb.decision",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "syllabus_node",
+      "targetId": "mb.ob_motivation",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "syllabus_node",
+      "targetId": "mb.leadership",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "syllabus_node",
+      "targetId": "stats.scales",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "syllabus_node",
+      "targetId": "stats.anova",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "syllabus_node",
+      "targetId": "stats.regression",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.statistics",
+      "targetKind": "syllabus_node",
+      "targetId": "stats.nonparam",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.islamic-management",
+      "targetKind": "syllabus_node",
+      "targetId": "islamic.malik_covenant",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.islamic-management",
+      "targetKind": "syllabus_node",
+      "targetId": "islamic.justice",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "syllabus_node",
+      "targetId": "sm.rbv",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "syllabus_node",
+      "targetId": "sm.dynamic_capabilities",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "syllabus_node",
+      "targetId": "sm.value_chain",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "syllabus_node",
+      "targetId": "sm.core_competencies",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.strategy",
+      "targetKind": "syllabus_node",
+      "targetId": "sm.portfolio",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "syllabus_node",
+      "targetId": "mkt.brand",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "syllabus_node",
+      "targetId": "mkt.cobranding",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "syllabus_node",
+      "targetId": "mkt.plc",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "syllabus_node",
+      "targetId": "mkt.stp",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.marketing",
+      "targetKind": "syllabus_node",
+      "targetId": "mkt.consumer",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.innovation",
+      "targetKind": "syllabus_node",
+      "targetId": "inno.s_curve",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.innovation",
+      "targetKind": "syllabus_node",
+      "targetId": "inno.ambidextrous",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.innovation",
+      "targetKind": "syllabus_node",
+      "targetId": "tech.absorptive",
+      "note": "حوزه علمی از شناسه و عنوان سرفصل موجود؛ taxonomy classification."
+    },
+    {
+      "tagId": "discipline.islamic-management",
+      "targetKind": "question",
+      "targetId": "q-1404-005",
+      "note": "حوزه علمی از گره اصلی نگاشت‌شده سؤال."
     }
   ],
   "relations": [],
@@ -963,7 +1113,9 @@
       "primarySkillId": "skill.islamic.malik_covenant.appointees",
       "secondarySkillIds": [],
       "learningOutcomeIds": [],
-      "tagIds": [],
+      "tagIds": [
+        "discipline.islamic-management"
+      ],
       "bloomLevel": 2,
       "difficulty": null,
       "format": "single_choice",
