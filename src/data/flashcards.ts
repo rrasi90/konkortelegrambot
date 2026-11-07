@@ -8,6 +8,8 @@
  * لاودون، نوناکی، بودی، اولریچ، فیدلر، برنز-بس، وبر، هود).
  */
 
+import { FLASHCARD_EXPANSION } from './flashcards-expansion';
+
 export interface Flashcard {
   id: string;
   nodeId: string;
@@ -106,4 +108,5 @@ export const FLASHCARDS: Flashcard[] = [
 
   // ==================== مدیریت اسلامی ====================
   { id: 'fc-bus-islamic-001', nodeId: 'bus.islamic_moghimi', type: 'concept', front: 'در فرمان امام علی (ع) به مالک اشتر، کدام مؤلفه‌های انتخاب دستیار و ساختار نظارت برجسته‌اند؟', back: 'انتخاب بر اساس: تجربهٔ عملی، امانت‌داری، پرهیز از greed، صلاحیت بر پدربزرگی/نسب. نظارت: مراقبت از نبود اختلاف طبقاتی، توجه به فقرا و مستضعفان، نهاد نظارت درونی (تقوا) به‌عنوان مکمل نظارت رسمی.', extra: 'مقیمی: مدل انگیزشی اسلامی — نیاز به معنویت و خودشکوفایی الهی؛ نه فقط نیازهای مزلو.', tags: ['مدیریت اسلامی', 'مقیمی'], difficulty: 'basic', source: 'مقیمی؛ عهدنامهٔ مالک اشتر', origin: 'authored_textbook' },
+  ...FLASHCARD_EXPANSION,
 ];
