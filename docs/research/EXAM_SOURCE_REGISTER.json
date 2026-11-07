@@ -1,0 +1,20 @@
+{
+  "register_version": "1.0.0",
+  "generated_at": "2026-11-07",
+  "mission": "library-10y-repository-consolidation-20261107",
+  "note": "بعضی فایل‌ها فقط در محیط local (.ael-work) وجود دارند و در Git نیستند (rights gate). فیلد in_git مشخص می‌کند.",
+  "sources": [
+    {"source_id": "src-04a3c3699722445a", "type": "msc_paper_1404", "basename": "1142-مدیریت.pdf", "sha256": "fde401522a8563a2fda6a1498d79bfeb38504278cd3fe49372625f32e0e45661", "pages": 36, "in_git": false, "location": ".ael-work/pdf-ingestion/archive/", "verified_sha_match": true, "rights": "pending_official_check"},
+    {"source_id": "src-e52c7fb6fe314fb3", "type": "msc_paper_1392", "basename": "دفترچه_سؤالات_کنکور_ارشد_مدیریت_1392.pdf", "sha256": "e52c7fb6fe314fb3", "pages": 38, "in_git": false, "verified_sha_match": true, "rights": "pending_official_check"},
+    {"source_id": "src-d56b2597a8c93d88", "type": "msc_key_1404", "basename": "جواب 1404.pdf", "sha256": "d56b2597a8c93d88", "pages": 1, "in_git": false, "verified_sha_match": true, "text_layer": true, "rights": "pending_official_check"},
+    {"source_id": "src-763187f91e466a55", "type": "msc_key_1405", "basename": "جواب 1405.pdf", "sha256": "763187f91e466a55", "pages": 1, "in_git": false, "verified_sha_match": true, "text_layer": false, "ocr_status": "corrupted", "rights": "pending_official_check"},
+    {"source_id": "retrieval-1402-paper-mastertest", "type": "msc_paper_1402_recovery", "basename": "1402-paper-1142-mastertest.pdf", "sha256_prefix": "c0733be9ea419be5", "pages": 40, "source_url": "https://mastertest.ir/wp-content/soal1402/1142.pdf", "retrieved_at": "2026-11-07", "in_git": false, "location": ".ael-work/exam-recovery/downloads/", "text_layer": false, "rights": "pending_official_check", "note": "secondary source (mastertest) — not official until matched with sanjesh PDF"},
+    {"source_id": "official-sanjesh-noet-tk", "type": "official_system", "url": "https://www8.sanjesh.org/noet_tk/", "access_status": "403_anonymous_blocked", "credentials_required": true, "note": "کلید اولیهٔ ارشد ۱۴۰۵ + دفترچه‌ها؛ نیاز به شماره داوطلب/کد رشته", "rights": "official"},
+    {"source_id": "phd-sources-identified", "type": "phd_discovery", "sources": ["phdtest.ir", "heyvagroup.com", "irantest.ir"], "access_status": "identified_not_retrieved", "note": "کد دکتری: ۲۱۶۲ (R-001) vs ۲۱۷۱ (third-party) — discrepancy unresolved", "rights": "pending_official_check"}
+  ],
+  "recovery_summary": {
+    "msc_key_recovery": {"text_layer_recovered": 581, "holes_before": 676, "holes_after": 63, "rate": "90.7%", "method": "PDF embedded text layer (layout mode) cross-validated with MinerU OCR on 2666 overlapping entries, 0 disagreements"},
+    "phd_content_recovery": {"booklets": 0, "authored_questions": 27, "note": "no PhD booklet/key in archive; authored content labeled pending_sme"},
+    "cross_year_exact_matches": 10, "cross_year_near_duplicates": 16
+  }
+}
