@@ -163,6 +163,7 @@ const ENTITY = new Set<string>(ACADEMIC_ENTITY_KINDS);
 const add = (errors: AcademicFoundationIssue[], path: string, code: string, message: string) => errors.push({path,code,message});
 const record = (v: unknown): v is Record<string, any> => typeof v === 'object' && v !== null && !Array.isArray(v);
 const id = (v: unknown): v is string => typeof v === 'string' && ID.test(v);
+const examCode = (v: unknown): v is string => typeof v === 'string' && (ID.test(v) || /^[0-9]{1,4}$/.test(v));
 const stringList = (v: unknown): v is string[] => Array.isArray(v) && v.every(x => typeof x === 'string' && x.trim().length > 0);
 const duplicate = (v: readonly string[]) => new Set(v).size !== v.length;
 const canonicalPair = (a: string,b: string) => a < b ? a + '|' + b : b + '|' + a;
@@ -353,7 +354,7 @@ export function validateAcademicFoundationBundle(input: unknown, refs: AcademicR
     if(!record(v)){add(errors,p,'invalid_object','Exam assignment باید شیء باشد.');return;}
     if(!id(v.id)||!id(v.examSetCode)||!id(v.subjectCode)||!id(v.courseDefinitionCode))add(errors,p,'invalid_ids','شناسه‌های assignment نامعتبر است.');
     if(!['master','doctorate'].includes(v.examLevel))add(errors,p+'.examLevel','invalid_level','مقطع نامعتبر است.');
-    if(v.combinationCode!=null&&!id(v.combinationCode))add(errors,p+'.combinationCode','invalid_combination','کد ترکیب نامعتبر است.');
+    if(v.combinationCode!=null&&!examCode(v.combinationCode))add(errors,p+'.combinationCode','invalid_combination','کد ترکیب نامعتبر است.');
     if(!['exam_component','subject','course','learning_only'].includes(v.coefficientScope))add(errors,p+'.coefficientScope','invalid_scope','دامنه ضریب نامعتبر است.');
     if(v.officialCoefficient!=null&&(typeof v.officialCoefficient!=='number'||!Number.isFinite(v.officialCoefficient)||v.officialCoefficient<0))add(errors,p+'.officialCoefficient','invalid_coefficient','ضریب رسمی باید عدد نامنفی یا null باشد.');
     if(v.learningPriorityWeight!=null&&(typeof v.learningPriorityWeight!=='number'||!Number.isFinite(v.learningPriorityWeight)||v.learningPriorityWeight<0||v.learningPriorityWeight>100))add(errors,p+'.learningPriorityWeight','invalid_priority','وزن اولویت باید بین صفر و صد یا null باشد.');
