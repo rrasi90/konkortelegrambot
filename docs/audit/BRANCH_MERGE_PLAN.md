@@ -8,9 +8,9 @@
 | Step | Action | Source | Risk | Verification gate |
 |---|---|---|---|---|
 | M1 | ✅ DONE — P0 data fixes on consolidation branch (exam codes, provenance downgrade, reconciliation) | direct commits `0eef570` | low | 606 tests green; ael003-inventory runs |
-| M2 | Evaluate `content/pdf-ingest-20261106-batch26` (`3de3b45`) — tooling commit (AgentSkill + MinerU converter + PaddleOCR pilot). Main already contains the production pdf-ingest pipeline (`scripts/ael-pdf-*.mjs`). **Decision: SUPERSEDED unless the AgentSkill file is wanted** → port only `skill/` folder if useful; otherwise DELETE_ELIGIBLE | `3de3b45` | low | diff review; no runtime overlap |
-| M3 | Evaluate `design/ael-visual-card-redesign` (`5db8186`) — pre-dates merged `feat/ael-design-integration` (main already has Warm Charcoal system per commit `10ad233` + `24383b4`). **Decision: diff the design tokens/components; if main's version is the evolved one → SUPERSEDED** | `5db8186` | medium (design regression) | visual diff + component file comparison |
-| M4 | `fix/a19-replayable-migrations` (97 commits) — **PARTIAL_PICK, highest value:**<br>a) `2a615b5` migration policy idempotency fix + `b07f2c4` replay harness → port supabase/tests changes<br>b) `4103dcb` rate-limit effective in dev → port apps/worker rate-limit change<br>c) evidence/register/runbook updates already in main — skip duplicates<br>**No PR exists** → create PR for the port or land on consolidation branch | cherry-pick `2a615b5`, `4103dcb` + targeted test files | medium (migrations touch) | replay harness green; 606+199 tests; migration dry-run |
+| M2 | ✅ RESOLVED — `content/pdf-ingest-20261106-batch26` (886 insertions: AgentSkill docs + MinerU→MD converter + PaddleOCR pilot). **Content-level verdict: SUPERSEDED** — main's production pdf-ingest pipeline (ael-pdf-scan/ingest/ocr.mjs) covers the function; tooling is duplicate documentation. DELETE_ELIGIBLE | `3de3b45` | low | esbuild green; no runtime overlap |
+| M3 | ✅ RESOLVED — `design/ael-visual-card-redesign`: diff shows main REMOVES 422 lines vs branch (branch has 94-line design-tokens.css that main deleted; AelCard.tsx old prototype). The merged `feat/ael-design-integration` is the evolved version. **Content-level verdict: SUPERSEDED** — branch is the pre-merge prototype. DELETE_ELIGIBLE | `5db8186` | low | 606 tests green on main |
+| M4 | ✅ RESOLVED — `fix/a19-replayable-migrations`: cherry-pick of `4103dcb` conflicted because **main already contains the a19 content** via the direct main push documented in the runbook (`d3e640d..0939e20`). Content-level diff confirms: a19 is MISSING migrations 0022-0026 (1545 lines) and telegram-inbox tests (234 lines) that main has; a19's worker diff is 6981 deletions = main has more. The 97 "unique commits" are parallel-history artifacts of the same session's work landed directly on main. **Content-level verdict: SUPERSEDED** — main is the authoritative continuation. DELETE_ELIGIBLE | `56d3149` | low | 606 tests green; migrations 0001-0026 all in main; runbook in main |
 | M5 | Post-merge cleanup: `DELETE_ELIGIBLE` for the 6 fully-merged feat branches + 3 closed-no-merge branches **only after** M2–M4 land and ledger row is written per branch | — | low | ledger entries in BRANCH_ARCHIVE_AND_DELETION_LEDGER.md |
 
 ## Delete ledger (pre-filled, activation deferred to M5)
@@ -23,9 +23,9 @@
 | feat/ael-313-pdf-ingestion | c5dd3da | 0 unique commits | after M5 |
 | feat/ael-design-integration | 10ad233 | 0 unique commits | after M5 |
 | feat/ael-question-explanations-001 | e86f8ca | PR #13 merged | after M5 |
-| content/pdf-ingest-20261106-batch26 | 3de3b45 | 1 unique commit → M2 decision | after M2 |
-| design/ael-visual-card-redesign | 5db8186 | 2 unique commits → M3 decision | after M3 |
-| fix/a19-replayable-migrations | 56d3149 | 97 commits → M4 partial port | after M4 |
+| content/pdf-ingest-20261106-batch26 | 3de3b45 | SUPERSEDED: main's ael-pdf pipeline covers function | M5 activation |
+| design/ael-visual-card-redesign | 5db8186 | SUPERSEDED: merged design-integration is evolved version | M5 activation |
+| fix/a19-replayable-migrations | 56d3149 | SUPERSEDED: content landed on main via direct push (runbook); a19 missing 0022-0026 migrations | M5 activation |
 
 ## P0 items landed (this branch)
 
