@@ -287,13 +287,31 @@ export function validateAcademicFoundationBundle(input: unknown, refs: AcademicR
     if(v.targetKind==='lesson_topic'&&refs.lessonTopicKeys&&!refs.lessonTopicKeys.has(v.targetId))add(errors,p+'.targetId','unknown_reference','مبحث درسنامه‌ای هدف پیدا نشد.');
   });
 
+  const referenceExists = (kind: string, targetId: string): boolean | undefined => {
+    const index: Record<string, ReadonlySet<string> | undefined> = {
+      course: refs.courseIds,
+      syllabus_node: refs.syllabusNodeIds,
+      skill: refs.skillIds,
+      learning_outcome: refs.learningOutcomeIds,
+      question: refs.questionIds,
+      lesson_topic: refs.lessonTopicKeys,
+    };
+    const set = index[kind];
+    return set ? set.has(targetId) : undefined;
+  };
   const relationIds=new Set<string>(), relationKeys=new Set<string>();
   (input.relations as unknown[]).forEach((v,i)=>{
     const p='relations['+i+']';
     if(!record(v)){add(errors,p,'invalid_object','Relation باید شیء باشد.');return;}
     if(!id(v.id)||relationIds.has(v.id))add(errors,p+'.id','duplicate_id','شناسه رابطه نامعتبر یا تکراری است.');
     relationIds.add(v.id);
-    if(!ENTITY.has(v.fromKind)||!ENTITY.has(v.toKind)||!id(v.fromId)||!id(v.toId))add(errors,p,'invalid_endpoint','مبدأ یا مقصد رابطه نامعتبر است.');
+    const fromIdValid = v.fromKind === 'lesson_topic' ? compoundLessonTopicId(v.fromId) : id(v.fromId);
+    const toIdValid = v.toKind === 'lesson_topic' ? compoundLessonTopicId(v.toId) : id(v.toId);
+    if(!ENTITY.has(v.fromKind)||!ENTITY.has(v.toKind)||!fromIdValid||!toIdValid)add(errors,p,'invalid_endpoint','مبدأ یا مقصد رابطه نامعتبر است.');
+    const fromExists = typeof v.fromKind === 'string' && typeof v.fromId === 'string' ? referenceExists(v.fromKind, v.fromId) : undefined;
+    const toExists = typeof v.toKind === 'string' && typeof v.toId === 'string' ? referenceExists(v.toKind, v.toId) : undefined;
+    if(fromExists === false)add(errors,p+'.fromId','unknown_reference','مبدأ رابطه در رجیستری مرجع موجود نیست.');
+    if(toExists === false)add(errors,p+'.toId','unknown_reference','مقصد رابطه در رجیستری مرجع موجود نیست.');
     if(!KNOWLEDGE_RELATION_KINDS.includes(v.relation))add(errors,p+'.relation','invalid_relation','نوع رابطه ناشناخته است.');
     if(v.fromKind===v.toKind&&v.fromId===v.toId)add(errors,p,'self_relation','رابطه خودارجاع مجاز نیست.');
     if(typeof v.strength!=='number'||!Number.isFinite(v.strength)||v.strength<0||v.strength>1)add(errors,p+'.strength','invalid_strength','قدرت رابطه باید بین صفر و یک باشد.');
