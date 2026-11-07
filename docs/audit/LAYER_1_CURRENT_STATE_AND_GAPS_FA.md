@@ -115,14 +115,12 @@
 ## ۶. Tagging و Knowledge Relations
 
 در مخزن فایل taxonomy عمومی که namespace، tag definition و assignment را با قواعد cardinality و hierarchy مدیریت کند، وجود نداشت. فایل جدید پایه شامل:
-- ۱۰ namespace
-- ۴۳ tag
-- ۰ tag assignment
-- ۰ رابطه معنایی جدید
-- ۱۸ QuestionAcademicMapping
-- ۳ UnmappedQuestion
-- ۲۲ LessonTopicMapping در وضعیت needs_mapping
-- ۰ ExamCourseAssignment
+- ۱۰ namespace و ۴۹ Tag
+- ۸۷ TagAssignment: شامل ۲۴ سرفصل، ۲۳ Skill، ۱۸ سؤال و ۲۲ Topic درسنامه
+- ۰ رابطه معنایی جدید؛ prerequisite graph موجود جدا نگه داشته شده و رابطه غیرمستند ساخته نشده است
+- ۱۸ QuestionAcademicMapping و ۳ UnmappedQuestion
+- ۲۲ LessonTopicMapping در وضعیت needs_mapping؛ فقط Tag حوزه علمی به آن‌ها متصل شده و Syllabus/Skill mapping هنوز باز است
+- ۰ ExamCourseAssignment؛ دامنه انتساب ضریب رسمی به درس‌ها هنوز از داده‌های فعلی قابل استخراج قطعی نیست
 
 Assignments و KnowledgeRelationها فعلاً خالی‌اند؛ این انتخاب عمدی است. گراف موجود `prerequisite_edges` و `NodeDependency` حفظ می‌شود و برای جلوگیری از تکرار، رابطه پیش‌نیاز در `KnowledgeRelation` تعریف نشده است.
 
@@ -133,7 +131,8 @@ Assignments و KnowledgeRelationها فعلاً خالی‌اند؛ این ان�
 3. مدل‌های اختیاری academic mapping و lesson blocks در `formative-quiz.ts`.
 4. `normalizeLearningTopicBlocks` برای سازگاری داده تخت قدیمی با بلوک‌های جدید.
 5. اعتبارسنجی فیلدهای اختیاری در `scripts/validate-learning-courses.ts`.
-6. taxonomy و crosswalk در `content/knowledge/academic-foundation.v1.json`.
+6. taxonomy و mapping در `content/knowledge/academic-foundation.v1.json`.
+7. شناسه‌های قدیمی/جدید در `content/knowledge/layer1-node-course-crosswalk.v1.json`؛ ۴۸ ردیف شناسه گره (۱۳ تطبیق دقیق، ۲۴ گره نیازمند ورود به Registry، ۱۱ گره موجود فقط در فایل سرفصل)، ۲۳ Skill (۱۹ تطبیق دقیق، ۳ نامزد، ۱ مقصد ناموجود) و ۷ عنوان درس (۴ تطبیق دقیق، ۲ نامزد، ۱ بدون CourseDefinition).
 7. Migration `0027_academic_foundation.sql`.
 8. تست قرارداد و درخت در `packages/contracts/tests/academic-foundation.test.ts`.
 9. مستند معماری در `docs/architecture/LAYER_1_ACADEMIC_FOUNDATION_FA.md`.
@@ -142,15 +141,37 @@ Assignments و KnowledgeRelationها فعلاً خالی‌اند؛ این ان�
 
 | مورد | اقدام بعدی |
 |---|---|
-| ۳۷ گره در برابر ۲۴ syllabus node | تولید crosswalk و تکمیل درخت Registry با حفظ IDها |
+| ۳۷ گره موتور در برابر ۲۴ ردیف سرفصل تخت | Crosswalk ۴۸ ردیفی ایجاد شده؛ ۲۴ گره موتور هنوز به درخت Registry وارد نشده‌اند و ۱۱ ردیف سرفصل فقط در فایل سرفصل‌اند |
 | ۴ Skill با node_id ناموجود در فایل سرفصل | تعیین canonical node یا تعریف گره جدید |
 | ۲ Skill reference ناموجود | تعریف Skill یا اصلاح رابطه با مدرک محتوایی |
 | ۷ عنوان درس در برابر ۶ Course | تطبیق هویت/alias و تفکیک Course مستقل |
 | ۲۲ Topic بدون syllabus mapping | نگاشت به گره‌های دقیق و حفظ needs_mapping برای مجهولات |
 | ۳ سؤال بدون Skill mapping | انتخاب مهارت اصلی و ثانویه پس از تحلیل سؤال |
-| taxonomy دارای صفر assignment | تعریف سیاست tag و تخصیص بر مبنای محتوا |
+| روابط معنایی و ExamCourseAssignment خالی‌اند | یال‌های معنایی واقعی و نگاشت رسمی درس/ماده/ترکیب را پس از تطبیق داده مرجع وارد کن؛ ضریب را حدس نزن |
 | روابط معنایی جدید | استخراج فقط رابطه‌های واقعی و جدا از prerequisite |
 | ExamCourseAssignment خالی | اتصال رسمی درس/ماده/ترکیب و دامنه ضریب با داده معتبر |
 | درخت سرفصل Registry | تبدیل ساختار تخت فعلی به parent/child و position بدون ID بازیافتی |
 
-**وضعیت لایه اول:** قراردادها و زیرساخت اولیه پیاده‌سازی شده‌اند؛ یکپارچگی کامل داده و crosswalk علمی هنوز تکمیل نشده است. این لایه را نباید صرفاً به دلیل اضافه‌شدن قراردادها «Complete» نامید.
+**به‌روزرسانی پس از پیاده‌سازی:** ۴۹ Tag و ۸۷ تخصیص موضوعی اضافه شده‌اند. ۲۲ Topic همچنان needs_mapping هستند؛ ۴ Skill node mapping قطعی ندارند؛ ۲ ارجاع Skill به شناسه ناموجود اشاره می‌کنند؛ سه سؤال هنوز Skill mapping ندارند. فایل Crosswalk ساخته و وارد اعتبارسنجی اجرا می‌شود.
+
+**وضعیت لایه اول:** قرارداد و taxonomy و تخصیص‌های اولیه پیاده‌سازی شده‌اند، اما لایه اول هنوز Complete نیست؛ درخت سلسله‌مراتبی ۴۸ شناسه، ۲۲ نگاشت درسنامه و ۳ سؤال ناقص باید در فاز بعدی تکمیل شوند.
+
+## ۹. به‌روزرسانی ممیزی پس از اجرای اولیه
+
+فایل مرجع Crosswalk: `content/knowledge/layer1-node-course-crosswalk.v1.json`.
+
+این فایل ۴۸ شناسه یکتا را در سه مجموعه کنار هم قرار می‌دهد: ۲۵ گره اصلی موتور، ۱۲ گره توسعه دکتری و ۲۴ ردیف فایل سرفصل. تداخل‌ها و فاصله‌ها چنین‌اند:
+- ۱۳ شناسه بین فایل سرفصل و یکی از دو مجموعه موتور تطبیق دقیق دارند.
+- ۲۴ گره موتور در فایل سرفصل فعلی دیده نمی‌شوند.
+- ۱۱ ردیف سرفصل در فایل موتور دیده نمی‌شوند.
+- ۱۹ Skill شناسه گره منطبق دارند؛ ۳ مورد فقط نامزد تطبیق دارند و یک مورد مقصد مشخص ندارد.
+- دو ارجاع Skill به شناسه‌ای اشاره می‌کند که در فهرست Skill وجود ندارد: یک prerequisite و یک confusableWith.
+- تطبیق عنوان‌های درس: ۴ عنوان دقیق، ۲ نامزد نیازمند بازبینی و یک عنوان فاقد CourseDefinition مستقل.
+
+Tagging فعلی:
+- ۲۴ ردیف سرفصل موجود
+- ۲۳ Skill فعلی
+- ۱۸ سؤال نگاشت‌شده
+- ۲۲ مبحث درسنامه
+
+این ۸۷ تخصیص، حوزه علمی را مشخص می‌کنند؛ به‌معنای تکمیل روابط prerequisite، outcome یا mapping دقیق سؤال/درسنامه به Skill نیستند.
