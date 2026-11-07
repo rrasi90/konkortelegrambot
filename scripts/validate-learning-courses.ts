@@ -138,16 +138,18 @@ for (const course of learningCourses) {
  * Layer 1 — validate the shared academic taxonomy and crosswalk against the
  * current skill, syllabus, question and learning-course catalogs.
  */
-const [foundationRaw, syllabusRaw, skillsRaw, examPackRaw] = await Promise.all([
+const [foundationRaw, syllabusRaw, skillsRaw, examPackRaw, crosswalkRaw] = await Promise.all([
   readFile(new URL('../content/knowledge/academic-foundation.v1.json', import.meta.url), 'utf8'),
   readFile(new URL('../content/knowledge/syllabus-nodes.json', import.meta.url), 'utf8'),
   readFile(new URL('../content/knowledge/skills.json', import.meta.url), 'utf8'),
   readFile(new URL('../content/knowledge/exam-packs/phd-management-business-v1.json', import.meta.url), 'utf8'),
+  readFile(new URL('../content/knowledge/layer1-node-course-crosswalk.v1.json', import.meta.url), 'utf8'),
 ]);
 const foundation = JSON.parse(foundationRaw);
 const syllabusNodes = JSON.parse(syllabusRaw);
 const skills = JSON.parse(skillsRaw);
 const examPack = JSON.parse(examPackRaw);
+const layer1Crosswalk = JSON.parse(crosswalkRaw);
 const academicResult = validateAcademicFoundationBundle(foundation, {
   syllabusNodeIds: new Set(syllabusNodes.map((node: { id: string }) => node.id)),
   skillIds: new Set(skills.map((skill: { id: string }) => skill.id)),
@@ -159,4 +161,29 @@ console.log(
   'Academic Foundation: ' + foundation.namespaces.length + ' namespaces, ' +
   foundation.tags.length + ' tags, ' + foundation.questionMappings.length + ' question mappings, ' +
   foundation.unmappedQuestions.length + ' unmapped questions, ' + foundation.lessonMappings.length + ' lesson mappings.'
+);
+
+const uniqueIds = (values: string[], label: string) => {
+  assert.equal(new Set(values).size, values.length, 'Duplicate ' + label + ' identifiers.');
+};
+uniqueIds(layer1Crosswalk.nodeCrosswalk.map((node: {nodeId:string}) => node.nodeId), 'node crosswalk');
+uniqueIds(layer1Crosswalk.skillCrosswalk.map((skill: {skillId:string}) => skill.skillId), 'skill crosswalk');
+uniqueIds(layer1Crosswalk.courseTitleCrosswalk.map((course: {sourceTitle:string}) => course.sourceTitle), 'course title crosswalk');
+const currentSkillIds = new Set<string>(skills.map((skill: {id:string}) => skill.id));
+for (const entry of layer1Crosswalk.skillCrosswalk) {
+  assert.ok(currentSkillIds.has(entry.skillId), 'Crosswalk skill does not exist: ' + entry.skillId);
+  const expectedMissingPrerequisites = entry.prerequisiteSkillIds.filter((id: string) => !currentSkillIds.has(id)).sort();
+  const expectedMissingConfusables = entry.confusableSkillIds.filter((id: string) => !currentSkillIds.has(id)).sort();
+  assert.deepEqual([...entry.missingPrerequisiteSkillIds].sort(), expectedMissingPrerequisites, 'Stale missing prerequisite references for ' + entry.skillId);
+  assert.deepEqual([...entry.missingConfusableSkillIds].sort(), expectedMissingConfusables, 'Stale missing confusable references for ' + entry.skillId);
+}
+assert.equal(layer1Crosswalk.counts.initialKnowledgeNodes, 25);
+assert.equal(layer1Crosswalk.counts.phdExpansionNodes, 12);
+assert.equal(layer1Crosswalk.counts.syllabusNodes, syllabusNodes.length);
+assert.equal(layer1Crosswalk.counts.skills, skills.length);
+assert.equal(layer1Crosswalk.nodeCrosswalk.length, layer1Crosswalk.counts.nodeCrosswalkRows);
+console.log(
+  'Layer 1 crosswalk: ' + layer1Crosswalk.nodeCrosswalk.length + ' node identities, ' +
+  layer1Crosswalk.skillCrosswalk.length + ' skills, ' +
+  layer1Crosswalk.courseTitleCrosswalk.length + ' course-title mappings; unresolved references explicitly retained.'
 );
