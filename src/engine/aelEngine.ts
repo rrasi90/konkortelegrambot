@@ -1332,11 +1332,21 @@ export function getNodeEffectiveBranchCoefficient(
   if (branch === 'phd_all') {
     return node.examCoefficient;
   }
+  /**
+   * درس‌های اختصاصی سطح دکتری (روش تحقیق پیشرفته، زبان دکتری، آمار غیرپارامتری)
+   * برای هیچ گرایش ارشدی ضریب ندارند — ارشد زبان/آمار خودش را دارد
+   * (bus.english_eshraghi و stats.scales/anova/regression).
+   */
+  if (node.id.startsWith('rm.') || node.id === 'lang.phd_readings' || node.id === 'stats.nonparametric') {
+    return 0;
+  }
+  // بسته‌های رسمی ۱۴۰۵: هر درس تخصصی فقط در ترکیب خودش (کد ترکیب، دفترچهٔ ۱۴۰۵ ص۲۴–۲۵)
   if (branch === 'business') {
-    if (node.id.startsWith('mkt.')) return 4;
+    if (node.id.startsWith('mkt.')) return 4; // ترکیب ۱، بستهٔ ۳
     if (node.id === 'ind.pom_eoq_mrp') return 0; // مدیریت تولید در بازرگانی ضریب ۰ دارد
     if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.mcdm_dea_queue') return 2;
     if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
+    if (node.id.startsWith('pa.') || node.id.startsWith('mis.') || node.id.startsWith('fin.') || node.id.startsWith('hr.')) return 0;
     return node.examCoefficient;
   }
   if (branch === 'industrial') {
@@ -1344,38 +1354,57 @@ export function getNodeEffectiveBranchCoefficient(
     if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.mcdm_dea_queue') return 3; // تحقیق در عملیات ضریب ۳ در صنعتی
     if (node.id === 'ind.pom_eoq_mrp') return 2;
     if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
+    if (node.id.startsWith('pa.') || node.id.startsWith('mis.') || node.id.startsWith('fin.') || node.id.startsWith('hr.')) return 0;
     return node.examCoefficient;
   }
   if (branch === 'technology') {
     if (node.id.startsWith('mkt.')) return 0; // بازاریابی در مدیریت تکنولوژی ضریب ۰ دارد
     if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.mcdm_dea_queue') return 2;
     if (node.id === 'ind.pom_eoq_mrp') return 2;
-    if (node.id.startsWith('inno.')) return 4;
+    if (node.id.startsWith('inno.')) return 4; // ترکیب ۶، بستهٔ ۷
     if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
+    if (node.id.startsWith('pa.') || node.id.startsWith('mis.') || node.id.startsWith('fin.') || node.id.startsWith('hr.')) return 0;
     return node.examCoefficient;
   }
   if (branch === 'public') {
-    if (node.id.startsWith('pa.')) return 4; // نظریه‌های دولتی و خط‌مشی ضریب ۴
-    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp') return 0; // OR و تولید در دولتی ضریب ۰
+    if (node.id.startsWith('pa.')) return 4; // نظریه‌های دولتی و خط‌مشی ضریب ۴ — ترکیب ۲، بستهٔ ۴
+    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp' || node.id === 'ind.mcdm_dea_queue') return 0; // OR و تولید در دولتی ضریب ۰
+    if (node.id.startsWith('sm.')) return 0; // استراتژیک پیشرفته در بستهٔ ترکیب دولتی نیست
+    if (node.id.startsWith('mkt.') || node.id.startsWith('mis.') || node.id.startsWith('fin.') || node.id.startsWith('hr.') || node.id.startsWith('inno.')) return 0;
     if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
     return node.examCoefficient;
   }
   if (branch === 'financial') {
-    if (node.id.startsWith('fin.')) return 4; // مالی ضریب ۴
+    if (node.id.startsWith('fin.')) return 4; // مالی ضریب ۴ — ترکیب ۷، بستهٔ ۸
     if (node.id.startsWith('mkt.')) return 0; // بازاریابی در مالی ضریب ۰
+    if (node.id.startsWith('sm.') || node.id.startsWith('mis.') || node.id.startsWith('hr.') || node.id.startsWith('inno.')) return 0;
+    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp' || node.id === 'ind.mcdm_dea_queue') return 0;
     if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
     return node.examCoefficient;
   }
   if (branch === 'media') {
-    if (node.id.startsWith('mis.')) return 4; // MIS و مدیریت دانش ضریب ۴ در رسانه
-    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp') return 0;
+    if (node.id.startsWith('mis.')) return 4; // MIS و مدیریت دانش ضریب ۴ در رسانه — ترکیب ۵، بستهٔ ۶
+    if (node.id.startsWith('mkt.') || node.id.startsWith('pa.') || node.id.startsWith('fin.') || node.id.startsWith('hr.') || node.id.startsWith('inno.')) return 0;
+    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp' || node.id === 'ind.mcdm_dea_queue') return 0;
     if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
     return node.examCoefficient;
   }
   if (branch === 'foresight' || branch === 'stpolicy') {
-    if (node.id.startsWith('inno.')) return 4;
-    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp') return 0;
+    if (node.id.startsWith('inno.')) return 4; // ترکیب ۶، بستهٔ ۷
+    if (node.id.startsWith('mkt.') || node.id.startsWith('pa.') || node.id.startsWith('mis.') || node.id.startsWith('fin.') || node.id.startsWith('hr.')) return 0;
+    if (node.id === 'ind.or_simplex_duality' || node.id === 'ind.pom_eoq_mrp' || node.id === 'ind.mcdm_dea_queue') return 0;
     if (node.id === 'bus.english_eshraghi' || node.id.startsWith('mb.')) return 3;
+    return node.examCoefficient;
+  }
+  if (branch === 'amad') {
+    // ترکیب ۴ (بسته‌های ۱ و ۹): فقط زبان + ارتباط/رفتار سازمانی + استراتژیک —
+    // بدون بستهٔ مجموعه دروس کارشناسی (آمار/مبانی/اسلام) و بدون دروس تخصصی دیگر
+    if (node.id.startsWith('hr.')) return 4; // ارتباط و رفتار سازمانی — بستهٔ ۹
+    if (node.id.startsWith('sm.')) return 4; // استراتژیک — بستهٔ ۹
+    if (node.id.startsWith('mkt.') || node.id.startsWith('pa.') || node.id.startsWith('mis.') || node.id.startsWith('fin.') || node.id.startsWith('inno.')) return 0;
+    if (node.id.startsWith('ind.')) return 0;
+    if (node.id.startsWith('stats.') || node.id.startsWith('mb.') || node.id.startsWith('bus.islamic') || node.id.startsWith('bus.math')) return 0;
+    if (node.id === 'bus.english_eshraghi') return 3; // بستهٔ ۱ — زبان
     return node.examCoefficient;
   }
   return node.examCoefficient;

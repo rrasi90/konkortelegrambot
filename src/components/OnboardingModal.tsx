@@ -1,41 +1,49 @@
 import React, { useState } from 'react';
-import { GraduationCap, CalendarDays, ArrowLeft, Sparkles, CheckSquare, Square } from 'lucide-react';
+import { GraduationCap, CalendarDays, ArrowLeft, Sparkles, CheckSquare, Square, ChevronRight } from 'lucide-react';
 
 /**
- * OnboardingModal — بازطراحی: چندتخصصی همزمان + تعیین سطح اختیاری
- * گام ۱: انتخاب چندگانهٔ مقطع/گرایش (checkbox — دکتری و ارشد همزمان مجاز)
- * گام ۲: تاریخ آزمون (اختیاری) — شمارش معکوس
- * تعیین سطح: پیشنهاد می‌شود ولی اجباری نیست
+ * OnboardingModal — جریان سطح‌محور (طبق درخواست: اول مقطع، بعد گرایش، نه همه با هم)
+ * گام ۱: مقطع — دکتری تخصصی یا کارشناسی ارشد
+ * گام ۲: گرایش — ارشد: چندانتخابی گرایش‌های ارشد؛ دکتری: phd_all (شامل پیش‌نیاز ارشد)
+ * گام ۳: تاریخ آزمون (اختیاری) — شمارش معکوس
  */
 
+export type OnboardTrack =
+  | 'phd_all' | 'business' | 'industrial' | 'technology' | 'public'
+  | 'financial' | 'media' | 'foresight' | 'stpolicy' | 'amad';
+
+export type OnboardLevel = 'arshad' | 'phd';
+
 export interface OnboardingResult {
-  track: 'phd_all' | 'business' | 'industrial' | 'technology' | 'public' | 'financial' | 'media' | 'foresight' | 'stpolicy' | 'amad';
-  tracks: Array<'phd_all' | 'business' | 'industrial' | 'technology' | 'public' | 'financial' | 'media' | 'foresight' | 'stpolicy' | 'amad'>;
+  track: OnboardTrack;
+  tracks: OnboardTrack[];
   examDate: string | null;
+  level: OnboardLevel;
 }
 
-const ALL_TRACKS: Array<{ id: OnboardingResult['track']; title: string; hint: string; level: 'دکتری' | 'ارشد' }> = [
-  { id: 'phd_all', title: 'دکتری تخصصی مدیریت', hint: 'مبانی سازمان، تئوری‌ها، روش تحقیق، آمار، زبان', level: 'دکتری' },
-  { id: 'business', title: 'ارشد مدیریت بازرگانی', hint: 'بازاریابی ضریب ۴ + تئوری، اقتصاد، OR، زبان', level: 'ارشد' },
-  { id: 'industrial', title: 'ارشد مدیریت صنعتی', hint: 'تحقیق در عملیات ضریب ۳ + تولید، آمار، زبان', level: 'ارشد' },
-  { id: 'technology', title: 'ارشد مدیریت تکنولوژی', hint: 'تئوری و زبان ضریب ۳ + اقتصاد، OR', level: 'ارشد' },
-  { id: 'public', title: 'ارشد مدیریت دولتی', hint: 'نظریه‌های دولتی، خط‌مشی‌گذاری، حقوق اداری', level: 'ارشد' },
-  { id: 'financial', title: 'ارشد مدیریت مالی', hint: 'ریسک و سرمایه‌گذاری، بازارهای مالی، مهندسی مالی', level: 'ارشد' },
-  { id: 'media', title: 'ارشد مدیریت رسانه و اطلاعات', hint: 'MIS پیشرفته، مدیریت دانش، رسانه دیجیتال', level: 'ارشد' },
-  { id: 'foresight', title: 'ارشد آینده‌پژوهی', hint: 'نظریه‌ها و روش‌های آینده‌پژوهی، سناریو', level: 'ارشد' },
-  { id: 'stpolicy', title: 'ارشد سیاست‌گذاری علم و فناوری', hint: 'سیاست‌گذاری علم، مدیریت فناوری، نوآوری', level: 'ارشد' },
+const ARSHAD_TRACKS: Array<{ id: OnboardTrack; title: string; hint: string }> = [
+  { id: 'business', title: 'مدیریت بازرگانی', hint: 'بازاریابی ضریب ۴ + تئوری، اقتصاد، OR، زبان' },
+  { id: 'industrial', title: 'مدیریت صنعتی', hint: 'تحقیق در عملیات ضریب ۳ + تولید، آمار، زبان' },
+  { id: 'technology', title: 'مدیریت تکنولوژی', hint: 'تئوری و زبان ضریب ۳ + اقتصاد، OR' },
+  { id: 'public', title: 'مدیریت دولتی', hint: 'نظریه‌های دولتی و خط‌مشی‌گذاری + حقوق اداری' },
+  { id: 'financial', title: 'مدیریت مالی', hint: 'ریسک و سرمایه‌گذاری + بازارهای مالی (بستهٔ ۸)' },
+  { id: 'media', title: 'مدیریت رسانه و اطلاعات', hint: 'MIS پیشرفته + مدیریت دانش (بستهٔ ۶)' },
+  { id: 'foresight', title: 'آینده‌پژوهی', hint: 'نظریه‌ها و روش‌های آینده‌پژوهی + نوآوری' },
+  { id: 'stpolicy', title: 'سیاست‌گذاری علم و فناوری', hint: 'سیاست‌گذاری علم + مدیریت فناوری' },
+  { id: 'amad', title: 'مدیریت آماد و پشتیبانی', hint: 'ارتباط و رفتار سازمانی + استراتژیک (بستهٔ ۹)' },
 ];
 
 export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => void }> = ({ onComplete }) => {
-  const [step, setStep] = useState<1 | 2>(1);
-  const [selected, setSelected] = useState<Set<OnboardingResult['track']>>(new Set(['phd_all']));
+  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [level, setLevel] = useState<OnboardLevel | null>(null);
+  const [selected, setSelected] = useState<Set<OnboardTrack>>(new Set());
   const [examDate, setExamDate] = useState<string>('');
 
-  const toggle = (id: OnboardingResult['track']) => {
+  const toggle = (id: OnboardTrack) => {
     setSelected((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
-        if (next.size > 1) next.delete(id); // حداقل یک انتخاب
+        if (next.size > 1) next.delete(id); // حداقل یک گرایش
       } else {
         next.add(id);
       }
@@ -43,7 +51,28 @@ export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => vo
     });
   };
 
-  const primary = selected.has('phd_all') ? 'phd_all' : selected.has('business') ? 'business' : selected.has('industrial') ? 'industrial' : 'technology';
+  const tracks: OnboardTrack[] =
+    level === 'phd' ? ['phd_all'] : level === 'arshad' ? [...selected] : [];
+  const primary: OnboardTrack = tracks[0] ?? 'business';
+
+  const levelButton = (l: OnboardLevel, title: string, hint: string) => (
+    <button
+      key={l}
+      type="button"
+      onClick={() => {
+        setLevel(l);
+        if (l === 'arshad') setSelected(new Set(['business']));
+        setStep(2);
+      }}
+      className="text-right px-5 py-5 rounded-2xl border border-slate-700 bg-slate-800/60 text-slate-100 transition-all cursor-pointer hover:border-blue-400"
+    >
+      <div className="text-base font-extrabold">{title}</div>
+      <div className="text-[11px] text-slate-400 mt-1 leading-5">{hint}</div>
+      <div className="flex items-center gap-1 text-[11px] text-blue-300 mt-2">
+        انتخاب <ChevronRight className="w-3.5 h-3.5" />
+      </div>
+    </button>
+  );
 
   return (
     <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4">
@@ -54,18 +83,39 @@ export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => vo
             <span>خوش آمدید — فقط ۲۰ ثانیه</span>
           </div>
           <h2 className="text-lg font-extrabold text-white leading-7">
-            مسیر مطالعهٔ خود را انتخاب کنید (چند مورد مجاز است)
+            {step === 1 && 'مقطع هدف شما چیست؟'}
+            {step === 2 && 'گرایش‌های هدف — چند انتخاب مجاز است'}
+            {step === 3 && 'تاریخ آزمون (اختیاری — قابل تغییر بعداً)'}
           </h2>
+          <div className="flex gap-1.5 mt-3" dir="ltr">
+            {[1, 2, 3].map((s) => (
+              <div
+                key={s}
+                className={`h-1 rounded-full flex-1 transition-all ${s <= step ? 'bg-blue-500' : 'bg-slate-700'}`}
+              />
+            ))}
+          </div>
         </div>
 
-        {step === 1 ? (
+        {step === 1 && (
           <div className="p-5 space-y-3">
             <div className="flex items-center gap-2 text-sm font-bold text-slate-200">
               <GraduationCap className="w-4 h-4 text-blue-400" />
-              مقطع و گرایش‌های هدف — چند انتخاب مجاز
+              در چه مقطعی شرکت می‌کنید؟
+            </div>
+            {levelButton('arshad', 'کارشناسی ارشد (کد ۱۱۴۲)', 'گرایش‌های بازرگانی، صنعتی، دولتی، مالی، رسانه، تکنولوژی، آینده‌پژوهی، سیاست‌گذاری و آماد')}
+            {levelButton('phd', 'دکتری تخصصی مدیریت (کد ۲۱۶۲)', 'مبانی سازمان، تئوری‌ها، روش تحقیق، آمار، زبان — مسیر دکتری شامل پوشش کامل مباحث ارشد (پیش‌نیاز) هم می‌شود')}
+          </div>
+        )}
+
+        {step === 2 && level === 'arshad' && (
+          <div className="p-5 space-y-3">
+            <div className="flex items-center gap-2 text-sm font-bold text-slate-200">
+              <GraduationCap className="w-4 h-4 text-blue-400" />
+              ارشد — گرایش(های) هدف شما؟
             </div>
             <div className="grid grid-cols-1 gap-2">
-              {ALL_TRACKS.map((t) => {
+              {ARSHAD_TRACKS.map((t) => {
                 const active = selected.has(t.id);
                 return (
                   <button
@@ -85,28 +135,71 @@ export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => vo
                     <div>
                       <div className="text-sm font-bold">{t.title}</div>
                       <div className="text-[11px] text-slate-400 mt-0.5">{t.hint}</div>
-                      <div className="text-[10px] text-blue-300 mt-0.5">{t.level}</div>
                     </div>
                   </button>
                 );
               })}
             </div>
-            {selected.has('phd_all') && selected.size > 1 && (
+            {selected.size > 1 && (
               <p className="rounded-xl bg-amber-500/10 border border-amber-500/30 px-3 py-2 text-[11px] leading-5 text-amber-200">
-                مسیر دکتری شامل پوشش کامل مباحث ارشد هم می‌شود — همزمان مطالعهٔ هر دو مقطع مجاز و پیشنهادی است.
+                انتخاب چند گرایش مجاز است — درس‌های مشترک یک‌بار خوانده می‌شوند و دروس اختصاصی هر گرایش با ضریب خودش وارد برنامه می‌شود.
               </p>
             )}
-            <button
-              type="button"
-              onClick={() => setStep(2)}
-              disabled={selected.size === 0}
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white text-sm font-extrabold cursor-pointer"
-            >
-              ادامه
-              <ArrowLeft className="w-4 h-4" />
-            </button>
+            <div className="flex items-center justify-between gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="px-3 py-2 rounded-xl text-xs text-slate-400 hover:text-slate-200 cursor-pointer"
+              >
+                تغییر مقطع
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep(3)}
+                disabled={selected.size === 0}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white text-sm font-extrabold cursor-pointer"
+              >
+                ادامه
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-        ) : (
+        )}
+
+        {step === 2 && level === 'phd' && (
+          <div className="p-5 space-y-3">
+            <div className="flex items-center gap-2 text-sm font-bold text-slate-200">
+              <GraduationCap className="w-4 h-4 text-blue-400" />
+              دکتری تخصصی مدیریت
+            </div>
+            <div className="rounded-2xl border border-blue-500/40 bg-blue-600/10 px-4 py-4 text-sm text-slate-100 leading-6">
+              <div className="font-bold mb-1">مجموعه مدیریت — همه گرایش‌ها (کد ۲۱۶۲)</div>
+              آزمون دکتری همهٔ گرایش‌ها زیر یک مجموعه برگزار می‌شود؛ برنامهٔ شما همهٔ درس‌ها را با ضریب رسمی پوشش می‌دهد.
+            </div>
+            <p className="rounded-xl bg-amber-500/10 border border-amber-500/30 px-3 py-2 text-[11px] leading-5 text-amber-200">
+              مسیر دکتری شامل پوشش کامل مباحث ارشد (پیش‌نیاز) هم می‌شود.
+            </p>
+            <div className="flex items-center justify-between gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="px-3 py-2 rounded-xl text-xs text-slate-400 hover:text-slate-200 cursor-pointer"
+              >
+                تغییر مقطع
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep(3)}
+                className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-extrabold cursor-pointer"
+              >
+                ادامه
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
           <div className="p-5 space-y-4">
             <div className="flex items-center gap-2 text-sm font-bold text-slate-200">
               <CalendarDays className="w-4 h-4 text-blue-400" />
@@ -115,11 +208,6 @@ export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => vo
             <p className="text-xs text-slate-400 leading-5">
               روز شمار تا آزمون بالای صفحه می‌ماند. اگر هنوز تاریخ را نمی‌دانید، خالی بگذارید.
             </p>
-            {selected.has('phd_all') && (
-              <p className="rounded-xl bg-amber-500/10 border border-amber-500/30 px-3 py-2 text-[11px] leading-5 text-amber-200">
-                مسیر دکتری شامل پوشش کامل مباحث ارشد (پیش‌نیاز) هم می‌شود.
-              </p>
-            )}
             <input
               type="date"
               value={examDate}
@@ -130,14 +218,14 @@ export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => vo
             <div className="flex items-center justify-between gap-2 pt-1">
               <button
                 type="button"
-                onClick={() => setStep(1)}
+                onClick={() => setStep(2)}
                 className="px-3 py-2 rounded-xl text-xs text-slate-400 hover:text-slate-200 cursor-pointer"
               >
                 تغییر گرایش
               </button>
               <button
                 type="button"
-                onClick={() => onComplete({ track: primary, tracks: [...selected], examDate: examDate || null })}
+                onClick={() => onComplete({ track: primary, tracks, examDate: examDate || null, level: level ?? 'arshad' })}
                 className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-extrabold cursor-pointer shadow-lg shadow-blue-600/20"
               >
                 شروع کنیم

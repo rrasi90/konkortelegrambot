@@ -871,38 +871,57 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-              {/* ۱. انتخاب گرایش */}
+              {/* ۱. انتخاب گرایش — سطح‌محور: دکتری انحصاری، ارشد چندانتخابی */}
               <div className="glass-subcard p-4 space-y-2.5">
                 <label className="block font-bold text-slate-800 dark:text-slate-200">
-                  ۱. گرایش(های) هدف شما؟ — انتخاب همزمان چند تخصص مجاز است
+                  ۱. مقطع و گرایش(های) هدف شما؟ — ارشد: چند انتخاب مجاز؛ دکتری: انحصاری
                 </label>
+                {/* دکتری تخصصی (انحصاری — همه گرایش‌ها زیر مجموعهٔ ۲۱۶۲) */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    tmaHaptic.selection();
+                    onUpdateStudyPreferences({ selectedMajorBranch: 'phd_all', selectedMajorBranches: [] });
+                  }}
+                  className={`w-full p-2.5 rounded-xl border text-right transition-all cursor-pointer ${
+                    activeBranch === 'phd_all'
+                      ? 'bg-blue-600 text-white border-blue-500 font-bold shadow-xs'
+                      : 'bg-white/60 dark:bg-slate-900/50 border-slate-200/80 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-blue-400'
+                  }`}
+                >
+                  🎓 دکتری تخصصی مدیریت — مجموعهٔ ۲۱۶۲ (همه گرایش‌ها + پیش‌نیاز ارشد)
+                </button>
+                {/* ارشد — چندانتخابی */}
+                <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 pt-1">
+                  کارشناسی ارشد (کد ۱۱۴۲) — گرایش‌ها:
+                </div>
                 <div className="grid grid-cols-1 gap-1.5">
                   {[
-                    { id: 'business', label: 'ارشد مدیریت بازرگانی (بازاریابی ضریب ۴)' },
-                    { id: 'industrial', label: 'ارشد مدیریت صنعتی (تحقیق در عملیات ضریب ۳)' },
-                    { id: 'technology', label: 'ارشد مدیریت تکنولوژی (تئوری و زبان ضریب ۳)' },
-                    { id: 'phd_all', label: 'دکتری تخصصی مدیریت (همه گرایش‌ها)' },
+                    { id: 'business', label: 'بازرگانی (بازاریابی ضریب ۴)' },
+                    { id: 'industrial', label: 'صنعتی (تحقیق در عملیات ضریب ۳)' },
+                    { id: 'technology', label: 'تکنولوژی (تئوری و زبان ضریب ۳)' },
+                    { id: 'public', label: 'دولتی (نظریه‌های دولتی و خط‌مشی ضریب ۴)' },
+                    { id: 'financial', label: 'مالی (ریسک و سرمایه‌گذاری + بازارهای مالی)' },
+                    { id: 'media', label: 'رسانه و اطلاعات (MIS + مدیریت دانش ضریب ۴)' },
+                    { id: 'foresight', label: 'آینده‌پژوهی (نظریه‌ها و روش‌ها ضریب ۴)' },
+                    { id: 'stpolicy', label: 'سیاست‌گذاری علم و فناوری (ضریب ۴)' },
+                    { id: 'amad', label: 'آماد و پشتیبانی (رفتار سازمانی + استراتژیک)' },
                   ].map((b) => {
-                    const active = selectedBranches.includes(b.id as MajorExamBranch) || (!selectedBranches.length && activeBranch === b.id);
+                    const bid = b.id as MajorExamBranch;
+                    const active = selectedBranches.includes(bid) || (!selectedBranches.length && activeBranch === bid);
                     return (
                       <button
                         key={b.id}
                         type="button"
                         onClick={() => {
                           tmaHaptic.selection();
-                          const bid = b.id as MajorExamBranch;
-                          // چندتخصصی: انتخاب همزمان چند گرایش مجاز است (دکتری همه‌گرایشی انحصاری است)
-                          if (bid === 'phd_all') {
-                            onUpdateStudyPreferences({ selectedMajorBranch: 'phd_all', selectedMajorBranches: [] });
-                            return;
-                          }
-                          const current = (selectedBranches.length ? selectedBranches : [activeBranch as MajorExamBranch]).filter((x) => x !== 'phd_all');
+                          const current: MajorExamBranch[] = (selectedBranches.length ? selectedBranches : [activeBranch as MajorExamBranch]).filter((x) => x !== 'phd_all');
                           const next = current.includes(bid)
                             ? current.filter((x) => x !== bid)
                             : [...current, bid];
                           const fallback = next.length ? next : [activeBranch as MajorExamBranch];
                           onUpdateStudyPreferences({
-                            selectedMajorBranch: fallback[fallback.length - 1],
+                            selectedMajorBranch: fallback[0],
                             selectedMajorBranches: next,
                           });
                         }}
