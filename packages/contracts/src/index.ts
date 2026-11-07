@@ -413,3 +413,4 @@ export * from './registry';
 
 // AEL فاز ۳ — Source Library و Ingestion (AEL-301..312)
 export * from './ingestion';
+export * from './academic-foundation';
