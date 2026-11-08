@@ -1,0 +1,15 @@
+{
+  "_meta": {
+    "status": "PROPOSED seed — not applied to runtime registry. Needs SME + owner sign-off.",
+    "date": "2026-11-08",
+    "source": "content/knowledge/courses.json + packages/contracts/src/exam-structure.ts (SUB_GROUP_SUBJECTS)"
+  },
+  "courses": [
+    { "id": "course-org-theory", "title": "مبانی سازمان و مدیریت", "examSetCode": "2162", "level": "undergraduate_core", "tracks": ["common", "business", "technology"], "verification": "needs_check" },
+    { "id": "course-stats", "title": "آمار و کاربرد آن در مدیریت", "examSetCode": "2162", "level": "undergraduate_core", "tracks": ["common", "business", "technology"], "verification": "needs_check" },
+    { "id": "course-islamic-mgmt", "title": "اصول و مبانی مدیریت از دیدگاه اسلام", "examSetCode": "2162", "level": "undergraduate_core", "tracks": ["common", "business", "technology"], "verification": "needs_check" },
+    { "id": "course-strategic-mgmt", "title": "مدیریت استراتژیک پیشرفته", "examSetCode": "2162", "level": "graduate_specialized", "tracks": ["common", "business", "technology"], "verification": "needs_check" },
+    { "id": "course-marketing", "title": "بازاریابی و مدیریت بازار پیشرفته", "examSetCode": "2162", "level": "graduate_specialized", "tracks": ["business"], "verification": "needs_check", "alias": "بازاریابی پیشرفته" },
+    { "id": "course-innovation-mgmt", "title": "تئوری‌های نوآوری و مدیریت فناوری", "examSetCode": "2162", "level": "graduate_specialized", "tracks": ["technology"], "verification": "needs_check", "alias": "تئوری‌های نوآوری و فناوری" }
+  ]
+}

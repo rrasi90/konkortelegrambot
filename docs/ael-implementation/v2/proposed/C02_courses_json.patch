@@ -1,0 +1,10 @@
+--- a/content/knowledge/courses.json
++++ b/content/knowledge/courses.json (PROPOSED — requires owner + SME approval)
+@@
+-    "exam_code": "2164",
++    "exam_code": "2162",
+ # repeated for all 6 courses:
+ # course-org-theory, course-stats, course-islamic-mgmt,
+ # course-strategic-mgmt, course-marketing, course-innovation-mgmt
+# Note: sub-group codes (2163/2164/2165) are not official set codes (R-001, exam-structure.ts L9-11).
+# Do not apply without دفترچه 1405 re-verification and GOV-02 approval.

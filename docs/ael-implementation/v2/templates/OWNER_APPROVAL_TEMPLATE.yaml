@@ -1,0 +1,16 @@
+# Template: owner approval for provenance / content release (PROV-01/D-14)
+# Usage: owner fills the fields; agent never fills approvals. Copy to approvals/<id>.yaml
+approval:
+  id: ""            # e.g. PROV-2026-11-01-financial
+  packId: ""        # e.g. financial-management
+  requestedClass: "O1|O2|O3|O4|O5|O6|O7"
+  sources:
+    - title: ""
+      url: ""
+      checkedOn: "2026-11-08"
+      hash: ""      # sha256 of source file/booklet
+  ownerName: ""
+  ownerSignature: ""  # human signature only; agent must not forge
+  date: "2026-11-08"
+  scopeNote: "what this approval covers and does not cover (rights, AI use, offline publish)"
+  decision: "approve|reject|defer"

@@ -1,0 +1,21 @@
+scope,numerator_label,numerator,denominator_label,denominator,ratio,status,note
+course:course-org-theory,nodes_in_registry,5,nodes_total,24,0.208,measured,course 'مبانی سازمان و مدیریت' exam_code=2164 — share of registry nodes
+course:course-stats,nodes_in_registry,4,nodes_total,24,0.167,measured,course 'آمار و کاربرد آن در مدیریت' exam_code=2164 — share of registry nodes
+course:course-islamic-mgmt,nodes_in_registry,2,nodes_total,24,0.083,measured,course 'اصول و مبانی مدیریت از دیدگاه اسلام' exam_code=2164 — share of registry nodes
+course:course-strategic-mgmt,nodes_in_registry,5,nodes_total,24,0.208,measured,course 'مدیریت استراتژیک پیشرفته' exam_code=2164 — share of registry nodes
+course:course-marketing,nodes_in_registry,0,nodes_total,24,0,measured,course 'بازاریابی و مدیریت بازار پیشرفته' exam_code=2164 — share of registry nodes
+course:course-innovation-mgmt,nodes_in_registry,0,nodes_total,24,0,measured,course 'تئوری‌های نوآوری و مدیریت فناوری' exam_code=2164 — share of registry nodes
+corpus:syllabus-coverage,nodes_with_skill,18,nodes_total,24,0.75,measured,skills.json node_id join
+corpus:relations,edges_both_endpoints_known,14,edges_total,14,1,measured,dangling endpoints: 
+pack:financial-management:review,questions_reviewed,0,questions_total,24,0,measured,status=authored_pilot version=1.1.0
+pack:financial-management:topics-with-question,topics_with_question,8,topics_total,8,1,measured,
+pack:financial-management:sources,sources_count,8,topics_total(ref),8,1,info,sources are references, not coverage
+pack:phd-management-expansion:review,questions_reviewed,0,questions_total,27,0,measured,status=authored_pilot version=1.0.0
+pack:phd-management-expansion:topics-with-question,topics_with_question,12,topics_total,12,1,measured,
+pack:phd-management-expansion:sources,sources_count,12,topics_total(ref),12,1,info,sources are references, not coverage
+pack:statistics-foundations:review,questions_reviewed,0,questions_total,5,0,measured,status=authored_pilot version=1.2.0
+pack:statistics-foundations:topics-with-question,topics_with_question,2,topics_total,2,1,measured,
+pack:statistics-foundations:sources,sources_count,2,topics_total(ref),2,1,info,sources are references, not coverage
+corpus:skills-mapped,skills_with_question_map,18,skills_total,23,0.783,measured,question-skill-mappings.jsonl join
+sec7:doctorate-years,years_with_structure,12,years_supported(1395..1406),12,1,measured,DOCTORATE_EXAM_YEAR_STRUCTURES keys; 1406 coefficients reported, counts null
+sec7:combinations,combinations_official_verified,4,combinations_total(7),7,0.571,measured,official_verified = 3,6,7 (+4?) see exam-structure.ts; needs_check=1,2,5
