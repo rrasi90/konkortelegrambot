@@ -1,0 +1,26 @@
+﻿usage: ledger.mjs summary | set <id> --status <S> ... | add <id> --planRef <ref> --status <S>
+verify-ledger: 70 rows, 70 unique, 24 errors
+ ERROR V2-004: evidencePath not a real file: plan/ael-v2-impl-20261108
+ ERROR V2-004: evidencePath is a branch name, not a file: plan/ael-v2-impl-20261108
+ ERROR V2-004: evidence must be logs/branch-proof.txt, got "plan/ael-v2-impl-20261108"
+ ERROR V2-020: mastery.ts is not provenance-contract evidence (filesChanged wrong)
+ ERROR V2-020: planner.ts is not provenance-contract evidence (filesChanged wrong)
+ ERROR V2-020: scheduler.ts is not provenance-contract evidence (filesChanged wrong)
+ ERROR V2-020: target-weights.ts is not provenance-contract evidence (filesChanged wrong)
+ ERROR V2-020: readiness-copy.ts is not provenance-contract evidence (filesChanged wrong)
+ ERROR V2-020: coverage-matrix.ts is not provenance-contract evidence (filesChanged wrong)
+ ERROR V2-037: references non-existent id V2-03C
+ ERROR V2-03A: status not allowed: "BLOCKED_BY_HUMAN" (BLOCKED_BY_HUMAN is forbidden; use HUMAN_REQUIRED or PROPOSED_ONLY)
+ ERROR V2-03A: BLOCKED_BY_HUMAN forbidden
+ ERROR V2-066: status not allowed: "BLOCKED_BY_HUMAN" (BLOCKED_BY_HUMAN is forbidden; use HUMAN_REQUIRED or PROPOSED_ONLY)
+ ERROR V2-066: BLOCKED_BY_HUMAN forbidden
+ ERROR V2-110: status not allowed: "BLOCKED_BY_HUMAN" (BLOCKED_BY_HUMAN is forbidden; use HUMAN_REQUIRED or PROPOSED_ONLY)
+ ERROR V2-110: BLOCKED_BY_HUMAN forbidden
+ ERROR V2-111: status not allowed: "BLOCKED_BY_HUMAN" (BLOCKED_BY_HUMAN is forbidden; use HUMAN_REQUIRED or PROPOSED_ONLY)
+ ERROR V2-111: BLOCKED_BY_HUMAN forbidden
+ ERROR V2-111: commitSha must be 40-char hex, got 2026-11-08
+ ERROR V2-112: status not allowed: "BLOCKED_BY_HUMAN" (BLOCKED_BY_HUMAN is forbidden; use HUMAN_REQUIRED or PROPOSED_ONLY)
+ ERROR V2-112: BLOCKED_BY_HUMAN forbidden
+ ERROR missing required id V2-006
+ ERROR missing required id V2-007
+ ERROR missing required id V2-018

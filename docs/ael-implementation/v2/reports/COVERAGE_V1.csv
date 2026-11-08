@@ -1,10 +1,10 @@
 scope,numerator_label,numerator,denominator_label,denominator,ratio,status,note
-course:course-org-theory,nodes_in_registry,5,nodes_total,24,0.208,measured,course 'مبانی سازمان و مدیریت' exam_code=2164 — share of registry nodes
-course:course-stats,nodes_in_registry,4,nodes_total,24,0.167,measured,course 'آمار و کاربرد آن در مدیریت' exam_code=2164 — share of registry nodes
-course:course-islamic-mgmt,nodes_in_registry,2,nodes_total,24,0.083,measured,course 'اصول و مبانی مدیریت از دیدگاه اسلام' exam_code=2164 — share of registry nodes
-course:course-strategic-mgmt,nodes_in_registry,5,nodes_total,24,0.208,measured,course 'مدیریت استراتژیک پیشرفته' exam_code=2164 — share of registry nodes
-course:course-marketing,nodes_in_registry,0,nodes_total,24,0,measured,course 'بازاریابی و مدیریت بازار پیشرفته' exam_code=2164 — share of registry nodes
-course:course-innovation-mgmt,nodes_in_registry,0,nodes_total,24,0,measured,course 'تئوری‌های نوآوری و مدیریت فناوری' exam_code=2164 — share of registry nodes
+share:course-org-theory,nodes_in_registry,5,nodes_total,24,0.208,measured,share-of-registry-nodes 'مبانی سازمان و مدیریت' exam_code=2164 (not per-course coverage)
+share:course-stats,nodes_in_registry,4,nodes_total,24,0.167,measured,share-of-registry-nodes 'آمار و کاربرد آن در مدیریت' exam_code=2164 (not per-course coverage)
+share:course-islamic-mgmt,nodes_in_registry,2,nodes_total,24,0.083,measured,share-of-registry-nodes 'اصول و مبانی مدیریت از دیدگاه اسلام' exam_code=2164 (not per-course coverage)
+share:course-strategic-mgmt,nodes_in_registry,5,nodes_total,24,0.208,measured,share-of-registry-nodes 'مدیریت استراتژیک پیشرفته' exam_code=2164 (not per-course coverage)
+share:course-marketing,nodes_in_registry,0,nodes_total,24,0,measured,share-of-registry-nodes 'بازاریابی و مدیریت بازار پیشرفته' exam_code=2164 (not per-course coverage)
+share:course-innovation-mgmt,nodes_in_registry,0,nodes_total,24,0,measured,share-of-registry-nodes 'تئوری‌های نوآوری و مدیریت فناوری' exam_code=2164 (not per-course coverage)
 corpus:syllabus-coverage,nodes_with_skill,18,nodes_total,24,0.75,measured,skills.json node_id join
 corpus:relations,edges_both_endpoints_known,14,edges_total,14,1,measured,dangling endpoints: 
 pack:financial-management:review,questions_reviewed,0,questions_total,24,0,measured,status=authored_pilot version=1.1.0

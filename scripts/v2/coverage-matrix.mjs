@@ -74,10 +74,10 @@ function row(scope, numeratorLabel, numerator, denominatorLabel, denominator, st
   return ratio;
 }
 
-// 1. syllabus coverage by course: nodes in registry per course / total nodes (share)
+// 1. share of registry nodes per course (NOT per-course coverage): nodes(course)/nodes_total
 for (const c of courses) {
   const n = nodeCountByCourse.get(c.name) ?? 0;
-  row(`course:${c.course_id}`, 'nodes_in_registry', n, 'nodes_total', nodes.length, 'measured', `course "${c.name}" exam_code=${c.exam_code} — share of registry nodes`);
+  row(`share:${c.course_id}`, 'nodes_in_registry', n, 'nodes_total', nodes.length, 'measured', `share-of-registry-nodes "${c.name}" exam_code=${c.exam_code} (not per-course coverage)`);
 }
 
 // 2. skills per node

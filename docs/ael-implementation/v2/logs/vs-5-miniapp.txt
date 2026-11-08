@@ -1,0 +1,9 @@
+﻿node.exe : npm notice run react-example@0.0.0 audit:miniapp
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\rrasi_oorj8fq\AppData\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice run ...0 audit:miniapp:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice run node --import tsx scripts/audit-client-bundle.ts apps/miniapp
+Client bundle security audit: PASS (no embedded answer-key literals).

@@ -1,17 +1,17 @@
 # پوشش V1 — ماتریس اندازه‌گیری‌شده (COVERAGE_V1)
 
-- تولید: 2026-11-08T12:00:25.242Z
+- تولید: 2026-11-08T12:33:23.886Z
 - ابزار: scripts/v2/coverage-matrix.mjs
 - قاعده: صورت و مخرج صریح است؛ درصدی که مخرجش تأیید نشده، null است نه ۱۰۰٪.
 
 | scope | numerator | denominator | ratio | status |
 |---|---|---|---|---|
-| course:course-org-theory | 5/24 | nodes_total | 0.208 | measured |
-| course:course-stats | 4/24 | nodes_total | 0.167 | measured |
-| course:course-islamic-mgmt | 2/24 | nodes_total | 0.083 | measured |
-| course:course-strategic-mgmt | 5/24 | nodes_total | 0.208 | measured |
-| course:course-marketing | 0/24 | nodes_total | 0 | measured |
-| course:course-innovation-mgmt | 0/24 | nodes_total | 0 | measured |
+| share:course-org-theory | 5/24 | nodes_total | 0.208 | measured |
+| share:course-stats | 4/24 | nodes_total | 0.167 | measured |
+| share:course-islamic-mgmt | 2/24 | nodes_total | 0.083 | measured |
+| share:course-strategic-mgmt | 5/24 | nodes_total | 0.208 | measured |
+| share:course-marketing | 0/24 | nodes_total | 0 | measured |
+| share:course-innovation-mgmt | 0/24 | nodes_total | 0 | measured |
 | corpus:syllabus-coverage | 18/24 | nodes_total | 0.75 | measured |
 | corpus:relations | 14/14 | edges_total | 1 | measured |
 | pack:financial-management:review | 0/24 | questions_total | 0 | measured |
