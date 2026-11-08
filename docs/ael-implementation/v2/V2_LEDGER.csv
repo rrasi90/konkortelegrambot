@@ -37,7 +37,7 @@ V2-044,COV-01,DONE,—,src/tests/v2/coverage-matrix.test.ts,npm test,src/tests/v
 V2-050,C-08/GRAPH-01,PROPOSED_ONLY,—,proposed/EDGE_CONVENTION.md,—,proposed/EDGE_CONVENTION.md,0,PROPOSED,2026-11-08,f9891a5af36fb4a1aeecd907d3860d52a47902fc
 V2-051,C-08,DONE,—,reports/GRAPH_AUDIT.md,—,reports/GRAPH_AUDIT.md,0,—,2026-11-08,
 V2-052,C-08,PROPOSED_ONLY,—,proposed/relations.proposed.jsonl,—,proposed/relations.proposed.jsonl,0,PROPOSED pending,2026-11-08,f9891a5af36fb4a1aeecd907d3860d52a47902fc
-V2-053,C-08,DONE,—,reports/GRAPH_missing_skills.md,—,reports/GRAPH_missing_skills.md,0,proposals,2026-11-08,
+V2-053,C-08,DONE,—,reports/GRAPH_missing_skills.md,—,reports/GRAPH_missing_skills.md,0,decision,2026-11-08,
 V2-054,C-08,DONE,—,reports/GRAPH_AUDIT.md,—,reports/GRAPH_AUDIT.md,0,—,2026-11-08,
 V2-055,G-06/GRAPH-02,PROPOSED_ONLY,—,proposed/GRAPH02_SPEC.md,—,proposed/GRAPH02_SPEC.md,0,PROPOSED,2026-11-08,f9891a5af36fb4a1aeecd907d3860d52a47902fc
 V2-060,G-03/COV-02,DONE,—,scripts/v2/objective-lint.mjs,node scripts/v2/objective-lint.mjs,—,0,0 issues,2026-11-08,
@@ -68,7 +68,7 @@ V2-103,—,DONE,—,HUMAN_REQUIRED.md (unchanged),—,HUMAN_REQUIRED.md,0,verifi
 V2-104,—,DONE,—,V2_EXECUTION_REPORT.md; V2_LEDGER.csv,npm test,V2_EXECUTION_REPORT.md,0,621/621,2026-11-08,
 V2-110,Wave 6,HUMAN_REQUIRED,—,—,—,—,—,after,2026-11-08,
 V2-111,QA-03/Wave 5,HUMAN_REQUIRED,—,—,—,—,—,pilot,2026-11-08,4946dedd82e87aa912cad81aaaf164bd2e86c05e
-V2-112,REV-01/L6,HUMAN_REQUIRED,—,—,—,—,—,Jalali,2026-11-08,
+V2-112,REV-01/L6,HUMAN_REQUIRED,—,—,—,—,—,REV,2026-11-08,
 V2-006,PROV-01,DONE,—,,,logs/verify-initial.txt,,tools,2026-11-08,
 V2-007,C-01,DONE,—,,,reports/PR_INVENTORY.md,,PR,2026-11-08,
 V2-018,C-01,DONE,—,,,reports/PR_OVERLAP.md,,PR,2026-11-08,
