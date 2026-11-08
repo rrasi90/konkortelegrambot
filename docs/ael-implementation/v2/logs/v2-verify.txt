@@ -1,0 +1,10 @@
+﻿node.exe : npm notice run react-example@0.0.0 v2:verify
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\rrasi_oorj8fq\AppData\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice run ...0.0.0 v2:verify:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice run node scripts/v2/verify-ledger.mjs
+verify-ledger: 73 rows, 73 unique, 0 errors
+verify-ledger: OK

@@ -110,6 +110,7 @@ async function main() {
   console.log('usage: ledger.mjs summary | set <id> --status <S> ... | add <id> --planRef <ref> --status <S>');
 }
 
-if (import.meta.url === `file://${process.argv[1]}` || process.argv[1]?.endsWith('ledger.mjs')) {
+import { basename } from 'node:path';
+if (basename(process.argv[1] ?? '') === 'ledger.mjs') {
   main().catch(e => { console.error(e.message); process.exit(1); });
 }
