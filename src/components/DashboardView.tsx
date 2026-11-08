@@ -21,6 +21,7 @@ import {
   MajorExamBranch,
 } from '../engine/aelEngine';
 import { shareProgressToTelegramChat, tmaHaptic } from '../utils/telegramBridge';
+import { formatJalaliFa } from '../utils/jalali';
 import {
   Play,
   Moon,
@@ -77,6 +78,7 @@ interface DashboardViewProps {
   ) => void;
   onSelectSubject?: (subjectId: KonkorCourseSectionId) => void;
   onResetToZeroState: () => void;
+  onExamDateChange?: (iso: string | null) => void;
 }
 
 type DashboardSubTab = 'today' | 'simulator' | 'velocity' | 'priorities' | 'settings';
@@ -100,15 +102,24 @@ const CATEGORY_LABELS: Record<StudyCourseCategory, string> = {
 const FA_D = '۰۱۲۳۴۵۶۷۸۹';
 const toFaDigits = (n: number | string) => String(n).replace(/[0-9]/g, (d) => FA_D[Number(d)]);
 function examCountdownLabel(iso: string): string {
-  const target = new Date(iso + 'T00:00:00');
-  if (Number.isNaN(target.getTime())) return '';
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const days = Math.round((target.getTime() - today.getTime()) / 86400000);
-  if (days < 0) return `آزمون برگزار شد (${toFaDigits(Math.abs(days))} روز پیش)`;
-  if (days === 0) return 'امروز روز آزمون است — موفق باشی!';
-  if (days === 1) return 'فردا روز آزمون است';
-  return `${toFaDigits(days)} روز تا آزمون`;
+  const now = new Date();
+  const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const target = Number(iso.slice(0, 4)) * 372 + Number(iso.slice(5, 7)) * 31 + Number(iso.slice(8, 10));
+  const today = now.getFullYear() * 372 + (now.getMonth() + 1) * 31 + now.getDate();
+  const daysApprox = target - today;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '';
+  // دقیق و بدون تغییر روز بر اساس منطقه زمانی (UTC)
+  const tMs = Date.UTC(Number(iso.slice(0, 4)), Number(iso.slice(5, 7)) - 1, Number(iso.slice(8, 10)));
+  void daysApprox; void todayIso;
+  const nowLocal = new Date();
+  const todayMs = Date.UTC(nowLocal.getFullYear(), nowLocal.getMonth(), nowLocal.getDate());
+  const days = Math.round((tMs - todayMs) / 86400000);
+  const jalali = formatJalaliFa(iso);
+  const suffix = jalali ? ` · ${jalali}` : '';
+  if (days < 0) return `آزمون برگزار شد (${toFaDigits(Math.abs(days))} روز پیش)${suffix}`;
+  if (days === 0) return `امروز روز آزمون است${suffix}`;
+  if (days === 1) return `فردا روز آزمون است${suffix}`;
+  return `${toFaDigits(days)} روز تا آزمون${suffix}`;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -131,9 +142,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onNavigateTab,
   onSelectSubject,
   onResetToZeroState,
+  onExamDateChange,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<DashboardSubTab>('today');
   const [shareToast, setShareToast] = useState<string | null>(null);
+  const [editExamDate, setEditExamDate] = useState<string>(examDate ?? '');
 
   const allStates = Object.values(nodeStates) as LearnerSixDState[];
   const overallMastery = Math.round(
@@ -271,6 +284,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <span className="glass-subcard px-3 py-1.5 font-bold inline-flex items-center gap-1.5 text-blue-700 dark:text-blue-300 tabular-nums">
               <CalendarClock className="w-3.5 h-3.5" />
               <span>{examCountdownLabel(examDate)}</span>
+            </span>
+          )}
+          {examDate && onExamDateChange && (
+            <span className="inline-flex items-center gap-1">
+              <input
+                type="date"
+                value={editExamDate}
+                onChange={(e) => setEditExamDate(e.target.value)}
+                className="rounded-lg bg-white/10 dark:bg-white/10 border px-2 py-1 text-xs"
+                dir="ltr"
+                aria-label="تغییر تاریخ آزمون"
+              />
+              <button type="button" onClick={() => { onExamDateChange(editExamDate || null); }} className="px-2 py-1 rounded-lg border text-xs">ذخیره</button>
             </span>
           )}
           <span className="hidden sm:inline tabular-nums">

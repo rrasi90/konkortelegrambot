@@ -18,7 +18,7 @@ V2-022,PROV-01,DONE,—,reports/PROVENANCE_REPORT.md,—,reports/PROVENANCE_REPO
 V2-023,C-11,DONE,—,proposed/provenance-defaults.json,—,proposed/provenance-defaults.json,0,O2,2026-11-08,4946dedd82e87aa912cad81aaaf164bd2e86c05e
 V2-024,PROV-01/D-14,DONE,—,templates/OWNER_APPROVAL_TEMPLATE.yaml,—,templates/OWNER_APPROVAL_TEMPLATE.yaml,0,—,2026-11-08,
 V2-025,PROV-01,DONE,—,logs/vs-2-after.txt,npm test,logs/vs-2-after.txt,0,621/621,2026-11-08,
-V2-030,C-02,DONE,—,reports/C02_exam_codes.md; proposed/C02_courses_json.patch,—,reports/C02_exam_codes.md,0,documented,2026-11-08,
+V2-030,C-02,DONE,—,reports/C02_exam_codes.md; proposed/C02_courses_json.patch,—,reports/C02_exam_codes.md,0,compat,2026-11-08,
 V2-031,C-03/D-02,DONE,—,reports/C03_exam_parity.md,—,reports/C03_exam_parity.md,0,—,2026-11-08,
 V2-032,C-06,PROPOSED_ONLY,—,proposed/LEVEL_AXES.md,—,proposed/LEVEL_AXES.md,0,PROPOSED,2026-11-08,4946dedd82e87aa912cad81aaaf164bd2e86c05e
 V2-033,C-07/C-13,DONE,—,reports/C07_coefficients.md,—,reports/C07_coefficients.md,0,1405 official; 1406 null,2026-11-08,
@@ -37,7 +37,7 @@ V2-044,COV-01,DONE,—,src/tests/v2/coverage-matrix.test.ts,npm test,src/tests/v
 V2-050,C-08/GRAPH-01,PROPOSED_ONLY,—,proposed/EDGE_CONVENTION.md,—,proposed/EDGE_CONVENTION.md,0,PROPOSED,2026-11-08,f9891a5af36fb4a1aeecd907d3860d52a47902fc
 V2-051,C-08,DONE,—,reports/GRAPH_AUDIT.md,—,reports/GRAPH_AUDIT.md,0,—,2026-11-08,
 V2-052,C-08,PROPOSED_ONLY,—,proposed/relations.proposed.jsonl,—,proposed/relations.proposed.jsonl,0,PROPOSED pending,2026-11-08,f9891a5af36fb4a1aeecd907d3860d52a47902fc
-V2-053,C-08,DONE,—,reports/GRAPH_missing_skills.md,—,reports/GRAPH_missing_skills.md,0,decision,2026-11-08,
+V2-053,C-08,DONE,—,reports/GRAPH_missing_skills.md,—,reports/GRAPH_missing_skills.md,0,graph,2026-11-08,
 V2-054,C-08,DONE,—,reports/GRAPH_AUDIT.md,—,reports/GRAPH_AUDIT.md,0,—,2026-11-08,
 V2-055,G-06/GRAPH-02,PROPOSED_ONLY,—,proposed/GRAPH02_SPEC.md,—,proposed/GRAPH02_SPEC.md,0,PROPOSED,2026-11-08,f9891a5af36fb4a1aeecd907d3860d52a47902fc
 V2-060,G-03/COV-02,DONE,—,scripts/v2/objective-lint.mjs,node scripts/v2/objective-lint.mjs,—,0,0 issues,2026-11-08,
@@ -55,7 +55,7 @@ V2-074,G-01/PLAN-01,DONE,—,packages/learning-engine/src/planner.ts,npm test,pa
 V2-075,PLAN-02,DONE,—,packages/learning-engine/src/scheduler.ts,npm test,packages/learning-engine/tests/v2-engine-helpers.test.ts,0,1 test,2026-11-08,
 V2-076,G-10/D-07,DONE,—,packages/learning-engine/src/target-weights.ts,npm test,packages/learning-engine/tests/v2-engine-helpers.test.ts,0,2 tests,2026-11-08,
 V2-077,C-16,PROPOSED_ONLY,—,proposed/C16_timed_exam_gate.md,—,proposed/C16_timed_exam_gate.md,0,PROPOSED,2026-11-08,f9891a5af36fb4a1aeecd907d3860d52a47902fc
-V2-080,G-11/D-08,DONE,—,packages/learning-engine/src/readiness-copy.ts; reports/FORBIDDEN_PHRASES.md,npm test,reports/FORBIDDEN_PHRASES.md,0,gate implemented,2026-11-08,
+V2-080,G-11/D-08,DONE,—,packages/learning-engine/src/readiness-copy.ts; reports/FORBIDDEN_PHRASES.md,npm test,reports/FORBIDDEN_PHRASES.md,0,Jalali,2026-11-08,
 V2-081,G-11,DONE,—,reports/C30_score_card.md,—,reports/C30_score_card.md,0,—,2026-11-08,
 V2-082,C-14,PROPOSED_ONLY,—,proposed/UI_READINESS_LEVELS.md,—,proposed/UI_READINESS_LEVELS.md,0,PROPOSED,2026-11-08,f9891a5af36fb4a1aeecd907d3860d52a47902fc
 V2-090,G-08/MET-01,PROPOSED_ONLY,—,proposed/MET01_MEASUREMENT_PLAN.md,—,proposed/MET01_MEASUREMENT_PLAN.md,0,PROPOSED WVDM,2026-11-08,f9891a5af36fb4a1aeecd907d3860d52a47902fc
