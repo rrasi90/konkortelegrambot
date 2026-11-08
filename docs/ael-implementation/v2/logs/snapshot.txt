@@ -1,0 +1,31 @@
+# Repository Snapshot - 2026-11-08
+
+## Migration Status
+- Total Migrations: 26
+- Last Migration: Identified via file list (0026_...)
+- Integrity: Continuous sequence verified.
+
+## Git Log (Last 20)
+8f8d49d docs(exam-model): specify year and candidate exam model
+718c54c feat(telegram-release): PhD expansion course pack live in Telegram miniapp
+0976b18 Merge pull request #13 from rrasi90/feat/ael-question-explanations-001
+e86f8ca feat(telegram-release): port PhD content expansion into worker seed — live Telegram miniapp gets 12 new nodes + 27 authored questions
+6d2231c fix(content-completion-001): restore selectedMajorBranches in both memo deps arrays
+13e1819 feat(content-completion-001): PhD exam content gaps closed — 7 absent courses added, multi-branch simultaneous study
+33668bc feat(ux-audit-001): applicant-journey UX overhaul — onboarding, exam countdown, session report, bot copy fixes
+446fe50 fix(ael-recovery-002): make dedup module import-safe — no top-level IO; CLI guarded
+59ad65d feat(ael-recovery-002): historical exam recovery — 581 key answers recovered via PDF text layer, cross-year matching, 10 mission deliverables
+acad07e ci: fetch base history for PDF guard
+ddc88e2 fix(types): annotate subject range test callbacks
+5096ce4 fix(types): annotate exam-level detector options
+7883d12 docs(ael): reconcile key coverage summary
+b3f1510 docs(ael): harden question entity and provenance model
+a552f41 test(ael): cover conflicted exam pairing selection
+4bedc64 fix(ael): block year-conflicted paper-key links
+558129f fix(ael): prevent conflicted exam pairings
+87ee6cb feat(ael-exam-analysis): coverage verification — key gap analysis, per-year counts, year coverage matrix
+86d7617 feat(ael-exam-analysis): review fixes — digit-safe key parser, evidence-based level detection, multi-evidence pairing, subject-range topic mapping
+6f92ba3 feat(ael-exam-analysis): structural exam MD inventory run structural-20261106f (local-only gate kept)
+
+## Active Branch
+- plan/ael-v2-impl-20261108 (Baseline: origin/main)
