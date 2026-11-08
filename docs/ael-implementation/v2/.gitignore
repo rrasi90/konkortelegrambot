@@ -1,0 +1,6 @@
+# Exclude temporary logs
+logs/env.txt
+logs/snapshot.txt
+logs/vs-*.txt
+# Exclude large reports if any
+reports/T11_branches.md
