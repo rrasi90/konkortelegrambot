@@ -120,9 +120,11 @@ describe('AEL comprehensive exam model', () => {
       c.targetId==='p1406.foresight'&&c.componentCode==='specialized'
     );
     expect(specializationWeight).toMatchObject({
-      value:5,state:'official_positive',scope:undefined,
+      value:5,state:'official_positive',
       subjectIds:['phd.2162.s2','phd.2162.s7']
     });
+    // ضریب کامپوننت‌سطح هرگز scope سابجکت را حمل نمی‌کند (ResolvedPreparationComponent بدون scope است)
+    expect('scope' in specializationWeight!).toBe(false);
     expect(resolved.componentCoefficients.some(c=>
       c.targetId==='p1406.foresight'&&c.componentCode==='language'&&c.value===1
     )).toBe(true);

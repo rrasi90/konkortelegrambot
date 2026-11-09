@@ -415,4 +415,46 @@ export * from './registry';
 // AEL فاز ۳ — Source Library و Ingestion (AEL-301..312)
 export * from './ingestion';
 export * from './academic-foundation';
-export * from './exam-model';
+
+// exam-model چند نام مشترک با registry/academic-foundation دارد (CoefficientScope،
+// ExamSelectionPolicy، ExamSubjectCourseMapping) — نسخه‌های exam-model با پسوند
+// ExamModel صادر می‌شوند تا مصرف‌کنندگان index دچار ابهام نشوند؛ تست‌ها مستقیم از
+// ./exam-model ایمپورت می‌کنند و نام‌های اصلی را حفظ می‌کنند.
+export {
+  EXAM_MODEL_SCHEMA_VERSION,
+  type ExamModelStatus,
+  type CandidateSelectionRole,
+  type CoefficientValueState,
+  type CoefficientScope as ExamModelCoefficientScope,
+  type ExamTargetAdmissionStatus,
+  type ExamModelSource,
+  type ExamModelEvent,
+  type ExamModelEventVersion,
+  type ExamModelSet,
+  type ExamSubjectComponentKind,
+  type ExamModelSubject,
+  type ExamSetSubject,
+  type ExamModelCombination,
+  type ExamCombinationSubject,
+  type ExamModelTarget,
+  type ExamCoefficientValue,
+  type ExamCoefficientAssignment,
+  type ExamComponentCoefficient,
+  type ExamSubjectCourseMapping as ExamModelSubjectCourseMapping,
+  type ExamSelectionPolicy as ExamModelSelectionPolicy,
+  type CandidateExamRegistrationSelection,
+  type CandidateExamRegistration,
+  type CandidatePreparationTarget,
+  type CandidateStudyPlan,
+  type ResolvedTargetSubject,
+  type ResolvedPreparationSubject,
+  type ResolvedPreparationComponent,
+  type CandidatePreparationResolution,
+  type ExamModelBundle,
+  type ExamModelIssue,
+  type ExamModelValidation,
+  validateExamModelBundle,
+  validateCandidateExamRegistration,
+  validateCandidateStudyPlan,
+  resolveCandidatePreparationPlan,
+} from './exam-model';

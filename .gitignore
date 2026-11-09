@@ -22,3 +22,7 @@ apps/worker/.dev.vars
 # AEL-313: local PDF processing state (registry, MinerU cache, quarantine)
 /.ael-work/
 __pycache__/
+
+# Anki import raw data — 60MB+ deck files; only generated src/data output is committed
+/anki/
+/anki-extracted/
