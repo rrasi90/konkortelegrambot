@@ -1,33 +1,33 @@
 taskId,phase,status,dependsOn,decisionRef,filesChanged,commands,evidencePath,baselineFailures,notes,updatedAt,commitSha
-V3-001,V3-A,DONE,—,—,"docs/ael-implementation/v3/READING_MANIFEST.md; docs/ael-implementation/v3/QUESTION_RESOLUTION_LOG.md","read AEL_Agent_Execution_Prompt_FA_v3.0_MASTER.md (4970 lines); read V2 ledger+report; read repo docs","docs/ael-implementation/v3/READING_MANIFEST.md",0,"سند مادر کامل خوانده شد؛ پیمان پذیرفته شد؛ QUESTION_RESOLUTION_LOG ایجاد شد",2026-11-09,TBD
-V3-002,V3-A,DONE,V3-001,—,"docs/ael-implementation/v3/reports/V3_LIVE_BASELINE.md; docs/ael-implementation/v3/reports/V3_GAP_REGISTER.csv","git rev-parse HEAD; ls supabase/migrations | wc -l; npm run typecheck; npm test; grep -c app routes worker; grep OnboardLevel","docs/ael-implementation/v3/reports/V3_LIVE_BASELINE.md",0,"main=c4ceddf؛ typecheck سبز؛ 666 تست سبز؛ 10 gap ثبت شد؛ OnboardingModal محدودیت arshad/phd دوباره تأیید شد",2026-11-09,TBD
-V3-003,V3-A,DONE,V3-002,—,"docs/ael-implementation/v3/reports/V3_ENTITY_SOURCE_OF_TRUTH.md","read T11_content_stores.md; ls src/data; ls content/learning-courses","docs/ael-implementation/v3/reports/V3_ENTITY_SOURCE_OF_TRUTH.md",0,"مالکیت هر مفهوم + 3 رجیستری موازی شناخته‌شده + 5 موجودیت بدون owner ثبت شد",2026-11-09,TBD
-V3-010,V3-B,NOT_STARTED,V3-003,—,—,—,—,—,"طراحی هسته مستقل از آزمون؛ سند CORE_PLATFORM_ARCHITECTURE_FA.md",2026-11-09,—
-V3-011,V3-B,NOT_STARTED,V3-010,—,—,—,—,—,"قرارداد خانواده آزمون و Adapter؛ EXAM_FAMILY_ADAPTER_CONTRACT_FA.md",2026-11-09,—
-V3-012,V3-B,NOT_STARTED,V3-011,—,—,—,—,—,"اسکن شرط‌های پراکندهٔ خانواده‌محور در هسته",2026-11-09,—
-V3-013,V3-B,NOT_STARTED,V3-011,—,—,—,—,—,"fixture خانوادهٔ ساختگی و تست end-to-end معماری",2026-11-09,—
-V3-020,V3-C,NOT_STARTED,V3-003,—,—,—,—,—,"نقشهٔ نهادهای برگزارکننده و ناظر",2026-11-09,—
-V3-021,V3-C,NOT_STARTED,V3-020,—,—,—,—,—,"کشف کامل خانواده‌های آزمونی؛ EXAM_UNIVERSE_REGISTER.csv",2026-11-09,—
-V3-022,V3-C,NOT_STARTED,V3-021,—,—,—,—,—,"نقشهٔ همهٔ مقاطع و مسیرهای پذیرش؛ تفکیک سه محور سطح",2026-11-09,—
-V3-023,V3-C,NOT_STARTED,V3-021,—,—,—,—,—,"کاتالوگ رشته‌ها و گرایش‌ها؛ استخراج از دفترچه رسمی",2026-11-09,—
-V3-024,V3-C,NOT_STARTED,V3-023,—,—,—,—,—,"مواد، ضرایب و ساختار ارزیابی با scope دقیق",2026-11-09,—
-V3-025,V3-C,NOT_STARTED,V3-024,—,—,—,—,—,"mapping مواد به درس و سرفصل",2026-11-09,—
-V3-026,V3-C,NOT_STARTED,V3-023,—,—,—,—,—,"pipeline ورود و اعتبارسنجی idempotent",2026-11-09,—
-V3-027,V3-C,NOT_STARTED,V3-026,—,—,—,—,—,"ماتریس پوشش واقعی با مخرج رسمی",2026-11-09,—
-V3-030,V3-D,NOT_STARTED,V3-003,—,—,—,—,—,"مدل سوابق تحصیلی چندمدرکی؛ CandidateEducationHistory",2026-11-09,—
-V3-031,V3-D,NOT_STARTED,V3-030,—,—,—,—,—,"onboarding داده‌محور؛ حذف لیست‌های ثابت از UI",2026-11-09,—
-V3-032,V3-D,NOT_STARTED,V3-031,—,—,—,—,—,"چند هدف، eligibility و تفکیک intent/registration",2026-11-09,—
-V3-033,V3-D,NOT_STARTED,V3-031,—,—,—,—,—,"مهاجرت پروفایل‌های قدیمی arshad/phd به مدل جدید",2026-11-09,—
-V3-040,V3-E,NOT_STARTED,V3-003,—,—,—,—,—,"ممیزی مدل canonical سؤال (Question/Revision/Appearance/Key)",2026-11-09,—
-V3-041,V3-E,NOT_STARTED,V3-040,—,—,—,—,—,"Quick Authoring از context صفحهٔ جاری",2026-11-09,—
-V3-042,V3-E,NOT_STARTED,V3-041,—,—,—,—,—,"workflow بازبینی و moderation سؤال",2026-11-09,—
-V3-043,V3-E,NOT_STARTED,V3-042,—,—,—,—,—,"اتصال امن سؤال کاربر به موتور؛ allowedUse/trust",2026-11-09,—
-V3-044,V3-E,NOT_STARTED,V3-042,—,—,—,—,—,"چرخهٔ اعتراض و اصلاح کلید؛ dispute flow",2026-11-09,—
-V3-050,V3-F,NOT_STARTED,V3-011,—,—,—,—,—,"resolver عمومی برنامهٔ آمادگی مستقل از خانواده",2026-11-09,—
-V3-051,V3-F,NOT_STARTED,V3-050,—,—,—,—,—,"union هدف‌ها و جلوگیری از دوباره‌خوانی مواد مشترک",2026-11-09,—
-V3-052,V3-F,NOT_STARTED,V3-050,—,—,—,—,—,"پیش‌نیاز و گراف دانش با status و جهت مشخص",2026-11-09,—
-V3-053,V3-F,NOT_STARTED,V3-051,—,—,—,—,—,"موتور تطبیقی بدون شناخت خانواده؛ پاکسازی hardcode",2026-11-09,—
-V3-060,V3-G,NOT_STARTED,V3-010,—,—,—,—,—,"مستندات محصول و معماری فهرست بخش ۲۷",2026-11-09,—
-V3-061,V3-G,NOT_STARTED,V3-042,—,—,—,—,—,"راهنمای contribution و سؤال‌سازی",2026-11-09,—
-V3-070,V3-G,NOT_STARTED,"V3-060; V3-031; V3-042; V3-043",—,—,—,—,—,"تست جامع E2E و دسترس‌پذیری",2026-11-09,—
-V3-071,V3-G,NOT_STARTED,V3-070,—,—,—,—,—,"release gate برای هر خانواده؛ سطوح E0..E9",2026-11-09,—
+V3-001,V3-A,DONE,—,—,docs/ael-implementation/v3/READING_MANIFEST.md; docs/ael-implementation/v3/QUESTION_RESOLUTION_LOG.md,read AEL_Agent_Execution_Prompt_FA_v3.0_MASTER.md (4970 lines); read V2 ledger+report; read repo docs,docs/ael-implementation/v3/READING_MANIFEST.md,0,سند مادر کامل خوانده شد؛ پیمان پذیرفته شد؛ QUESTION_RESOLUTION_LOG ایجاد شد,2026-11-09,TBD
+V3-002,V3-A,DONE,V3-001,—,docs/ael-implementation/v3/reports/V3_LIVE_BASELINE.md; docs/ael-implementation/v3/reports/V3_GAP_REGISTER.csv,git rev-parse HEAD; ls supabase/migrations | wc -l; npm run typecheck; npm test; grep -c app routes worker; grep OnboardLevel,docs/ael-implementation/v3/reports/V3_LIVE_BASELINE.md,0,main=c4ceddf؛ typecheck سبز؛ 666 تست سبز؛ 10 gap ثبت شد؛ OnboardingModal محدودیت arshad/phd دوباره تأیید شد,2026-11-09,TBD
+V3-003,V3-A,DONE,V3-002,—,docs/ael-implementation/v3/reports/V3_ENTITY_SOURCE_OF_TRUTH.md,read T11_content_stores.md; ls src/data; ls content/learning-courses,docs/ael-implementation/v3/reports/V3_ENTITY_SOURCE_OF_TRUTH.md,0,مالکیت هر مفهوم + 3 رجیستری موازی شناخته‌شده + 5 موجودیت بدون owner ثبت شد,2026-11-09,TBD
+V3-010,V3-B,DONE,V3-003,—,—,write doc,docs/architecture/CORE_PLATFORM_ARCHITECTURE_FA.md,—,طراحی هسته مستقل از آزمون؛ سند CORE_PLATFORM_ARCHITECTURE_FA.md,2026-11-09,—
+V3-011,V3-B,DONE,V3-010,—,—,write doc,docs/architecture/EXAM_FAMILY_ADAPTER_CONTRACT_FA.md,—,قرارداد خانواده آزمون و Adapter؛ EXAM_FAMILY_ADAPTER_CONTRACT_FA.md,2026-11-09,—
+V3-012,V3-B,DONE,V3-011,—,—,grep scans,docs/ael-implementation/v3/reports/V3_HARDCODED_EXAM_BRANCHES.md,—,اسکن شرط‌های پراکندهٔ خانواده‌محور در هسته,2026-11-09,—
+V3-013,V3-B,DONE,V3-011,—,—,npx vitest run src/tests/v3/generic-family-fixture.test.ts,src/tests/v3/generic-family-fixture.test.ts,—,fixture خانوادهٔ ساختگی و تست end-to-end معماری,2026-11-09,—
+V3-020,V3-C,NOT_STARTED,V3-003,—,—,—,—,—,نقشهٔ نهادهای برگزارکننده و ناظر,2026-11-09,—
+V3-021,V3-C,NOT_STARTED,V3-020,—,—,—,—,—,کشف کامل خانواده‌های آزمونی؛ EXAM_UNIVERSE_REGISTER.csv,2026-11-09,—
+V3-022,V3-C,NOT_STARTED,V3-021,—,—,—,—,—,نقشهٔ همهٔ مقاطع و مسیرهای پذیرش؛ تفکیک سه محور سطح,2026-11-09,—
+V3-023,V3-C,NOT_STARTED,V3-021,—,—,—,—,—,کاتالوگ رشته‌ها و گرایش‌ها؛ استخراج از دفترچه رسمی,2026-11-09,—
+V3-024,V3-C,NOT_STARTED,V3-023,—,—,—,—,—,مواد، ضرایب و ساختار ارزیابی با scope دقیق,2026-11-09,—
+V3-025,V3-C,NOT_STARTED,V3-024,—,—,—,—,—,mapping مواد به درس و سرفصل,2026-11-09,—
+V3-026,V3-C,NOT_STARTED,V3-023,—,—,—,—,—,pipeline ورود و اعتبارسنجی idempotent,2026-11-09,—
+V3-027,V3-C,NOT_STARTED,V3-026,—,—,—,—,—,ماتریس پوشش واقعی با مخرج رسمی,2026-11-09,—
+V3-030,V3-D,NOT_STARTED,V3-003,—,—,—,—,—,مدل سوابق تحصیلی چندمدرکی؛ CandidateEducationHistory,2026-11-09,—
+V3-031,V3-D,NOT_STARTED,V3-030,—,—,—,—,—,onboarding داده‌محور؛ حذف لیست‌های ثابت از UI,2026-11-09,—
+V3-032,V3-D,NOT_STARTED,V3-031,—,—,—,—,—,چند هدف، eligibility و تفکیک intent/registration,2026-11-09,—
+V3-033,V3-D,NOT_STARTED,V3-031,—,—,—,—,—,مهاجرت پروفایل‌های قدیمی arshad/phd به مدل جدید,2026-11-09,—
+V3-040,V3-E,NOT_STARTED,V3-003,—,—,—,—,—,ممیزی مدل canonical سؤال (Question/Revision/Appearance/Key),2026-11-09,—
+V3-041,V3-E,NOT_STARTED,V3-040,—,—,—,—,—,Quick Authoring از context صفحهٔ جاری,2026-11-09,—
+V3-042,V3-E,NOT_STARTED,V3-041,—,—,—,—,—,workflow بازبینی و moderation سؤال,2026-11-09,—
+V3-043,V3-E,NOT_STARTED,V3-042,—,—,—,—,—,اتصال امن سؤال کاربر به موتور؛ allowedUse/trust,2026-11-09,—
+V3-044,V3-E,NOT_STARTED,V3-042,—,—,—,—,—,چرخهٔ اعتراض و اصلاح کلید؛ dispute flow,2026-11-09,—
+V3-050,V3-F,NOT_STARTED,V3-011,—,—,—,—,—,resolver عمومی برنامهٔ آمادگی مستقل از خانواده,2026-11-09,—
+V3-051,V3-F,NOT_STARTED,V3-050,—,—,—,—,—,union هدف‌ها و جلوگیری از دوباره‌خوانی مواد مشترک,2026-11-09,—
+V3-052,V3-F,NOT_STARTED,V3-050,—,—,—,—,—,پیش‌نیاز و گراف دانش با status و جهت مشخص,2026-11-09,—
+V3-053,V3-F,NOT_STARTED,V3-051,—,—,—,—,—,موتور تطبیقی بدون شناخت خانواده؛ پاکسازی hardcode,2026-11-09,—
+V3-060,V3-G,NOT_STARTED,V3-010,—,—,—,—,—,مستندات محصول و معماری فهرست بخش ۲۷,2026-11-09,—
+V3-061,V3-G,NOT_STARTED,V3-042,—,—,—,—,—,راهنمای contribution و سؤال‌سازی,2026-11-09,—
+V3-070,V3-G,NOT_STARTED,V3-060; V3-031; V3-042; V3-043,—,—,—,—,—,تست جامع E2E و دسترس‌پذیری,2026-11-09,—
+V3-071,V3-G,NOT_STARTED,V3-070,—,—,—,—,—,release gate برای هر خانواده؛ سطوح E0..E9,2026-11-09,—

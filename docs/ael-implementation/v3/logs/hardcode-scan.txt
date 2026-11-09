@@ -1,0 +1,27 @@
+=== exam codes 1142/2162/2164 in src (UI) ===
+src/\tests\exam-analyze.test.ts:31:    expect(normalizeNumText('۱۱۴۲ - مديريت')).toBe('1142 - مدیریت');
+src/\tests\exam-analyze.test.ts:169:  it('official set code 2162 → phd_management with strong evidence', () => {
+src/\tests\exam-analyze.test.ts:170:    const r = detectExamLevel('آزمون دکتری سال ۱۴۰۵', { setCode: '2162' });
+src/\tests\exam-analyze.test.ts:175:  it('official set code 1142 upgrades an otherwise untied title to msc_management', () => {
+src/\tests\exam-analyze.test.ts:176:    const r = detectExamLevel('کلید سوالات آزمون کارشناسی ارشد – سال ۱۴۰۵', { setCode: '1142' });
+src/\tests\exam-analyze.test.ts:204:    const r = detectExamLevel('دکتری مدیریت', { setCode: '1142' });
+src/\tests\exam-analyze.test.ts:273:    exam_set_code: '1142',
+src/\tests\exam-analyze.test.ts:280:    exam_set_code: '1142',
+src/\tests\exam-analyze.test.ts:296:      exam_year: 1404, exam_level: 'msc_management', exam_set_code: '1142', booklet_code: '519C', max_question: 200,
+src/\tests\exam-analyze.test.ts:304:      exam_year: 1404, exam_level: 'msc_management', exam_set_code: '1142', booklet_code: '519C', max_question: 200,
+src/\tests\exam-analyze.test.ts:311:    const r = scorePairingEvidence({ exam_year: 1390, exam_level: 'msc_management', exam_set_code: '1142', booklet_code: null, max_question: 200 }, {
+src/\tests\exam-analyze.test.ts:312:      exam_year: 1391, exam_level: 'msc_management', exam_set_code: '1142', booklet_code: null, max_question: 200,
+src/\data\flashcards.ts:3: * Anki-style flashcards covering ALL management courses (arshad 1142 + PhD 2162).
+src/\components\LessonsLibraryView.tsx:15:  MASTER_1142_COEFFICIENTS_TABLE,
+src/\components\LessonsLibraryView.tsx:599:                  {MASTER_1142_COEFFICIENTS_TABLE.map((row) => {
+
+=== family-specific branches in worker (beyond validation) ===
+1156:    if (packs.length === 0) for (const t of ['common', 'business', 'technology', 'strategy', 'industrial'] as TrackId[]) tracks.add(t);
+
+=== ARSHAD_TRACKS / OnboardTrack hardcode ===
+src/\components\OnboardingModal.tsx:12:export type OnboardTrack =
+src/\components\OnboardingModal.tsx:19:  track: OnboardTrack;
+src/\components\OnboardingModal.tsx:20:  tracks: OnboardTrack[];
+src/\components\OnboardingModal.tsx:25:const ARSHAD_TRACKS: Array<{ id: OnboardTrack; title: string; hint: string }> = [
+src/\components\OnboardingModal.tsx:40:  const [selected, setSelected] = useState<Set<OnboardTrack>>(new Set());
+src/\components\OnboardingModal.tsx:60:  const toggle = (id: OnboardTrack) => {
