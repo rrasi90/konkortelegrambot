@@ -11,6 +11,30 @@
  */
 import type { ExamLevel } from './exam-structure';
 
+/**
+ * V3-022 (MX-022) — سطح پذیرش مدل آزمون، جدا از ExamLevel legacy.
+ * ExamLevel (doctorate/master) هویت ساختار legacy باقی می‌ماند و مسیر
+ * شبیه‌ساز/ساختار فقط همان دو سطح را می‌شناسند؛ سطح‌های پذیرش دیگر
+ * (بخش ۱۸٫۵ سند مادر) فقط روی مدل دادهٔ نسخه‌دار باز می‌شوند تا افزودن
+ * خانوادهٔ جدید، بدون branch در هستهٔ ساختار، فقط با داده ممکن باشد.
+ */
+export const EXAM_MODEL_LEVELS = [
+  'doctorate',
+  'master',
+  'professional_doctorate',
+  'specialty',
+  'subspecialty',
+  'bachelor',
+  'associate',
+  'unknown',
+] as const;
+
+export type ExamModelLevel = (typeof EXAM_MODEL_LEVELS)[number];
+
+export function isExamModelLevel(value: unknown): value is ExamModelLevel {
+  return typeof value === 'string' && (EXAM_MODEL_LEVELS as readonly string[]).includes(value);
+}
+
 export const EXAM_MODEL_SCHEMA_VERSION = 1 as const;
 export type ExamModelStatus = 'official_verified' | 'reported' | 'needs_check' | 'draft';
 export type CandidateSelectionRole = 'primary' | 'floating' | 'additional';
@@ -36,7 +60,7 @@ export interface ExamModelSource {
 
 export interface ExamModelEvent {
   id: string;
-  examLevel: ExamLevel;
+  examLevel: ExamModelLevel;
   examFamilyCode: string;
   yearNumber: number;
   yearLabel: string;
@@ -182,7 +206,7 @@ export interface ExamSubjectCourseMapping {
 export interface ExamSelectionPolicy {
   id: string;
   eventVersionId: string;
-  examLevel: ExamLevel;
+  examLevel: ExamModelLevel;
   maxExamSetSelections: number | null;
   allowedRoles: CandidateSelectionRole[];
   allowSameSetMultipleTimes: boolean;
@@ -374,6 +398,21 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
   const comboByCode = new Map<string,ExamModelCombination>();
   const validStatuses: ExamModelStatus[] = ['official_verified','reported','needs_check','draft'];
 
+  // V3-011 (provenance الزامی): هر موجودیت نسخه‌دار باید دست‌کم یک منبع ثبت‌شده
+  // داشته باشد؛ ارتباط Source → Event → EventVersion بدون شاهد مجاز نیست.
+  const provenanceEntities: Array<[unknown[], string]> = [
+    [events,'events'],[versions,'eventVersions'],[sets,'examSets'],
+    [targets,'targets'],[coefficientAssignments,'coefficientAssignments'],
+    [componentCoefficients,'componentCoefficients'],
+  ];
+  for (const [rows,name] of provenanceEntities) {
+    rows.forEach((row,idx)=>{
+      const r=row as {sourceIds?:unknown};
+      if(!Array.isArray(r.sourceIds)||r.sourceIds.length===0)
+        add(errors,name+'['+idx+'].sourceIds','missing_source_reference','هر موجودیت نسخه‌دار باید دست‌کم یک منبع ثبت‌شده داشته باشد.');
+    });
+  }
+
   sources.forEach((s,i)=>{
     const p='sources['+i+']';
     if(!nonEmpty(s.title)||!nonEmpty(s.publisher)||!nonEmpty(s.locator))add(errors,p,'missing_source_metadata','عنوان، ناشر و محل استناد الزامی است.');
@@ -384,7 +423,7 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
 
   events.forEach((e,i)=>{
     const p='events['+i+']';
-    if(!['master','doctorate'].includes(e.examLevel))add(errors,p+'.examLevel','invalid_level','مقطع آزمون نامعتبر است.');
+    if(!isExamModelLevel(e.examLevel))add(errors,p+'.examLevel','invalid_level','مقطع آزمون نامعتبر است.');
     if(!Number.isInteger(e.yearNumber)||e.yearNumber<1300||!Number.isInteger(e.session)||e.session<1)add(errors,p,'invalid_event_period','سال یا نوبت آزمون نامعتبر است.');
     if(!nonEmpty(e.examFamilyCode)||!nonEmpty(e.organizer)||!nonEmpty(e.title)||!nonEmpty(e.yearLabel))add(errors,p,'missing_event_metadata','شناسه مجموعه آزمون، مجری و عنوان الزامی است.');
     if(!validStatuses.includes(e.status))add(errors,p+'.status','invalid_status','وضعیت رویداد آزمون نامعتبر است.');
@@ -511,7 +550,7 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
   policies.forEach((p,i)=>{
     const path='selectionPolicies['+i+']';
     if(!versionMap.has(p.eventVersionId))add(errors,path+'.eventVersionId','unknown_version','نسخه سیاست انتخاب آزمون پیدا نشد.');
-    if(!['master','doctorate'].includes(p.examLevel))add(errors,path+'.examLevel','invalid_level','مقطع سیاست انتخاب نامعتبر است.');
+    if(!isExamModelLevel(p.examLevel))add(errors,path+'.examLevel','invalid_level','مقطع سیاست انتخاب نامعتبر است.');
     if(p.maxExamSetSelections!==null&&(!Number.isInteger(p.maxExamSetSelections)||p.maxExamSetSelections<1))add(errors,path+'.maxExamSetSelections','invalid_limit','حد انتخاب باید عدد صحیح مثبت یا null باشد.');
     if(duplicate(p.allowedRoles))add(errors,path+'.allowedRoles','duplicate_roles','نقش‌های مجاز تکراری‌اند.');
     if(!validStatuses.includes(p.status))add(errors,path+'.status','invalid_status','وضعیت سیاست انتخاب نامعتبر است.');
