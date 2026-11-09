@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-11-09T22:00:04.928Z",
+  "registryPath": "apps/worker/src/data/client-bank-keys.server.ts",
+  "registrySha256": "b3fe2c45087baa1f4fd96ce70b2a9607f6a49b6eeb7783e39d43c4b20457e33b",
+  "totalKeys": 212,
+  "perBank": {
+    "konkorData": 183,
+    "referenceBooksRepo": 27,
+    "security-canary": 2
+  },
+  "canaryIds": [
+    "sec.canary.correct.0001",
+    "sec.canary.option.0002"
+  ],
+  "banks": [
+    {
+      "bank": "konkorData",
+      "sourcePath": "src/data/konkorData.ts"
+    },
+    {
+      "bank": "yearlyKonkorExams",
+      "sourcePath": "src/data/yearlyKonkorExams.ts"
+    },
+    {
+      "bank": "phdExpansionContent",
+      "sourcePath": "src/data/phdExpansionContent.ts"
+    },
+    {
+      "bank": "referenceBooksRepo",
+      "sourcePath": "src/data/referenceBooksRepo.ts"
+    },
+    {
+      "bank": "comprehensiveCourseEncyclopedia",
+      "sourcePath": "src/data/comprehensiveCourseEncyclopedia.ts"
+    },
+    {
+      "bank": "bookChaptersRepo",
+      "sourcePath": "src/data/bookChaptersRepo.ts"
+    }
+  ]
+}
