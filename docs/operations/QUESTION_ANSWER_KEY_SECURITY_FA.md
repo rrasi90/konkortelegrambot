@@ -35,3 +35,28 @@
 5. اجرای مجدد ممیزی + CI تا سبز واقعی بدون استثنا.
 
 این کار یک PR مستقل امنیتی است (تغییر معماری تحویل سؤال در React miniapp) — در همین PR انجام نمی‌شود.
+
+---
+
+## به‌روزرسانی ۲۰۲۶-۱۱-۱۰ (مأموریت مستقل R-036 remediation — شاخهٔ `security/answer-key-server-only-delivery`)
+
+### اقدام اجرا شده (گام ۱ از R-025 — زیرساخت server-only delivery)
+
+| مؤلفه | وضعیت | شاهد |
+|---|---|---|
+| رجیستری کلید سمت سرور | ✅ ساخته شد | `apps/worker/src/data/client-bank-keys.server.ts` (۲۱۲ رکورد = ۲۱۰ واقعی + ۲ canary)؛ مولد: `scripts/generate-answer-key-registry.mts`؛ sha256 در manifest |
+| مصرف بلیت تلاش | ✅ در دو Store | `consumeAttemptTicket` در DataStore/MemoryStore/SupabaseStore |
+| API تصحیح سمت سرور | ✅ سه endpoint | `POST /api/practice/attempts`، `POST /api/practice/answer`، `GET /api/practice/result` — ownership از بلیت، مصرف قبل از افشا، replay idempotent |
+| تست‌های SEC | ✅ ۱۲ تست جدید | `apps/worker/tests/practice-answer-security.test.ts` (SEC-001..010 بخش API) + `src/tests/v3/server-key-registry-guard.test.ts` |
+| اسکن Canary باندل | ✅ PASS روی باندل مستقر فعلی | `scripts/scan-bundle-for-canary.mts` → «SEC-010 PASS: no server canary in 4 assets» — رجیستری سرور هرگز وارد کلاینت نشده |
+
+### آنچه هنوز باقی است (شرط بستن R-036 — باز می‌ماند)
+
+۱. **مصرف‌کنندهٔ کلاینت هنوز متصل نشده:** ۸ نمای React (`StudySessionView`، `YearlyKonkorExamView`، `SubjectDedicatedHubView`، `LessonsLibraryView`، `BookLibraryView`، `MistakeNotebookView`، `PlacementModal`، `App.tsx`) هنوز از تصحیح محلی با کلیدِ داخل باندل استفاده می‌کنند. اتصال این نماها به سه endpoint جدید + حذف فیلدهای کلید از بانک‌های `src/data/*` (تبدیل به public-only) گام بعدی است و نیازمند بازنویسی async مسیر پاسخ در همهٔ نماهاست.
+۲. استثنای R-036 در `audit-client-bundle.ts` تا زمان صفرشدن افشای باندل باقی می‌ماند (حذف زودهنگام = شکست CI بدون رفع علت).
+۳. تصمیم محصول برای حالت offline (`build:offline`): بدون سرور، تصحیح ممکن نیست — نیازمند تصمیم مالک (degradedpractice بدون grading یا حذف offline).
+
+### شمار افشا قبل/بعد این مأموریت
+
+- قبل: ۲۱۰ correctOption + ۲۵ correctIndex در باندل مستقر (بدون هیچ زیرساخت server-only برای بانک کلاینت)
+- بعد: باندل تغییر نداده (۲۱۰+۲۵ — رفع در گام ۲ انجام می‌شود) اما **زیرساخت کامل تصحیح سرور-محور + پوشش تستی SEC آماده است** و رجیستری سرور با Canary اثبات‌شده خارج از باندل است.
