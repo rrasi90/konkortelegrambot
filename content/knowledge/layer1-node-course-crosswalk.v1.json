@@ -1,0 +1,1015 @@
+{
+  "schemaVersion": 1,
+  "note": "Crosswalk is a bridge between legacy node catalogs and the current flat syllabus file. Candidate mappings are not canonical until reviewed.",
+  "counts": {
+    "initialKnowledgeNodes": 25,
+    "phdExpansionNodes": 12,
+    "syllabusNodes": 24,
+    "unionNodeIds": 48,
+    "skills": 23,
+    "courses": 6,
+    "nodeCrosswalkRows": 48,
+    "exactNodeMatches": 13,
+    "nodesNeedingRegistry": 24,
+    "syllabusOnlyNodes": 11,
+    "skillsWithMissingNode": 4,
+    "missingSkillReferences": 2,
+    "contentCourseCatalogRows": 6,
+    "syllabusCourseTitles": 7,
+    "courseTitleExactContentMatches": 4,
+    "courseTitleCandidates": 2,
+    "courseTitlesWithoutContentMatch": 1,
+    "registryCourseDefinitionMatches": 0
+  },
+  "nodeCrosswalk": [
+    {
+      "nodeId": "bus.econ_nazari",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "bus.english_eshraghi",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "bus.islamic_moghimi",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "bus.math_stats_ranjbaran_tourani",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "fin.markets_institutions",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "fin.risk_investment",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "hr.ob_leadership",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "hr.practices_hrm",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "ind.mcdm_dea_queue",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [
+        "ind.mcdm"
+      ],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "ind.or_simplex_duality",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [
+        "ind.or_simplex"
+      ],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "ind.pom_eoq_mrp",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [
+        "ind.production_inv"
+      ],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "inno.ambidextrous",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "technology",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.inno.ambidextrous.dual_focus"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "inno.open_rd_transfer",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "inno.s_curve",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "technology",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.inno.s_curve.disruption"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "inno.tidd_4p",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "islamic.justice",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "islamic.malik_covenant",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [
+        "skill.islamic.malik_covenant.appointees"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "lang.phd_readings",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "mb.contingency",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.mb.contingency.differentiation"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "mb.culture",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "mb.decision",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [
+        "skill.mb.decision.bounded_rationality"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "mb.leadership",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "mb.ob_motivation",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "mb.structure",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.mb.structure.mechanic_organic"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "mis.knowledge_mgmt",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "mis.sims_advanced",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "mkt.brand",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "business",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.mkt.brand.cbbe_pyramid"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "mkt.cobranding",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "business",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [
+        "skill.mkt.cobranding.strategy"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "mkt.consumer",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "business",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "mkt.plc",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "business",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.mkt.plc.stages"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "mkt.stp",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "business",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "pa.policy_theories",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "pa.public_theories",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "rm.reliability_forms",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "rm.research_design",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "rm.validity",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "sm.core_competencies",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [
+        "skill.sm.core_competencies.prahalad"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "sm.dynamic",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [
+        "sm.dynamic_capabilities"
+      ],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "sm.dynamic_capabilities",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [
+        "skill.sm.dynamic_capabilities.reconfiguration"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "sm.portfolio",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.sm.portfolio.bcg_ge"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "sm.rbv",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.sm.rbv.vrio",
+        "skill.sm.rbv.isolating_mechanisms"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "sm.value_chain",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.sm.value_chain.porter"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "stats.anova",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.stats.anova.parametric_assumptions"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "stats.nonparam",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [],
+      "candidateLegacyAliases": [
+        "stats.nonparametric"
+      ],
+      "mappingStatus": "syllabus_only_review"
+    },
+    {
+      "nodeId": "stats.nonparametric",
+      "sources": [
+        "PHD_EXPANSION_NODES"
+      ],
+      "track": null,
+      "syllabusPresence": "missing",
+      "enginePresence": "present",
+      "skillIds": [],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "needs_registry_node"
+    },
+    {
+      "nodeId": "stats.regression",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.stats.regression.r_squared"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "stats.scales",
+      "sources": [
+        "INITIAL_KNOWLEDGE_NODES",
+        "syllabus-nodes.json"
+      ],
+      "track": "common",
+      "syllabusPresence": "present",
+      "enginePresence": "present",
+      "skillIds": [
+        "skill.stats.scales.identify"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "exact_id_match"
+    },
+    {
+      "nodeId": "tech.absorptive",
+      "sources": [
+        "syllabus-nodes.json"
+      ],
+      "track": "technology",
+      "syllabusPresence": "present",
+      "enginePresence": "missing",
+      "skillIds": [
+        "skill.tech.absorptive.capacity"
+      ],
+      "candidateLegacyAliases": [],
+      "mappingStatus": "syllabus_only_review"
+    }
+  ],
+  "skillCrosswalk": [
+    {
+      "skillId": "skill.mb.contingency.differentiation",
+      "nodeId": "mb.contingency",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.mb.structure.mechanic_organic"
+      ],
+      "confusableSkillIds": [
+        "skill.mb.structure.mechanic_organic"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.mb.structure.mechanic_organic",
+      "nodeId": "mb.structure",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.mb.decision.bounded_rationality",
+      "nodeId": "mb.decision",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.stats.regression.r_squared",
+      "nodeId": "stats.regression",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.stats.scales.identify"
+      ],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.stats.anova.parametric_assumptions",
+      "nodeId": "stats.anova",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.stats.scales.identify"
+      ],
+      "confusableSkillIds": [
+        "skill.stats.nonparam.kruskal"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": [
+        "skill.stats.nonparam.kruskal"
+      ]
+    },
+    {
+      "skillId": "skill.stats.scales.identify",
+      "nodeId": "stats.scales",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.islamic.malik_covenant.appointees",
+      "nodeId": "islamic.malik_covenant",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.sm.rbv.vrio",
+      "nodeId": "sm.rbv",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.sm.value_chain.porter"
+      ],
+      "confusableSkillIds": [
+        "skill.sm.dynamic_capabilities.reconfiguration"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.sm.value_chain.porter",
+      "nodeId": "sm.value_chain",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.sm.core_competencies.prahalad",
+      "nodeId": "sm.core_competencies",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.sm.rbv.vrio"
+      ],
+      "confusableSkillIds": [
+        "skill.sm.rbv.vrio"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.sm.dynamic_capabilities.reconfiguration",
+      "nodeId": "sm.dynamic_capabilities",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [
+        "sm.dynamic"
+      ],
+      "prerequisiteSkillIds": [
+        "skill.sm.rbv.vrio"
+      ],
+      "confusableSkillIds": [
+        "skill.sm.rbv.vrio"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.mkt.brand.cbbe_pyramid",
+      "nodeId": "mkt.brand",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.mkt.stp.positioning"
+      ],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [
+        "skill.mkt.stp.positioning"
+      ],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.mkt.cobranding.strategy",
+      "nodeId": "mkt.cobranding",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.mkt.brand.cbbe_pyramid"
+      ],
+      "confusableSkillIds": [
+        "skill.mkt.brand.cbbe_pyramid"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.inno.s_curve.disruption",
+      "nodeId": "inno.s_curve",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.inno.ambidextrous.dual_focus",
+      "nodeId": "inno.ambidextrous",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.mb.structure.mechanic_organic"
+      ],
+      "confusableSkillIds": [
+        "skill.mb.structure.mechanic_organic"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.tech.absorptive.capacity",
+      "nodeId": "tech.absorptive",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.mkt.plc.stages",
+      "nodeId": "mkt.plc",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [],
+      "confusableSkillIds": [
+        "skill.mkt.brand.cbbe_pyramid"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.sm.portfolio.bcg_ge",
+      "nodeId": "sm.portfolio",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.sm.value_chain.porter"
+      ],
+      "confusableSkillIds": [
+        "skill.sm.core_competencies.prahalad"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.sm.rbv.isolating_mechanisms",
+      "nodeId": "sm.rbv",
+      "nodeMappingStatus": "exact_id_match",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.sm.rbv.vrio"
+      ],
+      "confusableSkillIds": [
+        "skill.sm.core_competencies.prahalad"
+      ],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.ind.or_simplex",
+      "nodeId": "ind.or_simplex",
+      "nodeMappingStatus": "candidate_needs_review",
+      "candidateNodeIds": [
+        "ind.or_simplex_duality"
+      ],
+      "prerequisiteSkillIds": [
+        "skill.stats.scales.identify"
+      ],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.ind.mcdm",
+      "nodeId": "ind.mcdm",
+      "nodeMappingStatus": "candidate_needs_review",
+      "candidateNodeIds": [
+        "ind.mcdm_dea_queue"
+      ],
+      "prerequisiteSkillIds": [
+        "skill.ind.or_simplex"
+      ],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.ind.production_inv",
+      "nodeId": "ind.production_inv",
+      "nodeMappingStatus": "candidate_needs_review",
+      "candidateNodeIds": [
+        "ind.pom_eoq_mrp"
+      ],
+      "prerequisiteSkillIds": [
+        "skill.ind.or_simplex"
+      ],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    },
+    {
+      "skillId": "skill.ind.supply_chain",
+      "nodeId": "ind.supply_chain",
+      "nodeMappingStatus": "missing_node_review",
+      "candidateNodeIds": [],
+      "prerequisiteSkillIds": [
+        "skill.ind.production_inv",
+        "skill.sm.value_chain.porter"
+      ],
+      "confusableSkillIds": [],
+      "missingPrerequisiteSkillIds": [],
+      "missingConfusableSkillIds": []
+    }
+  ],
+  "courseTitleCrosswalk": [
+    {
+      "sourceTitle": "مبانی سازمان و مدیریت",
+      "contentCourseId": "course-org-theory",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
+    },
+    {
+      "sourceTitle": "آمار و کاربرد آن در مدیریت",
+      "contentCourseId": "course-stats",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
+    },
+    {
+      "sourceTitle": "اصول و مبانی مدیریت از دیدگاه اسلام",
+      "contentCourseId": "course-islamic-mgmt",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
+    },
+    {
+      "sourceTitle": "مدیریت استراتژیک پیشرفته",
+      "contentCourseId": "course-strategic-mgmt",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
+    },
+    {
+      "sourceTitle": "بازاریابی پیشرفته",
+      "contentCourseId": "course-marketing",
+      "contentMatchStatus": "candidate_needs_review",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
+    },
+    {
+      "sourceTitle": "تئوری‌های نوآوری و فناوری",
+      "contentCourseId": "course-innovation-mgmt",
+      "contentMatchStatus": "candidate_needs_review",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
+    },
+    {
+      "sourceTitle": "مدیریت فناوری و نوآوری",
+      "contentCourseId": null,
+      "contentMatchStatus": "no_content_catalog_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "note": "contentCourseId از فایل courses.json است و نباید با CourseDefinition.code رجیستری یکی فرض شود."
+    }
+  ]
+}

@@ -92,15 +92,115 @@ export interface PrerequisiteEdge {
 
 // ---------- آزمون و پذیرش ----------
 export interface ExamFamily { code: string; name: string; status: RegistryLifecycleStatus }
-export interface ExamEvent { id: string; familyCode: string; academicYearId: string | null; yearLabel: string; session: number; name: string; status: RegistryVersionStatus }
+export interface ExamEvent {
+  id: string;
+  familyCode: string;
+  /** سطح آزمون؛ مثال master یا doctorate. برای رویدادهای قدیمی اختیاری است. */
+  levelCode?: string | null;
+  academicYearId: string | null;
+  yearLabel: string;
+  session: number;
+  name: string;
+  status: RegistryVersionStatus;
+}
 export type ExamEventVersion = VersionedEntityBase & { eventId: string; rulesHash: string | null };
 export interface RegistryExamSubject { code: string; name: string; status: RegistryLifecycleStatus }
-export interface RegistryExamSet { id: string; eventVersionId: string; code: string; name: string }
-export interface RegistryExamCombination { id: string; eventVersionId: string; code: string; name: string; subfieldCode: string | null }
+export type ExamSetSelectionCategory = 'main' | 'floating' | 'independent' | 'unknown';
+export interface RegistryExamSet {
+  id: string;
+  eventVersionId: string;
+  code: string;
+  name: string;
+  /** دستهٔ انتخاب در همان سال/نوبت؛ از سال دیگر به ارث نمی‌رسد. */
+  selectionCategory?: ExamSetSelectionCategory;
+  /** آیا برای فعال‌سازی این مجموعه باید یک کد ترکیب مشخص شود؟ */
+  requiresCombinationSelection?: boolean;
+}
+export interface RegistryExamCombination {
+  id: string;
+  eventVersionId: string;
+  code: string;
+  name: string;
+  /** سازگاری قدیمی؛ رابطهٔ چندبه‌چند canonical در examCombinationSubfields است. */
+  subfieldCode: string | null;
+}
+export interface ExamSetCombinationMapping {
+  id: string;
+  examSetId: string;
+  combinationId: string;
+  status: RegistryVersionStatus;
+  sourceIds: string[];
+}
+export type SubfieldEligibility = 'eligible' | 'conditional' | 'restricted' | 'not_available' | 'needs_check';
+export interface ExamCombinationSubfieldMapping {
+  id: string;
+  combinationId: string;
+  subfieldCode: string;
+  eligibility: SubfieldEligibility;
+  restrictionCode: string | null;
+  note: string | null;
+  status: RegistryVersionStatus;
+  sourceIds: string[];
+}
+export type ExamSubjectCourseMappingKind = 'exact' | 'covers' | 'partial' | 'supplementary';
+export interface ExamSubjectCourseMapping {
+  id: string;
+  subjectCode: string;
+  courseDefinitionCode: string;
+  mappingKind: ExamSubjectCourseMappingKind;
+  /** سهم پوشش این درس از مادهٔ امتحانی، فقط در صورت داشتن مبنای مستند. */
+  coverageWeight: number | null;
+  status: RegistryVersionStatus;
+  sourceIds: string[];
+}
+export type ExamSubjectRole = 'shared' | 'specialized' | 'elective' | 'conditional' | 'unknown';
+export type ExamCoefficientScope = 'exam_component' | 'subject' | 'course' | 'unknown';
 export interface ExamFieldSubjectAssignment {
-  id: string; combinationId: string; subjectCode: string;
-  coefficient: number; weight: number;
-  negativeMarking: NegativeMarkingKind; timeLimitMinutes: number | null; position: number;
+  id: string;
+  combinationId: string;
+  subjectCode: string;
+  /** فیلد قدیمی؛ برای سازگاری Import باقی مانده و مرجع canonical نیست. */
+  coefficient: number;
+  /** فیلد قدیمی؛ وزن رسمی آزمون را با اولویت مطالعه یکی نکنید. */
+  weight: number;
+  negativeMarking: NegativeMarkingKind;
+  timeLimitMinutes: number | null;
+  position: number;
+  /** ضریب رسمی با دامنهٔ صریح؛ null یعنی در منبع تعیین نشده، نه ضریب صفر. */
+  officialCoefficient?: number | null;
+  coefficientScope?: ExamCoefficientScope;
+  /** وزن داخلی برنامه‌ریزی مطالعه؛ هرگز جایگزین ضریب رسمی نیست. */
+  learningPriorityWeight?: number | null;
+  subjectRole?: ExamSubjectRole;
+  verification?: 'official_verified' | 'reported' | 'needs_check';
+  sourceIds?: string[];
+}
+export interface ExamSelectionCategoryLimit {
+  category: ExamSetSelectionCategory;
+  minSelections: number;
+  maxSelections: number | null;
+}
+export type ExamSelectionPurpose = 'study_plan' | 'registration_intent' | 'official_registration';
+export type ExamSelectionMode = 'single' | 'primary_plus_secondary' | 'multiple' | 'unverified';
+export interface ExamSelectionPolicy {
+  id: string;
+  eventVersionId: string;
+  /** null = policy برای کل رویداد؛ در غیر این صورت فقط همان مجموعه. */
+  examSetId: string | null;
+  purpose: ExamSelectionPurpose;
+  mode: ExamSelectionMode;
+  minSelections: number | null;
+  maxSelections: number | null;
+  maxCombinationsPerSet: number | null;
+  allowMultipleCombinationsPerSet: boolean;
+  requiresPrimarySelection: boolean;
+  categoryLimits: ExamSelectionCategoryLimit[];
+  /** منشأ policy محصولی است یا ادعای مقررات رسمی دارد. */
+  policyOrigin: 'official' | 'reported' | 'product';
+  verification: 'official_verified' | 'reported' | 'needs_check';
+  status: RegistryVersionStatus;
+  sourceIds: string[];
+  note: string | null;
 }
 export interface AdmissionRule { id: string; eventVersionId: string; ruleJson: Record<string, unknown>; status: RegistryVersionStatus; sourceIds: string[] }
 export interface AssessmentComponent { id: string; eventVersionId: string; kind: AssessmentComponentKind; weight: number; config: Record<string, unknown> }
@@ -140,6 +240,11 @@ export interface RegistryImportBundle {
   examSubjects: RegistryExamSubject[];
   examSets: RegistryExamSet[];
   examCombinations: RegistryExamCombination[];
+  /** Additive v1-import fields; omitted arrays are treated as empty. */
+  examSetCombinationMappings?: ExamSetCombinationMapping[];
+  examCombinationSubfields?: ExamCombinationSubfieldMapping[];
+  examSubjectCourseMappings?: ExamSubjectCourseMapping[];
+  examSelectionPolicies?: ExamSelectionPolicy[];
   examFieldSubjectAssignments: ExamFieldSubjectAssignment[];
   admissionRules: AdmissionRule[];
   assessmentComponents: AssessmentComponent[];
@@ -154,7 +259,8 @@ export const EMPTY_REGISTRY_BUNDLE: RegistryImportBundle = {
   curricula: [], curriculumVersions: [], courseDefinitions: [], courseOfferings: [], courseUnits: [],
   syllabusNodes: [], learningOutcomes: [], curriculumCourses: [], prerequisiteEdges: [],
   examFamilies: [], examEvents: [], examEventVersions: [], examSubjects: [], examSets: [],
-  examCombinations: [], examFieldSubjectAssignments: [], admissionRules: [], assessmentComponents: [],
+  examCombinations: [], examSetCombinationMappings: [], examCombinationSubfields: [],
+  examSubjectCourseMappings: [], examSelectionPolicies: [], examFieldSubjectAssignments: [], admissionRules: [], assessmentComponents: [],
   assessmentRubrics: [], examBooklets: [],
 };
 
@@ -410,6 +516,9 @@ const PLAIN_ENTITIES: EntitySpec[] = [
   plainEntity('examEvents', (record, errors, index) => {
     if (!isCode(record.id)) errors.push({ entity: 'examEvents', index, field: 'id', code: 'invalid_code', message: 'شناسهٔ رویداد معتبر نیست.', severity: 'error' });
     if (!isCode(record.familyCode)) errors.push({ entity: 'examEvents', index, field: 'familyCode', code: 'invalid_code', message: 'خانوادهٔ آزمون معتبر نیست.', severity: 'error' });
+    if (record.levelCode !== undefined && record.levelCode !== null && !isCode(record.levelCode)) {
+      errors.push({ entity: 'examEvents', index, field: 'levelCode', code: 'invalid_code', message: 'مقطع آزمون معتبر نیست.', severity: 'error' });
+    }
     if (!isNonEmptyString(record.yearLabel)) errors.push({ entity: 'examEvents', index, field: 'yearLabel', code: 'required', message: 'برچسب سال الزامی است.', severity: 'error' });
     if (!Number.isInteger(record.session) || (record.session as number) < 1) {
       errors.push({ entity: 'examEvents', index, field: 'session', code: 'invalid_number', message: 'نوبت باید عدد صحیح مثبت باشد.', severity: 'error' });
@@ -418,10 +527,80 @@ const PLAIN_ENTITIES: EntitySpec[] = [
   plainEntity('examSets', (record, errors, index) => {
     if (!isCode(record.id)) errors.push({ entity: 'examSets', index, field: 'id', code: 'invalid_code', message: 'شناسهٔ مجموعه معتبر نیست.', severity: 'error' });
     if (!isCode(record.eventVersionId)) errors.push({ entity: 'examSets', index, field: 'eventVersionId', code: 'invalid_code', message: 'نسخهٔ رویداد معتبر نیست.', severity: 'error' });
+    if (record.selectionCategory !== undefined && !checkEnum(record.selectionCategory, ['main','floating','independent','unknown'])) {
+      errors.push({ entity: 'examSets', index, field: 'selectionCategory', code: 'invalid_enum', message: 'دستهٔ انتخاب مجموعه معتبر نیست.', severity: 'error' });
+    }
+    if (record.requiresCombinationSelection !== undefined && typeof record.requiresCombinationSelection !== 'boolean') {
+      errors.push({ entity: 'examSets', index, field: 'requiresCombinationSelection', code: 'invalid_type', message: 'الزام انتخاب کد ترکیب باید بولی باشد.', severity: 'error' });
+    }
   }),
   plainEntity('examCombinations', (record, errors, index) => {
     if (!isCode(record.id)) errors.push({ entity: 'examCombinations', index, field: 'id', code: 'invalid_code', message: 'شناسهٔ ترکیب معتبر نیست.', severity: 'error' });
     if (!isCode(record.eventVersionId)) errors.push({ entity: 'examCombinations', index, field: 'eventVersionId', code: 'invalid_code', message: 'نسخهٔ رویداد معتبر نیست.', severity: 'error' });
+    if (record.subfieldCode !== null && record.subfieldCode !== undefined && !isCode(record.subfieldCode)) {
+      errors.push({ entity: 'examCombinations', index, field: 'subfieldCode', code: 'invalid_code', message: 'زیررشتهٔ قدیمی ترکیب معتبر نیست.', severity: 'error' });
+    }
+  }),
+  plainEntity('examSetCombinationMappings', (record, errors, index) => {
+    if (!isCode(record.id)) errors.push({ entity: 'examSetCombinationMappings', index, field: 'id', code: 'invalid_code', message: 'شناسهٔ نگاشت معتبر نیست.', severity: 'error' });
+    if (!isCode(record.examSetId)) errors.push({ entity: 'examSetCombinationMappings', index, field: 'examSetId', code: 'invalid_code', message: 'مجموعهٔ آزمون معتبر نیست.', severity: 'error' });
+    if (!isCode(record.combinationId)) errors.push({ entity: 'examSetCombinationMappings', index, field: 'combinationId', code: 'invalid_code', message: 'کد ترکیب معتبر نیست.', severity: 'error' });
+    if (!checkVersionStatus(record.status)) errors.push({ entity: 'examSetCombinationMappings', index, field: 'status', code: 'invalid_status', message: 'وضعیت نگاشت معتبر نیست.', severity: 'error' });
+    if (record.sourceIds !== undefined && !isStringArray(record.sourceIds)) errors.push({ entity: 'examSetCombinationMappings', index, field: 'sourceIds', code: 'invalid_type', message: 'منابع باید فهرست شناسه باشند.', severity: 'error' });
+  }),
+  plainEntity('examCombinationSubfields', (record, errors, index) => {
+    if (!isCode(record.id)) errors.push({ entity: 'examCombinationSubfields', index, field: 'id', code: 'invalid_code', message: 'شناسهٔ نگاشت معتبر نیست.', severity: 'error' });
+    if (!isCode(record.combinationId)) errors.push({ entity: 'examCombinationSubfields', index, field: 'combinationId', code: 'invalid_code', message: 'کد ترکیب معتبر نیست.', severity: 'error' });
+    if (!isCode(record.subfieldCode)) errors.push({ entity: 'examCombinationSubfields', index, field: 'subfieldCode', code: 'invalid_code', message: 'زیررشته معتبر نیست.', severity: 'error' });
+    if (!checkEnum(record.eligibility, ['eligible','conditional','restricted','not_available','needs_check'])) errors.push({ entity: 'examCombinationSubfields', index, field: 'eligibility', code: 'invalid_enum', message: 'وضعیت پذیرش زیررشته معتبر نیست.', severity: 'error' });
+    if (record.restrictionCode !== null && record.restrictionCode !== undefined && !isCode(record.restrictionCode)) errors.push({ entity: 'examCombinationSubfields', index, field: 'restrictionCode', code: 'invalid_code', message: 'کد محدودیت معتبر نیست.', severity: 'error' });
+    if (record.note !== null && record.note !== undefined && typeof record.note !== 'string') errors.push({ entity: 'examCombinationSubfields', index, field: 'note', code: 'invalid_type', message: 'یادداشت باید متن یا null باشد.', severity: 'error' });
+    if (!checkVersionStatus(record.status)) errors.push({ entity: 'examCombinationSubfields', index, field: 'status', code: 'invalid_status', message: 'وضعیت نگاشت معتبر نیست.', severity: 'error' });
+    if (record.sourceIds !== undefined && !isStringArray(record.sourceIds)) errors.push({ entity: 'examCombinationSubfields', index, field: 'sourceIds', code: 'invalid_type', message: 'منابع باید فهرست شناسه باشند.', severity: 'error' });
+  }),
+  plainEntity('examSubjectCourseMappings', (record, errors, index) => {
+    if (!isCode(record.id)) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'id', code: 'invalid_code', message: 'شناسهٔ نگاشت معتبر نیست.', severity: 'error' });
+    if (!isCode(record.subjectCode)) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'subjectCode', code: 'invalid_code', message: 'مادهٔ آزمون معتبر نیست.', severity: 'error' });
+    if (!isCode(record.courseDefinitionCode)) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'courseDefinitionCode', code: 'invalid_code', message: 'درس آموزشی معتبر نیست.', severity: 'error' });
+    if (!checkEnum(record.mappingKind, ['exact','covers','partial','supplementary'])) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'mappingKind', code: 'invalid_enum', message: 'نوع نگاشت ماده به درس معتبر نیست.', severity: 'error' });
+    if (record.coverageWeight !== null && record.coverageWeight !== undefined &&
+        (typeof record.coverageWeight !== 'number' || !Number.isFinite(record.coverageWeight) || record.coverageWeight < 0 || record.coverageWeight > 1)) {
+      errors.push({ entity: 'examSubjectCourseMappings', index, field: 'coverageWeight', code: 'invalid_number', message: 'سهم پوشش باید بین صفر و یک یا null باشد.', severity: 'error' });
+    }
+    if (!checkVersionStatus(record.status)) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'status', code: 'invalid_status', message: 'وضعیت نگاشت معتبر نیست.', severity: 'error' });
+    if (record.sourceIds !== undefined && !isStringArray(record.sourceIds)) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'sourceIds', code: 'invalid_type', message: 'منابع باید فهرست شناسه باشند.', severity: 'error' });
+  }),
+  plainEntity('examSelectionPolicies', (record, errors, index) => {
+    if (!isCode(record.id) || !isCode(record.eventVersionId)) errors.push({ entity: 'examSelectionPolicies', index, field: 'id', code: 'invalid_code', message: 'شناسهٔ policy یا نسخهٔ رویداد معتبر نیست.', severity: 'error' });
+    if (record.examSetId !== null && record.examSetId !== undefined && !isCode(record.examSetId)) errors.push({ entity: 'examSelectionPolicies', index, field: 'examSetId', code: 'invalid_code', message: 'مجموعهٔ محدودکننده معتبر نیست.', severity: 'error' });
+    if (!checkEnum(record.purpose, ['study_plan','registration_intent','official_registration'])) errors.push({ entity: 'examSelectionPolicies', index, field: 'purpose', code: 'invalid_enum', message: 'هدف policy معتبر نیست.', severity: 'error' });
+    if (!checkEnum(record.mode, ['single','primary_plus_secondary','multiple','unverified'])) errors.push({ entity: 'examSelectionPolicies', index, field: 'mode', code: 'invalid_enum', message: 'حالت انتخاب معتبر نیست.', severity: 'error' });
+    for (const field of ['minSelections','maxSelections','maxCombinationsPerSet'] as const) {
+      const value = record[field];
+      if (value !== null && value !== undefined && (!Number.isInteger(value) || (value as number) < 0)) {
+        errors.push({ entity: 'examSelectionPolicies', index, field, code: 'invalid_number', message: 'محدودیت انتخاب باید عدد صحیح نامنفی یا null باشد.', severity: 'error' });
+      }
+    }
+    if (record.minSelections != null && record.maxSelections != null && record.minSelections > record.maxSelections) errors.push({ entity: 'examSelectionPolicies', index, field: 'maxSelections', code: 'invalid_range', message: 'حداقل انتخاب از حداکثر بیشتر است.', severity: 'error' });
+    if (typeof record.allowMultipleCombinationsPerSet !== 'boolean' || typeof record.requiresPrimarySelection !== 'boolean') errors.push({ entity: 'examSelectionPolicies', index, field: null, code: 'invalid_boolean', message: 'قواعد بولی policy نامعتبر است.', severity: 'error' });
+    if (!Array.isArray(record.categoryLimits)) errors.push({ entity: 'examSelectionPolicies', index, field: 'categoryLimits', code: 'invalid_type', message: 'محدودیت‌های دسته باید فهرست باشند.', severity: 'error' });
+    else {
+      const seenCategories = new Set<string>();
+      record.categoryLimits.forEach((limit: Record<string, unknown>, limitIndex: number) => {
+        if (!limit || typeof limit !== 'object' || Array.isArray(limit)) { errors.push({ entity: 'examSelectionPolicies', index, field: `categoryLimits[${limitIndex}]`, code: 'invalid_type', message: 'محدودیت دسته معتبر نیست.', severity: 'error' }); return; }
+        if (!checkEnum(limit.category, ['main','floating','independent','unknown']) || seenCategories.has(String(limit.category))) errors.push({ entity: 'examSelectionPolicies', index, field: `categoryLimits[${limitIndex}].category`, code: 'invalid_enum', message: 'دستهٔ انتخاب نامعتبر یا تکراری است.', severity: 'error' });
+        seenCategories.add(String(limit.category));
+        if (!Number.isInteger(limit.minSelections) || (limit.minSelections as number) < 0) errors.push({ entity: 'examSelectionPolicies', index, field: `categoryLimits[${limitIndex}].minSelections`, code: 'invalid_number', message: 'حداقل دسته باید عدد صحیح نامنفی باشد.', severity: 'error' });
+        if (limit.maxSelections !== null && (!Number.isInteger(limit.maxSelections) || (limit.maxSelections as number) < 0)) errors.push({ entity: 'examSelectionPolicies', index, field: `categoryLimits[${limitIndex}].maxSelections`, code: 'invalid_number', message: 'حداکثر دسته باید عدد صحیح نامنفی یا null باشد.', severity: 'error' });
+        if (limit.maxSelections !== null && Number.isInteger(limit.minSelections) && (limit.minSelections as number) > (limit.maxSelections as number)) errors.push({ entity: 'examSelectionPolicies', index, field: `categoryLimits[${limitIndex}]`, code: 'invalid_range', message: 'حداقل دسته از حداکثر بیشتر است.', severity: 'error' });
+      });
+    }
+    if (!checkEnum(record.policyOrigin, ['official','reported','product'])) errors.push({ entity: 'examSelectionPolicies', index, field: 'policyOrigin', code: 'invalid_enum', message: 'منشأ policy معتبر نیست.', severity: 'error' });
+    if (!checkEnum(record.verification, ['official_verified','reported','needs_check'])) errors.push({ entity: 'examSelectionPolicies', index, field: 'verification', code: 'invalid_enum', message: 'وضعیت راستی‌آزمایی policy معتبر نیست.', severity: 'error' });
+    if (!checkVersionStatus(record.status)) errors.push({ entity: 'examSelectionPolicies', index, field: 'status', code: 'invalid_status', message: 'وضعیت policy معتبر نیست.', severity: 'error' });
+    if (!isStringArray(record.sourceIds)) errors.push({ entity: 'examSelectionPolicies', index, field: 'sourceIds', code: 'invalid_type', message: 'شناسه منابع باید فهرست رشته غیرخالی باشد.', severity: 'error' });
+    if (record.note !== null && record.note !== undefined && typeof record.note !== 'string') errors.push({ entity: 'examSelectionPolicies', index, field: 'note', code: 'invalid_type', message: 'یادداشت باید متن یا null باشد.', severity: 'error' });
+    if (record.verification === 'official_verified' && record.policyOrigin === 'product') errors.push({ entity: 'examSelectionPolicies', index, field: 'verification', code: 'invalid_provenance', message: 'قاعده محصولی نباید راستی‌آزمایی رسمی تلقی شود.', severity: 'error' });
   }),
   plainEntity('examFieldSubjectAssignments', (record, errors, index) => {
     if (!isCode(record.id)) errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'id', code: 'invalid_code', message: 'شناسهٔ ردیف معتبر نیست.', severity: 'error' });
@@ -434,6 +613,26 @@ const PLAIN_ENTITIES: EntitySpec[] = [
     }
     if (record.negativeMarking !== undefined && !checkEnum(record.negativeMarking, NEGATIVE_MARKING_KINDS)) {
       errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'negativeMarking', code: 'invalid_enum', message: 'قاعدهٔ نمرهٔ منفی معتبر نیست.', severity: 'error' });
+    }
+    if (record.officialCoefficient !== undefined && record.officialCoefficient !== null &&
+        (typeof record.officialCoefficient !== 'number' || !Number.isFinite(record.officialCoefficient) || record.officialCoefficient < 0)) {
+      errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'officialCoefficient', code: 'invalid_number', message: 'ضریب رسمی باید عدد نامنفی یا null باشد.', severity: 'error' });
+    }
+    if (record.coefficientScope !== undefined && !checkEnum(record.coefficientScope, ['exam_component','subject','course','unknown'])) {
+      errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'coefficientScope', code: 'invalid_enum', message: 'دامنهٔ ضریب معتبر نیست.', severity: 'error' });
+    }
+    if (record.learningPriorityWeight !== undefined && record.learningPriorityWeight !== null &&
+        (typeof record.learningPriorityWeight !== 'number' || !Number.isFinite(record.learningPriorityWeight) || record.learningPriorityWeight < 0 || record.learningPriorityWeight > 100)) {
+      errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'learningPriorityWeight', code: 'invalid_number', message: 'وزن یادگیری باید بین صفر و صد یا null باشد.', severity: 'error' });
+    }
+    if (record.subjectRole !== undefined && !checkEnum(record.subjectRole, ['shared','specialized','elective','conditional','unknown'])) {
+      errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'subjectRole', code: 'invalid_enum', message: 'نقش مادهٔ امتحانی معتبر نیست.', severity: 'error' });
+    }
+    if (record.verification !== undefined && !checkEnum(record.verification, ['official_verified','reported','needs_check'])) {
+      errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'verification', code: 'invalid_enum', message: 'وضعیت راستی‌آزمایی assignment معتبر نیست.', severity: 'error' });
+    }
+    if (record.sourceIds !== undefined && !isStringArray(record.sourceIds)) {
+      errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'sourceIds', code: 'invalid_type', message: 'منابع باید فهرست شناسه باشد.', severity: 'error' });
     }
   }),
   plainEntity('admissionRules', (record, errors, index) => {
@@ -495,6 +694,92 @@ export function validateRegistryBundle(input: unknown): { ok: true } | { ok: fal
     list.forEach((item, index) => spec.validate(item, errors, index));
   }
   if (errors.length > 0) return { ok: false, errors };
+
+  // Cross-entity validation is performed when the corresponding collections
+  // are present in this import. Partial imports remain supported.
+  const rows = (key: string): Array<Record<string, any>> | undefined =>
+    Array.isArray(bundle[key]) ? bundle[key] as Array<Record<string, any>> : undefined;
+  const sets = rows('examSets');
+  const combinations = rows('examCombinations');
+  const setCombinationMappings = rows('examSetCombinationMappings');
+  const combinationSubfields = rows('examCombinationSubfields');
+  const subfields = rows('subfields');
+  const subjects = rows('examSubjects');
+  const courses = rows('courseDefinitions');
+  const subjectCourseMappings = rows('examSubjectCourseMappings');
+  const eventVersions = rows('examEventVersions');
+  const policies = rows('examSelectionPolicies');
+  const assignments = rows('examFieldSubjectAssignments');
+
+  const byId = (items: Array<Record<string, any>> | undefined) =>
+    new Map((items ?? []).filter(item => typeof item.id === 'string').map(item => [item.id, item]));
+  const setById = byId(sets);
+  const combinationById = byId(combinations);
+  const subfieldByCode = new Map((subfields ?? []).filter(item => typeof item.code === 'string').map(item => [item.code, item]));
+  const subjectByCode = new Map((subjects ?? []).filter(item => typeof item.code === 'string').map(item => [item.code, item]));
+  const courseByCode = new Map((courses ?? []).filter(item => typeof item.code === 'string').map(item => [item.code, item]));
+  const eventVersionById = byId(eventVersions);
+
+  if (setCombinationMappings && sets && combinations) {
+    const seen = new Set<string>();
+    setCombinationMappings.forEach((mapping, index) => {
+      const set = setById.get(mapping.examSetId);
+      const combination = combinationById.get(mapping.combinationId);
+      if (!set) errors.push({ entity: 'examSetCombinationMappings', index, field: 'examSetId', code: 'unknown_exam_set', message: 'مجموعهٔ مرجع این نگاشت پیدا نشد.', severity: 'error' });
+      if (!combination) errors.push({ entity: 'examSetCombinationMappings', index, field: 'combinationId', code: 'unknown_combination', message: 'کد ترکیب مرجع این نگاشت پیدا نشد.', severity: 'error' });
+      if (set && combination && set.eventVersionId !== combination.eventVersionId) {
+        errors.push({ entity: 'examSetCombinationMappings', index, field: null, code: 'event_version_mismatch', message: 'مجموعه و ترکیب باید به یک نسخهٔ رویداد تعلق داشته باشند.', severity: 'error' });
+      }
+      const key = String(mapping.examSetId) + '|' + String(mapping.combinationId);
+      if (seen.has(key)) errors.push({ entity: 'examSetCombinationMappings', index, field: null, code: 'duplicate_mapping', message: 'رابطهٔ مجموعه/ترکیب تکراری است.', severity: 'error' });
+      seen.add(key);
+    });
+  }
+
+  if (combinationSubfields && combinations && subfields) {
+    const seen = new Set<string>();
+    combinationSubfields.forEach((mapping, index) => {
+      if (!combinationById.has(mapping.combinationId)) errors.push({ entity: 'examCombinationSubfields', index, field: 'combinationId', code: 'unknown_combination', message: 'ترکیب مرجع زیررشته پیدا نشد.', severity: 'error' });
+      if (!subfieldByCode.has(mapping.subfieldCode)) errors.push({ entity: 'examCombinationSubfields', index, field: 'subfieldCode', code: 'unknown_subfield', message: 'زیررشتهٔ مرجع پیدا نشد.', severity: 'error' });
+      const key = String(mapping.combinationId) + '|' + String(mapping.subfieldCode);
+      if (seen.has(key)) errors.push({ entity: 'examCombinationSubfields', index, field: null, code: 'duplicate_mapping', message: 'رابطهٔ ترکیب/زیررشته تکراری است.', severity: 'error' });
+      seen.add(key);
+    });
+  }
+
+  if (subjectCourseMappings && subjects && courses) {
+    const seen = new Set<string>();
+    subjectCourseMappings.forEach((mapping, index) => {
+      if (!subjectByCode.has(mapping.subjectCode)) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'subjectCode', code: 'unknown_subject', message: 'مادهٔ مرجع نگاشت به درس پیدا نشد.', severity: 'error' });
+      if (!courseByCode.has(mapping.courseDefinitionCode)) errors.push({ entity: 'examSubjectCourseMappings', index, field: 'courseDefinitionCode', code: 'unknown_course', message: 'تعریف درس مرجع پیدا نشد.', severity: 'error' });
+      const key = String(mapping.subjectCode) + '|' + String(mapping.courseDefinitionCode) + '|' + String(mapping.mappingKind);
+      if (seen.has(key)) errors.push({ entity: 'examSubjectCourseMappings', index, field: null, code: 'duplicate_mapping', message: 'نگاشت ماده/درس/نوع رابطه تکراری است.', severity: 'error' });
+      seen.add(key);
+    });
+  }
+
+  if (assignments && combinations && subjects) {
+    assignments.forEach((assignment, index) => {
+      if (!combinationById.has(assignment.combinationId)) errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'combinationId', code: 'unknown_combination', message: 'ترکیب مرجع مادهٔ امتحانی پیدا نشد.', severity: 'error' });
+      if (!subjectByCode.has(assignment.subjectCode)) errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'subjectCode', code: 'unknown_subject', message: 'مادهٔ امتحانی پیدا نشد.', severity: 'error' });
+      if (assignment.officialCoefficient != null && assignment.coefficientScope === 'unknown') {
+        errors.push({ entity: 'examFieldSubjectAssignments', index, field: 'coefficientScope', code: 'coefficient_scope_required', message: 'برای ضریب رسمی عددی، دامنهٔ ضریب نمی‌تواند unknown باشد.', severity: 'error' });
+      }
+    });
+  }
+
+  if (policies && eventVersions) {
+    const seen = new Set<string>();
+    policies.forEach((policy, index) => {
+      if (!eventVersionById.has(policy.eventVersionId)) errors.push({ entity: 'examSelectionPolicies', index, field: 'eventVersionId', code: 'unknown_event_version', message: 'نسخهٔ رویداد policy پیدا نشد.', severity: 'error' });
+      if (policy.examSetId != null && sets && !setById.has(policy.examSetId)) errors.push({ entity: 'examSelectionPolicies', index, field: 'examSetId', code: 'unknown_exam_set', message: 'مجموعهٔ محدودشده در policy پیدا نشد.', severity: 'error' });
+      const key = String(policy.eventVersionId) + '|' + String(policy.examSetId ?? '*') + '|' + String(policy.purpose);
+      if (seen.has(key)) errors.push({ entity: 'examSelectionPolicies', index, field: null, code: 'duplicate_policy', message: 'برای این نسخه/مجموعه/هدف، policy تکراری است.', severity: 'error' });
+      seen.add(key);
+    });
+  }
+
+  if (errors.length > 0) return { ok: false, errors };
   return { ok: true };
 }
 
@@ -543,6 +828,10 @@ export function findDuplicateKeys(bundle: RegistryImportBundle): RegistryFieldEr
   scan('examSubjects', bundle.examSubjects);
   scan('examSets', bundle.examSets);
   scan('examCombinations', bundle.examCombinations);
+  scan('examSetCombinationMappings', bundle.examSetCombinationMappings ?? []);
+  scan('examCombinationSubfields', bundle.examCombinationSubfields ?? []);
+  scan('examSubjectCourseMappings', bundle.examSubjectCourseMappings ?? []);
+  scan('examSelectionPolicies', bundle.examSelectionPolicies ?? []);
   scan('examFieldSubjectAssignments', bundle.examFieldSubjectAssignments);
   scan('admissionRules', bundle.admissionRules);
   scan('assessmentComponents', bundle.assessmentComponents);
@@ -582,6 +871,10 @@ export const REGISTRY_ENTITY_TABLES = {
   examSubjects: 'exam_subjects',
   examSets: 'exam_sets',
   examCombinations: 'exam_combinations',
+  examSetCombinationMappings: 'exam_set_combination_mappings',
+  examCombinationSubfields: 'exam_combination_subfields',
+  examSubjectCourseMappings: 'exam_subject_course_mappings',
+  examSelectionPolicies: 'exam_selection_policies',
   examFieldSubjectAssignments: 'exam_field_subject_assignments',
   admissionRules: 'admission_rules',
   assessmentComponents: 'assessment_components',

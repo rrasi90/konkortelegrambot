@@ -1,8 +1,11 @@
+import type { AcademicDifficulty, LessonBlock } from '@ael/contracts';
 export type QuizMode = 'practice' | 'diagnostic' | 'timed';
+/** `applied` remains a legacy authoring label; new content uses the shared four-band difficulty vocabulary. */
+export type LearningQuestionDifficulty = AcademicDifficulty | 'applied' | 'simple';
 export interface LearningSource {
   id: string;
   title: string;
-  url: string;
+  url?: string | null;
   locator: string;
   kind: 'concept_reference';
   checkedOn: string;
@@ -18,11 +21,18 @@ export interface LearningTopic {
   workedExample: string;
   commonError: string;
   sourceIds: string[];
+  /** Optional canonical mapping; existing packs remain valid without it. */
+  syllabusNodeId?: string | null;
+  skillIds?: string[];
+  learningOutcomeIds?: string[];
+  tagIds?: string[];
+  /** Structured lesson content; legacy flat fields are normalized when absent. */
+  blocks?: LessonBlock[];
 }
 export interface LearningQuestion {
   id: string;
   topicId: string;
-  difficulty: 'basic' | 'applied';
+  difficulty: LearningQuestionDifficulty;
   prompt: string;
   choices: string[];
   answerIndex: number;
@@ -37,6 +47,14 @@ export interface LearningQuestion {
   variantGroup?: string;
   rubric?: string[];
   readingBlock?: { type: 'concept' | 'formula' | 'workedExample' | 'commonError'; index?: number };
+  /** Optional academic mapping metadata; do not infer missing values. */
+  skillIds?: string[];
+  learningOutcomeIds?: string[];
+  tagIds?: string[];
+  bloomLevel?: 1 | 2 | 3 | 4 | 5 | 6 | null;
+  questionFormat?: 'single_choice' | 'multiple_select' | 'calculation' | 'short_answer' | 'essay' | 'case_analysis' | 'matching' | 'true_false';
+  assessmentPurpose?: ('practice' | 'diagnostic' | 'verification' | 'proof' | 'timed_exam')[];
+  estimatedTimeSeconds?: number | null;
 }
 export interface LearningCourse {
   schemaVersion: 1;
@@ -82,11 +100,44 @@ function distinctCount(questions: LearningQuestion[]) {
   return new Set(questions.map(variantKey)).size;
 }
 
+
+/**
+ * Return canonical ordered blocks for a lesson topic.
+ * Legacy concepts/formula/workedExample/commonError remain the source data;
+ * this adapter prevents older packs from requiring a destructive migration.
+ */
+export function normalizeLearningTopicBlocks(topic: LearningTopic): LessonBlock[] {
+  if (topic.blocks?.length) {
+    return topic.blocks
+      .map(block => ({ ...block }))
+      .sort((a, b) => a.position - b.position || a.id.localeCompare(b.id));
+  }
+  const blocks: LessonBlock[] = [];
+  let position = 0;
+  const push = (kind: LessonBlock['kind'], id: string, title: string, content: string) => {
+    if (!content.trim()) return;
+    blocks.push({ id, kind, position: position++, title, content, sourceIds: [...topic.sourceIds] });
+  };
+  push('learning_objective', topic.id + '.objective', 'هدف یادگیری', topic.objective);
+  topic.concepts.forEach((concept, index) => push(
+    'concept_explanation', topic.id + '.concept.' + (index + 1), 'مفهوم ' + (index + 1), concept,
+  ));
+  push('formula', topic.id + '.formula', 'فرمول و رابطه', topic.formula);
+  push('worked_example', topic.id + '.worked-example', 'مثال حل‌شده', topic.workedExample);
+  push('common_misconception', topic.id + '.common-error', 'خطای رایج', topic.commonError);
+  return blocks;
+}
+
 export function courseOverview(course: LearningCourse) {
   const { id, title, version, status, description, scopeNote } = course;
   const topics = course.topics.map(topic => {
     const { id, title, objective, minutes, prerequisites, concepts, formula, workedExample, commonError, sourceIds } = topic;
     return { id, title, objective, minutes, prerequisites, concepts, formula, workedExample, commonError, sourceIds,
+      syllabusNodeId: topic.syllabusNodeId ?? null,
+      skillIds: topic.skillIds ?? [],
+      learningOutcomeIds: topic.learningOutcomeIds ?? [],
+      tagIds: topic.tagIds ?? [],
+      blocks: normalizeLearningTopicBlocks(topic),
       questionCount: distinctCount(course.questions.filter(q => q.topicId === id)),
       mcqCount: distinctCount(course.questions.filter(q => q.topicId === id && q.kind !== 'essay')),
       essayCount: distinctCount(course.questions.filter(q => q.topicId === id && q.kind === 'essay')) };
@@ -97,8 +148,12 @@ export function courseOverview(course: LearningCourse) {
 }
 
 export function projectFormativeQuestion(question: LearningQuestion) {
-  const { id, topicId, difficulty, prompt, choices, sourceIds, origin, review, kind } = question;
-  return { id, topicId, difficulty, prompt, choices, sourceIds, origin, review, kind: kind ?? 'mcq' };
+  const { id, topicId, difficulty, prompt, choices, sourceIds, origin, review, kind,
+    skillIds, learningOutcomeIds, tagIds, bloomLevel, questionFormat, assessmentPurpose, estimatedTimeSeconds } = question;
+  return { id, topicId, difficulty, prompt, choices, sourceIds, origin, review, kind: kind ?? 'mcq',
+    skillIds: skillIds ?? [], learningOutcomeIds: learningOutcomeIds ?? [], tagIds: tagIds ?? [],
+    bloomLevel: bloomLevel ?? null, questionFormat: questionFormat ?? (kind === 'essay' ? 'essay' : 'single_choice'),
+    assessmentPurpose: assessmentPurpose ?? [], estimatedTimeSeconds: estimatedTimeSeconds ?? null };
 }
 
 /**

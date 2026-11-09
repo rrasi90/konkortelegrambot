@@ -48,3 +48,31 @@ npm run audit:miniapp
 شناسهٔ مبحث و سؤال را برای رکورد معتبر بازاستفاده نکن. اصلاح متن یا گزینه همراه با افزایش نسخه ثبت شود. تغییر مفهومی سؤال به شناسهٔ جدید نیاز دارد. فایل HTML تولیدشده است. محتوای آن را دستی ویرایش نکن. این قرارداد برای تمرین تألیفی است. واردکردن سؤال رسمی به جریان اصلی به حقوق، شمارهٔ دقیق، کلید معتبر، نسخه و پذیرش دادهٔ جداگانه نیاز دارد.
 
 نمونهٔ سؤال تشریحی در `content/learning-courses/statistics-foundations.json` با شناسهٔ `stat.center.essay01` قرار دارد. یک پاسخ نوشته‌شده تا تصحیح انسانی در وضعیت `pending` می‌ماند. خودارزیابی کاربر به‌صورت جداگانه ذخیره می‌شود و نمرهٔ رسمی یا شاهد تسلط نیست. متن پاسخ، حداکثر ۵۰۰۰ نویسه است. در نسخهٔ آفلاین پاسخ نمونه داخل فایل محلی وجود دارد.
+
+
+## افزودهٔ لایه اول — Taxonomy، گراف معنایی و اتصال سرفصل
+
+مرجع مشترک این ساختارها:
+- قراردادها: `packages/contracts/src/academic-foundation.ts`
+- داده پایه و crosswalk: `content/knowledge/academic-foundation.v1.json`
+- شرح تصمیم‌ها و شکاف‌های موجود: `docs/architecture/LAYER_1_ACADEMIC_FOUNDATION_FA.md`
+- گزارش موجودی و موارد حل‌نشده: `docs/audit/LAYER_1_CURRENT_STATE_AND_GAPS_FA.md`
+
+### قواعد اجباری هنگام افزودن یا اصلاح درس
+
+1. برای رشته، گرایش، CourseDefinition و SyllabusNode، رجیستری آموزشی را گسترش بده؛ فایل موازی برای همان مفهوم نساز.
+2. کد مجموعه آزمون، کد ترکیب، کد دفترچه، studyTrack و examLevel را جدا نگه دار.
+3. ضریب رسمی، scope ضریب و learningPriorityWeight سه داده مستقل‌اند. اگر ضریب رسمی معلوم نیست null ثبت کن.
+4. Tag را با Skill یکی نکن. Skill باید تعریف عملیاتی و شاهد سنجش داشته باشد؛ Tag برای جست‌وجو و طبقه‌بندی است.
+5. رابطه prerequisite را در گراف پیش‌نیاز موجود نگه دار. برای related_to، confusable_with، contrasts_with و روابط معنایی از KnowledgeRelation استفاده کن.
+6. هیچ parent، Skill، Tag، Outcome یا relation را صرفاً برای پرشدن نمودار حدس نزن. شناسهٔ نامعلوم در وضعیت needs_mapping یا needs_review باقی بماند.
+7. هر سؤال جدید باید تا حد امکان primaryNodeId و primarySkillId روشن داشته باشد؛ secondaryها فقط با دلیل وارد شوند.
+8. هر Topic درسنامه باید به یک syllabusNodeId متصل شود، اگر معادل دقیق آن وجود دارد. اگر وجود ندارد، null و status=needs_mapping بماند.
+9. Topic می‌تواند blocks استاندارد داشته باشد. در داده‌های قدیمی، concepts/formula/workedExample/commonError حفظ می‌شوند و موتور از `normalizeLearningTopicBlocks` برای نمایش canonical استفاده می‌کند.
+10. پس از تغییر taxonomy یا mappingها، `npm run validate:learning` و `npm test` را اجرا کن.
+
+### واژگان Tag پایه
+
+Namespaceهای اولیه: discipline، competency-area، bloom-level، difficulty، question-format، assessment-purpose، exam-level، study-track، language و content-format.
+
+وضعیت یادگیری داوطلب (weak/mastered/due/overdue) را در taxonomy محتوایی ثبت نکن؛ این وضعیت به پروفایل یادگیرنده تعلق دارد.

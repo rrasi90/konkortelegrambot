@@ -1,0 +1,579 @@
+{
+  "schemaVersion": 1,
+  "sourceFile": "content/knowledge/syllabus-nodes.json",
+  "sourceRowCount": 24,
+  "courseGroupCount": 7,
+  "chapterCount": 24,
+  "topicCount": 24,
+  "status": "proposal_only_waiting_registry_course_definition_mapping",
+  "note": "Chapter/topic tree is grouped from the explicit course and chapter fields. It is not yet importable as canonical Registry SyllabusNode because CourseDefinition.code has not been resolved. Existing topic IDs are preserved.",
+  "courseGroups": [
+    {
+      "sourceCourseTitle": "مبانی سازمان و مدیریت",
+      "contentCourseId": "course-org-theory",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "chapterNodes": [
+        {
+          "id": "chapter.mb.contingency",
+          "title": "تئوری‌های اقتضایی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 0,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مبانی سازمان و مدیریت",
+          "children": [
+            {
+              "id": "mb.contingency",
+              "title": "مدل‌های لارنس و لورش و وودوارد",
+              "nodeKind": "topic",
+              "parentId": "chapter.mb.contingency",
+              "position": 0,
+              "sourceSyllabusNodeId": "mb.contingency",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.mb.structure",
+          "title": "ساختارهای سازمانی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 1,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مبانی سازمان و مدیریت",
+          "children": [
+            {
+              "id": "mb.structure",
+              "title": "ساختارهای مکانیکی و ارگانیک",
+              "nodeKind": "topic",
+              "parentId": "chapter.mb.structure",
+              "position": 0,
+              "sourceSyllabusNodeId": "mb.structure",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.mb.decision",
+          "title": "تصمیم‌گیری سازمانی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 2,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مبانی سازمان و مدیریت",
+          "children": [
+            {
+              "id": "mb.decision",
+              "title": "عقلانیت محدود سایمون و مدل‌های رضایت‌بخش",
+              "nodeKind": "topic",
+              "parentId": "chapter.mb.decision",
+              "position": 0,
+              "sourceSyllabusNodeId": "mb.decision",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.mb.ob_motivation",
+          "title": "رفتار سازمانی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 3,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مبانی سازمان و مدیریت",
+          "children": [
+            {
+              "id": "mb.ob_motivation",
+              "title": "نظریه‌های انگیزش (انتظار وروم و برابری آدامز)",
+              "nodeKind": "topic",
+              "parentId": "chapter.mb.ob_motivation",
+              "position": 0,
+              "sourceSyllabusNodeId": "mb.ob_motivation",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.mb.leadership",
+          "title": "رهبری سازمانی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 4,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مبانی سازمان و مدیریت",
+          "children": [
+            {
+              "id": "mb.leadership",
+              "title": "رهبری اقتضایی فیدلر و رهبری تحول‌آفرین",
+              "nodeKind": "topic",
+              "parentId": "chapter.mb.leadership",
+              "position": 0,
+              "sourceSyllabusNodeId": "mb.leadership",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sourceCourseTitle": "آمار و کاربرد آن در مدیریت",
+      "contentCourseId": "course-stats",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "chapterNodes": [
+        {
+          "id": "chapter.stats.scales",
+          "title": "مبانی اندازه‌گیری",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 0,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "آمار و کاربرد آن در مدیریت",
+          "children": [
+            {
+              "id": "stats.scales",
+              "title": "مقیاس‌های اسمی، رتبه‌ای، فاصله‌ای و نسبتی",
+              "nodeKind": "topic",
+              "parentId": "chapter.stats.scales",
+              "position": 0,
+              "sourceSyllabusNodeId": "stats.scales",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.stats.anova",
+          "title": "آزمون‌های پارامتریک",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 1,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "آمار و کاربرد آن در مدیریت",
+          "children": [
+            {
+              "id": "stats.anova",
+              "title": "تحلیل واریانس یک‌طرفه و دوطرفه (ANOVA)",
+              "nodeKind": "topic",
+              "parentId": "chapter.stats.anova",
+              "position": 0,
+              "sourceSyllabusNodeId": "stats.anova",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.stats.regression",
+          "title": "تحلیل رگرسیون",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 2,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "آمار و کاربرد آن در مدیریت",
+          "children": [
+            {
+              "id": "stats.regression",
+              "title": "رگرسیون خطی، ضریب تعیین و آزمون معناداری شیب",
+              "nodeKind": "topic",
+              "parentId": "chapter.stats.regression",
+              "position": 0,
+              "sourceSyllabusNodeId": "stats.regression",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.stats.nonparam",
+          "title": "آزمون‌های ناپارامتریک",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 3,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "آمار و کاربرد آن در مدیریت",
+          "children": [
+            {
+              "id": "stats.nonparam",
+              "title": "آزمون‌های من-ویتنی و کروسکال-والیس",
+              "nodeKind": "topic",
+              "parentId": "chapter.stats.nonparam",
+              "position": 0,
+              "sourceSyllabusNodeId": "stats.nonparam",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sourceCourseTitle": "اصول و مبانی مدیریت از دیدگاه اسلام",
+      "contentCourseId": "course-islamic-mgmt",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "chapterNodes": [
+        {
+          "id": "chapter.islamic.malik_covenant",
+          "title": "مدیریت در سیره علوی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 0,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "اصول و مبانی مدیریت از دیدگاه اسلام",
+          "children": [
+            {
+              "id": "islamic.malik_covenant",
+              "title": "عهدنامه مالک اشتر و اصول انتصاب و نظارت کارگزاران",
+              "nodeKind": "topic",
+              "parentId": "chapter.islamic.malik_covenant",
+              "position": 0,
+              "sourceSyllabusNodeId": "islamic.malik_covenant",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.islamic.justice",
+          "title": "اصول حاکمیت اسلامی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 1,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "اصول و مبانی مدیریت از دیدگاه اسلام",
+          "children": [
+            {
+              "id": "islamic.justice",
+              "title": "عدالت سازمانی و سعه صدر مدیریتی",
+              "nodeKind": "topic",
+              "parentId": "chapter.islamic.justice",
+              "position": 0,
+              "sourceSyllabusNodeId": "islamic.justice",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sourceCourseTitle": "مدیریت استراتژیک پیشرفته",
+      "contentCourseId": "course-strategic-mgmt",
+      "contentMatchStatus": "exact_name_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "chapterNodes": [
+        {
+          "id": "chapter.sm.rbv",
+          "title": "دیدگاه‌های استراتژی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 0,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مدیریت استراتژیک پیشرفته",
+          "children": [
+            {
+              "id": "sm.rbv",
+              "title": "دیدگاه مبتنی بر منابع (بارنی) و چارچوب VRIO",
+              "nodeKind": "topic",
+              "parentId": "chapter.sm.rbv",
+              "position": 0,
+              "sourceSyllabusNodeId": "sm.rbv",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.sm.dynamic_capabilities",
+          "title": "قابلیت‌های سازمانی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 1,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مدیریت استراتژیک پیشرفته",
+          "children": [
+            {
+              "id": "sm.dynamic_capabilities",
+              "title": "قابلیت‌های پویا (تیس) و بازآرایی شایستگی‌ها",
+              "nodeKind": "topic",
+              "parentId": "chapter.sm.dynamic_capabilities",
+              "position": 0,
+              "sourceSyllabusNodeId": "sm.dynamic_capabilities",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.sm.value_chain",
+          "title": "تحلیل صنعت",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 2,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مدیریت استراتژیک پیشرفته",
+          "children": [
+            {
+              "id": "sm.value_chain",
+              "title": "زنجیره ارزش پورتر و فعالیت‌های اولیه و پشتیبانی",
+              "nodeKind": "topic",
+              "parentId": "chapter.sm.value_chain",
+              "position": 0,
+              "sourceSyllabusNodeId": "sm.value_chain",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.sm.core_competencies",
+          "title": "شایستگی‌های رقابتی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 3,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مدیریت استراتژیک پیشرفته",
+          "children": [
+            {
+              "id": "sm.core_competencies",
+              "title": "شایستگی‌های محوری پراهالاد و همل",
+              "nodeKind": "topic",
+              "parentId": "chapter.sm.core_competencies",
+              "position": 0,
+              "sourceSyllabusNodeId": "sm.core_competencies",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.sm.portfolio",
+          "title": "استراتژی سطح کسب‌وکار",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 4,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مدیریت استراتژیک پیشرفته",
+          "children": [
+            {
+              "id": "sm.portfolio",
+              "title": "ماتریس‌های پورتفولیو (BCG و GE)",
+              "nodeKind": "topic",
+              "parentId": "chapter.sm.portfolio",
+              "position": 0,
+              "sourceSyllabusNodeId": "sm.portfolio",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sourceCourseTitle": "بازاریابی پیشرفته",
+      "contentCourseId": "course-marketing",
+      "contentMatchStatus": "candidate_needs_review",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "chapterNodes": [
+        {
+          "id": "chapter.mkt.brand",
+          "title": "مدیریت برند",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 0,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "بازاریابی پیشرفته",
+          "children": [
+            {
+              "id": "mkt.brand",
+              "title": "دارایی‌های برند و هرم رزونانس کلر",
+              "nodeKind": "topic",
+              "parentId": "chapter.mkt.brand",
+              "position": 0,
+              "sourceSyllabusNodeId": "mkt.brand",
+              "track": "business",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.mkt.cobranding",
+          "title": "استراتژی‌های برند",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 1,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "بازاریابی پیشرفته",
+          "children": [
+            {
+              "id": "mkt.cobranding",
+              "title": "نام‌گذاری تجاری مشترک (Co-Branding) و اهرم‌سازی اعتبار",
+              "nodeKind": "topic",
+              "parentId": "chapter.mkt.cobranding",
+              "position": 0,
+              "sourceSyllabusNodeId": "mkt.cobranding",
+              "track": "business",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.mkt.plc",
+          "title": "استراتژی‌های محصول",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 2,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "بازاریابی پیشرفته",
+          "children": [
+            {
+              "id": "mkt.plc",
+              "title": "چرخه عمر محصول و استراتژی‌های کاتلر",
+              "nodeKind": "topic",
+              "parentId": "chapter.mkt.plc",
+              "position": 0,
+              "sourceSyllabusNodeId": "mkt.plc",
+              "track": "business",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.mkt.stp",
+          "title": "بخش‌بندی و جایگاه‌یابی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 3,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "بازاریابی پیشرفته",
+          "children": [
+            {
+              "id": "mkt.stp",
+              "title": "بخش‌بندی بازار، هدف‌گیری و نقشه ادراکی",
+              "nodeKind": "topic",
+              "parentId": "chapter.mkt.stp",
+              "position": 0,
+              "sourceSyllabusNodeId": "mkt.stp",
+              "track": "business",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.mkt.consumer",
+          "title": "رفتار مصرف‌کننده",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 4,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "بازاریابی پیشرفته",
+          "children": [
+            {
+              "id": "mkt.consumer",
+              "title": "انگیزش، ادراک و فرآیند تصمیم‌گیری خرید",
+              "nodeKind": "topic",
+              "parentId": "chapter.mkt.consumer",
+              "position": 0,
+              "sourceSyllabusNodeId": "mkt.consumer",
+              "track": "business",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sourceCourseTitle": "تئوری‌های نوآوری و فناوری",
+      "contentCourseId": "course-innovation-mgmt",
+      "contentMatchStatus": "candidate_needs_review",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "chapterNodes": [
+        {
+          "id": "chapter.inno.s_curve",
+          "title": "چرخه عمر فناوری",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 0,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "تئوری‌های نوآوری و فناوری",
+          "children": [
+            {
+              "id": "inno.s_curve",
+              "title": "منحنی S فناوری (فاستر) و گذار تکنولوژیک",
+              "nodeKind": "topic",
+              "parentId": "chapter.inno.s_curve",
+              "position": 0,
+              "sourceSyllabusNodeId": "inno.s_curve",
+              "track": "technology",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.inno.ambidextrous",
+          "title": "سازمان‌های نوآور",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 1,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "تئوری‌های نوآوری و فناوری",
+          "children": [
+            {
+              "id": "inno.ambidextrous",
+              "title": "سازمان‌های دوپهلو (اکتشاف و بهره‌برداری هم‌زمان)",
+              "nodeKind": "topic",
+              "parentId": "chapter.inno.ambidextrous",
+              "position": 0,
+              "sourceSyllabusNodeId": "inno.ambidextrous",
+              "track": "technology",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "sourceCourseTitle": "مدیریت فناوری و نوآوری",
+      "contentCourseId": null,
+      "contentMatchStatus": "no_content_catalog_match",
+      "registryCourseDefinitionCode": null,
+      "registryMappingStatus": "not_resolved_against_education_registry",
+      "chapterNodes": [
+        {
+          "id": "chapter.tech.absorptive",
+          "title": "ظرفیت‌های فناورانه",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 0,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مدیریت فناوری و نوآوری",
+          "children": [
+            {
+              "id": "tech.absorptive",
+              "title": "ظرفیت جذب (کوهن و لوینتال) و شناسایی دانش بیرونی",
+              "nodeKind": "topic",
+              "parentId": "chapter.tech.absorptive",
+              "position": 0,
+              "sourceSyllabusNodeId": "tech.absorptive",
+              "track": "technology",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

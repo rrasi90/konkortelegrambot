@@ -4,6 +4,7 @@
  */
 
 export * from './exam-structure';
+export * from './exam-selection';
 export * from './english-skills';
 import type { ExamLevel } from './exam-structure';
 
@@ -413,3 +414,5 @@ export * from './registry';
 
 // AEL فاز ۳ — Source Library و Ingestion (AEL-301..312)
 export * from './ingestion';
+export * from './academic-foundation';
+export * from './exam-model';
