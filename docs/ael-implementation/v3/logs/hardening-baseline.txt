@@ -1,0 +1,7 @@
+# V3 Hardening Baseline — 2026-11-10
+branch: feat/ael-multi-exam-platform-20261109
+base SHA: 8e6bfaa2b8eec8130554dd2d54e261ef864c96a2 (= PR #16 head)
+CI: run 42693216475 SUCCESS (typecheck+tests / database jobs)
+tests: 674 passed / 60 files (last full run)
+ledger: 12 DONE + 2 DONE_WITH_DEFAULT = 14/37; gap register: GAP-001..015 (011 CLOSED, 015 MITIGATED)
+prior fixes on branch: 7a0a79c audit-CLI-align, f807479 HUMAN_REQUIRED-rev, a28a3b5 generic-weights+provenance+levels, 97c72df family-separation, 8e6bfaa real-family-test
