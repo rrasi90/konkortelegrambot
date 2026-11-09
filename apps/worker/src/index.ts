@@ -1150,10 +1150,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   });
 
   app.get('/api/tracks', async (c) => {
+    // V3-Hardening B8: فهرست trackها فقط از کاتالوگ واقعی می‌آید — بدون fallback
+    // ثابت مدیریت‌محور. کاتالوگ خالی = پاسخ صریح catalog_not_available، نه تزریق
+    // رشتهٔ فرضی از یک فهرست hardcoded.
     const packs = await store.listPacks().catch(() => []);
+    if (packs.length === 0) {
+      return c.json({ tracks: [], packs: [], catalog_not_available: true });
+    }
     const tracks = new Set<TrackId>(['common']);
     for (const p of packs) for (const t of p.tracks) tracks.add(t);
-    if (packs.length === 0) for (const t of ['common', 'business', 'technology', 'strategy', 'industrial'] as TrackId[]) tracks.add(t);
     return c.json({ tracks: [...tracks], packs });
   });
 
