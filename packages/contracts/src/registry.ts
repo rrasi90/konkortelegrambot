@@ -91,7 +91,41 @@ export interface PrerequisiteEdge {
 }
 
 // ---------- آزمون و پذیرش ----------
-export interface ExamFamily { code: string; name: string; status: RegistryLifecycleStatus }
+/**
+ * V3-011: خانوادهٔ آزمون با فیلدهای اختیاری تفصیلی — افزودنی و سازگار با
+ * رکوردهای قدیمی (فقط code/name/status اجباری‌اند). readiness از سطوح E0..E9
+ * بخش ۲۹ سند مادر می‌آید؛ E7 به بالا فقط با امضای انسانی اعطا می‌شود.
+ */
+export const EXAM_FAMILY_READINESS = [
+  'discovered',        // E0
+  'sourced',           // E1
+  'cataloged',         // E2
+  'validated',         // E3
+  'mapped',            // E4
+  'learning_ready',    // E5
+  'assessment_ready',  // E6
+  'sme_reviewed',      // E7 — فقط انسانی
+  'piloted',           // E8 — فقط انسانی
+  'production_ready',  // E9
+  'out_of_scope',
+] as const;
+export type ExamFamilyReadiness = (typeof EXAM_FAMILY_READINESS)[number];
+export const HUMAN_ONLY_READINESS: readonly ExamFamilyReadiness[] = ['sme_reviewed', 'piloted'];
+
+export interface ExamFamily {
+  code: string;
+  name: string;
+  status: RegistryLifecycleStatus;
+  countryCode?: string;
+  authorityCode?: string;
+  nameEn?: string;
+  admissionLevel?: string;
+  readiness?: ExamFamilyReadiness;
+  /** آخرین سالی که با منبع قابل اثبات است؛ بدون سند null/غایب — حدس نمی‌شود. */
+  latestKnownYear?: number | null;
+  sourceIds?: string[];
+  notes?: string | null;
+}
 export interface ExamEvent {
   id: string;
   familyCode: string;
@@ -203,7 +237,20 @@ export interface ExamSelectionPolicy {
   note: string | null;
 }
 export interface AdmissionRule { id: string; eventVersionId: string; ruleJson: Record<string, unknown>; status: RegistryVersionStatus; sourceIds: string[] }
-export interface AssessmentComponent { id: string; eventVersionId: string; kind: AssessmentComponentKind; weight: number; config: Record<string, unknown> }
+/**
+ * V3-011: وزن جزء می‌تواند unknown باشد — وزن نامعلوم null است، هرگز صفر.
+ * weightState غایب یعنی رفتار legacy (وزن عددی اجباری) برای رکوردهای قدیمی.
+ */
+export interface AssessmentComponent {
+  id: string;
+  eventVersionId: string;
+  kind: AssessmentComponentKind;
+  weight: number | null;
+  weightState?: 'official_positive' | 'official_zero' | 'unknown' | 'not_applicable';
+  /** شرط ورود به این جزء پس از جزء دیگر، در صورت وجود منبع رسمی. */
+  gateAfterComponentId?: string | null;
+  config: Record<string, unknown>;
+}
 export interface AssessmentRubric { id: string; componentId: string; versionNumber: number; criteria: Array<Record<string, unknown>>; status: RegistryVersionStatus }
 export interface ExamBooklet { id: string; eventVersionId: string; code: string; form: number; status: RegistryVersionStatus }
 
@@ -646,7 +693,10 @@ const PLAIN_ENTITIES: EntitySpec[] = [
     if (!isCode(record.id)) errors.push({ entity: 'assessmentComponents', index, field: 'id', code: 'invalid_code', message: 'شناسهٔ جزء ارزیابی معتبر نیست.', severity: 'error' });
     if (!isCode(record.eventVersionId)) errors.push({ entity: 'assessmentComponents', index, field: 'eventVersionId', code: 'invalid_code', message: 'نسخهٔ رویداد معتبر نیست.', severity: 'error' });
     if (!checkEnum(record.kind, COMPONENT_KINDS)) errors.push({ entity: 'assessmentComponents', index, field: 'kind', code: 'invalid_enum', message: 'نوع جزء ارزیابی معتبر نیست.', severity: 'error' });
-    if (typeof record.weight !== 'number' || !Number.isFinite(record.weight) || (record.weight as number) < 0) {
+    // V3-011: وزن نامعلوم null است؛ weightState غایب = رفتار legacy عددی
+    if (record.weightState === 'unknown') {
+      if (record.weight !== null) errors.push({ entity: 'assessmentComponents', index, field: 'weight', code: 'unknown_has_value', message: 'وزن نامعلوم باید null باشد.', severity: 'error' });
+    } else if (typeof record.weight !== 'number' || !Number.isFinite(record.weight) || (record.weight as number) < 0) {
       errors.push({ entity: 'assessmentComponents', index, field: 'weight', code: 'invalid_number', message: 'وزن باید عدد نامنفی باشد.', severity: 'error' });
     }
   }),

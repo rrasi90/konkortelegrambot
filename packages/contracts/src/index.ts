@@ -5,6 +5,7 @@
 
 export * from './exam-structure';
 export * from './exam-selection';
+export * from './exam-family';
 export * from './english-skills';
 import type { ExamLevel } from './exam-structure';
 
