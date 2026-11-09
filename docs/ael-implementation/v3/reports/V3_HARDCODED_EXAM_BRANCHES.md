@@ -22,3 +22,15 @@
 4. **ممنوع در آینده:** افزودن هر `examCode === '...'` جدید — قاعده باید در exam-model JSON یا Adapter ثبت شود.
 
 پatchهای اصلاحی در شاخهٔ کاری این مأموریت (فقط با تست parity) اعمال می‌شوند؛ دادهٔ production دست‌نخورده می‌ماند.
+
+## به‌روزرسانی مرحلهٔ اصلاحی (۲۰۲۶-۱۱-۰۹، کامیت‌های پس از bd92c30)
+
+| مورد | وضعیت جدید |
+|---|---|
+| `computeTargetWeights` خانواده‌محور (specialization/language/aptitude) | **عمومی شد** — `computeSubjectWeights` طبق مشخصات V2-076 اضافه شد؛ نسخهٔ legacy فقط برای سازگاری و فقط مصرف‌کنندهٔ تست خودش (GAP-011 CLOSED) |
+| `ExamLevel` فقط master/doctorate | **گسترش سازگار**: `EXAM_MODEL_LEVELS` (بخش ۱۸٫۵ سند مادر) در exam-model جدا از legacy اضافه شد؛ اعتبارسنج رویداد و policy حالا `bachelor/associate/professional_doctorate/specialty/subspecialty` را می‌پذیرند؛ ساختار legacy و exam-simulation دست‌نخورده |
+| provenance Source→Event→Version | **الزام validator**: هر event/version/set/target/assignment/component بدون sourceIds رد می‌شود؛ دادهٔ واقعی main همین حالا رعایت می‌کند |
+| Worker fallback TrackId (خط ۱۱۵۶) | باز است — V3-031 |
+| ARSHAD_TRACKS در UI | باز است — V3-031 |
+
+تأیید اجرایی: خانوادهٔ واقعی کنکور گروه ریاضی ۱۴۰۵ (`bachelor`) با صفر تغییر branch در هسته از validate → eligibility → resolver چندهدف → وزن‌دهی عمومی → برنامهٔ ارزیابی عبور می‌کند (`src/tests/v3/real-family-konkur.test.ts` — ۵ تست).
