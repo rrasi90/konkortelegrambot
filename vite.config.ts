@@ -7,6 +7,16 @@ import { parseWorkerAppUrl } from './apps/pages/app-url.ts';
 const root = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig(({ command, mode }) => {
+  // miniapp build: full React app (root index.html + Telegram SDK + Tailwind) → dist-miniapp/
+  if (command === 'build' && mode === 'miniapp') {
+    return {
+      root,
+      envDir: root,
+      base: './',
+      plugins: [react(), tailwindcss()],
+      build: { outDir: fileURLToPath(new URL('./dist-miniapp', import.meta.url)), emptyOutDir: true },
+    };
+  }
   if (command === 'build' && mode !== 'legacy') {
     const env = loadEnv(mode, root, 'VITE_');
     const appUrl = parseWorkerAppUrl(env.VITE_AEL_APP_URL);

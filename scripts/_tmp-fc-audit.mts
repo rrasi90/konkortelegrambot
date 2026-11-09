@@ -1,0 +1,10 @@
+import { FLASHCARDS, FLASHCARD_COURSES } from '../src/data/flashcards.ts';
+console.log('total cards:', FLASHCARDS.length);
+console.log('courses:', FLASHCARD_COURSES.length);
+const byNode: Record<string, number> = {};
+for (const c of FLASHCARDS) byNode[c.nodeId] = (byNode[c.nodeId] || 0) + 1;
+console.log('nodes covered:', Object.keys(byNode).length);
+console.log('byNode:', JSON.stringify(byNode));
+const types: Record<string, number> = {};
+for (const c of FLASHCARDS) types[c.type] = (types[c.type] || 0) + 1;
+console.log('byType:', types);

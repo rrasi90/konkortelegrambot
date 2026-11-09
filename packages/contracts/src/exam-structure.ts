@@ -300,6 +300,24 @@ export const MANAGEMENT_SUB_GROUPS: ExamSubGroup[] = [
     verification: 'needs_check',
     combinationCodes: ['6'],
   },
+  {
+    id: 'financial',
+    code: null,
+    title: 'مدیریت مالی (مهندسی مالی، بانکداری، بیمه)',
+    fields: ['مهندسی مالی', 'بانکداری', 'بیمه', 'حقوق مالی', 'مالی بین‌المللی'],
+    // ترکیب ۷ رسمی است؛ خودِ رکورد زیرمجموعه طبق R-001 بدون ادعای کد می‌ماند
+    verification: 'needs_check',
+    combinationCodes: ['7'],
+  },
+  {
+    id: 'amad',
+    code: null,
+    title: 'مدیریت آماد و پشتیبانی',
+    fields: ['لجستیک نظامی', 'پشتیبانی و آماد'],
+    // ترکیب ۴ رسمی است؛ خودِ رکورد زیرمجموعه طبق R-001 بدون ادعای کد می‌ماند
+    verification: 'needs_check',
+    combinationCodes: ['4'],
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -355,6 +373,18 @@ export const SUB_GROUP_SUBJECTS: Record<string, ExamSubject[]> = {
     ...SHARED_BACHELOR_SUBJECTS,
     { id: 'stp_policy', title: 'سیاست‌گذاری علم و فناوری', level: 'کارشناسی ارشد', coefficient: 1 },
     { id: 'tech_management', title: 'مدیریت فناوری', level: 'کارشناسی ارشد', coefficient: 1 },
+  ],
+  // ترکیب ۷ (بستهٔ ۸) — مالی
+  financial: [
+    ...SHARED_BACHELOR_SUBJECTS,
+    { id: 'risk_investment', title: 'ریسک و مدیریت سرمایه‌گذاری', level: 'کارشناسی ارشد', coefficient: 1 },
+    { id: 'financial_markets', title: 'بازارها و نهادهای مالی', level: 'کارشناسی ارشد', coefficient: 1 },
+  ],
+  // ترکیب ۴ (بستهٔ ۹) — آماد و پشتیبانی (دانشگاه‌های نظامی)
+  amad: [
+    ...SHARED_BACHELOR_SUBJECTS,
+    { id: 'org_behavior', title: 'مدیریت ارتباط و رفتار سازمانی', level: 'کارشناسی ارشد', coefficient: 1 },
+    { id: 'strategy_amad', title: 'مدیریت استراتژیک', level: 'کارشناسی ارشد', coefficient: 1 },
   ],
 };
 

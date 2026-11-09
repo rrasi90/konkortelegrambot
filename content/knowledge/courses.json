@@ -5,7 +5,7 @@
     "level": "undergraduate_core",
     "tracks": ["common", "business", "technology"],
     "coefficient": 5,
-    "exam_code": "2164",
+    "exam_code": "2162",
     "description": "نظریه‌های سازمان، طراحی ساختار، رفتار سازمانی و فرایندهای رهبری و انگیزش"
   },
   {
@@ -14,7 +14,7 @@
     "level": "undergraduate_core",
     "tracks": ["common", "business", "technology"],
     "coefficient": 5,
-    "exam_code": "2164",
+    "exam_code": "2162",
     "description": "آمار توصیفی، استنباطی، آزمون‌های فرض پارامتریک و ناپارامتریک و مدل‌های رگرسیون"
   },
   {
@@ -23,7 +23,7 @@
     "level": "undergraduate_core",
     "tracks": ["common", "business", "technology"],
     "coefficient": 5,
-    "exam_code": "2164",
+    "exam_code": "2162",
     "description": "مبانی نظری مدیریت اسلامی، سیره نبوی و علوی، عهدنامه مالک اشتر و اصول حاکمیت"
   },
   {
@@ -32,7 +32,7 @@
     "level": "graduate_specialized",
     "tracks": ["common", "business", "technology"],
     "coefficient": 5,
-    "exam_code": "2164",
+    "exam_code": "2162",
     "description": "مدیریت استراتژیک، مزیت رقابتی، دیدگاه مبتنی بر منابع (RBV)، قابلیت‌های پویا و ماتریس‌های پورتفولیو"
   },
   {
@@ -41,7 +41,7 @@
     "level": "graduate_specialized",
     "tracks": ["business"],
     "coefficient": 5,
-    "exam_code": "2164",
+    "exam_code": "2162",
     "description": "استراتژی‌های بازاریابی، مدیریت برند، رفتار مصرف‌کننده، STP و آمیخته بازاریابی پیشرفته"
   },
   {
@@ -50,7 +50,7 @@
     "level": "graduate_specialized",
     "tracks": ["technology"],
     "coefficient": 5,
-    "exam_code": "2164",
+    "exam_code": "2162",
     "description": "چرخه عمر فناوری، سازمان‌های دوپهلو، منحنی S فناوری، استراتژی‌های ورود و ظرفیت جذب"
   }
 ]

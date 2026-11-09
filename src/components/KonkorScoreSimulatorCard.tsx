@@ -17,6 +17,12 @@ const BRANCH_LABELS: Record<MajorExamBranch, string> = {
   industrial: 'ارشد مدیریت صنعتی',
   technology: 'ارشد مدیریت تکنولوژی',
   phd_all: 'دکتری مدیریت',
+  public: 'مدیریت دولتی',
+  financial: 'مدیریت مالی',
+  media: 'مدیریت رسانه و اطلاعات',
+  foresight: 'آینده‌پژوهی',
+  stpolicy: 'سیاست‌گذاری علم و فناوری',
+  amad: 'آماد و پشتیبانی',
 };
 
 export const KonkorScoreSimulatorCard: FC<KonkorScoreSimulatorCardProps> = ({

@@ -1,0 +1,275 @@
+{
+  "generatedAt": "2026-10-31T15:25:15.600Z",
+  "totalKnowledgeNodes": 25,
+  "totalInteractiveLessons": 25,
+  "totalQuestionsInCentralBank": 156,
+  "totalYearlyKonkorBooklets": 15,
+  "localPdfBookletsVerified": [
+    {
+      "year": 1405,
+      "bookletCode": "319A",
+      "pdfPath": "/assets/aistudio/1405-_______f08c886c.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 5381615
+    },
+    {
+      "year": 1404,
+      "bookletCode": "519C",
+      "pdfPath": "/assets/aistudio/1142-_______fde40152.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 6115716
+    },
+    {
+      "year": 1403,
+      "bookletCode": "141C",
+      "pdfPath": "/assets/aistudio/Arshad_modiriat_1403_cafetadris.com__dd7d7c57.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 38597836
+    },
+    {
+      "year": 1402,
+      "bookletCode": "818C",
+      "pdfPath": "/assets/aistudio/arshd_modiriat-1402_4bad2af3.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 2998687
+    },
+    {
+      "year": 1401,
+      "bookletCode": "517A",
+      "pdfPath": "/assets/aistudio/__________________________________________________e161d562.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 8442890
+    },
+    {
+      "year": 1400,
+      "bookletCode": "716C",
+      "pdfPath": "/assets/aistudio/________________________________1400_36819d02.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 8061282
+    },
+    {
+      "year": 1399,
+      "bookletCode": "316A",
+      "pdfPath": "/assets/aistudio/________________________________1399_04a3c369.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 6322167
+    },
+    {
+      "year": 1398,
+      "bookletCode": "716C",
+      "pdfPath": "/assets/aistudio/________________________________1398_bb4de2bc.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 3236253
+    },
+    {
+      "year": 1397,
+      "bookletCode": "116A",
+      "pdfPath": "/assets/aistudio/________________________________1397_17f8f2df.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 3317586
+    },
+    {
+      "year": 1396,
+      "bookletCode": "106C",
+      "pdfPath": "/assets/aistudio/________________________________1396_7ba65778.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 5714209
+    },
+    {
+      "year": 1395,
+      "bookletCode": "107A",
+      "pdfPath": "/assets/aistudio/________________________________1395_8fa34e52.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 4659306
+    },
+    {
+      "year": 1394,
+      "bookletCode": "103C",
+      "pdfPath": "/assets/aistudio/________________________________1394_0b1b7bc9.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 4139611
+    },
+    {
+      "year": 1393,
+      "bookletCode": "103A",
+      "pdfPath": "/assets/aistudio/________________________________1393_1ebaf5ec.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 4988890
+    },
+    {
+      "year": 1392,
+      "bookletCode": "103A",
+      "pdfPath": "/assets/aistudio/________________________________1392_e52c7fb6.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 894514
+    },
+    {
+      "year": 1391,
+      "bookletCode": "103D",
+      "pdfPath": "/assets/aistudio/________________________________1391_1a3b5f9e.pdf",
+      "existsOnDisk": true,
+      "fileSizeBytes": 1173248
+    }
+  ],
+  "questionBankVerification": {
+    "totalQuestionsChecked": 156,
+    "validCorrectOptionCount": 156,
+    "withDetailedExplanationCount": 156,
+    "withTrapNoteCount": 156,
+    "invalidQuestionsFound": []
+  },
+  "courses100PageCoverage": [
+    {
+      "courseId": "course.100p.management_theories",
+      "courseTitle": "تئوری‌های مدیریت جامع (مبانی سازمان، رفتار سازمانی، منابع انسانی، تئوری سازمان و پارادایم‌های دکتری)",
+      "branches": [
+        "business",
+        "industrial",
+        "technology"
+      ],
+      "degreeLevels": [
+        "ارشد",
+        "دکتری"
+      ],
+      "equivalentPagesGuaranteed": 145,
+      "meets100PageThreshold": true,
+      "primaryReferenceBooksCount": 5,
+      "modulesCount": 4,
+      "scholarMatrixRowsCount": 6,
+      "formulasCount": 3,
+      "linkedNodesCount": 3,
+      "linkedInteractiveMicroStepsCount": 13,
+      "linkedVerifiedQuestionsCount": 30
+    },
+    {
+      "courseId": "course.100p.marketing_strategy",
+      "courseTitle": "مدیریت بازاریابی، رفتار مصرف‌کننده و مدیریت استراتژیک پیشرفته (ویژه بازرگانی ارشد ضریب ۴ و دکتری ضریب ۵)",
+      "branches": [
+        "business"
+      ],
+      "degreeLevels": [
+        "ارشد",
+        "دکتری"
+      ],
+      "equivalentPagesGuaranteed": 130,
+      "meets100PageThreshold": true,
+      "primaryReferenceBooksCount": 3,
+      "modulesCount": 4,
+      "scholarMatrixRowsCount": 4,
+      "formulasCount": 2,
+      "linkedNodesCount": 4,
+      "linkedInteractiveMicroStepsCount": 19,
+      "linkedVerifiedQuestionsCount": 25
+    },
+    {
+      "courseId": "course.100p.operations_research",
+      "courseTitle": "تحقیق در عملیات جامع و پیشرفته (LP، سیمپلکس، دوگان، حساسیت، حمل‌ونقل، MCDM، DEA و صف)",
+      "branches": [
+        "industrial",
+        "business",
+        "technology"
+      ],
+      "degreeLevels": [
+        "ارشد",
+        "دکتری"
+      ],
+      "equivalentPagesGuaranteed": 135,
+      "meets100PageThreshold": true,
+      "primaryReferenceBooksCount": 3,
+      "modulesCount": 4,
+      "scholarMatrixRowsCount": 3,
+      "formulasCount": 2,
+      "linkedNodesCount": 2,
+      "linkedInteractiveMicroStepsCount": 10,
+      "linkedVerifiedQuestionsCount": 14
+    },
+    {
+      "courseId": "course.100p.production_technology",
+      "courseTitle": "مدیریت تولید و عملیات + مدیریت استراتژیک تکنولوژی و نوآوری (ویژه صنعتی و فناوری ارشد و دکتری)",
+      "branches": [
+        "industrial",
+        "technology"
+      ],
+      "degreeLevels": [
+        "ارشد",
+        "دکتری"
+      ],
+      "equivalentPagesGuaranteed": 130,
+      "meets100PageThreshold": true,
+      "primaryReferenceBooksCount": 3,
+      "modulesCount": 4,
+      "scholarMatrixRowsCount": 3,
+      "formulasCount": 2,
+      "linkedNodesCount": 4,
+      "linkedInteractiveMicroStepsCount": 19,
+      "linkedVerifiedQuestionsCount": 20
+    },
+    {
+      "courseId": "course.100p.economics_micro_macro",
+      "courseTitle": "اقتصاد خرد و کلان جامع (پوشش ۱۰۰٪ مباحث و فرمول‌های دکتر محسن نظری از ۱۳۹۱ تا ۱۴۰۵)",
+      "branches": [
+        "business",
+        "industrial",
+        "technology"
+      ],
+      "degreeLevels": [
+        "ارشد",
+        "دکتری"
+      ],
+      "equivalentPagesGuaranteed": 125,
+      "meets100PageThreshold": true,
+      "primaryReferenceBooksCount": 3,
+      "modulesCount": 4,
+      "scholarMatrixRowsCount": 3,
+      "formulasCount": 2,
+      "linkedNodesCount": 1,
+      "linkedInteractiveMicroStepsCount": 5,
+      "linkedVerifiedQuestionsCount": 18
+    },
+    {
+      "courseId": "course.100p.math_stats_research",
+      "courseTitle": "ریاضی و آمار جامع + آمار و روش تحقیق پیشرفته دکتری (رنجبران، طورانی، عادل آذر و سرمد)",
+      "branches": [
+        "business",
+        "industrial",
+        "technology"
+      ],
+      "degreeLevels": [
+        "ارشد",
+        "دکتری"
+      ],
+      "equivalentPagesGuaranteed": 135,
+      "meets100PageThreshold": true,
+      "primaryReferenceBooksCount": 3,
+      "modulesCount": 4,
+      "scholarMatrixRowsCount": 2,
+      "formulasCount": 2,
+      "linkedNodesCount": 5,
+      "linkedInteractiveMicroStepsCount": 21,
+      "linkedVerifiedQuestionsCount": 25
+    },
+    {
+      "courseId": "course.100p.islamic_english_general",
+      "courseTitle": "اصول و مبانی مدیریت از دیدگاه اسلام (دکتر مقیمی) + زبان عمومی و تخصصی مدیریت (جهانشاهی و اشراقی)",
+      "branches": [
+        "business",
+        "industrial",
+        "technology"
+      ],
+      "degreeLevels": [
+        "ارشد",
+        "دکتری"
+      ],
+      "equivalentPagesGuaranteed": 110,
+      "meets100PageThreshold": true,
+      "primaryReferenceBooksCount": 3,
+      "modulesCount": 2,
+      "scholarMatrixRowsCount": 2,
+      "formulasCount": 1,
+      "linkedNodesCount": 2,
+      "linkedInteractiveMicroStepsCount": 10,
+      "linkedVerifiedQuestionsCount": 16
+    }
+  ],
+  "allCoursesMeet100PageStandard": true
+}

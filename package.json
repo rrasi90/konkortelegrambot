@@ -35,7 +35,8 @@
     "ael:exam:analyze": "node scripts/ael-exam-analyze.mjs --run-id structural-20261106f",
     "ael:exam:recovery": "python -I scripts/ael-key-text-recovery.py",
     "ael:exam:merge-keys": "python -I scripts/ael-key-merge-recovered.py",
-    "ael:exam:dedup": "node scripts/ael-question-dedup.mjs"
+    "ael:exam:dedup": "node scripts/ael-question-dedup.mjs",
+    "build:miniapp": "vite build --mode miniapp"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

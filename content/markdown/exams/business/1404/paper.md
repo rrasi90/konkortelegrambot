@@ -9,11 +9,17 @@ exam_pack_id: phd-management-business
 source_ref: src-sanjesh-portal
 source_url: "https://sanjesh.org/exams/phd/1404/2164_questions.pdf"
 source_page_count: 24
-rights_status: authorized
-verification_status: verified
+rights_status: unknown
+verification_status: unverified_provenance
 language: fa
 content_version: 1
 ---
+
+> **PROVENANCE WARNING (2026-11-07, mission/library-10y-repository-consolidation):**
+> The source_url above (`sanjesh.org/.../2164_*.pdf`) does not match any reachable official pattern
+> and the booklet code shown (2164) contradicts the verified set code 2162 (R-001).
+> This document is DOWNGRADED to `unverified_provenance` — it must NOT be presented as an official
+> exam paper until the original PDF is recovered and matched (see docs/research/EXAM_SOURCE_REGISTER.json).
 
 # دفترچه سؤالات آزمون ورودی مقطع دکتری تخصصی (Ph.D) — مجموعه مدیریت (کد ۲۱۶۴) — سال ۱۴۰۴
 
