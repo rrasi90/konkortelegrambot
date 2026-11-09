@@ -5,6 +5,7 @@
 
 export * from './exam-structure';
 export * from './exam-selection';
+export * from './exam-family';
 export * from './english-skills';
 import type { ExamLevel } from './exam-structure';
 
@@ -425,6 +426,18 @@ export {
   type ExamModelStatus,
   type CandidateSelectionRole,
   type CoefficientValueState,
+  COEFFICIENT_VALUE_AXES,
+  type CoefficientValueAxis,
+  COEFFICIENT_EVIDENCE_STATES,
+  type CoefficientEvidence,
+  type LegacyCoefficientState,
+  isLegacyCoefficientState,
+  isCoefficientValueAxis,
+  normalizeCoefficientValueState,
+  mapAssignmentVerificationToEvidence,
+  isCoefficientEvidence,
+  SELECTION_LIMIT_STATES,
+  type SelectionLimitState,
   type CoefficientScope as ExamModelCoefficientScope,
   type ExamTargetAdmissionStatus,
   type ExamModelSource,

@@ -1,0 +1,46 @@
+taskId,phase,status,dependsOn,decisionRef,filesChanged,commands,evidencePath,baselineFailures,notes,updatedAt,commitSha
+V3-001,V3-A,DONE,—,—,docs/ael-implementation/v3/READING_MANIFEST.md; docs/ael-implementation/v3/QUESTION_RESOLUTION_LOG.md,read AEL_Agent_Execution_Prompt_FA_v3.0_MASTER.md (4970 lines); read V2 ledger+report; read repo docs,docs/ael-implementation/v3/READING_MANIFEST.md,0,سند مادر کامل خوانده شد؛ پیمان پذیرفته شد؛ QUESTION_RESOLUTION_LOG ایجاد شد,2026-11-09,512d130
+V3-002,V3-A,DONE,V3-001,—,docs/ael-implementation/v3/reports/V3_LIVE_BASELINE.md; docs/ael-implementation/v3/reports/V3_GAP_REGISTER.csv,git rev-parse HEAD; ls supabase/migrations | wc -l; npm run typecheck; npm test; grep -c app routes worker; grep OnboardLevel,docs/ael-implementation/v3/reports/V3_LIVE_BASELINE.md,0,main=c4ceddf؛ typecheck سبز؛ 666 تست سبز؛ 10 gap ثبت شد؛ OnboardingModal محدودیت arshad/phd دوباره تأیید شد,2026-11-09,512d130
+V3-003,V3-A,DONE,V3-002,—,docs/ael-implementation/v3/reports/V3_ENTITY_SOURCE_OF_TRUTH.md,read T11_content_stores.md; ls src/data; ls content/learning-courses,docs/ael-implementation/v3/reports/V3_ENTITY_SOURCE_OF_TRUTH.md,0,مالکیت هر مفهوم + 3 رجیستری موازی شناخته‌شده + 5 موجودیت بدون owner ثبت شد,2026-11-09,512d130
+V3-010,V3-B,DONE,V3-003,—,—,write doc,docs/architecture/CORE_PLATFORM_ARCHITECTURE_FA.md,—,طراحی هسته مستقل از آزمون؛ سند CORE_PLATFORM_ARCHITECTURE_FA.md,2026-11-09,bd92c30
+V3-011,V3-B,DONE,V3-010,—,—,write doc,docs/architecture/EXAM_FAMILY_ADAPTER_CONTRACT_FA.md,—,قرارداد خانواده آزمون و Adapter؛ EXAM_FAMILY_ADAPTER_CONTRACT_FA.md,2026-11-09,bd92c30
+V3-012,V3-B,DONE,V3-011,—,—,grep scans,docs/ael-implementation/v3/reports/V3_HARDCODED_EXAM_BRANCHES.md,—,اسکن شرط‌های پراکندهٔ خانواده‌محور در هسته,2026-11-09,bd92c30
+V3-013,V3-B,DONE,V3-011,—,—,npx vitest run src/tests/v3/generic-family-fixture.test.ts,src/tests/v3/generic-family-fixture.test.ts,—,fixture خانوادهٔ ساختگی و تست end-to-end معماری,2026-11-09,bd92c30
+V3-020,V3-C,DONE_WITH_DEFAULT,V3-003,HR-02,—,WebSearch; csv write,docs/catalog/EDUCATION_AND_EXAM_AUTHORITIES.csv,—,نقشهٔ نهادهای برگزارکننده و ناظر,2026-11-09,ae176cd
+V3-021,V3-C,DONE_WITH_DEFAULT,V3-020,HR-02,—,WebSearch; csv write,docs/catalog/EXAM_UNIVERSE_REGISTER.csv,—,کشف کامل خانواده‌های آزمونی؛ EXAM_UNIVERSE_REGISTER.csv,2026-11-09,ae176cd
+V3-022,V3-C,NOT_STARTED,V3-021,—,—,—,—,—,نقشهٔ همهٔ مقاطع و مسیرهای پذیرش؛ تفکیک سه محور سطح,2026-11-09,—
+V3-023,V3-C,NOT_STARTED,V3-021,—,—,—,—,—,کاتالوگ رشته‌ها و گرایش‌ها؛ استخراج از دفترچه رسمی,2026-11-09,—
+V3-024,V3-C,NOT_STARTED,V3-023,—,—,—,—,—,مواد، ضرایب و ساختار ارزیابی با scope دقیق,2026-11-09,—
+V3-025,V3-C,NOT_STARTED,V3-024,—,—,—,—,—,mapping مواد به درس و سرفصل,2026-11-09,—
+V3-026,V3-C,NOT_STARTED,V3-023,—,—,—,—,—,pipeline ورود و اعتبارسنجی idempotent,2026-11-09,—
+V3-027,V3-C,NOT_STARTED,V3-026,—,—,—,—,—,ماتریس پوشش واقعی با مخرج رسمی,2026-11-09,—
+V3-030,V3-D,NOT_STARTED,V3-003,—,—,—,—,—,مدل سوابق تحصیلی چندمدرکی؛ CandidateEducationHistory,2026-11-09,—
+V3-031,V3-D,NOT_STARTED,V3-030,—,—,—,—,—,onboarding داده‌محور؛ حذف لیست‌های ثابت از UI,2026-11-09,—
+V3-032,V3-D,NOT_STARTED,V3-031,—,—,—,—,—,چند هدف، eligibility و تفکیک intent/registration,2026-11-09,—
+V3-033,V3-D,NOT_STARTED,V3-031,—,—,—,—,—,مهاجرت پروفایل‌های قدیمی arshad/phd به مدل جدید,2026-11-09,—
+V3-040,V3-E,NOT_STARTED,V3-003,—,—,—,—,—,ممیزی مدل canonical سؤال (Question/Revision/Appearance/Key),2026-11-09,—
+V3-041,V3-E,NOT_STARTED,V3-040,—,—,—,—,—,Quick Authoring از context صفحهٔ جاری,2026-11-09,—
+V3-042,V3-E,NOT_STARTED,V3-041,—,—,—,—,—,workflow بازبینی و moderation سؤال,2026-11-09,—
+V3-043,V3-E,NOT_STARTED,V3-042,—,—,—,—,—,اتصال امن سؤال کاربر به موتور؛ allowedUse/trust,2026-11-09,—
+V3-044,V3-E,NOT_STARTED,V3-042,—,—,—,—,—,چرخهٔ اعتراض و اصلاح کلید؛ dispute flow,2026-11-09,—
+V3-050,V3-F,NOT_STARTED,V3-011,—,—,—,—,—,resolver عمومی برنامهٔ آمادگی مستقل از خانواده,2026-11-09,—
+V3-051,V3-F,NOT_STARTED,V3-050,—,—,—,—,—,union هدف‌ها و جلوگیری از دوباره‌خوانی مواد مشترک,2026-11-09,—
+V3-052,V3-F,NOT_STARTED,V3-050,—,—,—,—,—,پیش‌نیاز و گراف دانش با status و جهت مشخص,2026-11-09,—
+V3-053,V3-F,NOT_STARTED,V3-051,—,—,—,—,—,موتور تطبیقی بدون شناخت خانواده؛ پاکسازی hardcode,2026-11-09,—
+V3-060,V3-G,NOT_STARTED,V3-010,—,—,—,—,—,مستندات محصول و معماری فهرست بخش ۲۷,2026-11-09,—
+V3-061,V3-G,NOT_STARTED,V3-042,—,—,—,—,—,راهنمای contribution و سؤال‌سازی,2026-11-09,—
+V3-070,V3-G,NOT_STARTED,V3-060; V3-031; V3-042; V3-043,—,—,—,—,—,تست جامع E2E و دسترس‌پذیری,2026-11-09,—
+V3-071,V3-G,NOT_STARTED,V3-070,—,—,—,—,—,release gate برای هر خانواده؛ سطوح E0..E9,2026-11-09,—
+FX-01,corrective,DONE,owner-feedback,HR-01/02/03/04 REVISED,docs/ael-implementation/v3/HUMAN_REQUIRED.md,—,docs/ael-implementation/v3/HUMAN_REQUIRED.md,0,HR-01 اصلاح شد (1142/2162 هر دو مدیریت؛ نمونهٔ واقعی غیرمدیریتی=کنکور گروه ریاضی)؛ HR-02 بدون درخواست غیرضروری؛ HR-03 با اظهارهای مالک بسته شد؛ HR-04 proposal-only,2026-11-09,TBD
+FX-02,corrective,DONE,CI-run-208,—,scripts/audit-client-bundle.ts,npm run audit:miniapp,scripts/audit-client-bundle.ts,0,ریشه: ساختار React جدید در برابر فهرست ۵فایلی vanilla + CLI سخت‌گیرتر از گیت مستند R-036؛ چشم‌پوشی محدود با هشدار صریح و شرط حذف پس از R-025؛ سایر نشتی‌ها مطلقاً رد می‌شوند,2026-11-09,TBD
+FX-03,corrective,DONE,GAP-011,—,packages/learning-engine/src/target-weights.ts; packages/contracts/src/exam-model.ts,npm run typecheck; npm test,packages/learning-engine/src/target-weights.ts,0,computeSubjectWeights عمومی (قواعد V2-076) + قانون provenance اجباری + گسترش سازگار EXAM_MODEL_LEVELS,2026-11-09,TBD
+FX-04,corrective,DONE,GAP-011,—,packages/contracts/src/registry.ts; packages/contracts/src/exam-family.ts; packages/contracts/src/index.ts,npm run typecheck,packages/contracts/src/exam-family.ts,0,تفکیک روی نوع‌های canonical registry: ExamFamily+readiness E0..E9 (انسانی‌سنجی E7+)، AssessmentComponent وزن null، AdmissionRoute مستقل + سه اعتبارسنج,2026-11-09,TBD
+FX-05,corrective,DONE,FX-03; FX-04,HR-01,src/tests/v3/real-family-konkur.test.ts,npx vitest run src/tests/v3/real-family-konkur.test.ts,src/tests/v3/real-family-konkur.test.ts,0,خانوادهٔ واقعی کنکور 1405 گروه ریاضی (bachelor، status=reported): validate، eligibility، resolver چندهدف، وزن‌دهی عمومی، تفکیک سه مفهوم — ۵ تست سبز؛ منبع: ثانویهٔ وب، بدون official_verified,2026-11-09,TBD
+HD-01,hardening,DONE,B2,—,packages/contracts/src/exam-model.ts,npm run typecheck; npx vitest run src/tests/v3/,packages/contracts/src/exam-model.ts,0,"examSetCode: کد منتشرشدهٔ رسمی بدون padding (1 تا 6 رقم، /^[1-9][0-9]{0,5}$/)؛ 001 رد می‌شود؛ شناسه داخلی=id جدا؛ fixture konkur به 1 اصلاح شد",2026-11-10,71b2fb0
+HD-02,hardening,DONE,B3,—,packages/contracts/src/exam-model.ts; src/tests/v3/real-family-konkur.test.ts,npm test,packages/contracts/src/exam-model.ts,0,officialTargetCode حدسی (1010/1020) → null؛ سقف انتخاب سه‌حالته selectionLimitState=limited|unlimited|unknown؛ خطای unknown-set و limit مستقل,2026-11-10,71b2fb0
+HD-03,hardening,DONE,B4,—,packages/contracts/src/exam-model.ts; packages/contracts/src/index.ts; packages/contracts/tests/exam-model.test.ts,npm test,packages/contracts/src/exam-model.ts,0,دو محور مستقل: valueState (positive/zero/unknown/not_applicable) و evidence (official_verified/reported/inferred/pending_verification)؛ aliasهای legacy با normalize یک‌طرفه؛ صفر بدون سند رسمی=هشدار (۸ ردیف legacy آشکار شد، ارتقای خاموش ممنوع),2026-11-10,71b2fb0
+HD-04,hardening,DONE,B5,—,packages/learning-engine/src/target-weights.ts; src/tests/v3/unknown-not-zero-weights.test.ts,npx vitest run src/tests/v3/unknown-not-zero-weights.test.ts,packages/learning-engine/src/target-weights.ts,0,Unknown≠Zero: وزن نامعلوم=null+needs_review؛ صفر معلوم=0+excluded؛ not_applicable متمایز؛ partial برای مخلوط؛ ۲۰ تست الزامی (ماتریس B4 + سناریوهای 1-9 B5),2026-11-10,17b08ec
+HD-05,hardening,DONE,B6,—,src/tests/v3/e2e-exam-to-plan.test.ts; src/tests/v3/real-family-konkur-builder.ts,npx vitest run src/tests/v3/e2e-exam-to-plan.test.ts,src/tests/v3/e2e-exam-to-plan.test.ts,0,زنجیرهٔ E2E واقعی ۱۰ مرحله‌ای با Planner/Scheduler واقعی (بدون mock) در دو مسیر: fixture عمومی + konkur واقعی؛ fail-closed partial برای reported,2026-11-10,01a991f
+HD-06,hardening,DONE,B7,—,apps/worker/tests/question-key-delivery.test.ts; docs/operations/QUESTION_ANSWER_KEY_SECURITY_FA.md,npx vitest run apps/worker/tests/question-key-delivery.test.ts,docs/operations/QUESTION_ANSWER_KEY_SECURITY_FA.md,0,اسکن خام API (queue/night-quiz/learning-quiz) قبل از submit؛ کلید فقط پس از answer؛ R-036 باز ماند: Security Blocker؛ ۲۱۰ کلید در باندل React — آمادهٔ انتشار نیست,2026-11-10,0800956
+HD-07,hardening,DONE,B8,—,apps/worker/src/index.ts; apps/worker/tests/tracks-catalog.test.ts,npx vitest run apps/worker/tests/tracks-catalog.test.ts,apps/worker/src/index.ts,0,حذف fallback ثابت مدیریت‌محور از GET /api/tracks؛ کاتالوگ خالی=با پاسخ صریح catalog_not_available و بدون تزریق رشته؛ تست اثبات تزریق‌نشدن,2026-11-10,2602335
+HD-08,hardening,DONE,B10,HR-02,docs/ael-implementation/v3/reports/V3_KONKUR_SOURCE_REGISTER.md,WebSearch×2,docs/ael-implementation/v3/reports/V3_KONKUR_SOURCE_REGISTER.md,0,منبع رسمی sanjesh.org در دسترس نبود → همهٔ مقادیر reported ماندند؛ موارد عمداً نامعلوم مستند شد (تعداد سؤالات، سقف چندگروهی، کد رشته‌محل),2026-11-10,9e862eb
