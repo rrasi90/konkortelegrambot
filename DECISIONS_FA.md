@@ -33,3 +33,12 @@
 | D-AEL-P0-2 | سیاست وضعیت‌گذاری importer: غیبت synthetic هرگز verified نمی‌دهد؛ بسته هرگز published/active نمی‌شود؛ نوشتن مستقیم فقط با --write و خارج از production. | اصل ۴ و ۵ سند مادر (بدون حدس خام؛ محتوای خام منتشر نشود) | src/import/import-policy.mjs + ۵ تست؛ رفتار قبلی حذف شد | ۵ نوامبر ۲۰۲۶ |
 | D-AEL-P0-3 | PR#1/#3/#4 بدون merge بسته می‌شوند؛ محتوای یکتا منتقل/تأیید شد؛ ۱۸ شاخه با تگ archive/* آرشیو و حذف شدند. | ممیزی سه‌طرفه با شاهد خط‌به‌خط (BRANCH_AND_PR_AUDIT.md) | ریموت فقط main + fix/a19-replayable-migrations؛ بستن PRها HUMAN-3 | ۵ نوامبر ۲۰۲۶ |
 | D-AEL-P0-4 | رفع CI بدون non-null assertion و بدون weakening tsconfig. | الزام صریح AEL-BASE-02.1 سند مادر | formative-quiz.ts با narrowing؛ ۱۰ تست مقاوم‌سازی جدید | ۵ نوامبر ۲۰۲۶ |
+
+| شناسه | تصمیم (V2 — PROPOSED، نیازمند تأیید مالک) | دلیل | اثر | تاریخ |
+|---|---|---|---|---|
+| D-V2-05-PROP | پیش‌فرض موقت ادغام شاخه‌ها: الف با شرط CI سبز؛ در OWNER_REPLIES ثبت نشد | T11_branches.md و ملاحظات معماری Main؛ چیزی از آن بر اساس امضا نبود | پیشنهاد در docs/ael-implementation/v2/proposed/D05_BRANCH_DECISION.md؛ هنوze PR/merge نشد | ۸ نوامبر ۲۰۲۶ |
+| D-V2-C11-PROP | پیش‌فرض موقتی O3 برای هر 3 بسته مالی/آمار/dکتری؛ ارتقا به O2 به فهرست مالک نیاز دارد | C-11 در HUMAN_REQUIRED | proposed/provenance-defaults.json؛ سقف نردبان L6 پایین | ۸ نوامبر ۲۰۲۶ |
+| D-V2-C08-PROP | 4 مهارت صنعتی و 2 ارجاع ناموجود در گراف decide نمانده و نیاز به تصمیم create/remove دارد | GRAPH_missing_skills.md | ثبت در HUMAN_REQUIRED؛ هیچ یالی ساخته نشد | ۸ نوامبر ۲۰۲۶ |
+| D-V2-D10-PROP | چک‌لیست اتصال Supabase فقط ثبت شده، اجرا نشده است | D-10 در HUMAN_REQUIRED | proposed/D10_PERSISTENCE.md | ۸ نوامبر ۲۰۲۶ |
+
+قاعده V2: ردیف‌های PROPOSED در این جدول تصمیم قطعی انسانی نیست؛ فقط شهروندان تا زمان پاسخ مالک است و هرکدام باید در OWNER_REPLIES امضا شوند.

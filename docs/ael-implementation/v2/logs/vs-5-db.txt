@@ -1,0 +1,17 @@
+﻿node.exe : npm notice run react-example@0.0.0 test:db
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\rrasi_oorj8fq\AppData\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice run ...e@0.0.0 test:db:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice run node scripts/db-test-embedded.mjs
+PostgreSQL 18.6 (PGlite 0.5.15) on wasm32-unknown-emscripten, compiled by emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.13 (e13ee988ce3d87a738dd8f3661d02223308c412a), 32-bit
+FRESH_PASS migrations=26 seeds=2
+LEDGER_REPLAY_PASS skipped=26 policy_count=29 hashed_tables=6
+LEDGER_CHECKSUM_AND_ATOMICITY_CONTROLS_PASS
+POLICY_AND_SAME_COUNT_CONTENT_DRIFT_CONTROLS_PASS
+INTEGRITY_PASS exam-submission.test.sql
+INTEGRITY_PASS integrity.test.sql
+INTEGRITY_PASS public-questions.test.sql
+BACKUP_RESTORE_PASS matching_rows_policies_and_ledger

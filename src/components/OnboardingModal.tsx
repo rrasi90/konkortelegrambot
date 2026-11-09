@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GraduationCap, CalendarDays, ArrowLeft, Sparkles, CheckSquare, Square, ChevronRight } from 'lucide-react';
+import { jalaliToIso, gregorianToJalaliFromIso, formatJalaliFa } from '../utils/jalali';
 
 /**
  * OnboardingModal — جریان سطح‌محور (طبق درخواست: اول مقطع، بعد گرایش، نه همه با هم)
@@ -38,6 +39,23 @@ export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => vo
   const [level, setLevel] = useState<OnboardLevel | null>(null);
   const [selected, setSelected] = useState<Set<OnboardTrack>>(new Set());
   const [examDate, setExamDate] = useState<string>('');
+  const [jalaliYear, setJalaliYear] = useState<string>('');
+  const [jalaliMonth, setJalaliMonth] = useState<string>('');
+  const [jalaliDay, setJalaliDay] = useState<string>('');
+  const [jalaliError, setJalaliError] = useState<string>('');
+  const applyJalali = () => {
+    const jy = Number(jalaliYear), jm = Number(jalaliMonth), jd = Number(jalaliDay);
+    const iso = jalaliToIso(jy, jm, jd);
+    if (iso) { setExamDate(iso); setJalaliError(''); }
+    else setJalaliError('تاریخ شمسی معتبر نیست.');
+  };
+  const syncFromDateInput = (iso: string) => {
+    setExamDate(iso);
+    if (iso) {
+      const p = gregorianToJalaliFromIso(iso);
+      if (p) { setJalaliYear(String(p.jy)); setJalaliMonth(String(p.jm)); setJalaliDay(String(p.jd)); }
+    } else { setJalaliYear(''); setJalaliMonth(''); setJalaliDay(''); setJalaliError(''); }
+  };
 
   const toggle = (id: OnboardTrack) => {
     setSelected((prev) => {
@@ -211,10 +229,18 @@ export const OnboardingModal: React.FC<{ onComplete: (r: OnboardingResult) => vo
             <input
               type="date"
               value={examDate}
-              onChange={(e) => setExamDate(e.target.value)}
+              onChange={(e) => syncFromDateInput(e.target.value)}
               className="w-full rounded-xl bg-slate-800 border border-slate-700 px-3 py-2.5 text-slate-100 text-sm"
               dir="ltr"
             />
+            <div className="grid grid-cols-3 gap-2" dir="ltr">
+              <input inputMode="numeric" placeholder="1404" value={jalaliYear} onChange={(e) => setJalaliYear(e.target.value)} className="rounded-xl bg-slate-800 border border-slate-700 px-3 py-2.5 text-slate-100 text-sm" />
+              <input inputMode="numeric" placeholder="12" value={jalaliMonth} onChange={(e) => setJalaliMonth(e.target.value)} className="rounded-xl bg-slate-800 border border-slate-700 px-3 py-2.5 text-slate-100 text-sm" />
+              <input inputMode="numeric" placeholder="29" value={jalaliDay} onChange={(e) => setJalaliDay(e.target.value)} className="rounded-xl bg-slate-800 border border-slate-700 px-3 py-2.5 text-slate-100 text-sm" />
+            </div>
+            <button type="button" onClick={applyJalali} className="w-full rounded-xl border border-slate-600 px-3 py-2 text-xs text-slate-200 cursor-pointer">اعمال تاریخ شمسی</button>
+            {jalaliError && <p className="text-xs text-red-400">{jalaliError}</p>}
+            {examDate && <p className="text-xs text-slate-400">تاریخ انتخاب‌شده (شمسی): {formatJalaliFa(examDate)}</p>}
             <div className="flex items-center justify-between gap-2 pt-1">
               <button
                 type="button"

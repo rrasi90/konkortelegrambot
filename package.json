@@ -36,7 +36,11 @@
     "ael:exam:recovery": "python -I scripts/ael-key-text-recovery.py",
     "ael:exam:merge-keys": "python -I scripts/ael-key-merge-recovered.py",
     "ael:exam:dedup": "node scripts/ael-question-dedup.mjs",
-    "build:miniapp": "vite build --mode miniapp"
+    "build:miniapp": "vite build --mode miniapp",
+    "v2:ledger": "node scripts/v2/ledger.mjs",
+    "v2:verify": "node scripts/v2/verify-ledger.mjs",
+    "v2:summary": "node scripts/v2/ledger.mjs summary",
+    "v2:reading-notes": "node scripts/v2/reading-notes-check.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

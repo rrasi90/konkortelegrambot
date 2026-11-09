@@ -1,0 +1,11 @@
+# V2-005 — مجموعه کامل VS (2026-11-08 روی f9891a5)
+# هر ردیف: فرمان / کد خروج / نتیجه جدا (لاگ هر فرمان در vs-5-*.txt)
+npm test → exit 0 → vs-5-test.txt (621+ تست؛ آخرین شمارش در vs-final)
+npm run typecheck → exit 1 → vs-5-typecheck.txt: فقط خطاهای untracked قدیمی (anki-import, tmp-inventory*.mts)؛ خطایی در ماژول‌های جدید V2 نیست
+npm run validate:learning → exit 1 → vs-5-learning.txt: phd-management-expansion source URL خالی (ERR_INVALID_URL) — شکست پیش‌موجود، نه از تغییرات V2
+npm run build:worker → exit 0 → vs-5-worker.txt
+npm run audit:miniapp → exit 0 → vs-5-miniapp.txt
+npm run build:offline → exit 0 → vs-5-offline.txt
+npm run test:db → exit 0 → vs-5-db.txt (INTEGRITY_PASS + BACKUP_RESTORE_PASS)
+# محدودیت: اجرای امروز وضعیت فعلی است، نه بازسازی خط‌پایه تاریخی قبل از تغییرات. بازسازی آن نیاز به worktree جدا روی SHA مبنا دارد و در این ایست انجام نشد؛ صریح ثبت می‌شود.
+# خط پایه تاریخی vs-0-before.txt (606 تست) جداگانه نگه داشته شده و با اجرای امروز قاطی نشده است.

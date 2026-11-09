@@ -1,0 +1,2 @@
+{"source": "mb.decision", "target": "mb.ob_motivation", "relation": "prerequisite", "weight": 0.4, "verification_status": "pending", "confidence": 0.7, "reason": "PROPOSED: تصمیم‌گیری عقلانیت محدود مبنای رفتار سازمانی است؛ نیازمند بازبینی متخصص و تأیید مالک.", "source_ref": "proposed-v2-052"}
+{"source": "islamic.justice", "target": "islamic.malik_covenant", "relation": "prerequisite", "weight": 0.4, "verification_status": "pending", "confidence": 0.7, "reason": "PROPOSED: عدالت سازمانی چارچوب تفسیر عهدنامه مالک اشتر است؛ نیازمند تأیید.", "source_ref": "proposed-v2-052"}

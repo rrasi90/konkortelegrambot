@@ -1,0 +1,64 @@
+npm notice run react-example@0.0.0 test
+npm notice run vitest run
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90mC:/Star/konkortelegrambot[39m
+
+ [32m✓[39m apps/worker/tests/markdown-export.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 143[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/learning-paths.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 125[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/sec02-failclosed.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 159[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/education-domain.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 221[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/release-catalog.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 258[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/telegram-inbox.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 266[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/admin-rbac.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 263[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/ingestion.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 303[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/audit-fixes.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 307[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/exam-simulation.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 410[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/supabase-store.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/formative-quiz.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 85[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/multi-course-quiz.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 89[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/learning-answer-persistence.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 101[2mms[22m[39m
+ [32m✓[39m src/tests/mistakeNotebook.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/tests/missionP0.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/ex-session.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/auth.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/learning-analytics.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 129[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/feedback-flow.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 195[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/english-skills.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 127[2mms[22m[39m
+ [32m✓[39m src/tests/pagesRelease.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/tests/registry-import.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m apps/worker/tests/worker.test.ts [2m([22m[2m61 tests[22m[2m)[22m[33m 1111[2mms[22m[39m
+ [32m✓[39m src/tests/questionBank.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/engine.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/exam-simulation.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/tests/clientBundleSecurity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/tests/telegramBridgePersistence.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/tests/import-pipeline.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/tests/exam-analyze.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/tests/pdf-ingestion.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/tests/legacyMasteryDirection.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/fsrs.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m packages/utils/tests/priority-calculations.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/grading-recommendation.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/fsrs-reference.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/tests/examStructure.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/tests/lessonRatingEvidence.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/data-versioning.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m packages/contracts/tests/registry.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/tests/examCoverage.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m packages/learning-engine/tests/analysis.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/tests/exam-dedup-recovery.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/tests/claimHonesty.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/tests/ael-exam-pairing.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/tests/import-content-policy.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/tests/miniappWiring.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/tests/legacyFsrsParity.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/tests/masteryEvidence.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m50 passed[39m[22m[90m (50)[39m
+[2m      Tests [22m [1m[32m606 passed[39m[22m[90m (606)[39m
+[2m   Start at [22m 14:38:28
+[2m   Duration [22m 2.42s[2m (import 42%, tests 41%, transform 14%, worker 3%)[22m
+
+[2m    Isolate [22m [33m50 workers spawned[39m[2m · ~249ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~883ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+

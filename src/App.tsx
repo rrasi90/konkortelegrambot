@@ -743,6 +743,11 @@ export default function App() {
         {activeTab === 'home' && (
           <DashboardView
             examDate={onboarding?.examDate ?? null}
+            onExamDateChange={(iso) => {
+              const next = onboarding ? { ...onboarding, examDate: iso } : null;
+              setOnboarding(next);
+              try { window.localStorage.setItem('ael.onboarding', JSON.stringify(next)); } catch { /* ignore */ }
+            }}
             nodes={nodes}
             stats={stats}
             nodeStates={nodeStates}

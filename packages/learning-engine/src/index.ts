@@ -846,5 +846,14 @@ export * from './data-versioning';
 
 export * from './multi-course-quiz';
 
+export * from './coverage-matrix';
+
+// V2-073..076 — deterministic plan/mastery/scheduling helpers (pure, no I/O)
+export * from './mastery';
+export * from './planner';
+export * from './scheduler';
+export * from './target-weights';
+export * from './readiness-copy';
+
 // AEL-405/406 — تحلیل محتوا (تشخیص تکرار و کلید)
 export * from './analysis';

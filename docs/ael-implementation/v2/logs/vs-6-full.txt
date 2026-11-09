@@ -1,0 +1,20 @@
+﻿node.exe : npm notice run react-example@0.0.0 test
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\rrasi_oorj8fq\AppData\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice run react-example@0.0.0 test:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice run vitest run
+
+ RUN  v5.0.5 C:/Star/konkortelegrambot
+
+
+ Test Files  54 passed (54)
+      Tests  638 passed (638)
+   Start at  18:31:46
+   Duration  2.10s (import 45%, tests 36%, transform 15%, worker 4%)
+
+    Isolate  54 workers spawned ┬╖ ~205ms startup each (spawn + environment, per file)
+             at least ~803ms faster with isolate: false ΓÇö reuses workers across files instead of one per file
+

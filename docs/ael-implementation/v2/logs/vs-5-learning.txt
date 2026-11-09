@@ -1,0 +1,23 @@
+﻿node.exe : npm notice run react-example@0.0.0 validate:learning
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\rrasi_oorj8fq\AppData\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm notice run ...lidate:learning:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+npm notice run node --import tsx scripts/validate-learning-courses.ts && node scripts/verify-source-audit.mjs && node 
+scripts/extract-learning-recurrence.mjs 1405 --check && node scripts/build-question-index.mjs --check
+financial-management: 8 topics, 24 authored items, 8 references.
+statistics-foundations: 2 topics, 5 authored items, 2 references.
+node:internal/url:840
+      href = bindingUrl.parse(input, base, true);
+                        ^
+
+TypeError: Invalid URL
+    at new URL (node:internal/url:840:25)
+    at <anonymous> (C:\Star\konkortelegrambot\scripts\validate-learning-courses.ts:28:17) {
+  code: 'ERR_INVALID_URL',
+  input: ''
+}
+
+Node.js v24.18.0

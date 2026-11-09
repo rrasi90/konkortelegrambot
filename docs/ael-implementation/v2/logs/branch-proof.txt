@@ -1,0 +1,7 @@
+branch: plan/ael-v2-impl-20261108
+HEAD: f9891a5af36fb4a1aeecd907d3860d52a47902fc
+remote-plan: f9891a5af36fb4a1aeecd907d3860d52a47902fc
+origin/main: 8f8d49d978f1824d6f32bb563f161426025960f6
+local main: 718c54c0f6e301fda3d72ffd2fecb02140b6c1bc
+# فرمان: git rev-parse HEAD / origin/plan/... / origin/main / branch --show-current
+# تاریخ: 2026-11-08 — این فایل شاهد V2-004 است، نه نام شاخه.

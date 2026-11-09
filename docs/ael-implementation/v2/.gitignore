@@ -1,0 +1,2 @@
+# Only ignore temporary large outputs, not evidence artifacts
+*.tmp

@@ -1,0 +1,10 @@
+{
+  "_meta": {
+    "status": "PROPOSED — provisional default O3 for all packs until owner reply (HUMAN_REQUIRED C-11). Do not treat as approved O2.",
+    "date": "2026-11-08",
+    "ownerDecisionRequired": true
+  },
+  "financial-management": { "provenanceClass": "O3", "note": "authored_pilot, pending_sme; O2 needs owner list" },
+  "statistics-foundations": { "provenanceClass": "O3", "note": "authored_pilot, pending_sme; O2 needs owner list" },
+  "phd-management-expansion": { "provenanceClass": "O3", "note": "authored_pilot, pending_sme; O2 needs owner list" }
+}
