@@ -17,4 +17,4 @@ GAP-015,CI,deploy,باندل production مینی‌اپ ۲۱۰ کلید correctO
 GAP-016,hardening,catalog,officialTargetCode حدسی (1010/1020) حذف شد؛ کد رسمی رشته‌محل نیازمند سند اولیه است,HD-02 (null شد),CLOSED,no
 GAP-017,hardening,catalog,سقف انتخاب ساختگی (5) حذف شد؛ selectionLimitState=unknown — سقف رسمی نیازمند دفترچه ثبت‌نام,HD-02 (unknown شد),CLOSED,no
 GAP-018,hardening,engine,ماتریس B4: ۸ ردیف legacy صفر با needs_check در exam-model.v1.json — zero_pending_official_evidence هشدار می‌گیرد؛ نیازمند بازبینی منبع,HD-03,OPEN,no
-GAP-019,security,deploy,R-036 باز: ۲۱۰ کلید در باندل React production؛ مسیر بستن در docs/operations/QUESTION_ANSWER_KEY_SECURITY_FA.md,HD-06,OPEN,yes
+GAP-019,security,deploy,R-036 باز: گام ۱ (زیرساخت server-only: رجیستری ۲۱۰کلیدی+canary، سه endpoint، consumeAttemptTicket، ۱۲ تست SEC، canary-scan PASS) در شاخهٔ security/answer-key-server-only-delivery (PR 17)؛ گام ۲ (اتصال ۸ نما + حذف کلید از src/data + حذف استثنای audit) باقی است,PR 17: 2180065/c14de36/03a7b3d,IN_PROGRESS,yes
