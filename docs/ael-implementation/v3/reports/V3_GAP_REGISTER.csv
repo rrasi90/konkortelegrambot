@@ -1,0 +1,11 @@
+gapId,phase,area,description,evidence,status,blocking
+GAP-001,V3-D,onboarding,"OnboardLevel فقط arshad/phd؛ کارشناسی و سایر خانواده‌ها در انتخاب مقصد نیستند",OnboardingModal.tsx:16 (SHA c4ceddf),OPEN,no
+GAP-002,V3-D,onboarding,"فیلد مستقل «مدرک/وضعیت تحصیلی فعلی» در onboarding و API وجود ندارد؛ PUT /api/exam-selection فقط examYear/subGroupId/combinationCode/setCode دارد",apps/worker/src/index.ts:1088,OPEN,no
+GAP-003,V3-E,questions,"هیچ route سؤال‌ساز کاربر (draft/submit/review/publish/report) در Worker وجود ندارد؛ ۳۶ route بررسی شد",apps/worker/src/index.ts,OPEN,no
+GAP-004,V3-E,questions,"correctOption در src/data/comprehensiveCourseEncyclopedia.ts در باندل کلاینت است (استثنای R-036)؛ گیت C-16 فقط سند است",src/data/comprehensiveCourseEncyclopedia.ts:68,OPEN,partially
+GAP-005,V3-B,architecture,"EXAM_LEVELS فقط doctorate/master؛ گسترش نیازمند audit مصرف‌کنندگان enum است",packages/contracts/src/exam-structure.ts,OPEN,no
+GAP-006,V3-C,catalog,"exam-model.v1.json فقط 1405/1406 مدیریت؛ هیچ family/مجموعهٔ دیگری استخراج نشده",content/knowledge/exam-model.v1.json,OPEN,no
+GAP-007,V3-C,universe,"EXAM_UNIVERSE_REGISTER.csv هنوز ساخته نشده؛ هیچ رجیستر خانوادهٔ آزمونی روی main نیست","docs/catalog/ (غایب)",OPEN,no
+GAP-008,V3-F,engine,"resolveCandidatePreparationPlan چندهدف است اما به کاتالوگ فقط مدیریت وصل است؛ هیچ fixture خانوادهٔ غیرمدیریتی وجود ندارد",packages/contracts/src/exam-model.ts:605,OPEN,no
+GAP-009,V3-G,docs,"هیچ سندی از فهرست بخش ۲۷ (CORE_PLATFORM_ARCHITECTURE، EXAM_FAMILY_ADAPTER_CONTRACT و…) روی main نیست","docs/architecture/ (فقط COMPREHENSIVE_EXAM_MODEL_FA.md)",OPEN,no
+GAP-010,V3-G,release,"هیچ سطح readiness خانوادگی (E0..E9) روی هیچ entity ثبت نشده است",—,OPEN,no
