@@ -233,11 +233,11 @@ describe('معماری مرکزی: افزودن خانوادهٔ آزمون سا
     const verbal = resolved.subjects.find((s) => s.subjectId === 'fixture.9100.s2')!;
     expect(verbal.includedInTargetIds).toEqual(['f1407.counseling']);
 
-    // ضریب نامعلوم هدف اول: مقدار null — هرگز صفر تفسیر نمی‌شود؛ scope صریح
+    // ضریب نامعلوم هدف اول: مقدار null — هرگز صفر تفسیر نمی‌شود؛ محور مقدار و شواهد جدا (B4)
     const math = resolved.subjects.find((s) => s.subjectId === 'fixture.9100.s3')!;
     expect(math.coefficientsByTarget).toEqual([
-      { targetId: 'f1407.counseling', value: null, state: 'unknown', scope: 'exam_subject' },
-      { targetId: 'f1407.assessment', value: 4, state: 'official_positive', scope: 'exam_subject' },
+      { targetId: 'f1407.counseling', value: null, valueState: 'unknown', evidence: 'pending_verification', scope: 'exam_subject' },
+      { targetId: 'f1407.assessment', value: 4, valueState: 'positive', evidence: 'pending_verification', scope: 'exam_subject' },
     ]);
 
     // جزء غیرکتبی (مصاحبه) جدا گزارش می‌شود، نه داخل درس‌ها — scope همیشه exam_component است
