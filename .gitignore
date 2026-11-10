@@ -26,3 +26,4 @@ __pycache__/
 # Anki import raw data — 60MB+ deck files; only generated src/data output is committed
 /anki/
 /anki-extracted/
+dist-miniapp/
