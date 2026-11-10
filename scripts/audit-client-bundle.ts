@@ -4,11 +4,24 @@ import { fileURLToPath } from 'node:url';
 
 export interface ClientBundleFinding {
   asset: string;
-  field: 'correctOption' | 'correctIndex' | 'answerIndex';
+  field:
+    | 'correctOption'
+    | 'correctIndex'
+    | 'answerIndex'
+    | 'solutionIndex'
+    | 'isCorrectLiteral'
+    | 'canaryValue'
+    | 'serverRegistryReference';
   count: number;
 }
 
 const SCAN_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.json', '.html', '.map']);
+/**
+ * R-036 گارد سخت — بدون هیچ استثنا (مأموریت v4 §3.2):
+ *  - الگوی فیلد+مقدار: کلید پاسخ داده‌شده (نه خواندن خصوصیت مثل q.correctOption).
+ *  - مقدارهای حساس شناخته‌شده: متن/مقدار canary رجیستری سرور.
+ *  - ارجاع به رجیستری سرور کلیدها: هرگز نباید به Bundle عمومی برسد.
+ */
 const ANSWER_KEY_PATTERNS: Array<{
   field: ClientBundleFinding['field'];
   pattern: RegExp;
@@ -24,6 +37,22 @@ const ANSWER_KEY_PATTERNS: Array<{
   {
     field: 'answerIndex',
     pattern: /["']?answerIndex["']?\s*:\s*\d+\b/g,
+  },
+  {
+    field: 'solutionIndex',
+    pattern: /["']?solutionIndex["']?\s*:\s*\d+\b/g,
+  },
+  {
+    field: 'isCorrectLiteral',
+    pattern: /["']?isCorrect["']?\s*:\s*(true|false)\b/g,
+  },
+  {
+    field: 'canaryValue',
+    pattern: /CANARY-(EXPLANATION|TRAPNOTE|CORRECT)-R036-[0-9a-f]{16}/g,
+  },
+  {
+    field: 'serverRegistryReference',
+    pattern: /client-bank-keys/g,
   },
 ];
 
@@ -150,18 +179,10 @@ async function runAudit(root: string): Promise<void> {
     }
   }
   const findings = await auditClientBundle(root);
-  // R-036 (مستند در src/tests/clientBundleSecurity.test.ts و
-  // docs/phase-5/CLIENT_ANSWER_KEY_RELEASE_GATE.md): تا R-025 (تحویل سؤال از سمت
-  // سرور) ردپای شناخته‌شدهٔ correctOption/correctIndex در assets/index-*.js مجاز است؛
-  // هر نشتی دیگری (فیلد یا asset دیگر) مطلقاً شکست می‌خورد. پس از R-025 این چشم‌پوشی
-  // حذف می‌شود و گارد به حالت سخت بازمی‌گردد.
-  const knownR036Footprint = (f: ClientBundleFinding) =>
-    isMiniapp &&
-    /assets\/index-[\w-]+\.js$/.test(f.asset) &&
-    (f.field === 'correctOption' || f.field === 'correctIndex');
-  const unknownLeaks = findings.filter((f) => !knownR036Footprint(f));
-  if (unknownLeaks.length > 0) {
-    const details = unknownLeaks
+  // R-036 گارد سخت (بدون استثنا) — مأموریت v4 §3.2: هر یافته‌ای در هر asset
+  // عمومی مطلقاً شکست می‌خورد. هیچ Allowlist یا چشم‌پوشی مجاز نیست.
+  if (findings.length > 0) {
+    const details = findings
       .map((finding) => `- ${finding.asset}: ${finding.field} × ${finding.count}`)
       .join('\n');
     throw new Error(
@@ -173,18 +194,7 @@ async function runAudit(root: string): Promise<void> {
       ].join('\n'),
     );
   }
-  const r036Counts = findings
-    .filter(knownR036Footprint)
-    .map((finding) => `${finding.asset}:${finding.field}×${finding.count}`)
-    .join(', ');
-  if (r036Counts) {
-    process.stdout.write(
-      `Client bundle security audit: PASS with documented R-036 footprint (${r036Counts}).\n` +
-      'Remove this exception after R-025 server-side question delivery.\n',
-    );
-  } else {
-    process.stdout.write('Client bundle security audit: PASS (no embedded answer-key literals).\n');
-  }
+  process.stdout.write('Client bundle security audit: PASS (no embedded answer-key literals).\n');
   if (resolve(root) === resolve(process.cwd(), 'dist')) {
     await assertPublicPagesAssets(root);
   }

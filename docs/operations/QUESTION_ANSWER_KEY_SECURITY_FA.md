@@ -60,3 +60,31 @@
 
 - قبل: ۲۱۰ correctOption + ۲۵ correctIndex در باندل مستقر (بدون هیچ زیرساخت server-only برای بانک کلاینت)
 - بعد: باندل تغییر نداده (۲۱۰+۲۵ — رفع در گام ۲ انجام می‌شود) اما **زیرساخت کامل تصحیح سرور-محور + پوشش تستی SEC آماده است** و رجیستری سرور با Canary اثبات‌شده خارج از باندل است.
+
+---
+
+## به‌روزرسانی ۲۰۲۶-۱۱-۱۱ (مأموریت v4 — بستن R-036 و سخت‌سازی گیت)
+
+### R-036: ✅ CLOSED — با شاهد
+
+| گام | وضعیت | شاهد |
+|---|---|---|
+| گام ۱ — زیرساخت server-only | ✅ | رجیستری ۲۳۷کلیدی + ۳ endpoint + consumeAttemptTicket + ۱۲ تست SEC (کامیت‌های 2180065..03a7b3d، PR #17) |
+| گام ۲ — حذف کلید از بانک‌های کلاینت | ✅ | `scripts/strip-client-bank-keys.mts`: ۱۰۰۴ خط کلید از ۵ بانک حذف شد (کامیت 5aa8c1f، merge fa9251c) |
+| گام ۲ — اتصال نماها به گریتینگ سرور | ✅ | App/StudySession/YearlyKonkor/SubjectHub/LessonsLibrary/BookLibrary/PlacementModal همه از `src/lib/serverGrading.ts` استفاده می‌کنند؛ دفتر خطا فقط از reveal سرور پر می‌شود (`reveal?.correctOption ?? -1`) |
+| گام ۲ — Bundle مستقر | ✅ | بازسازی باندل `apps/miniapp` (کامیت 65c72d5): ۰ کلید داده‌ای — شمارش `correctOption:<digit>` از ۲۱۰ به **۰** |
+| گام ۳ — حذف استثنای Audit | ✅ | `knownR036Footprint` کاملاً حذف شد؛ گارد سخت: هر یافته = شکست (این کامیت) |
+| گام ۳ — الگوهای مقدار-محور | ✅ | الگوهای جدید: solutionIndex، isCorrect:true/false لفظی، مقدارهای CANARY-R036، ارجاع `client-bank-keys` |
+| گام ۳ — تست منفی/مثبت canary | ✅ | `src/tests/clientBundleSecurity.test.ts`: تزریق عمدی canary → Fail؛ باندل تمیز با نام تایپ عمومی → Pass (۱۱ تست) |
+| گام ۳ — Offline | ✅ | بازنویسی کامل: Projection عمومی بدون کلید در Build (`tools/offline/offline-payload.ts` + plugin esbuild)، حذف `gradeFormativeAnswer/gradeFormativeQuiz` از آداپتور، UI «مطالعه و مرور — بدون تصحیح»، وضعیت `offline_unverified`، پشتیبان قدیمی با `unverified_legacy_result`؛ خروجی `AEL_OFFLINE.html`: **۰ کلید** (قبل: ۳۴ answerIndex)؛ `audit:offline` به CI اضافه شد |
+
+### شمار افشا نهایی (اندازه‌گیری مستقیم روی خروجی Build)
+
+- باندل Mini App (`apps/miniapp/assets/index-*.js`): ۰
+- خروجی Offline (`tools/offline/AEL_OFFLINE.html`): ۰
+- گارد Audit: بدون هیچ استثنا/Allowlist — PASS روی `audit:client-bundle`، `audit:miniapp`، `audit:offline`
+- Canary منفی: تشخیص داده می‌شود؛ Canary مثبت: باندل تمیز Pass؛ هیچ Canary واقعی در Production نیست (SEC-010 PASS)
+
+### منبع حقیقت نمایش‌ها
+
+`MistakeEntry.correctOption/explanation/trapNote` فقط از نتیجهٔ سرور همان سؤالِ پاسخ‌داده‌شده پر می‌شود (`App.tsx → recordAnswerInNotebook`) و دفتر خطا صرفاً برای مرور است — هیچ مسیر Mastery/FSRS از آن تغذیه نمی‌شود.
