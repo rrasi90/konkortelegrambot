@@ -242,6 +242,14 @@ export class MemoryStore implements DataStore {
     };
   }
 
+  async consumeAttemptTicket(userId: string, attemptId: string, questionId: string): Promise<boolean> {
+    const ticket = this.tickets.get(attemptId);
+    if (!ticket || ticket.userId !== userId || ticket.questionId !== questionId) return false;
+    if (ticket.consumedAt || ticket.expiresAt <= Date.now()) return false;
+    ticket.consumedAt = new Date().toISOString();
+    return true;
+  }
+
   tickets = new Map<string, { userId: string; questionId: string; attemptType: string; expiresAt: number; consumedAt: string | null }>();
 
   skillStates = new Map<string, LearnerSkillState & { userId: string }>(); // key: userId:skillId

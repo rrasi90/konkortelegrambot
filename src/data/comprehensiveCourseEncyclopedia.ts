@@ -65,11 +65,6 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
           'اهمیت وظیفه و تنوع مهارت',
           'حقوق پایه و امنیت شغلی',
         ],
-        correctOption: 1,
-        detailedAnswer:
-          'در فرمول $MPS = \\frac{SV + TI + TS}{3} \\times \\text{Autonomy} \\times \\text{Feedback}$، دو متغیر «استقلال (Autonomy)» و «بازخورد (Feedback)» در پرانتز میانگین سه بعد اول ضرب می‌شوند؛ بنابراین صفر بودن هر یک از این دو، کل $MPS$ را صفر می‌کند.',
-        konkorTrap:
-          'سه بعد تنوع مهارت، هویت وظیفه و اهمیت وظیفه با هم جمع می‌شوند و صفر بودن یکی از آن‌ها $MPS$ را صفر نمی‌کند.',
       },
     ],
   },
@@ -119,11 +114,6 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
           'تفکیک‌ناپذیری (Inseparability)',
           'تغییرپذیری (Variability)',
         ],
-        correctOption: 1,
-        detailedAnswer:
-          'ویژگی «فناپذیری یا ذخیره‌ناپذیری (Perishability)» بیان می‌کند که ظرفیت خدمت در صورت عدم استفاده در زمان ارائه از بین می‌رود و قابل انبارش برای فروش در آینده نیست.',
-        konkorTrap:
-          'وقتی تقاضا ثابت باشد فناپذیری مشکلی ایجاد نمی‌کند، اما در تقاضای نوسانی مدیران خدمات باید با قیمت‌گذاری متغیر و رزرو، عرضه و تقاضا را هم‌زمان کنند.',
       },
     ],
   },
@@ -171,11 +161,6 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
           '$2$',
           '$\\frac{4}{3}$',
         ],
-        correctOption: 0,
-        detailedAnswer:
-          'در تبعیض قیمت درجه سوم داریم $MR_A = MR_B \\Rightarrow P_A(1 - \\frac{1}{|E_A|}) = P_B(1 - \\frac{1}{|E_B|})$. با قرار دادن $|E_A| = 2$ و $|E_B| = 4$ داریم: $P_A(1 - \\frac{1}{2}) = P_B(1 - \\frac{1}{4}) \\Rightarrow \\frac{1}{2} P_A = \\frac{3}{4} P_B \\Rightarrow \\frac{P_A}{P_B} = \\frac{3/4}{1/2} = \\frac{3}{2} = 1.5$.',
-        konkorTrap:
-          'همیشه در بازاری که کشش قیمتی کمتر است ($|E_A|=2 < |E_B|=4$)، قیمت انحصارگر بالاتر است ($P_A > P_B$).',
       },
     ],
   },
@@ -224,11 +209,6 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
           '$f(x, y)$',
           '$0$',
         ],
-        correctOption: 0,
-        detailedAnswer:
-          'صورت کسر همگن از درجه ۴ و مخرج همگن از درجه ۱ است، بنابراین تابع $f(x, y)$ همگن از درجه $k = 4 - 1 = 3$ است ($f(tx, ty) = t^3 f(x, y)$). طبق قضیه اویلر، بدون نیاز به هیچ‌گونه مشتق‌گیری داریم: $x f_x + y f_y = k f(x, y) = 3 f(x, y)$.',
-        konkorTrap:
-          'مشتق‌گیری مستقیم از این کسر در جلسه کنکور بیش از ۵ دقیقه زمان می‌گیرد، اما با قضیه اویلر در ۵ ثانیه حل می‌شود!',
       },
     ],
   },

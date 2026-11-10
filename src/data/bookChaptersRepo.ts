@@ -144,7 +144,7 @@ export const buildFullBookMarkdown = (
     if (group && group.questions.length > 0) {
       lines.push(`\n**تست‌های این فصل در سامانه (${group.questions.length}):**`);
       group.questions.forEach((q) =>
-        lines.push(`- ${q.text} → گزینهٔ صحیح: ${q.correctOption + 1}`)
+        lines.push(`- ${q.text} → (کلید پس از submit در حالت آنلاین)`)
       );
     }
   });

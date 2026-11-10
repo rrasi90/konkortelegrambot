@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { GradingUnavailableError, gradeAnswerOnServer } from '../lib/serverGrading';
 import { SectionHeader } from './ui';
 import confetti from 'canvas-confetti';
 import {
@@ -49,7 +50,7 @@ interface StudySessionViewProps {
     selectedOption: number | null;
     confidence: 'high' | 'low';
     responseTimeMs: number;
-  }) => { report: RippleReport; snapshot: SnapshotForRollback };
+  }) => Promise<{ report: RippleReport; snapshot: SnapshotForRollback; reveal?: { correctOption: number; explanation: string; trapNote: string } }>;
   onRollbackSlip: (snapshot: SnapshotForRollback, report: RippleReport) => RippleReport;
   onRateLessonInSession: (nodeId: string, rating: 1 | 2 | 3 | 4 | 5) => string;
   onDismissNonQuestionCard: (cardId: string) => void;
@@ -93,11 +94,28 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
   const [isFinished, setIsFinished] = useState(false);
   const [confidence, setConfidence] = useState<'high' | 'low'>('high');
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string }>>({});
+  const [gradingNotice, setGradingNotice] = useState<string | null>(null);
   const [activeReport, setActiveReport] = useState<RippleReport | null>(null);
   const [activeSnapshot, setActiveSnapshot] = useState<SnapshotForRollback | null>(null);
   const [lessonDrawerOpen, setLessonDrawerOpen] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [conceptCheckChoice, setConceptCheckChoice] = useState<number | null>(null);
+  const [ccReveal, setCcReveal] = useState<{ correctOption: number; explanation: string } | null>(null);
+  const [ccChecking, setCcChecking] = useState(false);
+  const handleConceptCheck = (idx: number) => {
+    if (!node) return;
+    setConceptCheckChoice(idx);
+    void (async () => {
+      try {
+        const reveal = await gradeAnswerOnServer(`${node.id}#conceptCheck`, idx);
+        setCcReveal({ correctOption: reveal.correctOption, explanation: reveal.explanation });
+      } catch {
+        setCcReveal(null);
+        setGradingNotice('بررسی مفهوم نیاز به اتصال آنلاین دارد.');
+      }
+    })();
+  };
   const [lessonRatingChosen, setLessonRatingChosen] = useState<1 | 2 | 3 | 4 | 5 | null>(null);
   const [lessonRatingMsg, setLessonRatingMsg] = useState<string | null>(null);
 
@@ -180,6 +198,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
       </div>
     );
   }
+  const activeReveal = question ? questionReveals[question.id] : undefined;
   const lesson = lessons[node.id];
   const freqInsight = examFrequencyMap[node.id];
   const compTable =
@@ -190,14 +209,30 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
 
   const handleAnswerSubmit = (choice: number | null) => {
     if (activeReport) return;
+    if (gradingNotice) setGradingNotice(null);
     setSelectedOption(choice);
 
-    const { report, snapshot } = onSubmitAnswer({
+    void (async () => {
+    let reveal: { correctOption: number; explanation: string; trapNote: string } | undefined;
+    try {
+      const out = await onSubmitAnswer({
       card: currentCard,
       selectedOption: choice,
       confidence,
       responseTimeMs: elapsedSeconds * 1000,
-    });
+      });
+      var report = out.report;
+      var snapshot = out.snapshot;
+      reveal = out.reveal;
+    } catch (err) {
+      if (err instanceof GradingUnavailableError) {
+        setGradingNotice('تصحیح آنلاین در دسترس نیست — پاسخ شما بدون ثبت نتیجه ماند. برای تمرین معتبر به اینترنت متصل شوید.');
+        return;
+      }
+      throw err;
+    }
+
+    if (reveal) setQuestionReveals((prev) => ({ ...prev, [currentCard.questionId ?? '']: reveal! }));
 
     setActiveReport(report);
     setActiveSnapshot(snapshot);
@@ -244,6 +279,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
         // ignore
       }
     }
+    })();
   };
 
   const handleSlipRollback = () => {
@@ -429,12 +465,12 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
             <div className="grid grid-cols-1 gap-2.5">
               {lesson.conceptCheck.options.map((opt, idx) => {
                 const isChosen = conceptCheckChoice === idx;
-                const isCorrect = idx === lesson.conceptCheck.correctIndex;
+                const isCorrect = idx === ccReveal?.correctOption;
                 return (
                   <button
                     key={idx}
                     type="button"
-                    onClick={() => setConceptCheckChoice(idx)}
+                    onClick={() => handleConceptCheck(idx)}
                     className={`w-full text-right p-3.5 rounded-xl border text-xs font-medium transition-all cursor-pointer flex items-center justify-between gap-3 ${
                       conceptCheckChoice === null
                         ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-blue-500'
@@ -448,17 +484,17 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
                     <span>
                       <MathText text={opt} />
                     </span>
-                    {conceptCheckChoice !== null && isCorrect && (
+                    {ccReveal !== null && isCorrect && (
                       <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
                     )}
                   </button>
                 );
               })}
             </div>
-            {conceptCheckChoice !== null && (
+            {ccReveal !== null && (
               <div className="text-xs text-slate-700 dark:text-slate-300 pt-2 border-t border-slate-200/70 dark:border-slate-700">
                 <span className="font-bold text-emerald-600 dark:text-emerald-400">توضیح: </span>
-                <MathText text={lesson.conceptCheck.explanation} />
+                <MathText text={ccReveal?.explanation ?? ''} />
               </div>
             )}
           </div>
@@ -602,13 +638,13 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
               دام تستی در مبحث «{node.topic}»
             </h3>
             <p className="text-sm text-slate-800 dark:text-slate-200 leading-7">
-              <MathText text={question.trapNote} />
+              <MathText text={activeReveal?.trapNote ?? ''} />
             </p>
           </div>
 
           <div className="text-xs text-slate-600 dark:text-slate-400 leading-6">
             <span className="font-bold text-slate-800 dark:text-slate-200">پاسخ تشریحی تست مرجع: </span>
-            <MathText text={question.explanation} />
+            <MathText text={activeReveal?.explanation ?? ''} />
           </div>
 
           <div className="flex justify-end">
@@ -718,7 +754,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
           <div className="space-y-2.5">
             {question.options.map((opt, idx) => {
               const isSelected = selectedOption === idx;
-              const isCorrectOption = idx === question.correctOption;
+              const isCorrectOption = idx === activeReveal?.correctOption;
 
               let optionStyle =
                 'bg-slate-50/70 dark:bg-slate-800/45 border-slate-200/90 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-400 text-slate-800 dark:text-slate-200';
@@ -834,7 +870,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-200/70 dark:border-slate-700/70">
                   <div className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
                     <BookOpen className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
-                    <span>پاسخ تشریحی کامل (گزینه صحیح: گزینه {question.correctOption + 1})</span>
+                    <span>پاسخ تشریحی کامل (گزینه صحیح: گزینه {(activeReveal?.correctOption ?? 0) + 1})</span>
                   </div>
                   <span className="text-[11px] text-slate-500 dark:text-slate-400">
                     {question.designedFromTextbook || question.sourceReference || node.sourceBookCitation}
@@ -842,20 +878,20 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
                 </div>
 
                 <div className="text-slate-800 dark:text-slate-200 leading-7 whitespace-pre-line">
-                  <MathText text={question.explanation} />
+                  <MathText text={activeReveal?.explanation ?? ''} />
                 </div>
 
-                {question.trapNote && (
+                {(activeReveal?.trapNote && (
                   <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-950 dark:text-amber-200 space-y-1">
                     <div className="font-bold flex items-center gap-1.5 text-amber-800 dark:text-amber-300">
                       <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                       <span>دام طراح کنکور:</span>
                     </div>
                     <div className="leading-6">
-                      <MathText text={question.trapNote} />
+                      <MathText text={activeReveal?.trapNote ?? ''} />
                     </div>
                   </div>
-                )}
+                ))}
               </div>
 
               {/* کشوی بازشونده درسنامه و نکات مرجع مبحث */}

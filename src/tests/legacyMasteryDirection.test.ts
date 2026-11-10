@@ -20,7 +20,8 @@ function fixture() {
   const zero = createZeroStateEngine(KNOWLEDGE_NODES, QUESTION_BANK);
   const questionCard = zero.cards.find((c) => c.cardType === 'question')!;
   const question = QUESTION_BANK.find((q) => q.id === questionCard.questionId)!;
-  const wrongOption = (question.correctOption + 1) % question.options.length;
+  // R-036: کلید در کلاینت نیست؛ سناریوی «پاسخ غلط» با نتیجهٔ تصحیح سمت سرور شبیه‌سازی می‌شود
+  const wrongOption = 0;
   return { zero, questionCard, question, wrongOption };
 }
 
@@ -33,6 +34,7 @@ describe('A-09 — موتور قدیمی: پاسخ غلط شایستگی نمی�
     const out = evaluateAnswerAndRipple({
       card: questionCard,
       selectedOption: wrongOption,
+      grading: { wasCorrect: false, trapNote: '' },
       confidence: 'low',
       responseTimeMs: 30_000,
       nodeStates: zero.nodeStates,
@@ -61,6 +63,7 @@ describe('A-09 — موتور قدیمی: پاسخ غلط شایستگی نمی�
     const out = evaluateAnswerAndRipple({
       card: questionCard,
       selectedOption: wrongOption,
+      grading: { wasCorrect: false, trapNote: '' },
       confidence: 'low',
       responseTimeMs: 30_000,
       nodeStates: zero.nodeStates,

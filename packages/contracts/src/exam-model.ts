@@ -11,10 +11,96 @@
  */
 import type { ExamLevel } from './exam-structure';
 
+/**
+ * V3-022 (MX-022) — سطح پذیرش مدل آزمون، جدا از ExamLevel legacy.
+ * ExamLevel (doctorate/master) هویت ساختار legacy باقی می‌ماند و مسیر
+ * شبیه‌ساز/ساختار فقط همان دو سطح را می‌شناسند؛ سطح‌های پذیرش دیگر
+ * (بخش ۱۸٫۵ سند مادر) فقط روی مدل دادهٔ نسخه‌دار باز می‌شوند تا افزودن
+ * خانوادهٔ جدید، بدون branch در هستهٔ ساختار، فقط با داده ممکن باشد.
+ */
+export const EXAM_MODEL_LEVELS = [
+  'doctorate',
+  'master',
+  'professional_doctorate',
+  'specialty',
+  'subspecialty',
+  'bachelor',
+  'associate',
+  'unknown',
+] as const;
+
+export type ExamModelLevel = (typeof EXAM_MODEL_LEVELS)[number];
+
+export function isExamModelLevel(value: unknown): value is ExamModelLevel {
+  return typeof value === 'string' && (EXAM_MODEL_LEVELS as readonly string[]).includes(value);
+}
+
 export const EXAM_MODEL_SCHEMA_VERSION = 1 as const;
 export type ExamModelStatus = 'official_verified' | 'reported' | 'needs_check' | 'draft';
 export type CandidateSelectionRole = 'primary' | 'floating' | 'additional';
-export type CoefficientValueState = 'official_positive' | 'official_zero' | 'unknown' | 'not_applicable';
+/**
+ * V3-Hardening B4 — دو محور مستقل برای ضریب:
+ *  - محور مقدار (CoefficientValueAxis): معنای عددی — هرگز دربارهٔ منبع قضاوت نمی‌کند.
+ *  - محور شواهد (CoefficientEvidence): اعتبار منبع — هرگز معنای عددی نمی‌دهد.
+ * وضعیت‌های قدیمی official_positive/official_zero/... aliasهای یک‌طرفهٔ legacyاند
+ * و فقط از طریق normalizeCoefficientValueState خوانده می‌شوند؛ هرگز به‌عنوان
+ * شاهد رسمی تفسیر نمی‌شوند (مقدار reported از منبع ثانویه = positive+reported).
+ */
+export const COEFFICIENT_VALUE_AXES = ['positive', 'zero', 'unknown', 'not_applicable'] as const;
+export type CoefficientValueAxis = (typeof COEFFICIENT_VALUE_AXES)[number];
+
+export const COEFFICIENT_EVIDENCE_STATES = [
+  'official_verified',
+  'reported',
+  'inferred',
+  'pending_verification',
+] as const;
+export type CoefficientEvidence = (typeof COEFFICIENT_EVIDENCE_STATES)[number];
+
+/** وضعیت‌های قدیمی — فقط برای سازگاری داده و ردیابی صریح مهاجرت. */
+export type LegacyCoefficientState = 'official_positive' | 'official_zero' | 'unknown' | 'not_applicable';
+/** سازگاری نوع: نام قدیمی و محور جدید هر دو پذیرفته می‌شوند؛ جداسازی در normalize. */
+export type CoefficientValueState = LegacyCoefficientState | CoefficientValueAxis;
+
+const LEGACY_VALUE_AXIS_MAP: Record<LegacyCoefficientState, CoefficientValueAxis> = {
+  official_positive: 'positive',
+  official_zero: 'zero',
+  unknown: 'unknown',
+  not_applicable: 'not_applicable',
+};
+
+export function isLegacyCoefficientState(value: unknown): value is LegacyCoefficientState {
+  return typeof value === 'string' && value in LEGACY_VALUE_AXIS_MAP;
+}
+
+export function isCoefficientValueAxis(value: unknown): value is CoefficientValueAxis {
+  return typeof value === 'string' && (COEFFICIENT_VALUE_AXES as readonly string[]).includes(value);
+}
+
+/** تبدیل صریح و یک‌طرفه: axis جدید یا alias قدیمی → محور مقدار. تبدیل پنهان ممنوع. */
+export function normalizeCoefficientValueState(raw: unknown): CoefficientValueAxis | null {
+  if (isCoefficientValueAxis(raw)) return raw;
+  if (isLegacyCoefficientState(raw)) return LEGACY_VALUE_AXIS_MAP[raw];
+  return null;
+}
+
+/**
+ * نگاشت وضعیت بردار قدیمی (ExamModelStatus) به محور شواهد؛ تبدیل قابل ردیابی:
+ * needs_check و draft هرگز به official_verified ارتقا نمی‌یابند.
+ */
+export function mapAssignmentVerificationToEvidence(verification: unknown): CoefficientEvidence {
+  switch (verification) {
+    case 'official_verified': return 'official_verified';
+    case 'reported': return 'reported';
+    case 'needs_check':
+    case 'draft':
+    default: return 'pending_verification';
+  }
+}
+
+export function isCoefficientEvidence(value: unknown): value is CoefficientEvidence {
+  return typeof value === 'string' && (COEFFICIENT_EVIDENCE_STATES as readonly string[]).includes(value);
+}
 export type CoefficientScope = 'exam_subject' | 'exam_component';
 export type ExamTargetAdmissionStatus =
   | 'not_guaranteed_by_exam_table'
@@ -36,7 +122,7 @@ export interface ExamModelSource {
 
 export interface ExamModelEvent {
   id: string;
-  examLevel: ExamLevel;
+  examLevel: ExamModelLevel;
   examFamilyCode: string;
   yearNumber: number;
   yearLabel: string;
@@ -136,7 +222,12 @@ export interface ExamModelTarget {
 export interface ExamCoefficientValue {
   subjectId: string;
   value: number | null;
-  state: CoefficientValueState;
+  /** legacy: وضعیت قدیمی با محور و شواهد درهم — فقط با normalize خوانده می‌شود. */
+  state?: CoefficientValueState;
+  /** محور مقدار صریح (استایل جدید) — مقدم بر state. */
+  valueState?: CoefficientValueAxis;
+  /** محور شواهد صریح؛ غایب = نگاشت از verification بردار. */
+  evidence?: CoefficientEvidence;
 }
 
 export interface ExamCoefficientAssignment {
@@ -179,11 +270,23 @@ export interface ExamSubjectCourseMapping {
   note: string | null;
 }
 
+/**
+ * V3-Hardening B3 — سه حالت مجزا برای سقف انتخاب مجموعه:
+ *  - 'limited': سقف مشخص و مستند (maxExamSetSelections عدد الزامی)
+ *  - 'unlimited': بی‌سقف بودنِ مستندشده (maxExamSetSelections باید null باشد)
+ *  - 'unknown': سقف نامعلوم (maxExamSetSelections باید null باشد) — نامعلوم
+ *    هرگز معنای «بی‌سقف» یا «صفر» نمی‌گیرد.
+ * غایب = رفتار legacy برای رکوردهای قدیمی (عدد یا null بدون ادعای حالت).
+ */
+export const SELECTION_LIMIT_STATES = ['limited', 'unlimited', 'unknown'] as const;
+export type SelectionLimitState = (typeof SELECTION_LIMIT_STATES)[number];
+
 export interface ExamSelectionPolicy {
   id: string;
   eventVersionId: string;
-  examLevel: ExamLevel;
+  examLevel: ExamModelLevel;
   maxExamSetSelections: number | null;
+  selectionLimitState?: SelectionLimitState;
   allowedRoles: CandidateSelectionRole[];
   allowSameSetMultipleTimes: boolean;
   status: ExamModelStatus;
@@ -246,8 +349,11 @@ export interface ResolvedPreparationSubject {
   coefficientsByTarget: Array<{
     targetId: string;
     value: number | null;
-    state: CoefficientValueState;
-    scope: CoefficientScope | null;
+    /** محور مقدار — معنای عددی، مستقل از منبع (B4). */
+    valueState: CoefficientValueAxis;
+    /** محور شواهد — اعتبار منبع، مستقل از معنای عددی (B4). */
+    evidence: CoefficientEvidence;
+    scope: 'exam_subject' | null;
   }>;
 }
 
@@ -257,7 +363,10 @@ export interface ResolvedPreparationComponent {
   componentCode: string;
   componentTitle: string;
   value: number | null;
-  state: CoefficientValueState;
+  /** محور مقدار، نرمال‌شده از state قدیمی جزء (B4). */
+  valueState: CoefficientValueAxis;
+  /** محور شواهد جزء — نگاشت صریح از verification. */
+  evidence: CoefficientEvidence;
   subjectIds: string[];
 }
 
@@ -374,6 +483,21 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
   const comboByCode = new Map<string,ExamModelCombination>();
   const validStatuses: ExamModelStatus[] = ['official_verified','reported','needs_check','draft'];
 
+  // V3-011 (provenance الزامی): هر موجودیت نسخه‌دار باید دست‌کم یک منبع ثبت‌شده
+  // داشته باشد؛ ارتباط Source → Event → EventVersion بدون شاهد مجاز نیست.
+  const provenanceEntities: Array<[unknown[], string]> = [
+    [events,'events'],[versions,'eventVersions'],[sets,'examSets'],
+    [targets,'targets'],[coefficientAssignments,'coefficientAssignments'],
+    [componentCoefficients,'componentCoefficients'],
+  ];
+  for (const [rows,name] of provenanceEntities) {
+    rows.forEach((row,idx)=>{
+      const r=row as {sourceIds?:unknown};
+      if(!Array.isArray(r.sourceIds)||r.sourceIds.length===0)
+        add(errors,name+'['+idx+'].sourceIds','missing_source_reference','هر موجودیت نسخه‌دار باید دست‌کم یک منبع ثبت‌شده داشته باشد.');
+    });
+  }
+
   sources.forEach((s,i)=>{
     const p='sources['+i+']';
     if(!nonEmpty(s.title)||!nonEmpty(s.publisher)||!nonEmpty(s.locator))add(errors,p,'missing_source_metadata','عنوان، ناشر و محل استناد الزامی است.');
@@ -384,7 +508,7 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
 
   events.forEach((e,i)=>{
     const p='events['+i+']';
-    if(!['master','doctorate'].includes(e.examLevel))add(errors,p+'.examLevel','invalid_level','مقطع آزمون نامعتبر است.');
+    if(!isExamModelLevel(e.examLevel))add(errors,p+'.examLevel','invalid_level','مقطع آزمون نامعتبر است.');
     if(!Number.isInteger(e.yearNumber)||e.yearNumber<1300||!Number.isInteger(e.session)||e.session<1)add(errors,p,'invalid_event_period','سال یا نوبت آزمون نامعتبر است.');
     if(!nonEmpty(e.examFamilyCode)||!nonEmpty(e.organizer)||!nonEmpty(e.title)||!nonEmpty(e.yearLabel))add(errors,p,'missing_event_metadata','شناسه مجموعه آزمون، مجری و عنوان الزامی است.');
     if(!validStatuses.includes(e.status))add(errors,p+'.status','invalid_status','وضعیت رویداد آزمون نامعتبر است.');
@@ -402,7 +526,10 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
   sets.forEach((s,i)=>{
     const p='examSets['+i+']';
     if(!versionMap.has(s.eventVersionId))add(errors,p+'.eventVersionId','unknown_version','نسخه آزمون پیدا نشد.');
-    if(!/^\d{3,6}$/.test(s.examSetCode))add(errors,p+'.examSetCode','invalid_exam_set_code','کد مجموعه امتحانی باید مستقل و عددی باشد.');
+    // V3-Hardening B2: examSetCode = کد «منتشرشدهٔ رسمی» دقیقاً به شکل منبع؛
+    // شناسه داخلی پایدار فیلد جداگانهٔ id است. صفر ابتدایی (padding) ممنوع —
+    // '001' برای '1' جعل شکل کد رسمی برای عبور از اعتبارسنجی است، نه نگهداری آن.
+    if(!/^[1-9][0-9]{0,5}$/.test(s.examSetCode))add(errors,p+'.examSetCode','invalid_exam_set_code','کد مجموعه امتحانی باید عدد منتشرشدهٔ رسمی بدون صفر ابتدایی باشد (۱ تا ۶ رقم).');
     if(!nonEmpty(s.title)||!validStatuses.includes(s.status))add(errors,p,'invalid_set','عنوان یا وضعیت مجموعه معتبر نیست.');
     for(const sid of s.sourceIds??[])if(!sourceIds.has(sid))add(errors,p+'.sourceIds','unknown_source','منبع مجموعه یافت نشد: '+sid);
   });
@@ -475,11 +602,26 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
       if(!subjectMap.has(v.subjectId))add(errors,p+'.values','unknown_subject','ماده در بردار ضریب پیدا نشد: '+v.subjectId);
       if(seen.has(v.subjectId))add(errors,p+'.values','duplicate_subject_value','برای یک ماده بیش از یک ضریب ثبت شده است.');
       seen.add(v.subjectId);
-      if(!['official_positive','official_zero','unknown','not_applicable'].includes(v.state))add(errors,p+'.values.state','invalid_coefficient_state','وضعیت ضریب نامعتبر است.');
-      if(v.state==='unknown'&&v.value!==null)add(errors,p+'.values','unknown_has_value','ضریب نامعلوم باید null باشد، نه صفر یا عدد.');
-      if(v.state==='official_zero'&&v.value!==0)add(errors,p+'.values','zero_state_mismatch','ضریب رسمی صفر باید دقیقاً ۰ باشد.');
-      if(v.state==='official_positive'&&(typeof v.value!=='number'||!Number.isFinite(v.value)||v.value<=0))add(errors,p+'.values','positive_state_mismatch','ضریب مثبت باید عددی بزرگ‌تر از صفر باشد.');
-      if(v.state==='not_applicable'&&v.value!==null)add(errors,p+'.values','not_applicable_has_value','درس نامرتبط با null ثبت می‌شود.');
+      // V3-Hardening B4: دو محور مستقل — مقدار و شواهد
+      if(v.state!==undefined && v.state!==null && normalizeCoefficientValueState(v.state)===null)
+        add(errors,p+'.values.state','invalid_coefficient_state','وضعیت ضریب نامعتبر است.');
+      if(v.valueState!==undefined && !isCoefficientValueAxis(v.valueState))
+        add(errors,p+'.values.valueState','invalid_coefficient_state','محور مقدار نامعتبر است.');
+      if(v.evidence!==undefined && !isCoefficientEvidence(v.evidence))
+        add(errors,p+'.values.evidence','invalid_evidence_state','وضعیت شواهد نامعتبر است.');
+      if(v.valueState!==undefined && v.state!==undefined &&
+         normalizeCoefficientValueState(v.state)!==v.valueState)
+        add(errors,p+'.values','legacy_state_value_state_mismatch','state قدیمی با valueState جدید ناسازگار است.');
+      const valueAxis = v.valueState ?? normalizeCoefficientValueState(v.state);
+      const evidence = v.evidence ?? mapAssignmentVerificationToEvidence(a.verification);
+      if(valueAxis==='unknown' && v.value!==null)add(errors,p+'.values','unknown_has_value','ضریب نامعلوم باید null باشد، نه صفر یا عدد.');
+      if(valueAxis==='zero' && v.value!==0)add(errors,p+'.values','zero_state_mismatch','ضریب صفر باید دقیقاً ۰ باشد.');
+      if(valueAxis==='positive'&&(typeof v.value!=='number'||!Number.isFinite(v.value)||v.value<=0))add(errors,p+'.values','positive_state_mismatch','ضریب مثبت باید عددی بزرگ‌تر از صفر باشد.');
+      if(valueAxis==='not_applicable'&&v.value!==null)add(errors,p+'.values','not_applicable_has_value','درس نامرتبط با null ثبت می‌شود.');
+      // صفر رسمی باید با سند رسمی اثبات شود؛ دادهٔ legacy بدون شواهد رسمی هشدار می‌گیرد،
+      // نه ارتقای خاموش — مقادیر needs_check/draft هرگز official_verified نمی‌شوند.
+      if(valueAxis==='zero' && evidence!=='official_verified')
+        add(warnings,p+'.values','zero_pending_official_evidence','ضریب صفر بدون سند رسمی؛ به‌عنوان نیازمند بررسی حفظ می‌شود، نه صفر رسمی.');
       if(!setSubjectKeys.has(key(a.examSetId,v.subjectId)))add(errors,p+'.values','coefficient_subject_outside_set','بردار ضریب به ماده‌ای خارج از مجموعه اشاره می‌کند.');
     }
     if(!validStatuses.includes(a.verification))add(errors,p+'.verification','invalid_status','وضعیت بردار ضریب نامعتبر است.');
@@ -511,11 +653,21 @@ export function validateExamModelBundle(input: unknown): ExamModelValidation {
   policies.forEach((p,i)=>{
     const path='selectionPolicies['+i+']';
     if(!versionMap.has(p.eventVersionId))add(errors,path+'.eventVersionId','unknown_version','نسخه سیاست انتخاب آزمون پیدا نشد.');
-    if(!['master','doctorate'].includes(p.examLevel))add(errors,path+'.examLevel','invalid_level','مقطع سیاست انتخاب نامعتبر است.');
+    if(!isExamModelLevel(p.examLevel))add(errors,path+'.examLevel','invalid_level','مقطع سیاست انتخاب نامعتبر است.');
     if(p.maxExamSetSelections!==null&&(!Number.isInteger(p.maxExamSetSelections)||p.maxExamSetSelections<1))add(errors,path+'.maxExamSetSelections','invalid_limit','حد انتخاب باید عدد صحیح مثبت یا null باشد.');
+    // V3-Hardening B3: سه حالت سقف — سازگار با رکوردهای قدیمی بدون selectionLimitState
+    if(p.selectionLimitState!==undefined){
+      if(!(SELECTION_LIMIT_STATES as readonly string[]).includes(p.selectionLimitState))
+        add(errors,path+'.selectionLimitState','invalid_limit_state','حالت سقف انتخاب نامعتبر است.');
+      if(p.selectionLimitState==='limited'&&p.maxExamSetSelections===null)
+        add(errors,path+'.selectionLimitState','limit_state_mismatch','حالت limited نیازمند عدد سقف است.');
+      if(p.selectionLimitState!=='limited'&&p.maxExamSetSelections!==null)
+        add(errors,path+'.selectionLimitState','limit_state_mismatch','حالت unlimited/unknown نیازمند سقف null است.');
+    }
     if(duplicate(p.allowedRoles))add(errors,path+'.allowedRoles','duplicate_roles','نقش‌های مجاز تکراری‌اند.');
     if(!validStatuses.includes(p.status))add(errors,path+'.status','invalid_status','وضعیت سیاست انتخاب نامعتبر است.');
-    if(p.maxExamSetSelections===null&&p.status==='official_verified')warnings.push({path:path+'.maxExamSetSelections',code:'unbounded_verified_policy',message:'سقف نامعلوم با وضعیت قطعی ثبت شده است.'});
+    if(p.maxExamSetSelections===null&&p.status==='official_verified'&&p.selectionLimitState!=='unknown')
+      warnings.push({path:path+'.maxExamSetSelections',code:'unbounded_verified_policy',message:'سقف نامعلوم با وضعیت قطعی ثبت شده است.'});
   });
 
   // Cross-table semantic guard: a master coefficient row belongs to a target/profile,
@@ -647,7 +799,9 @@ export function resolveCandidatePreparationPlan(
     for(const component of targetComponents){
       resolvedComponents.push({
         targetId:target.id,componentId:component.id,componentCode:component.componentCode,
-        componentTitle:component.componentTitle,value:component.value,state:component.state,
+        componentTitle:component.componentTitle,value:component.value,
+        valueState:normalizeCoefficientValueState(component.state)??'unknown',
+        evidence:mapAssignmentVerificationToEvidence(component.verification),
         subjectIds:component.subjectIds.filter(subjectId=>includedSetRows.some(row=>row.subjectId===subjectId))
       });
     }
@@ -658,14 +812,18 @@ export function resolveCandidatePreparationPlan(
       const subject=subjectsById.get(row.subjectId);
       if(!subject)continue;
       const direct=coefficientRow?.values.find(v=>v.subjectId===row.subjectId)??null;
-      if(direct?.state==='official_zero'||direct?.state==='not_applicable')continue;
-      const inclusion=membership?'included_by_combination':direct?.state==='unknown'?'unknown_coefficient':'positive_coefficient';
+      // V3-Hardening B4/B5: محور مقدار و شواهد جدا خوانده می‌شوند؛ دادهٔ legacy با normalize.
+      // بدون ردیف ضریب صریح → unknown (نه not_applicable؛ غیبت رکورد ≠ نامرتبط بودن)
+      const directAxis=direct?(normalizeCoefficientValueState(direct.valueState??direct.state)??'unknown'):'unknown';
+      const directEvidence=direct?(direct.evidence??mapAssignmentVerificationToEvidence(coefficientRow?.verification)):'pending_verification';
+      if(directAxis==='zero'||directAxis==='not_applicable')continue;
+      const inclusion=membership?'included_by_combination':directAxis==='unknown'?'unknown_coefficient':'positive_coefficient';
       resolvedTargets.push({targetId:target.id,subjectId:subject.id,inclusion,directCoefficient:direct,componentCoefficients:[]});
       const old=subjectTargetMap.get(subject.id);
       if(old){
         if(!old.includedInTargetIds.includes(target.id))old.includedInTargetIds.push(target.id);
         old.coefficientsByTarget.push({
-          targetId:target.id,value:direct?.value??null,state:direct?.state??'unknown',
+          targetId:target.id,value:direct?.value??null,valueState:directAxis,evidence:directEvidence,
           scope:direct?'exam_subject':null,
         });
       }else{
@@ -673,7 +831,7 @@ export function resolveCandidatePreparationPlan(
           subjectId:subject.id,subjectNumber:row.subjectNumber,title:subject.title,
           includedInTargetIds:[target.id],
           coefficientsByTarget:[{
-            targetId:target.id,value:direct?.value??null,state:direct?.state??'unknown',
+            targetId:target.id,value:direct?.value??null,valueState:directAxis,evidence:directEvidence,
             scope:direct?'exam_subject':null,
           }],
         });

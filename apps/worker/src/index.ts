@@ -17,6 +17,7 @@ export function resetRateLimitsForTesting(): void {
  * API اصلی سامانه — Cloudflare Workers (Hono)
  * همهٔ منطق تصمیم در @ael/engine است؛ این لایه فقط ارکستراسیون و پایدارسازی است.
  */
+import { CLIENT_BANK_ANSWER_KEY_BY_ID } from './data/client-bank-keys.server';
 import { Hono } from 'hono';
 import type { Context } from 'hono';
 import { cors } from 'hono/cors';
@@ -1150,10 +1151,15 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   });
 
   app.get('/api/tracks', async (c) => {
+    // V3-Hardening B8: فهرست trackها فقط از کاتالوگ واقعی می‌آید — بدون fallback
+    // ثابت مدیریت‌محور. کاتالوگ خالی = پاسخ صریح catalog_not_available، نه تزریق
+    // رشتهٔ فرضی از یک فهرست hardcoded.
     const packs = await store.listPacks().catch(() => []);
+    if (packs.length === 0) {
+      return c.json({ tracks: [], packs: [], catalog_not_available: true });
+    }
     const tracks = new Set<TrackId>(['common']);
     for (const p of packs) for (const t of p.tracks) tracks.add(t);
-    if (packs.length === 0) for (const t of ['common', 'business', 'technology', 'strategy', 'industrial'] as TrackId[]) tracks.add(t);
     return c.json({ tracks: [...tracks], packs });
   });
 
@@ -2407,6 +2413,155 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       lesson: lessonPayload(question.nodeId),
       replay: isReplay,
       stats: { coins: stats.coins, streakDays: stats.streakDays, dayNumber: stats.dayNumber },
+    });
+  });
+
+
+  /* ---------- R-036/R-025: تصحیح سمت سرور برای بانک سؤال کلاینت (server-only keys) ----------
+   * کلیدهای بانک سؤال React فقط در client-bank-keys.server.ts زندگی می‌کنند و هرگز
+   * به Bundle کلاینت نمی‌روند. کلاینت سؤال عمومی (صورت/گزینه‌ها) را محلی دارد،
+   * بلیت می‌گیرد، پاسخ می‌فرستد و نتیجهٔ مجاز همان سؤال را پس از submit می‌گیرد.
+   * قواعد: ownership از بلیت سرور، مصرف بلیت قبل از بازگشت نتیجه، idempotent بودن
+   * replay از روی AnswerEvent، و افشای کلید فقط برای همان سؤال همان داوطلب. */
+  app.use('/api/practice/attempts', (c, next) => rateLimit(c, next));
+  app.use('/api/practice/answer', (c, next) => rateLimit(c, next));
+  app.use('/api/practice/result', (c, next) => rateLimit(c, next));
+
+  app.post('/api/practice/attempts', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as { questionIds?: unknown } | null;
+    const questionIds = body?.questionIds;
+    if (
+      !Array.isArray(questionIds) ||
+      questionIds.length === 0 ||
+      questionIds.length > 50 ||
+      !questionIds.every((id) => typeof id === 'string' && id.length > 0 && id.length <= 128) ||
+      new Set(questionIds).size !== questionIds.length
+    ) {
+      return c.json({ error: 'فهرست شناسهٔ سؤال نامعتبر است (۱ تا ۵۰ شناسهٔ یکتا)' }, 400);
+    }
+    const unknown = questionIds.filter((id) => !CLIENT_BANK_ANSWER_KEY_BY_ID.has(id));
+    if (unknown.length > 0) {
+      return c.json({ error: 'شناسهٔ سؤال در بانک سمت سرور یافت نشد', unknownCount: unknown.length }, 404);
+    }
+    const attempts = questionIds.map((questionId) => ({
+      attemptId: crypto.randomUUID(),
+      questionId,
+      attemptType: 'practice' as const,
+    }));
+    await store.issueAttemptTickets(user.id, attempts);
+    store
+      .logAudit({
+        userId: user.id,
+        action: 'practice_attempts_issued',
+        entityType: 'attempt_ticket',
+        entityId: `${attempts.length}`,
+        details: { count: attempts.length, path: '/api/practice/attempts' },
+        sourceIp: c.req.header('x-forwarded-for') ?? null,
+      })
+      .catch(() => undefined);
+    return c.json({
+      attempts: attempts.map((a) => ({ attemptId: a.attemptId, questionId: a.questionId })),
+    });
+  });
+
+  app.post('/api/practice/answer', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as
+      | { attemptId?: unknown; questionId?: unknown; selectedOption?: unknown }
+      | null;
+    if (
+      !body ||
+      typeof body.attemptId !== 'string' ||
+      typeof body.questionId !== 'string' ||
+      typeof body.selectedOption !== 'number' ||
+      !Number.isInteger(body.selectedOption) ||
+      body.selectedOption < 0 ||
+      body.selectedOption > 3
+    ) {
+      return c.json({ error: 'ورودی نامعتبر' }, 400);
+    }
+    const key = CLIENT_BANK_ANSWER_KEY_BY_ID.get(body.questionId);
+    if (!key) return c.json({ error: 'سؤال ناشناخته' }, 404);
+
+    // idempotency: replay همان نتیجهٔ ثبت‌شده را برمی‌گرداند، بدون ثبت دوباره
+    const existing = await store.findAnswerByAttempt(user.id, body.attemptId);
+    if (existing) {
+      if (existing.questionId !== body.questionId) {
+        return c.json({ error: 'شناسهٔ تلاش قبلاً برای سؤال دیگری ثبت شده است' }, 400);
+      }
+      return c.json({
+        questionId: body.questionId,
+        submitted: true,
+        wasCorrect: existing.isCorrect,
+        correctOption: key.correctOption,
+        explanation: key.explanation,
+        trapNote: key.trapNote,
+        replay: true,
+      });
+    }
+
+    // ownership از بلیت سمت سرور — هیچ شناسهٔ کلاینتی مدرک مجوز نیست
+    const consumed = await store.consumeAttemptTicket(user.id, body.attemptId, body.questionId);
+    if (!consumed) {
+      return c.json({ error: 'بلیت این تلاش نامعتبر، مصرف‌شده یا منقضی است.' }, 403);
+    }
+
+    const wasCorrect = body.selectedOption === key.correctOption;
+    await store.insertAnswerEvent({
+      id: crypto.randomUUID(),
+      userId: user.id,
+      questionId: body.questionId,
+      selectedOption: body.selectedOption,
+      isCorrect: wasCorrect,
+      attemptId: body.attemptId,
+      answeredAt: new Date().toISOString(),
+      rippleReport: null,
+    });
+    store
+      .logAudit({
+        userId: user.id,
+        action: 'practice_answer_recorded',
+        entityType: 'answer_event',
+        entityId: body.questionId,
+        details: { attemptId: body.attemptId, path: '/api/practice/answer' },
+        sourceIp: c.req.header('x-forwarded-for') ?? null,
+      })
+      .catch(() => undefined);
+
+    // افشای کلید فقط همین‌جا — فقط برای همان سؤالِ همان داوطلبِ همان تلاشِ مصرف‌شده
+    return c.json({
+      questionId: body.questionId,
+      submitted: true,
+      wasCorrect,
+      correctOption: key.correctOption,
+      explanation: key.explanation,
+      trapNote: key.trapNote,
+      replay: false,
+    });
+  });
+
+  app.get('/api/practice/result', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const attemptId = c.req.query('attemptId');
+    if (typeof attemptId !== 'string' || attemptId.length === 0 || attemptId.length > 128) {
+      return c.json({ error: 'شناسهٔ تلاش نامعتبر است' }, 400);
+    }
+    const existing = await store.findAnswerByAttempt(user.id, attemptId);
+    if (!existing) return c.json({ error: 'نتیجه‌ای برای این تلاش ثبت نشده است' }, 404);
+    const key = CLIENT_BANK_ANSWER_KEY_BY_ID.get(existing.questionId);
+    if (!key) return c.json({ error: 'سؤال ناشناخته' }, 404);
+    return c.json({
+      questionId: existing.questionId,
+      submitted: true,
+      wasCorrect: existing.isCorrect,
+      correctOption: key.correctOption,
+      explanation: key.explanation,
+      trapNote: key.trapNote,
+      answeredAt: existing.answeredAt,
     });
   });
 

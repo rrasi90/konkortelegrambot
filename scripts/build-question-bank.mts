@@ -7,6 +7,7 @@
 import { writeFile, mkdir } from 'node:fs/promises';
 import { INITIAL_QUESTION_BANK } from '../src/data/konkorData';
 import { YEARLY_KONKOR_QUESTIONS, YEARLY_KONKOR_BOOKLETS } from '../src/data/yearlyKonkorExams';
+import { CLIENT_BANK_ANSWER_KEY_BY_ID } from '../apps/worker/src/data/client-bank-keys.server';
 
 type Tier = 'official_traced_phd' | 'official_traced_arshad' | 'quarantine';
 
@@ -63,7 +64,7 @@ for (const q of items) {
   }
   const sameContent =
     prev.text === q.text &&
-    prev.correctOption === q.correctOption &&
+    (CLIENT_BANK_ANSWER_KEY_BY_ID.get(prev.id)?.correctOption ?? -1) === (CLIENT_BANK_ANSWER_KEY_BY_ID.get(q.id)?.correctOption ?? -1) &&
     prev.options.join('|') === q.options.join('|');
   if (sameContent) {
     mergedDuplicates += 1; // keep the first (richer) record
@@ -94,9 +95,10 @@ for (const q of unique) {
     sourceReference: q.sourceReference ?? '',
     questionText: q.text,
     options: q.options,
-    correctOption: q.correctOption,
-    explanation: q.explanation,
-    trapNote: q.trapNote ?? '',
+    // R-036: کلید فقط از رجیستری سرور می‌آید — بانک کلاینت public-only است
+    correctOption: CLIENT_BANK_ANSWER_KEY_BY_ID.get(q.id)?.correctOption ?? -1,
+    explanation: CLIENT_BANK_ANSWER_KEY_BY_ID.get(q.id)?.explanation ?? '',
+    trapNote: CLIENT_BANK_ANSWER_KEY_BY_ID.get(q.id)?.trapNote ?? '',
     expectedTimeMs: q.expectedTimeMs ?? null,
     difficulty: 'unclassified',
     cognitiveLevel: 'unclassified',

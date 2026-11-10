@@ -113,14 +113,16 @@ describe('AEL comprehensive exam model', () => {
     expect(resolved.examSetIds).toEqual(['set.doctorate.1406.2162']);
     expect(resolved.subjects.map(s=>s.subjectNumber)).toEqual([1,2,3,7]);
     const specialized=resolved.subjects.find(s=>s.subjectId==='phd.2162.s7')!;
+    // V3-Hardening B4: محور مقدار و شواهد جدا — دکتری بردار ضریب سطر ندارد
+    // (کامپوننت‌محور است) → شواهد صریحاً pending_verification، نه ارتقای خاموش
     expect(specialized.coefficientsByTarget).toEqual([
-      {targetId:'p1406.foresight',value:null,state:'unknown',scope:null}
+      {targetId:'p1406.foresight',value:null,valueState:'unknown',evidence:'pending_verification',scope:null}
     ]);
     const specializationWeight=resolved.componentCoefficients.find(c=>
       c.targetId==='p1406.foresight'&&c.componentCode==='specialized'
     );
     expect(specializationWeight).toMatchObject({
-      value:5,state:'official_positive',
+      value:5,valueState:'positive',evidence:'official_verified',
       subjectIds:['phd.2162.s2','phd.2162.s7']
     });
     // ضریب کامپوننت‌سطح هرگز scope سابجکت را حمل نمی‌کند (ResolvedPreparationComponent بدون scope است)

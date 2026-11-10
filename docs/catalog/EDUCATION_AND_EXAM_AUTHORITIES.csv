@@ -1,0 +1,11 @@
+authorityCode,countryCode,nameFa,nameEn,role,url,status,sourceTier,notes
+ir-sanjesh,IR,سازمان سنجش آموزش کشور,Organization for Educational Research and Planning (Sanjesh),exam_organizer,https://sanjesh.org,active,1,"برگزارکنندهٔ سراسری، ارشد، دکتری، کاردانی به کارشناسی؛ سامانهٔ ثبت‌نام و نتایج"
+ir-sanjeshp,IR,مرکز سنجش آموزش پزشکی وزارت بهداشت,Centre for Assessment of Medical Education,exam_organizer,https://sanjeshp.ir,active,1,"دستیاری/تخصص/فوق‌تخصص/فلوشیپ و ارشد و دکتری علوم پزشکی"
+ir-azad,IR,دانشگاه آزاد اسلامی,Islamic Azad University,institution_admission,https://www.iau.ir,active,2,"پذیرش جدا یا پیوند با سنجش؛ وضعیت هر سال باید از منبع همان سال تأیید شود (PLANNED)"
+ir-pnu,IR,دانشگاه پیام نور,Payame Noor University,institution_admission,https://pnu.ac.ir,active,2,"نوع مؤسسه است نه لزوماً ExamFamily"
+ir-tvto,IR,دانشگاه فنی و حرفه‌ای / ملی مهارت,Technical and Vocational University,exam_organizer,https://www.tvu.ac.ir,planned,2,"کاردانی فنی‌وحرفه‌ای؛ نیاز به تأیید وضعیت آزمون هر سال"
+ir-uast,IR,دانشگاه جامع علمی-کاربردی,University of Applied Science and Technology,exam_organizer,https://uast.ac.ir,planned,2,"پذیرش کاردانی/کارشناسی ناپیوسته؛ آزمون مستقل یا بدون آزمون"
+ir-farhangian,IR,دانشگاه فرهنگیان / تربیت دبیر,Farhangian University,institution_admission,https://cfu.ac.ir,planned,2,"مسیر دانشجو-معلم؛ بررسی اتصال به آزمون سراسری هر سال لازم است"
+ir-ministry-edu,IR,وزارت آموزش و پرورش,Ministry of Education,policy_authority,https://www.moe.gov.ir,active,1,"نهاد ناظر مقاطع زیر دیپلم/دیپلم؛ نه برگزارکنندهٔ آزمون ورودی دانشگاه"
+ir-health-ministry,IR,وزارت بهداشت، درمان و آموزش پزشکی,Ministry of Health and Medical Education,policy_authority,https://health.gov.ir,active,1,"نهاد سیاست‌گذار و ناظر خانواده‌های علوم پزشکی"
+ir-science-ministry,IR,وزارت علوم، تحقیقات و فناوری,Ministry of Science Research and Technology,policy_authority,https://www.msrt.ir,active,1,"نهاد سیاست‌گذار آموزش عالی سنجش‌محور"

@@ -190,6 +190,14 @@ export interface DataStore {
   /** خواندن بلیت صادرشده برای اعتبارسنجی سمت سرور (نوع تلاش از client پذیرفته نمی‌شود) */
   getAttemptTicket(userId: string, attemptId: string, questionId: string): Promise<AttemptTicket | null>;
 
+  /**
+   * R-036/R-025: مصرف بلیت تلاش برای مسیر تصحیح practice بانک کلاینت.
+   * فقط بلیت مصرف‌نشدهٔ همان کاربر/همان سؤال مصرف می‌شود؛ false یعنی
+   * مصرف‌شده/منقضی/ناموجود. مصرف باید قبل از بازگشت نتیجه انجام شود تا
+   * Retry نتواند نتیجه را دوباره بسازد (idempotency از AnswerEvent می‌آید).
+   */
+  consumeAttemptTicket(userId: string, attemptId: string, questionId: string): Promise<boolean>;
+
   /** وضعیت شش‌بعدی مهارت‌های کاربر (learner_skill_states) */
   getSkillStates(userId: string): Promise<LearnerSkillState[]>;
   /** ثبت وضعیت شش‌بعدی یک مهارت */
@@ -793,6 +801,21 @@ export class SupabaseStore implements DataStore {
       consumedAt: row.consumed_at == null ? null : String(row.consumed_at),
       expiresAt: String(row.expires_at),
     };
+  }
+
+  async consumeAttemptTicket(userId: string, attemptId: string, questionId: string): Promise<boolean> {
+    const ticket = await this.getAttemptTicket(userId, attemptId, questionId);
+    if (!ticket) return false;
+    if (ticket.consumedAt || new Date(ticket.expiresAt).getTime() <= Date.now()) return false;
+    await this.request(
+      'PATCH',
+      'attempt_tickets',
+      { consumed_at: new Date().toISOString() },
+      `?attempt_id=eq.${encodeURIComponent(attemptId)}&user_id=eq.${encodeURIComponent(userId)}&question_id=eq.${encodeURIComponent(questionId)}&consumed_at=is.null`,
+    );
+    // راستی‌آزمایی مصرف (PATCH فیلترشده فقط ردیف مصرف‌نشده را تغییر می‌دهد)
+    const after = await this.getAttemptTicket(userId, attemptId, questionId);
+    return !!after?.consumedAt;
   }
 
   async getSkillStates(userId: string): Promise<LearnerSkillState[]> {

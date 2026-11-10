@@ -52,6 +52,7 @@ describe('learning and content integrity', () => {
     const ordinary = base.cards.find((card) => card.questionId)!;
     const grade = (card: ReviewCard) => evaluateAnswerAndRipple({
       ...base, nodes, dependencies, questions, lessons: {}, card, selectedOption: 0,
+      grading: { wasCorrect: false, trapNote: '' },
       confidence: 'high', responseTimeMs: 1000,
     });
     expect(() => grade({ ...ordinary, nodeId: 'missing' })).toThrow();

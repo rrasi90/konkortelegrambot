@@ -3,6 +3,7 @@ import { QUESTION_BANK, KNOWLEDGE_NODES } from '../data/konkorData';
 import { PLACEMENT_BOTTLENECK_QUESTIONS, MasteryDeltaWithTitle } from '../engine/aelEngine';
 import { MathText } from './MathText';
 import { Sparkles, CheckCircle2, XCircle, X, ArrowLeft } from 'lucide-react';
+import { gradeAnswersOnServerBatch, type PracticeReveal } from '../lib/serverGrading';
 
 interface PlacementModalProps {
   onCompletePlacement: (results: { questionId: string; wasCorrect: boolean }[]) => MasteryDeltaWithTitle[];
@@ -18,6 +19,8 @@ export const PlacementModal: React.FC<PlacementModalProps> = ({
   ).filter(Boolean);
 
   const [step, setStep] = useState(0);
+  const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string }>>({});
+
   const [answers, setAnswers] = useState<
     { questionId: string; chosenIdx: number; wasCorrect: boolean }[]
   >([]);
@@ -28,7 +31,22 @@ export const PlacementModal: React.FC<PlacementModalProps> = ({
 
   const handleSelect = (optionIdx: number) => {
     if (!currentQ) return;
-    const wasCorrect = optionIdx === currentQ.correctOption;
+    // R-036: wasCorrect فقط از تصحیح سمت سرور — نه از کلید باندل
+    void (async () => {
+    let wasCorrect = false;
+    try {
+      const reveal = await gradeAnswersOnServerBatch([{ questionId: currentQ.id, selectedOption: optionIdx }]);
+      wasCorrect = reveal.get(currentQ.id)?.wasCorrect ?? false;
+      const r = reveal.get(currentQ.id);
+      if (r) {
+        setQuestionReveals((prev) => ({
+          ...prev,
+          [currentQ.id]: { correctOption: r.correctOption, explanation: r.explanation, trapNote: r.trapNote },
+        }));
+      }
+    } catch {
+      // آفلاین: پاسخ ثبت می‌شود اما بدون نتیجهٔ معتبر (برچسب unknown)
+    }
     const nextAnswers = [
       ...answers,
       { questionId: currentQ.id, chosenIdx: optionIdx, wasCorrect },
@@ -46,6 +64,7 @@ export const PlacementModal: React.FC<PlacementModalProps> = ({
       );
       setFinalDeltas(deltas);
     }
+    })();
   };
 
   if (!currentQ && !finalDeltas) return null;
@@ -123,6 +142,7 @@ export const PlacementModal: React.FC<PlacementModalProps> = ({
               {answers.map((ans, idx) => {
                 const q = questions.find((item) => item.id === ans.questionId);
                 if (!q) return null;
+                const activeReveal = questionReveals[ans.questionId]; // R-036: کلید فقط از reveal سرور
                 return (
                   <div
                     key={q.id + idx}
@@ -137,7 +157,7 @@ export const PlacementModal: React.FC<PlacementModalProps> = ({
                         )}
                         <span>
                           سؤال {idx + 1}: پاسخ شما گزینه {ans.chosenIdx + 1}
-                          {ans.wasCorrect ? ' (درست)' : ` — کلید: گزینه ${q.correctOption + 1}`}
+                          {ans.wasCorrect ? ' (درست)' : ` — کلید: گزینه ${(activeReveal?.correctOption ?? 0) + 1}`}
                         </span>
                       </span>
                       <span className="text-[11px] text-slate-500">
@@ -145,7 +165,13 @@ export const PlacementModal: React.FC<PlacementModalProps> = ({
                       </span>
                     </div>
                     <div className="text-slate-700 dark:text-slate-300 leading-6">
-                      <MathText text={q.explanation} />
+                      {activeReveal ? (
+                        <MathText text={activeReveal.explanation} />
+                      ) : (
+                        <span className="text-slate-500 dark:text-slate-400">
+                          پاسخ تشریحی پس از تأیید سمت سرور نمایش داده می‌شود.
+                        </span>
+                      )}
                     </div>
                   </div>
                 );
