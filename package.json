@@ -22,6 +22,7 @@
     "validate:phase1": "node scripts/validate-phase-1-foundation.mjs",
     "audit:client-bundle": "node --import tsx scripts/audit-client-bundle.ts",
     "audit:miniapp": "node --import tsx scripts/audit-client-bundle.ts apps/miniapp",
+    "audit:offline": "node --import tsx scripts/audit-client-bundle.ts tools/offline",
     "dev:miniapp": "node --import tsx scripts/dev-server.mjs",
     "build:legacy": "vite build --mode legacy",
     "test:db": "node scripts/db-test-embedded.mjs",

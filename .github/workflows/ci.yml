@@ -30,6 +30,8 @@ jobs:
       - run: npm run validate:learning
       - run: npm run build:worker
       - run: npm run audit:miniapp
+      - run: npm run build:offline
+      - run: npm run audit:offline  # R-036/m4 §3.5: offline output must contain zero keys
       - name: Validate Wrangler bundle without deploying
         run: npx --yes wrangler deploy --dry-run --config apps/worker/wrangler.jsonc
 
