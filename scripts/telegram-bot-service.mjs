@@ -11,7 +11,9 @@ if (!BOT_TOKEN) {
   );
   process.exit(1);
 }
-const APP_URL = process.env.APP_URL || 'https://rrasi90.github.io/konkortelegrambot/';
+// مینی‌اپ باید از دامنهٔ Worker سرو شود: تصحیح سمت سرور (R-036) از مسیرهای نسبی
+// /api استفاده می‌کند و فقط هم‌مبأ با Worker کار می‌کند. Pages تعطیل است (پلن ریپو).
+const APP_URL = process.env.APP_URL || 'https://adaptive-exam-worker.ael-worker.workers.dev';
 const API_BASE = `https://api.telegram.org/bot${BOT_TOKEN}`;
 
 async function tg(method, body = {}) {
