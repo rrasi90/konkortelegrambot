@@ -82,7 +82,9 @@
   body {
     width: 100%;
     max-width: 100vw;
-    overflow-x: hidden;
+    /* FIX-SCROLL: «hidden» روی html+body در WebKit (Telegram WebView) اسکرول عمودی را
+       می‌شکند — «clip» بدون ساختن scroll-container برش می‌زند و اسکرول سالم می‌ماند. */
+    overflow-x: clip;
     margin: 0;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
