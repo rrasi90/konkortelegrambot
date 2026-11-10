@@ -18,7 +18,7 @@ V3-030,V3-D,NOT_STARTED,V3-003,—,—,—,—,—,مدل سوابق تحصیل�
 V3-031,V3-D,NOT_STARTED,V3-030,—,—,—,—,—,onboarding داده‌محور؛ حذف لیست‌های ثابت از UI,2026-11-09,—
 V3-032,V3-D,NOT_STARTED,V3-031,—,—,—,—,—,چند هدف، eligibility و تفکیک intent/registration,2026-11-09,—
 V3-033,V3-D,NOT_STARTED,V3-031,—,—,—,—,—,مهاجرت پروفایل‌های قدیمی arshad/phd به مدل جدید,2026-11-09,—
-V3-040,V3-E,NOT_STARTED,V3-003,—,—,—,—,—,ممیزی مدل canonical سؤال (Question/Revision/Appearance/Key),2026-11-09,—
+V3-040,V3-E,DONE,V3-003,—,packages/contracts/src/question-model.ts; packages/contracts/src/index.ts; src/tests/v3/canonical-question-model.test.ts,npx vitest run src/tests/v3/canonical-question-model.test.ts,src/tests/v3/canonical-question-model.test.ts,0,مدل canonical با ۶ موجودیت (Question/Revision/Appearance/AnswerKeyRevision append-only/Review/Dispute) + validatorهای dangling/duplicate/cross-question/key-range + policy computeAllowedUse (trust/verification/key مستقل) + آداپتور legacy بدون ارتقای official — ۸ تست؛ lifecycle API در V3-041..044 ادامه دارد,2026-11-11,این-PR
 V3-041,V3-E,NOT_STARTED,V3-040,—,—,—,—,—,Quick Authoring از context صفحهٔ جاری,2026-11-09,—
 V3-042,V3-E,NOT_STARTED,V3-041,—,—,—,—,—,workflow بازبینی و moderation سؤال,2026-11-09,—
 V3-043,V3-E,NOT_STARTED,V3-042,—,—,—,—,—,اتصال امن سؤال کاربر به موتور؛ allowedUse/trust,2026-11-09,—

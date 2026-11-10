@@ -417,6 +417,9 @@ export * from './registry';
 export * from './ingestion';
 export * from './academic-foundation';
 
+// V3-040 — مدل canonical سؤال (هویت/revision/appearance/key append-only)
+export * from './question-model';
+
 // exam-model چند نام مشترک با registry/academic-foundation دارد (CoefficientScope،
 // ExamSelectionPolicy، ExamSubjectCourseMapping) — نسخه‌های exam-model با پسوند
 // ExamModel صادر می‌شوند تا مصرف‌کنندگان index دچار ابهام نشوند؛ تست‌ها مستقیم از
