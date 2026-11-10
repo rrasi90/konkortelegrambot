@@ -25,7 +25,7 @@ describe('Ledger / Gap Register reconciliation (v5 §3)', () => {
       DONE: 10,
       DONE_WITH_DEFAULT: 3,
       PARTIAL: 4,
-      NOT_STARTED: 15,
+      NOT_STARTED: 14,
     });
     expect(ledger.countsByPrefix['FX']).toEqual({ DONE: 5 });
     expect(ledger.countsByPrefix['HD']).toEqual({ DONE: 8 });
