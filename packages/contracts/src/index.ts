@@ -420,6 +420,9 @@ export * from './academic-foundation';
 // V3-030..033 — پروفایل تحصیلی داوطلب، چند هدف و eligibility
 export * from './candidate-profile';
 
+// V3-041..044 — چرخهٔ عمر سؤال، moderation و dispute
+export * from './question-lifecycle';
+
 // V3-040 — مدل canonical سؤال (هویت/revision/appearance/key append-only)
 export * from './question-model';
 
