@@ -848,6 +848,9 @@ export * from './multi-course-quiz';
 
 export * from './coverage-matrix';
 
+// V3-052 — گراف پیش‌نیاز typed با cycle detection و پیشنهادهای proposal-only (C-08)
+export * from './prereq-graph';
+
 // V2-073..076 — deterministic plan/mastery/scheduling helpers (pure, no I/O)
 export * from './mastery';
 export * from './planner';
