@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { gradeAnswerOnServer } from '../lib/serverGrading';
 import { SectionHeader } from './ui';
 import type { KonkorCourseSectionId } from '../data/yearlyKonkorExams';
 import type { KnowledgeNode, QuestionItem, InteractiveLesson } from '../data/konkorData';
@@ -58,6 +59,8 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
   onRecordMistake,
 }) => {
   const [selectedSubjectId, setSelectedSubjectId] = useState<KonkorCourseSectionId>(initialSubjectId);
+  const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string }>>({});
+
   const [activeSubTab, setActiveSubTab] = useState<SubjectSubTab>('books');
   const [selectedDegreeFilter, setSelectedDegreeFilter] = useState<'all' | 'ارشد' | 'دکتری'>('all');
   const [selectedYearFilter, setSelectedYearFilter] = useState<number | 'all'>('all');
@@ -122,11 +125,24 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
   }, [allSubjectQuestions]);
 
   const handleSelectOption = (q: QuestionItem, optIdx: number) => {
+    if (userAnswers[q.id] !== undefined) return;
     setUserAnswers((prev) => ({ ...prev, [q.id]: optIdx }));
     setRevealedAnswers((prev) => ({ ...prev, [q.id]: true }));
-    if (optIdx !== q.correctOption && onRecordMistake) {
-      onRecordMistake(q, optIdx);
-    }
+    // R-036: تصحیح فقط سمت سرور — ثبت خطا بر اساس نتیجهٔ reveal سرور
+    void (async () => {
+      try {
+        const reveal = await gradeAnswerOnServer(q.id, optIdx);
+        setQuestionReveals((prev) => ({
+          ...prev,
+          [q.id]: { correctOption: reveal.correctOption, explanation: reveal.explanation, trapNote: reveal.trapNote },
+        }));
+        if (!reveal.wasCorrect && onRecordMistake) {
+          onRecordMistake(q, optIdx);
+        }
+      } catch {
+        // بدون افشای کلید؛ تشریح صرفاً پس از تأیید سرور
+      }
+    })();
   };
 
   const activeBook = subjectBooks[0];
@@ -555,7 +571,8 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
                 const isRevealed = revealedAnswers[q.id];
                 const selectedOpt = userAnswers[q.id];
                 const isAnswered = selectedOpt !== undefined;
-                const isCorrect = isAnswered && selectedOpt === q.correctOption;
+                const activeReveal = questionReveals[q.id]; // R-036: کلید فقط از reveal سرور
+                const isCorrect = !!(isAnswered && activeReveal && selectedOpt === activeReveal.correctOption);
                 const isPhd =
                   q.examLevel === 'دکتری' ||
                   Boolean(q.sourceReference && q.sourceReference.includes('دکتری'));
@@ -586,16 +603,22 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
                       </div>
 
                       {isAnswered && (
-                        <span
-                          className={`px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 ${
-                            isCorrect
-                              ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
-                              : 'bg-rose-500/15 text-rose-700 dark:text-rose-300'
-                          }`}
-                        >
-                          {isCorrect ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
-                          <span>{isCorrect ? 'پاسخ صحیح' : 'پاسخ نادرست'}</span>
-                        </span>
+                        activeReveal ? (
+                          <span
+                            className={`px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 ${
+                              isCorrect
+                                ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
+                                : 'bg-rose-500/15 text-rose-700 dark:text-rose-300'
+                            }`}
+                          >
+                            {isCorrect ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
+                            <span>{isCorrect ? 'پاسخ صحیح' : 'پاسخ نادرست'}</span>
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-1 rounded-lg font-bold bg-slate-500/15 text-slate-600 dark:text-slate-300">
+                            در انتظار تأیید سرور
+                          </span>
+                        )
                       )}
                     </div>
 
@@ -608,7 +631,7 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {q.options.map((opt, optIdx) => {
                         const isThisSelected = selectedOpt === optIdx;
-                        const isThisCorrect = optIdx === q.correctOption;
+                        const isThisCorrect = optIdx === (activeReveal?.correctOption ?? -1);
                         let btnStyle =
                           'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-blue-400';
 
@@ -654,24 +677,32 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
                     {/* پاسخ تشریحی و دام طراح */}
                     {isRevealed && (
                       <div className="mt-3 pt-3 border-t border-slate-200/80 dark:border-slate-800 space-y-2.5">
-                        <div className="p-4 rounded-xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 space-y-1.5">
-                          <div className="font-bold text-blue-800 dark:text-blue-300">
-                            پاسخ تشریحی کامل (گزینه صحیح: گزینه {q.correctOption + 1}):
-                          </div>
-                          <div className="text-slate-800 dark:text-slate-200 leading-6">
-                            <MathText text={q.explanation} />
-                          </div>
-                        </div>
+                        {activeReveal ? (
+                          <>
+                            <div className="p-4 rounded-xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 space-y-1.5">
+                              <div className="font-bold text-blue-800 dark:text-blue-300">
+                                پاسخ تشریحی کامل (گزینه صحیح: گزینه {activeReveal.correctOption + 1}):
+                              </div>
+                              <div className="text-slate-800 dark:text-slate-200 leading-6">
+                                <MathText text={activeReveal.explanation} />
+                              </div>
+                            </div>
 
-                        {q.trapNote && (
-                          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 space-y-1">
-                            <div className="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
-                              <AlertTriangle className="w-3.5 h-3.5" />
-                              <span>دام طراح کنکور:</span>
-                            </div>
-                            <div className="text-amber-950 dark:text-amber-100 leading-6">
-                              <MathText text={q.trapNote} />
-                            </div>
+                            {activeReveal.trapNote && (
+                              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 space-y-1">
+                                <div className="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                                  <AlertTriangle className="w-3.5 h-3.5" />
+                                  <span>دام طراح کنکور:</span>
+                                </div>
+                                <div className="text-amber-950 dark:text-amber-100 leading-6">
+                                  <MathText text={activeReveal.trapNote} />
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
+                            کلید و پاسخ تشریحی پس از تأیید سمت سرور (ثبت پاسخ شما) نمایش داده می‌شود.
                           </div>
                         )}
 

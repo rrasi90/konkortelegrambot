@@ -45,6 +45,7 @@ import {
 } from './utils/telegramBridge';
 import { DashboardView } from './components/DashboardView';
 import { StudySessionView } from './components/StudySessionView';
+import { gradeAnswerOnServer, GradingUnavailableError } from './lib/serverGrading';
 import { SkillTreeGraph } from './components/SkillTreeGraph';
 import { LessonsLibraryView } from './components/LessonsLibraryView';
 import { PlacementModal } from './components/PlacementModal';
@@ -361,7 +362,8 @@ export default function App() {
     question: QuestionItem | undefined,
     selectedOption: number | null,
     wasCorrect: boolean,
-    errorType: MistakeErrorType
+    errorType: MistakeErrorType,
+    reveal?: { correctOption: number; explanation: string; trapNote: string }
   ) => {
     if (!question) return;
     if (wasCorrect) {
@@ -379,10 +381,11 @@ export default function App() {
         topic: node.topic,
         questionText: question.text,
         options: question.options,
-        correctOption: question.correctOption,
+        // R-036: کلید از reveal سرور می‌آید — هرگز از بانک کلاینت
+        correctOption: reveal?.correctOption ?? -1,
         selectedOption,
-        explanation: question.explanation,
-        trapNote: question.trapNote,
+        explanation: reveal?.explanation ?? '',
+        trapNote: reveal?.trapNote ?? '',
         source:
           question.sourceReference ||
           question.designedFromTextbook ||
@@ -817,17 +820,23 @@ export default function App() {
             nodeStates={nodeStates}
             examFrequencyMap={examFrequencyMap}
             isNightQuiz={isNightQuizMode}
-            onSubmitAnswer={({
+            onSubmitAnswer={async ({
               card,
               selectedOption,
               confidence,
               responseTimeMs,
             }) => {
+              // R-036: تصحیح فقط سمت سرور؛ کلید هرگز از باندل نمی‌آید
+              const reveal = card.questionId
+                ? await gradeAnswerOnServer(card.questionId, selectedOption ?? -1)
+                : undefined;
+
               const result = evaluateAnswerAndRipple({
                 card,
                 selectedOption,
                 confidence,
                 responseTimeMs,
+                grading: { wasCorrect: reveal?.wasCorrect ?? false, trapNote: reveal?.trapNote ?? '' },
                 nodeStates,
                 cards,
                 stats,
@@ -841,7 +850,7 @@ export default function App() {
               setCards(result.nextCards);
               setStats(result.nextStats);
 
-              // ثبت پاسخ در دفتر خطا (پاسخ صحیح، خطای قبلی همان سؤال را حل‌شده می‌کند)
+              // ثبت پاسخ در دفتر خطا با reveal سرور (پاسخ صحیح، خطای قبلی همان سؤال را حل‌شده می‌کند)
               const answeredQuestion = card.questionId
                 ? questions.find((q) => q.id === card.questionId)
                 : undefined;
@@ -849,7 +858,8 @@ export default function App() {
                 answeredQuestion,
                 selectedOption,
                 result.report.wasCorrect,
-                result.report.errorType as MistakeErrorType
+                result.report.errorType as MistakeErrorType,
+                reveal
               );
 
               if (customSessionQueue && result.report.spawnedCards.length > 0) {
@@ -861,7 +871,7 @@ export default function App() {
                 );
               }
 
-              return { report: result.report, snapshot: result.snapshot };
+              return { report: result.report, snapshot: result.snapshot, reveal };
             }}
             onRollbackSlip={(snapshot, report) => {
               const restored = rollbackSlipPenalty(snapshot, report);
@@ -962,6 +972,10 @@ export default function App() {
             onRecordQuestionAttempt={(question, selectedOption) => {
               if (question.isQuarantinedProof || !nodes.some((node) => node.id === question.nodeId) ||
                   !questions.some((item) => item.id === question.id && item.nodeId === question.nodeId && !item.isQuarantinedProof)) return;
+              void (async () => {
+              // R-036: تصحیح سرور-محور
+              void gradeAnswerOnServer(question.id, selectedOption).then((reveal) => {
+              return reveal; }).then(async (reveal) => {
               const targetCard: ReviewCard = cards.find(
                 (card) => card.questionId === question.id && card.nodeId === question.nodeId &&
                   card.cardType === 'question' && card.attemptType !== 'proof'
@@ -981,6 +995,7 @@ export default function App() {
                 selectedOption,
                 confidence: 'high',
                 responseTimeMs: question.expectedTimeMs || 45000,
+                grading: { wasCorrect: reveal?.wasCorrect ?? false, trapNote: reveal?.trapNote ?? '' },
                 nodeStates,
                 cards,
                 stats,
@@ -997,8 +1012,11 @@ export default function App() {
                 question,
                 selectedOption,
                 result.report.wasCorrect,
-                result.report.errorType as MistakeErrorType
+                result.report.errorType as MistakeErrorType,
+                reveal
               );
+              });
+              })();
             }}
             onStartYearAdaptiveSession={(year, sectionId) => {
               const now = new Date();

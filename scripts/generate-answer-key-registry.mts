@@ -17,6 +17,7 @@ import { createHash, randomUUID } from 'node:crypto';
 interface ExtractedKey {
   id: string;
   bank: string;
+  /** سؤال چهارگزینه‌ای: اندیس گزینه صحیح. conceptCheck: اندیس گزینه صحیح (۰ یا ۱). */
   correctOption: number;
   explanation: string;
   trapNote: string;
@@ -28,16 +29,24 @@ async function importBank(relPath: string) {
 }
 
 /** استخراج بازگشتی هر شیء شبیه QuestionItem از خروجی‌های صادرشدهٔ ماژول.
- * دو شکل شناخته‌شده: QuestionItem (text/explanation/trapNote) و RefBook
- * (questionText/detailedAnswer/konkorTrap) — هویت با id، کلید با correctOption. */
-function collectFromValue(value: unknown, bank: string, out: Map<string, ExtractedKey>, seen: Set<unknown>): void {
+ * سه شکل شناخته‌شده: QuestionItem (text/explanation/trapNote)، RefBook
+ * (questionText/detailedAnswer/konkorTrap) و conceptCheck درس‌ها
+ * (prompt/correctIndex/explanation با کلید ترکیبی `${lessonId}#conceptCheck`). */
+function collectFromValue(
+  value: unknown,
+  bank: string,
+  out: Map<string, ExtractedKey>,
+  seen: Set<unknown>,
+  containerId: string | null = null,
+): void {
   if (!value || typeof value !== 'object' || seen.has(value)) return;
   seen.add(value);
   if (Array.isArray(value)) {
-    for (const item of value) collectFromValue(item, bank, out, seen);
+    for (const item of value) collectFromValue(item, bank, out, seen, containerId);
     return;
   }
   const record = value as Record<string, unknown>;
+  const ownId = typeof record.id === 'string' && record.id.length > 0 ? record.id : containerId;
   const hasKey = typeof record.correctOption === 'number';
   const identityText = typeof record.text === 'string' ? record.text : typeof record.questionText === 'string' ? record.questionText : null;
   const hasIdentity = typeof record.id === 'string' && record.id.length > 0 && identityText !== null;
@@ -64,7 +73,24 @@ function collectFromValue(value: unknown, bank: string, out: Map<string, Extract
       });
     }
   }
-  for (const v of Object.values(record)) collectFromValue(v, bank, out, seen);
+  // conceptCheck درس‌ها: correctIndex + prompt — کلید ترکیبی از شناسهٔ درس والد
+  if (typeof record.correctIndex === 'number' && typeof record.prompt === 'string' && ownId) {
+    const ccId = `${ownId}#conceptCheck`;
+    if (!out.has(ccId)) {
+      out.set(ccId, {
+        id: ccId,
+        bank,
+        correctOption: record.correctIndex as number,
+        explanation: typeof record.explanation === 'string' ? record.explanation : '',
+        trapNote: '',
+      });
+    }
+  }
+  for (const [childKey, v] of Object.entries(record)) {
+    // Record<string, T> مثل INITIAL_INTERACTIVE_LESSONS: کلید رکورد، شناسهٔ والد است
+    const childContainer = ownId ?? (typeof childKey === 'string' && childKey.length > 0 && v && typeof v === 'object' && !Array.isArray(v) && typeof (v as Record<string, unknown>).id !== 'string' ? childKey : null);
+    collectFromValue(v, bank, out, seen, childContainer);
+  }
 }
 
 async function main(): Promise<void> {

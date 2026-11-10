@@ -20,6 +20,7 @@ import {
   YEARLY_KONKOR_BOOKLETS,
   YEARLY_KONKOR_QUESTIONS,
 } from '../src/data/yearlyKonkorExams';
+import { CLIENT_BANK_ANSWER_KEY_BY_ID } from '../apps/worker/src/data/client-bank-keys.server';
 import {
   REFERENCE_BOOKS_DATABASE,
   MASTER_1142_COEFFICIENTS_TABLE,
@@ -101,14 +102,16 @@ function runKonkorExtractionAndAudit(): void {
   const knownNodeIds = new Set(INITIAL_KNOWLEDGE_NODES.map((n) => n.id));
 
   for (const q of INITIAL_QUESTION_BANK) {
+    // R-036: کلید از رجیستری سرور — بانک کلاینت public-only است
+    const serverKey = CLIENT_BANK_ANSWER_KEY_BY_ID.get(q.id);
     const hasValidOption =
-      typeof q.correctOption === 'number' &&
-      q.correctOption >= 0 &&
-      q.correctOption < q.options.length &&
+      typeof serverKey?.correctOption === 'number' &&
+      serverKey.correctOption >= 0 &&
+      serverKey.correctOption < q.options.length &&
       q.options.length === 4;
     const hasExplanation =
-      typeof q.explanation === 'string' && q.explanation.trim().length > 20;
-    const hasTrap = typeof q.trapNote === 'string' && q.trapNote.trim().length > 5;
+      typeof serverKey?.explanation === 'string' && serverKey.explanation.trim().length > 20;
+    const hasTrap = typeof serverKey?.trapNote === 'string' && serverKey.trapNote.trim().length > 5;
     const hasValidNode = knownNodeIds.has(q.nodeId);
 
     if (hasValidOption) validCorrectOptionCount++;

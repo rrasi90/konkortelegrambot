@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { gradeAnswerOnServer } from '../lib/serverGrading';
 import { SectionHeader } from './ui';
 import {
   KnowledgeNode,
@@ -126,6 +127,8 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
   const [librarySection, setLibrarySection] = useState<
     'books' | 'interactive_lessons' | 'reference_books' | 'compendium_100p' | 'coefficients_table'
   >('books');
+  const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string }>>({});
+  const [gradingNotice, setGradingNotice] = useState<string | null>(null);
   const [bookPresetId, setBookPresetId] = useState<string | null>(null);
   const lastRequestedLesson = useRef<string | null>(initialSelectedNodeId ?? null);
   const [selectedBranch, setSelectedBranch] = useState<ManagementBranchId>('business');
@@ -133,6 +136,23 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
   const [selectedBookId, setSelectedBookId] = useState<string>('book.bus.kotler_jalilian');
   const [selectedQuestionAnswers, setSelectedQuestionAnswers] = useState<Record<string, number>>({});
   const [testBankViewMode, setTestBankViewMode] = useState<'interactive' | 'descriptive'>('descriptive');
+  // R-036: تصحیح سؤالات نمونه فقط سمت سرور — کلید هرگز از بانک کلاینت خوانده نمی‌شود
+  const handleSampleQuestionAnswer = (questionId: string, optionIdx: number) => {
+    if (selectedQuestionAnswers[questionId] !== undefined) return;
+    setGradingNotice(null);
+    setSelectedQuestionAnswers((prev) => ({ ...prev, [questionId]: optionIdx }));
+    void (async () => {
+      try {
+        const reveal = await gradeAnswerOnServer(questionId, optionIdx);
+        setQuestionReveals((prev) => ({
+          ...prev,
+          [questionId]: { correctOption: reveal.correctOption, explanation: reveal.explanation, trapNote: reveal.trapNote },
+        }));
+      } catch {
+        setGradingNotice('تصحیح آنلاین در دسترس نیست — برای دیدن پاسخ تشریحی به اینترنت متصل شوید.');
+      }
+    })();
+  };
   const [selected100PageCourseId, setSelected100PageCourseId] = useState<string>(
     CENTRALIZED_100PAGE_COURSE_CATALOG[0]?.courseId || 'course.100p.management_theories'
   );
@@ -148,6 +168,22 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
   const [unlockedStepCount, setUnlockedStepCount] = useState<number>(3);
   const [revealedCards, setRevealedCards] = useState<Record<number, boolean>>({});
   const [conceptChoice, setConceptChoice] = useState<number | null>(null);
+  const [ccReveal, setCcReveal] = useState<{ correctOption: number; explanation: string } | null>(null);
+  const [ccNotice, setCcNotice] = useState<string | null>(null);
+  // R-036: بررسی مفهوم فقط سمت سرور — کلید هرگز از بانک کلاینت
+  const handleConceptCheck = (lessonId: string, idx: number) => {
+    setConceptChoice(idx);
+    setCcNotice(null);
+    void (async () => {
+      try {
+        const reveal = await gradeAnswerOnServer(`${lessonId}#conceptCheck`, idx);
+        setCcReveal({ correctOption: reveal.correctOption, explanation: reveal.explanation });
+      } catch {
+        setCcReveal(null);
+        setCcNotice('بررسی مفهوم نیاز به اتصال آنلاین دارد.');
+      }
+    })();
+  };
   const [ratingFeedback, setRatingFeedback] = useState<string | null>(null);
   const [mobileListOpen, setMobileListOpen] = useState(false);
 
@@ -1101,6 +1137,7 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                   {activeBook.sampleKonkorQuestions.map((q) => {
                     const chosenIdx = selectedQuestionAnswers[q.id];
                     const isAnswered = testBankViewMode === 'descriptive' || chosenIdx !== undefined;
+                    const activeReveal = questionReveals[q.id];
                     return (
                       <div
                         key={q.id}
@@ -1127,7 +1164,7 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {q.options.map((opt, oIdx) => {
                             const isPicked = chosenIdx === oIdx;
-                            const isCorrect = q.correctOption === oIdx;
+                            const isCorrect = (activeReveal?.correctOption ?? 0)=== oIdx;
                             let btnStyle =
                               'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-400';
                             if (isAnswered) {
@@ -1143,12 +1180,7 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                               <button
                                 key={oIdx}
                                 type="button"
-                                onClick={() =>
-                                  setSelectedQuestionAnswers((prev) => ({
-                                    ...prev,
-                                    [q.id]: oIdx,
-                                  }))
-                                }
+                                onClick={() => handleSampleQuestionAnswer(q.id, oIdx)}
                                 className={`text-right p-2.5 rounded-lg border text-xs transition-colors cursor-pointer ${btnStyle}`}
                               >
                                 <span className="font-bold ml-1.5">{oIdx + 1})</span>
@@ -1158,24 +1190,33 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                           })}
                         </div>
 
-                        {isAnswered && (
+                        {activeReveal ? (
                           <div className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 text-xs space-y-1.5">
                             <div className="font-bold text-emerald-700 dark:text-emerald-400">
-                              پاسخ تشریحی کامل (گزینه صحیح: {q.correctOption + 1})
+                              پاسخ تشریحی کامل (گزینه صحیح: {(activeReveal.correctOption) + 1})
                             </div>
                             <div className="text-slate-700 dark:text-slate-300 leading-relaxed">
-                              <MathText text={q.detailedAnswer} />
+                              <MathText text={activeReveal.explanation} />
                             </div>
                             <div className="text-amber-700 dark:text-amber-400 pt-1 border-t border-slate-100 dark:border-slate-800">
                               <strong>دام کنکوری: </strong>
-                              <MathText text={q.konkorTrap} />
+                              <MathText text={activeReveal.trapNote} />
                             </div>
                           </div>
-                        )}
+                        ) : isAnswered && chosenIdx !== undefined ? (
+                          <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
+                            پاسخ شما ثبت شد؛ تصحیح و پاسخ تشریحی پس از تأیید سمت سرور نمایش داده می‌شود.
+                          </div>
+                        ) : null}
                       </div>
                     );
                   })}
                 </div>
+                {gradingNotice && (
+                  <div className="mt-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs text-amber-800 dark:text-amber-300">
+                    {gradingNotice}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -1549,12 +1590,12 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {activeLesson.conceptCheck.options.map((opt, idx) => {
                       const isPicked = conceptChoice === idx;
-                      const isRight = activeLesson.conceptCheck.correctIndex === idx;
+                      const isRight = ccReveal?.correctOption === idx;
                       return (
                         <button
                           key={idx}
                           type="button"
-                          onClick={() => setConceptChoice(idx)}
+                          onClick={() => handleConceptCheck(activeLesson.nodeId, idx)}
                           className={`p-3 rounded-xl border text-right text-xs font-medium transition-all cursor-pointer ${
                             conceptChoice === null
                               ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-blue-400 text-slate-800 dark:text-slate-200'
@@ -1570,12 +1611,14 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                       );
                     })}
                   </div>
-                  {conceptChoice !== null && (
+                  {ccReveal ? (
                     <div className="flex items-start gap-2 text-xs text-emerald-700 dark:text-emerald-300 pt-1">
                       <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5" />
-                      <MathText text={activeLesson.conceptCheck.explanation} />
+                      <MathText text={ccReveal.explanation} />
                     </div>
-                  )}
+                  ) : ccNotice ? (
+                    <div className="text-xs text-amber-700 dark:text-amber-400 pt-1">{ccNotice}</div>
+                  ) : null}
                 </div>
 
                 {/* دکمه‌های ۵گانه خودارزیابی درک درسنامه (۱ تا ۵) با آپدیت زنده برنامه درسی */}

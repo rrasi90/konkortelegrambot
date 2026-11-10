@@ -711,6 +711,8 @@ export function evaluateAnswerAndRipple(params: {
   selectedOption: number | null;
   confidence: 'high' | 'low';
   responseTimeMs: number;
+  /** R-036: نتیجهٔ تصحیح سمت سرور — کلید هرگز از بانک کلاینت خوانده نمی‌شود */
+  grading: { wasCorrect: boolean; trapNote: string };
   nodeStates: Record<string, LearnerSixDState>;
   cards: ReviewCard[];
   stats: UserStats;
@@ -778,7 +780,8 @@ export function evaluateAnswerAndRipple(params: {
   const currentSixD = nextNodeStates[node.id];
 
   const wasSkipped = selectedOption === null;
-  const wasCorrect = !wasSkipped && selectedOption === question.correctOption;
+  // R-036: wasCorrect فقط از تصحیح سمت سرور می‌آید — نه از کلید باندل
+  const wasCorrect = !wasSkipped && params.grading.wasCorrect;
 
   const masteryDeltas: MasteryDeltaWithTitle[] = [];
   const spawnedCards: RippleReport['spawnedCards'] = [];
@@ -1047,7 +1050,7 @@ export function evaluateAnswerAndRipple(params: {
   masteryDeltas.push(topicDelta);
 
   // ساخت کارت دام طراح (لایه ۱)
-  if (question.trapNote) {
+  if (params.grading.trapNote) {
     const trapCardId = `card.trap.${question.id}`;
     if (!nextCards.some((c) => c.id === trapCardId)) {
       nextCards.unshift({

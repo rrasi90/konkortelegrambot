@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { gradeAnswerOnServer } from '../lib/serverGrading';
 import { SectionHeader } from './ui';
 import {
   YEARLY_KONKOR_BOOKLETS,
@@ -57,6 +58,8 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
   const [revealedQuestions, setRevealedQuestions] = useState<Record<string, boolean>>({});
   const [activeQuestionIndex, setActiveQuestionIndex] = useState<number>(0);
   const [showBudgetTable, setShowBudgetTable] = useState<boolean>(false);
+  const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string }>>({});
+  const [gradingNotice, setGradingNotice] = useState<string | null>(null);
 
   // تایمر شبیه‌ساز جلسه کنکور
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
@@ -153,8 +156,10 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
       let w = 0;
       for (const q of secQuestions) {
         const ans = userAnswers[q.id];
-        if (ans !== undefined && ans !== null) {
-          if (ans === q.correctOption) c++;
+        // R-036: صحت فقط با نتیجهٔ سمت سرور (reveal) محاسبه می‌شود — نه کلید محلی
+        const reveal = questionReveals[q.id];
+        if (ans !== undefined && ans !== null && reveal) {
+          if (ans === reveal.correctOption) c++;
           else w++;
         }
       }
@@ -197,7 +202,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
       weightedAveragePercent,
       sectionStats,
     };
-  }, [allQuestionsOfSelectedYear, currentBooklet, selectedBranch, userAnswers]);
+  }, [allQuestionsOfSelectedYear, currentBooklet, selectedBranch, userAnswers, questionReveals]);
 
   const handleSelectOption = (q: YearlyKonkorQuestion, optIdx: number) => {
     const alreadyAnswered = userAnswers[q.id] !== undefined && userAnswers[q.id] !== null;
@@ -212,6 +217,21 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
     if (!alreadyAnswered && onRecordQuestionAttempt) {
       onRecordQuestionAttempt(q, optIdx);
     }
+    // R-036: ثبت پاسخ و تصحیح فقط سمت سرور — کلید هرگز به کلاینت ارسال نمی‌شود
+    if (!alreadyAnswered) {
+      setGradingNotice(null);
+      void (async () => {
+        try {
+          const reveal = await gradeAnswerOnServer(q.id, optIdx);
+          setQuestionReveals((prev) => ({
+            ...prev,
+            [q.id]: { correctOption: reveal.correctOption, explanation: reveal.explanation, trapNote: reveal.trapNote },
+          }));
+        } catch {
+          setGradingNotice('تصحیح آنلاین در دسترس نیست — پاسخ شما ثبت شد اما نتیجه/کارنامه تا اتصال به سرور محاسبه نمی‌شود.');
+        }
+      })();
+    }
   };
 
   const handleClearOption = (qId: string) => {
@@ -225,12 +245,16 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
   const handleResetYearExam = () => {
     const nextAnswers = { ...userAnswers };
     const nextRevealed = { ...revealedQuestions };
+    const nextServerReveals = { ...questionReveals };
     for (const q of allQuestionsOfSelectedYear) {
       delete nextAnswers[q.id];
       delete nextRevealed[q.id];
+      delete nextServerReveals[q.id];
     }
     setUserAnswers(nextAnswers);
     setRevealedQuestions(nextRevealed);
+    setQuestionReveals(nextServerReveals);
+    setGradingNotice(null);
     setActiveQuestionIndex(0);
     setIsTimerRunning(false);
     // نسبت زمان به تعداد سؤال‌های واقعی بانک (~۸۰ ثانیه/سؤال) — تایمر تمرینی، نه شبیه‌سازی زمان کل دفترچه
@@ -263,6 +287,11 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
   return (
     <div className="space-y-4 pb-20">
       <SectionHeader title="آرشیو کنکورها" accent="var(--ael-accent-blue)" />
+      {gradingNotice && (
+        <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 text-xs text-amber-800 dark:text-amber-300">
+          {gradingNotice}
+        </div>
+      )}
       {/* ۱. پنل یکپارچه انتخاب سال (۱۳۹۱ تا ۱۴۰۵)، گرایش و ابزارهای دفترچه */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-4 sm:p-5 shadow-xs space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -601,7 +630,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
               {yearQuestions.map((q, idx) => {
                 const ans = userAnswers[q.id];
                 const isAnswered = ans !== undefined && ans !== null;
-                const isCorrect = isAnswered && ans === q.correctOption;
+                const isCorrect = isAnswered && ans === (questionReveals[q.id]?.correctOption ?? -1);
                 const isActive = idx === activeQuestionIndex;
 
                 return (
@@ -700,7 +729,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
                 const selectedOpt = userAnswers[currentQuestion.id];
                 const isRevealed = !!revealedQuestions[currentQuestion.id];
                 const isSelected = selectedOpt === optIdx;
-                const isCorrect = optIdx === currentQuestion.correctOption;
+                const isCorrect = optIdx === (questionReveals[currentQuestion.id]?.correctOption ?? -1);
 
                 let style =
                   'bg-slate-50/80 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800 hover:border-blue-500 text-slate-800 dark:text-slate-200';
@@ -796,34 +825,48 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
             {/* پاسخ تشریحی کامل مستخرج از کتب مرجع کنکور + دام طراح + خلاصه درسنامه مرتبط */}
             {revealedQuestions[currentQuestion.id] && (
               <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
-                <div className="p-4 rounded-xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/25 space-y-2">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-xs font-bold text-blue-800 dark:text-blue-300 flex items-center gap-1.5">
-                      <BookOpen className="w-4 h-4" />
-                      <span>
-                        پاسخ تشریحی کامل (گزینه صحیح: گزینه {currentQuestion.correctOption + 1})
-                      </span>
-                    </span>
-                    <span className="text-[11px] text-slate-600 dark:text-slate-400">
-                      منبع: {currentQuestion.designedFromTextbook}
-                    </span>
-                  </div>
-                  <div className="text-xs text-slate-800 dark:text-slate-200 leading-7 whitespace-pre-line">
-                    <MathText text={currentQuestion.explanation} />
-                  </div>
-                </div>
+                {(() => {
+                  const serverReveal = questionReveals[currentQuestion.id]; // R-036: کلید فقط از reveal سرور
+                  if (!serverReveal) {
+                    return (
+                      <div className="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
+                        پاسخ تشریحی و کلید پس از تأیید سمت سرور نمایش داده می‌شود.
+                      </div>
+                    );
+                  }
+                  return (
+                    <>
+                      <div className="p-4 rounded-xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/25 space-y-2">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="text-xs font-bold text-blue-800 dark:text-blue-300 flex items-center gap-1.5">
+                            <BookOpen className="w-4 h-4" />
+                            <span>
+                              پاسخ تشریحی کامل (گزینه صحیح: گزینه {serverReveal.correctOption + 1})
+                            </span>
+                          </span>
+                          <span className="text-[11px] text-slate-600 dark:text-slate-400">
+                            منبع: {currentQuestion.designedFromTextbook}
+                          </span>
+                        </div>
+                        <div className="text-xs text-slate-800 dark:text-slate-200 leading-7 whitespace-pre-line">
+                          <MathText text={serverReveal.explanation} />
+                        </div>
+                      </div>
 
-                {currentQuestion.trapNote && (
-                  <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-1">
-                    <div className="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
-                      <AlertTriangle className="w-3.5 h-3.5" />
-                      <span>دام طراح کنکور:</span>
-                    </div>
-                    <div className="text-amber-950 dark:text-amber-100 leading-6">
-                      <MathText text={currentQuestion.trapNote} />
-                    </div>
-                  </div>
-                )}
+                      {serverReveal.trapNote && (
+                        <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs space-y-1">
+                          <div className="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
+                            <AlertTriangle className="w-3.5 h-3.5" />
+                            <span>دام طراح کنکور:</span>
+                          </div>
+                          <div className="text-amber-950 dark:text-amber-100 leading-6">
+                            <MathText text={serverReveal.trapNote} />
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
 
                 {/* نمودار مفهومی وکتوری متناسب با موضوع سوال */}
                 <TopicDiagramVisualizer
@@ -861,6 +904,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
         <div className="space-y-4">
           {yearQuestions.map((q) => {
             const node = nodes.find((n) => n.id === q.nodeId);
+            const activeReveal = questionReveals[q.id]; // R-036: کلید فقط از reveal سرور
             return (
               <div
                 key={q.id}
@@ -900,7 +944,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {q.options.map((opt, idx) => {
-                    const isCorrect = idx === q.correctOption;
+                    const isCorrect = idx === (activeReveal?.correctOption ?? -1);
                     return (
                       <div
                         key={idx}
@@ -925,15 +969,23 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
                 </div>
 
                 <div className="p-4 rounded-xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 text-xs space-y-2">
-                  <div className="font-bold text-blue-800 dark:text-blue-300">
-                    پاسخ تشریحی کامل (گزینه {q.correctOption + 1}):
-                  </div>
-                  <div className="text-slate-800 dark:text-slate-200 leading-7 whitespace-pre-line">
-                    <MathText text={q.explanation} />
-                  </div>
-                  {q.trapNote && (
-                    <div className="pt-2 border-t border-blue-500/20 text-amber-800 dark:text-amber-300">
-                      <strong>دام طراح کنکور:</strong> <MathText text={q.trapNote} />
+                  {activeReveal ? (
+                    <>
+                      <div className="font-bold text-blue-800 dark:text-blue-300">
+                        پاسخ تشریحی کامل (گزینه {activeReveal.correctOption + 1}):
+                      </div>
+                      <div className="text-slate-800 dark:text-slate-200 leading-7 whitespace-pre-line">
+                        <MathText text={activeReveal.explanation} />
+                      </div>
+                      {activeReveal.trapNote && (
+                        <div className="pt-2 border-t border-blue-500/20 text-amber-800 dark:text-amber-300">
+                          <strong>دام طراح کنکور:</strong> <MathText text={activeReveal.trapNote} />
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="text-slate-500 dark:text-slate-400">
+                      پاسخ تشریحی و کلید پس از تأیید سمت سرور نمایش داده می‌شود (تصحیح آنلاین در دسترس نیست).
                     </div>
                   )}
 
@@ -977,7 +1029,9 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
             <h3 className="text-xs font-bold text-slate-900 dark:text-white sticky top-0 bg-white dark:bg-slate-900 py-2 border-b border-slate-200 dark:border-slate-800">
               کلید، منبع طرح سؤال و پاسخ تشریحی سؤالات منتخب سال {selectedYear}
             </h3>
-            {yearQuestions.map((q) => (
+            {yearQuestions.map((q) => {
+              const activeReveal = questionReveals[q.id]; // R-036: کلید فقط از reveal سرور
+              return (
               <div
                 key={q.id}
                 className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800 space-y-2 text-xs"
@@ -986,9 +1040,11 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
                   <span className="text-blue-600 dark:text-blue-400">
                     سؤال شماره {q.bookletQuestionNumber} ({q.courseSectionTitle})
                   </span>
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                    کلید: گزینه {q.correctOption + 1}
-                  </span>
+                  {activeReveal && (
+                    <span className="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                      کلید: گزینه {activeReveal.correctOption + 1}
+                    </span>
+                  )}
                 </div>
                 <div className="text-[11px] text-slate-500 dark:text-slate-400">
                   <strong>منبع طراحی:</strong> {q.designedFromTextbook}
@@ -997,10 +1053,17 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
                   <MathText text={q.text} />
                 </div>
                 <div className="pt-2 border-t border-slate-200/70 dark:border-slate-700 text-slate-700 dark:text-slate-300 leading-6">
-                  <strong>پاسخ تشریحی:</strong> <MathText text={q.explanation} />
+                  {activeReveal ? (
+                    <>
+                      <strong>پاسخ تشریحی:</strong> <MathText text={activeReveal.explanation} />
+                    </>
+                  ) : (
+                    <span className="text-slate-500 dark:text-slate-400">کلید و تشریح پس از تأیید سمت سرور نمایش داده می‌شود.</span>
+                  )}
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

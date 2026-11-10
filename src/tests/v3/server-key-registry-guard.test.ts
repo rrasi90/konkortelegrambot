@@ -2,7 +2,7 @@
  * V3-Hardening R-036 — گارد ساختاری رجیستری کلید سمت سرور:
  *  ۱) هیچ ماژول کلاینت (src/) رجیستری سرور را import نمی‌کند.
  *  ۲) رجیستری شامل Canary است و شمار کلیدهای آن با manifest سازگار است.
- *  ۳) پوشش رجیستری با افشای شناخته‌شدهٔ باندل هم‌خوان است (۲۱۰ کلید واقعی + ۲ canary).
+ *  ۳) پوشش رجیستری با افشای شناخته‌شدهٔ باندل هم‌خوان است (۲۱۰ سؤال + ۲۵ conceptCheck = ۲۳۵ کلید واقعی + ۲ canary).
  *  ۴) شکل‌های دو بانک (QuestionItem و RefBook) نرمال شده‌اند.
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
@@ -42,9 +42,12 @@ describe('گارد رجیستری کلید سمت سرور (R-036 remediation)',
     }
   });
 
-  it('۳. پوشش رجیستری: ۲۱۰ کلید واقعی + ۲ canary؛ تکراری/بی‌شناسه ممنوع', () => {
+  it('۳. پوشش رجیستری: ۲۳۵ کلید واقعی (۲۱۰ سؤال + ۲۵ conceptCheck) + ۲ canary؛ تکراری/بی‌شناسه ممنوع', () => {
     const real = CLIENT_BANK_ANSWER_KEYS.filter((k) => !k.id.startsWith('sec.'));
-    expect(real.length).toBe(210);
+    // ۲۱۰ کلید سؤال + ۲۵ کلید conceptCheck (کلید ترکیبی `<lessonId>#conceptCheck`)
+    expect(real.length).toBe(235);
+    const conceptChecks = real.filter((k) => k.id.endsWith('#conceptCheck'));
+    expect(conceptChecks.length).toBe(25);
     const ids = new Set(real.map((k) => k.id));
     expect(ids.size).toBe(real.length);
     // همهٔ کلیدها شناسهٔ پایدار و گزینهٔ معتبر دارند

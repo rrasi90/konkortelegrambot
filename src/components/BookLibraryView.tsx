@@ -1,5 +1,6 @@
 import { TopicDiagramVisualizer } from './TopicDiagramVisualizer';
 import React, { useEffect, useMemo, useState } from 'react';
+import { gradeAnswerOnServer } from '../lib/serverGrading';
 import {
   REFERENCE_BOOKS_DATABASE,
   MANAGEMENT_BRANCH_META,
@@ -93,9 +94,10 @@ const QuestionCard: React.FC<{
   q: QuestionItem;
   chosen?: number;
   revealed: boolean;
+  reveal?: { correctOption: number; explanation: string; trapNote: string };
   onChoose: (idx: number) => void;
   onReveal: () => void;
-}> = ({ q, chosen, revealed, onChoose, onReveal }) => {
+}> = ({ q, chosen, revealed, reveal, onChoose, onReveal }) => {
   const showAnswer = chosen !== undefined || revealed;
   return (
     <div className="glass-subcard p-4 space-y-3 text-xs">
@@ -113,7 +115,7 @@ const QuestionCard: React.FC<{
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {q.options.map((opt, idx) => {
           const isPicked = chosen === idx;
-          const isCorrect = q.correctOption === idx;
+          const isCorrect = (reveal?.correctOption ?? -1) === idx;
           let style =
             'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-blue-400';
           if (showAnswer && isCorrect)
@@ -136,18 +138,24 @@ const QuestionCard: React.FC<{
       </div>
 
       {showAnswer ? (
-        <div className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 space-y-1.5">
-          <div className="font-bold text-emerald-700 dark:text-emerald-400">
-            پاسخ تشریحی (گزینهٔ {fa(q.correctOption + 1)})
+        reveal ? (
+          <div className="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 space-y-1.5">
+            <div className="font-bold text-emerald-700 dark:text-emerald-400">
+              پاسخ تشریحی (گزینهٔ {fa(reveal.correctOption + 1)})
+            </div>
+            <div className="text-slate-700 dark:text-slate-300 leading-6">
+              <MathText text={reveal.explanation} />
+            </div>
+            <div className="text-amber-700 dark:text-amber-400 pt-1 border-t border-slate-100 dark:border-slate-800">
+              <strong>دام طراح: </strong>
+              <MathText text={reveal.trapNote} />
+            </div>
           </div>
-          <div className="text-slate-700 dark:text-slate-300 leading-6">
-            <MathText text={q.explanation} />
+        ) : (
+          <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
+            پاسخ شما ثبت شد؛ پاسخ تشریحی پس از تأیید سمت سرور نمایش داده می‌شود.
           </div>
-          <div className="text-amber-700 dark:text-amber-400 pt-1 border-t border-slate-100 dark:border-slate-800">
-            <strong>دام طراح: </strong>
-            <MathText text={q.trapNote} />
-          </div>
-        </div>
+        )
       ) : (
         <button
           type="button"
@@ -168,6 +176,24 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
   onStartPracticeNode,
 }) => {
   const [branchFilter, setBranchFilter] = useState<'all' | ManagementBranchId>('all');
+  const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string }>>({});
+
+  // R-036: تصحیح فقط سمت سرور — کلید هرگز از بانک کلاینت خوانده نمی‌شود
+  const handleQuestionChoose = (questionId: string, idx: number) => {
+    setAnswers((prev) => ({ ...prev, [questionId]: idx }));
+    void (async () => {
+      try {
+        const reveal = await gradeAnswerOnServer(questionId, idx);
+        setQuestionReveals((prev) => ({
+          ...prev,
+          [questionId]: { correctOption: reveal.correctOption, explanation: reveal.explanation, trapNote: reveal.trapNote },
+        }));
+      } catch {
+        // بدون افشای کلید: تشریح صرفاً پس از تأیید سرور نمایش داده می‌شود
+      }
+    })();
+  };
+
   const [search, setSearch] = useState('');
   const [openBookId, setOpenBookId] = useState<string | null>(null);
   const [tab, setTab] = useState<BookTab>('chapters');
@@ -750,7 +776,8 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                       q={q}
                       chosen={answers[q.id]}
                       revealed={!!revealed[q.id]}
-                      onChoose={(idx) => setAnswers((prev) => ({ ...prev, [q.id]: idx }))}
+                      reveal={questionReveals[q.id]}
+                      onChoose={(idx) => handleQuestionChoose(q.id, idx)}
                       onReveal={() => setRevealed((prev) => ({ ...prev, [q.id]: true }))}
                     />
                   ))}

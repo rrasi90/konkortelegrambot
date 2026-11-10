@@ -1,7 +1,7 @@
 /**
  * SERVER-ONLY — این فایل هرگز نباید به Bundle کلاینت import شود (R-036/R-025).
  *
- * تولیدشده توسط scripts/generate-answer-key-registry.mts در 2026-11-09T22:00:04.926Z
+ * تولیدشده توسط scripts/generate-answer-key-registry.mts در 2026-11-09T22:47:12.293Z
  * منبع حقیقت کلیدها همان بانک‌های src/data است؛ این فایل فقط کلید را نگه می‌دارد.
  * Canaryها برای تست SEC-010 (اسکن Bundle) به‌صورت ثابت تولید می‌شوند.
  *
@@ -20,6 +20,23 @@ export interface ClientBankAnswerKey {
 export const SECURITY_CANARY_IDS = ["sec.canary.correct.0001","sec.canary.option.0002"] as const;
 
 export const CLIENT_BANK_ANSWER_KEYS: readonly ClientBankAnswerKey[] = [
+  { id: "bus.econ_nazari#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "چون هزینه نهایی ($MC$) همواره مثبت است و در تعادل $MR = MC > 0$، از فرمول $MR = P(1 - 1/|E_p|)$ نتیجه می‌شود که حتماً $|E_p| > 1$ است.", trapNote: "" },
+  { id: "bus.english_eshraghi#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "Escalation of Commitment به معنای تشدید تعهد به یک مسیر شکست‌خورده به خاطر هزینه‌های غرق‌شده است.", trapNote: "" },
+  { id: "bus.islamic_moghimi#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "در مدیریت اسلامی، مشورت با خبرگان واجب است اما «عزم (تصمیم نهایی و پذیرش مسئولیت آن)» بر عهده شخص مدیر است.", trapNote: "" },
+  { id: "bus.math_stats_ranjbaran_tourani#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "عدد ثابت ۷ تأثیری بر واریانس ندارد و ضرایب به توان ۲ رسیده و جمع می‌شوند: $2^2 \\text{Var}(X) + (-1)^2 \\text{Var}(Y) = 4(4) + 1(5) = 21$.", trapNote: "" },
+  { id: "ind.mcdm_dea_queue#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "چون همواره $\\theta_{\\text{CCR}}^* \\le \\theta_{\\text{BCC}}^* \\le 1$ است، اگر کارایی CCR برابر ۱ باشد، کارایی BCC نیز الزاماً برابر ۱ خواهد بود.", trapNote: "" },
+  { id: "ind.or_simplex_duality#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "طبق قضیه مکمل‌های متوازن $y_1^* \\cdot s_1^* = 0$، وقتی منبع مازاد دارد، ارزش نهایی یک واحد اضافه از آن صفر است.", trapNote: "" },
+  { id: "ind.pom_eoq_mrp#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "در مدل کلاسیک EOQ بدون کمبود، منحنی هزینه سفارش‌دهی و خط هزینه نگهداری دقیقاً در نقطه $Q^*$ یکدیگر را قطع می‌کنند.", trapNote: "" },
+  { id: "inno.ambidextrous#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "بهره‌برداری بیش از حد از موفقیت‌های گذشته بدون اکتشاف فناوری جدید، تله موفقیت نام دارد.", trapNote: "" },
+  { id: "inno.open_rd_transfer#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "خروج ایده‌ها و فناوری‌های داخلی به بازار بیرونی برای کسب درآمد و جلوگیری از بایگانی شدن، نوآوری باز خروجی (Inside-Out) نامیده می‌شود.", trapNote: "" },
+  { id: "inno.s_curve#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "فاستر تأکید می‌کند که عملکرد فناوری تابعی از میزان تلاش و سرمایه‌گذاری مهندسی است و زمان صرفاً یک جایگزین تقریبی است.", trapNote: "" },
+  { id: "inno.tidd_4p#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "تغییر بازار هدف و زمینه درک مشتری از یک محصول موجود، تعریف دقیق نوآوری جایگاه (Position) است.", trapNote: "" },
+  { id: "mb.contingency#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "دو سر طیف پیچیدگی فناوری (تکی و فرآیندی) ساختار ارگانیک دارند و میانه طیف (تولید انبوه) ساختار مکانیکی دارد.", trapNote: "" },
+  { id: "mb.culture#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "تركيب تمركز بيروني (بازار و اهداف) با ثبات و جهت‌گيري مشخص، فرهنگ مأموريتي را شكل مي‌دهد.", trapNote: "" },
+  { id: "mb.structure#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "در ساختار ارگانیک دانش در سراسر شبکه توزیع شده و ارتباطات به جای دستور عمودی، ماهیت مشاوره‌ای و افقی دارد.", trapNote: "" },
+  { id: "mkt.brand#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "عملکرد و تصویر ذهنی دو بالِ لایه دوم هرم (معنای برند: تو چیستی؟) را تشکیل می‌دهند.", trapNote: "" },
+  { id: "mkt.consumer#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "مسیر مرکزی تنها زمانی فعال می‌شود که مخاطب هم بخواهد (انگیزه) و هم بتواند (توانایی و فرصت) استدلال‌های پیام را کالبدشکافی کند.", trapNote: "" },
+  { id: "mkt.plc#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "قیمت پایین مانع ورود رقبا شده و بازار حساس به قیمت را تسخیر می‌کند و ترفیع بالا آگاهی سریع ایجاد می‌نماید.", trapNote: "" },
   { id: "q.bus.econ.1", bank: "konkorData", correctOption: 0, explanation: "در دام نقدینگی، منحنی LM کاملاً افقی است (کشش تقاضای پول نسبت به نرخ بهره بی‌نهایت است). بنابراین انتقال منحنی IS به راست باعث افزایش کامل درآمد ملی بدون افزایش نرخ بهره و با اثر برون‌رانی صفر می‌شود.", trapNote: "دام نقدینگی = منحنی LM افقی = حداکثر کارایی سیاست مالی؛ حالت کلاسیکی = منحنی LM عمودی = حداکثر کارایی سیاست پولی." },
   { id: "q.bus.econ.2", bank: "konkorData", correctOption: 0, explanation: "بر اساس فصل کشش کتاب اقتصاد خرد دکتر محسن نظری، از رابطه $|E_d| = \\frac{\\%\\Delta Q}{\\%\\Delta P}$ داریم: $\\%\\Delta Q = 2.5 \\times 10\\% = +25\\%$. همچنین طبق رابطه کلیدی $MR = P(1 - \\frac{1}{|E_d|})$، وقتی تقاضا باکشش است ($|E_d| > 1$)، قیمت ($P$) و درآمد کل ($TR$) در «خلاف جهت یکدیگر» حرکت می‌کنند؛ بنابراین با کاهش قیمت، درصد افزایش مقدار تقاضا (۲۵٪) بیشتر از درصد کاهش قیمت (۱۰٪) بوده و درآمد کل افزایش می‌یابد.", trapNote: "قانون طلایی دکتر نظری: در ناحیه باکشش ($|E_d| > 1$) قیمت و $TR$ رابطه معکوس دارند؛ در ناحیه کم‌کشش ($|E_d| < 1$) قیمت و $TR$ رابطه مستقیم دارند؛ و در $|E_d| = 1$ درآمد کل حداکثر است." },
   { id: "q.bus.econ.3", bank: "konkorData", correctOption: 0, explanation: "طبق قضیه ضریب فزاینده بودجه متوازن (هاولمو) در کتاب اقتصاد کلان دکتر محسن نظری: ضریب فزاینده مخارج دولت برابر $k_G = \\frac{1}{1-b} = \\frac{1}{1-0.8} = 5$ و ضریب فزاینده مالیات مقطوع برابر $k_T = \\frac{-b}{1-b} = \\frac{-0.8}{0.2} = -4$ است. مجموع این دو ضریب همواره برابر $k_G + k_T = \\frac{1-b}{1-b} = 1$ است؛ بنابراین $\\Delta Y = 5(50) - 4(50) = +50$ میلیارد تومان.", trapNote: "دام کلاسیک کنکور: تصور اینکه اگر $\\Delta G = \\Delta T$ باشد تغییر درآمد ملی صفر است! در مدل ساده کینزی بدون مالیات تبعی، ضریب بودجه متوازن همیشه دقیقاً برابر ۱ است." },
@@ -230,8 +247,16 @@ export const CLIENT_BANK_ANSWER_KEYS: readonly ClientBankAnswerKey[] = [
   { id: "ref.q.schilling.1", bank: "referenceBooksRepo", correctOption: 1, explanation: "به محض تثبیت طرح غالب، وارد «عصر تغییرات تدریجی» می‌شویم که در آن رقابت به سمت نوآوری فرآیند، کارایی و کاهش قیمت شیفت می‌کند.", trapNote: "پس از ظهور طرح غالب، تعداد شرکت‌های حاضر در صنعت به دلیل خروج شرکت‌های بازنده کاهش می‌یابد (Shakeout)." },
   { id: "ref.q.stats_tourani.1", bank: "referenceBooksRepo", correctOption: 0, explanation: "میانگین جدید برابر است با $\\bar{Y} = -2(\\bar{X}) + 10 = -2(12) + 10 = -14$. چون انحراف معیار قدیم $S_X = 3$ است، واریانس قدیم $S_X^2 = 9$ است؛ بنابراین واریانس جدید برابر است با $S_Y^2 = a^2 S_X^2 = (-2)^2 \\times 9 = 4 \\times 9 = 36$ (و انحراف معیار جدید برابر ۶ است).", trapNote: "دقت کنید سؤال «واریانس جدید ($S_Y^2 = 36$)» را خواسته نه انحراف معیار جدید ($S_Y = 6$)؛ همچنین واریانس هرگز منفی نمی‌شود." },
   { id: "ref.q.tidd.1", bank: "referenceBooksRepo", correctOption: 1, explanation: "فناوری‌های کلیدی (Key Technologies) در زمان حال ستون اصلی مزیت رقابتی و تمایز محصول شرکت را تشکیل می‌دهند.", trapNote: "فناوری‌های پیشاهنگ (Pacing) فناوری‌های فردا هستند که پتانسیل جایگزینی فناوری‌های کلیدی فعلی را دارند." },
+  { id: "rm.validity#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "در جدول فورنل-لارکر قطر اصلی برابر با جذر AVE یعنی $\\sqrt{0.64} = 0.80$ است که باید از تمام همبستگی‌های سطر و ستون خود بزرگ‌تر باشد.", trapNote: "" },
   { id: "sec.canary.correct.0001", bank: "security-canary", correctOption: 2, explanation: "CANARY-EXPLANATION-R036-9f4c1a2b7d8e3f60", trapNote: "CANARY-TRAPNOTE-R036-4e8d90a1c2b35f67" },
   { id: "sec.canary.option.0002", bank: "security-canary", correctOption: 0, explanation: "CANARY-EXPLANATION-R036-a1b2c3d4e5f60718", trapNote: "CANARY-TRAPNOTE-R036-b2c3d4e5f6071829" },
+  { id: "sm.dynamic#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "شناسایی و پایش فرصت‌ها مرحله Sensing است، اما بسیج منابع و طراحی مدل کسب‌وکار برای شکار آن فرصت مرحله Seizing است.", trapNote: "" },
+  { id: "sm.portfolio#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "سهم نسبی برابر است با ۲۰ تقسیم بر ۴۰ یعنی ۰٫۵؛ چون کمتر از ۱ است، شرکت رهبر بازار نیست.", trapNote: "" },
+  { id: "sm.rbv#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "کمیاب بودن منبعِ ارزشمند در کوتاه‌مدت مزیت رقابتی موقت ایجاد می‌کند، اما به دلیل قابل تقلید بودن، پایدار نخواهد ماند.", trapNote: "" },
+  { id: "sm.value_chain#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "خرید و قرارداد در تمام سطوح سازمان جزو تدارکات (پشتیبانی) است، اما جابه‌جایی و انبارش فیزیکی ورودی‌ها جزو لجستیک ورودی (اولیه) محسوب می‌شود.", trapNote: "" },
+  { id: "stats.anova#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "درجه آزادی بین‌گروهی $k - 1 = 4 - 1 = 3$ و درجه آزادی درون‌گروهی $n - k = 24 - 4 = 20$ است.", trapNote: "" },
+  { id: "stats.regression#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "طبق رابطه $DW \\approx 2(1 - \\rho)$، با قرار دادن $\\rho = 0.8$ مقدار $DW \\approx 2(0.2) = 0.4$ به دست می‌آید.", trapNote: "" },
+  { id: "stats.scales#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "نسبت گرفتن و تقسیم بر میانگین نیازمند صفر مطلق است که تنها در مقیاس نسبتی وجود دارد.", trapNote: "" },
 ];
 
 export const CLIENT_BANK_ANSWER_KEY_BY_ID: ReadonlyMap<string, ClientBankAnswerKey> =
