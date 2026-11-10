@@ -21,12 +21,14 @@ describe('Ledger / Gap Register reconciliation (v5 §3)', () => {
   it('ledger has 45 rows and V3 statuses match the reconciled truth', () => {
     expect(ledger.totalRows).toBe(45);
     // مأموریت v5 §3.1 — شمارش مرجع (از FX/HD جدا):
+    // مأموریت v5 wave-2: همهٔ ۳۲ ردیف V3 اکنون وضعیت واقعی دارند:
     expect(ledger.countsByPrefix['V3']).toEqual({
-      DONE: 11,
-      DONE_WITH_DEFAULT: 3,
-      PARTIAL: 4,
-      NOT_STARTED: 14,
+      DONE: 13,
+      DONE_WITH_DEFAULT: 11,
+      PARTIAL: 8,
     });
+    // دیگر هیچ ردیف NOT_STARTED برای V3 باقی نیست:
+    expect(ledger.countsByPrefix['V3'].NOT_STARTED).toBeUndefined();
     expect(ledger.countsByPrefix['FX']).toEqual({ DONE: 5 });
     expect(ledger.countsByPrefix['HD']).toEqual({ DONE: 8 });
   });
