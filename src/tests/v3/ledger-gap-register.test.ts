@@ -22,7 +22,7 @@ describe('Ledger / Gap Register reconciliation (v5 §3)', () => {
     expect(ledger.totalRows).toBe(45);
     // مأموریت v5 §3.1 — شمارش مرجع (از FX/HD جدا):
     expect(ledger.countsByPrefix['V3']).toEqual({
-      DONE: 10,
+      DONE: 11,
       DONE_WITH_DEFAULT: 3,
       PARTIAL: 4,
       NOT_STARTED: 14,
