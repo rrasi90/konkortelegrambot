@@ -46,6 +46,21 @@ describe('public client bundle answer-key guard (R-036 hard gate)', () => {
     expect(findings).toEqual([]);
   });
 
+  it('correctIndex semantics (v5 §4.2): binary contract, scanner covers 0..3 defensively', () => {
+    // قرارداد واقعی: conceptCheck دوگزینه‌ای با correctIndex∈{0,1} (aelEngine validator).
+    // اسکنر عمداً ۰..۳ را یافته می‌گیرد (دفاع در عمق) — همهٔ مقادیر literal کلید ممنوعند:
+    const findings = findClientAnswerKeyLeaks({
+      'a.js': '{correctIndex:0}',
+      'b.js': '{correctIndex:1}',
+      'c.js': '{correctIndex:2}',
+      'd.js': '{correctIndex:3}',
+    });
+    expect(findings.filter((f) => f.field === 'correctIndex').map((f) => f.asset).sort())
+      .toEqual(['a.js', 'b.js', 'c.js', 'd.js']);
+    // خواندن خصوصیت مجاز:
+    expect(findClientAnswerKeyLeaks({ 'ok.js': 'show(l.conceptCheck.correctIndex);' })).toEqual([]);
+  });
+
   it('detects whitespace, quoted JSON keys and source-map contents', () => {
     const findings = findClientAnswerKeyLeaks({
       'assets/app.js': '({ "correctOption" : 3, \'correctIndex\' : 0 })',

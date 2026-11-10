@@ -31,8 +31,14 @@ const ANSWER_KEY_PATTERNS: Array<{
     pattern: /["']?correctOption["']?\s*:\s*[0-3]\b/g,
   },
   {
+    // semantics (v5 §4.2): «correctIndex» طبق قرارداد فعلی دودویی است — فقط در
+    // conceptCheck درسنامه‌ها با «دقیقاً ۲ گزینه» (validator: src/engine/aelEngine.ts).
+    // الگوی اسکن ۰ تا ۳ پوشش می‌دهد تا اگر قرارداد آینده گسترش یابد یا کلیدِ
+    // چندگزینه‌ای با همین نام نشت کند، باز هم شناسایی شود؛ مقدار خارج از قرارداد
+    // (۲/۳) نیز به‌عنوان دادهٔ مشکوک یافته می‌شود. خواندن خصوصیت (q.correctIndex)
+    // match نمی‌شود — فقط literal «کلید: مقدار».
     field: 'correctIndex',
-    pattern: /["']?correctIndex["']?\s*:\s*[0-1]\b/g,
+    pattern: /["']?correctIndex["']?\s*:\s*[0-3]\b/g,
   },
   {
     field: 'answerIndex',

@@ -1,8 +1,19 @@
 # امنیت تحویل سؤال و کلید پاسخ — وضعیت واقعی
 
+> ## ✅ وضعیت جاری (آخرین ممیزی: ۲۰۲۶-۱۱-۱۱ · مأموریت v5)
+>
+> **R-036: CLOSED** — بر مبنای آخرین build و CI تأییدشده:
+> - باندل مینی‌اپ (`apps/miniapp/assets/index-CMfhsezy.js`): **۰** کلید داده‌ای (`correctOption:digit` از ۲۱۰ به ۰)
+> - خروجی Offline (`tools/offline/AEL_OFFLINE.html`): **۰** کلید (از ۳۴ answerIndex)
+> - گارد `scripts/audit-client-bundle.ts` سخت و **بدون هیچ استثنا** + تست منفی/مثبت canary (۱۱ تست در `src/tests/clientBundleSecurity.test.ts`)
+> - CI سبز روی SHA `52671fb` (run 42912474342، هر دو Job، ۷۱۹ تست)
+> - **محدودهٔ ادعا**: «۰ نشتی در build» فقط خروجی‌های قابل اسکن (JS/JSON/HTML/map در dist، apps/miniapp، tools/offline) را می‌پوشاند و معادل «امنیت کامل کل سامانه» نیست؛ دادهٔ کلید در رجیستری سرور (`client-bank-keys.server.ts`) باقی است و API تنها پس از ثبت پاسخ مجاز افشا می‌کند.
+>
+> جزئیات بستن: الحاقیهٔ «۲۰۲۶-۱۱-۱۱» در همین سند + `reports/MISSION_V4_FINAL_REPORT.md`
+
 به‌روزرسانی: ۲۰۲۶-۱۱-۱۰ (V3-Hardening B7) · مرجع قبلی: `docs/phase-5/CLIENT_ANSWER_KEY_RELEASE_GATE.md`
 
-## ⛔ Security Blocker — R-036: باز است
+## ⛔ Historical state — 2026-11-10 (superseded) · Security Blocker — R-036 در آن زمان باز بود
 
 **کلید پاسخ هنوز در باندل کلاینت React مینی‌اپ قابل دسترسی است** (۲۱۰ `correctOption` + ۲۵ `correctIndex` در `assets/index-*.js`). سبز بودن CI به معنی رفع این مشکل **نیست** — ممیزی `audit:miniapp` با چشم‌پوشی محدود و مستند (رفتار گیت R-036) می‌گذرد و پس از R-025 سخت می‌شود.
 
