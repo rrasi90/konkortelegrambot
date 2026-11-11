@@ -43,6 +43,7 @@ describe('ممیزی دقت محتوای آموزشی AEL — 2026-11-12', () =>
     expect(q.prompt).toContain('هدایت‌گری به‌جای پاروزنی');
     expect(q.prompt).not.toContain('کاسه‌بازی');
     expect(q.explanation).toContain('پاسخ‌گویی');
+    expect(phd.questions.some((item: any) => item.prompt.includes('کاسه‌بازی'))).toBe(false);
   });
 
   it('چهار مرحلهٔ SECI را با نام‌های استاندارد فارسی و توالی درست نگه می‌دارد', () => {
@@ -112,6 +113,7 @@ describe('ممیزی دقت محتوای آموزشی AEL — 2026-11-12', () =>
     expect(authored).toHaveLength(4);
     expect(authored.every((q) => q.origin === 'authored_supplement')).toBe(true);
     expect(authored.every((q) => q.examYear === undefined)).toBe(true);
+    expect(COURSE_ENCYCLOPEDIA_SUPPLEMENTS.every((item) => !item.coveredKonkorYears.includes('۱۰۰٪'))).toBe(true);
     const book = REFERENCE_BOOKS_DATABASE.find((item) => item.id === 'book.bus.robbins_daft');
     expect(book).toBeDefined();
     const merged = book!.sampleKonkorQuestions.find((q) => q.id === 'ref.q.robbins.supp.1');
