@@ -598,7 +598,7 @@
       "learningReferences": [
         {
           "title": "Christopher Hood — A Public Management for All Seasons (1991)",
-          "locator": "Doctrines of NPM"
+          "locator": "Seven doctrinal components of New Public Management"
         }
       ]
     },
@@ -839,6 +839,10 @@
         {
           "title": "Robbins & Judge — Organizational Behavior",
           "locator": "Leadership theories"
+        },
+        {
+          "title": "Bernard M. Bass & Bruce J. Avolio (1993) — Transformational Leadership and Organizational Culture",
+          "locator": "Four Is of transformational leadership: idealized influence, inspirational motivation, intellectual stimulation, individualized consideration"
         }
       ]
     },
@@ -1151,6 +1155,10 @@
         {
           "title": "دکتر نادرقلی حافظ‌نیا — روش تحقیق در علوم رفتاری (سمت)",
           "locator": "طرح تحقیق، نمونه‌گیری، سنجش"
+        },
+        {
+          "title": "Wilson, Pan & Schumsky (2012) — Recalculation of the Critical Values for Lawshe’s Content Validity Ratio",
+          "locator": "جدول مقادیر بحرانی CVR بر حسب تعداد داوران و سطح آلفا؛ N=9 و alpha=.05"
         }
       ]
     },
@@ -1174,7 +1182,7 @@
       "learningReferences": [
         {
           "title": "Christopher Hood — A Public Management for All Seasons (1991)",
-          "locator": "Doctrines of NPM"
+          "locator": "Seven doctrinal components of New Public Management"
         }
       ]
     },
