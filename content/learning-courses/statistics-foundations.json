@@ -1,210 +1,316 @@
 {
-  "schemaVersion": 1,
-  "id": "statistics-foundations",
-  "version": "1.2.0",
-  "title": "مبانی آمار و احتمال",
-  "status": "authored_pilot",
-  "description": "دو درس کوتاه تألیفی دربارهٔ شاخص مرکزی و احتمال شرطی.",
-  "scopeNote": "بستهٔ آزمایشی تألیفی است و پرسش‌ها در انتظار بازبینی متخصص‌اند.",
-  "sources": [
-    {
-      "id": "nist.stat.location",
-      "title": "NIST Engineering Statistics Handbook",
-      "url": "https://www.itl.nist.gov/div898/handbook/eda/section3/eda351.htm",
-      "locator": "Measures of Location",
-      "kind": "concept_reference",
-      "checkedOn": "2026-11-04"
-    },
-    {
-      "id": "nist.stat.conditional",
-      "title": "NIST Engineering Statistics Handbook",
-      "url": "https://www.itl.nist.gov/div898/handbook/apr/section1/apr1a.htm",
-      "locator": "Conditional probability",
-      "kind": "concept_reference",
-      "checkedOn": "2026-11-04"
-    }
-  ],
-  "topics": [
-    {
-      "id": "stat.center",
-      "title": "میانگین و میانه",
-      "objective": "مرکز داده را با توجه به داده‌های پرت تفسیر کنیم.",
-      "minutes": 4,
-      "prerequisites": [],
-      "concepts": [
-        "میانگین برابر مجموع مقدارها تقسیم بر تعداد آن‌هاست.",
-        "میانه مقدار میانی داده‌های مرتب‌شده است.",
-        "برای تعداد زوج، میانه میانگین دو مقدار میانی است."
-      ],
-      "formula": "Mean = sum(x) / n",
-      "workedExample": "برای ۲، ۳ و ۱۰ میانگین ۵ و میانه ۳ است.",
-      "commonError": "قبل از تعیین میانه داده‌ها را مرتب کن و اثر مقدار پرت بر میانگین را بررسی کن.",
-      "sourceIds": [
-        "nist.stat.location"
-      ]
-    },
-    {
-      "id": "stat.conditional",
-      "title": "احتمال شرطی",
-      "objective": "مخرج احتمال را با شرط مسئله انتخاب کنیم.",
-      "minutes": 4,
-      "prerequisites": [],
-      "concepts": [
-        "احتمال شرطی، فراوانی رویداد مشترک را در میان موارد دارای شرط می‌سنجد.",
-        "برای محاسبه باید احتمال شرط بزرگ‌تر از صفر باشد.",
-        "احتمال A به شرط B با احتمال B به شرط A لزوماً یکسان نیست."
-      ],
-      "formula": "P(A|B) = P(A∩B) / P(B), P(B) > 0",
-      "workedExample": "از ۲۰ نفر دارای ویژگی B، تعداد ۵ نفر ویژگی A هم دارند. احتمال A به شرط B برابر ۵ ÷ ۲۰ یعنی ۲۵٪ است.",
-      "commonError": "مخرج باید تعداد یا احتمال موارد دارای شرط B باشد.",
-      "sourceIds": [
-        "nist.stat.conditional"
-      ]
-    }
-  ],
-  "questions": [
-    {
-      "id": "stat.center.q01",
-      "topicId": "stat.center",
-      "difficulty": "basic",
-      "prompt": "میانگین ۲، ۴ و ۹ چقدر است؟",
-      "choices": [
-        "۳",
-        "۵",
-        "۶",
-        "۹"
-      ],
-      "answerIndex": 1,
-      "explanation": "مجموع ۱۵ و تعداد ۳ است، پس میانگین ۵ است.",
-      "optionReasons": [
-        "۳ تعداد داده‌هاست.",
-        "۱۵ تقسیم بر ۳ برابر ۵ است.",
-        "۶ از این مجموع و تعداد حاصل نمی‌شود.",
-        "۹ بزرگ‌ترین مشاهده است."
-      ],
-      "sourceIds": [
-        "nist.stat.location"
-      ],
-      "origin": "authored",
-      "rights": "original_ael",
-      "review": "pending_sme",
-      "readingBlock": {
-        "type": "concept",
-        "index": 0
-      }
-    },
-    {
-      "id": "stat.center.q02",
-      "topicId": "stat.center",
-      "difficulty": "applied",
-      "prompt": "میانهٔ داده‌های ۲، ۴، ۶ و ۲۰ کدام است؟",
-      "choices": [
-        "۴",
-        "۵",
-        "۶",
-        "۸"
-      ],
-      "answerIndex": 1,
-      "explanation": "دو مقدار میانی ۴ و ۶ هستند و میانگین آن‌ها ۵ است.",
-      "optionReasons": [
-        "۴ فقط یکی از دو مقدار میانی است.",
-        "میانگین دو مقدار میانی ۵ است.",
-        "۶ فقط یکی از دو مقدار میانی است.",
-        "میانگین کل داده‌هاست، نه میانه."
-      ],
-      "sourceIds": [
-        "nist.stat.location"
-      ],
-      "origin": "authored",
-      "rights": "original_ael",
-      "review": "pending_sme",
-      "readingBlock": {
-        "type": "concept",
-        "index": 2
-      }
-    },
-    {
-      "id": "stat.conditional.q01",
-      "topicId": "stat.conditional",
-      "difficulty": "basic",
-      "prompt": "از ۲۰ نفر دارای گواهی B، تعداد ۵ نفر گواهی A هم دارند. احتمال A به شرط B چقدر است؟",
-      "choices": [
-        "۵٪",
-        "۲۰٪",
-        "۲۵٪",
-        "۴۰٪"
-      ],
-      "answerIndex": 2,
-      "explanation": "در گروه دارای B، پنج نفر از بیست نفر A دارند.",
-      "optionReasons": [
-        "نسبت ۵ به ۲۰ پنج درصد نیست.",
-        "۲۰٪ معادل نسبت ۴ به ۲۰ است.",
-        "۵ تقسیم بر ۲۰ برابر ۲۵٪ است.",
-        "۴۰٪ معادل نسبت ۸ به ۲۰ است."
-      ],
-      "sourceIds": [
-        "nist.stat.conditional"
-      ],
-      "origin": "authored",
-      "rights": "original_ael",
-      "review": "pending_sme",
-      "readingBlock": {
-        "type": "workedExample"
-      }
-    },
-    {
-      "id": "stat.conditional.q02",
-      "topicId": "stat.conditional",
-      "difficulty": "applied",
-      "prompt": "اگر P(B)=۰٫۴ و P(A∩B)=۰٫۱ باشد، P(A|B) چقدر است؟",
-      "choices": [
-        "۰٫۱",
-        "۰٫۲۵",
-        "۰٫۴",
-        "۴"
-      ],
-      "answerIndex": 1,
-      "explanation": "احتمال مشترک ۰٫۱ را بر احتمال شرط ۰٫۴ تقسیم می‌کنیم.",
-      "optionReasons": [
-        "۰٫۱ احتمال مشترک است.",
-        "۰٫۱ تقسیم بر ۰٫۴ برابر ۰٫۲۵ است.",
-        "۰٫۴ احتمال شرط است.",
-        "احتمال از یک بزرگ‌تر نمی‌شود."
-      ],
-      "sourceIds": [
-        "nist.stat.conditional"
-      ],
-      "origin": "authored",
-      "rights": "original_ael",
-      "review": "pending_sme",
-      "readingBlock": {
-        "type": "formula"
-      }
-    },
-    {
-      "id": "stat.center.essay01",
-      "topicId": "stat.center",
-      "kind": "essay",
-      "difficulty": "applied",
-      "prompt": "در داده‌های ۲، ۳ و ۱۰ میانگین و میانه را محاسبه کن و توضیح بده چرا این دو متفاوت‌اند.",
-      "choices": [],
-      "answerIndex": -1,
-      "explanation": "میانگین (۲+۳+۱۰)÷۳ برابر ۵ و میانه برابر ۳ است. مقدار ۱۰ میانگین را نسبت به دو مقدار دیگر به سمت خود می‌کشد.",
-      "optionReasons": [],
-      "rubric": [
-        "میانگین ۵ محاسبه شود.",
-        "میانه ۳ تعیین شود.",
-        "اثر مقدار بزرگ‌تر بر میانگین توضیح داده شود."
-      ],
-      "sourceIds": [
-        "nist.stat.location"
-      ],
-      "origin": "authored",
-      "rights": "original_ael",
-      "review": "pending_sme",
-      "readingBlock": {
-        "type": "workedExample"
-      }
-    }
-  ]
+ "schemaVersion": 1,
+ "id": "statistics-foundations",
+ "version": "1.3.0",
+ "title": "مبانی آمار و احتمال",
+ "status": "authored_pilot",
+ "description": "سه درس کوتاه تألیفی دربارهٔ شاخص مرکزی، پراکندگی و احتمال شرطی.",
+ "scopeNote": "بستهٔ آزمایشی تألیفی است و پرسش‌ها در انتظار بازبینی متخصص‌اند.",
+ "sources": [
+  {
+   "id": "nist.stat.location",
+   "title": "NIST Engineering Statistics Handbook",
+   "url": "https://www.itl.nist.gov/div898/handbook/eda/section3/eda351.htm",
+   "locator": "Measures of Location",
+   "kind": "concept_reference",
+   "checkedOn": "2026-11-04"
+  },
+  {
+   "id": "nist.stat.conditional",
+   "title": "NIST Engineering Statistics Handbook",
+   "url": "https://www.itl.nist.gov/div898/handbook/apr/section1/apr1a.htm",
+   "locator": "Conditional probability",
+   "kind": "concept_reference",
+   "checkedOn": "2026-11-04"
+  },
+  {
+   "id": "nist.stat.spread",
+   "title": "NIST Engineering Statistics Handbook",
+   "url": "https://www.itl.nist.gov/div898/handbook/eda/section3/eda356.htm",
+   "locator": "Measures of Scale",
+   "kind": "concept_reference",
+   "checkedOn": "2026-11-11"
+  }
+ ],
+ "topics": [
+  {
+   "id": "stat.center",
+   "title": "میانگین و میانه",
+   "objective": "مرکز داده را با توجه به داده‌های پرت تفسیر کنیم.",
+   "minutes": 4,
+   "prerequisites": [],
+   "concepts": [
+    "میانگین برابر مجموع مقدارها تقسیم بر تعداد آن‌هاست.",
+    "میانه مقدار میانی داده‌های مرتب‌شده است.",
+    "برای تعداد زوج، میانه میانگین دو مقدار میانی است."
+   ],
+   "formula": "Mean = sum(x) / n",
+   "workedExample": "برای ۲، ۳ و ۱۰ میانگین ۵ و میانه ۳ است.",
+   "commonError": "قبل از تعیین میانه داده‌ها را مرتب کن و اثر مقدار پرت بر میانگین را بررسی کن.",
+   "sourceIds": [
+    "nist.stat.location"
+   ]
+  },
+  {
+   "id": "stat.conditional",
+   "title": "احتمال شرطی",
+   "objective": "مخرج احتمال را با شرط مسئله انتخاب کنیم.",
+   "minutes": 4,
+   "prerequisites": [],
+   "concepts": [
+    "احتمال شرطی، فراوانی رویداد مشترک را در میان موارد دارای شرط می‌سنجد.",
+    "برای محاسبه باید احتمال شرط بزرگ‌تر از صفر باشد.",
+    "احتمال A به شرط B با احتمال B به شرط A لزوماً یکسان نیست."
+   ],
+   "formula": "P(A|B) = P(A∩B) / P(B), P(B) > 0",
+   "workedExample": "از ۲۰ نفر دارای ویژگی B، تعداد ۵ نفر ویژگی A هم دارند. احتمال A به شرط B برابر ۵ ÷ ۲۰ یعنی ۲۵٪ است.",
+   "commonError": "مخرج باید تعداد یا احتمال موارد دارای شرط B باشد.",
+   "sourceIds": [
+    "nist.stat.conditional"
+   ]
+  },
+  {
+   "id": "stat.dispersion",
+   "title": "پراکندگی و واریانس",
+   "objective": "پراکندگی داده را جدا از مرکز تفسیر کنیم و انحراف معیار را محاسبه کنیم.",
+   "minutes": 4,
+   "prerequisites": [
+    "stat.center"
+   ],
+   "concepts": [
+    "دامنه = بیشینه − کمینه؛ ساده‌ترین سنجهٔ پراکندگی است.",
+    "واریانس میانگین مربع انحراف‌ها از میانگین است و انحراف معیار جذر آن است.",
+    "واریانس جامعه بر n تقسیم می‌شود و واریانس نمونه بر n−1."
+   ],
+   "formula": "s^2 = sum((x - mean)^2) / (n - 1)",
+   "workedExample": "برای ۲، ۴ و ۹ میانگین ۵ است؛ انحراف‌ها ۳ و ۱ و ۴ و واریانس نمونه (۹+۱+۱۶)/۲ = ۱۳ است.",
+   "commonError": "جذر واریانس را برای رسیدن به انحراف معیار فراموش نکن و تقسیم بر n و n−1 را اشتباه نگیر.",
+   "sourceIds": [
+    "nist.stat.spread"
+   ]
+  }
+ ],
+ "questions": [
+  {
+   "id": "stat.center.q01",
+   "topicId": "stat.center",
+   "difficulty": "basic",
+   "prompt": "میانگین ۲، ۴ و ۹ چقدر است؟",
+   "choices": [
+    "۳",
+    "۵",
+    "۶",
+    "۹"
+   ],
+   "answerIndex": 1,
+   "explanation": "مجموع ۱۵ و تعداد ۳ است، پس میانگین ۵ است.",
+   "optionReasons": [
+    "۳ تعداد داده‌هاست.",
+    "۱۵ تقسیم بر ۳ برابر ۵ است.",
+    "۶ از این مجموع و تعداد حاصل نمی‌شود.",
+    "۹ بزرگ‌ترین مشاهده است."
+   ],
+   "sourceIds": [
+    "nist.stat.location"
+   ],
+   "origin": "authored",
+   "rights": "original_ael",
+   "review": "pending_sme",
+   "readingBlock": {
+    "type": "concept",
+    "index": 0
+   }
+  },
+  {
+   "id": "stat.center.q02",
+   "topicId": "stat.center",
+   "difficulty": "applied",
+   "prompt": "میانهٔ داده‌های ۲، ۴، ۶ و ۲۰ کدام است؟",
+   "choices": [
+    "۴",
+    "۵",
+    "۶",
+    "۸"
+   ],
+   "answerIndex": 1,
+   "explanation": "دو مقدار میانی ۴ و ۶ هستند و میانگین آن‌ها ۵ است.",
+   "optionReasons": [
+    "۴ فقط یکی از دو مقدار میانی است.",
+    "میانگین دو مقدار میانی ۵ است.",
+    "۶ فقط یکی از دو مقدار میانی است.",
+    "میانگین کل داده‌هاست، نه میانه."
+   ],
+   "sourceIds": [
+    "nist.stat.location"
+   ],
+   "origin": "authored",
+   "rights": "original_ael",
+   "review": "pending_sme",
+   "readingBlock": {
+    "type": "concept",
+    "index": 2
+   }
+  },
+  {
+   "id": "stat.conditional.q01",
+   "topicId": "stat.conditional",
+   "difficulty": "basic",
+   "prompt": "از ۲۰ نفر دارای گواهی B، تعداد ۵ نفر گواهی A هم دارند. احتمال A به شرط B چقدر است؟",
+   "choices": [
+    "۵٪",
+    "۲۰٪",
+    "۲۵٪",
+    "۴۰٪"
+   ],
+   "answerIndex": 2,
+   "explanation": "در گروه دارای B، پنج نفر از بیست نفر A دارند.",
+   "optionReasons": [
+    "نسبت ۵ به ۲۰ پنج درصد نیست.",
+    "۲۰٪ معادل نسبت ۴ به ۲۰ است.",
+    "۵ تقسیم بر ۲۰ برابر ۲۵٪ است.",
+    "۴۰٪ معادل نسبت ۸ به ۲۰ است."
+   ],
+   "sourceIds": [
+    "nist.stat.conditional"
+   ],
+   "origin": "authored",
+   "rights": "original_ael",
+   "review": "pending_sme",
+   "readingBlock": {
+    "type": "workedExample"
+   }
+  },
+  {
+   "id": "stat.conditional.q02",
+   "topicId": "stat.conditional",
+   "difficulty": "applied",
+   "prompt": "اگر P(B)=۰٫۴ و P(A∩B)=۰٫۱ باشد، P(A|B) چقدر است؟",
+   "choices": [
+    "۰٫۱",
+    "۰٫۲۵",
+    "۰٫۴",
+    "۴"
+   ],
+   "answerIndex": 1,
+   "explanation": "احتمال مشترک ۰٫۱ را بر احتمال شرط ۰٫۴ تقسیم می‌کنیم.",
+   "optionReasons": [
+    "۰٫۱ احتمال مشترک است.",
+    "۰٫۱ تقسیم بر ۰٫۴ برابر ۰٫۲۵ است.",
+    "۰٫۴ احتمال شرط است.",
+    "احتمال از یک بزرگ‌تر نمی‌شود."
+   ],
+   "sourceIds": [
+    "nist.stat.conditional"
+   ],
+   "origin": "authored",
+   "rights": "original_ael",
+   "review": "pending_sme",
+   "readingBlock": {
+    "type": "formula"
+   }
+  },
+  {
+   "id": "stat.center.essay01",
+   "topicId": "stat.center",
+   "kind": "essay",
+   "difficulty": "applied",
+   "prompt": "در داده‌های ۲، ۳ و ۱۰ میانگین و میانه را محاسبه کن و توضیح بده چرا این دو متفاوت‌اند.",
+   "choices": [],
+   "answerIndex": -1,
+   "explanation": "میانگین (۲+۳+۱۰)÷۳ برابر ۵ و میانه برابر ۳ است. مقدار ۱۰ میانگین را نسبت به دو مقدار دیگر به سمت خود می‌کشد.",
+   "optionReasons": [],
+   "rubric": [
+    "میانگین ۵ محاسبه شود.",
+    "میانه ۳ تعیین شود.",
+    "اثر مقدار بزرگ‌تر بر میانگین توضیح داده شود."
+   ],
+   "sourceIds": [
+    "nist.stat.location"
+   ],
+   "origin": "authored",
+   "rights": "original_ael",
+   "review": "pending_sme",
+   "readingBlock": {
+    "type": "workedExample"
+   }
+  },
+  {
+   "id": "stat.dispersion.q01",
+   "topicId": "stat.dispersion",
+   "difficulty": "advanced",
+   "prompt": "انحراف معیار نمونهٔ ۲، ۴ و ۹ چقدر است؟",
+   "choices": [
+    "√۱۳ ≈ ۳٫۶۱",
+    "۱۳",
+    "۵",
+    "√۴ ≈ ۲"
+   ],
+   "answerIndex": 0,
+   "explanation": "میانگین ۵ است؛ انحراف‌های ۳ و ۱ و ۴ مربع‌شان ۹ و ۱ و ۱۶ و واریانس نمونه ۲۶/۲ = ۱۳ و انحراف معیار جذر ۱۳ است.",
+   "optionReasons": [
+    "درست است: واریانس نمونه ۱۳ و انحراف معیار جذر آن است.",
+    "۱۳ واریانس است نه انحراف معیار؛ جذر لازم است.",
+    "۵ میانگین داده‌هاست نه پراکندگی.",
+    "این دامنهٔ تقریبی است نه انحراف معیار."
+   ],
+   "sourceIds": [
+    "nist.stat.spread"
+   ],
+   "origin": "authored",
+   "rights": "original_ael",
+   "review": "pending_sme"
+  },
+  {
+   "id": "stat.dispersion.q02",
+   "topicId": "stat.dispersion",
+   "difficulty": "advanced",
+   "prompt": "دو مجموعهٔ A = {۴، ۴، ۴} و B = {۱، ۴، ۷} میانگین یکسان ۴ دارند. کدام گزینه درست است؟",
+   "choices": [
+    "پراکندگی B بیشتر است؛ میانگین به‌تنهایی نمایندهٔ کامل داده نیست.",
+    "پراکندگی هر دو صفر است چون میانگین برابر است.",
+    "پراکندگی A بیشتر است چون مقدارها بزرگ‌ترند.",
+    "برای مقایسهٔ پراکندگی فقط دامنه کافی نیست و باید میانه را دید."
+   ],
+   "answerIndex": 0,
+   "explanation": "با میانگین برابر، انحراف‌های A صفر و انحراف‌های B سه واحدند؛ پس B پراکنده‌تر است و میانگین به‌تنهایی شکل توزیع را نمی‌گوید.",
+   "optionReasons": [
+    "درست است: واریانس صفر در برابر واریانس ۹ تمایز اصلی را نشان می‌دهد.",
+    "میانگین برابر به معنای پراکندگی برابر نیست.",
+    "بزرگ‌بودن مقدارها به‌تنهایی پراکندگی نمی‌سازد؛ پراکندگی به فاصله از میانگین وابسته است.",
+    "جمله درست دربارهٔ میانه است اما پاسخِ درست دربارهٔ پراکندگی است."
+   ],
+   "sourceIds": [
+    "nist.stat.spread"
+   ],
+   "origin": "authored",
+   "rights": "original_ael",
+   "review": "pending_sme"
+  },
+  {
+   "id": "stat.dispersion.essay01",
+   "topicId": "stat.dispersion",
+   "difficulty": "applied",
+   "prompt": "برای داده‌های ۳، ۷ و ۸ میانگین، واریانس نمونه و انحراف معیار را محاسبه کن و توضیح بده چرا تقسیم بر n−1 به‌جای n انجام می‌شود.",
+   "choices": [],
+   "answerIndex": -1,
+   "explanation": "میانگین ۶ است؛ انحراف‌های ۳ و ۱ و ۲ و واریانس نمونه (۹+۱+۴)/۲ = ۷ و انحراف معیار √۷ ≈ ۲٫۶۵. تقسیم بر n−1 (تصحیح بِسل) درجهٔ آزادی را لحاظ می‌کند تا برآوردگر واریانس جامعه بدون سوگیری باشد.",
+   "optionReasons": [],
+   "sourceIds": [
+    "nist.stat.spread"
+   ],
+   "origin": "authored",
+   "rights": "original_ael",
+   "review": "pending_sme",
+   "kind": "essay",
+   "rubric": [
+    "میانگین ۶ محاسبه شود.",
+    "واریانس نمونه ۷ با تقسیم بر n−1 محاسبه شود.",
+    "انحراف معیار √۷ ≈ ۲٫۶۵ گزارش شود.",
+    "دلیل تقسیم بر n−1 (تصحیح بِسل و بدون‌سوییچ‌کردن برآورد واریانس جامعه) توضیح داده شود."
+   ],
+   "readingBlock": {
+    "type": "formula"
+   }
+  }
+ ]
 }
