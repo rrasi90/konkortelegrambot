@@ -81,6 +81,8 @@ describe('ممیزی دقت محتوای آموزشی AEL — 2026-11-12', () =>
   });
 
   it('اثر کاهش آلفا را مشروط بیان می‌کند و افزایش حجم نمونه را تنها راه نمی‌نامد', () => {
+    expect(topic('rm.research_design').concepts[2]).toContain('عدم رد فرض صفرِ نادرست');
+    expect(topic('rm.research_design').concepts[2]).not.toContain('پذیرش نول غلط');
     expect(topic('rm.research_design').concepts[3]).not.toContain('تنها راه');
     expect(question('phd-exp.q009').explanation).not.toContain('تنها راه');
     expect(card('fc-rm-002')?.back).not.toContain('تنها راه');
@@ -105,6 +107,7 @@ describe('ممیزی دقت محتوای آموزشی AEL — 2026-11-12', () =>
     const back = card('fc-stats-004')?.back ?? '';
     expect(back).toContain('مرز سرانگشتی ۵۰');
     expect(back).toContain('قانون قطعی');
+    expect(card('fc-stats-005')?.extra).toContain('قاعدهٔ سرانگشتی');
     expect(back).toContain('توان آزمون');
   });
 
