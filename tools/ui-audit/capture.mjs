@@ -199,7 +199,7 @@ async function scenarioPlacement(page, viewport) {
   // پاسخ به ۵ سؤال: اولین گزینه داخل مودال (دادهٔ آزمایشی demo)
   for (let i = 0; i < 5; i++) {
     const opt = await page.evaluate(() => {
-      const modal = document.querySelector('div.z-\[50\]');
+      const modal = document.querySelector('div.z-\\[50\\]');
       if (!modal) return 'NO-MODAL';
       const btns = [...modal.querySelectorAll('div.space-y-2 > button')];
       if (!btns.length) return 'NO-OPTIONS';
@@ -264,6 +264,7 @@ async function scenarioStudySession(page, viewport) {
     return btns.length;
   });
 
+  const PROGRESS = ['مطالعه شد — کارت بعدی', 'متوجه شدم — گام بعدی', 'ادامه به گام بعدی', 'فعالیت بعدی', 'کارت بعدی', 'سؤال بعدی'];
   let answeredQuestions = 0;
   for (let card = 0; card < 16; card++) {
     const optCount = await clickQuestionOption();
@@ -445,8 +446,28 @@ async function runViewport(browser, viewportName) {
 
 async function main() {
   ensureDir(SHOTS);
+  // ادغام با MANIFEST موجود: ردیف‌های قبلی حفظ و شماره‌گذاری ادامه می‌یابد
+  const manifestPath = path.join(ROOT, 'MANIFEST.csv');
+  if (fs.existsSync(manifestPath)) {
+    const csvText = fs.readFileSync(manifestPath, 'utf8');
+    const lines = csvText.trim().split('\n');
+    for (const line of lines.slice(1)) {
+      const cells = [];
+      let cur = '', inQ = false;
+      for (const ch of line) {
+        if (ch === '"') inQ = !inQ;
+        else if (ch === ',' && !inQ) { cells.push(cur); cur = ''; }
+        else cur += ch;
+      }
+      cells.push(cur);
+      const r = {};
+      lines[0].split(',').forEach((h, i) => { r[h] = cells[i] ?? ''; });
+      manifest.push(r);
+    }
+    console.log('merged existing manifest rows:', manifest.length);
+  }
   const browser = await chromium.launch({ headless: true, channel: 'chrome' });
-  const viewports = onlyViewport ? [onlyViewport] : ['desktop', 'mobile'];
+  const viewports = onlyViewport ? [onlyViewport] : ['desktop', 'mobile', 'telegram'];
   for (const vp of viewports) {
     console.log('=== viewport:', vp);
     await runViewport(browser, vp);
