@@ -11,16 +11,16 @@ export interface CourseEncyclopediaSupplement {
 }
 
 /**
- * دایرةالمعارف جامع و مکمل ۱۰۰ صفحه‌ای هر درس (پوشش ۱۰۰٪ مباحث کنکور کارشناسی ارشد و دکتری ۱۳۹۱ تا ۱۴۰۵)
- * این ماژول به صورت خودکار با بانک کتب مرجع (REFERENCE_BOOKS_DATABASE) ادغام می‌شود تا هیچ سؤال یا مبحثی
- * در ۱۵ سال اخیر ارشد و دکتری بدون مرجع، فرمول یا درسنامه نماند.
+ * مجموعه‌ای از فصل‌ها، نکات و پرسش‌های تکمیلی برای پیوند به کتاب‌های مرجع.
+ * این فایل به‌تنهایی اثبات‌کنندهٔ پوشش کامل سرفصل‌ها یا همهٔ سؤال‌های آزمون‌های ۱۳۹۱ تا ۱۴۰۵ نیست.
+ * پرسش‌های افزوده‌شده در این ماژول، تمرین تألیفی‌اند و نباید به‌عنوان سؤال رسمی کنکور نمایش داده شوند.
  */
 export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
   {
     bookId: 'book.bus.robbins_daft',
     courseTitle: 'تئوری‌های مدیریت (مبانی سازمان، رفتار سازمانی، منابع انسانی، تئوری سازمان و پارادایم‌های دکتری)',
     equivalentReferencePages: 145,
-    coveredKonkorYears: 'پوشش ۱۰۰٪ سؤالات ارشد (کد ۱۱۴۲) و دکتری تخصصی از ۱۳۹۱ تا ۱۴۰۵',
+    coveredKonkorYears: 'مباحث منتخب مرتبط با آزمون‌های ۱۳۹۱ تا ۱۴۰۵؛ این بسته ادعای پوشش کامل آزمون‌ها را ندارد.',
     extraChapters: [
       {
         chapterNumber: 'بخش ۴: مدیریت منابع انسانی پیشرفته (دکتر سیدجوادین، سعادت و دسلر)',
@@ -53,9 +53,10 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
     extraQuestions: [
       {
         id: 'ref.q.robbins.supp.1',
-        examTitle: 'کنکور کارشناسی ارشد و دکتری مدیریت',
-        examYear: 1403,
+        examTitle: 'تمرین تألیفی مکمل (سؤال کنکور رسمی نیست)',
         degreeLevel: 'ارشد',
+        origin: 'authored_supplement',
+        sourceReference: 'تمرین تألیفی مکمل برای مرور مبحث همین فصل؛ متن سؤال از دفترچهٔ رسمی استخراج نشده است.',
         chapterTopic: 'مدل ویژگی‌های شغلی هاکمن و اولدهام (JCM)',
         questionText:
           'در مدل ویژگی‌های شغلی هاکمن و اولدهام، کدام دو بعد شغلی نقشی ضربی در فرمول توان انگیزشی شغل ($MPS$) دارند و در صورت صفر بودن هر یک از آن‌ها، توان انگیزشی کل شغل صفر می‌شود؟',
@@ -72,7 +73,7 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
     bookId: 'book.bus.kotler_jalilian',
     courseTitle: 'مدیریت بازاریابی پیشرفته و تئوری‌های بازاریابی دکتری (جلیلیان، مروج، کاتلر و کلر)',
     equivalentReferencePages: 130,
-    coveredKonkorYears: 'پوشش ۱۰۰٪ سؤالات بازاریابی ارشد (ضریب ۴) و دکتری (ضریب ۵) از ۱۳۹۱ تا ۱۴۰۵',
+    coveredKonkorYears: 'مباحث منتخب مرتبط با آزمون‌های ۱۳۹۱ تا ۱۴۰۵؛ این بسته ادعای پوشش کامل آزمون‌ها را ندارد.',
     extraChapters: [
       {
         chapterNumber: 'فصل ۱۳ تا ۱۸ جلیلیان و کاتلر',
@@ -102,9 +103,10 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
     extraQuestions: [
       {
         id: 'ref.q.kotler.supp.1',
-        examTitle: 'کنکور کارشناسی ارشد مدیریت بازرگانی',
-        examYear: 1401,
+        examTitle: 'تمرین تألیفی مکمل (سؤال کنکور رسمی نیست)',
         degreeLevel: 'ارشد',
+        origin: 'authored_supplement',
+        sourceReference: 'تمرین تألیفی مکمل برای مرور مبحث همین فصل؛ متن سؤال از دفترچهٔ رسمی استخراج نشده است.',
         chapterTopic: 'ویژگی‌های چهارگانه خدمات (کاتلر و جلیلیان)',
         questionText:
           'این واقعیت که «خدمات را نمی‌توان مانند کالاهای فیزیکی انبار و ذخیره کرد» و به همین دلیل هتل‌ها و خطوط هوایی برای کنسلی لحظه آخری جریمه دریافت می‌کنند، ناشی از کدام ویژگی خدمات است؟',
@@ -121,7 +123,7 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
     bookId: 'book.bus.econ_nazari',
     courseTitle: 'اقتصاد خرد و کلان جامع (دکتر محسن نظری — پوشش کامل فرمول‌ها و مکاتب اقتصادی)',
     equivalentReferencePages: 125,
-    coveredKonkorYears: 'پوشش ۱۰۰٪ سؤالات اقتصاد خرد و کلان کنکور ارشد مدیریت از ۱۳۹۱ تا ۱۴۰۵',
+    coveredKonkorYears: 'مباحث منتخب مرتبط با آزمون‌های ۱۳۹۱ تا ۱۴۰۵؛ این بسته ادعای پوشش کامل آزمون‌ها را ندارد.',
     extraChapters: [
       {
         chapterNumber: 'بخش تکمیلی خرد دکتر نظری: اثر جانشینی و درآمدی (هیکس و اسلاتسکی) و بازارهای انحصاری',
@@ -149,9 +151,10 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
     extraQuestions: [
       {
         id: 'ref.q.econ.supp.1',
-        examTitle: 'کنکور کارشناسی ارشد مدیریت',
-        examYear: 1402,
+        examTitle: 'تمرین تألیفی مکمل (سؤال کنکور رسمی نیست)',
         degreeLevel: 'ارشد',
+        origin: 'authored_supplement',
+        sourceReference: 'تمرین تألیفی مکمل برای مرور مبحث همین فصل؛ متن سؤال از دفترچهٔ رسمی استخراج نشده است.',
         chapterTopic: 'تبعیض قیمت درجه سوم در انحصار (اقتصاد خرد دکتر نظری)',
         questionText:
           'یک بنگاه انحصاری محصول خود را در دو بازار تفکیک‌شده الف و ب عرضه می‌کند. اگر کشش قیمتی تقاضا در بازار الف برابر $-2$ و در بازار ب برابر $-4$ باشد، نسبت قیمت فروش در بازار الف به بازار ب ($\\frac{P_A}{P_B}$) برای حداکثرسازی سود چقدر باید باشد؟',
@@ -168,7 +171,7 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
     bookId: 'book.bus.math_stats_ranjbaran_tourani',
     courseTitle: 'ریاضی و آمار جامع ارشد و دکتری (دکتر هادی رنجبران + محسن طورانی + دکتر عادل آذر)',
     equivalentReferencePages: 135,
-    coveredKonkorYears: 'پوشش ۱۰۰٪ سؤالات ریاضی و آمار ارشد و آمار پیشرفته دکتری از ۱۳۹۱ تا ۱۴۰۵',
+    coveredKonkorYears: 'مباحث منتخب مرتبط با آزمون‌های ۱۳۹۱ تا ۱۴۰۵؛ این بسته ادعای پوشش کامل آزمون‌ها را ندارد.',
     extraChapters: [
       {
         chapterNumber: 'بخش ۳: دنباله‌ها، سری‌ها، توابع دو متغیره و بهینه‌سازی مقید لاگرانژ (رنجبران)',
@@ -197,9 +200,10 @@ export const COURSE_ENCYCLOPEDIA_SUPPLEMENTS: CourseEncyclopediaSupplement[] = [
     extraQuestions: [
       {
         id: 'ref.q.math.supp.1',
-        examTitle: 'کنکور کارشناسی ارشد مدیریت',
-        examYear: 1402,
+        examTitle: 'تمرین تألیفی مکمل (سؤال کنکور رسمی نیست)',
         degreeLevel: 'ارشد',
+        origin: 'authored_supplement',
+        sourceReference: 'تمرین تألیفی مکمل برای مرور مبحث همین فصل؛ متن سؤال از دفترچهٔ رسمی استخراج نشده است.',
         chapterTopic: 'قضیه اویلر در توابع همگن (ریاضیات عمومی دکتر رنجبران)',
         questionText:
           'اگر تابع دو متغیره $f(x, y) = \\frac{x^4 + y^4}{x + y}$ مفروض باشد، حاصل عبارت $x \\frac{\\partial f}{\\partial x} + y \\frac{\\partial f}{\\partial y}$ کدام است؟',
