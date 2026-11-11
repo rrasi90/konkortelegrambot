@@ -1451,20 +1451,20 @@ export function generateBookHandoutMarkdown(book: ReferenceBookItem): string {
     const provenance = q.origin === 'authored_supplement'
       ? 'تمرین تألیفی مکمل — سؤال کنکور رسمی نیست'
       : `${q.examTitle} — سال ${q.examYear ?? 'نامشخص'}`;
-    lines.push(`\\n### سؤال ${idx + 1} (${provenance} | مقطع ${q.degreeLevel} | مبحث: ${q.chapterTopic})`);
+    lines.push(`\n### سؤال ${idx + 1} (${provenance} | مقطع ${q.degreeLevel} | مبحث: ${q.chapterTopic})`);
     if (q.sourceReference) lines.push(`**منشأ:** ${q.sourceReference}`);
     lines.push(`**صورت سؤال:** ${q.questionText}\\n`);
     q.options.forEach((opt, oIdx) => {
       lines.push(`${oIdx + 1}) ${opt}`);
     });
-    lines.push(`\\n- **پاسخ صحیح و تشریح کامل:** پس از submit در حالت آنلاین نمایش داده می‌شود (کلید فقط سمت سرور است).`);
+    lines.push(`\n- **پاسخ صحیح و تشریح کامل:** پس از submit در حالت آنلاین نمایش داده می‌شود (کلید فقط سمت سرور است).`);
   });
 
   return lines.join('\n');
 }
 
 export function generateAllBooksMasterHandoutMarkdown(): string {
-  const header = `# پکیج کامل جزوات خلاصه فصول، فرمول‌نامه و بانک تست تشریحی کنکور کارشناسی ارشد و دکتری مدیریت\nشامل هر ۷ درس طلایی کارشناسی ارشد مدیریت بازرگانی + منابع تخصصی مدیریت صنعتی و مدیریت فناوری\n\n====================\n\n`;
+  const header = `# بستهٔ جزوات، نکات مرجع، سؤال‌های منتخب و تمرین‌های تألیفی مدیریت\nشامل هر ۷ درس طلایی کارشناسی ارشد مدیریت بازرگانی + منابع تخصصی مدیریت صنعتی و مدیریت فناوری\n\n====================\n\n`;
   return (
     header +
     REFERENCE_BOOKS_DATABASE.map((b) => generateBookHandoutMarkdown(b)).join(
