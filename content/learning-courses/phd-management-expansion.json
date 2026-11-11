@@ -10,8 +10,8 @@
   {
    "id": "hood.npm",
    "title": "Christopher Hood — A Public Management for All Seasons (1991)",
-   "url": "https://doi.org/10.1093/0198282824.003.0001",
-   "locator": "Doctrines of NPM",
+   "url": "https://doi.org/10.1111/j.1467-9299.1991.tb00779.x",
+   "locator": "Seven doctrinal components of New Public Management",
    "kind": "concept_reference",
    "checkedOn": "2026-11-07"
   },
@@ -108,6 +108,14 @@
    "title": "Wilson, Pan & Schumsky (2012) — Recalculation of the Critical Values for Lawshe’s Content Validity Ratio",
    "url": "https://doi.org/10.1177/0748175612440286",
    "locator": "جدول مقادیر بحرانی CVR بر حسب تعداد داوران و سطح آلفا؛ N=9 و alpha=.05",
+   "kind": "concept_reference",
+   "checkedOn": "2026-11-12"
+  },
+  {
+   "id": "bass.avolio.1993",
+   "title": "Bernard M. Bass & Bruce J. Avolio (1993) — Transformational Leadership and Organizational Culture",
+   "url": "https://citeseerx.ist.psu.edu/document?doi=ebc2a250401abcf7b772041377834f143f2f52a8&repid=rep1&type=pdf",
+   "locator": "Four Is of transformational leadership: idealized influence, inspirational motivation, intellectual stimulation, individualized consideration",
    "kind": "concept_reference",
    "checkedOn": "2026-11-12"
   }
@@ -264,7 +272,8 @@
    "workedExample": "۹ داور، ۷ نفر «ضروری»: CVR = (۷ − ۴٫۵) ÷ ۴٫۵ ≈ ۰٫۵۶. در سطح یک‌طرفهٔ α=۰٫۰۵، مقدار بحرانی بازحساب‌شده برای ۹ داور حدود ۰٫۷۸ است؛ بنابراین ۰٫۵۶ به حد بحرانی نمی‌رسد و گویه صرفاً بر پایهٔ این معیار پذیرفته نمی‌شود. تصمیم نهایی محتوا همچنان به بازبینی متخصص نیاز دارد.",
    "commonError": "مقدار بحرانی CVR را بدون توجه به تعداد داوران و سطح آلفا از یک جدول عمومی حفظ نکن؛ مقدار بحرانی با این دو عامل تغییر می‌کند. CVR نیز جایگزین داوری محتوایی متخصص نیست.",
    "sourceIds": [
-    "hafaznia.method"
+    "hafaznia.method",
+    "wilson.cvr2012"
    ]
   },
   {
@@ -283,7 +292,8 @@
    "workedExample": "تیم پژوهشی خبره با وظایف مبهم → سبک مشارکتی/تحول‌آفرین با تحریک ذهنی؛ عملیات بحرانی با رویهٔ روشن → وظیفه‌گرا.",
    "commonError": "خلط مؤلفه‌های تبادلی و تحول‌آفرین؛ یا انتظار انعطاف سبک از رهبر فیدلری (مدل این اجازه را نمی‌دهد).",
    "sourceIds": [
-    "robbins.leadership"
+    "robbins.leadership",
+    "bass.avolio.1993"
    ]
   },
   {
@@ -664,7 +674,8 @@
     "تاکتیک‌های نفوذ روزمره‌اند نه مؤلفه‌های تحول‌آفرینی."
    ],
    "sourceIds": [
-    "robbins.leadership"
+    "robbins.leadership",
+    "bass.avolio.1993"
    ],
    "origin": "authored",
    "rights": "original_ael",
