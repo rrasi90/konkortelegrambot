@@ -1,4 +1,8 @@
 // Auto-generated Anki Flashcards Import
+// CORRECTION (2026-11-11): کارت‌های مدیریت اسلامی (اجتهاد، نیروی محرکه اسلام، انواع حاکمیت،
+// اصل استثنای حضرت موسی، اجتهاد و نوآوری علمی) که در اکسپورت اصلی داخل دکٔ management_theory
+// ادغام شده بودند به subject «islamic_management» منتقل و نام subject ادغامی «islamic_theory»
+// به «islamic_management» اصلاح شد — دو درس مستقل، دو subject مستقل.
 export interface AnkiFlashcardItem {
   id: string;
   subjectId: string;
@@ -8514,7 +8518,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_655",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "امت وسطا",
     "back": "<img src=\"img1506407347891587383.jpg\">",
     "sourceDeck": "islam",
@@ -8527,7 +8531,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_656",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "مرابطه و مصابره",
     "back": "<img src=\"img3882929963329208689.jpg\">",
     "sourceDeck": "islam",
@@ -8540,7 +8544,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_657",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "مدینه فارابی",
     "back": "<img src=\"img2883694856279818978.jpg\">",
     "sourceDeck": "islam",
@@ -8553,7 +8557,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_658",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "حیات طیبه",
     "back": "<img src=\"img6859589705848764310.jpg\">",
     "sourceDeck": "islam",
@@ -8566,7 +8570,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_659",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "تفاوت سازمان دنیا گرا و آخرت گرا",
     "back": "<img src=\"img9179060080470566238.jpg\">",
     "sourceDeck": "islam",
@@ -8579,7 +8583,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_660",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "سطوح اهداف",
     "back": "<img src=\"img6282855985916542493.jpg\">",
     "sourceDeck": "islam",
@@ -8592,7 +8596,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_661",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "قائده فقهی کل امارة امانة",
     "back": "<img src=\"img2480976637620970146.jpg\">",
     "sourceDeck": "islam",
@@ -8605,7 +8609,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_662",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "اندیشمندان",
     "back": "<img src=\"img2238889356659957719.jpg\">",
     "sourceDeck": "islam",
@@ -8618,7 +8622,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_663",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "نوع شناسی علم دینی",
     "back": "<img src=\"img1156224104449742369.jpg\">",
     "sourceDeck": "islam",
@@ -8631,7 +8635,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_664",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "روش شناسی مطالعات مدیریت اسلامی",
     "back": "<img src=\"img5732427965645749144.jpg\">",
     "sourceDeck": "islam",
@@ -8644,7 +8648,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_665",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "منظومه فکری خامنه ای برای رویکرد تأسیسی",
     "back": "<img src=\"img5439709063610565006.jpg\">",
     "sourceDeck": "islam",
@@ -8657,7 +8661,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_666",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "سید جعفر کشفی",
     "back": "<img src=\"img4665392908960447410.jpg\">",
     "sourceDeck": "islam",
@@ -8670,7 +8674,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_667",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "اصول برنامه ریزی مبتنی بر آیه های قرآنی",
     "back": "<img src=\"img2053456240227203724.jpg\">",
     "sourceDeck": "islam",
@@ -8683,7 +8687,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_668",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "سطوح برنامه ها در سازمان آخرت گرا",
     "back": "<img src=\"img8816566693884007932.jpg\">",
     "sourceDeck": "islam",
@@ -8696,7 +8700,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_669",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "لایه های برنامه ریزی در سازمان آخرتگرا",
     "back": "<img src=\"img1146609272850494507.jpg\">",
     "sourceDeck": "islam",
@@ -8709,7 +8713,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_670",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "ویژگی های احکام حکومتی",
     "back": "<img src=\"img726020559884589034.jpg\">",
     "sourceDeck": "islam",
@@ -8722,7 +8726,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_671",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "رابطه مردم با حکومت در قالب قاعده الخراج بالضمان",
     "back": "<img src=\"img2489472831689920701.jpg\">",
     "sourceDeck": "islam",
@@ -8735,7 +8739,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_672",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "پیوستار مراتب دست یابی به علم و معرفت نسبت به پدیده ها",
     "back": "<img src=\"img4493119972831704022.jpg\">",
     "sourceDeck": "islam",
@@ -8748,7 +8752,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_673",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "ماهیت اطلاعات موثق و غیر موثق در مدیریت اسلامی",
     "back": "<img src=\"img5382697662740907501.jpg\">",
     "sourceDeck": "islam",
@@ -8761,7 +8765,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_674",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "نوع شناسی مصالح",
     "back": "<img src=\"img4481766580769075193.jpg\">",
     "sourceDeck": "islam",
@@ -8774,7 +8778,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_675",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "قواعد فقهی دارای کاربرد در سیاستگذاری بر مبنای مصلحت",
     "back": "<img src=\"img4001123798491330852.jpg\">",
     "sourceDeck": "islam",
@@ -8787,7 +8791,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_676",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "مراحل تصمیم گیری بر مبنای مشورت مبتنی بر اندیشه های محقق سبزواری",
     "back": "<img src=\"img206510970902252869.jpg\">",
     "sourceDeck": "islam",
@@ -8800,7 +8804,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_677",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "الگوی مدیریت و تصمیم گیری در شرایط فتنه",
     "back": "<img src=\"img4943651289866532418.jpg\">",
     "sourceDeck": "islam",
@@ -8813,7 +8817,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_678",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "مراحل تکاملی جامعه نبوی مبتی بر سوره فتح",
     "back": "<img src=\"img8492606216294241018.jpg\">",
     "sourceDeck": "islam",
@@ -8826,7 +8830,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_679",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "ارتباط بین ویژگی ها و عملکرد کارکنان در سازمان آخرتگرا",
     "back": "<img src=\"img7006058982599711726.jpg\">",
     "sourceDeck": "islam",
@@ -8839,7 +8843,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_680",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "مراحل جامعه پذیری سازمانی در سازمان های توحید گرا",
     "back": "<img src=\"img7839028905009712960.jpg\">",
     "sourceDeck": "islam",
@@ -8852,7 +8856,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_681",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "انواع استراتژی‌های نظام پاداش و تنبیه در سازمان آخرتگرا",
     "back": "<img src=\"img8658752890464297339.jpg\">",
     "sourceDeck": "islam",
@@ -8865,7 +8869,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_682",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "مقایسه انواع رویکرد ها در خصوص ارتباطات رهبر پیرو",
     "back": "<img src=\"img1572796158334768197.jpg\">",
     "sourceDeck": "islam",
@@ -8878,7 +8882,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_683",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "فرآیند شکل گیری رفتار های پیروان رشد یافته و سرکش",
     "back": "<img src=\"img4824877046984357544.jpg\">",
     "sourceDeck": "islam",
@@ -8891,7 +8895,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_684",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "مختصات سبک رهبری رحمانی",
     "back": "<img src=\"img6420764965822965464.jpg\">",
     "sourceDeck": "islam",
@@ -8904,7 +8908,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_685",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "اصول سبک رهبری تعاون محور",
     "back": "<img src=\"img7069542281876014487.jpg\">",
     "sourceDeck": "islam",
@@ -8917,7 +8921,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_686",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "سطوح ادراک و معرفت انسانی",
     "back": "<img src=\"img4670250558422385687.jpg\">",
     "sourceDeck": "islam",
@@ -8930,7 +8934,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_687",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "روش های کشف معانی اعتباری",
     "back": "<img src=\"img2246467476307921702.jpg\">",
     "sourceDeck": "islam",
@@ -8943,7 +8947,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_688",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "ارتباط لایه های هویتی انسان با سطح نیاز ها و درجه تکاملی انسان",
     "back": "<img src=\"img2509299089144494781.jpg\">",
     "sourceDeck": "islam",
@@ -8956,7 +8960,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_689",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "سلسله مراتب نیاز های انسانی در سازمان آخرتگرا",
     "back": "<img src=\"img3057202602074215741.jpg\">",
     "sourceDeck": "islam",
@@ -8969,7 +8973,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_690",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "اقدامات مدیریت برای تأمین نیازهای کارکنان",
     "back": "<img src=\"img2113652454781810058.jpg\">",
     "sourceDeck": "islam",
@@ -8982,7 +8986,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_691",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "فرآیند حرکت جوهری نفس مبتنی بر حکمت متعالیه ملاصدرا",
     "back": "<img src=\"img1362615151962478019.jpg\">",
     "sourceDeck": "islam",
@@ -8995,7 +8999,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_692",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "گونه شناسی رفتارهای سازمانی مبتنی بر دسته بندی انسان ها از منظر فارابی",
     "back": "<img src=\"img7485444709527728239.jpg\">",
     "sourceDeck": "islam",
@@ -9008,7 +9012,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_693",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "انواع رفتار های سازمانی بر حسب نوع سازمان و کارکنان",
     "back": "<img src=\"img1255506037583804445.jpg\">",
     "sourceDeck": "islam",
@@ -9021,7 +9025,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_694",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "گام های اعتماد سازی بین دولت و شهروندان",
     "back": "<img src=\"img1758772776725808637.jpg\">",
     "sourceDeck": "islam",
@@ -9034,7 +9038,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_695",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "سازه های تعهد سازمانی در سازمان آخرتگرا",
     "back": "<img src=\"img8691066017546998936.jpg\">",
     "sourceDeck": "islam",
@@ -9047,7 +9051,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_696",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "انواع ارتباطات و مجاری ارتباطی",
     "back": "<img src=\"img48852221160016888.jpg\">",
     "sourceDeck": "islam",
@@ -9060,7 +9064,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_697",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "مدل فرهنگ سازمانی عاشورایی",
     "back": "<img src=\"img2356232766514565687.jpg\">",
     "sourceDeck": "islam",
@@ -9073,7 +9077,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_698",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "جلوه‌های فرهنگ سازمانی عاشورایی در پیاده‌روی اربعین حسینی",
     "back": "<img src=\"img3084767059326272829.jpg\">",
     "sourceDeck": "islam",
@@ -9086,7 +9090,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_699",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "جلوه های فرهنگ سازمانی عاشورایی در پیاده‌روی اربعین حسینی",
     "back": "<img src=\"img9002846545641273333.jpg\">",
     "sourceDeck": "islam",
@@ -9099,7 +9103,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_700",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "مدل جامع مدیریت تعارض از دیدگاه امام خمینی",
     "back": "<img src=\"img3200600115742334551.jpg\">",
     "sourceDeck": "islam",
@@ -9112,7 +9116,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_701",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "استراتژی های مدیریت تعارض از منظر قرآن کریم",
     "back": "<img src=\"img3622836885747807448.jpg\">",
     "sourceDeck": "islam",
@@ -9125,7 +9129,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_702",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "انواع راهبرد های مدیریت تعارض",
     "back": "<img src=\"img2410604362672452438.jpg\">",
     "sourceDeck": "islam",
@@ -9138,7 +9142,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_703",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img9086114240594192951.jpg\">",
     "back": "<img src=\"img6291878676430830148.jpg\">",
     "sourceDeck": "islam",
@@ -9151,7 +9155,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_704",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img7026802250961517756.jpg\">",
     "back": "<img src=\"img2174773171119673256.jpg\">",
     "sourceDeck": "islam",
@@ -9164,7 +9168,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_705",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img415028973907882273.jpg\">",
     "back": "<img src=\"img6867636643052478858.jpg\"><br><img src=\"img6988189209093118748.jpg\">",
     "sourceDeck": "islam",
@@ -9177,7 +9181,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_706",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img4091761712463121969.jpg\">",
     "back": "<img src=\"img558813309513025729.jpg\">",
     "sourceDeck": "islam",
@@ -9190,7 +9194,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_707",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img8616310235380308673.jpg\">",
     "back": "<img src=\"img7137551658545409715.jpg\">",
     "sourceDeck": "islam",
@@ -9203,7 +9207,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_708",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img1113867932964831771.jpg\">",
     "back": "<img src=\"img2343906283851251388.jpg\">",
     "sourceDeck": "islam",
@@ -9216,7 +9220,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_709",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img7039534025265972238.jpg\">",
     "back": "<img src=\"img4541339034810533964.jpg\">",
     "sourceDeck": "islam",
@@ -9229,7 +9233,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_710",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img6180581020956936120.jpg\">",
     "back": "<img src=\"img5245444072500533434.jpg\">",
     "sourceDeck": "islam",
@@ -9242,7 +9246,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_711",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img4023264937057215085.jpg\">",
     "back": "<img src=\"img7774578761642023160.jpg\">",
     "sourceDeck": "islam",
@@ -9255,7 +9259,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_712",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img3807168470415610018.jpg\">",
     "back": "<img src=\"img7680149645938589957.jpg\">",
     "sourceDeck": "islam",
@@ -9268,7 +9272,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_713",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img82522754110792457.jpg\">",
     "back": "<img src=\"img8172128468672502878.jpg\"><br><img src=\"img7414021610396559440.jpg\">",
     "sourceDeck": "islam",
@@ -9281,7 +9285,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_714",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img3057355708119046584.jpg\">",
     "back": "<img src=\"img7854865441864848412.jpg\">",
     "sourceDeck": "islam",
@@ -9294,7 +9298,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_715",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img8697378186656933994.jpg\">",
     "back": "<img src=\"img5220212318397392650.jpg\"><br><img src=\"img2452448385442427249.jpg\">",
     "sourceDeck": "islam",
@@ -9307,7 +9311,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_716",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img7860884700218755021.jpg\">",
     "back": "<img src=\"img1947774652128774254.jpg\">",
     "sourceDeck": "islam",
@@ -9320,7 +9324,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_717",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img5188785734923095025.jpg\">",
     "back": "<img src=\"img7856588244635207799.jpg\">",
     "sourceDeck": "islam",
@@ -9333,7 +9337,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_718",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img6513379971312924514.jpg\">",
     "back": "<img src=\"img5134687892700027576.jpg\">",
     "sourceDeck": "islam",
@@ -9346,7 +9350,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_719",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img8846655705811735577.jpg\">",
     "back": "<img src=\"img6662941243571399128.jpg\">",
     "sourceDeck": "islam",
@@ -9359,7 +9363,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_720",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img6201183961843479900.jpg\">",
     "back": "<img src=\"img6746563840930284743.jpg\">",
     "sourceDeck": "islam",
@@ -9372,7 +9376,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_721",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img7671903413276528378.jpg\">",
     "back": "<img src=\"img8047874886195198842.jpg\">",
     "sourceDeck": "islam",
@@ -9385,7 +9389,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_722",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img3217898350677707487.jpg\">",
     "back": "<img src=\"img3848038817249487223.jpg\">",
     "sourceDeck": "islam",
@@ -9398,7 +9402,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_723",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img1971303736756631617.jpg\">",
     "back": "<img src=\"img7579606895896014735.jpg\">",
     "sourceDeck": "islam",
@@ -9411,7 +9415,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_724",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img5325760337580496235.jpg\">",
     "back": "<img src=\"img894644017338304227.jpg\"><br><img src=\"img7898490010431554280.jpg\">",
     "sourceDeck": "islam",
@@ -9424,7 +9428,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_725",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img8242014997508002742.jpg\">",
     "back": "<img src=\"img8380857777511074159.jpg\"><br><img src=\"img396328497652302092.jpg\">",
     "sourceDeck": "islam",
@@ -9437,7 +9441,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_726",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img469654334104976659.jpg\">",
     "back": "<img src=\"img3738903426672828235.jpg\"><br><img src=\"img4921501468544573893.jpg\">",
     "sourceDeck": "islam",
@@ -9450,7 +9454,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_727",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img5700007361788818935.jpg\">",
     "back": "<img src=\"img5815215557267535498.jpg\">",
     "sourceDeck": "islam",
@@ -9463,7 +9467,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_728",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img626201825837243766.jpg\">",
     "back": "<img src=\"img5717031474965041284.jpg\">",
     "sourceDeck": "islam",
@@ -9476,7 +9480,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_729",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img9111423162095948620.jpg\">",
     "back": "<img src=\"img2922680882182384785.jpg\"><br><img src=\"img6108902223706297495.jpg\">",
     "sourceDeck": "islam",
@@ -9489,7 +9493,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_730",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img6629007734184521975.jpg\">",
     "back": "<img src=\"img1425636190602268874.jpg\">",
     "sourceDeck": "islam",
@@ -9502,7 +9506,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_731",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img1208679681060106176.jpg\">",
     "back": "<img src=\"img2256560108040183548.jpg\">",
     "sourceDeck": "islam",
@@ -9515,7 +9519,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_732",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img6657644267919306587.jpg\">",
     "back": "<img src=\"img5327582194419626357.jpg\">",
     "sourceDeck": "islam",
@@ -9528,7 +9532,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_733",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img5167967546398831072.jpg\">",
     "back": "<img src=\"img6579511276647331091.jpg\">",
     "sourceDeck": "islam",
@@ -9541,7 +9545,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_734",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img1649587316616989023.jpg\">",
     "back": "<img src=\"img2946366391233818058.jpg\"><br><img src=\"img7679343399770021433.jpg\">",
     "sourceDeck": "islam",
@@ -9554,7 +9558,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_735",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img3910756243198822394.jpg\">",
     "back": "<img src=\"img2602715453581279451.jpg\">",
     "sourceDeck": "islam",
@@ -9567,7 +9571,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_736",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img8373486920977509184.jpg\">",
     "back": "<img src=\"img2266017406817137661.jpg\">",
     "sourceDeck": "islam",
@@ -9580,7 +9584,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_737",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img667294771792345373.jpg\"><br>",
     "back": "<img src=\"img8390031194897303432.jpg\">",
     "sourceDeck": "islam",
@@ -9593,7 +9597,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_738",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img1556425896013574030.jpg\">",
     "back": "<img src=\"img7628444335115380732.jpg\">",
     "sourceDeck": "islam",
@@ -9606,7 +9610,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_739",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img1311706073422057398.jpg\">",
     "back": "<img src=\"img3848560302690347922.jpg\">",
     "sourceDeck": "islam",
@@ -9619,7 +9623,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_740",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img3672803388971010495.jpg\"><br>",
     "back": "<img src=\"img5642315754426577762.jpg\">",
     "sourceDeck": "islam",
@@ -9632,7 +9636,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_741",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img7045337731384080448.jpg\">",
     "back": "<img src=\"img7902285289795272478.jpg\">",
     "sourceDeck": "islam",
@@ -9645,7 +9649,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_742",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img117816381821237845.jpg\">",
     "back": "<img src=\"img1550578112870685966.jpg\">",
     "sourceDeck": "islam",
@@ -9658,7 +9662,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_743",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img4910062033705795924.jpg\">",
     "back": "<img src=\"img7516866165014345361.jpg\">",
     "sourceDeck": "islam",
@@ -9671,7 +9675,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_744",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img8826615972491567347.jpg\">",
     "back": "<img src=\"img1896578421780639568.jpg\">",
     "sourceDeck": "islam",
@@ -9684,7 +9688,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_745",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img381845293637946607.jpg\">",
     "back": "<img src=\"img5216867153197920849.jpg\"><br><img src=\"img5685937262242821878.jpg\">",
     "sourceDeck": "islam",
@@ -9697,7 +9701,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_746",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img2167761122020024739.jpg\">",
     "back": "<img src=\"img3712976646190820834.jpg\">",
     "sourceDeck": "islam",
@@ -9710,7 +9714,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_747",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img273052488825847941.jpg\">",
     "back": "<img src=\"img5320902144105349551.jpg\">",
     "sourceDeck": "islam",
@@ -9723,7 +9727,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_748",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img6628110317093700848.jpg\">",
     "back": "<img src=\"img2039298738815896155.jpg\">",
     "sourceDeck": "islam",
@@ -9736,7 +9740,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_749",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img5813159261041490924.jpg\">",
     "back": "<img src=\"img1042697456166806622.jpg\">",
     "sourceDeck": "islam",
@@ -9749,7 +9753,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_750",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img3291237689737184211.jpg\">",
     "back": "<img src=\"img8603915319305603278.jpg\">",
     "sourceDeck": "islam",
@@ -9762,7 +9766,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_751",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "<img src=\"img3304229985864711871.jpg\">",
     "back": "<img src=\"img3097382142443457575.jpg\">",
     "sourceDeck": "islam",
@@ -9775,7 +9779,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_752",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "پایه های عدل از دیدگاه امام علی ع",
     "back": "<img src=\"img4814362202259204341.jpg\">",
     "sourceDeck": "islam",
@@ -9788,7 +9792,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_753",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "ویژگی های جانشین نبی از دید ابن سینا",
     "back": "<img src=\"img7578988493571803142.jpg\">",
     "sourceDeck": "islam",
@@ -9801,7 +9805,7 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_islamic_theory_754",
-    "subjectId": "islamic_theory",
+    "subjectId": "islamic_management",
     "front": "راه های شناخت از نظر کشفی",
     "back": "<img src=\"img6671508881325666584.jpg\">",
     "sourceDeck": "islam",
@@ -9814,10 +9818,10 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_management_theory_755",
-    "subjectId": "management_theory",
+    "subjectId": "islamic_management",
     "front": "اجتهاد",
     "back": "به معنی کوشش عالمانه با روش صحیح برای درک مقررات اسلام با استفاده از منابع فقه یعنی کتاب سنت اجماع و عقل",
-    "sourceDeck": "management_theory",
+    "sourceDeck": "islam",
     "tags": [
       "management_theory",
       "anki_import",
@@ -9827,10 +9831,10 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_management_theory_756",
-    "subjectId": "management_theory",
+    "subjectId": "islamic_management",
     "front": "نیروی محرکه اسلام",
     "back": "اجتهاد (به تعریف اقبال لاهوری)",
-    "sourceDeck": "management_theory",
+    "sourceDeck": "islam",
     "tags": [
       "management_theory",
       "anki_import",
@@ -9840,10 +9844,10 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_management_theory_757",
-    "subjectId": "management_theory",
+    "subjectId": "islamic_management",
     "front": "انواع حاکمیت",
     "back": "<img src=\"img6023848326677922422.jpg\">",
-    "sourceDeck": "management_theory",
+    "sourceDeck": "islam",
     "tags": [
       "management_theory",
       "anki_import",
@@ -9853,10 +9857,10 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_management_theory_758",
-    "subjectId": "management_theory",
+    "subjectId": "islamic_management",
     "front": "کدام اصل مدیریت را حضرت موسی انجام داد",
     "back": "اصل مدیریت بر مبنای استثنا",
-    "sourceDeck": "management_theory",
+    "sourceDeck": "islam",
     "tags": [
       "management_theory",
       "anki_import",
@@ -11348,10 +11352,10 @@ export const ANKI_IMPORTED_FLASHCARDS: AnkiFlashcardItem[] = [
   },
   {
     "id": "anki_management_theory_873",
-    "subjectId": "management_theory",
+    "subjectId": "islamic_management",
     "front": "از نظر خامنه‌ای برای نوآوری علمی که در فرهنگ معارف اسلامی که از آن به اجتهاد تعبیر می‌شود به چه چیزی نیاز است",
     "back": "قدرت علمی و جرات علمی",
-    "sourceDeck": "management_theory",
+    "sourceDeck": "islam",
     "tags": [
       "management_theory",
       "anki_import",
