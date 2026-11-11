@@ -6,11 +6,15 @@ export type ExamDegreeLevel = 'ارشد و دکتری' | 'ویژه کارشنا�
 export interface ReferenceBookQuestion {
   id: string;
   examTitle: string;
-  examYear: number;
+  /** فقط برای سؤال دارای سال/دفترچهٔ واقعی؛ برای تمرین تألیفی حذف می‌شود. */
+  examYear?: number;
   degreeLevel: 'ارشد' | 'دکتری';
   chapterTopic: string;
   questionText: string;
   options: [string, string, string, string];
+  /** منشأ صریح؛ legacy records بدون origin تا زمان ممیزی جداگانه حفظ می‌شوند. */
+  origin?: 'official_exam' | 'authored_supplement';
+  sourceReference?: string;
 }
 
 export interface ReferenceBookChapterSummary {
@@ -1442,14 +1446,18 @@ export function generateBookHandoutMarkdown(book: ReferenceBookItem): string {
   });
 
   lines.push(`\n---\n`);
-  lines.push(`## بخش سوم: بانک تست چهارگزینه‌ای با پاسخ کاملاً تشریحی و تحلیل دام طراح`);
+  lines.push(`## بخش سوم: سؤال‌های منتخب و تمرین‌های تألیفی چهارگزینه‌ای`);
   book.sampleKonkorQuestions.forEach((q, idx) => {
-    lines.push(`\n### سؤال ${idx + 1} (${q.examTitle} — سال ${q.examYear} | مقطع ${q.degreeLevel} | مبحث: ${q.chapterTopic})`);
-    lines.push(`**صورت سؤال:** ${q.questionText}\n`);
+    const provenance = q.origin === 'authored_supplement'
+      ? 'تمرین تألیفی مکمل — سؤال کنکور رسمی نیست'
+      : `${q.examTitle} — سال ${q.examYear ?? 'نامشخص'}`;
+    lines.push(`\\n### سؤال ${idx + 1} (${provenance} | مقطع ${q.degreeLevel} | مبحث: ${q.chapterTopic})`);
+    if (q.sourceReference) lines.push(`**منشأ:** ${q.sourceReference}`);
+    lines.push(`**صورت سؤال:** ${q.questionText}\\n`);
     q.options.forEach((opt, oIdx) => {
       lines.push(`${oIdx + 1}) ${opt}`);
     });
-    lines.push(`\n- **پاسخ صحیح و تشریح کامل:** پس از submit در حالت آنلاین نمایش داده می‌شود (کلید فقط سمت سرور است).`);
+    lines.push(`\\n- **پاسخ صحیح و تشریح کامل:** پس از submit در حالت آنلاین نمایش داده می‌شود (کلید فقط سمت سرور است).`);
   });
 
   return lines.join('\n');
