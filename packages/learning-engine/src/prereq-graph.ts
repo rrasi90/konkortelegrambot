@@ -101,8 +101,9 @@ export function validatePrereqGraph(nodeIds: Iterable<string>, edges: PrereqEdge
       const c = color.get(next);
       if (c === 1) {
         const start = stack.indexOf(next);
-        result.cycles.push([...stack.slice(start), next]);
-        errors.push(`cycle در یال‌های ترتیبی: ${result.cycles[result.cycles.length - 1].join(' → ')}`);
+        const cycle = [...stack.slice(start), next];
+        result.cycles.push(cycle);
+        errors.push(`cycle در یال‌های ترتیبی: ${cycle.join(' → ')}`);
       } else if (c === undefined) {
         dfs(next);
       }
