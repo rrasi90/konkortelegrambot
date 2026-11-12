@@ -845,6 +845,20 @@ git push -u origin feat/short-description
 | [گزارش E2E](E2E_TEST_REPORT.md) | شواهد تست انتها‌به‌انتها |
 | [گزارش Engine Parity](ENGINE_PARITY_REPORT.md) | مقایسهٔ سناریوهای موتور |
 | [اعتبارسنجی محتوای علمی](SCIENTIFIC_CONTENT_VALIDATION.md) | روش و وضعیت بررسی محتوای علمی |
+| [نقشهٔ اجرایی ممیزی درس‌ها v2.0](docs/ael-content/COURSE_AUDIT_ROADMAP.md) | چرخهٔ ۱۲مرحله‌ای ممیزی هر درس، معیارهای پذیرش و فاز ممیزی دفترچه‌ها |
+| [دفتر پیگیری ممیزی درس‌ها](docs/ael-content/COURSE_AUDIT_LEDGER.json) | وضعیت زندهٔ هر درس (ترتیب، درس فعال، شواهد، PR و CI) — با هر «ادامه بده» یک درس |
+
+---
+
+## 📚 برنامهٔ ممیزی درس‌به‌درس (نسخهٔ ۲.۰ — نوامبر ۲۰۲۶)
+
+برنامهٔ فعال جاری: ممیزی کامل و تأیید تک‌تک درس‌های AEL در چرخهٔ ۱۲مرحله‌ای (تثبیت محدوده، منابع، درس‌نامه، سرفصل، بانک سؤال، فلش‌کارت، مکمل، گراف دانش، محصول، سلامت داده، اصلاحات، تست). ترتیب اجرا مطابق شش رکورد `courses.json` است و فهرست نهایی پس از حل تعارض‌های کاتالوگ تثبیت می‌شود.
+
+- **نقشهٔ اجرا:** [docs/ael-content/COURSE_AUDIT_ROADMAP.md](docs/ael-content/COURSE_AUDIT_ROADMAP.md)
+- **دفتر پیگیری:** [docs/ael-content/COURSE_AUDIT_LEDGER.json](docs/ael-content/COURSE_AUDIT_LEDGER.json) — وضعیت زندهٔ هر درس (همگی `NOT_STARTED` در شروع)
+- **گزارش هر درس:** `docs/ael-content/courses/<course-id>.md`
+- **قاعدهٔ اجرا:** با هر «ادامه بده» فقط یک درس، از ابتدا تا معیارهای پذیرش؛ وضعیت‌های `TECHNICAL_PASS` و `SOURCE_VERIFIED` هرگز جایگزین تأیید SME نمی‌شوند.
+- **فاز بعدی:** پس از تکمیل درس‌ها، ممیزی دفترچه‌به‌دفترچهٔ کنکورها آغاز می‌شود.
 
 ---
 
