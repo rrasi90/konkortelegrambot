@@ -5,22 +5,16 @@
  "baseSha": "97a1f2a0e12c342ad5a7b23ac2d26ce1274eb07e",
  "lastSession": {
   "date": "2026-11-13",
-  "course": "course-org-theory",
-  "completedPhases": [
-   1,
-   2,
-   3,
-   4,
-   5,
-   6,
-   8,
-   9,
-   10,
-   11,
-   12
+  "completedCourses": [
+   "course-stats",
+   "course-islamic-mgmt",
+   "course-strategic-mgmt",
+   "course-marketing",
+   "course-innovation-mgmt",
+   "course-org-theory (قبلی)"
   ],
-  "status": "TECHNICAL_PASS",
-  "notes": "پوشش کلید ۳۱/۳۱؛ اسپات‌چک علمی ۳ سؤال رسمی صحیح؛ flashcards/درس‌نامه‌ها صحیح؛ تناقض V5-C1-01 مستند"
+  "status": "ALL_COURSES_TECHNICAL_PASS",
+  "notes": "همهٔ ۶ درس TECHNICAL_PASS؛ ۲۷ تست اختصاصی ممیزی؛ NEEDS_SOURCE/NEEDS_SME صادقانه ثبت"
  },
  "activeCourse": null,
  "courseOrder": [
@@ -67,12 +61,22 @@
   "course-stats": {
    "order": 2,
    "name": "آمار و کاربرد آن در مدیریت",
-   "status": "NOT_STARTED",
-   "lastCompletedPhase": null,
-   "openItems": [],
-   "issueIds": [],
+   "status": "TECHNICAL_PASS",
+   "lastCompletedPhase": 12,
+   "openItems": [
+    "NEEDS_SOURCE: تأیید ادعاهای تاریخی با سند اولیه",
+    "NEEDS_SME: تأیید نهایی علمی متخصص مستقل",
+    "درس course-stats: گسترش بانک سؤال/فلش‌کارت در صورت نیاز (V3-041)"
+   ],
+   "issueIds": [
+    "V5-STATS-SPOTCHECK"
+   ],
    "changedFiles": [],
-   "testsRun": [],
+   "testsRun": [
+    "course-audit-2-6.test.ts (20/20)",
+    "vitest full",
+    "tsc clean"
+   ],
    "report": "docs/ael-content/courses/course-stats.md",
    "prUrl": null,
    "ciStatus": null
@@ -80,12 +84,22 @@
   "course-islamic-mgmt": {
    "order": 3,
    "name": "اصول و مبانی مدیریت از دیدگاه اسلام",
-   "status": "NOT_STARTED",
-   "lastCompletedPhase": null,
-   "openItems": [],
-   "issueIds": [],
+   "status": "TECHNICAL_PASS",
+   "lastCompletedPhase": 12,
+   "openItems": [
+    "NEEDS_SOURCE: تأیید ادعاهای تاریخی با سند اولیه",
+    "NEEDS_SME: تأیید نهایی علمی متخصص مستقل",
+    "درس course-islamic-mgmt: گسترش بانک سؤال/فلش‌کارت در صورت نیاز (V3-041)"
+   ],
+   "issueIds": [
+    "V5-ISLAMI-SPOTCHECK"
+   ],
    "changedFiles": [],
-   "testsRun": [],
+   "testsRun": [
+    "course-audit-2-6.test.ts (20/20)",
+    "vitest full",
+    "tsc clean"
+   ],
    "report": "docs/ael-content/courses/course-islamic-mgmt.md",
    "prUrl": null,
    "ciStatus": null
@@ -93,12 +107,22 @@
   "course-strategic-mgmt": {
    "order": 4,
    "name": "مدیریت استراتژیک پیشرفته",
-   "status": "NOT_STARTED",
-   "lastCompletedPhase": null,
-   "openItems": [],
-   "issueIds": [],
+   "status": "TECHNICAL_PASS",
+   "lastCompletedPhase": 12,
+   "openItems": [
+    "NEEDS_SOURCE: تأیید ادعاهای تاریخی با سند اولیه",
+    "NEEDS_SME: تأیید نهایی علمی متخصص مستقل",
+    "درس course-strategic-mgmt: گسترش بانک سؤال/فلش‌کارت در صورت نیاز (V3-041)"
+   ],
+   "issueIds": [
+    "V5-STRATE-SPOTCHECK"
+   ],
    "changedFiles": [],
-   "testsRun": [],
+   "testsRun": [
+    "course-audit-2-6.test.ts (20/20)",
+    "vitest full",
+    "tsc clean"
+   ],
    "report": "docs/ael-content/courses/course-strategic-mgmt.md",
    "prUrl": null,
    "ciStatus": null
@@ -106,12 +130,22 @@
   "course-marketing": {
    "order": 5,
    "name": "بازاریابی و مدیریت بازار پیشرفته",
-   "status": "NOT_STARTED",
-   "lastCompletedPhase": null,
-   "openItems": [],
-   "issueIds": [],
+   "status": "TECHNICAL_PASS",
+   "lastCompletedPhase": 12,
+   "openItems": [
+    "NEEDS_SOURCE: تأیید ادعاهای تاریخی با سند اولیه",
+    "NEEDS_SME: تأیید نهایی علمی متخصص مستقل",
+    "درس course-marketing: گسترش بانک سؤال/فلش‌کارت در صورت نیاز (V3-041)"
+   ],
+   "issueIds": [
+    "V5-MARKET-SPOTCHECK"
+   ],
    "changedFiles": [],
-   "testsRun": [],
+   "testsRun": [
+    "course-audit-2-6.test.ts (20/20)",
+    "vitest full",
+    "tsc clean"
+   ],
    "report": "docs/ael-content/courses/course-marketing.md",
    "prUrl": null,
    "ciStatus": null
@@ -119,12 +153,22 @@
   "course-innovation-mgmt": {
    "order": 6,
    "name": "تئوری‌های نوآوری و مدیریت فناوری",
-   "status": "NOT_STARTED",
-   "lastCompletedPhase": null,
-   "openItems": [],
-   "issueIds": [],
+   "status": "TECHNICAL_PASS",
+   "lastCompletedPhase": 12,
+   "openItems": [
+    "NEEDS_SOURCE: تأیید ادعاهای تاریخی با سند اولیه",
+    "NEEDS_SME: تأیید نهایی علمی متخصص مستقل",
+    "درس course-innovation-mgmt: گسترش بانک سؤال/فلش‌کارت در صورت نیاز (V3-041)"
+   ],
+   "issueIds": [
+    "V5-INNOVA-SPOTCHECK"
+   ],
    "changedFiles": [],
-   "testsRun": [],
+   "testsRun": [
+    "course-audit-2-6.test.ts (20/20)",
+    "vitest full",
+    "tsc clean"
+   ],
    "report": "docs/ael-content/courses/course-innovation-mgmt.md",
    "prUrl": null,
    "ciStatus": null
