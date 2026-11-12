@@ -269,12 +269,6 @@ export function getCourseSectionForQuestion(
   if (textBlob.includes('تولید') || textBlob.includes('متقی') || textBlob.includes('جعفرنژاد') || textBlob.includes('موجودی'))
     return 'production';
 
-  // بررسی بر اساس گره متناظر
-  const linkedNode = nodes.find((n) => n.id === q.nodeId);
-  if (linkedNode) {
-    return getCourseSectionForNode(linkedNode);
-  }
-
   return 'management_theories';
 }
 
