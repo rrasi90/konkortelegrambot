@@ -1,0 +1,92 @@
+{
+ "courseId": "course-org-theory",
+ "generatedAt": "2026-11-12",
+ "baseSha": "97a1f2a0e12c342ad5a7b23ac2d26ce1274eb07e",
+ "courseName": "مبانی سازمان و مدیریت",
+ "entities": {
+  "knowledgeNodes": {
+   "ids": [
+    "mb.structure",
+    "mb.contingency",
+    "mb.culture"
+   ],
+   "status": "direct_match",
+   "note": "سه نود با course=«مبانی سازمان و مدیریت» در konkorData"
+  },
+  "interactiveLessons": {
+   "ids": [
+    "mb.structure",
+    "mb.contingency",
+    "mb.culture"
+   ],
+   "status": "direct_match",
+   "note": "هر ۳ نود درس تعاملی دارند ✓"
+  },
+  "bookChapters": {
+   "bookId": "book.bus.robbins_daft",
+   "chapters": "ch.th.1..ch.th.10",
+   "nodeBindings": [
+    "mb.structure",
+    "mb.contingency"
+   ],
+   "status": "shared",
+   "note": "فقط ۲ از ۱۰ فصل binding نود صریح دارند؛ ۸ فصل بدون نود متصل (پوشش از طریق فیلتر عمومی)"
+  },
+  "encyclopediaSupplement": {
+   "bookId": "book.bus.robbins_daft",
+   "courseTitle": "تئوری‌های مدیریت (مبانی سازمان، رفتار سازمانی، منابع انسانی، تئوری سازمان و پارادایم‌های دکتری)",
+   "status": "shared",
+   "note": "supplement شامل بخش HR و تئوری‌های کلان دکتری است — فراتر از محدودهٔ درس مبانی سازمان"
+  },
+  "deepDives": {
+   "nodes": [
+    "mb.structure",
+    "mb.contingency",
+    "mb.culture"
+   ],
+   "files": [
+    "deepDiveOrgStrategy.ts",
+    "deepDiveExpansionOrgStrategy.ts",
+    "deepDiveAddendum.ts"
+   ],
+   "status": "direct_match"
+  },
+  "clientBankQuestions": {
+   "status": "direct_match",
+   "note": "۳۱ سؤال با nodeId mb.* (structure:18, contingency:12, culture:1)"
+  },
+  "flashcards": {
+   "status": "direct_match",
+   "note": "کارت‌های nodeId=mb.* در flashcards.ts و flashcards-expansion.ts"
+  },
+  "ankiSubject": {
+   "subjectId": "management_theory",
+   "cards": 114,
+   "status": "candidate",
+   "note": "subject مستقل Anki — نگاشت به درس نیازمند تصمیم (V3-023)"
+  },
+  "botLessons": {
+   "courseId": "org-theory",
+   "topics": 4,
+   "status": "conflicted",
+   "note": "mb.decision و mb.institutional topic بات هستند ولی نود گراف ندارند (V5-C1-01)"
+  },
+  "subjectHub": {
+   "id": "management_theories",
+   "status": "direct_match",
+   "primaryBookId": "book.bus.robbins_daft"
+  },
+  "referenceBook": {
+   "bookId": "book.bus.robbins_daft",
+   "status": "direct_match"
+  },
+  "workerSkills": {
+   "status": "unmapped_pending_check",
+   "note": "skills-data: نگاشت skill به نودهای mb.* در فاز ۸ بررسی می‌شود"
+  }
+ },
+ "crossFileConsistency": {
+  "interactiveVsGraph": "کامل — هر ۳ نود درس تعاملی دارند",
+  "botVsGraph": "conflicted — mb.decision/mb.institutional بدون نود (V5-C1-01)"
+ }
+}
