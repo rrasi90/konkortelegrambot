@@ -22,7 +22,7 @@ const EXPECTED_COUNTS: Record<string, number> = {
   'course-islamic-mgmt': 9,
   'course-strategic-mgmt': 13,
   'course-marketing': 17,
-  'course-innovation-mgmt': 5,
+  'course-innovation-mgmt': 7,
 };
 
 describe('ممیزی درس‌های ۲ تا ۶ — پوشش بانک سؤال و کلید سمت سرور (v2.0 §3/§12)', () => {

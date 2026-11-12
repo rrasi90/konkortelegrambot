@@ -90,22 +90,25 @@ async function startPolling() {
             // بهترین شیوهٔ onboarding: پیام کوتاه + دکمه؛ نه نسخهٔ محصول، نه اصطلاح فنی
             await tg('sendMessage', {
               chat_id: chatId,
-              text: `سلام ${userFirstName}! آماده‌ای مسیر مرور تا روز کنکورت را بر اساس سطحت بچینیم؟ 🎯`,
+              text: `سلام ${userFirstName}! 👋\n\nبه سامانهٔ آموزش کنکور مدیریت خوش آمدی.\nاز اینجا می‌تونی شروع کنی:\n\n🎯 تعیین سطح — ۵ سؤال سریع\n📚 مطالعهٔ کتاب فصل‌به‌فصل\n🗂 فلش‌کارت‌های مرور هوشمند\n📝 کنکورهای ۱۳۹۱ تا ۱۴۰۵`,
               reply_markup: {
                 inline_keyboard: [
                   [
                     {
-                      text: '🚀 شروع کن — ۵ سؤال تعیین سطح',
-                      web_app: { url: APP_URL },
+                      text: '🎯 تعیین سطح — ۵ سؤال',
+                      web_app: { url: APP_URL + '?startapp=placement' },
                     },
+                  ],
+                  [
+                    { text: '📖 مطالعهٔ کتاب', web_app: { url: APP_URL + '?startapp=lessons' } },
+                    { text: '🗂 فلش‌کارت', web_app: { url: APP_URL + '?startapp=flashcards' } },
+                  ],
+                  [
+                    { text: '📝 کنکورهای سالانه', web_app: { url: APP_URL + '?startapp=yearly_exams' } },
                   ],
                   [{ text: '📅 یادآور روزانه', callback_data: 'reminder_info' }],
                 ],
               },
-            });
-            await tg('sendMessage', {
-              chat_id: chatId,
-              text: 'پ.ن: هر روز فقط ۱۵ دقیقه در این ربات، زنجیرهٔ مطالعه‌ات را زنده نگه می‌دارد.',
             });
           } else {
             await tg('sendMessage', {

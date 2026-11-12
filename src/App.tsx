@@ -560,6 +560,12 @@ export default function App() {
       handleStartPracticeNode(cmd.nodeId, 'practice');
     } else if (cmd.type === 'proof') {
       handleStartPracticeNode(cmd.nodeId, 'proof');
+    } else if (cmd.type === 'flashcards') {
+      setActiveTab('flashcards');
+    } else if (cmd.type === 'yearly_exams') {
+      setActiveTab('exams');
+    } else if (cmd.type === 'lessons') {
+      setActiveTab('lessons');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

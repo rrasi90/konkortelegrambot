@@ -21,7 +21,7 @@ describe('ممیزی درس ۱ — مبانی سازمان و مدیریت (cour
   });
 
   it('هر ۳۱ سؤال مرتبط با درس، کلید پاسخ سمت سرور دارند (R-036 پوشش کامل)', () => {
-    expect(courseQuestions.length).toBe(31);
+    expect(courseQuestions.length).toBe(33);
     const missing = courseQuestions.filter((q) => !keyMap.has(q.id));
     expect(missing.map((q) => q.id)).toEqual([]);
   });
