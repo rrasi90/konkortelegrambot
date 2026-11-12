@@ -51,6 +51,7 @@ import { LessonsLibraryView } from './components/LessonsLibraryView';
 import { PlacementModal } from './components/PlacementModal';
 import { OnboardingModal, OnboardingResult } from './components/OnboardingModal';
 import { FlashcardStudyView } from './components/FlashcardStudyView';
+import { BookFlipStudyView } from './components/BookFlipStudyView';
 import { CodePatchesView } from './components/CodePatchesView';
 import { TelegramBotSimulatorModal } from './components/TelegramBotSimulatorModal';
 import { YearlyKonkorExamView } from './components/YearlyKonkorExamView';
@@ -1068,6 +1069,13 @@ export default function App() {
         )}
 
         {activeTab === 'patches' && <CodePatchesView />}
+
+        {activeTab === 'flashcards' && (
+          <>
+            <BookFlipStudyView />
+            <FlashcardStudyView />
+          </>
+        )}
       </main>
 
       {/* نوار ناوبری پایین موبایل — شناور Warm Charcoal (AEL Visual Language) */}
