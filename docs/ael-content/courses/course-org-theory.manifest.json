@@ -16,11 +16,14 @@
   "interactiveLessons": {
    "ids": [
     "mb.structure",
-    "mb.contingency",
-    "mb.culture"
+    "mb.contingency"
    ],
-   "status": "direct_match",
-   "note": "هر ۳ نود درس تعاملی دارند ✓"
+   "extraLessonWithoutNode": [
+    "mb.decision",
+    "mb.institutional"
+   ],
+   "status": "conflicted",
+   "note": "lessons-data (بات) ۴ topic دارد: mb.decision و mb.institutional در گراف دانش نود ندارند — نیاز به نود یا تفکیک"
   },
   "bookChapters": {
    "bookId": "book.bus.robbins_daft",
@@ -68,8 +71,7 @@
   "botLessons": {
    "courseId": "org-theory",
    "topics": 4,
-   "status": "conflicted",
-   "note": "mb.decision و mb.institutional topic بات هستند ولی نود گراف ندارند (V5-C1-01)"
+   "status": "candidate"
   },
   "subjectHub": {
    "id": "management_theories",
@@ -86,7 +88,7 @@
   }
  },
  "crossFileConsistency": {
-  "interactiveVsGraph": "کامل — هر ۳ نود درس تعاملی دارند",
-  "botVsGraph": "conflicted — mb.decision/mb.institutional بدون نود (V5-C1-01)"
+  "lessonVsGraph": "conflicted (mb.decision/mb.institutional بدون نود گراف)",
+  "cultureNodeWithoutLesson": "mb.culture نود دارد ولی درس تعاملی و topic بات ندارد"
  }
 }
