@@ -618,9 +618,13 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 
     const update = (await c.req.json().catch(() => null)) as {
       update_id?: number;
-      message?: { chat?: { id?: number; type?: string }; from?: { id?: number }; text?: string };
-      edited_message?: { chat?: { id?: number; type?: string }; from?: { id?: number }; text?: string };
-      callback_query?: { id?: number };
+      message?: { chat?: { id?: number; type?: string }; from?: { id?: number; first_name?: string }; text?: string };
+      edited_message?: { chat?: { id?: number; type?: string }; from?: { id?: number; first_name?: string }; text?: string };
+      callback_query?: {
+        id?: number | string;
+        data?: string;
+        message?: { chat?: { id?: number } };
+      };
     } | null;
     if (!update || typeof update.update_id !== 'number') return c.json({ ok: false }, 400);
 
@@ -641,7 +645,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const updateId: number = update.update_id;
     const message = update.message ?? update.edited_message;
     const isEdit = !update.message && !!update.edited_message;
-    const chatId = message?.chat?.id ?? null;
+    const callbackQuery = update.callback_query ?? null;
+    const chatId = message?.chat?.id ?? callbackQuery?.message?.chat?.id ?? null;
     const senderId = message?.from?.id ?? null;
     const text = (message?.text ?? '').trim();
 
@@ -755,12 +760,42 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       });
     }
 
+    // ---------- callback_query: دکمه‌های شیشه‌ای (یادآور روزانه) ----------
+    if (callbackQuery && typeof callbackQuery.id !== 'undefined') {
+      // بستن حالت لودینگ دکمه — idempotent سمت تلگرام، مستقل از Inbox
+      await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/answerCallbackQuery`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ callback_query_id: callbackQuery.id }),
+      }).catch(() => null);
+      if (callbackQuery.data === 'reminder_info') {
+        return deliverOnce('reminder_info', {
+          chat_id: chatId,
+          text: '⏰ یادآور روزانه\n\nاز داخل مینی‌اپ: تب «تنظیمات» → ساعت مطالعهٔ روزانه را مشخص کنید.\nپیشنهاد: یک زمان ثابت انتخاب کنید (مثلاً ۲۱:۰۰) — عادت‌سازی روی زمان ثابت مؤثرتر است.',
+          reply_markup: { inline_keyboard: [[{ text: '⚙️ باز کردن تنظیمات', web_app: { url: appUrl } }]] },
+        });
+      }
+      return c.json({ ok: true });
+    }
+
     // ---------- /start و پاسخ عمومی (یک intent منطقی) ----------
     if (text.startsWith('/start')) {
+      // onboarding کوتاه + دسترسی مستقیم به چهار مسیر اصلی (هم‌راستا با telegram-bot-service.mjs)
+      const fromName = message?.from?.first_name ?? 'داوطلب';
       return deliverOnce('start_welcome', {
         chat_id: chatId,
-        text: 'سلام! به سامانهٔ یادگیری تطبیقی «آموزش کنکور» خوش آمدید 🎓\n\nبرای شروع تمرین و ارزیابی هوشمند، روی دکمهٔ زیر بزنید:',
-        reply_markup: { inline_keyboard: [[{ text: '🚀 باز کردن آموزش کنکور', web_app: { url: appUrl } }]] },
+        text: `سلام ${fromName}! 👋\n\nبه سامانهٔ آموزش کنکور مدیریت خوش آمدی.\nاز اینجا می‌تونی شروع کنی:\n\n🎯 تعیین سطح — ۵ سؤال سریع\n📚 مطالعهٔ کتاب فصل‌به‌فصل\n🗂 فلش‌کارت‌های مرور هوشمند\n📝 کنکورهای ۱۳۹۱ تا ۱۴۰۵`,
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: '🎯 تعیین سطح — ۵ سؤال', web_app: { url: `${appUrl}?startapp=placement` } }],
+            [
+              { text: '📖 مطالعهٔ کتاب', web_app: { url: `${appUrl}?startapp=lessons` } },
+              { text: '🗂 فلش‌کارت', web_app: { url: `${appUrl}?startapp=flashcards` } },
+            ],
+            [{ text: '📝 کنکورهای سالانه', web_app: { url: `${appUrl}?startapp=yearly_exams` } }],
+            [{ text: '📅 یادآور روزانه', callback_data: 'reminder_info' }],
+          ],
+        },
       });
     }
 
