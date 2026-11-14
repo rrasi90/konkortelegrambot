@@ -11,7 +11,7 @@
 
 | کنترل | فرمان | نتیجه |
 |---|---|---|
-| تست‌ها | `npm test` | ✅ ۸۳۲ تست در ۸۳ فایل |
+| تست‌ها | `npm test` | ✅ ۸۵۱ تست در ۸۸ فایل |
 | تایپ | `npm run typecheck` | ✅ صفر خطا |
 | محتوای یادگیری | `npm run validate:learning` | ✅ مالی ۸ مبحث/۲۴ سؤال، آمار ۳ مبحث/۸ سؤال، گسترش دکتری ۱۲ مبحث/۲۹ سؤال؛ ۲۰۰ شناسه و ۵ منبع بررسی شد (۵ فایل منبع در این checkout نیست) |
 | فایل آفلاین | `npm run build:offline` | ✅ تولید `tools/offline/AEL_OFFLINE.html` بدون کلید تصحیح |
@@ -19,7 +19,15 @@
 | دیتابیس | `npm run test:db` | ✅ ۲۹ مهاجرت + ۲ seed، replay ledger، کنترل‌های یکپارچگی و بازیابی/پشتیبان |
 | پیش‌بررسی production | `npm run check:production` | ⛔ متوقف؛ نبود `SUPABASE_URL` و `SUPABASE_SERVICE_ROLE_KEY`؛ هشدار `0029`، `APP_URL` و `ALLOW_DEMO_AUTH` |
 
-مهاجرت‌ها از `0001_init.sql` تا `0029_reminder_preferences.sql` ادامه دارند. محیط اجرا: ویندوز (Git Bash)، `core.autocrlf=true`. این خط پایه روی کامیت `abba6c0` ثبت و به `origin/main` push شد. هیچ دیپلوی production انجام نشد: ورکر زنده هنوز باندل قدیمی `index-D8G2k1lT.js` را سرو می‌کند و پیش‌بررسی به‌دلیل دو secret غایب متوقف می‌شود.
+مهاجرت‌ها از `0001_init.sql` تا `0029_reminder_preferences.sql` ادامه دارند.
+
+### به‌روزرسانی ۱۴ نوامبر ۲۰۲۶ (بعدازظهر) — «هیچ فصل بدون سؤال»
+
+- **۲۳۱ تست تألیفی فصل** در [src/data/chapterAuthoredQuestions.ts](src/data/chapterAuthoredQuestions.ts) اضافه شد؛ ۷۷ فصل از فصل‌های کلیدی ۱۴ کتاب که سؤال وابسته نداشتند، هرکدام ۳ تست چهارگزینه‌ای هم‌سطح آزمون گرفتند. کلید و تشریح فقط در رجیستری سرور (`apps/worker/src/data/client-bank-keys.server.ts` — مجموع ۴۷۰ کلید) است و `audit:miniapp` بدون افشای کلید می‌گذرد.
+- پوشش سؤال فصل‌ها با [scripts/audit-chapter-questions.mts](scripts/audit-chapter-questions.mts) ممیزی شد: ۱۰/۱۰ فصل برای همهٔ کتاب‌ها، صفر فصل خالی ([reports/chapter-question-audit.txt](reports/chapter-question-audit.txt)). تست پوشش جدید: [src/tests/chapterQuestionCoverage.test.ts](src/tests/chapterQuestionCoverage.test.ts).
+- رفع خرابی محتوایی: فصل‌های «کانال توزیع» بازاریابی به‌اشتباه نمودار توزیع نرمال آماری می‌گرفتند ([TopicDiagramVisualizer.tsx](src/components/TopicDiagramVisualizer.tsx)).
+- باندل مینی‌اپ بازساخته و sync شد؛ محیط زندهٔ تلگرام همچنان باندل قدیمی را سرو می‌کند (بند ۱ بخش ۳).
+ محیط اجرا: ویندوز (Git Bash)، `core.autocrlf=true`. این خط پایه روی کامیت `abba6c0` ثبت و به `origin/main` push شد. هیچ دیپلوی production انجام نشد: ورکر زنده هنوز باندل قدیمی `index-D8G2k1lT.js` را سرو می‌کند و پیش‌بررسی به‌دلیل دو secret غایب متوقف می‌شود.
 
 ## ۲. کارکردهای موجود (با مرز ادعا)
 
