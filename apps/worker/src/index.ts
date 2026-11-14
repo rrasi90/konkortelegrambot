@@ -53,7 +53,7 @@ import { initializeFSRSState, Rating, scheduleNextFSRS } from '@ael/engine';
 import type { LearningCourse } from '@ael/engine';
 import { FormativeQuizError } from '@ael/engine';
 import { issueSessionToken, verifySessionToken, verifyTelegramInitData } from './auth';
-import type { AppUser, DataStore, UserStats } from './store';
+import type { AppUser, DataStore, ReminderPreference, UserStats } from './store';
 import { MemoryStore } from './memory-store';
 import { SupabaseStore } from './store';
 import { skillMetaMap, estimatedMinutesForNode, skillForNode, skillTitle, nodeForSkill } from './skills-data';
@@ -509,6 +509,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
   app.use('/api/night-quiz', (c, next) => rateLimit(c, next));
   app.use('/api/diagnostic', (c, next) => rateLimit(c, next));
   app.use('/api/exam-simulation*', (c, next) => rateLimit(c, next));
+  app.use('/api/reminders*', (c, next) => rateLimit(c, next));
+  app.use('/api/feedback', (c, next) => rateLimit(c, next));
 
   // AEL-509 (AT-AEL-18): منبع حقیقت Runtime کاتالوگ = Release فعال DB.
   // Legacy static فقط تا پیش از انتشار اولین Release باقی است (ADR-003) و برچسب legacy دارد.
@@ -771,8 +773,8 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       if (callbackQuery.data === 'reminder_info') {
         return deliverOnce('reminder_info', {
           chat_id: chatId,
-          text: '⏰ یادآور روزانه\n\nاز داخل مینی‌اپ: تب «تنظیمات» → ساعت مطالعهٔ روزانه را مشخص کنید.\nپیشنهاد: یک زمان ثابت انتخاب کنید (مثلاً ۲۱:۰۰) — عادت‌سازی روی زمان ثابت مؤثرتر است.',
-          reply_markup: { inline_keyboard: [[{ text: '⚙️ باز کردن تنظیمات', web_app: { url: appUrl } }]] },
+          text: '⏰ یادآور روزانه\n\nاز منوی «بیشتر» → «هدف دوم و یادآور» ساعت و روزهای ارسال را انتخاب کن.\nپیشنهاد: یک زمان ثابت انتخاب کن (مثلاً ۲۱:۰۰)؛ عادت‌سازی روی زمان ثابت مؤثرتر است.',
+          reply_markup: { inline_keyboard: [[{ text: '⚙️ تنظیم یادآور', web_app: { url: `${appUrl}?startapp=preferences` } }]] },
         });
       }
       return c.json({ ok: true });
@@ -1111,6 +1113,118 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
     const user = await currentUser(c);
     if (!user) return authError(c);
     return c.json({ user });
+  });
+
+  /* ---------- گزارش محتوا و پیام به ادمین از داخل مینی‌اپ ---------- */
+  app.post('/api/feedback', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as {
+      category?: unknown;
+      body?: unknown;
+      relatedEntityType?: unknown;
+      relatedEntityId?: unknown;
+    } | null;
+    if (!body || typeof body.body !== 'string') return c.json({ error: 'متن پیام الزامی است.' }, 400);
+    const text = body.body.trim();
+    if (text.length < 5 || text.length > 4000) return c.json({ error: 'متن پیام باید بین ۵ تا ۴۰۰۰ نویسه باشد.' }, 400);
+    const allowedCategories = new Set(['general', 'question_report', 'content_issue', 'technical', 'suggestion']);
+    const category = typeof body.category === 'string' && allowedCategories.has(body.category) ? body.category : 'general';
+    const createFeedbackThread = store.createFeedbackThread?.bind(store);
+    if (typeof createFeedbackThread !== 'function') {
+      return c.json({ error: 'لایهٔ فیدبک در دسترس نیست.' }, 503);
+    }
+    const relatedEntityType = typeof body.relatedEntityType === 'string' ? body.relatedEntityType.slice(0, 32) : null;
+    const relatedEntityId = typeof body.relatedEntityId === 'string' ? body.relatedEntityId.slice(0, 160) : null;
+    const chatId = typeof user.telegramUserId === 'number' ? user.telegramUserId : null;
+    const threadId = await createFeedbackThread({
+      userId: user.id,
+      telegramUserId: user.telegramUserId ?? null,
+      chatId,
+      category,
+      body: text,
+      relatedEntityType,
+      relatedEntityId,
+    });
+    return c.json({ ok: true, threadId });
+  });
+
+  /* ---------- یادآور روزانه: تنظیم و آزمایش ---------- */
+  const getReminderStore = () => store as {
+    getReminderPreference?: (userId: string) => Promise<ReminderPreference | null>;
+    upsertReminderPreference?: (preference: ReminderPreference) => Promise<ReminderPreference>;
+  };
+
+  app.get('/api/reminders', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const reminderStore = getReminderStore();
+    if (typeof reminderStore.getReminderPreference !== 'function') {
+      return c.json({ error: 'لایهٔ یادآور در دسترس نیست.' }, 503);
+    }
+    return c.json({ reminder: await reminderStore.getReminderPreference(user.id) });
+  });
+
+  app.put('/api/reminders', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    const body = (await c.req.json().catch(() => null)) as Partial<ReminderPreference> | null;
+    if (!body) return c.json({ error: 'ورودی نامعتبر است.' }, 400);
+    const timePattern = /^([01]\d|2[0-3]):[0-5]\d$/;
+    if (typeof body.timeLocal !== 'string' || !timePattern.test(body.timeLocal)) {
+      return c.json({ error: 'ساعت یادآور باید به شکل HH:MM باشد.' }, 400);
+    }
+    if (typeof body.quietStart !== 'string' || !timePattern.test(body.quietStart)) {
+      return c.json({ error: 'شروع ساعات سکوت نامعتبر است.' }, 400);
+    }
+    if (typeof body.quietEnd !== 'string' || !timePattern.test(body.quietEnd)) {
+      return c.json({ error: 'پایان ساعات سکوت نامعتبر است.' }, 400);
+    }
+    const timezone = typeof body.timezone === 'string' ? body.timezone.trim().slice(0, 64) : '';
+    try {
+      new Intl.DateTimeFormat('en-US', { timeZone: timezone }).format(new Date());
+    } catch {
+      return c.json({ error: 'منطقهٔ زمانی معتبر نیست.' }, 400);
+    }
+    const weekdays = Array.isArray(body.weekdays)
+      ? [...new Set(body.weekdays.map((day) => Number(day)))].filter((day) => Number.isInteger(day) && day >= 0 && day <= 6)
+      : [0, 1, 2, 3, 4, 5, 6];
+    if (weekdays.length === 0) return c.json({ error: 'حداقل یک روز ارسال انتخاب کن.' }, 400);
+    const reminderStore = getReminderStore();
+    if (typeof reminderStore.upsertReminderPreference !== 'function') {
+      return c.json({ error: 'لایهٔ یادآور در دسترس نیست.' }, 503);
+    }
+    const existing = typeof reminderStore.getReminderPreference === 'function'
+      ? await reminderStore.getReminderPreference(user.id)
+      : null;
+    const saved = await reminderStore.upsertReminderPreference({
+      userId: user.id,
+      enabled: body.enabled === true,
+      timeLocal: body.timeLocal,
+      timezone,
+      weekdays,
+      quietStart: body.quietStart,
+      quietEnd: body.quietEnd,
+      onlyWhenDue: body.onlyWhenDue === true,
+      lastSentOn: existing?.lastSentOn ?? null,
+    });
+    return c.json({ reminder: saved });
+  });
+
+  app.post('/api/reminders/test', async (c) => {
+    const user = await currentUser(c);
+    if (!user) return authError(c);
+    if (!env.TELEGRAM_BOT_TOKEN) return c.json({ error: 'توکن ربات تنظیم نشده است.' }, 503);
+    if (typeof user.telegramUserId !== 'number') return c.json({ error: 'فقط داخل تلگرام قابل آزمایش است.' }, 409);
+    const reminderStore = getReminderStore();
+    const reminder = typeof reminderStore.getReminderPreference === 'function'
+      ? await reminderStore.getReminderPreference(user.id)
+      : null;
+    if (!reminder) return c.json({ error: 'اول تنظیمات یادآور را ذخیره کن.' }, 409);
+    const appUrl = env.APP_URL || new URL(c.req.url).origin;
+    const result = await sendTelegramReminder(env.TELEGRAM_BOT_TOKEN, user.telegramUserId, appUrl);
+    if (!result.ok) return c.json({ error: 'ارسال آزمایشی ناموفق بود.' }, 502);
+    return c.json({ ok: true });
   });
 
   // R-020 — انتخاب کنکور داوطلب (exam_selections)؛ اعتبارسنجی ساختاری سمت سرور
@@ -2952,8 +3066,99 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
 }
 
 /* برای محیط اجرای Cloudflare Workers */
+/* ---------- ارسال یادآور از cron و مسیر آزمایش ---------- */
+
+async function sendTelegramReminder(botToken: string, chatId: number, appUrl: string): Promise<{ ok: boolean }> {
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: '⏰ وقت مرور کوتاه است\n\n۱۰ دقیقه مرور کارت‌های امروز، قدم بعدی را جلو می‌برد. عجله لازم نیست؛ فقط شروع کن.',
+        reply_markup: { inline_keyboard: [[{ text: 'شروع مرور', web_app: { url: `${appUrl}?startapp=flashcards` } }]] },
+      }),
+    });
+    return { ok: res.ok };
+  } catch {
+    return { ok: false };
+  }
+}
+
+function zonedParts(now: Date, timeZone: string): { date: string; time: string; weekday: number } | null {
+  try {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: false,
+      weekday: 'short',
+    }).formatToParts(now);
+    const map = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+    const hour = map.hour === '24' ? '00' : map.hour;
+    const weekdayMap: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+    const weekday = weekdayMap[map.weekday ?? ''];
+    if (weekday === undefined) return null;
+    return {
+      date: `${map.year}-${map.month}-${map.day}`,
+      time: `${hour}:${map.minute}`,
+      weekday,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function minutesOfDay(value: string): number {
+  const [hour, minute] = value.split(':').map(Number);
+  return (hour || 0) * 60 + (minute || 0);
+}
+
+function insideQuietHours(time: string, start: string, end: string): boolean {
+  const current = minutesOfDay(time);
+  const from = minutesOfDay(start);
+  const to = minutesOfDay(end);
+  if (from === to) return false;
+  return from < to ? current >= from && current < to : current >= from || current < to;
+}
+
+async function runReminderSweep(env: Env): Promise<void> {
+  if (!env.TELEGRAM_BOT_TOKEN) return;
+  const store: DataStore =
+    env.SUPABASE_URL && env.SUPABASE_SERVICE_ROLE_KEY
+      ? new SupabaseStore(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
+      : (globalMemoryStore ??= new MemoryStore());
+  const reminderStore = store as {
+    listReminderPreferences?: () => Promise<ReminderPreference[]>;
+    markReminderSent?: (userId: string, localDate: string) => Promise<void>;
+  };
+  if (typeof reminderStore.listReminderPreferences !== 'function' || typeof reminderStore.markReminderSent !== 'function') return;
+  const reminders = await reminderStore.listReminderPreferences();
+  const now = new Date();
+  const appUrl = env.APP_URL || 'https://t.me';
+  for (const reminder of reminders) {
+    if (!reminder.enabled) continue;
+    const local = zonedParts(now, reminder.timezone);
+    if (!local) continue;
+    if (reminder.lastSentOn === local.date) continue;
+    if (!reminder.weekdays.includes(local.weekday)) continue;
+    if (insideQuietHours(local.time, reminder.quietStart, reminder.quietEnd)) continue;
+    const target = minutesOfDay(reminder.timeLocal);
+    const current = minutesOfDay(local.time);
+    if (current < target || current >= target + 15) continue;
+    // chatId در پیام خصوصی تلگرام همان telegramUserId است.
+    const user = await store.getUser(reminder.userId).catch(() => null);
+    const chatId = user?.telegramUserId;
+    if (!chatId) continue;
+    const result = await sendTelegramReminder(env.TELEGRAM_BOT_TOKEN, chatId, appUrl);
+    if (result.ok) await reminderStore.markReminderSent(reminder.userId, local.date);
+  }
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     return createApp(env).fetch(request);
+  },
+  async scheduled(_event: unknown, env: Env, _ctx: unknown): Promise<void> {
+    await runReminderSweep(env);
   },
 };

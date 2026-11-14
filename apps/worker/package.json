@@ -5,8 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc -b",
-    "dev": "wrangler dev",
-    "deploy": "npm run --prefix ../.. build:worker && npm run --prefix ../.. audit:miniapp && npx --yes wrangler deploy"
+    "dev": "npx --yes wrangler dev --var ENVIRONMENT:development",
+    "deploy": "npm run --prefix ../.. build:worker && npm run --prefix ../.. audit:miniapp && npm run --prefix ../.. check:production && npx --yes wrangler deploy"
   },
   "dependencies": {
     "@ael/contracts": "*",

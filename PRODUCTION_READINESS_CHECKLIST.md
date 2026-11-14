@@ -12,6 +12,13 @@
 > DEFERRED / NOT_STARTED / BLOCKED. See `docs/audit/COMPREHENSIVE_AUDIT_20261102.md` and the
 > `A-01…A-24` block in `docs/audit/REMEDIATION_REGISTER.md`. This raises confidence in what was
 > already built; it does not remove any external release blocker.
+>
+> **Current baseline (2026-11-14):** 832 tests in 83 files, `typecheck` green, 29 migrations
+> (`0001`–`0029`) applied from scratch on PGlite with ledger/backup controls green, and R-036
+> closed after the client bundle was rebuilt without answer keys. `npm run check:production`
+> still stops on missing `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`; migration `0029`,
+> `APP_URL` and `ALLOW_DEMO_AUTH=false` remain target-environment blockers. Overall decision is
+> still **NO-GO / DEFER**; no production deployment was performed.
 
 Statuses follow the standard set only. A row without a linked artifact is not a pass.
 
@@ -21,7 +28,7 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 
 | Item | Status | Evidence / limitation |
 |---|---|---|
-| Content validation script run | PASS_WITH_EVIDENCE | `evidence/phase-4/content-validate-exam87.txt` — 2 packs, 0 warnings |
+| Content validation script run | PASS_WITH_EVIDENCE (current) | `npm run validate:learning` on 2026-11-14: financial 8 topics/24 items, statistics 3/8, PhD expansion 12/29; 200 metadata entries; 5 references checked and 5 source files absent from this checkout. Historical `evidence/phase-4/content-validate-exam87.txt` remains separate evidence. |
 | Scientific content quality report | IMPLEMENTED_UNVERIFIED | `docs/phase-2/CONTENT_QUALITY_REPORT.md`, derived from bank data |
 | Psychometric analysis (CTT/IRT) | BLOCKED | No response data; no assumed parameters were invented |
 | Question quality verified | IMPLEMENTED_UNVERIFIED | Structural checks pass; distractor/ difficulty quality not empirically validated |
@@ -44,9 +51,9 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 
 | Item | Status | Evidence / limitation |
 |---|---|---|
-| Migrations apply from scratch | PASS_WITH_EVIDENCE | Docker PostgreSQL 16: **0001–0015 + seeds recreated from scratch** on a throwaway DB; 16-block integrity suite EXIT=0 (`evidence/audit-20261102/db-integrity-0015.txt`). Audit A-19 records that migrations 0001/0005/0006/0007 still lack `drop policy if exists`, so re-running them on an applied database fails — fresh application is green, in-place re-run is not |
+| Migrations apply from scratch | PASS_WITH_EVIDENCE (local current) | `npm run test:db` on PGlite 18.6: **29 migrations + 2 seeds**, ledger replay, integrity and backup/restore controls green (2026-11-14). Historical Docker PostgreSQL 16 evidence covers 0001–0015 only; applying `0029` to the real Supabase database remains BLOCKED |
 | Data integrity constraints verified | PASS_WITH_EVIDENCE | Integrity suite incl. tickets, RLS/RPC checks (R-010, R-020, R-023) and the new block 16 (A-01/A-02: missing stats columns present, legacy RPC no longer executable by PUBLIC/anon/authenticated, `app_users` owner-read policy, default privileges) |
-| Telegram learner snapshot backup/recovery | PASS_WITH_EVIDENCE (scoped client tests) | PR #8 verifies complete React nodeStates/cards/stats backup, cloud restore, two-slot failure safety, version selection and Zero-State invalidation. Not a Supabase backup, not mistake-notebook backup and not staging Telegram-host E2E |
+| Telegram learner snapshot backup/recovery | PASS_WITH_EVIDENCE (scoped client tests) | PR #8 verifies complete React nodeStates/cards/stats backup, cloud restore, two-slot failure safety, version selection and Zero-State invalidation. Not a Supabase backup, not mistake-notebook or personal-flashcard backup, and not staging Telegram-host E2E |
 | Backup and restore tested | PASS_WITH_EVIDENCE (scoped local DB) | `scripts/db-backup-restore.sh`: pg_dump → restore into fresh DB, all 6 key row counts match, index preserved (`evidence/phase-5/db-backup-restore.txt`); deployment artifact rollback still NOT_STARTED |
 | Availability SLA | NOT_STARTED | Not defined or measured |
 | Disaster recovery | NOT_STARTED | No DR plan/runbook |
@@ -59,10 +66,10 @@ Statuses follow the standard set only. A row without a linked artifact is not a 
 | Authentication hardened | PASS_WITH_EVIDENCE | Prod unsigned modes 401; rate limiter wired; cross-user/ticket tests (R-010) |
 | Attempt-ticket enforcement | PASS_WITH_EVIDENCE | Server-issued single-use tickets; RPC/RLS verified (§8.7, R-010) |
 | SQL injection posture | PASS_WITH_EVIDENCE (scoped) | Parameterized REST/RPC paths; no raw user SQL found in reviewed endpoints |
-| Rate limiting | PASS_WITH_EVIDENCE (scoped, corrected) | Audit A-04: the limiter was a **no-op in production** (counter created inside `createApp`, which the Workers entrypoint calls per request). Counter moved to module scope with a production-path regression test. Still in-memory per isolate; distributed/edge limits not configured |
+| Rate limiting | PASS_WITH_EVIDENCE (scoped, corrected) | Audit A-04: the limiter was a **no-op in production** (counter created inside `createApp`, which the Workers entrypoint calls per request). Counter moved to module scope with a production-path regression test. Still in-memory per isolate; distributed/edge limits are not configured and SEC-01-F5 remains open |
 | Token generation | PASS_WITH_EVIDENCE | `crypto.getRandomValues`/UUID; no `Math.random` session tokens |
 | OWASP Top 10 full assessment | IMPLEMENTED_UNVERIFIED | Partial audit; no external pentest |
-| Public client answer-key exposure (R-036) | BLOCKED — fail-closed deploy gate | React Vite currently bundles correctOption/correctIndex. PR #9 adds a bundle scanner and blocks Pages/guarded Worker deploy until the React UI uses authenticated Worker answer endpoints. This PR is a release mitigation, not removal of keys from the current bundle |
+| Public client answer-key exposure (R-036) | CLOSED (2026-11-11) | Client bank keys were stripped, React study/exam flows were moved to authenticated Worker grading, and the bundle/offline outputs were rebuilt with zero data keys. `audit:miniapp` passes with the hard gate; see `docs/operations/QUESTION_ANSWER_KEY_SECURITY_FA.md`. This closure does not complete R-009/R-025 learner-store convergence |
 | Encryption at rest/in transit | NOT_STARTED | Depends on deployment configuration; unverified |
 | Security test report | PASS_WITH_EVIDENCE (scoped local) | `SECURITY_TEST_REPORT.md`: 333/333 tests (audit revision), incl. A-02 legacy security-definer RPC revoked from PUBLIC/anon/authenticated, A-04 production rate limiting, A-05 coin-farming loop closed, A-06 queue payload exposure removed, A-15 self-report no longer invents evidence; initData signature/staleness, token forgery, ticket replay/cross-user, RLS/RPC, PostgREST encoding fix; staging/pentest/encryption and a comprehensive XSS audit NOT_VERIFIED (`evidence/audit-20261102/vitest-final.txt`, `evidence/phase-5/security-local-suite.txt`) |
 

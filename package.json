@@ -38,6 +38,8 @@
     "ael:exam:merge-keys": "python -I scripts/ael-key-merge-recovered.py",
     "ael:exam:dedup": "node scripts/ael-question-dedup.mjs",
     "build:miniapp": "vite build --mode miniapp",
+    "sync:miniapp": "node scripts/sync-miniapp-build.mjs",
+    "check:production": "node scripts/preflight-production.mjs",
     "v2:ledger": "node scripts/v2/ledger.mjs",
     "v2:verify": "node scripts/v2/verify-ledger.mjs",
     "v2:summary": "node scripts/v2/ledger.mjs summary",

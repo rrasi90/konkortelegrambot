@@ -12,6 +12,8 @@ import { KnowledgeNode, InteractiveLesson } from '../data/konkorData';
 import { MajorExamBranch } from '../engine/aelEngine';
 import { MathText } from './MathText';
 import { TopicDiagramVisualizer } from './TopicDiagramVisualizer';
+import { queueMistakeReview } from '../utils/mistakeReview';
+import { MISTAKE_ERROR_LABELS, type MistakeErrorType } from '../utils/mistakeNotebook';
 import {
   FileText,
   Play,
@@ -38,6 +40,7 @@ interface YearlyKonkorExamViewProps {
   onChangeBranch: (branch: MajorExamBranch) => void;
   onStartYearAdaptiveSession: (year: number, sectionId: KonkorCourseSectionId | 'all') => void;
   onRecordQuestionAttempt?: (question: YearlyKonkorQuestion, selectedOption: number) => void;
+  onRecordMistakeReason?: (questionId: string, errorType: MistakeErrorType) => void;
   onOpenLessonNode: (nodeId: string) => void;
 }
 
@@ -49,6 +52,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
   onChangeBranch,
   onStartYearAdaptiveSession,
   onRecordQuestionAttempt,
+  onRecordMistakeReason,
   onOpenLessonNode,
 }) => {
   const [selectedYear, setSelectedYear] = useState<number>(initialYear);
@@ -60,6 +64,8 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
   const [showBudgetTable, setShowBudgetTable] = useState<boolean>(false);
   const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string }>>({});
   const [gradingNotice, setGradingNotice] = useState<string | null>(null);
+  const [reviewNotice, setReviewNotice] = useState<string | null>(null);
+  const [mistakeReasonSaved, setMistakeReasonSaved] = useState<MistakeErrorType | null>(null);
 
   // تایمر شبیه‌ساز جلسه کنکور
   const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
@@ -79,6 +85,11 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
       YEARLY_KONKOR_BOOKLETS[0],
     [selectedYear]
   );
+
+  useEffect(() => {
+    setMistakeReasonSaved(null);
+    setReviewNotice(null);
+  }, [activeQuestionIndex, selectedYear]);
 
   useEffect(() => {
     setIsTimerRunning(false);
@@ -220,6 +231,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
     // R-036: ثبت پاسخ و تصحیح فقط سمت سرور — کلید هرگز به کلاینت ارسال نمی‌شود
     if (!alreadyAnswered) {
       setGradingNotice(null);
+      setReviewNotice(null);
       void (async () => {
         try {
           const reveal = await gradeAnswerOnServer(q.id, optIdx);
@@ -227,6 +239,16 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
             ...prev,
             [q.id]: { correctOption: reveal.correctOption, explanation: reveal.explanation, trapNote: reveal.trapNote },
           }));
+          if (reveal.correctOption !== optIdx) {
+            const outcome = queueMistakeReview(q, optIdx, reveal);
+            if (outcome.queued) {
+              setReviewNotice(
+                outcome.created
+                  ? 'این پرسش به کارت‌های مرور اضافه شد و در جلسهٔ بعدی مرور دیده می‌شود.'
+                  : 'کارت این پرسش از قبل بود؛ برای مرور بعدی دوباره در صف قرار گرفت.',
+              );
+            }
+          }
         } catch {
           setGradingNotice('تصحیح آنلاین در دسترس نیست — پاسخ شما ثبت شد اما نتیجه/کارنامه تا اتصال به سرور محاسبه نمی‌شود.');
         }
@@ -255,6 +277,7 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
     setRevealedQuestions(nextRevealed);
     setQuestionReveals(nextServerReveals);
     setGradingNotice(null);
+    setReviewNotice(null);
     setActiveQuestionIndex(0);
     setIsTimerRunning(false);
     // نسبت زمان به تعداد سؤال‌های واقعی بانک (~۸۰ ثانیه/سؤال) — تایمر تمرینی، نه شبیه‌سازی زمان کل دفترچه
@@ -768,6 +791,42 @@ export const YearlyKonkorExamView: React.FC<YearlyKonkorExamViewProps> = ({
                 );
               })}
             </div>
+
+            {reviewNotice && (
+              <div className="flex items-start gap-2 rounded-xl border border-rose-500/25 bg-rose-500/10 px-3 py-2 text-xs leading-6 text-rose-800 dark:text-rose-200">
+                <Layers className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{reviewNotice}</span>
+              </div>
+            )}
+
+            {reviewNotice && onRecordMistakeReason && (
+              <div className="rounded-xl border border-rose-500/20 bg-white dark:bg-slate-900 p-3">
+                <div className="text-base font-bold text-slate-800 dark:text-slate-100">علت این خطا چه بود؟</div>
+                <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">ثبت علت، پرسش مرور بعدی را هدفمند می‌کند.</p>
+                <div className="mt-2 grid grid-cols-2 gap-1.5">
+                  {(['concept_gap', 'prerequisite_failure', 'misread', 'slip'] as MistakeErrorType[]).map((reason) => (
+                    <button
+                      key={reason}
+                      type="button"
+                      onClick={() => {
+                        onRecordMistakeReason(currentQuestion.id, reason);
+                        setMistakeReasonSaved(reason);
+                      }}
+                      className={`min-h-[44px] rounded-lg border px-2 py-2 text-sm font-bold cursor-pointer ${
+                        mistakeReasonSaved === reason
+                          ? 'border-rose-500 bg-rose-500/15 text-rose-800 dark:text-rose-200'
+                          : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
+                      }`}
+                    >
+                      {MISTAKE_ERROR_LABELS[reason]}
+                    </button>
+                  ))}
+                </div>
+                {mistakeReasonSaved && (
+                  <div className="mt-2 text-sm text-emerald-700 dark:text-emerald-300">ثبت شد؛ کارت مرور این پرسش بر همین علت تمرکز می‌کند.</div>
+                )}
+              </div>
+            )}
 
             {/* دکمه‌های نمایش پاسخ تشریحی و حرکت بین سؤالات به ترتیب دفترچه */}
             <div className="flex flex-wrap items-center justify-between gap-3 pt-2">

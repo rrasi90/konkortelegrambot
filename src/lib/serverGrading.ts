@@ -63,7 +63,7 @@ async function authenticate(): Promise<boolean> {
   return authPromise;
 }
 
-async function authedFetch(path: string, init: RequestInit): Promise<Response> {
+export async function authedFetch(path: string, init: RequestInit): Promise<Response> {
   if (!(await authenticate())) throw new GradingUnavailableError('احراز هویت برقرار نشد');
   const res = await fetch(path, {
     ...init,

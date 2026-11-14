@@ -105,6 +105,49 @@ describe('Phase 7 — Feedback (F-01..F-06)', () => {
     expect(messages.some(row => row.is_internal_note === true)).toBe(true);
   });
 
+  it('F-07: گزارش محتوا از داخل مینی‌اپ با شناسهٔ محتوا ثبت می‌شود', async () => {
+    const login = await app.request('/api/auth/telegram', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ initData: await buildInitData(605) }),
+    });
+    const token = ((await login.json()) as { token: string }).token;
+    const res = await app.request('/api/feedback', {
+      method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        category: 'content_issue',
+        body: 'گزارش محتوا\nنوع: card\nشناسه: anki.marketing_1\nدلیل: غلط علمی',
+        relatedEntityType: 'card',
+        relatedEntityId: 'anki.marketing_1',
+      }),
+    });
+    expect(res.status).toBe(200);
+    const threads = await store.listFeedbackThreads({ status: 'new', limit: 10 }) as Array<Record<string, unknown>>;
+    expect(threads.some((thread) => thread.category === 'content_issue' && thread.related_entity_id === 'anki.marketing_1')).toBe(true);
+  });
+
+  it('F-08: یادآور با منطقهٔ زمانی معتبر ذخیره و بازیابی می‌شود', async () => {
+    const login = await app.request('/api/auth/telegram', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ initData: await buildInitData(606) }),
+    });
+    const token = ((await login.json()) as { token: string }).token;
+    const save = await app.request('/api/reminders', {
+      method: 'PUT', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        enabled: true, timeLocal: '21:00', timezone: 'Asia/Tehran',
+        weekdays: [6, 0, 1, 2, 3, 4, 5], quietStart: '23:00', quietEnd: '08:00',
+      }),
+    });
+    expect(save.status).toBe(200);
+    const saved = await save.json() as { reminder: { enabled: boolean; timeLocal: string } };
+    expect(saved.reminder.enabled).toBe(true);
+    expect(saved.reminder.timeLocal).toBe('21:00');
+
+    const get = await app.request('/api/reminders', { headers: { Authorization: `Bearer ${token}` } });
+    expect(get.status).toBe(200);
+    expect((await get.json() as { reminder: { timezone: string } }).reminder.timezone).toBe('Asia/Tehran');
+  });
+
   it('F-06: نقش بدون مجوز reply → 403', async () => {
     const auditor = await adminStore.upsertAdminUser({ telegramUserId: 778, username: null, displayName: 'Auditor' });
     await adminStore.grantRole(auditor.id, 'AUDITOR_READONLY', null, 'x');

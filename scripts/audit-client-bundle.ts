@@ -16,6 +16,8 @@ export interface ClientBundleFinding {
 }
 
 const SCAN_EXTENSIONS = new Set(['.js', '.mjs', '.cjs', '.json', '.html', '.map']);
+/** Vite emits an entry chunk and dynamic chunks, each with an eight-character hash. */
+const HASHED_BUNDLE = /^(?:index-[A-Za-z0-9_-]+|[A-Za-z0-9][\w.-]*-[A-Za-z0-9_-]{8})\.(?:js|css)$/;
 /**
  * R-036 گارد سخت — بدون هیچ استثنا (مأموریت v4 §3.2):
  *  - الگوی فیلد+مقدار: کلید پاسخ داده‌شده (نه خواندن خصوصیت مثل q.correctOption).
@@ -179,7 +181,7 @@ async function runAudit(root: string): Promise<void> {
     }
     if (bundled.some((entry) =>
       !entry.isFile() ||
-      (!/^index-[\w-]+\.(js|css)$/.test(entry.name) && !/\.(md|json)$/.test(entry.name))
+      (!HASHED_BUNDLE.test(entry.name) && !/\.(md|json)$/.test(entry.name))
     )) {
       throw new Error('Mini App assets must be hashed JS/CSS bundles or app data (md/json); raw sources and archives are prohibited.');
     }

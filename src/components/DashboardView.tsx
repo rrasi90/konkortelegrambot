@@ -54,6 +54,8 @@ interface DashboardViewProps {
   stats: UserStats;
   nodeStates: Record<string, LearnerSixDState>;
   queue: ReviewCard[];
+  dueMistakeCards: number;
+  onStartFlashcardReview: () => void;
   roiRankings: ROINodeRanking[];
   examFrequencyList: MultiYearFrequencyInsight[];
   onStartDailySession: () => void;
@@ -134,6 +136,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   stats,
   nodeStates,
   queue,
+  dueMistakeCards,
+  onStartFlashcardReview,
   roiRankings,
   examFrequencyList,
   onStartDailySession,
@@ -368,6 +372,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
                 </div>
               </div>
+
+              {dueMistakeCards > 0 && (
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-300/25 bg-amber-300/10 px-3 py-2.5">
+                  <span className="text-base leading-7 text-amber-100">
+                    {toFaDigits(dueMistakeCards)} کارت خطا هم برای مرور امروز سررسید است.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      tmaHaptic.impact('light');
+                      onStartFlashcardReview();
+                    }}
+                    className="min-h-[44px] rounded-xl border border-amber-300/40 px-3 py-2 text-sm font-bold text-amber-100 hover:bg-amber-300/15 cursor-pointer"
+                  >
+                    مرور کارت‌های خطا
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="pt-6 mt-6 border-t border-white/12 flex flex-wrap items-center justify-between gap-3">
