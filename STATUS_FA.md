@@ -2,7 +2,7 @@
 
 - **نسخه:** ۲ — ۱۴ نوامبر ۲۰۲۶ / ۲۳ آبان ۱۴۰۵
 - **مالک به‌روزرسانی:** ایجنت توسعه (طبق بستهٔ GOV-01 نقشهٔ راه)
-- **مبنا:** working tree جاری بدون commit؛ نقشهٔ راه جامع [docs/roadmap/AEL_Master_Roadmap_FA_2026-11-05.md](docs/roadmap/AEL_Master_Roadmap_FA_2026-11-05.md)
+- **مبنا:** کامیت `abba6c0` و همین به‌روزرسانی اسناد؛ نقشهٔ راه جامع [docs/roadmap/AEL_Master_Roadmap_FA_2026-11-05.md](docs/roadmap/AEL_Master_Roadmap_FA_2026-11-05.md)
 - **فهرست کارها:** [BACKLOG_FA.md](BACKLOG_FA.md) — **تصمیم‌ها:** [DECISIONS_FA.md](DECISIONS_FA.md)
 
 این سند پاسخ می‌دهد: «الان چه چیزی کار می‌کند، مدرک چیست و چه چیزی باز است؟» هر ادعا باید مسیر و تاریخ داشته باشد. «موجود» یعنی اثر قابلیت یا گزارش آزمون محلی، نه تأیید علمی یا کاربر واقعی.
@@ -19,7 +19,7 @@
 | دیتابیس | `npm run test:db` | ✅ ۲۹ مهاجرت + ۲ seed، replay ledger، کنترل‌های یکپارچگی و بازیابی/پشتیبان |
 | پیش‌بررسی production | `npm run check:production` | ⛔ متوقف؛ نبود `SUPABASE_URL` و `SUPABASE_SERVICE_ROLE_KEY`؛ هشدار `0029`، `APP_URL` و `ALLOW_DEMO_AUTH` |
 
-مهاجرت‌ها از `0001_init.sql` تا `0029_reminder_preferences.sql` ادامه دارند. محیط اجرا: ویندوز (Git Bash)، `core.autocrlf=true`. این خط پایه فقط وضعیت working tree است؛ هیچ commit یا دیپلوی تازه‌ای ساخته نشده است.
+مهاجرت‌ها از `0001_init.sql` تا `0029_reminder_preferences.sql` ادامه دارند. محیط اجرا: ویندوز (Git Bash)، `core.autocrlf=true`. این خط پایه روی کامیت `abba6c0` ثبت و به `origin/main` push شد. هیچ دیپلوی production انجام نشد: ورکر زنده هنوز باندل قدیمی `index-D8G2k1lT.js` را سرو می‌کند و پیش‌بررسی به‌دلیل دو secret غایب متوقف می‌شود.
 
 ## ۲. کارکردهای موجود (با مرز ادعا)
 
@@ -38,7 +38,7 @@
 
 ## ۳. موارد باز (مسدودکننده‌های مهم)
 
-1. **انتشار production:** `npm run check:production` با دو خطا متوقف می‌شود: نبود `SUPABASE_URL` و `SUPABASE_SERVICE_ROLE_KEY`. `ALLOW_DEMO_AUTH` باید روی ورکر مقصد `false` شود و `APP_URL` تنظیم شود.
+1. **انتشار production:** `npm run check:production` با دو خطا متوقف می‌شود: نبود `SUPABASE_URL` و `SUPABASE_SERVICE_ROLE_KEY`. `ALLOW_DEMO_AUTH` باید روی ورکر مقصد `false` شود و `APP_URL` تنظیم شود. ورکر زنده در ۱۴ نوامبر ۲۰۲۶ باندل قدیمی `index-D8G2k1lT.js` را سرو می‌کند؛ بنابراین کد و مینی‌اپ تازه هنوز روی production نیستند.
 2. **مهاجرت `0029_reminder_preferences.sql`:** روی Supabase واقعی اعمال نشده است. `test:db` فقط ۲۹ مهاجرت را روی PGlite از صفر تأیید می‌کند، نه روی دیتابیس مقصد.
 3. **امنیت باز (SEC-01-F4/F5):** توکن نشست انقضا/لغو ندارد و محدودسازی نرخ در حافظه و per-isolate است. اصلاحات fail-closed قبلی (F1/F2/F3/F6) در کد هست، اما اعمال روی مقصد جدا است.
 4. **حلقهٔ مرور، ادامهٔ باز:** ورود APKG، همگام‌سازی خودکار/سروری کارت‌ها، آزمایشگاه ۱۰۰ ترکیب و حالت‌های تصویری/تطبیق جفت‌ها/تشخیص تله پیاده نشده‌اند. بازطراحی بصری چهار مقصد هم به تأیید صریح مالک نیاز دارد.
