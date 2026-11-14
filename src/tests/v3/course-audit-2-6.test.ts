@@ -18,11 +18,12 @@ const COURSE_NODES: Record<string, string[]> = {
 };
 
 const EXPECTED_COUNTS: Record<string, number> = {
-  'course-stats': 18,
-  'course-islamic-mgmt': 9,
-  'course-strategic-mgmt': 13,
-  'course-marketing': 17,
-  'course-innovation-mgmt': 7,
+  // شمارش‌ها پس از افزودن تست‌های تألیفی فصل (q.auth.*) به‌روز شده‌اند
+  'course-stats': 21,
+  'course-islamic-mgmt': 30,
+  'course-strategic-mgmt': 31,
+  'course-marketing': 32,
+  'course-innovation-mgmt': 28,
 };
 
 describe('ممیزی درس‌های ۲ تا ۶ — پوشش بانک سؤال و کلید سمت سرور (v2.0 §3/§12)', () => {

@@ -18,6 +18,8 @@ import {
 } from '../data/bookChaptersRepo';
 import type { BookChapter } from '../data/bookChaptersTypes';
 import type { QuestionItem } from '../data/konkorData';
+import { findBestChapterForQuestion } from '../data/chapterFlashcards';
+import { ChapterContentBadge, ChapterLearningUnit } from './ChapterLearningUnit';
 import { RichText } from './RichText';
 import { MathText } from './MathText';
 import {
@@ -241,8 +243,24 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
     () => (activeBook ? groupBookQuestionsByChapter(activeBook.id, ownQuestions) : []),
     [activeBook, ownQuestions]
   );
+  // سؤال‌های بی‌فصل با استنتاج بهترین فصل (همان منطق هاب درس‌ها) به فصل
+  // تخصیص می‌یابند تا هیچ فصلی در نمای کتابخانه بی‌سؤال دیده نشود.
+  const chapterQuestionsById = useMemo(() => {
+    const map = new Map<string, QuestionItem[]>();
+    groups.forEach((group) => {
+      if (group.chapter) map.set(group.chapter.id, group.questions);
+    });
+    const unresolved = groups.find((group) => !group.chapter)?.questions ?? [];
+    unresolved.forEach((question) => {
+      if (!activeBook) return;
+      const chapter = findBestChapterForQuestion(chapters, question);
+      if (!chapter) return;
+      map.set(chapter.id, [...(map.get(chapter.id) ?? []), question]);
+    });
+    return map;
+  }, [activeBook, chapters, groups]);
   const questionsForChapter = (chapter: BookChapter) =>
-    groups.find((group) => group.chapter?.id === chapter.id)?.questions ?? [];
+    chapterQuestionsById.get(chapter.id) ?? [];
 
   const openBook = (id: string) => {
     setOpenBookId(id);
@@ -471,6 +489,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                       <span className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
                         {ch.title}
                       </span>
+                      <ChapterContentBadge chapter={ch} />
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${badgeStyle}`}>
                         {CHAPTER_IMPORTANCE_LABEL[importance]}
                       </span>
@@ -493,6 +512,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
 
                 {isOpen && (
                   <div className="px-4 pb-4 space-y-3 border-t border-slate-200/70 dark:border-slate-800 pt-3">
+                    <ChapterLearningUnit chapter={ch} />
                     <ul className="space-y-2">
                       {ch.points.map((p, i) => (
                         <li
@@ -618,6 +638,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                     {fa(i + 1)}
                   </span>
                   <span>{ch.title}</span>
+                  <ChapterContentBadge chapter={ch} />
                 </div>
                 <div className="reading-surface">
                   <p className="text-[11px] text-amber-700 dark:text-amber-400 font-bold mb-1">
@@ -634,6 +655,7 @@ export const BookLibraryView: React.FC<BookLibraryViewProps> = ({
                       </li>
                     ))}
                   </ul>
+                  <ChapterLearningUnit chapter={ch} />
                   {ch.formulas && ch.formulas.length > 0 && (
                     <div className="mt-2 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700 space-y-1">
                       <div className="text-[10px] font-bold text-slate-600 dark:text-slate-400">

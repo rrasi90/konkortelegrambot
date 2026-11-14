@@ -785,7 +785,7 @@ export default function App() {
             <button
               type="button"
               onClick={handleStartDailySession}
-              className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all active:scale-95 whitespace-nowrap shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
+              className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-100 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 hover:border-blue-500 rounded-xl transition-all active:scale-95 whitespace-nowrap shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
             >
               <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
               <span className="hidden sm:inline">مرور امروز</span>

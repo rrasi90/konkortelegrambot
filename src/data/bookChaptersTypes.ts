@@ -7,6 +7,30 @@
 export const CHAPTER_FREQUENCY_BASIS =
   'برآورد از دفترچه‌های کارشناسی ارشد (کد ۱۱۴۲)، ۱۳۹۱ تا ۱۴۰۵ — نه آزمون دکتری';
 
+/** نوع محتوای ثبت‌شده برای یک فصل؛ ادعای «کتاب کامل» فقط با full_text مجاز است. */
+export type ChapterContentKind = 'full_text' | 'authored_summary' | 'notes_only' | 'incomplete';
+
+export const CHAPTER_CONTENT_KIND_LABEL: Record<ChapterContentKind, string> = {
+  full_text: 'متن کامل',
+  authored_summary: 'خلاصهٔ تألیفی',
+  notes_only: 'فقط نکات',
+  incomplete: 'ناقص',
+};
+
+export const DEFAULT_CHAPTER_CONTENT_KIND: ChapterContentKind = 'notes_only';
+
+export interface ChapterPrompt {
+  question: string;
+  answer: string;
+  hint?: string;
+}
+
+export interface ChapterWorkedExample {
+  title: string;
+  steps: string[];
+  takeaway?: string;
+}
+
 /** یک فصل کلیدی کتاب مرجع؛ واحد اصلی مرور «کتاب ← فصل ← آموزش و تست» */
 export interface BookChapter {
   /** شناسه یکتا: ch.<کد کتاب>.<شماره> */
@@ -26,7 +50,24 @@ export interface BookChapter {
   points: string[];
   /** فرمول‌ها و مدل‌های کلیدی */
   formulas?: string[];
+  /** نوع محتوای واقعی این فصل؛ نبود آن یعنی «فقط نکات» است، نه متن کامل. */
+  contentKind?: ChapterContentKind;
+  /** حداکثر سه هدف قابل‌سنجش؛ UI بیشتر از سه مورد را رندر نمی‌کند. */
+  objectives?: string[];
+  /** پیش‌نیازهای مفهومی که کاربر باید بداند. */
+  prerequisites?: string[];
+  /** پرسش‌های کوتاه قبل از خواندن؛ پاسخ در UI پنهان می‌ماند. */
+  pretest?: ChapterPrompt[];
+  /** یک مثال حل‌شدهٔ گام‌به‌گام برای الگوسازی. */
+  workedExample?: ChapterWorkedExample;
+  /** دام رایج یا اشتباه پرتکرار همین فصل. */
+  commonTrap?: string;
+  /** پرسش‌های بازیابی بعد از خواندن؛ پاسخ در UI پنهان می‌ماند. */
+  retrievalPrompts?: ChapterPrompt[];
 }
+
+export const getChapterContentKind = (chapter: Pick<BookChapter, 'contentKind'>): ChapterContentKind =>
+  chapter.contentKind ?? DEFAULT_CHAPTER_CONTENT_KIND;
 
 /** اهمیت فصل بر پایهٔ تعداد سؤال طرح‌شده از آن */
 export type ChapterImportance = 'critical' | 'important' | 'supporting';

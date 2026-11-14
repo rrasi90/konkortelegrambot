@@ -11,11 +11,14 @@ import {
   getBooksForCourseSection,
 } from '../data/subjectHubMeta';
 import { ReferenceBookItem } from '../data/referenceBooksRepo';
-import { getBookChapters, BookChapter } from '../data/bookChaptersRepo';
+import { getBookChapters, groupBookQuestionsByChapter, BookChapter } from '../data/bookChaptersRepo';
+import { findBestChapterForQuestion } from '../data/chapterFlashcards';
+import { isAuthoredQuestion } from '../data/chapterAuthoredQuestions';
+import { ChapterContentBadge } from './ChapterLearningUnit';
+import { ChapterCardStudy } from './ChapterCardStudy';
 import { getLessonDeepDive, getDeepDiveWordCount } from '../data/lessonDeepDives';
 import { TopicDiagramVisualizer } from './TopicDiagramVisualizer';
 import { MathText } from './MathText';
-import { RichText } from './RichText';
 import { LessonDeepDivePanel } from './LessonDeepDivePanel';
 import {
   BookOpen,
@@ -27,12 +30,10 @@ import {
   Flame,
   Award,
   Sparkles,
-  ChevronDown,
   Layers,
-  GraduationCap,
+  ChevronLeft,
   Filter,
   Eye,
-  Bookmark,
 } from 'lucide-react';
 
 interface SubjectDedicatedHubViewProps {
@@ -65,7 +66,7 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
   const [selectedDegreeFilter, setSelectedDegreeFilter] = useState<'all' | 'ارشد' | 'دکتری'>('all');
   const [selectedYearFilter, setSelectedYearFilter] = useState<number | 'all'>('all');
   const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
-  const [openBookChapterId, setOpenBookChapterId] = useState<string | null>(null);
+  const [studyChapterId, setStudyChapterId] = useState<string | null>(null);
   const [userAnswers, setUserAnswers] = useState<Record<string, number>>({});
   const [revealedAnswers, setRevealedAnswers] = useState<Record<string, boolean>>({});
 
@@ -147,6 +148,22 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
 
   const activeBook = subjectBooks[0];
   const activeBookChapters: BookChapter[] = activeBook ? getBookChapters(activeBook.id) : [];
+  const chapterQuestionsById = useMemo(() => {
+    const map = new Map<string, QuestionItem[]>();
+    if (!activeBook) return map;
+    const groups = groupBookQuestionsByChapter(activeBook.id, allSubjectQuestions);
+    groups.forEach((group) => {
+      if (group.chapter) map.set(group.chapter.id, group.questions);
+    });
+    const unresolved = groups.find((group) => !group.chapter)?.questions ?? [];
+    unresolved.forEach((question) => {
+      const chapter = findBestChapterForQuestion(activeBookChapters, question);
+      if (!chapter) return;
+      map.set(chapter.id, [...(map.get(chapter.id) ?? []), question]);
+    });
+    return map;
+  }, [activeBook, activeBookChapters, allSubjectQuestions]);
+  const studyChapter = activeBookChapters.find((chapter) => chapter.id === studyChapterId) ?? null;
 
   const activeDive = activeNodeId ? getLessonDeepDive(activeNodeId) : null;
   const activeDiveWords = activeDive ? getDeepDiveWordCount(activeDive) : 0;
@@ -186,17 +203,18 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
                 onClick={() => {
                   setSelectedSubjectId(s.id);
                   setActiveNodeId(null);
-                  setOpenBookChapterId(null);
+                  setStudyChapterId(null);
                 }}
-                className={`p-2.5 sm:p-3 rounded-2xl border text-right transition-all cursor-pointer flex flex-col justify-between gap-2 ${
+                data-subject={s.id}
+                className={`p-2.5 sm:p-3 rounded-xl border text-right transition-transform active:scale-[0.99] motion-reduce:active:scale-100 cursor-pointer flex flex-col justify-between gap-2 ${
                   isSelected
-                    ? 'bg-blue-600 text-white border-blue-500 shadow-md ring-2 ring-blue-500/30'
-                    : 'bg-slate-50/70 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-blue-400'
+                    ? 'bg-[var(--subject-solid)] text-[var(--subject-on-solid)] border-[var(--subject-line)]'
+                    : 'bg-[var(--subject-soft)] text-[color:var(--subject-text)] border-[color:var(--subject-line)] hover:bg-[var(--subject-soft)]'
                 }`}
               >
                 <div className="text-xs font-bold leading-tight">{s.shortTitle}</div>
                 <div className="flex items-center justify-between text-[10px] pt-1 border-t border-current/15">
-                  <span className="font-mono">{s.questionCountInExam.split(' ')[0]} سؤال</span>
+                  <span>{s.questionCountInExam.split(' ')[0]} سؤال</span>
                   <span className="opacity-80 text-[9px] truncate max-w-[60px]">{s.englishTitle.split(' ')[0]}</span>
                 </div>
               </button>
@@ -205,48 +223,54 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
         </div>
       </div>
 
-      {/* ۲. کارت پیشخوان فرماندهی درس انتخابی */}
-      <div className={`p-5 sm:p-6 rounded-3xl text-white shadow-lg bg-gradient-to-r ${currentSubject.gradient} space-y-4`}>
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="space-y-1.5 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/20 backdrop-blur-md text-xs font-bold">
-              <GraduationCap className="w-3.5 h-3.5" />
-              <span>{currentSubject.badge}</span>
+      {/* ۲. هدر فشردهٔ درس انتخابی؛ رنگ درس فقط روی نوار و چیپ می‌ماند */}
+      <div
+        data-subject={currentSubject.id}
+        className="rounded-2xl border border-slate-200/80 border-s-[3px] border-s-[color:var(--subject-line)] bg-white p-4 dark:border-slate-800 dark:border-s-[color:var(--subject-line)] dark:bg-slate-900 sm:p-5"
+      >
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="min-w-0 space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-lg bg-[var(--subject-soft)] px-2 py-1 text-[10px] font-bold text-[color:var(--subject-text)]">
+                {currentSubject.shortTitle}
+              </span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400">{currentSubject.badge}</span>
             </div>
-            <h2 className="text-xl sm:text-2xl font-black">{currentSubject.title}</h2>
-            <p className="text-xs sm:text-sm text-white/90 font-medium font-sans">{currentSubject.englishTitle}</p>
-            <p className="text-xs leading-6 text-white/95 pt-1">{currentSubject.whyImportantInExam}</p>
+            <h2 className="text-lg font-extrabold leading-8 text-slate-900 dark:text-white">
+              {currentSubject.title}
+            </h2>
+            <p className="max-w-2xl text-xs leading-6 text-slate-600 dark:text-slate-300">
+              {currentSubject.whyImportantInExam}
+            </p>
           </div>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            <button
-              type="button"
-              onClick={() => onStartCoursePractice(currentSubject.id, allSubjectQuestions)}
-              className="px-4 py-3 rounded-2xl bg-white text-slate-900 hover:bg-slate-100 font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
-            >
-              <Play className="w-4 h-4 fill-current text-blue-600" />
-              <span>شروع آزمون اختصاصی این درس ({allSubjectQuestions.length} سؤال)</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => onStartCoursePractice(currentSubject.id, allSubjectQuestions)}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          >
+            <Play className="h-4 w-4" />
+            آزمون این درس ({allSubjectQuestions.length.toLocaleString('fa-IR')} سؤال)
+          </button>
         </div>
 
-        {/* اطلاعات آماری سریع */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-white/20 text-xs">
-          <div className="p-2.5 rounded-xl bg-black/15 backdrop-blur-xs space-y-0.5">
-            <div className="text-[10px] text-white/70">مرجع اصلی کنکور:</div>
-            <div className="font-bold truncate text-[11px]">{currentSubject.primaryAuthor}</div>
+        <div className="mt-3 grid grid-cols-2 gap-2 border-t border-slate-200/70 pt-3 text-xs dark:border-slate-800 sm:grid-cols-3">
+          <div className="rounded-lg bg-slate-50 px-2.5 py-2 dark:bg-slate-800/50">
+            <div className="text-[10px] text-slate-500 dark:text-slate-400">مرجع اصلی</div>
+            <div className="truncate text-[11px] font-bold text-slate-800 dark:text-slate-100">
+              {currentSubject.primaryAuthor}
+            </div>
           </div>
-          <div className="p-2.5 rounded-xl bg-black/15 backdrop-blur-xs space-y-0.5">
-            <div className="text-[10px] text-white/70">ضریب در کارشناسی ارشد:</div>
-            <div className="font-bold text-[11px]">{currentSubject.coefficientMaster}</div>
+          <div className="rounded-lg bg-slate-50 px-2.5 py-2 dark:bg-slate-800/50">
+            <div className="text-[10px] text-slate-500 dark:text-slate-400">ضریب ارشد</div>
+            <div className="truncate text-[11px] font-bold text-slate-800 dark:text-slate-100">
+              {currentSubject.coefficientMaster}
+            </div>
           </div>
-          <div className="p-2.5 rounded-xl bg-black/15 backdrop-blur-xs space-y-0.5">
-            <div className="text-[10px] text-white/70">ضریب در دکتری تخصصی:</div>
-            <div className="font-bold text-[11px]">{currentSubject.coefficientDoctorate}</div>
-          </div>
-          <div className="p-2.5 rounded-xl bg-black/15 backdrop-blur-xs space-y-0.5">
-            <div className="text-[10px] text-white/70">بانک تست موجود:</div>
-            <div className="font-bold text-[11px]">{allSubjectQuestions.length} تست شناسنامه‌دار</div>
+          <div className="col-span-2 rounded-lg bg-slate-50 px-2.5 py-2 dark:bg-slate-800/50 sm:col-span-1">
+            <div className="text-[10px] text-slate-500 dark:text-slate-400">بانک تست</div>
+            <div className="text-[11px] font-bold text-slate-800 dark:text-slate-100">
+              {allSubjectQuestions.length.toLocaleString('fa-IR')} تست شناسنامه‌دار
+            </div>
           </div>
         </div>
       </div>
@@ -296,99 +320,67 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
                 </div>
                 <div className="px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>پوشش کامل سرفصل‌های ارشد و دکتری</span>
+                  <span>فصل‌های پرتکرار + کارت مطالعه</span>
                 </div>
               </div>
 
               {/* خلاصه فصول کتاب */}
               <div className="space-y-3">
-                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4 text-blue-600" />
-                  <span>فهرست فصول سوال‌خیز و پرتکرار این کتاب مرجع:</span>
-                </h4>
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200">
+                    <BookOpen className="h-4 w-4 text-[color:var(--subject-text)]" />
+                    <span>هر فصل یک کارت مطالعه دارد</span>
+                  </h4>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                    {activeBookChapters.length.toLocaleString('fa-IR')} فصل
+                  </span>
+                </div>
+                <p className="text-[11px] leading-6 text-slate-500 dark:text-slate-400">
+                  روی هر فصل بزن تا نکته‌ها، آموزش، دام‌ها و تست‌های همان فصل را کارت‌به‌کارت مرور کنی.
+                </p>
 
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-1 gap-2.5">
                   {activeBookChapters.map((ch) => {
-                    const isOpen = openBookChapterId === ch.id;
                     const isFrequent = ch.examCount >= 2;
+                    const questionCount = chapterQuestionsById.get(ch.id)?.length ?? 0;
                     return (
-                      <div
+                      <button
                         key={ch.id}
-                        className={`rounded-2xl border transition-all ${
-                          isFrequent
-                            ? 'bg-amber-500/5 dark:bg-amber-500/10 border-amber-500/30'
-                            : 'bg-slate-50 dark:bg-slate-800/40 border-slate-200/80 dark:border-slate-800'
-                        }`}
+                        type="button"
+                        data-subject={selectedSubjectId}
+                        onClick={() => setStudyChapterId(ch.id)}
+                        className="group w-full cursor-pointer rounded-xl border border-slate-200/80 border-s-[3px] border-s-[color:var(--subject-line)] bg-white p-3.5 text-right transition-colors hover:bg-[var(--subject-soft)] dark:border-slate-800 dark:bg-slate-900 dark:border-s-[color:var(--subject-line)] dark:hover:bg-[var(--subject-soft)]"
                       >
-                        <button
-                          type="button"
-                          onClick={() => setOpenBookChapterId(isOpen ? null : ch.id)}
-                          className="w-full p-4 flex items-center justify-between gap-3 text-right cursor-pointer"
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <span className="w-7 h-7 rounded-xl bg-blue-600/10 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center justify-center shrink-0">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex min-w-0 items-start gap-2.5">
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--subject-soft)] text-xs font-bold text-[color:var(--subject-text)]">
                               {ch.number}
                             </span>
-                            <div>
-                              <div className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white">
                                 <span>{ch.title}</span>
+                                <ChapterContentBadge chapter={ch} />
                                 {isFrequent && (
-                                  <span className="px-2 py-0.5 rounded-lg bg-amber-500/15 text-amber-800 dark:text-amber-300 text-[10px] font-bold flex items-center gap-1">
+                                  <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-300">
                                     <Flame className="w-3 h-3 text-amber-600 fill-current" />
-                                    <span>{ch.examCount} بار تکرار در کنکور</span>
+                                    <span>{ch.examCount.toLocaleString('fa-IR')} بار</span>
                                   </span>
                                 )}
                               </div>
-                              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                                شامل {ch.points.length} نکته کلیدی آموزشی
+                              <div className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                                {ch.points.length.toLocaleString('fa-IR')} نکته ·{' '}
+                                {questionCount > 0
+                                  ? `${questionCount.toLocaleString('fa-IR')} تست برای مرور`
+                                  : 'بدون تست ثبت‌شده'}
                               </div>
                             </div>
                           </div>
-                          <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                        </button>
-
-                        {isOpen && (
-                          <div className="px-4 pb-4 pt-2 border-t border-slate-200/60 dark:border-slate-800/60 space-y-3 text-xs">
-                            {/* هایلایت طلایی برای فصل‌های پرتکرار */}
-                            {isFrequent && (
-                              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/25 space-y-1">
-                                <div className="font-bold text-amber-800 dark:text-amber-300 flex items-center gap-1.5">
-                                  <Flame className="w-3.5 h-3.5 text-amber-600 fill-current" />
-                                  <span>بخش طلایی و پرتکرار کنکورهای ۱۵ سال اخیر</span>
-                                </div>
-                                <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-5">
-                                  طراحان کنکور ارشد و دکتری به طور مستمر از مفاهیم این فصل تست طرح کرده‌اند. تسلط بر مفاهیم تفکیکی و دام‌های تستی این بخش اولویت نخست است.
-                                </p>
-                              </div>
-                            )}
-
-                            {/* نکات آموزشی */}
-                            <ul className="space-y-1.5 text-slate-700 dark:text-slate-300 leading-6">
-                              {ch.points.map((pt, i) => (
-                                <li key={i} className="flex items-start gap-2">
-                                  <span className="text-blue-500 font-bold mt-0.5">•</span>
-                                  <RichText text={pt} />
-                                </li>
-                              ))}
-                            </ul>
-
-                            {/* فرمول‌ها */}
-                            {ch.formulas && ch.formulas.length > 0 && (
-                              <div className="p-3 rounded-xl bg-blue-500/5 dark:bg-blue-500/10 border border-blue-500/20 space-y-1.5">
-                                <div className="font-bold text-blue-800 dark:text-blue-300 text-[11px]">فرمول‌ها و مدل‌های کلیدی این فصل:</div>
-                                {ch.formulas.map((f, i) => (
-                                  <div key={i} className="text-xs text-slate-800 dark:text-slate-200">
-                                    <MathText text={f} />
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-
-                            {/* نمودار مفهومی وکتوری سبک */}
-                            <TopicDiagramVisualizer nodeId={ch.nodes[0] || ''} topic={`${ch.title} ${ch.points.join(' ')}`} />
+                          <div className="flex shrink-0 items-center gap-1 text-[11px] font-bold text-[color:var(--subject-text)]">
+                            <span>شروع کارت‌ها</span>
+                            <ChevronLeft className="h-4 w-4 transition-transform group-hover:-translate-x-0.5 motion-reduce:group-hover:translate-x-0" />
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      </button>
                     );
                   })}
                 </div>
@@ -592,10 +584,16 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
                           className={`px-2 py-0.5 rounded-lg text-[11px] font-bold ${
                             isPhd
                               ? 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border border-purple-500/30'
-                              : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
+                              : isAuthoredQuestion(q)
+                                ? 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border border-amber-500/30'
+                                : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
                           }`}
                         >
-                          {isPhd ? 'کنکور دکتری تخصصی' : 'کنکور کارشناسی ارشد'} ({q.examYear})
+                          {isAuthoredQuestion(q)
+                            ? `تست تألیفی فصل (${q.examYear})`
+                            : isPhd
+                              ? `کنکور دکتری تخصصی (${q.examYear})`
+                              : `کنکور کارشناسی ارشد (${q.examYear})`}
                         </span>
                         <span className="text-slate-500 dark:text-slate-400 text-[11px]">
                           <strong>منبع طرح سؤال:</strong> {q.designedFromTextbook || q.sourceReference}
@@ -715,6 +713,20 @@ export const SubjectDedicatedHubView: React.FC<SubjectDedicatedHubViewProps> = (
             )}
           </div>
         </div>
+      )}
+
+      {studyChapter && (
+        <ChapterCardStudy
+          chapter={studyChapter}
+          subjectId={selectedSubjectId}
+          subjectTitle={currentSubject.shortTitle}
+          questions={chapterQuestionsById.get(studyChapter.id) ?? []}
+          onClose={() => setStudyChapterId(null)}
+          onOpenQuestions={() => {
+            setStudyChapterId(null);
+            setActiveSubTab('questions');
+          }}
+        />
       )}
     </div>
   );

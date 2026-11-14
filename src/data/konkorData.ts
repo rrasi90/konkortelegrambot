@@ -6,6 +6,7 @@
 
 import { YEARLY_KONKOR_QUESTIONS } from './yearlyKonkorExams';
 import { PHD_EXPANSION_NODES, PHD_EXPANSION_QUESTIONS } from './phdExpansionContent';
+import { CHAPTER_AUTHORED_QUESTIONS } from './chapterAuthoredQuestions';
 
 export type TrackId = 'common' | 'business' | 'industrial' | 'technology' | 'strategy';
 export type DependencyRelation = 'prerequisite' | 'cross_course';
@@ -2869,6 +2870,8 @@ export const INITIAL_QUESTION_BANK: QuestionItem[] = [
   ...YEARLY_KONKOR_QUESTIONS,
   // ۳۳. گسترش محتوای دکتری: دروس غایب بسته‌های رسمی (مدیریت دولتی، سیاست‌گذاری، MIS/مدیریت دانش، مالی، روش تحقیق، HR، زبان، آمار)
   ...PHD_EXPANSION_QUESTIONS,
+  // ۳۴. تست‌های تألیفی فصل‌ها («هیچ فصل بدون سؤال») — کلید پاسخ فقط در رجیستری سمت سرور
+  ...CHAPTER_AUTHORED_QUESTIONS,
 ];
 
 /**

@@ -20,8 +20,9 @@ describe('ممیزی درس ۱ — مبانی سازمان و مدیریت (cour
     for (const n of mbNodes) expect(n.course).toContain('مبانی سازمان');
   });
 
-  it('هر ۳۱ سؤال مرتبط با درس، کلید پاسخ سمت سرور دارند (R-036 پوشش کامل)', () => {
-    expect(courseQuestions.length).toBe(33);
+  it('هر ۵۴ سؤال مرتبط با درس، کلید پاسخ سمت سرور دارند (R-036 پوشش کامل)', () => {
+    // ۳۳ سؤال اصلی + ۲۱ تست تألیفی فصل مبانی سازمان (q.auth.th.*)
+    expect(courseQuestions.length).toBe(57);
     const missing = courseQuestions.filter((q) => !keyMap.has(q.id));
     expect(missing.map((q) => q.id)).toEqual([]);
   });

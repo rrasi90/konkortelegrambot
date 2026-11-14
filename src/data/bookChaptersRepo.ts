@@ -2,6 +2,7 @@ import { REFERENCE_BOOKS_DATABASE, ReferenceBookItem } from './referenceBooksRep
 import { BUSINESS_BOOK_CHAPTERS } from './bookChaptersBusiness';
 import { INDUSTRIAL_TECH_BOOK_CHAPTERS } from './bookChaptersIndustrialTech';
 import type { BookChapter } from './bookChaptersTypes';
+import { CHAPTER_CONTENT_KIND_LABEL, getChapterContentKind } from './bookChaptersTypes';
 import type { QuestionItem } from './konkorData';
 
 export type { BookChapter };
@@ -134,6 +135,7 @@ export const buildFullBookMarkdown = (
 
   chapters.forEach((ch, i) => {
     lines.push(`\n---\n\n## ${i + 1}. ${ch.title}`);
+    lines.push(`> نوع محتوا: ${CHAPTER_CONTENT_KIND_LABEL[getChapterContentKind(ch)]}`);
     lines.push(`> تکرار در ادوار: ${ch.examCount} سؤال`);
     ch.points.forEach((p) => lines.push(`- ${p}`));
     if (ch.formulas?.length) {

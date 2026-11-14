@@ -14,6 +14,7 @@ import {
 import { REFERENCE_BOOKS_DATABASE } from '../data/referenceBooksRepo';
 import { getBookChapters } from '../data/bookChaptersRepo';
 import { FLASHCARDS } from '../data/flashcards';
+import { ChapterLearningUnit } from './ChapterLearningUnit';
 
 type Level = 'arshad' | 'phd';
 
@@ -164,6 +165,9 @@ export const BookFlipStudyView: React.FC = () => {
         <div className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-200">
           <GraduationCap className="w-5 h-5 text-blue-500" /> مطالعهٔ فصل‌به‌فصل کتاب با فلش‌کارت
         </div>
+        <p className="text-[11px] leading-6 text-slate-500 dark:text-slate-400">
+          این جلسه از نکات و فلش‌کارت‌های تألیفی ساخته می‌شود، نه متن کامل کتاب؛ برای متن اصلی به نسخهٔ چاپی مراجعه کنید.
+        </p>
         <p className="text-xs text-slate-500 dark:text-slate-400">مقطع هدف خود را انتخاب کنید:</p>
         {([
           { id: 'arshad' as Level, title: 'کارشناسی ارشد (کد ۱۱۴۲)', desc: 'همهٔ ۱۴ کتاب مرجع ارشد' },
@@ -263,6 +267,8 @@ export const BookFlipStudyView: React.FC = () => {
         <div className="font-bold text-slate-700 dark:text-slate-200">{chapter.title}</div>
         {isChapterDone && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
       </div>
+
+      <ChapterLearningUnit chapter={chapter} />
 
       {cards.length === 0 ? (
         <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-center text-sm text-slate-500">

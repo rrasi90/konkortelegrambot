@@ -9,9 +9,11 @@ import {
 
 describe('flashcard deck rescue', () => {
   it('keeps only usable text-only Anki cards', () => {
-    expect(ANKI_STUDY_CARDS).toHaveLength(430);
+    // از ۴۳۰ کارت متنی، ۳ کارت با صورت «نکته» فاقد پرسش قابل‌بازیابی بودند و قرنطینه شدند.
+    expect(ANKI_STUDY_CARDS).toHaveLength(427);
     expect(DECK_STATS.ankiRaw).toBe(873);
     expect(DECK_STATS.quarantinedImages).toBe(443);
+    expect(DECK_STATS.quarantinedIncomplete).toBe(3);
   });
 
   it('has no image cards, empty backs, or duplicate fronts', () => {

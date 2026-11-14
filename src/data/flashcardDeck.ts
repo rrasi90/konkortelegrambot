@@ -13,6 +13,7 @@
 import { FLASHCARDS, FLASHCARD_COURSES, type Flashcard } from './flashcards';
 import { ANKI_IMPORTED_FLASHCARDS, type AnkiFlashcardItem } from './flashcardsAnkiImport';
 import { normalizeCardText, stripAnkiHtml } from '../utils/cardText';
+import { FLASHCARD_REWRITES, REWRITTEN_CARD_COUNT } from './flashcardRewrites';
 
 export { normalizeCardText, stripAnkiHtml } from '../utils/cardText';
 
@@ -117,10 +118,14 @@ function toAuthoredCard(card: Flashcard): StudyCard {
 }
 
 function toAnkiCard(card: AnkiFlashcardItem): StudyCard | null {
-  if (/<img/i.test(card.back)) return null;
-  const front = stripAnkiHtml(card.front);
-  const back = stripAnkiHtml(card.back);
+  // کارت تصویری بدون فایل رسانه و کارت ناقص هرگز به جلسهٔ مرور نمی‌رسند.
+  if (/<img/i.test(card.front) || /<img/i.test(card.back)) return null;
+  const rewrite = FLASHCARD_REWRITES[card.id];
+  const front = stripAnkiHtml(rewrite?.front ?? card.front);
+  const back = stripAnkiHtml(rewrite?.back ?? card.back);
   if (!front || back.length < 10) return null;
+  // «نکته» و برچسب‌های بی‌صورت‌سؤال، کارت قابل‌بازیابی نیستند.
+  if (/^(نکته|نکته\s*[۰-۹0-9]+|تست|سؤال)$/.test(front)) return null;
   const courseId = ANKI_COURSE[card.subjectId] ?? 'bus';
   return {
     id: `anki.${card.id}`,
@@ -129,11 +134,11 @@ function toAnkiCard(card: AnkiFlashcardItem): StudyCard | null {
     front,
     back,
     source: `ورودی انکی: ${card.sourceDeck}`,
-    layer: 'L1',
-    type: 'term',
+    layer: rewrite?.layer ?? 'L1',
+    type: rewrite ? 'question' : 'term',
     difficulty: 'basic',
     origin: 'anki',
-    tags: card.tags,
+    tags: rewrite ? [...card.tags, 'rewritten'] : card.tags,
   };
 }
 
@@ -197,4 +202,12 @@ export const DECK_STATS = {
   ankiUsable: ANKI_STUDY_CARDS.length,
   ankiRaw: ANKI_IMPORTED_FLASHCARDS.length,
   quarantinedImages: ANKI_IMPORTED_FLASHCARDS.filter((card) => /<img/i.test(card.front) || /<img/i.test(card.back)).length,
+  quarantinedIncomplete: ANKI_IMPORTED_FLASHCARDS.filter((card) =>
+    !/<img/i.test(card.front) &&
+    !/<img/i.test(card.back) &&
+    (!stripAnkiHtml(card.front) ||
+      stripAnkiHtml(card.back).length < 10 ||
+      /^(نکته|نکته\s*[۰-۹0-9]+|تست|سؤال)$/.test(stripAnkiHtml(card.front)))
+  ).length,
+  rewritten: REWRITTEN_CARD_COUNT,
 } as const;

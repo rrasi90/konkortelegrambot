@@ -301,6 +301,144 @@
   margin-inline: auto;
 }
 
+/* ==========================================================================
+   رنگ هویتی درس — فقط در بستر محتوای همان درس
+   ========================================================================== */
+
+[data-subject] {
+  --subject-on-solid: #fffdf8;
+}
+
+[data-subject="islamic"] {
+  --subject-text: #6366f1;
+  --subject-line: #6366f1;
+  --subject-soft: rgba(99, 102, 241, 0.1);
+  --subject-solid: #6366f1;
+}
+
+[data-subject="management_theories"] {
+  --subject-text: #3b82f6;
+  --subject-line: #3b82f6;
+  --subject-soft: rgba(59, 130, 246, 0.1);
+  --subject-solid: #3b82f6;
+}
+
+[data-subject="marketing"] {
+  --subject-text: #db2777;
+  --subject-line: #ec4899;
+  --subject-soft: rgba(236, 72, 153, 0.1);
+  --subject-solid: #db2777;
+}
+
+[data-subject="economics"] {
+  --subject-text: #0e7490;
+  --subject-line: #06b6d4;
+  --subject-soft: rgba(6, 182, 212, 0.1);
+  --subject-solid: #0e7490;
+}
+
+[data-subject="math_stats"] {
+  --subject-text: #7c3aed;
+  --subject-line: #8b5cf6;
+  --subject-soft: rgba(139, 92, 246, 0.1);
+  --subject-solid: #7c3aed;
+}
+
+[data-subject="operations_research"] {
+  --subject-text: #c2410c;
+  --subject-line: #f97316;
+  --subject-soft: rgba(249, 115, 22, 0.1);
+  --subject-solid: #c2410c;
+}
+
+[data-subject="production"] {
+  --subject-text: #8a5a32;
+  --subject-line: #c08457;
+  --subject-soft: rgba(192, 132, 87, 0.12);
+  --subject-solid: #8a5a32;
+}
+
+[data-subject="english"] {
+  --subject-text: #a21caf;
+  --subject-line: #d946ef;
+  --subject-soft: rgba(217, 70, 239, 0.1);
+  --subject-solid: #a21caf;
+}
+
+[data-subject="unknown"] {
+  --subject-text: #5d5548;
+  --subject-line: #5d5548;
+  --subject-soft: rgba(93, 85, 72, 0.1);
+  --subject-solid: #5d5548;
+}
+
+.dark [data-subject] {
+  --subject-on-solid: #07110f;
+}
+
+.dark [data-subject="islamic"] {
+  --subject-text: #a5b4fc;
+  --subject-line: #6366f1;
+  --subject-soft: rgba(99, 102, 241, 0.14);
+  --subject-solid: #a5b4fc;
+}
+
+.dark [data-subject="management_theories"] {
+  --subject-text: #93c5fd;
+  --subject-line: #3b82f6;
+  --subject-soft: rgba(59, 130, 246, 0.14);
+  --subject-solid: #93c5fd;
+}
+
+.dark [data-subject="marketing"] {
+  --subject-text: #f9a8d4;
+  --subject-line: #ec4899;
+  --subject-soft: rgba(236, 72, 153, 0.14);
+  --subject-solid: #f9a8d4;
+}
+
+.dark [data-subject="economics"] {
+  --subject-text: #67e8f9;
+  --subject-line: #06b6d4;
+  --subject-soft: rgba(6, 182, 212, 0.14);
+  --subject-solid: #67e8f9;
+}
+
+.dark [data-subject="math_stats"] {
+  --subject-text: #c4b5fd;
+  --subject-line: #8b5cf6;
+  --subject-soft: rgba(139, 92, 246, 0.14);
+  --subject-solid: #c4b5fd;
+}
+
+.dark [data-subject="operations_research"] {
+  --subject-text: #fdba74;
+  --subject-line: #f97316;
+  --subject-soft: rgba(249, 115, 22, 0.14);
+  --subject-solid: #fdba74;
+}
+
+.dark [data-subject="production"] {
+  --subject-text: #e7c9a9;
+  --subject-line: #c08457;
+  --subject-soft: rgba(192, 132, 87, 0.14);
+  --subject-solid: #e7c9a9;
+}
+
+.dark [data-subject="english"] {
+  --subject-text: #f0abfc;
+  --subject-line: #d946ef;
+  --subject-soft: rgba(217, 70, 239, 0.14);
+  --subject-solid: #f0abfc;
+}
+
+.dark [data-subject="unknown"] {
+  --subject-text: #a8bbb4;
+  --subject-line: #5d5548;
+  --subject-soft: rgba(168, 187, 180, 0.12);
+  --subject-solid: #a8bbb4;
+}
+
 .lesson-prose {
   color: var(--ink);
   font-size: 0.9375rem;

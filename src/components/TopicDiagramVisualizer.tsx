@@ -201,7 +201,15 @@ export const TopicDiagramVisualizer: React.FC<TopicDiagramVisualizerProps> = ({
   }
 
   // ۵. توزیع نرمال آمار و احتمال (Gaussian Normal Distribution)
-  if (norm.includes('normal') || norm.includes('توزیع') || norm.includes('stats')) {
+  // دام محتوایی: «کانال توزیع» و «توزیع فیزیکی» بازاریابی‌اند، نه آمار؛
+  // این نمودار فقط برای موضوع‌های آماری رندر می‌شود.
+  const isStatsNormal =
+    norm.includes('normal') ||
+    norm.includes('stats') ||
+    norm.includes('نرمال') ||
+    norm.includes('احتمال') ||
+    (norm.includes('توزیع') && !norm.includes('کانال') && !norm.includes('فیزیکی'));
+  if (isStatsNormal) {
     return (
       <div className={`p-4 rounded-2xl glass-subcard border border-teal-500/20 space-y-2 ${className}`}>
         <div className="flex items-center justify-between text-xs font-bold text-slate-800 dark:text-slate-200">

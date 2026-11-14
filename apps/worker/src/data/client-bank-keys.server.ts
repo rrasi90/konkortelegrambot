@@ -261,6 +261,312 @@ export const CLIENT_BANK_ANSWER_KEYS: readonly ClientBankAnswerKey[] = [
   { id: "stats.anova#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "درجه آزادی بین‌گروهی $k - 1 = 4 - 1 = 3$ و درجه آزادی درون‌گروهی $n - k = 24 - 4 = 20$ است.", trapNote: "" },
   { id: "stats.regression#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "طبق رابطه $DW \\approx 2(1 - \\rho)$، با قرار دادن $\\rho = 0.8$ مقدار $DW \\approx 2(0.2) = 0.4$ به دست می‌آید.", trapNote: "" },
   { id: "stats.scales#conceptCheck", bank: "konkorData", correctOption: 0, explanation: "نسبت گرفتن و تقسیم بر میانگین نیازمند صفر مطلق است که تنها در مقیاس نسبتی وجود دارد.", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * تست‌های تألیفی فصل‌ها (q.auth.*) — «هیچ فصل بدون سؤال».
+   * این مدخل‌ها به‌صورت دستی به رجیستری اضافه شده‌اند؛ کلید آن‌ها هرگز در
+   * بانک کلاینت (src/data/chapterAuthoredQuestions.ts) نبوده است، پس
+   * بازتولید با generate-answer-key-registry.mts این مدخل‌ها را از دست
+   * نمی‌دهد ولی این بلوک را مرتب نمی‌کند. جایگاه گزینهٔ صحیح با جای‌گردی
+   * قطعی بر پایهٔ شناسه (scripts/rotate-authored-options.mts) پراکنده شده است.
+   * ------------------------------------------------------------------ */
+
+  // بازاریابی — فصل ۱
+  { id: "q.auth.kotler.1.1", bank: "konkorData", correctOption: 2, explanation: "تقاضای نامنظم (فصلی) با بازاریابی هم‌زمان‌سازی یا تعادل‌بخشی زمانی پاسخ می‌گیرد؛ تثبیتی برای تقاضای کامل، تبدیلی برای تقاضای منفی و ضدّی برای تقاضای ناسالم است.", trapNote: "جفت‌کردن استراتژی با حالت تقاضای اشتباه، دام پرتکرار کنکور است." },
+  { id: "q.auth.kotler.1.2", bank: "konkorData", correctOption: 3, explanation: "بازاریابی کل‌نگر چهار جزء دارد: رابطه‌مند، یکپارچه، درونی و عملکردی/اجتماعی. STP و 4P ساختارهای دیگر بازاریابی‌اند، نه اجزای این مفهوم.", trapNote: "" },
+  { id: "q.auth.kotler.1.3", bank: "konkorData", correctOption: 0, explanation: "لویت «نزدیک‌بینی بازاریابی» را در فلسفهٔ تولید تعریف می‌کند: عشق به محصول، نیاز واقعی بازار را پنهان می‌کند.", trapNote: "فلسفهٔ محصول هم خطر مشابه دارد اما خطای کلاسیک لویت به فلسفهٔ تولید گره خورده است." },
+  // بازاریابی — فصل ۸
+  { id: "q.auth.kotler.8.1", bank: "konkorData", correctOption: 1, explanation: "کانال سطح صفر یعنی فروش مستقیم تولیدکننده به مصرف‌کنندهٔ نهایی بدون هیچ واسطه؛ خرده‌فروش در سطح ۱ و خرده‌فروش + عمده‌فروش در سطح ۲ است.", trapNote: "شمارش سطح کانال بر پایهٔ تعداد واسطه‌هاست، نه تعداد فروش‌ها." },
+  { id: "q.auth.kotler.8.2", bank: "konkorData", correctOption: 2, explanation: "کارکردهای کانال توزیع عبارت‌اند از: مذاکره، توزیع فیزیکی، تأمین مالی و پذیرش ریسک. گزینه‌های دیگر فهرست STP، ابزارهای ترویج و فعالیت‌های تولیدی‌اند.", trapNote: "" },
+  { id: "q.auth.kotler.8.3", bank: "konkorData", correctOption: 3, explanation: "تمرکز ترویج بر مصرف‌کنندهٔ نهایی برای کشف سفارش از واسطه‌ها، استراتژی کششی است؛ فشاری یعنی فشار بر واسطه‌ها برای انبار و پخش محصول.", trapNote: "جهت جریان ترویج را با جهت جریان محصول اشتباه نگیرید." },
+  // بازاریابی — فصل ۹
+  { id: "q.auth.kotler.9.1", bank: "konkorData", correctOption: 2, explanation: "تبلیغات برای آگاهی‌سازی گسترده و هم‌زمان مناسب است اما کنترل کم بر پیام دارد؛ فروش شخصی کنترل بالا با گسترهٔ کم دارد.", trapNote: "" },
+  { id: "q.auth.kotler.9.2", bank: "konkorData", correctOption: 3, explanation: "روش هدف و وظیفه: تعریف هدف ترویجی ← تعیین وظایف لازم ← برآورد هزینهٔ وظایف. درصد فروش، رقابتی و مازاد روش‌های دیگر بودجه‌بندی‌اند.", trapNote: "" },
+  { id: "q.auth.kotler.9.3", bank: "konkorData", correctOption: 0, explanation: "AIDA ترتیب توجه (Attention)، علاقه (Interest)، تمایل (Desire) و اقدام (Action) است.", trapNote: "" },
+  // بازاریابی — فصل ۱۰
+  { id: "q.auth.kotler.10.1", bank: "konkorData", correctOption: 2, explanation: "تفکیک‌ناپذیری یعنی تولید و مصرف خدمت هم‌زمان رخ می‌دهند. تغییرپذیری = نوسان کیفیت، فناپذیری = نبود انبارش، ناملموسی = دیده‌نشدن خدمت.", trapNote: "چهار ویژگی خدمات را با تعریف یک‌به‌یک وصل کنید، نه با حافظهٔ عمومی." },
+  { id: "q.auth.kotler.10.2", bank: "konkorData", correctOption: 3, explanation: "شکاف ۱ فاصلهٔ میان انتظار واقعی مشتری و درک مدیریت از آن انتظار است؛ شکاف ۵ فاصلهٔ میان خدمت ادراک‌شده و مورد انتظار مشتری است.", trapNote: "" },
+  { id: "q.auth.kotler.10.3", bank: "konkorData", correctOption: 0, explanation: "CLV مجموع حاشیهٔ سود یک مشتری در کل طول رابطه منهای هزینهٔ جذب و نگهداشت اوست؛ فرمول کتاب: $CLV \\approx$ (حاشیه × عمر) − هزینهٔ جذب.", trapNote: "" },
+  // زبان — فصل ۲
+  { id: "q.auth.eng.2.1", bank: "konkorData", correctOption: 0, explanation: "ترکیب ثابت درست «meet a deadline» است؛ «catch»، «win» و «succeed» با deadline هم‌نشینی ندارند.", trapNote: "گزینه‌های هم‌معنا با حرف اضافه یا فعل متفاوت، شایع‌ترین دام زبان تخصصی است." },
+  { id: "q.auth.eng.2.2", bank: "konkorData", correctOption: 1, explanation: "«phase out» یعنی حذف تدریجی؛ «roll out» گسترش، «scale up» مقیاس‌دادن و «break even» سربه‌سر شدن است.", trapNote: "" },
+  { id: "q.auth.eng.2.3", bank: "konkorData", correctOption: 2, explanation: "«bear the cost» به معنای متقبل شدن و بر عهده گرفتن هزینه است، نه معنای لفظی حمل.", trapNote: "" },
+  // زبان — فصل ۳
+  { id: "q.auth.eng.3.1", bank: "konkorData", correctOption: 1, explanation: "قید «since» با حال کامل می‌آید: «has expanded». حال استمراری با currently/at present و گذشتهٔ کامل با by the time هم‌نشین است.", trapNote: "انتخاب زمان از قیدهای کلیدی را با حفظ‌کردن شکل فعل اشتباه نگیرید." },
+  { id: "q.auth.eng.3.2", bank: "konkorData", correctOption: 2, explanation: "«the number of» مفرد می‌گیرد و «a number of» جمع؛ همچنین در «neither … nor» فعل با نزدیک‌ترین فاعل تطبیق می‌یابد، پس «the CEO was informed» درست است.", trapNote: "" },
+  { id: "q.auth.eng.3.3", bank: "konkorData", correctOption: 3, explanation: "در ساختار «neither … nor» فعل مطابق فاعل نزدیک‌تر به خود (دومین فاعل) صرف می‌شود.", trapNote: "" },
+  // زبان — فصل ۴
+  { id: "q.auth.eng.4.1", bank: "konkorData", correctOption: 2, explanation: "شروع جمله با قید منفی «Rarely» وارونگی را الزامی می‌کند: کمکی پیش از فاعل، «has the market seen». پس از وارونگی، فعل اصلی به شکل پایه برمی‌گردد.", trapNote: "دوگانه‌کردن وارونگی و تغییر زمان فعل اصلی، دام رایج است." },
+  { id: "q.auth.eng.4.2", bank: "konkorData", correctOption: 3, explanation: "ساختار ثابت «No sooner … than» است؛ «when» و «that» جای «than» را نمی‌گیرند.", trapNote: "" },
+  { id: "q.auth.eng.4.3", bank: "konkorData", correctOption: 0, explanation: "شکل درست: «Not only did they miss the deadline, but they also lost the client.» — کمکی «did» پیش از فاعل و فعل اصلی در شکل پایه می‌آید.", trapNote: "" },
+  // زبان — فصل ۶
+  { id: "q.auth.eng.6.1", bank: "konkorData", correctOption: 0, explanation: "در انگلیسی آکادمیک «data» جمع «datum» است و فعل جمع می‌گیرد: «The data were collected».", trapNote: "در انگلیسی عمومی حالت مفرد رایج است اما متن آکادمیک کنکور جمع را می‌پذیرد." },
+  { id: "q.auth.eng.6.2", bank: "konkorData", correctOption: 1, explanation: "در نقل قول غیرمستقیم زمان فعل یک پله به عقب می‌رود و قید زمان هم تغییر می‌کند: «she was busy that day».", trapNote: "جابه‌جایی هم‌زمان فعل و قید زمان را فراموش نکنید." },
+  { id: "q.auth.eng.6.3", bank: "konkorData", correctOption: 2, explanation: "افعال گزارشی مانند claim، argue و suggest ساختار «that-clause» می‌پذیرند: «The authors claim that…».", trapNote: "" },
+  // زبان — فصل ۷
+  { id: "q.auth.eng.7.1", bank: "konkorData", correctOption: 1, explanation: "گام اول کلوز، خواندن کل پاراگراف برای تشخیص موضوع است؛ بعد نوع کلمهٔ هر جای خالی و سپس حذف گزینه.", trapNote: "پر کردن جای خالی‌ها پیش از خواندن متن، خطای ترتیب است." },
+  { id: "q.auth.eng.7.2", bank: "konkorData", correctOption: 2, explanation: "نوع کلمهٔ لازم از جایگاه دستوری جای خالی در جمله تعیین می‌شود: اسم، فعل، صفت یا حرف اضافه.", trapNote: "" },
+  { id: "q.auth.eng.7.3", bank: "konkorData", correctOption: 3, explanation: "شایع‌ترین دام، گزینه‌های هم‌معنا با حرف اضافهٔ متفاوت است؛ هم‌نشینی واژه‌ها را بسنجید.", trapNote: "" },
+  // زبان — فصل ۹
+  { id: "q.auth.eng.9.1", bank: "konkorData", correctOption: 3, explanation: "عنوان خوب کل متن را می‌پوشاند؛ عنوانی که فقط یک جزئیات را بازتاب دهد حذف می‌شود.", trapNote: "گزینهٔ «فقط یک جزئیات» در سؤال عنوان، دام ثابت است." },
+  { id: "q.auth.eng.9.2", bank: "konkorData", correctOption: 0, explanation: "ایدهٔ اصلی معمولاً در جملهٔ اول یا آخر پاراگراف قرار دارد.", trapNote: "" },
+  { id: "q.auth.eng.9.3", bank: "konkorData", correctOption: 1, explanation: "قیدهای ارزشی مانند «unfortunately» نگرش منفی نویسنده را نشان می‌دهند؛ «surprisingly» تعجب و «arguably» تردید می‌رسانند.", trapNote: "" },
+  // تئوری‌های مدیریت — فصل ۱
+  { id: "q.auth.th.1.1", bank: "konkorData", correctOption: 1, explanation: "بوروکراسی وبر بر اقتدار قانونی-عقلایی بنا شده است؛ اقتدار سنتی بر سنت و کاریزماتیک بر ویژگی‌های شخصی رهبر استوار است.", trapNote: "سه نوع اقتدار وبر را با ویژگی‌های بوروکراسی قاطی نکنید." },
+  { id: "q.auth.th.1.2", bank: "konkorData", correctOption: 2, explanation: "ترتیب تاریخی: کلاسیک ← نئوکلاسیک (هاثورن و روابط انسانی) ← کمی ← سیستمی ← اقتضایی.", trapNote: "جایگاه مکتب کمی میان نئوکلاسیک و سیستمی، دام پرتکرار است." },
+  { id: "q.auth.th.1.3", bank: "konkorData", correctOption: 3, explanation: "ویژگی‌های بوروکراسی وبر: تقسیم کار، سلسله‌مراتب، قواعد مکتوب و غیرشخصی بودن.", trapNote: "" },
+  // تئوری‌های مدیریت — فصل ۳
+  { id: "q.auth.th.3.1", bank: "konkorData", correctOption: 3, explanation: "سایمون عقلانیت انسان را محدود می‌داند و مدیر به‌جای بهینه‌یابی، گزینهٔ رضایت‌بخش را انتخاب می‌کند؛ این پایهٔ مدل رفتاری (اداری) است.", trapNote: "«رضایت‌بخشی» (satisficing) را با «بهینه‌یابی» مدل عقلایی اشتباه نگیرید." },
+  { id: "q.auth.th.3.2", bank: "konkorData", correctOption: 0, explanation: "MBO یعنی هدف‌گذاری مشترک مدیر و کارمند و سنجش عملکرد بر اساس همان اهداف؛ مدیریت بر پایهٔ استثنا و سناریو ابزارهای دیگر برنامه‌ریزی‌اند.", trapNote: "" },
+  { id: "q.auth.th.3.3", bank: "konkorData", correctOption: 1, explanation: "نخستین گام مدل عقلایی، شناخت و تعریف مسئله است؛ سپس معیارها، وزن‌دهی، تولید و انتخاب گزینه و اجرا.", trapNote: "" },
+  // تئوری‌های مدیریت — فصل ۴
+  { id: "q.auth.th.4.1", bank: "konkorData", correctOption: 0, explanation: "سه بُعد ساختار از دید رابینز: پیچیدگی، رسمیت و تمرکز. اندازه، فناوری و محیط عوامل اقتضایی‌اند، نه ابعاد ساختار.", trapNote: "" },
+  { id: "q.auth.th.4.2", bank: "konkorData", correctOption: 1, explanation: "در ادهوکراسی مینتزبرگ مکانیزم غالب هماهنگی متقابل است؛ نظارت مستقیم ساختار ساده و استانداردسازی کار ماشین‌بنیاد را می‌سازد.", trapNote: "مکانیزم غالب هر پیکربندی را با مکانیزم‌های حاشیه‌ای اشتباه نگیرید." },
+  { id: "q.auth.th.4.3", bank: "konkorData", correctOption: 2, explanation: "تفکیک افقی یعنی تقسیم کار در سطح وظایف و تخصص‌ها؛ عمودی یعنی تفکیک قدرت در سطوح سلسله‌مراتب و فضایی یعنی پراکندگی جغرافیایی.", trapNote: "" },
+  // تئوری‌های مدیریت — فصل ۶
+  { id: "q.auth.th.6.1", bank: "konkorData", correctOption: 2, explanation: "سه سطح شاین: مصنوعات (مشاهده‌پذیر)، ارزش‌های حمایت‌شده و فرض‌های بنیادین (ناخودآگاه).", trapNote: "" },
+  { id: "q.auth.th.6.2", bank: "konkorData", correctOption: 3, explanation: "فرض‌های بنیادین ناخودآگاه و تغییرناپذیرترین لایه‌اند؛ مصنوعات و ارزش‌های اعلام‌شده آسان‌تر تغییر می‌کنند.", trapNote: "سطح عمیق‌تر فرهنگ، دشوارتر برای تغییر است." },
+  { id: "q.auth.th.6.3", bank: "konkorData", correctOption: 0, explanation: "چارچوب ارزش‌های رقابتی چهار فرهنگ دارد: قبیله‌ای، ادهوکراسی، بازاری و سلسله‌مراتبی.", trapNote: "" },
+  // تئوری‌های مدیریت — فصل ۷
+  { id: "q.auth.th.7.1", bank: "konkorData", correctOption: 3, explanation: "حقوق و شرایط کاری عوامل بهداشتی‌اند: نارضایتی را می‌کاهند اما رضایت و انگیزهٔ واقعی نمی‌سازند؛ انگیزاننده‌ها پیشرفت، قدردانی و مسئولیت‌اند.", trapNote: "نکتهٔ کنکوری هرزبرگ: رضایت و نارضایتی دو پیوستار جدا هستند، نه دو سر یک پیوستار." },
+  { id: "q.auth.th.7.2", bank: "konkorData", correctOption: 0, explanation: "آدامز مقایسهٔ نسبت «داده/ستانده» فرد با نسبت دیگران را هستهٔ انگیزش می‌داند؛ بی‌برابری به کاهش یا افزایش تلاش می‌انجامد.", trapNote: "" },
+  { id: "q.auth.th.7.3", bank: "konkorData", correctOption: 1, explanation: "مؤلفه‌های وروم: انتظار (تلاش به عملکرد)، وسیله (عملکرد به پاداش) و ارزش (جذابیت پاداش).", trapNote: "" },
+  // تئوری‌های مدیریت — فصل ۸
+  { id: "q.auth.th.8.1", bank: "konkorData", correctOption: 0, explanation: "هرسی و بلانچارد سبک رهبری را بر پایهٔ بلوغ (آمادگی) پیرو تعیین می‌کنند: دستوری، مشورتی، مشارکتی و تفویضی.", trapNote: "" },
+  { id: "q.auth.th.8.2", bank: "konkorData", correctOption: 1, explanation: "رهبری تعاملی بر تبادل پاداش در برابر عملکرد تکیه دارد؛ تحول‌آفرین با چشم‌انداز و انگیزش فراتر از منافع فردی عمل می‌کند.", trapNote: "تفکیک بس و آوولیو بین دو سبک، سؤال پرتکرار است." },
+  { id: "q.auth.th.8.3", bank: "konkorData", correctOption: 2, explanation: "کنترل موقعیتی فیدلر از سه عنصر ساخته می‌شود: روابط رهبر-عضو، ساختار وظیفه و قدرت جایگاه.", trapNote: "" },
+  // تئوری‌های مدیریت — فصل ۹
+  { id: "q.auth.th.9.1", bank: "konkorData", correctOption: 1, explanation: "ترتیب تاکمن: تشکیل، طوفانی، هنجارسازی، اجرا و در پایان انحلال.", trapNote: "جای‌به‌جایی مراحل طوفانی و هنجارسازی دام رایج است." },
+  { id: "q.auth.th.9.2", bank: "konkorData", correctOption: 2, explanation: "همکاری راه‌حل برد-برد با تمرکز بر منافع هر دو طرف است؛ سازش راه‌حل میانه، رقابت برد-باخت و اجتناب باخت-باخت است.", trapNote: "" },
+  { id: "q.auth.th.9.3", bank: "konkorData", correctOption: 3, explanation: "شبکهٔ غیررسمی مکمل ارتباط رسمی و مسیر سریع انتقال اطلاعات است؛ کنترل کامل آن ممکن نیست و شایعه بخشی از طبیعت آن است.", trapNote: "" },
+  // اقتصاد — فصل ۱
+  { id: "q.auth.econ.1.1", bank: "konkorData", correctOption: 2, explanation: "درآمد مصرف‌کننده عامل تعیین‌کنندهٔ تقاضاست و منحنی را جابه‌جا می‌کند؛ تغییر قیمت خود کالا فقط حرکت روی منحنی است.", trapNote: "تفکیک «حرکت روی منحنی» و «جابه‌جایی منحنی» پرتکرارترین دام این فصل است." },
+  { id: "q.auth.econ.1.2", bank: "konkorData", correctOption: 3, explanation: "سقف قیمت زیر تعادل مقدار تقاضا را بالا و عرضه را پایین می‌برد: کمبود و صف.", trapNote: "سقف قیمت فقط زیر تعادل اثر می‌گذارد؛ کف قیمت فقط بالای تعادل." },
+  { id: "q.auth.econ.1.3", bank: "konkorData", correctOption: 0, explanation: "کف قیمت بالای تعادل عرضه را افزایش و تقاضا را کاهش می‌دهد: مازاد عرضه؛ نمونهٔ کلاسیک، حداقل دستمزد است.", trapNote: "" },
+  // اقتصاد — فصل ۶
+  { id: "q.auth.econ.6.1", bank: "konkorData", correctOption: 3, explanation: "در رقابت انحصاری منحنی تقاضای شیب‌دار بنگاه در سمت چپ حداقل میانگین هزینه با AC مماس می‌شود؛ همین فاصله ظرفیت مازاد می‌سازد.", trapNote: "" },
+  { id: "q.auth.econ.6.2", bank: "konkorData", correctOption: 0, explanation: "منحنی تقاضای شکسته یعنی رقبا با کاهش قیمت همراهی می‌کنند اما با افزایش قیمت نه؛ نتیجه، قیمت رقیب و سقف شدید درآمد از کاهش قیمت است.", trapNote: "جهت همراهی رقبا در دو نیمهٔ منحنی را معکوس نگفته باشید." },
+  { id: "q.auth.econ.6.3", bank: "konkorData", correctOption: 1, explanation: "تعادل نش یعنی هیچ بازیگری با انحراف یک‌طرفه از استراتژی خود بهبودی نمی‌یابد؛ برخلاف نتیجهٔ همکاری کامل، سود بازیگران می‌تواند صفر نباشد.", trapNote: "" },
+  // اقتصاد — فصل ۹
+  { id: "q.auth.econ.9.1", bank: "konkorData", correctOption: 2, explanation: "شوک منفی عرضه، AS را به چپ می‌برد: قیمت بالا و تولید پایین هم‌زمان، یعنی رکود تورمی.", trapNote: "شوک تقاضا و شوک عرضه پیامدهای معکوس بر قیمت و تولید دارند." },
+  { id: "q.auth.econ.9.2", bank: "konkorData", correctOption: 3, explanation: "فیلیپس بلندمدت عمودی در نرخ طبیعی بیکاری است؛ بنا بر انتظارات عقلایی، بده‌بستان تورم-بیکاری در بلندمدت از بین می‌رود.", trapNote: "" },
+  { id: "q.auth.econ.9.3", bank: "konkorData", correctOption: 0, explanation: "بیکاری ادواری از افت تقاضای کل در دورهٔ رکود می‌آید؛ اصطکاکی از جست‌وجوی شغل و ساختاری از ناهماهنگی مهارت‌ها.", trapNote: "" },
+  // ریاضی و آمار — فصل ۳
+  { id: "q.auth.math.3.1", bank: "konkorData", correctOption: 1, explanation: "سود بیشینه در شرط مرتبهٔ اول $\\pi' = MR - MC = 0$ یعنی $MR = MC$ و با آزمون مرتبهٔ دوم تأیید می‌شود؛ $MR = 0$ فقط بیشینهٔ درآمد است.", trapNote: "بیشینهٔ درآمد و بیشینهٔ سود نقطهٔ یکسانی ندارند." },
+  { id: "q.auth.math.3.2", bank: "konkorData", correctOption: 2, explanation: "قانون تقاضا رابطهٔ معکوس قیمت و مقدار را می‌دهد، پس $dQ/dP < 0$ و کشش قیمتی برای کالای معمولی منفی است.", trapNote: "" },
+  { id: "q.auth.math.3.3", bank: "konkorData", correctOption: 3, explanation: "مشتق لگاریتمی برای توابعی که متغیر هم در پایه و هم در توان دارند (مانند $y = x^x$) کاربرد اصلی دارد.", trapNote: "" },
+  // ریاضی و آمار — فصل ۴
+  { id: "q.auth.math.4.1", bank: "konkorData", correctOption: 2, explanation: "هزینهٔ کل، انتگرال نامعین هزینهٔ نهایی است و ثابت انتگرال‌گیری با هزینهٔ ثابت تعیین می‌شود.", trapNote: "فراموش کردن ثابت هزینهٔ ثابت، خطای رایج است." },
+  { id: "q.auth.math.4.2", bank: "konkorData", correctOption: 3, explanation: "مازاد مصرف‌کننده سطح زیر منحنی تقاضا تا قیمت بازار منابر پرداخت واقعی مصرف‌کننده است.", trapNote: "" },
+  { id: "q.auth.math.4.3", bank: "konkorData", correctOption: 0, explanation: "قاعدهٔ توان انتگرال: $\\int x^n dx = x^{n+1}/(n+1) + C$ برای $n \\neq -1$؛ حالت استثنا $n = -1$ به $\\ln|x|$ می‌رسد.", trapNote: "استثنای $n = -1$ را با قاعدهٔ توان اشتباه نگیرید." },
+  // ریاضی و آمار — فصل ۸
+  { id: "q.auth.math.8.1", bank: "konkorData", correctOption: 2, explanation: "پواسون تعداد رخداد در واحد زمان با نرخ ثابت را مدل می‌کند؛ دوجمله‌ای تعداد موفقیت در تعداد ثابت آزمایش است.", trapNote: "معیار انتخاب: نرخ رخداد ← پواسون، تعداد آزمایش ثابت ← دوجمله‌ای." },
+  { id: "q.auth.math.8.2", bank: "konkorData", correctOption: 3, explanation: "دوجمله‌ای سه شرط دارد: تعداد آزمایش ثابت، دو حالت بودن هر آزمایش و استقلال با احتمال موفقیت ثابت.", trapNote: "" },
+  { id: "q.auth.math.8.3", bank: "konkorData", correctOption: 0, explanation: "استانداردسازی $Z = (X - \\mu)/\\sigma$ هر توزیع نرمال را به نرمال استاندارد می‌برد تا از جدول Z استفاده شود.", trapNote: "" },
+  // مدیریت اسلامی — فصل ۲
+  { id: "q.auth.isl.2.1", bank: "konkorData", correctOption: 2, explanation: "سه لایهٔ نظام ارزش‌ها: اعتقادی (بنیاد)، اخلاقی (میانجی) و رفتاری (خروجی عملی).", trapNote: "" },
+  { id: "q.auth.isl.2.2", bank: "konkorData", correctOption: 3, explanation: "نیت مبنای ارزش‌گذاری عمل است؛ «اعمال به نیت‌هاست» یعنی ارزش هر رفتار از نیت فاعل می‌آید، نه فقط از ظاهر آن.", trapNote: "" },
+  { id: "q.auth.isl.2.3", bank: "konkorData", correctOption: 0, explanation: "انسان دو بعدی یعنی نظام انگیزش و کنترل باید هم نیازهای مادی و هم نیازهای معنوی را پوشش دهد؛ حذف یکی از دو بعد، الگو را ناقص می‌کند.", trapNote: "" },
+  // مدیریت اسلامی — فصل ۳
+  { id: "q.auth.isl.3.1", bank: "konkorData", correctOption: 3, explanation: "الگوی قرآنی «وشاورهم فی الامر، فاذا عزمت فتوکل» یعنی مشورت انجام می‌شود اما عزم و مسئولیت تصمیم نهایی با مدیر است و سپس توکل.", trapNote: "مشورت جایگزین مسئولیت مدیر نمی‌شود؛ دام سؤال‌های کنکور همین است." },
+  { id: "q.auth.isl.3.2", bank: "konkorData", correctOption: 0, explanation: "برنامه‌ریزی اسلامی بر سه پایه استوار است: شناخت واقعیت، هدف‌گذاری ارزشی و مشورت.", trapNote: "" },
+  { id: "q.auth.isl.3.3", bank: "konkorData", correctOption: 1, explanation: "توکل پس از تدبیر و تلاش معنا دارد و جایگزین برنامه‌ریزی نیست؛ توکل بدون تدبیر، تفویض مسئولیت به سرنوشت است.", trapNote: "" },
+  // مدیریت اسلامی — فصل ۴
+  { id: "q.auth.isl.4.1", bank: "konkorData", correctOption: 0, explanation: "«تکلیف به قدر وسع» یعنی مسئولیت هر فرد متناسب با توان او تعیین می‌شود؛ بار مساوی یا سلیقه‌ای ناعادلانه است.", trapNote: "" },
+  { id: "q.auth.isl.4.2", bank: "konkorData", correctOption: 1, explanation: "سپردن مسئولیت بر اصل شایستگی و امانت‌داری استوار است؛ قدمت، رابطه یا قرعه ملاک نیستند.", trapNote: "" },
+  { id: "q.auth.isl.4.3", bank: "konkorData", correctOption: 2, explanation: "وحدت فرماندهی با پرهیز از تضاد مراجع دستور هم‌سو است و در بستر اخوت و پرهیز از تکبر مدیریتی معنا می‌یابد، نه استبداد و نه حذف سلسله‌مراتب.", trapNote: "" },
+  // مدیریت اسلامی — فصل ۵
+  { id: "q.auth.isl.5.1", bank: "konkorData", correctOption: 1, explanation: "سیرهٔ علوی گزینش کارگزار را بر صلاحیت علمی و اخلاقی (اقوی و امین) بنا می‌کند.", trapNote: "دو رکن قدرت و امانت را با یکدیگر جایگزین نکنید." },
+  { id: "q.auth.isl.5.2", bank: "konkorData", correctOption: 2, explanation: "مزد پیش از کار اضطراب معیشت کارگزار را از بین می‌برد و تمرکز و اثربخشی او را بالا می‌برد؛ این توصیهٔ عملی نامهٔ مالک اشتر است.", trapNote: "" },
+  { id: "q.auth.isl.5.3", bank: "konkorData", correctOption: 3, explanation: "تکلیف مالایطاق یعنی سپردن کاری فراتر از توان فرد و در الگوی اسلامی ممنوع است؛ افزایش تدریجی بار آموزشی با آن فرق دارد.", trapNote: "" },
+  // مدیریت اسلامی — فصل ۶
+  { id: "q.auth.isl.6.1", bank: "konkorData", correctOption: 2, explanation: "انگیزش اسلامی ترکیبی است: پاداش مادی مشروع در کنار انگیزهٔ معنوی مانند رضایت الهی و پاداش اخروی.", trapNote: "تک‌بعدی دیدن انگیزش (فقط مادی یا فقط معنوی) نقد اصلی الگوی اسلامی است." },
+  { id: "q.auth.isl.6.2", bank: "konkorData", correctOption: 3, explanation: "نقد اصلی این است که نظریه‌های صرفاً مادی، بعد معنوی و دو بعدی بودن انسان را نادیده می‌گیرند.", trapNote: "" },
+  { id: "q.auth.isl.6.3", bank: "konkorData", correctOption: 0, explanation: "رهبر با الگو بودن عملی و پرورش انگیزهٔ معنوی، در کنار جبران خدمات عادلانه، انگیزه می‌سازد؛ پاداش صرف جدولی کافی نیست.", trapNote: "" },
+  // مدیریت اسلامی — فصل ۷
+  { id: "q.auth.isl.7.1", bank: "konkorData", correctOption: 3, explanation: "صفات رهبر در مدیریت اسلامی: عدالت، تقوا، علم، شجاعت و رفق و مدارا.", trapNote: "" },
+  { id: "q.auth.isl.7.2", bank: "konkorData", correctOption: 0, explanation: "نامهٔ مالک اشتر بر انتخاب کارگزار شایسته، نظارت مستمر بر او، رفق به رعیت و پرهیز از استبداد در رأی تأکید دارد.", trapNote: "این نامه سند اصلی سؤال‌های سیرهٔ علوی در کنکور است." },
+  { id: "q.auth.isl.7.3", bank: "konkorData", correctOption: 1, explanation: "رهبری خدمتگزار محورش خدمت به رعیت و پاسخگویی است؛ رهبری قدرت‌محور منفعت و حفظ اقتدار شخصی را می‌جوید.", trapNote: "" },
+  // تحقیق در عملیات — فصل ۲
+  { id: "q.auth.or.2.1", bank: "konkorData", correctOption: 3, explanation: "اگر خط هم‌مقدار موازی با یک ضلع ناحیهٔ شدنی باشد، همهٔ نقاط آن ضلع بهینه‌اند: جواب بهینهٔ چندگانه. باز بودن ناحیه در جهت بهبود یعنی جواب نامحدود و نابرآورده‌شدن قیود یعنی ناشدنی.", trapNote: "سه حالت خاص «چندگانه، نامحدود، ناشدنی» را با نشانهٔ ترسیمی هرکدام جدا نگه دارید." },
+  { id: "q.auth.or.2.2", bank: "konkorData", correctOption: 0, explanation: "جواب نامحدود یعنی ناحیهٔ شدنی در جهت بهبود تابع هدف باز است و مقدار بهینه بدون کران بالا می‌رود.", trapNote: "" },
+  { id: "q.auth.or.2.3", bank: "konkorData", correctOption: 1, explanation: "قید غیرفعال در جواب بهینه مازاد دارد و قیمت سایهٔ آن صفر است؛ افزایش سمت راست آن مقدار بهینه را تغییر نمی‌دهد.", trapNote: "" },
+  // تحقیق در عملیات — فصل ۵
+  { id: "q.auth.or.5.1", bank: "konkorData", correctOption: 2, explanation: "در بازهٔ مجاز تغییر ضریب تابع هدف یک متغیر پایه، جواب بهینه (ترکیب متغیرهای پایه) ثابت می‌ماند و فقط مقدار بهینه تغییر می‌کند.", trapNote: "بیرون از بازه، جواب پایه عوض می‌شود و بازمحاسبهٔ کامل لازم است." },
+  { id: "q.auth.or.5.2", bank: "konkorData", correctOption: 3, explanation: "هزینهٔ کاهش‌یافتهٔ متغیر غیرپایه می‌گوید ورود یک واحد از آن تابع هدف را چقدر تغییر می‌دهد؛ تا وقتی مثبت است، ورود صرفه ندارد.", trapNote: "" },
+  { id: "q.auth.or.5.3", bank: "konkorData", correctOption: 0, explanation: "تغییر سمت راست بیرون از بازهٔ مجاز، پایهٔ جواب را می‌شکند و بازمحاسبهٔ کامل (دومرحله‌ای یا M بزرگ) لازم است؛ تغییر متناسب فقط درون بازه معتبر است.", trapNote: "" },
+  // تحقیق در عملیات — فصل ۷
+  { id: "q.auth.or.7.1", bank: "konkorData", correctOption: 0, explanation: "در $t_e = (a + 4m + b)/6$ برآورد محتمل وزن ۴ دارد و خوش‌بینانه و بدبینانه هرکدام وزن ۱.", trapNote: "" },
+  { id: "q.auth.or.7.2", bank: "konkorData", correctOption: 1, explanation: "مسیر بحرانی طولانی‌ترین مسیر شبکه از مبدأ به مقصد است و همهٔ فعالیت‌هایش شناوری صفر دارند.", trapNote: "مسیر بحرانی با «کوتاه‌ترین مسیر دایکسترا» اشتباه گرفته می‌شود." },
+  { id: "q.auth.or.7.3", bank: "konkorData", correctOption: 2, explanation: "شناوری کل صفر یعنی هیچ حاشیهٔ تأخیری نیست؛ هر روز تأخیر در آن فعالیت، کل پروژه را به همان اندازه عقب می‌اندازد.", trapNote: "" },
+  // تحقیق در عملیات — فصل ۸
+  { id: "q.auth.or.8.1", bank: "konkorData", correctOption: 1, explanation: "متغیر صفر-یک برای تصمیم «انجام بده یا نکن» است؛ انتخاب پروژه، احداث کارخانه و محدودیت‌های منطقی اگر-آنگاه با آن مدل می‌شود.", trapNote: "" },
+  { id: "q.auth.or.8.2", bank: "konkorData", correctOption: 2, explanation: "در برنامه‌ریزی آرمانی به‌جای بهینه‌سازی یک هدف، مجموع انحراف‌های وزنی از آرمان‌ها کمینه می‌شود؛ اولویت‌بندی اهداف در تابع هدف می‌آید.", trapNote: "GP اهداف را حذف نمی‌کند؛ فاصلهٔ رسیدن به آن‌ها را کمینه می‌کند." },
+  { id: "q.auth.or.8.3", bank: "konkorData", correctOption: 3, explanation: "گرد کردن جواب LP ممکن است نشدنی یا غیربهینه باشد؛ روش‌های صحیح شاخه و کران یا برش گوموری‌اند.", trapNote: "" },
+  // تحقیق در عملیات — مهرگان فصل ۱
+  { id: "q.auth.meh.1.1", bank: "konkorData", correctOption: 3, explanation: "قید «≥» با کم و کسر متغیر مازاد و افزودن متغیر مصنوعی به تساوی می‌رسد؛ قید «≤» فقط متغیر کمبود مثبت لازم دارد.", trapNote: "تفکیک متغیر کمبود، مازاد و مصنوعی بر پایهٔ جهت قید، پرتکرار است." },
+  { id: "q.auth.meh.1.2", bank: "konkorData", correctOption: 0, explanation: "متغیر آزاد به تفاضل دو متغیر نامنفی تبدیل می‌شود: $x = x^+ - x^-$ با $x^+, x^- \\ge 0$.", trapNote: "" },
+  { id: "q.auth.meh.1.3", bank: "konkorData", correctOption: 1, explanation: "متغیر کمبود جزء سود نیست و با ضریب صفر در تابع هدف بیشینه وارد می‌شود.", trapNote: "" },
+  // تحقیق در عملیات — مهرگان فصل ۷
+  { id: "q.auth.meh.7.1", bank: "konkorData", correctOption: 1, explanation: "دایکسترا کوتاه‌ترین مسیر را با وزن‌های غیرمنفی حل می‌کند؛ وزن منفی الگوریتم را می‌شکند.", trapNote: "شرط غیرمنفی بودن وزن‌ها در دایکسترا شرط کنکوری است." },
+  { id: "q.auth.meh.7.2", bank: "konkorData", correctOption: 2, explanation: "فورد-فولکرسون بیشینه جریان را با افزودن مسیرهای افزایشی تا ناپدید شدن مسیر از مبدأ به مقصد می‌یابد.", trapNote: "" },
+  { id: "q.auth.meh.7.3", bank: "konkorData", correctOption: 3, explanation: "کروسکال یال‌ها را به ترتیب وزن صعودی بررسی و انتخاب می‌کند مگر یال دور بسازد؛ پریم با رشد درخت از یک گره کار می‌کند.", trapNote: "تفاوت کروسکال (مرتب‌سازی یال) و پریم (رشد از گره) سؤال پرتکرار است." },
+  // تولید و عملیات — فصل ۲
+  { id: "q.auth.pom.2.1", bank: "konkorData", correctOption: 2, explanation: "در $Q^* = \\sqrt{2DS/H}$ نماد D تقاضای سالانه، S هزینهٔ هر بار سفارش و H هزینهٔ نگهداری هر واحد در سال است.", trapNote: "جابه‌جایی D و H در فرمول، خطای محاسباتی رایج است." },
+  { id: "q.auth.pom.2.2", bank: "konkorData", correctOption: 3, explanation: "در EOQ بهینه، هزینهٔ سالانهٔ سفارش‌دهی و هزینهٔ سالانهٔ نگهداری برابر می‌شوند و منحنی‌ها در نقطهٔ $Q^*$ یکدیگر را قطع می‌کنند.", trapNote: "" },
+  { id: "q.auth.pom.2.3", bank: "konkorData", correctOption: 0, explanation: "EPQ تولید هم‌زمان با مصرف را با عامل $(1 - d/p)$ در مخرج وارد می‌کند؛ نتیجه، اندازهٔ لات بزرگ‌تر از EOQ است.", trapNote: "" },
+  // تولید و عملیات — فصل ۳
+  { id: "q.auth.pom.3.1", bank: "konkorData", correctOption: 3, explanation: "ROP بر پایهٔ تقاضای میانگین در طول زمان تأمین به‌علاوهٔ موجودی ایمنی تعیین می‌شود؛ در نقطهٔ رسیدن موجودی به ROP سفارش جدید ثبت می‌شود.", trapNote: "" },
+  { id: "q.auth.pom.3.2", bank: "konkorData", correctOption: 0, explanation: "جزء $z\\sigma_d\\sqrt{L}$ موجودی ایمنی برای پوشش نوسان تقاضا در طول زمان تأمین است.", trapNote: "" },
+  { id: "q.auth.pom.3.3", bank: "konkorData", correctOption: 1, explanation: "سطح خدمت بالاتر یعنی z بزرگ‌تر (۱٫۲۸ به ۲٫۳۳) و موجودی ایمنی و هزینهٔ نگهداری بیشتر.", trapNote: "" },
+  // تولید و عملیات — فصل ۴
+  { id: "q.auth.pom.4.1", bank: "konkorData", correctOption: 0, explanation: "سه ورودی MRP: فهرست مواد (BOM)، وضعیت و سوابق موجودی و برنامهٔ تولید اصلی (MPS).", trapNote: "" },
+  { id: "q.auth.pom.4.2", bank: "konkorData", correctOption: 1, explanation: "تقاضای وابسته از BOM و برنامهٔ محصول نهایی مشتق می‌شود؛ تقاضای مستقل با پیش‌بینی آماری برآورد می‌شود.", trapNote: "تفکیک تقاضای مستقل و وابسته سؤال پرتکرار MRP است." },
+  { id: "q.auth.pom.4.3", bank: "konkorData", correctOption: 2, explanation: "در سیاست L4L مقدار سفارش هر دوره دقیقاً برابر نیاز خالص همان دوره است؛ هزینهٔ راه‌اندازی بالا و موجودی انبار حداقل می‌ماند.", trapNote: "" },
+  // تولید و عملیات — فصل ۵
+  { id: "q.auth.pom.5.1", bank: "konkorData", correctOption: 1, explanation: "EDD (زمان تحویل زودتر اول) حداکثر و میانگین تأخیر نسبت به زمان تحویل را هدف می‌گیرد.", trapNote: "EDD میانگین جریان کار را کمینه نمی‌کند؛ آن کار SPT است." },
+  { id: "q.auth.pom.5.2", bank: "konkorData", correctOption: 2, explanation: "SPT میانگین جریان کار (زمان سپری‌شده در سیستم) را کمینه می‌کند و کارهای کوتاه سریع‌تر از سیستم خارج می‌شوند.", trapNote: "" },
+  { id: "q.auth.pom.5.3", bank: "konkorData", correctOption: 3, explanation: "در الگوریتم جانسون کم‌ترین زمان پردازش اگر روی ماشین دوم باشد، آن کار در انتهای توالی قرار می‌گیرد؛ روی ماشین اول در ابتدای توالی.", trapNote: "" },
+  // تولید و عملیات — فصل ۶
+  { id: "q.auth.pom.6.1", bank: "konkorData", correctOption: 2, explanation: "$C_p$ فقط پراکندگی را نسبت به دامنهٔ مشخصات می‌سنجد؛ $C_{pk}$ با $\\min(USL-\\mu, \\mu-LSL)/3\\sigma$ مرکزیت را هم وارد می‌کند.", trapNote: "برای فرایند غیرمتمرکز $C_{pk} < C_p$ است." },
+  { id: "q.auth.pom.6.2", bank: "konkorData", correctOption: 3, explanation: "$C_p = 1$ یعنی پراکندگی فرایند ($6\\sigma$) دقیقاً برابر دامنهٔ مشخصات است؛ هیچ فضا برای نوسان مرکزیت باقی نمی‌ماند.", trapNote: "" },
+  { id: "q.auth.pom.6.3", bank: "konkorData", correctOption: 0, explanation: "خطای نوع اول هشدار اصلاح وقتی فرایند در واقع تحت کنترل است؛ خطای دوم ادامهٔ فرایند معیوب بدون هشدار است.", trapNote: "" },
+  // تولید و عملیات — فصل ۹
+  { id: "q.auth.pom.9.1", bank: "konkorData", correctOption: 1, explanation: "اثر شلاقی یعنی نوسان تقاضا هرچه به بالادست زنجیره نزدیک‌تر می‌شویم تشدید می‌شود؛ تولیدکننده نوسان شدیدتری از خرده‌فروش می‌بیند.", trapNote: "جهت اثر (پایین‌دست به بالادست) را معکوس نگفته باشید." },
+  { id: "q.auth.pom.9.2", bank: "konkorData", correctOption: 2, explanation: "چهار علت شلاقی: پیش‌بینی بر پایهٔ سفارش‌ها، دسته‌بندی سفارش، نوسان قیمت و رفتار بازی/حجم‌دادن به سفارش. گزینهٔ دیگر فهرست راه‌حل‌هاست نه علت‌ها.", trapNote: "" },
+  { id: "q.auth.pom.9.3", bank: "konkorData", correctOption: 3, explanation: "در VMI تصمیم سطح و زمان موجودی از خرده‌فروش به تأمین‌کننده منتقل می‌شود و اثر شلاقی را می‌کاهد.", trapNote: "" },
+  // تولید و عملیات — فصل ۱۰
+  { id: "q.auth.pom.10.1", bank: "konkorData", correctOption: 1, explanation: "CPM با زمان‌های قطعی کار می‌کند و PERT با سه برآورد خوش‌بینانه، محتمل و بدبینانه زمان را احتمالی می‌بیند.", trapNote: "" },
+  { id: "q.auth.pom.10.2", bank: "konkorData", correctOption: 2, explanation: "فشرده‌سازی کم‌هزینه بر فعالیت بحرانی با کمترین نسبت هزینهٔ فشرده‌سازی به کاهش زمان انجام می‌شود.", trapNote: "فقط فعالیت‌های مسیر بحرانی فشرده می‌شوند." },
+  { id: "q.auth.pom.10.3", bank: "konkorData", correctOption: 3, explanation: "واریانس زمان فعالیت در PERT برابر $\\sigma^2 = ((b-a)/6)^2$ است و زمان مورد انتظار $t_e = (a+4m+b)/6$.", trapNote: "" },
+  // MCDM — فصل ۳
+  { id: "q.auth.mcdm.3.1", bank: "konkorData", correctOption: 0, explanation: "SAW ساده‌ترین روش جبرانی است: نرمال‌سازی نمره‌ها و جمع وزنی خطی آن‌ها.", trapNote: "" },
+  { id: "q.auth.mcdm.3.2", bank: "konkorData", correctOption: 1, explanation: "ELECTRE روش غیرجبرانی بر پایهٔ روابط برتری با آستانه‌های توافق و ناسازگاری است؛ جابه‌جایی بین معیارها را مجاز نمی‌داند.", trapNote: "جبرانی بودن SAW و غیرجبرانی بودن ELECTRE دام مفهومی این فصل است." },
+  { id: "q.auth.mcdm.3.3", bank: "konkorData", correctOption: 2, explanation: "شاخص سازش VIKOR گزینه را بر پایهٔ بیشینه‌سازی «فایدهٔ گروه» و کمینه‌سازی «پشیمانی فردی» با نزدیکی به جواب ایده‌آل رتبه‌بندی می‌کند.", trapNote: "" },
+  // MCDM — فصل ۵
+  { id: "q.auth.mcdm.5.1", bank: "konkorData", correctOption: 2, explanation: "مدل CCR فرض بازده ثابت به مقیاس دارد؛ BCC بازده متغیر به مقیاس را می‌پذیرد.", trapNote: "CCR و BCC را با جهت بازده اشتباه نگیرید؛ تفاوت فقط در فرض مقیاس است." },
+  { id: "q.auth.mcdm.5.2", bank: "konkorData", correctOption: 3, explanation: "نمرهٔ ۱ یعنی واحد روی مرز کارایی قرار دارد و در مقایسهٔ نسبی با واحدهای همتا کاراست؛ این ادعا دربارهٔ برتری مطلق همه‌جانبه نیست.", trapNote: "" },
+  { id: "q.auth.mcdm.5.3", bank: "konkorData", correctOption: 0, explanation: "در مدل پایهٔ DEA وزن‌ها آزادند و مدل برای هر DMU بهترین مجموعهٔ وزن ممکن را انتخاب می‌کند تا نمرهٔ آن بیشینه شود.", trapNote: "" },
+  // MCDM — فصل ۹
+  { id: "q.auth.mcdm.9.1", bank: "konkorData", correctOption: 2, explanation: "در M/M/c بهره‌برداری برابر $\\rho = \\lambda/(c\\mu)$ است؛ ظرفیت کل سیستم c برابر نرخ خدمت تک‌کانال است.", trapNote: "شرط پایداری: $\\rho < 1$." },
+  { id: "q.auth.mcdm.9.2", bank: "konkorData", correctOption: 3, explanation: "تجمیع صف‌ها از مرگ مشتری پشت صف پر و بیکارماندن ناهمسان کانال‌ها جلوگیری می‌کند و زمان انتظار متوسط را می‌کاهد.", trapNote: "" },
+  { id: "q.auth.mcdm.9.3", bank: "konkorData", correctOption: 0, explanation: "تصمیم ظرفیت، کمینه‌سازی مجموع هزینهٔ انتظار مشتری و هزینهٔ تأمین ظرفیت است؛ بهره‌برداری ۱ انتظار را بی‌نهایت می‌کند.", trapNote: "" },
+  // R&D تید — فصل ۵
+  { id: "q.auth.tidd.5.1", bank: "konkorData", correctOption: 2, explanation: "تحقیق (R) هدفش تولید دانش جدید است و توسعه (D) هدفش تبدیل دانش به محصول و فرایند؛ مرز خروجی‌ها این دو را جدا می‌کند.", trapNote: "" },
+  { id: "q.auth.tidd.5.2", bank: "konkorData", correctOption: 3, explanation: "تصمیم ادامه/توقف در نقاط راهبردی (دروازه‌های مرحله‌ای) با ارزیابی پیشرفت، هزینه و بلوغ فنی گرفته می‌شود؛ ارزیابی صرفاً در پایان، دیر است.", trapNote: "" },
+  { id: "q.auth.tidd.5.3", bank: "konkorData", correctOption: 0, explanation: "پرتفوی R&D تعادل افق زمانی، ریسک و تمایل اکتشاف در برابر بهره‌برداری را مدیریت می‌کند؛ قاعدهٔ رایج ۷۰-۲۰-۱۰ است.", trapNote: "" },
+  // اسپین‌آف — فصل ۹
+  { id: "q.auth.op.9.1", bank: "konkorData", correctOption: 0, explanation: "اسپین‌آف مسیر ارزش‌گیری از فناوری یا ایده‌ای است که بیرون از هستهٔ کسب‌وکار مادر زندگی می‌کند؛ درون هسته نگه‌داشتنش ارزش را نمی‌سازد.", trapNote: "" },
+  { id: "q.auth.op.9.2", bank: "konkorData", correctOption: 1, explanation: "مدل‌های مشارکت با استارتاپ: شتاب‌دهندهٔ شرکتی، سرمایه‌گذاری خطرپذیر شرکتی (CVC) و پیش‌آمادگاه؛ خرید کامل فقط یکی از حالت‌های انتهاست.", trapNote: "" },
+  { id: "q.auth.op.9.3", bank: "konkorData", correctOption: 2, explanation: "سرمایه‌گذار خطرپذیر بیش از همه به کیفیت تیم بنیان‌گذار، اندازه و رشد بازار و تمایز فناوری وزن می‌دهد؛ دفتر و وسایل اداری ملاک نیست.", trapNote: "" },
+  // استراتژی عمومی — فصل ۶
+  { id: "q.auth.str.6.1", bank: "konkorData", correctOption: 3, explanation: "سه استراتژی عمومی پورتر: رهبری هزینه، تمایز و تمرکز (به شکل هزینه‌ای یا تمایزی).", trapNote: "" },
+  { id: "q.auth.str.6.2", bank: "konkorData", correctOption: 0, explanation: "گیر افتادن در میانه یعنی نه هزینهٔ کم رهبر، نه تمایز پذیرفته‌شده؛ بنگاه میان دو استراتژی، حاشیهٔ سود پایینی می‌ماند.", trapNote: "دستیابی هم‌زمان و پایدار به هزینه و تمایز، استثنایی است و معنای گیر افتادن در میانه نیست." },
+  { id: "q.auth.str.6.3", bank: "konkorData", correctOption: 1, explanation: "هر دو استراتژی تمرکز در بازار باریک عمل می‌کنند؛ تمرکز هزینه‌ای کمترین هزینه را در آن بخش می‌جوید و تمرکز تمایزی تمایز متناسب با همان بخش می‌سازد.", trapNote: "" },
+  // تولید و عملیات — فصل ۷
+  { id: "q.auth.pom.7.1", bank: "konkorData", correctOption: 3, explanation: "زمان استاندارد = زمان مشاهده‌شده × ضریب عملکرد + افزودنی‌های مجاز (شخصی و خستگی).", trapNote: "" },
+  { id: "q.auth.pom.7.2", bank: "konkorData", correctOption: 0, explanation: "اول مطالعهٔ روش تا روش بهینه شود؛ زمان‌سنجی روی روش غیربهینه معنا ندارد.", trapNote: "ترتیب روش-سپس-زمان، نکتهٔ کنکوری این فصل است." },
+  { id: "q.auth.pom.7.3", bank: "konkorData", correctOption: 1, explanation: "نمودار انسان-ماشین زمان‌های بیکاری دو طرف را نشان می‌دهد تا کارها ترکیب و اتلاف حذف شود.", trapNote: "" },
+  // MCDM — فصل ۶
+  { id: "q.auth.mcdm.6.1", bank: "konkorData", correctOption: 3, explanation: "BCC بازده متغیر به مقیاس می‌پذیرد و مجموع وزن‌ها به یک می‌رسد (مرز محدب)؛ CCR بازده ثابت با مرز مخروطی دارد.", trapNote: "به یاد داشته باشید: BCC یعنی بازده متغیر، CCR یعنی بازده ثابت." },
+  { id: "q.auth.mcdm.6.2", bank: "konkorData", correctOption: 0, explanation: "کارایی مقیاس نسبت کارایی CCR به کارایی BCC است: $SE = \\theta_{CCR}/\\theta_{BCC}$ و همیشه $\\le 1$.", trapNote: "کسر وارونه نشود؛ چون $\\theta_{CCR} \\le \\theta_{BCC}$ است." },
+  { id: "q.auth.mcdm.6.3", bank: "konkorData", correctOption: 1, explanation: "کارا در BCC و ناکارا در CCR یعنی کارایی فنی خالص خوب است اما اندازهٔ واحد نابجا است: ناکارایی مقیاس، نه ناکارایی مدیریتی.", trapNote: "" },
+  // MCDM — فصل ۷
+  { id: "q.auth.mcdm.7.1", bank: "konkorData", correctOption: 0, explanation: "ابرکارایی نمرهٔ واحدهای کارای مدل پایه را با حذف خود واحد از مرجع، بالاتر از ۱ محاسبه و رتبه‌بندی ممکن می‌کند.", trapNote: "" },
+  { id: "q.auth.mcdm.7.2", bank: "konkorData", correctOption: 1, explanation: "SBM ناکارایی را با متغیرهای کمبود و فاصله در همهٔ ورودی و خروجی‌ها مستقیم می‌سنجد و شعاعی نیست.", trapNote: "" },
+  { id: "q.auth.mcdm.7.3", bank: "konkorData", correctOption: 2, explanation: "نمره‌های DEA به تعداد واحدها و متغیرها حساس‌اند؛ قاعدهٔ تجربی پوشش (تعداد کافی DMU نسبت به مجموع ورودی و خروجی) را کنترل کنید.", trapNote: "" },
+  // MCDM — فصل ۱۰
+  { id: "q.auth.mcdm.10.1", bank: "konkorData", correctOption: 2, explanation: "مونت‌کارلو با تولید اعداد تصادفی از توزیع‌ها و تکرار زیاد، توزیع خروجی سیستم را برآورد می‌کند.", trapNote: "" },
+  { id: "q.auth.mcdm.10.2", bank: "konkorData", correctOption: 3, explanation: "اعتبارسنجی یعنی مقایسهٔ خروجی مدل با رفتار واقعی سیستم؛ مدل نامعتبر تصمیم‌گیری را گمراه می‌کند.", trapNote: "" },
+  { id: "q.auth.mcdm.10.3", bank: "konkorData", correctOption: 0, explanation: "وقتی نمرهٔ معیارها تصادفی و نامطمئن است، شبیه‌سازی توزیع رتبه‌ها را می‌دهد و MCDM بر روی آن تصمیم می‌گیرد.", trapNote: "" },
+  // شیلینگ — فصل ۹
+  { id: "q.auth.sch.9.1", bank: "konkorData", correctOption: 3, explanation: "اتحادهای صنعتی مکمل‌ها و ذی‌نفعان را حول فناوری جمع می‌کنند تا جرم بحرانی شکل گیرد و استاندارد آن فناوری برسد.", trapNote: "" },
+  { id: "q.auth.sch.9.2", bank: "konkorData", correctOption: 0, explanation: "اثر شبکه بازخورد مثبت است: کاربر بیشتر ← ارزش بیشتر برای هر کاربر ← پذیرش سریع‌تر.", trapNote: "اثر شبکه را با صرفه‌جویی مقیاس تولید اشتباه نگیرید." },
+  { id: "q.auth.sch.9.3", bank: "konkorData", correctOption: 1, explanation: "بدون مکمل‌های کلیدی، ارزش کل اکوسیستم کامل نمی‌شود و پذیرش فناوری کند می‌ماند؛ نقش مکمل‌ها در همهٔ مراحل چرخه است.", trapNote: "" },
+  // تید — فصل ۲
+  { id: "q.auth.tidd.2.1", bank: "konkorData", correctOption: 3, explanation: "فرایند تید و بسانت چهار مرحله دارد: جست‌وجو، انتخاب، اجرا و ارزش‌گیری، با یادگیری بازخوردی میان آن‌ها.", trapNote: "" },
+  { id: "q.auth.tidd.2.2", bank: "konkorData", correctOption: 0, explanation: "قیف نوآوری ایده‌ها را مرحله‌به‌مرحله غربال می‌کند و در هر دروازه، معیارهای عبور تعیین می‌کنند کدام ایده ادامه می‌یابد.", trapNote: "" },
+  { id: "q.auth.tidd.2.3", bank: "konkorData", correctOption: 1, explanation: "یادگیری بازخوردی یعنی نتایج هر مرحله، جست‌وجو و انتخاب مرحلهٔ بعد را اصلاح می‌کند؛ فرایند نوآوری حلقه‌ای است نه خطی یک‌طرفه.", trapNote: "" },
+  // پوشش نمای کتابخانه — بازاریابی فصل ۲
+  { id: "q.auth.kotler.2.1", bank: "konkorData", correctOption: 3, explanation: "محیط خرد شامل تأمین‌کننده، واسطه‌ها، مشتری، رقیب و مخاطبان عمومی است؛ نیروهای کلان در PESTEL می‌آیند.", trapNote: "" },
+  { id: "q.auth.kotler.2.2", bank: "konkorData", correctOption: 0, explanation: "ترتیب کلاسیک فرایند تحقیقات: تعریف مسئله، طرح تحقیق، جمع‌آوری داده، تحلیل و گزارش.", trapNote: "جابه‌جا کردن تحلیل و جمع‌آوری داده، دام رایج است." },
+  { id: "q.auth.kotler.2.3", bank: "konkorData", correctOption: 1, explanation: "دادهٔ ثانویه از پیش برای هدف دیگری گردآوری شده و از منابع موجود گرفته می‌شود؛ دادهٔ اولیه مخصوص همین مسئله است.", trapNote: "" },
+  // زبان فصل ۱ و ۸
+  { id: "q.auth.eng.1.1", bank: "konkorData", correctOption: 3, explanation: "«allocate» یعنی تخصیص دادن منابع یا بودجه؛ «delegate» تفویض اختیار و «retain» نگه‌داشتن است.", trapNote: "تفکیک allocate و delegate از پرتکرارهای زبان تخصصی است." },
+  { id: "q.auth.eng.1.2", bank: "konkorData", correctOption: 0, explanation: "«mitigate the risk» یعنی کاهش و کمرنگ کردن اثر خطر؛ انتقال خطر «transfer» است.", trapNote: "" },
+  { id: "q.auth.eng.1.3", bank: "konkorData", correctOption: 1, explanation: "«leverage» یعنی بهره‌برداری هوشمندانه از توانایی‌ها و منابع موجود برای دستاورد بیشتر.", trapNote: "" },
+  { id: "q.auth.eng.8.1", bank: "konkorData", correctOption: 2, explanation: "پاسخ سؤال جزئیات باید عیناً در متن باشد؛ با اسکن کلیدواژه‌های سؤال در متن یافته می‌شود.", trapNote: "پاسخ‌دادن از دانش عمومی، خطای رایج است." },
+  { id: "q.auth.eng.8.2", bank: "konkorData", correctOption: 3, explanation: "استنباط از دو یا سه جملهٔ مرتبط به دست می‌آید، نه از یک جزئیات تنها.", trapNote: "" },
+  { id: "q.auth.eng.8.3", bank: "konkorData", correctOption: 0, explanation: "قیدهای بیش‌تعمیم مانند always و never معمولاً نشانهٔ گزینهٔ غلط‌اند؛ متن نادر است که چنین ادعای مطلقی داشته باشد.", trapNote: "" },
+  // تئوری‌های مدیریت فصل ۲
+  { id: "q.auth.th.2.1", bank: "konkorData", correctOption: 2, explanation: "ده نقش مینتزبرگ در سه دستهٔ اطلاعاتی، میان‌فردی و تصمیمی قرار می‌گیرند.", trapNote: "سه دستهٔ نقش‌ها را با سه مهارت کتز اشتباه نگیرید." },
+  { id: "q.auth.th.2.2", bank: "konkorData", correctOption: 3, explanation: "مطابق کتز: مهارت فنی در سطوح پایین و مهارت ادراکی در سطوح بالا مهم‌تر است؛ مهارت انسانی در همهٔ سطوح لازم است.", trapNote: "" },
+  { id: "q.auth.th.2.3", bank: "konkorData", correctOption: 0, explanation: "نقش نمادین جزو نقش‌های میان‌فردی است، در کنار رهبر و رابط.", trapNote: "" },
+  // ریاضی و آمار فصل ۹
+  { id: "q.auth.math.9.1", bank: "konkorData", correctOption: 3, explanation: "خطای استاندارد با جذر حجم نمونه کاهش می‌یابد؛ نمونهٔ بزرگ‌تر دقت بیشتر می‌دهد.", trapNote: "" },
+  { id: "q.auth.math.9.2", bank: "konkorData", correctOption: 0, explanation: "خطای نوع اول: رد کردن فرض صفر در حالی که درست است؛ خطای نوع دوم پذیرفتن فرض صفر غلط است.", trapNote: "ترتیب α و β را جابه‌جا نکنید." },
+  { id: "q.auth.math.9.3", bank: "konkorData", correctOption: 1, explanation: "p-value احتمال مشاهدهٔ داده‌ای به این شدت متضاد با فرض صفر به‌شرط درستی فرض صفر است؛ نه احتمال درستی فرض‌ها.", trapNote: "تفسیر p به‌عنوان احتمال درستی فرض صفر، شایع‌ترین دام است." },
+  // مدیریت اسلامی فصل ۱۰
+  { id: "q.auth.isl.10.1", bank: "konkorData", correctOption: 1, explanation: "چهار محور مقایسه: نگاه به انسان، هدف سازمان، مبنای انگیزش و ابزار کنترل.", trapNote: "" },
+  { id: "q.auth.isl.10.2", bank: "konkorData", correctOption: 2, explanation: "دام‌های نسبت‌دهی: خودکنترلی را انحصاراً به مکتب اسلامی نسبت دادن یا پاداش صرفاً مادی را به مدیریت اسلامی.", trapNote: "" },
+  { id: "q.auth.isl.10.3", bank: "konkorData", correctOption: 3, explanation: "مبنای انگیزش اسلامی ترکیبی است: پاداش مادی مشروع با انگیزهٔ معنوی رضایت الهی و پاداش اخروی.", trapNote: "" },
+  // استراتژی فصل‌های ۱، ۲، ۳، ۸، ۹
+  { id: "q.auth.str.1.1", bank: "konkorData", correctOption: 2, explanation: "سطوح استراتژی: شرکتی (در چه کسب‌وکارهایی باشیم)، کسب‌وکار (چگونه رقابت کنیم) و وظیفه‌ای (هر تابع چگونه پشتیبانی کند).", trapNote: "" },
+  { id: "q.auth.str.1.2", bank: "konkorData", correctOption: 3, explanation: "مدل جامع دیوید سه فاز دارد: تدوین، اجرا و ارزیابی استراتژی.", trapNote: "" },
+  { id: "q.auth.str.1.3", bank: "konkorData", correctOption: 0, explanation: "استراتژی مسیر بلندمدت و کلان است؛ تاکتیک اقدام کوتاه‌مدت در خدمت اجرای همان مسیر.", trapNote: "" },
+  { id: "q.auth.str.2.1", bank: "konkorData", correctOption: 3, explanation: "سه مکتب تجویزی: طراحی، برنامه‌ریزی و موقعیت‌یابی؛ شش توصیفی و یک تلفیقی (پیکربندی).", trapNote: "" },
+  { id: "q.auth.str.2.2", bank: "konkorData", correctOption: 0, explanation: "پیکربندی مکتب تلفیقی است و سایر مکاتب را در پیکربندی‌های زمانی و موقعیتی یکپارچه می‌کند.", trapNote: "" },
+  { id: "q.auth.str.2.3", bank: "konkorData", correctOption: 1, explanation: "دام معروف مینتزبرگ: موقعیت‌یابی از خانوادهٔ تجویزی است، نه توصیفی.", trapNote: "این دام در نکات خود فصل آمده است." },
+  { id: "q.auth.str.3.1", bank: "konkorData", correctOption: 0, explanation: "پنج نیروی پورتر: ورود تازه‌واردان، قدرت تأمین‌کننده، قدرت خریدار، تهدید جانشین و شدت رقابت درون‌صنعتی.", trapNote: "SWOT نه مدل پورتر است و نه تحلیل کلان." },
+  { id: "q.auth.str.3.2", bank: "konkorData", correctOption: 1, explanation: "PESTEL تحلیل محیط کلان و عام است؛ تحلیل صنعت با پنج نیرو انجام می‌شود.", trapNote: "" },
+  { id: "q.auth.str.3.3", bank: "konkorData", correctOption: 2, explanation: "نقشهٔ گروه‌های استراتژیک رقبای مشابه را بر پایهٔ ابعاد رقابتی خوشه‌بندی می‌کند.", trapNote: "" },
+  { id: "q.auth.str.8.1", bank: "konkorData", correctOption: 1, explanation: "تنوع مرتبط بر هم‌افزایی میان واحدها تکیه دارد؛ ناهمبسته پراکنده‌سازی بدون پیوند عملیاتی است.", trapNote: "" },
+  { id: "q.auth.str.8.2", bank: "konkorData", correctOption: 2, explanation: "ادغام عمودی رو به جلو یعنی حرکت به پایین‌دست زنجیره (توزیع و فروش)؛ رو به عقب یعنی بالادست (تأمین).", trapNote: "جهت جلو و عقب در ادغام عمودی دام رایج است." },
+  { id: "q.auth.str.8.3", bank: "konkorData", correctOption: 3, explanation: "مزیت والد یعنی افزودهٔ ارزش مشخص والد برای واحد؛ بدون آن، واگذاری منطقی‌تر است.", trapNote: "" },
+  { id: "q.auth.str.9.1", bank: "konkorData", correctOption: 2, explanation: "فراملی = فشار هزینه بالا + فشار محلی بالا؛ جهانی = هزینه بالا/محلی پایین؛ چندملیتی = هزینه پایین/محلی بالا.", trapNote: "خانهٔ فراملی پرتلاش‌ترین خانهٔ ماتریس است." },
+  { id: "q.auth.str.9.2", bank: "konkorData", correctOption: 3, explanation: "حالت‌های ورود: صادرات، لایسنس، سرمایه‌گذاری مشترک، نمایندگی و سرمایه‌گذاری مستقیم.", trapNote: "" },
+  { id: "q.auth.str.9.3", bank: "konkorData", correctOption: 0, explanation: "انگیزه‌ها: دسترسی به بازار و منابع، صرفه‌جویی هزینه و کاهش ریسک تمرکز روی یک بازار.", trapNote: "" },
+  // تولید و عملیات فصل ۸
+  { id: "q.auth.pom.8.1", bank: "konkorData", correctOption: 0, explanation: "انواع چیدمان: محصولی (خط)، فرایندی (کارگاهی)، سلولی و ثابت؛ معیار انتخاب از تنوع و حجم تولید می‌آید.", trapNote: "" },
+  { id: "q.auth.pom.8.2", bank: "konkorData", correctOption: 1, explanation: "گلوگاه ایستگاه کم‌ظرفیت‌ترین حلقه است و ظرفیت مؤثر کل سیستم را تعیین می‌کند.", trapNote: "" },
+  { id: "q.auth.pom.8.3", bank: "konkorData", correctOption: 2, explanation: "سه استراتژی تجمیعی: تعقیبی (نیروی کار متغیر)، سطحی (موجودی و کمبود متغیر) و ترکیبی از هر دو.", trapNote: "" },
+  // MCDM فصل ۱
+  { id: "q.auth.mcdm.1.1", bank: "konkorData", correctOption: 2, explanation: "مقایسه‌های زوجی AHP با مقیاس ساعتی ۱ تا ۹ (اهمیتی یکسان تا مطلق) انجام می‌شود.", trapNote: "" },
+  { id: "q.auth.mcdm.1.2", bank: "konkorData", correctOption: 3, explanation: "نرخ ناسازگاری $CR = CI/RI$ باید کمتر از ۰٫۱ باشد؛ در غیر این صورت داوری‌ها باید بازبینی شوند.", trapNote: "شرط را با CI اشتباه نگیرید." },
+  { id: "q.auth.mcdm.1.3", bank: "konkorData", correctOption: 0, explanation: "وزن‌ها از بردار ویژهٔ اصلی ماتریس مقایسه‌های زوجی استخراج می‌شوند.", trapNote: "" },
+  // شیلینگ فصل‌های ۳، ۵، ۶
+  { id: "q.auth.sch.3.1", bank: "konkorData", correctOption: 1, explanation: "مزیت‌های پیشگام: اثر یادگیری، قفل‌شدن مشتری و اثر شبکه؛ ریسک پیشگام عدم قطعیت بازار و فناوری است.", trapNote: "" },
+  { id: "q.auth.sch.3.2", bank: "konkorData", correctOption: 2, explanation: "پیشگام ریسک عدم قطعیت بالا و هزینهٔ آموزش بازار را می‌پذیرد؛ پیرو این هزینه‌ها را نمی‌پردازد.", trapNote: "" },
+  { id: "q.auth.sch.3.3", bank: "konkorData", correctOption: 3, explanation: "زمان ورود با بلوغ فناوری، آمادگی بازار و توان مکمل‌ها سنجیده می‌شود؛ ورود زودهنگام در بازار نابالغ شکست می‌خورد.", trapNote: "" },
+  { id: "q.auth.sch.5.1", bank: "konkorData", correctOption: 3, explanation: "انواع همکاری: اتحاد راهبردی، سرمایه‌گذاری مشترک، کنسرسیوم و قرارداد تحقیق.", trapNote: "" },
+  { id: "q.auth.sch.5.2", bank: "konkorData", correctOption: 0, explanation: "مزیت اتحاد، دسترسی به دانش و قابلیت مکمل شریک بدون تملک کامل است.", trapNote: "" },
+  { id: "q.auth.sch.5.3", bank: "konkorData", correctOption: 1, explanation: "ریسک اصلی، فرصت‌طلبی شریک و نشت دانش اختصاصی است؛ قرارداد و اعتماد هر دو لازم‌اند.", trapNote: "" },
+  { id: "q.auth.sch.6.1", bank: "konkorData", correctOption: 0, explanation: "ابزارهای ارزش‌گیری: پتنت، کپی‌رایت، علامت تجاری، راز تجاری و زمان پیشرو بودن.", trapNote: "" },
+  { id: "q.auth.sch.6.2", bank: "konkorData", correctOption: 1, explanation: "در دارو هزینهٔ کشف بالا و بازتولید آسان است و فرمول در آزمایش‌های بالینی لو می‌رود؛ پتنت قوی‌ترین محافظ است.", trapNote: "" },
+  { id: "q.auth.sch.6.3", bank: "konkorData", correctOption: 2, explanation: "دارایی‌های مکمل برنده‌زنی و قدرت چانه‌زنی در تقسیم ارزش نوآوری را تعیین می‌کنند (تیس).", trapNote: "" },
+  // تید فصل‌های ۶، ۷، ۸
+  { id: "q.auth.tidd.6.1", bank: "konkorData", correctOption: 3, explanation: "SECI نوناکا: اجتماعی‌سازی (ضمنی به ضمنی)، برونی‌سازی (ضمنی به صریح)، ترکیب (صریح به صریح) و درونی‌سازی (صریح به ضمنی).", trapNote: "ترتیب و جهت هر فاز را با یکدیگر قاطی نکنید." },
+  { id: "q.auth.tidd.6.2", bank: "konkorData", correctOption: 0, explanation: "دانش ضمنی در تجربه و مهارت نشسته و مستندسازی‌اش دشوار است؛ دانش صریح قابل نوشتن و انتقال آسان دارد.", trapNote: "" },
+  { id: "q.auth.tidd.6.3", bank: "konkorData", correctOption: 1, explanation: "ظرفیت جذب (کوهن و لوینتال) سه گام دارد: شناسایی، همسان‌سازی و بهره‌برداری از دانش بیرونی.", trapNote: "" },
+  { id: "q.auth.tidd.7.1", bank: "konkorData", correctOption: 0, explanation: "چهار دستهٔ ADL: پایه، کلیدی، پیشرو (سرآمد) و در حال ظهور.", trapNote: "" },
+  { id: "q.auth.tidd.7.2", bank: "konkorData", correctOption: 1, explanation: "استراتژی‌ها: برون‌سپاری پایه، نگه‌داری کلیدی، سرمایه‌گذاری سنگین روی پیشرو و پایش ظهور.", trapNote: "برون‌سپاری کلیدی، دام سؤال‌های ADL است." },
+  { id: "q.auth.tidd.7.3", bank: "konkorData", correctOption: 2, explanation: "محل فناوری در ماتریس ADL از ضرب اهمیت رقابتی در بلوغ فناوری به دست می‌آید.", trapNote: "" },
+  { id: "q.auth.tidd.8.1", bank: "konkorData", correctOption: 1, explanation: "اجزای اطلس فناوری: در حال ظهور، سرآمد، کلیدی و پایه؛ چیدمان بر همان محورهای اهمیت و بلوغ.", trapNote: "اجزای اطلس را با حوزه‌های 4P تید اشتباه نگیرید." },
+  { id: "q.auth.tidd.8.2", bank: "konkorData", correctOption: 2, explanation: "فناوری در گذر زمان میان اجزا جابه‌جا می‌شود و سبد R&D باید با این حرکت بازتنظیم شود.", trapNote: "" },
+  { id: "q.auth.tidd.8.3", bank: "konkorData", correctOption: 3, explanation: "فناوری سرآمد، پیشرفته‌ترین فناوری در اختیار سازمان است که مزیت رقابتی امروز را می‌سازد.", trapNote: "" },
+  // چسبرو فصل‌های ۴، ۵، ۶، ۱۰
+  { id: "q.auth.op.4.1", bank: "konkorData", correctOption: 3, explanation: "سازوکارهای ارزش‌گیری باز: پلتفرم و API، اسپین‌آف/اسپین‌این و سرمایه‌گذاری شرکتی (CVC).", trapNote: "" },
+  { id: "q.auth.op.4.2", bank: "konkorData", correctOption: 0, explanation: "معیار انتخاب سازوکار، نزدیکی موضوع به شایستگی محوری است؛ هرچه دورتر، بیشتر برون‌سپاری و مشارکت.", trapNote: "" },
+  { id: "q.auth.op.4.3", bank: "konkorData", correctOption: 1, explanation: "اسپین‌این یعنی بازگرداندن دانش پرورده بیرون به درون سازمان؛ اسپین‌آف جداسازی واحد به شرکت مستقل است.", trapNote: "جهت جریان دانش در اسپین‌این و اسپین‌آف معکوس‌اند." },
+  { id: "q.auth.op.5.1", bank: "konkorData", correctOption: 0, explanation: "نسل‌های روث‌ول: فشار فناوری، کشش بازار، جفت‌شدن، یکپارچگی با استراتژی و شبکه‌ای/سیستمی.", trapNote: "ترتیب نسل‌ها را جابه‌جا نکنید؛ پرتکرارترین سؤال این فصل است." },
+  { id: "q.auth.op.5.2", bank: "konkorData", correctOption: 1, explanation: "نسل دوم کشش بازار است: ایده از نیاز مشتری می‌آید و آزمایشگاه پاسخ‌گوست.", trapNote: "" },
+  { id: "q.auth.op.5.3", bank: "konkorData", correctOption: 2, explanation: "نسل پنجم شبکه‌ای/سیستمی است: R&D درون شبکهٔ شرکا، تأمین‌کنندگان و مشتریان پیشرو انجام می‌شود.", trapNote: "" },
+  { id: "q.auth.op.6.1", bank: "konkorData", correctOption: 1, explanation: "اشکال قرارداد: لایسنس، فرانشیز، سرمایه‌گذاری مشترک، BOT و کلید در دست؛ خرید تجهیزات فقط یکی از اجزاست.", trapNote: "" },
+  { id: "q.auth.op.6.2", bank: "konkorData", correctOption: 2, explanation: "انتقال فناوری نیازمند دانش ضمنی، آموزش و توان بهره‌برداری است؛ دستگاه به‌تنهایی این‌ها را نمی‌آورد.", trapNote: "این دام در نکات خود فصل آمده است." },
+  { id: "q.auth.op.6.3", bank: "konkorData", correctOption: 3, explanation: "انتخاب قرارداد بر پایهٔ چهار معیار: میزان انتقال دانش، سطح کنترل، ریسک و سرعت اجرا.", trapNote: "" },
+  { id: "q.auth.op.10.1", bank: "konkorData", correctOption: 0, explanation: "موانع انتقال در سه سطح فردی، سازمانی و بین‌سازمانی طبقه‌بندی می‌شوند.", trapNote: "" },
+  { id: "q.auth.op.10.2", bank: "konkorData", correctOption: 1, explanation: "سنجه‌های موفقیت: بهره‌برداری تجاری، زمان رسیدن به بازار و توان نگهداشت فناوری.", trapNote: "" },
+  { id: "q.auth.op.10.3", bank: "konkorData", correctOption: 2, explanation: "دانش ضمنی مستندشدنی نیست و تفاوت بافت فرهنگی و سازمانی انتقالش را می‌شکند.", trapNote: "" },
 ];
 
 export const CLIENT_BANK_ANSWER_KEY_BY_ID: ReadonlyMap<string, ClientBankAnswerKey> =
