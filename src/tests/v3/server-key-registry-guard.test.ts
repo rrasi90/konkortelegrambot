@@ -42,11 +42,12 @@ describe('گارد رجیستری کلید سمت سرور (R-036 remediation)',
     }
   });
 
-  it('۳. پوشش رجیستری: ۴۰۳ کلید واقعی (۲۳۹ + ۲۳۱ تألیفی، بدون ۲ canary) + ۲ canary؛ تکراری/بی‌شناسه ممنوع', () => {
+  it('۳. پوشش رجیستری: ۵۸۲ کلید واقعی (۲۳۹ + ۲۳۱ تألیفی + ۱۱۲ دفترچهٔ زبان دکتری، بدون ۲ canary) + ۲ canary؛ تکراری/بی‌شناسه ممنوع', () => {
     const real = CLIENT_BANK_ANSWER_KEYS.filter((k) => !k.id.startsWith('sec.'));
     // ۲۱۰ کلید سؤال + ۲۵ کلید conceptCheck (کلید ترکیبی `<lessonId>#conceptCheck`)
     // + ۱۴۱ کلید تست تألیفی فصل («هیچ فصل بدون سؤال» — q.auth.*)
-    expect(real.length).toBe(470);
+    // + ۱۱۲ کلید دفترچهٔ زبان عمومی دکتری ۱۴۰۳/۱۴۰۴/۱۴۰۵ (q.phd1403/1404/1405.*)
+    expect(real.length).toBe(582);
     const conceptChecks = real.filter((k) => k.id.endsWith('#conceptCheck'));
     expect(conceptChecks.length).toBe(25);
     const ids = new Set(real.map((k) => k.id));
