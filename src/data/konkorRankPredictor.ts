@@ -74,7 +74,7 @@ export interface RankPredictionResult {
     rank1Percent: number | null;
     rank10Percent: number | null;
     gapFromRank1: number | null;
-    status: 'عالی (هم‌تراز رتبه برتر)' | 'خوب (تراز مثبت)' | 'متوسط (نیازمند ارتقا)' | 'نقطه ضعف (نیازمند جبران)';
+    status: 'عالی (هم‌تراز رتبه برتر)' | 'خوب (تراز مثبت)' | 'متوسط (نیازمند ارتقا)' | 'نقطه ضعف (نیازمند جبران)' | 'داده تاریخی کافی نیست';
   }[];
   universityAdmissions: {
     tier: UniversityAdmissionTier;
@@ -849,8 +849,11 @@ export function predictKonkorRankAndUniversity(params: {
 
   // ۶. توصیه استراتژیک هوشمند بر اساس بیشترین فاصله در دروس پرضریب
   const highCoeffWeakCourse = [...courseBreakdown]
-    .filter((c) => c.coeff >= 2 && c.gapFromRank1 !== null && c.rank10Percent !== null)
-    .sort((a, b) => (a.gapFromRank1! * b.coeff) - (b.gapFromRank1! * a.coeff))[0];
+    .filter(
+      (c): c is typeof c & { gapFromRank1: number; rank10Percent: number } =>
+        c.coeff >= 2 && c.gapFromRank1 !== null && c.rank10Percent !== null,
+    )
+    .sort((a, b) => a.gapFromRank1 * b.coeff - b.gapFromRank1 * a.coeff)[0];
 
   const strategicAdvice = highCoeffWeakCourse
     ? `بیشترین اهرم جهش رتبه شما در درس «${highCoeffWeakCourse.title} (ضریب ${highCoeffWeakCourse.coeff})» است؛ رساندن درصد این درس از ${highCoeffWeakCourse.userPercent}٪ به سطح رتبه ۱۰ کشوری (${highCoeffWeakCourse.rank10Percent}٪) تراز کل شما را بیش از ۴۵۰ واحد ارتقا می‌دهد.`
