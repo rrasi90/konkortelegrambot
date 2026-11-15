@@ -40,6 +40,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: arshad-management-1405-visual-review
-          path: \${{ runner.temp }}/review-output/
+          path: ${{ runner.temp }}/review-output/
           retention-days: 30
           compression-level: 6
