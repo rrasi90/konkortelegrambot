@@ -1,0 +1,95 @@
+{
+  "examRef": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A"
+  },
+  "sourcePdf": "MA_1142_1405.pdf",
+  "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+  "visualPagesReviewed": [
+    2,
+    6,
+    8,
+    12,
+    15,
+    20,
+    26,
+    29
+  ],
+  "reviewedQuestionCount": 9,
+  "questions": [
+    {
+      "number": 1,
+      "page": 2,
+      "liveId": "q.k1405.1",
+      "visualStatus": "checked",
+      "textStatus": "matches_bank",
+      "note": "English vocabulary item; stem and four options match rendered booklet."
+    },
+    {
+      "number": 26,
+      "page": 6,
+      "liveId": "q.k1405.26",
+      "visualStatus": "checked",
+      "textStatus": "matches_bank_with_minor_normalization",
+      "note": "Persian item on divine grace and justice; options visually present in source."
+    },
+    {
+      "number": 41,
+      "page": 8,
+      "liveId": "q.k1405.41",
+      "visualStatus": "checked",
+      "textStatus": "bank_matches_source_docx_ocr_differs",
+      "note": "Source image says ۳ مهره. OCR DOCX reads ۲; current bank correctly retains ۳."
+    },
+    {
+      "number": 66,
+      "page": 12,
+      "liveId": "q.k1405.66",
+      "visualStatus": "checked",
+      "textStatus": "matches_bank",
+      "note": "Bureaucracy / goal displacement. Candidate near-duplicate: 1403 Q84."
+    },
+    {
+      "number": 87,
+      "page": 15,
+      "liveId": "q.k1405.87",
+      "visualStatus": "checked",
+      "textStatus": "material_formula_conflict",
+      "note": "Source image visibly prints P=14+0.5Q, while current bank has P=14-0.5Q. Do not overwrite either side until SME examines the original formula and official key; source may contain a mathematical misprint."
+    },
+    {
+      "number": 136,
+      "page": 20,
+      "liveId": "q.k1405.136",
+      "visualStatus": "checked",
+      "textStatus": "prompt_and_options_visually_checked",
+      "note": "Linear-programming production/mounting formulation; keep formula option order attached to the image."
+    },
+    {
+      "number": 166,
+      "page": 26,
+      "liveId": "q.k1405.166",
+      "visualStatus": "checked",
+      "textStatus": "matches_bank",
+      "note": "Moore algorithm item; source shows option 2 as Moore."
+    },
+    {
+      "number": 188,
+      "page": 29,
+      "liveId": "q.k1405.188",
+      "visualStatus": "checked",
+      "textStatus": "matches_bank",
+      "note": "BCG Stars; source has high relative market share and high market growth (option 4)."
+    },
+    {
+      "number": 192,
+      "page": 29,
+      "liveId": "q.k1405.192",
+      "visualStatus": "checked",
+      "textStatus": "matches_bank",
+      "note": "Skimming; source option 1 is innovative product with initially price-inelastic demand."
+    }
+  ]
+}
