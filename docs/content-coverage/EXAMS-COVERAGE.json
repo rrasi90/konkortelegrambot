@@ -494,6 +494,6 @@
  },
  "arshadOfficialBaseline": 150,
  "missingAssets": [
-  "public/assets/aistudio/*.pdf — فایل‌های PDF دفترچه‌های ارشد referenced در yearlyKonkorExams در ریپو موجود نیست"
+  "public/assets/aistudio/*.pdf — لینک‌های دانلود دفترچه در yearlyKonkorExams شکسته‌اند؛ PDFها اکنون در konkor/downloads/ موجود است و باید در assets سینک شوند"
  ]
 }
