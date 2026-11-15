@@ -28,10 +28,20 @@ jobs:
           git archive "$SOURCE_COMMIT" konkor/downloads | tar -x -C "$RUNNER_TEMP/exam-source"
           mkdir -p "$RUNNER_TEMP/review"
           cp "$RUNNER_TEMP/exam-source/konkor/downloads/MA_1142_1405.pdf" "$RUNNER_TEMP/review/"
-          cp "$RUNNER_TEMP/exam-source/konkor/downloads/MA_1142_1405_KEY.pdf" "$RUNNER_TEMP/review/"
+      - name: Download the exact official key matching set 1142 and booklet 319A
+        continue-on-error: true
+        run: |
+          curl --fail --show-error --location --retry 2 --connect-timeout 20 --max-time 120 \
+            "https://www8.sanjesh.org/noet_tk/Handlers/DownloadHandler.ashx?A=1405_arsh_319A" \
+            -o "$RUNNER_TEMP/review/MA_1142_1405_KEY_319A.pdf" || {
+              echo "Official Sanjesh key download failed; no answer key will be inferred."
+              rm -f "$RUNNER_TEMP/review/MA_1142_1405_KEY_319A.pdf"
+            }
       - name: Render source pages for visual audit
         run: |
           python -m pip install --upgrade pip
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-fas tesseract-ocr-eng
           python -m pip install pymupdf Pillow
           python tools/exam-import/render-arshad-1405-review.py \
             --source-dir "$RUNNER_TEMP/review" \
