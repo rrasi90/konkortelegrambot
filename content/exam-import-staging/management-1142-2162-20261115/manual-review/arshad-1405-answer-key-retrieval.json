@@ -7,7 +7,7 @@
   },
   "status": "not_retrieved",
   "sourceUrl": "https://www8.sanjesh.org/noet_tk/Handlers/DownloadHandler.ashx?A=1405_arsh_319A",
-  "discoveryEvidence": "A secondary download index lists exam family 1142, booklet code 319A, with a direct key link to the Sanjesh host.",
+  "discoveryEvidence": "A secondary download index lists exam family 1142, booklet code 319A, with separate booklet and official-key links to the Sanjesh host. The table row is 1142 – Management | 319A; clicked key link id 250 on the article resolves to the exact Sanjesh URL.",
   "retrievalAttempts": [
     {
       "method": "GitHub Actions curl --location",
@@ -18,10 +18,21 @@
       "result": "timeout"
     },
     {
+      "method": "secondary index link click",
+      "result": "resolved exact Sanjesh URL, fetch timed out"
+    },
+    {
       "method": "container direct download",
       "result": "failed"
     }
   ],
   "answerKeyRevisionCreated": false,
-  "rule": "Do not use the unrelated 1152/117A key found in repository history. Do not infer or copy correctOption values into an official AnswerKeyRevision."
+  "rule": "Do not use the unrelated 1152/117A key found in repository history. Do not infer or copy correctOption values into an official AnswerKeyRevision.",
+  "secondaryIndex": {
+    "url": "https://irantahsil.org/دفترچه-سوالات-کنکور-ارشد/",
+    "tableRow": "1142 – مدیریت | 319A | دریافت دفترچه | دریافت کلید",
+    "articleLines": "278–280",
+    "keyLinkResolution": "https://www8.sanjesh.org/noet_tk/Handlers/DownloadHandler.ashx?A=1405_arsh_319A",
+    "status": "link_verified_pdf_not_retrieved"
+  }
 }
