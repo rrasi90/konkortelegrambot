@@ -1,0 +1,32 @@
+[
+  {
+    "level": "phd",
+    "year": 1403,
+    "set_code": "2162",
+    "control_code": "3258",
+    "status": "year_conflict_variant",
+    "evidence": "Filename says 1402 but OCR cover says doctoral exam 1403, set 2162, control 3258; keep separate from 1402.",
+    "source_pdf": "PhD_2162_1402.pdf",
+    "retrieval": "phdtest.ir scan",
+    "file": "2162-1402.docx",
+    "docxSha256": "28e8aa4afb97ca2300621c7b046c91ba295d27bd4b0d2d6778cf4adaca162166",
+    "pageCount": 12,
+    "internalConflicts": [],
+    "sourcePdfSha256": "5fbb5b6b172ea02679cfc685cf7c1f53de20d9a042d8a848d0382dabd24d49ad"
+  },
+  {
+    "level": "phd",
+    "year": 1405,
+    "set_code": "2162",
+    "control_code": "620A",
+    "status": "eligible_variant",
+    "evidence": "Alternate scan appears to be set 2162/control 620A; retain separately pending image comparison.",
+    "source_pdf": "PhD_2162_1405.pdf",
+    "retrieval": "phdtest.ir scan",
+    "file": "2162-1405-variant2.docx",
+    "docxSha256": "73f0a65f3ca6d36e6fba89343da3953675feb74b98573823c5f0cdb81f5f8526",
+    "pageCount": 44,
+    "internalConflicts": [],
+    "sourcePdfSha256": "2eae01584863d95c6e1260e4e732347a897ffb8b879d41b21dc3d8155a69813c"
+  }
+]
