@@ -58,48 +58,25 @@ export interface YearlyKonkorQuestion extends QuestionItem {
 export const KONKOR_COURSE_SECTIONS: {
   id: KonkorCourseSectionId;
   title: string;
-  defaultNodeId: string;
+  /** null means the current syllabus graph has no defensible single default node for this whole subject. */
+  defaultNodeId: string | null;
 }[] = [
-  {
-    id: 'english',
-    title: 'زبان عمومی و تخصصی (انگلیسی)',
-    defaultNodeId: 'bus.english_eshraghi',
-  },
-  {
-    id: 'islamic',
-    title: 'اصول و مبانی مدیریت از دیدگاه اسلام',
-    defaultNodeId: 'bus.islamic_moghimi',
-  },
-  {
-    id: 'math_stats',
-    title: 'ریاضی و آمار',
-    defaultNodeId: 'bus.math_stats_ranjbaran_tourani',
-  },
-  {
-    id: 'management_theories',
-    title: 'تئوری‌های مدیریت',
-    defaultNodeId: 'mb.structure',
-  },
-  {
-    id: 'economics',
-    title: 'اقتصاد خرد و کلان',
-    defaultNodeId: 'bus.econ_nazari',
-  },
-  {
-    id: 'operations_research',
-    title: 'تحقیق در عملیات',
-    defaultNodeId: 'ind.or_simplex_duality',
-  },
-  {
-    id: 'production',
-    title: 'مدیریت تولید و عملیات',
-    defaultNodeId: 'ind.pom_eoq_mrp',
-  },
-  {
-    id: 'marketing',
-    title: 'بازاریابی',
-    defaultNodeId: 'mkt.plc',
-  },
+  { id: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', defaultNodeId: 'bus.english_eshraghi' },
+  { id: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', defaultNodeId: 'bus.islamic_moghimi' },
+  { id: 'math_stats', title: 'ریاضی و آمار', defaultNodeId: 'bus.math_stats_ranjbaran_tourani' },
+  { id: 'management_theories', title: 'تئوری‌های مدیریت', defaultNodeId: 'mb.structure' },
+  { id: 'economics', title: 'اقتصاد خرد و کلان', defaultNodeId: 'bus.econ_nazari' },
+  { id: 'public_finance', title: 'مالیه عمومی و بودجه', defaultNodeId: null },
+  { id: 'human_resources', title: 'مدیریت منابع انسانی', defaultNodeId: null },
+  { id: 'operations_research', title: 'تحقیق در عملیات', defaultNodeId: 'ind.or_simplex_duality' },
+  { id: 'financial_management', title: 'مدیریت مالی', defaultNodeId: null },
+  { id: 'production', title: 'مدیریت تولید', defaultNodeId: 'ind.pom_eoq_mrp' },
+  { id: 'marketing', title: 'بازاریابی', defaultNodeId: 'mkt.plc' },
+  { id: 'investment_risk', title: 'مدیریت سرمایه‌گذاری و ریسک', defaultNodeId: null },
+  { id: 'entrepreneurship', title: 'مبانی کارآفرینی', defaultNodeId: null },
+  { id: 'accounting', title: 'حسابداری مالی و صنعتی', defaultNodeId: null },
+  { id: 'transportation', title: 'دانش حمل‌ونقل', defaultNodeId: null },
+  { id: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', defaultNodeId: null },
 ];
 
 export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
