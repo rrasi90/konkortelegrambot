@@ -1,0 +1,73 @@
+name: OCR management exam booklets to Word
+
+on:
+  push:
+    branches:
+      - ocr/exam-booklets-docx-20261115
+    paths:
+      - .github/workflows/ocr-exam-booklets.yml
+      - tools/exam-import/ocr-booklets-to-docx.py
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ocr-to-docx:
+    name: Persian OCR and DOCX generation
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout working branch and full Git history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install OCR and document dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-fas fonts-noto-core 7zip unar
+          python -m pip install --upgrade pip
+          python -m pip install pymupdf Pillow python-docx
+
+      - name: Verify Persian OCR language
+        run: |
+          tesseract --list-langs
+          tesseract --list-langs | grep -qx fas
+
+      - name: Restore source PDFs from Git history (without restoring them into the repository)
+        env:
+          SOURCE_COMMIT: 3d8a7031ffcd6dba450115a1f7f901ce4087fade
+        run: |
+          mkdir -p "$RUNNER_TEMP/exam-source"
+          git archive "$SOURCE_COMMIT" konkor/downloads | tar -x -C "$RUNNER_TEMP/exam-source"
+          test -d "$RUNNER_TEMP/exam-source/konkor/downloads"
+          find "$RUNNER_TEMP/exam-source/konkor/downloads" -maxdepth 1 -type f -printf '%f\n' | sort
+
+      - name: OCR all available exam booklets into editable Word documents
+        run: |
+          python tools/exam-import/ocr-booklets-to-docx.py \
+            --source-dir "$RUNNER_TEMP/exam-source/konkor/downloads" \
+            --output-dir docs/exam-ocr \
+            --dpi 250
+
+      - name: Upload Word documents and OCR audit manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: management-exam-booklets-ocr-docx
+          path: docs/exam-ocr/
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 6
+
+      - name: Commit OCR Word documents to this feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/exam-ocr/
+          if git diff --cached --quiet; then
+            echo "No OCR output changes to commit."
+          else
+            git commit -m "docs(exams): add OCR Word booklets for management exams"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
