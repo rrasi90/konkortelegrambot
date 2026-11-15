@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render private visual-audit artefacts for Master's Management 1405."""
 from pathlib import Path
-import argparse, json, fitz, hashlib
+import argparse, json, fitz, hashlib, subprocess
 from PIL import Image, ImageDraw
 
 def render(pdf: Path, out: Path, prefix: str, dpi: int):
