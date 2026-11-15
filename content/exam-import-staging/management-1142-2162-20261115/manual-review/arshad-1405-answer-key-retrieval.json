@@ -1,0 +1,27 @@
+{
+  "examRef": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A"
+  },
+  "status": "not_retrieved",
+  "sourceUrl": "https://www8.sanjesh.org/noet_tk/Handlers/DownloadHandler.ashx?A=1405_arsh_319A",
+  "discoveryEvidence": "A secondary download index lists exam family 1142, booklet code 319A, with a direct key link to the Sanjesh host.",
+  "retrievalAttempts": [
+    {
+      "method": "GitHub Actions curl --location",
+      "result": "timeout_or_no_file; no PDF present in artifact"
+    },
+    {
+      "method": "direct web link open",
+      "result": "timeout"
+    },
+    {
+      "method": "container direct download",
+      "result": "failed"
+    }
+  ],
+  "answerKeyRevisionCreated": false,
+  "rule": "Do not use the unrelated 1152/117A key found in repository history. Do not infer or copy correctOption values into an official AnswerKeyRevision."
+}
