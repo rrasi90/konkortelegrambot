@@ -20,4 +20,4 @@
 ❌ **فلش‌کارتی برای این فصل ساخته نشده.** (لیست تولید در `docs/content-coverage/FLASHCARD-BACKLOG.md`)
 
 ---
-*تولید خودکار — 2026-11-13 — منبع: bookChaptersBusiness/flashcards/INITIAL_QUESTION_BANK*
+*تولید خودکار — 2026-11-15 — منبع: bookChaptersBusiness/flashcards/INITIAL_QUESTION_BANK*

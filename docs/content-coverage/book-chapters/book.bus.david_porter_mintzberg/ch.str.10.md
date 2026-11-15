@@ -25,4 +25,4 @@
 - `q.sm.dyn.1` — سال 1403: بر اساس نظریه قابلیت‌های پویا (دیوید تیس)، توانایی یک شرکت خودروساز در «بازطراحی ساختار سا
 
 ---
-*تولید خودکار — 2026-11-13 — منبع: bookChaptersBusiness/flashcards/INITIAL_QUESTION_BANK*
+*تولید خودکار — 2026-11-15 — منبع: bookChaptersBusiness/flashcards/INITIAL_QUESTION_BANK*

@@ -40,4 +40,4 @@
 ✅ این فصل در دانشنامهٔ جامع پوشش داده شده: **نقدهای بوروکراسی (مرتون، گولدنر، سلزنیک، کروزیر، آرجریس)، بوم‌شناسی جمعیت، وابستگی به منابع و نهادگرایی**
 
 ---
-*تولید خودکار — 2026-11-13 — منبع: bookChaptersBusiness/flashcards/INITIAL_QUESTION_BANK*
+*تولید خودکار — 2026-11-15 — منبع: bookChaptersBusiness/flashcards/INITIAL_QUESTION_BANK*

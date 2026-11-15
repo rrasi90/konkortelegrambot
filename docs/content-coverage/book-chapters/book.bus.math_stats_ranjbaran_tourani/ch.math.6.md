@@ -42,4 +42,4 @@
 ❌ این فصل در دانشنامهٔ جامعِ این کتاب پوشش داده نشده.
 
 ---
-*تولید خودکار — 2026-11-13 — منبع: bookChaptersBusiness/flashcards/INITIAL_QUESTION_BANK*
+*تولید خودکار — 2026-11-15 — منبع: bookChaptersBusiness/flashcards/INITIAL_QUESTION_BANK*
