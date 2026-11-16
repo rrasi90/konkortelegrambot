@@ -30,7 +30,7 @@
     "yearsWithAtLeastOneConcreteExternalSource": 10,
     "yearsWithDirectlyViewedScannedBookletAndCoverEvidence": 3,
     "yearsWithQuestionPagesAndScannedQuestionEvidence": 2,
-    "yearsCoveredOnlyByCommercialOrBibliographicSources": 5,
+    "yearsCoveredOnlyByCommercialOrBibliographicSources": 4,
     "filesDownloadedIntoRepository": 0,
     "officiallyVerifiedNewQuestionAppearances": 0,
     "productionServable": 0,
@@ -38,7 +38,8 @@
     "yearsWithAtLeastOnePublicScannedQuestionPage": 2,
     "commerciallyCataloguedPhdYears": 5,
     "yearsWithPageLevelQuestionStructure": 2,
-    "questionStructureTotalAcrossThesePages": 580
+    "questionStructureTotalAcrossThesePages": 580,
+    "yearsWithPublicPdfAttachmentOrPublicQuestionScan": 6
   },
   "entries": [
     {
