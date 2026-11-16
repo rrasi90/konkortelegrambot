@@ -40,3 +40,8 @@
 ## External source recovery
 
 The external source URLs and year-by-year evidence for missing/quarantined 1142 and 2162 years are recorded in [source-recovery-register.json](../../content/exam-import-staging/management-1142-2162-20261115/source-recovery-register.json). This register records source discovery only; it does not mean the files were downloaded, verified as official originals, or imported into the question bank.
+
+
+## ممیزی دامنه و هویت ۲۰ بستهٔ ده‌ساله
+
+گزارش [EXAMS-SOURCE-AUDIT-2026-11-17.md](../content-coverage/EXAMS-SOURCE-AUDIT-2026-11-17.md) و دادهٔ ماشین‌خوان [phase1-source-identity-audit.json](../../content/exam-import-staging/management-1142-2162-20261115/phase1-source-identity-audit.json) برای ۲۰ بستهٔ ارشد ۱۱۴۲ و دکتری ۲۱۶۲ ساخته شد. توجه: کد ۲۱۶۲ در راهنمای دکتری ۱۴۰۵ مجموعهٔ «مدیریت» با چندین ترکیب درسی است؛ عنوان تجاری «بازرگانی و راهبردی» دامنهٔ کامل را نشان نمی‌دهد. این ممیزی صرفاً هویت منبع/تعارض‌ها را ثبت می‌کند و هیچ سؤال یا کلیدی را به Production منتقل نمی‌کند.
