@@ -1,0 +1,65 @@
+{
+  "batchId": "review-batch.arshad.1405.part-1.questions-001-095",
+  "examRef": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A"
+  },
+  "questionRange": {
+    "from": 1,
+    "to": 95,
+    "count": 95
+  },
+  "sourcePdf": "MA_1142_1405.pdf",
+  "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+  "pageRange": [
+    2,
+    16
+  ],
+  "visualPagesReviewed": 15,
+  "questionPageLocatorsVerified": 95,
+  "transcriptionStatus": {
+    "full_stem_and_four_options_transcribed_from_original_pdf": 92,
+    "visually_checked_sample": 2,
+    "source_visual_verified_bank_conflict": 1
+  },
+  "transcribedQuestionCount": 95,
+  "fullStemAndOptionsTranscriptions": 92,
+  "visuallyCheckedExistingBankRecords": 2,
+  "sourceBankConflictCount": 1,
+  "formulaTableAndSemanticsFlags": [
+    {
+      "question": 55,
+      "flag": "joint_distribution_table captured; derived expectation versus answer options requires second mathematical check"
+    },
+    {
+      "question": 56,
+      "flag": "printed exponential literal is e^(−۰/۲); answer-option consistency requires high-resolution review"
+    },
+    {
+      "question": 57,
+      "flag": "exact target statistic wording (sampling mean versus variance) requires semantic check"
+    },
+    {
+      "question": 60,
+      "flag": "regression coefficient glyphs appear inconsistent; preserve print literal pending source/SME verification"
+    },
+    {
+      "question": 67,
+      "flag": "option 4 has semantically unusual wording; preserve literal pending SME"
+    },
+    {
+      "question": 87,
+      "flag": "PDF has P=14+0.5Q; existing bank has P=14−0.5Q; do not overwrite before erratum decision"
+    }
+  ],
+  "answerKeysImported": 0,
+  "answerKeyRevisionsCreated": 0,
+  "chapterAndSkillMappingsApproved": 0,
+  "crossYearDeduplicationCompleted": 0,
+  "rightsStatus": "restricted_permission_required",
+  "allowedUse": [],
+  "productionServableQuestions": 0,
+  "nextPart": "Part 2: Questions 96–190 — evidence-backed chapter/skill mappings and official answer-key reconciliation when exact 319A key PDF is available"
+}
