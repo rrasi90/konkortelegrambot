@@ -117,9 +117,12 @@
           "code": "2143",
           "label": "مدیریت آموزشی",
           "classification": "adjacent_education_management",
-          "rule": "Separate exam family in Educational Sciences; never merge with 2162.",
+          "rule": "Separate exam family; never merge with 2162.",
           "officialCodeYears": [
             1400
+          ],
+          "probableCodeYears": [
+            1399
           ],
           "catalogueEvidenceYears": [
             1397,
@@ -140,6 +143,19 @@
         }
       ],
       "officialGuideEvidenceByYear": [
+        {
+          "year": 1399,
+          "url": "https://sedayemoshaveran.com/wp-content/uploads/2020/08/NoteCSphd99_v2.pdf",
+          "pages": [
+            45,
+            46,
+            47,
+            48,
+            49,
+            50
+          ],
+          "evidence": "Year-specific guide confirms codes 2162–2169, 2170 Tourism and 2171 Finance. The adjacent Educational Management heading has an OCR inconsistency (one heading reads 2143, another 1423) and remains probable pending page-image verification."
+        },
         {
           "year": 1400,
           "url": "https://phdnews.github.io/m/p/00147589-bcc5-4e68-9b17-b25e79cd363f/دفترچه-انتخاب-رشته-دکتری-1400.pdf",
@@ -205,7 +221,7 @@
           ]
         }
       ],
-      "codeReuseWarning": "Codes are year-specific. For example, Accounting is separate exam-set 2172 in 1400 and 2173 in 1402; the number 2173 also appears as a program-location code inside a 1400 2163 admission table, so it must never be interpreted without its field context."
+      "codeReuseWarning": "Codes are year-specific and context-specific. For example, Accounting is a separate exam set 2172 in 1400 and 2173 in 1402; 1399 guide does not verify an Accounting exam-set code. The 1399 Public Management 2163 table also uses numeric 2170–2175 as course-location codes, while its separate exam-set headings 2170 and 2171 mean Tourism and Finance."
     },
     "scopeCaveat": "The present 20-package plan is explicitly limited to 1142 and 2162. It must not be described as every Iranian exam set containing the word «مدیریت».",
     "auditUnitDefinition": "The 20 rows in `packages[]` are parent year-level records only (10 master's 1142 + 10 doctoral 2162 OCR records). They are not a count of all original doctoral Management exam booklets. The complete doctoral inventory must expand each year into historical examSetCode and/or 2162 courseCombinationCode units."
@@ -225,8 +241,9 @@
     "targetYearLevelParentRecords": 20,
     "existingDoctoral2162OcrParentRecords": 10,
     "completeDoctoralManagementBookletUnitsEnumerated": 0,
-    "completeDoctoralManagementBookletUnitsStatus": "not_enumerated; historical code-family map added but source-unit retrieval and counting remain open",
+    "completeDoctoralManagementBookletUnitsStatus": "not_enumerated; the official code family is now confirmed for 1399–1405 but question booklet and answer-key source units have not been individually acquired and counted",
     "yearsWithOfficialCodeTablesInspected": [
+      1399,
       1400,
       1401,
       1402,
@@ -237,10 +254,13 @@
     "yearsWithManagementTitlesButIncompleteCodeMapping": [
       1396,
       1397,
-      1398,
-      1399
+      1398
     ],
-    "yearsAwaitingCodeTableRetrieval": [],
+    "yearsAwaitingCodeTableRetrieval": [
+      1396,
+      1397,
+      1398
+    ],
     "transitionYearsAwaitingOfficialConfirmation": [],
     "adjacentManagementTitledExamSetsIdentified": [
       "2143",
@@ -283,7 +303,20 @@
     "accountingExamCodeByYear": {
       "1400": "2172",
       "1402": "2173"
-    }
+    },
+    "confirmed1399ExamCodeFamily": [
+      "2162",
+      "2163",
+      "2164",
+      "2165",
+      "2166",
+      "2167",
+      "2168",
+      "2169",
+      "2170",
+      "2171"
+    ],
+    "probableAdjacent1399Code": "2143"
   },
   "evidencePolicy": {
     "sourceIdentityIsSeparateFromQuestionTranscription": true,
@@ -1326,9 +1359,11 @@
     }
   ],
   "globalNextGates": [
-    "Expand each doctoral year into its actual exam codes and/or course-combination codes using the final registration guide and amendments for that year.",
-    "Retrieve/identify a complete original question booklet for every year × exam-code/course-combination unit in the management-family inventory.",
+    "Retrieve exact final registration tables and amendments for 1396–1398; reconcile each historical Management exam code/title including code amendments.",
+    "Expand each year into its actual exam codes and/or course-combination codes using the final registration guide and amendments for that year.",
+    "Retrieve/identify a complete original question booklet for every year × exam-code/course-combination unit in the Management family inventory.",
     "For every booklet, record cover year, examination-set code, track, combination code, control code, booklet type, page count and internal header conflicts from image evidence.",
+    "Resolve the probable 1399 Educational Management code 2143 against the PDF page image; extracted headings conflict between 2143 and 1423.",
     "Map changes in exam-set codes across years through explicit crosswalk records; do not merge historical appearances or infer equivalence from title similarity.",
     "Acquire and validate the exact initial and final official answer-key revisions separately by year, exam code, combination and booklet type.",
     "Complete visual page review, exact question-number continuity and source hashes before replacing any quarantined OCR source.",
