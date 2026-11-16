@@ -33,7 +33,10 @@
     "yearsCoveredOnlyByCommercialOrBibliographicSources": 5,
     "filesDownloadedIntoRepository": 0,
     "officiallyVerifiedNewQuestionAppearances": 0,
-    "productionServable": 0
+    "productionServable": 0,
+    "yearsWithDocumentedPublicChannelPdfAttachment": 1,
+    "yearsWithAtLeastOnePublicScannedQuestionPage": 2,
+    "commerciallyCataloguedPhdYears": 5
   },
   "entries": [
     {
@@ -438,6 +441,16 @@
       "recoveryStatus": "year_and_exam_code_corroborated_commercial_bundle_lists_question_and_key",
       "sources": [
         {
+          "role": "institution_shared_booklet_attachment",
+          "url": "https://t.me/Negareh_ac/1531",
+          "publisherOrHost": "Higher Education Institute Negareh (Telegram channel)",
+          "sourceType": "public_channel_post_with_attached_pdf",
+          "access": "public_post_attachment",
+          "evidence": "The channel post explicitly lists the attached file 'دفترچه_دکتری_مدیریت_بازرگانی_۱۴۰۲.pdf' (1.3 MB), announces publication of PhD Management Business & Strategy 1402 questions, and links to the Sanjesh announcement.",
+          "officialAnnouncementUrl": "https://old.sanjesh.org/FullStory.aspx?gid=2&id=8287",
+          "limitations": "The Telegram attachment was not downloaded into the repository; the Sanjesh announcement host timed out during web retrieval."
+        },
+        {
           "role": "question_and_answer_bundle_1396_1404",
           "url": "https://ketab-khoob.4kia.ir/info/834436/",
           "publisherOrHost": "Ketab-Khoob / 4kia",
@@ -457,7 +470,7 @@
       "ingestion": {
         "downloadedToRepo": false,
         "mislabelled_1403_variantMustRemainSeparate": true,
-        "nextAction": "Acquire the actual 1402 2162 booklet from the 1402 package listing; do not rename the current 1403/3258 scan as 1402.",
+        "nextAction": "Download the attached 1402 PDF from the public Negareh Telegram post or retrieve the corresponding official Sanjesh booklet, inspect the cover/set/control code, then OCR and reconcile against local 1403/3258 variant.",
         "answerKeyImported": false
       },
       "rights": {
