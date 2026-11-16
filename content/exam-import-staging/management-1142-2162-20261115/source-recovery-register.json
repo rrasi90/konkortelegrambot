@@ -36,7 +36,9 @@
     "productionServable": 0,
     "yearsWithDocumentedPublicChannelPdfAttachment": 1,
     "yearsWithAtLeastOnePublicScannedQuestionPage": 2,
-    "commerciallyCataloguedPhdYears": 5
+    "commerciallyCataloguedPhdYears": 5,
+    "yearsWithPageLevelQuestionStructure": 2,
+    "questionStructureTotalAcrossThesePages": 580
   },
   "entries": [
     {
@@ -222,7 +224,7 @@
           "publisherOrHost": "KonkurStudy",
           "sourceType": "question_by_question_scanned_reference_and_solutions",
           "access": "public_web_page",
-          "evidence": "Page identifies management set 1142 and 295 questions; states each question has an original scan and a step-by-step solution checked against the official Sanjesh key."
+          "evidence": "Page identifies management set 1142 and 295 questions; states each question has an original scan and a step-by-step solution checked against the official Sanjesh key. Page headings give all 16 section ranges, from question 1 to 295; the 295 total is explicitly displayed."
         },
         {
           "role": "all_years_question_and_answer_bundle",
@@ -242,6 +244,110 @@
         "status": "review_required",
         "allowedUse": [],
         "note": "Do not copy the commercial site's scans or solutions without checking licence/permission."
+      },
+      "questionStructureEvidence": {
+        "sourceUrl": "https://konkurstudy.ir/konkurs/management/1400",
+        "sourceType": "public_question_index_with_original_scan_image_per_question",
+        "totalQuestions": 295,
+        "sections": [
+          {
+            "subject": "English (General & Specialized)",
+            "from": 1,
+            "to": 30,
+            "count": 30
+          },
+          {
+            "subject": "Islamic Management Principles",
+            "from": 31,
+            "to": 45,
+            "count": 15
+          },
+          {
+            "subject": "Mathematics & Statistics",
+            "from": 46,
+            "to": 65,
+            "count": 20
+          },
+          {
+            "subject": "Management Theories",
+            "from": 66,
+            "to": 95,
+            "count": 30
+          },
+          {
+            "subject": "Micro & Macro Economics",
+            "from": 96,
+            "to": 115,
+            "count": 20
+          },
+          {
+            "subject": "Public Finance & Budgeting",
+            "from": 116,
+            "to": 130,
+            "count": 15
+          },
+          {
+            "subject": "Human Resource Management",
+            "from": 131,
+            "to": 145,
+            "count": 15
+          },
+          {
+            "subject": "Operations Research",
+            "from": 146,
+            "to": 160,
+            "count": 15
+          },
+          {
+            "subject": "Financial Management",
+            "from": 161,
+            "to": 175,
+            "count": 15
+          },
+          {
+            "subject": "Production & Operations Management",
+            "from": 176,
+            "to": 190,
+            "count": 15
+          },
+          {
+            "subject": "Marketing",
+            "from": 191,
+            "to": 205,
+            "count": 15
+          },
+          {
+            "subject": "Investment & Risk Management",
+            "from": 206,
+            "to": 220,
+            "count": 15
+          },
+          {
+            "subject": "Fundamentals of Entrepreneurship",
+            "from": 221,
+            "to": 235,
+            "count": 15
+          },
+          {
+            "subject": "Financial & Cost Accounting",
+            "from": 236,
+            "to": 250,
+            "count": 15
+          },
+          {
+            "subject": "Transportation Knowledge",
+            "from": 251,
+            "to": 265,
+            "count": 15
+          },
+          {
+            "subject": "Commercial & Transport Management Knowledge",
+            "from": 266,
+            "to": 295,
+            "count": 30
+          }
+        ],
+        "note": "Counts and question-number ranges are visible in the page's section headings. This is the site's full 295-question architecture, not the narrower eight-course subset counted in the older coverage document."
       }
     },
     {
@@ -258,7 +364,7 @@
           "publisherOrHost": "KonkurStudy",
           "sourceType": "question_by_question_scanned_reference_and_solutions",
           "access": "public_web_page",
-          "evidence": "Page identifies management set 1142 and 285 questions; states each question has an original scan and a step-by-step solution checked against the official Sanjesh key."
+          "evidence": "Page identifies management set 1142 and 285 questions; states each question has an original scan and a step-by-step solution checked against the official Sanjesh key. Page headings give all 16 section ranges, from question 1 to 285; the 285 total is explicitly displayed."
         },
         {
           "role": "all_years_question_and_answer_bundle",
@@ -279,6 +385,110 @@
         "status": "review_required",
         "allowedUse": [],
         "note": "Do not copy the commercial site's scans or solutions without checking licence/permission."
+      },
+      "questionStructureEvidence": {
+        "sourceUrl": "https://konkurstudy.ir/konkurs/management/1403",
+        "sourceType": "public_question_index_with_original_scan_image_per_question",
+        "totalQuestions": 285,
+        "sections": [
+          {
+            "subject": "English (General & Specialized)",
+            "from": 1,
+            "to": 25,
+            "count": 25
+          },
+          {
+            "subject": "Islamic Management Principles",
+            "from": 26,
+            "to": 40,
+            "count": 15
+          },
+          {
+            "subject": "Mathematics & Statistics",
+            "from": 41,
+            "to": 60,
+            "count": 20
+          },
+          {
+            "subject": "Management Theories",
+            "from": 61,
+            "to": 85,
+            "count": 25
+          },
+          {
+            "subject": "Micro & Macro Economics",
+            "from": 86,
+            "to": 105,
+            "count": 20
+          },
+          {
+            "subject": "Public Finance & Budgeting",
+            "from": 106,
+            "to": 120,
+            "count": 15
+          },
+          {
+            "subject": "Human Resource Management",
+            "from": 121,
+            "to": 135,
+            "count": 15
+          },
+          {
+            "subject": "Operations Research",
+            "from": 136,
+            "to": 150,
+            "count": 15
+          },
+          {
+            "subject": "Financial Management",
+            "from": 151,
+            "to": 165,
+            "count": 15
+          },
+          {
+            "subject": "Production & Operations Management",
+            "from": 166,
+            "to": 180,
+            "count": 15
+          },
+          {
+            "subject": "Marketing",
+            "from": 181,
+            "to": 195,
+            "count": 15
+          },
+          {
+            "subject": "Investment & Risk Management",
+            "from": 196,
+            "to": 210,
+            "count": 15
+          },
+          {
+            "subject": "Fundamentals of Entrepreneurship",
+            "from": 211,
+            "to": 225,
+            "count": 15
+          },
+          {
+            "subject": "Financial & Cost Accounting",
+            "from": 226,
+            "to": 240,
+            "count": 15
+          },
+          {
+            "subject": "Transportation Knowledge",
+            "from": 241,
+            "to": 255,
+            "count": 15
+          },
+          {
+            "subject": "Commercial & Transport Management Knowledge",
+            "from": 256,
+            "to": 285,
+            "count": 30
+          }
+        ],
+        "note": "Counts and question-number ranges are visible in the page's section headings. This is the site's full 285-question architecture, not the narrower eight-course subset counted in the older coverage document."
       }
     },
     {
@@ -465,12 +675,20 @@
           "sourceType": "exam_code_and_subject_confirmation",
           "access": "public_web_page",
           "evidence": "Identifies the 1402 doctoral management marketing candidate as answering the 2162 management business/strategy exam; does not itself supply the booklet PDF."
+        },
+        {
+          "role": "official_sanjesh_answer_key_index",
+          "url": "https://result2.sanjesh.org/Keys/phd1402/",
+          "publisherOrHost": "Sanjesh",
+          "sourceType": "official_answer_key_index",
+          "access": "host_timeout_during_check",
+          "evidence": "Negareh Institute's 2026? 1402 exam post links to this exact official result2.sanjesh.org/phd1402 key index; direct host retrieval timed out."
         }
       ],
       "ingestion": {
         "downloadedToRepo": false,
         "mislabelled_1403_variantMustRemainSeparate": true,
-        "nextAction": "Download the attached 1402 PDF from the public Negareh Telegram post or retrieve the corresponding official Sanjesh booklet, inspect the cover/set/control code, then OCR and reconcile against local 1403/3258 variant.",
+        "nextAction": "Download the attached 1402 PDF from the public Negareh Telegram post or retrieve the corresponding official Sanjesh booklet, inspect the cover/set/control code, then OCR and reconcile against local 1403/3258 variant. Retrieve official key index and identify the 2162 booklet/control variant; do not infer answer values from unrelated code or another variant.",
         "answerKeyImported": false
       },
       "rights": {
