@@ -1,0 +1,616 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-11-17",
+  "title": "Historical doctoral Management exam-code family and consolidation map",
+  "purpose": "Correct the initial one-code-per-year PhD 2162 assumption. Track all Management-related national PhD exam sets through their historical code structure and later consolidation.",
+  "criticalFinding": "A ten-year PhD Management corpus cannot be represented by one 2162 booklet per year. In 1401–1402 several Management disciplines were separate exam-set codes. In 1404–1405 many of those tracks sit under the umbrella code 2162 Management, using course-combination codes. The currently staged 2162 OCR is only one historical slice and does not establish complete Management PhD coverage.",
+  "dataModel": {
+    "requiredHierarchy": [
+      "examYear",
+      "examLevel",
+      "examSetCode",
+      "officialExamSetTitle",
+      "trackOrSpecialization",
+      "courseCombinationCode",
+      "bookletControlCode",
+      "bookletVariant",
+      "sourceDocumentId",
+      "answerKeyRevisionId"
+    ],
+    "identityRule": "Never merge question appearances solely because a discipline is renamed or moves under another exam-set code. Keep original examYear/examSetCode/booklet identity and link historical equivalence through a separate crosswalk.",
+    "yearAsParentOnly": true,
+    "existingAuditRecordsMeaning": "The existing ten doctoral records for code 2162 remain source-audit records for that code only. They are not the complete set of all PhD Management booklets for those years."
+  },
+  "familyScope": {
+    "coreIncludedHistoricalCodes": [
+      {
+        "code": "2162",
+        "title": "مدیریت بازرگانی و راهبردی / later مدیریت",
+        "classification": "core_management",
+        "notes": "Business and strategic management in earlier years; umbrella Management in 1404/1405."
+      },
+      {
+        "code": "2163",
+        "title": "مدیریت دولتی",
+        "classification": "core_management",
+        "notes": "Separate Management exam code in the pre-consolidation years."
+      },
+      {
+        "code": "2164",
+        "title": "مدیریت صنعتی",
+        "classification": "core_management",
+        "notes": "Separate Management exam code in the pre-consolidation years."
+      },
+      {
+        "code": "2165",
+        "title": "مدیریت رسانه و اطلاعات",
+        "classification": "core_management",
+        "notes": "Separate code in 1401/1402; later folded into 2162 umbrella."
+      },
+      {
+        "code": "2167",
+        "title": "مدیریت فناوری اطلاعات",
+        "classification": "core_management",
+        "notes": "Separate code in 1401/1402; later folded into 2162 umbrella."
+      },
+      {
+        "code": "2169",
+        "title": "کارآفرینی، آینده‌پژوهی و مدیریت تکنولوژی",
+        "classification": "core_management",
+        "notes": "Separate code in 1401/1402; later folded into 2162 umbrella."
+      },
+      {
+        "code": "2171",
+        "title": "مالی",
+        "classification": "management_related_track",
+        "notes": "Separate Finance exam-set code in 1401/1402; Finance and Insurance tracks appear under 2162 in 1404/1405. Preserve the original code for the older years."
+      }
+    ],
+    "adjacentSpecialistCodes": [
+      {
+        "code": "2166",
+        "title": "مدیریت پیشگیری از جرم، جرم‌یابی و ایمنی ترافیک",
+        "classification": "specialist_restricted_adjacent",
+        "restriction": "Admission in 1401/1402 is restricted to male active-duty law-enforcement personnel; preserve separately and do not mix into the public general-management bank.",
+        "includeInBroadInventory": true
+      },
+      {
+        "code": "2168",
+        "title": "مدیریت قراردادهای بین‌المللی نفت و گاز",
+        "classification": "specialist_adjacent",
+        "restriction": "Separate exam set with oil/gas economics and contract-law subjects. Keep as a distinct series; include in the broad inventory of management-titled doctoral exams, not in the canonical 2162 series.",
+        "includeInBroadInventory": true
+      }
+    ],
+    "explicitlyExcludedSeparateCodes": [
+      {
+        "code": "2170",
+        "title": "گردشگری",
+        "reason": "A separate Tourism exam set; not a Management exam set merely because it contains tourism management."
+      },
+      {
+        "code": "2173",
+        "title": "حسابداری",
+        "reason": "A separate Accounting exam set; do not absorb it into Management/Finance without a deliberate change of scope."
+      }
+    ],
+    "scopeBoundary": "The expanded inventory includes core Management codes and separately labelled specialist Management-titled exam sets. It excludes Tourism and Accounting as separately named exam sets. Any additional discipline discovered in a year-specific official guide must be added with evidence, not inferred from a related undergraduate admission field."
+  },
+  "yearMap": [
+    {
+      "year": 1396,
+      "status": "partially_confirmed_legacy_codes",
+      "confirmedCodes": [
+        {
+          "code": "2162",
+          "title": "مدیریت بازرگانی",
+          "evidence": "A 1396 exam result/program listing identifies code 2162 for Management Business."
+        },
+        {
+          "code": "2163",
+          "title": "مدیریت دولتی",
+          "evidence": "A 1396 exam result/program listing identifies code 2163 for Public Management."
+        }
+      ],
+      "additionalExamTitlesReported": [
+        "مدیریت راهبردی و آینده‌پژوهی",
+        "مدیریت",
+        "مدیریت آموزشی",
+        "مدیریت فناوری اطلاعات",
+        "مدیریت قراردادهای بین‌المللی نفت و گاز",
+        "کارآفرینی",
+        "مالی",
+        "حسابداری"
+      ],
+      "codeMappingStatus": "not_all_codes_reconciled",
+      "notes": "A 1396 amendment record says a pre-amendment code 2166 listing for HR/organizational-behaviour tracks was changed: HR moved under Public Management code 2163, while an organizational behaviour/HR track was placed under Business Management code 2162. Do not treat the pre-amendment 2166 label as a final code assignment."
+    },
+    {
+      "year": 1397,
+      "status": "titles_confirmed_codes_not_fully_reconciled",
+      "officialOrPublicQuestionTitleEvidence": [
+        "مدیریت بازرگانی و راهبردی",
+        "مدیریت دولتی",
+        "مدیریت صنعتی",
+        "مدیریت آموزشی",
+        "مدیریت رسانه و اطلاعات",
+        "مدیریت فناوری اطلاعات",
+        "مدیریت قراردادهای بین‌المللی نفت و گاز",
+        "کارآفرینی، آینده‌پژوهی و مدیریت تکنولوژی"
+      ],
+      "codeMappingStatus": "year_specific_code_table_required",
+      "notes": "Public question-booklet catalogue lists these as separate examination booklets, but this audit has not extracted the exact registration codes from the final 1397 amendments. Preserve each title as a distinct source family until code/control is confirmed."
+    },
+    {
+      "year": 1398,
+      "status": "titles_confirmed_codes_not_fully_reconciled",
+      "officialOrPublicQuestionTitleEvidence": [
+        "مدیریت بازرگانی و راهبردی",
+        "مدیریت دولتی",
+        "مدیریت صنعتی",
+        "مدیریت آموزشی",
+        "مدیریت رسانه و اطلاعات",
+        "مدیریت فناوری اطلاعات",
+        "مدیریت قراردادهای بین‌المللی نفت و گاز",
+        "کارآفرینی، آینده‌پژوهی و مدیریت تکنولوژی",
+        "مالی"
+      ],
+      "codeMappingStatus": "year_specific_code_table_required",
+      "notes": "The 1398 booklet guide and question archive enumerate separate Management-area booklets. The old local 2162-1398 OCR file is set 3162, so it cannot serve as proof of a 2162 source or the full management family."
+    },
+    {
+      "year": 1399,
+      "status": "titles_confirmed_codes_not_fully_reconciled",
+      "officialOrPublicQuestionTitleEvidence": [
+        "مدیریت پیشگیری از جرم، جرم‌یابی و ایمنی ترافیک",
+        "مدیریت بازرگانی و راهبردی",
+        "مدیریت دولتی",
+        "مدیریت صنعتی",
+        "مدیریت آموزشی",
+        "مدیریت رسانه و اطلاعات",
+        "مدیریت فناوری اطلاعات",
+        "مدیریت قراردادهای بین‌المللی نفت و گاز",
+        "کارآفرینی، آینده‌پژوهی و مدیریت تکنولوژی",
+        "مالی",
+        "حسابداری"
+      ],
+      "codeMappingStatus": "question_titles_listed_official_sanjesh_links_but_codes_not_all_extracted",
+      "notes": "The year-specific question archive exposes separate Sanjesh links by exam title. This demonstrates multi-booklet coverage is needed, but exact exam codes/controls are still to be extracted from the 1399 registration booklet."
+    },
+    {
+      "year": 1400,
+      "status": "not_yet_reconciled",
+      "officialOrPublicQuestionTitleEvidence": [],
+      "codeMappingStatus": "retrieve_1400_registration_guide_and_question_list",
+      "notes": "Do not extrapolate the full 1401/1402 code table backwards without the year-specific official guide."
+    },
+    {
+      "year": 1401,
+      "status": "official_guide_codes_confirmed",
+      "officialGuideUrl": "https://phdphd.org/wp-content/uploads/2021/11/PhdNote1401_v1.pdf",
+      "officialGuidePages": [
+        39,
+        40,
+        41
+      ],
+      "codes": [
+        {
+          "code": "2162",
+          "title": "مدیریت بازرگانی و راهبردی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2163",
+          "title": "مدیریت دولتی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2164",
+          "title": "مدیریت صنعتی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2165",
+          "title": "مدیریت رسانه و اطلاعات",
+          "classification": "core_management"
+        },
+        {
+          "code": "2166",
+          "title": "مدیریت پیشگیری از جرم، جرم‌یابی و ایمنی ترافیک",
+          "classification": "specialist_restricted_adjacent",
+          "restriction": "ویژه کارکنان پایور مرد ناجا"
+        },
+        {
+          "code": "2167",
+          "title": "مدیریت فناوری اطلاعات",
+          "classification": "core_management"
+        },
+        {
+          "code": "2168",
+          "title": "مدیریت قراردادهای بین‌المللی نفت و گاز",
+          "classification": "specialist_adjacent"
+        },
+        {
+          "code": "2169",
+          "title": "کارآفرینی، آینده‌پژوهی و مدیریت تکنولوژی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2170",
+          "title": "گردشگری",
+          "classification": "excluded_separate"
+        },
+        {
+          "code": "2171",
+          "title": "مالی",
+          "classification": "management_related_track"
+        },
+        {
+          "code": "2173",
+          "title": "حسابداری",
+          "classification": "excluded_separate"
+        }
+      ],
+      "notes": "Official guide lists these as separate exam sets. Management Industrial includes production/operations, operations research, systems management, financial, and industrial strategy. Finance 2171 includes financial engineering, banking, international finance, insurance and financial law."
+    },
+    {
+      "year": 1402,
+      "status": "official_guide_codes_confirmed",
+      "officialGuideUrl": "https://irantahsil.org/wp-content/uploads/2022/08/دفترچه-ثبت-نام-آزمون-دکتری-1402.pdf",
+      "officialGuidePages": [
+        40,
+        41,
+        42
+      ],
+      "codes": [
+        {
+          "code": "2162",
+          "title": "مدیریت بازرگانی و راهبردی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2163",
+          "title": "مدیریت دولتی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2164",
+          "title": "مدیریت صنعتی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2165",
+          "title": "مدیریت رسانه و اطلاعات",
+          "classification": "core_management"
+        },
+        {
+          "code": "2166",
+          "title": "مدیریت پیشگیری از جرم، جرائم امنیتی و ایمنی ترافیک",
+          "classification": "specialist_restricted_adjacent",
+          "restriction": "ویژه کارکنان پایور مرد فراجا"
+        },
+        {
+          "code": "2167",
+          "title": "مدیریت فناوری اطلاعات",
+          "classification": "core_management"
+        },
+        {
+          "code": "2168",
+          "title": "مدیریت قراردادهای بین‌المللی نفت و گاز",
+          "classification": "specialist_adjacent"
+        },
+        {
+          "code": "2169",
+          "title": "کارآفرینی، آینده‌پژوهی و مدیریت تکنولوژی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2170",
+          "title": "گردشگری",
+          "classification": "excluded_separate"
+        },
+        {
+          "code": "2171",
+          "title": "مالی",
+          "classification": "management_related_track"
+        },
+        {
+          "code": "2173",
+          "title": "حسابداری",
+          "classification": "excluded_separate"
+        }
+      ],
+      "notes": "The 1402 guide expressly labels codes 2162–2165 and later lists 2167–2169 and 2171. Negareh's year-specific post lists separate question-booklet attachments for Business, Public, Finance, Entrepreneurship, Industrial, IT and Media Management. The local file named PhD_2162_1402 is actually 1403/2162/3258 and is not a 1402 source."
+    },
+    {
+      "year": 1403,
+      "status": "transition_year_provisional",
+      "primaryEvidenceUrl": "https://seraaj24.ir/phd-exam-changes-1403/",
+      "codeMappingStatus": "official_1403_registration_code_table_and_all_questions_not_yet_reconciled",
+      "notes": "Secondary reporting indicates a change/consolidation of Management/Industrial Management into the 2162 Management set around 1403. This is a transition hypothesis only until the 1403 official registration guide and all booklet covers/controls are reconciled. Existing 620C and 3258 scans remain distinct."
+    },
+    {
+      "year": 1404,
+      "status": "official_guide_2162_umbrella_confirmed",
+      "officialGuideUrl": "https://www.tahsilatali.ir/wp-content/uploads/2023/11/Phd1404NOTE_v1.pdf",
+      "officialGuidePages": [
+        37,
+        38,
+        39
+      ],
+      "umbrellaCode": "2162",
+      "umbrellaTitle": "مدیریت",
+      "courseCombinationCodes": [
+        {
+          "combinationCode": "1",
+          "tracks": [
+            "مدیریت بازرگانی",
+            "مدیریت راهبردی"
+          ],
+          "specializations": [
+            "بازاریابی",
+            "سیاست‌گذاری بازرگانی",
+            "رفتار سازمانی و مدیریت منابع انسانی"
+          ]
+        },
+        {
+          "combinationCode": "2",
+          "tracks": [
+            "مدیریت دولتی",
+            "مدیریت و برنامه‌ریزی فرهنگی",
+            "حکمرانی اقتصادی",
+            "مطالعات مدیریت اسلامی"
+          ],
+          "specializations": [
+            "تصمیم‌گیری و خط‌مشی‌گذاری عمومی",
+            "مدیریت تطبیقی و توسعه",
+            "رفتار سازمانی",
+            "مدیریت منابع انسانی"
+          ]
+        },
+        {
+          "combinationCode": "3",
+          "tracks": [
+            "مدیریت صنعتی"
+          ],
+          "specializations": [
+            "تولید و عملیات",
+            "تحقیق در عملیات",
+            "مدیریت سیستم‌ها",
+            "مالی",
+            "استراتژی صنعتی"
+          ]
+        },
+        {
+          "combinationCode": "4",
+          "tracks": [
+            "مدیریت آماد و پشتیبانی",
+            "مدیریت رسانه"
+          ],
+          "specializations": [],
+          "restriction": "مدیریت آماد و پشتیبانی مربوط به دانشگاه‌های نظامی و انتظامی است."
+        },
+        {
+          "combinationCode": "5",
+          "tracks": [
+            "مدیریت فناوری اطلاعات",
+            "مدیریت بحران"
+          ],
+          "specializations": [
+            "کسب‌وکار هوشمند",
+            "مدیریت خدمات و توسعه فناوری اطلاعات"
+          ]
+        },
+        {
+          "combinationCode": "6",
+          "tracks": [
+            "کارآفرینی",
+            "مدیریت فناوری",
+            "آینده‌پژوهی",
+            "سیاست‌گذاری علم و فناوری",
+            "حکمرانی علم، فناوری و نوآوری"
+          ],
+          "specializations": [
+            "مدیریت نوآوری",
+            "مدیریت تحقیق و توسعه",
+            "مدیریت انتقال تکنولوژی"
+          ]
+        },
+        {
+          "combinationCode": "7",
+          "tracks": [
+            "مالی",
+            "بیمه"
+          ],
+          "specializations": [
+            "مهندسی مالی",
+            "بانکداری",
+            "بیمه",
+            "حقوق مالی",
+            "مالی بین‌المللی"
+          ]
+        }
+      ],
+      "notes": "The official registration guide places these tracks under 2162. Preserve combination code per appearance; do not treat each as interchangeable or collapse to business/strategy."
+    },
+    {
+      "year": 1405,
+      "status": "official_guide_2162_umbrella_confirmed",
+      "officialGuideUrl": "https://www.samanehha.com/upload/files/897182075NOTERegPhd1405.pdf",
+      "officialGuidePages": [
+        24,
+        25
+      ],
+      "umbrellaCode": "2162",
+      "umbrellaTitle": "مدیریت",
+      "courseCombinationCodes": [
+        {
+          "combinationCode": "1",
+          "tracks": [
+            "مدیریت بازرگانی",
+            "مدیریت راهبردی"
+          ],
+          "specializations": [
+            "مدیریت بازاریابی",
+            "مدیریت سیاست‌گذاری بازرگانی",
+            "رفتار سازمانی و مدیریت منابع انسانی"
+          ]
+        },
+        {
+          "combinationCode": "2",
+          "tracks": [
+            "مدیریت دولتی",
+            "مدیریت و برنامه‌ریزی فرهنگی",
+            "مدیریت مطالعات اسلامی"
+          ],
+          "specializations": [
+            "تصمیم‌گیری و خط‌مشی‌گذاری عمومی",
+            "مدیریت تطبیقی و توسعه",
+            "رفتار سازمانی",
+            "مدیریت منابع انسانی"
+          ]
+        },
+        {
+          "combinationCode": "3",
+          "tracks": [
+            "مدیریت صنعتی"
+          ],
+          "specializations": [
+            "تولید و عملیات",
+            "تحقیق در عملیات",
+            "مدیریت سیستم‌ها",
+            "مالی",
+            "استراتژی صنعتی"
+          ]
+        },
+        {
+          "combinationCode": "4",
+          "tracks": [
+            "مدیریت آماد و پشتیبانی",
+            "مدیریت رسانه"
+          ],
+          "specializations": [],
+          "restriction": "مدیریت آماد و پشتیبانی مربوط به دانشگاه‌های نظامی و انتظامی است."
+        },
+        {
+          "combinationCode": "5",
+          "tracks": [
+            "مدیریت فناوری اطلاعات",
+            "مدیریت بحران"
+          ],
+          "specializations": [
+            "کسب‌وکار هوشمند",
+            "مدیریت خدمات و توسعه فناوری اطلاعات"
+          ]
+        },
+        {
+          "combinationCode": "6",
+          "tracks": [
+            "کارآفرینی",
+            "مدیریت فناوری",
+            "آینده‌پژوهی",
+            "سیاست‌گذاری علم و فناوری",
+            "حکمرانی علم، فناوری و نوآوری"
+          ],
+          "specializations": [
+            "مدیریت نوآوری",
+            "مدیریت تحقیق و توسعه",
+            "مدیریت انتقال تکنولوژی"
+          ]
+        },
+        {
+          "combinationCode": "7",
+          "tracks": [
+            "مالی",
+            "بیمه"
+          ],
+          "specializations": [
+            "مهندسی مالی",
+            "بانکداری",
+            "بیمه",
+            "حقوق مالی",
+            "مالی بین‌المللی"
+          ]
+        }
+      ],
+      "notes": "The 1405 guide explicitly labels the umbrella code 2162 as Management and lists the above course combinations. This supersedes the assumption that all doctoral Management material is only Business & Strategy."
+    }
+  ],
+  "crosswalkRules": [
+    "Keep historical exam-set code as an immutable source attribute.",
+    "Represent 1404/1405 combination codes as track-level exam identities inside 2162.",
+    "For 1396–1402, one discipline often equals a separate exam-set code and generally has its own question booklet and source/key.",
+    "Never map earlier 2163/2164/2165/2167/2169/2171 appearances to new 2162 solely by title; link them only through historical equivalence metadata.",
+    "Never treat the management-themed 2166 police exam or 2168 oil/gas contract exam as an ordinary public 2162 booklet.",
+    "Do not count 2170 Tourism or 2173 Accounting as Management exam-set coverage."
+  ],
+  "outstandingResearch": [
+    "Extract exact final exam-code tables and amendments for 1396, 1397, 1398, 1399 and 1400; 1396 must account for the amendment moving HR/organizational-behaviour tracks.",
+    "Verify the 1403 transition against its official registration guide, booklet covers and official key indexes.",
+    "Find original question booklet and exact answer-key versions for each core historical code/year, not only code 2162 Business & Strategy.",
+    "Determine whether management educational, tourism, accounting, oil/gas contracts and law-enforcement specialist booklets should be included in any extended optional inventory, without conflating them with the core management family.",
+    "Extend the existing source-recovery register from single 2162 PhD year records to individual year × exam-code × track units."
+  ],
+  "sources": [
+    {
+      "url": "https://irantahsil.org/wp-content/uploads/2022/08/دفترچه-ثبت-نام-آزمون-دکتری-1402.pdf",
+      "description": "1402 registration guide; official exam-set pages 40–42; explicit codes 2162–2171 and 2173."
+    },
+    {
+      "url": "https://phdphd.org/wp-content/uploads/2021/11/PhdNote1401_v1.pdf",
+      "description": "1401 registration guide; Management-related code tables pages 39–41."
+    },
+    {
+      "url": "https://www.tahsilatali.ir/wp-content/uploads/2023/11/Phd1404NOTE_v1.pdf",
+      "description": "1404 registration guide; pages 37–39 show 2162 umbrella and combinations 1–7."
+    },
+    {
+      "url": "https://www.samanehha.com/upload/files/897182075NOTERegPhd1405.pdf",
+      "description": "1405 registration guide; pages 24–25 show 2162 Management umbrella and combinations 1–7."
+    },
+    {
+      "url": "https://ervingoudarzi.blogfa.com/post/300/دفترچه-سوالات-آزمون-Ph-D-نیمه-متمرکز-سال-1399",
+      "description": "Year-specific 1399 question booklet directory; separate links by management field titles."
+    },
+    {
+      "url": "https://ervingoudarzi.blogfa.com/post/171/دفترچه-سوالات-آزمون-Ph-D-نیمه-متمرکز-سال-1397",
+      "description": "Year-specific 1397 question booklet directory; separate management field booklets."
+    },
+    {
+      "url": "https://ervingoudarzi.blogfa.com/post/170/دفترچه-سوالات-آزمون-Ph-D-نیمه-متمرکز-سال-1398",
+      "description": "Year-specific 1398 question booklet directory; separate management field booklets."
+    },
+    {
+      "url": "https://t.me/s/Negareh_ac?before=1546",
+      "description": "Institutional channel posts with separate 1402 PhD Management booklet attachments by field."
+    },
+    {
+      "url": "https://iusnews.ir/fa/news-details/211614/",
+      "description": "Report on the 1396 exam code amendment affecting HR/organizational-behaviour tracks."
+    }
+  ],
+  "status": {
+    "yearRecordsMapped": 10,
+    "yearsWithOfficialCodeTableInspected": [
+      1401,
+      1402,
+      1404,
+      1405
+    ],
+    "yearsWithHistoricalTitleListsButCodeMappingIncomplete": [
+      1396,
+      1397,
+      1398,
+      1399
+    ],
+    "yearsNeedingCodeTableRetrieval": [
+      1400
+    ],
+    "transitionYearsNeedingOfficialConfirmation": [
+      1403
+    ],
+    "verifiedQuestionOrAnswerRecordsAdded": 0,
+    "sourcePdfsDownloadedInThisStep": 0,
+    "productionChanges": 0
+  }
+}
