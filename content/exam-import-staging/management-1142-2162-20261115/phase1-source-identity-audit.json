@@ -117,8 +117,11 @@
           "code": "2143",
           "label": "مدیریت آموزشی",
           "classification": "adjacent_education_management",
-          "rule": "Separate exam family in Educational Sciences; list in broad inventory without merging with 2162.",
-          "evidenceYears": [
+          "rule": "Separate exam family in Educational Sciences; never merge with 2162.",
+          "officialCodeYears": [
+            1400
+          ],
+          "catalogueEvidenceYears": [
             1397,
             1398,
             1399
@@ -128,12 +131,81 @@
           "code": "2115",
           "label": "علوم ورزشی — مدیریت ورزشی",
           "classification": "adjacent_sports_management",
-          "rule": "Separate Sports Sciences exam family; list in broad inventory without merging with 2162.",
-          "evidenceYears": [
-            1402
+          "rule": "Separate Sports Sciences exam family; never merge with 2162.",
+          "officialCodeYears": [
+            1400,
+            1402,
+            1403
           ]
         }
-      ]
+      ],
+      "officialGuideEvidenceByYear": [
+        {
+          "year": 1400,
+          "url": "https://phdnews.github.io/m/p/00147589-bcc5-4e68-9b17-b25e79cd363f/دفترچه-انتخاب-رشته-دکتری-1400.pdf",
+          "pages": [
+            37,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54
+          ],
+          "evidence": "Separate codes 2162–2169, 2171 and separately labelled 2143/2115; Tourism 2170 and Accounting 2172 are also distinct."
+        },
+        {
+          "year": 1401,
+          "url": "https://phdphd.org/wp-content/uploads/2021/11/PhdNote1401_v1.pdf",
+          "pages": [
+            39,
+            40,
+            41
+          ]
+        },
+        {
+          "year": 1402,
+          "url": "https://irantahsil.org/wp-content/uploads/2022/08/دفترچه-ثبت-نام-آزمون-دکتری-1402.pdf",
+          "pages": [
+            40,
+            41,
+            42
+          ],
+          "evidence": "Includes separate historical codes 2162–2169, 2170, 2171, 2173."
+        },
+        {
+          "year": 1403,
+          "url": "https://irantahsil.org/wp-content/uploads/2024/04/NOETCSphd1403_v1.pdf",
+          "pages": [
+            55,
+            56,
+            57,
+            58,
+            59,
+            60
+          ],
+          "evidence": "Official selection guide confirms 2162 Management with course combinations 1–7 and separate 2166/2168."
+        },
+        {
+          "year": 1404,
+          "url": "https://www.tahsilatali.ir/wp-content/uploads/2023/11/Phd1404NOTE_v1.pdf",
+          "pages": [
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "year": 1405,
+          "url": "https://www.samanehha.com/upload/files/897182075NOTERegPhd1405.pdf",
+          "pages": [
+            24,
+            25
+          ]
+        }
+      ],
+      "codeReuseWarning": "Codes are year-specific. For example, Accounting is separate exam-set 2172 in 1400 and 2173 in 1402; the number 2173 also appears as a program-location code inside a 1400 2163 admission table, so it must never be interpreted without its field context."
     },
     "scopeCaveat": "The present 20-package plan is explicitly limited to 1142 and 2162. It must not be described as every Iranian exam set containing the word «مدیریت».",
     "auditUnitDefinition": "The 20 rows in `packages[]` are parent year-level records only (10 master's 1142 + 10 doctoral 2162 OCR records). They are not a count of all original doctoral Management exam booklets. The complete doctoral inventory must expand each year into historical examSetCode and/or 2162 courseCombinationCode units."
@@ -155,8 +227,10 @@
     "completeDoctoralManagementBookletUnitsEnumerated": 0,
     "completeDoctoralManagementBookletUnitsStatus": "not_enumerated; historical code-family map added but source-unit retrieval and counting remain open",
     "yearsWithOfficialCodeTablesInspected": [
+      1400,
       1401,
       1402,
+      1403,
       1404,
       1405
     ],
@@ -166,18 +240,50 @@
       1398,
       1399
     ],
-    "yearsAwaitingCodeTableRetrieval": [
-      1400
-    ],
-    "transitionYearsAwaitingOfficialConfirmation": [
-      1403
-    ],
+    "yearsAwaitingCodeTableRetrieval": [],
+    "transitionYearsAwaitingOfficialConfirmation": [],
     "adjacentManagementTitledExamSetsIdentified": [
       "2143",
       "2115"
     ],
     "completeBroadDoctoralManagementInventoryEnumerated": 0,
-    "completeBroadDoctoralManagementInventoryStatus": "not_enumerated; core historical code family plus adjacent management-named exam sets identified but full source-unit inventory not yet counted"
+    "completeBroadDoctoralManagementInventoryStatus": "not_enumerated; core historical code family plus adjacent management-named exam sets identified but full source-unit inventory not yet counted",
+    "confirmed1403UmbrellaConsolidation": true,
+    "confirmed1400ExamCodeFamily": [
+      "2162",
+      "2163",
+      "2164",
+      "2165",
+      "2166",
+      "2167",
+      "2168",
+      "2169",
+      "2170",
+      "2171",
+      "2172",
+      "2143",
+      "2115"
+    ],
+    "confirmed1403Structure": {
+      "umbrellaCode": "2162",
+      "combinationCodes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "separateCodes": [
+        "2166",
+        "2168"
+      ]
+    },
+    "accountingExamCodeByYear": {
+      "1400": "2172",
+      "1402": "2173"
+    }
   },
   "evidencePolicy": {
     "sourceIdentityIsSeparateFromQuestionTranscription": true,
