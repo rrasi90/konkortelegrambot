@@ -2,8 +2,20 @@
   "schemaVersion": 1,
   "generatedAt": "2026-11-16",
   "scope": {
-    "arshad": { "examCode": "1142", "yearRange": [1396, 1405] },
-    "phd": { "examCode": "2162", "yearRange": [1396, 1405] }
+    "arshad": {
+      "examCode": "1142",
+      "yearRange": [
+        1396,
+        1405
+      ]
+    },
+    "phd": {
+      "examCode": "2162",
+      "yearRange": [
+        1396,
+        1405
+      ]
+    }
   },
   "purpose": "External source discovery register for missing or quarantined booklet years. This is a source locator and evidence ledger, not an import manifest.",
   "policy": {
@@ -496,14 +508,20 @@
     {
       "url": "https://ketab-khoob.4kia.ir/info/834224/",
       "covers": "Arshad management 1142, 1394-1404",
-      "listingIncludes": ["question booklet", "answer key"],
-      "priceAtLastCheck": "250000 IRR? Toman",
+      "listingIncludes": [
+        "question booklet",
+        "answer key"
+      ],
+      "priceAtLastCheck": "250000 toman",
       "priceNote": "The page displayed 250,000 toman; price may change. No purchase was made."
     },
     {
       "url": "https://ketab-khoob.4kia.ir/info/834436/",
       "covers": "PhD management business/strategy 2162, 1396-1404",
-      "listingIncludes": ["question booklet", "answer key"],
+      "listingIncludes": [
+        "question booklet",
+        "answer key"
+      ],
       "priceAtLastCheck": "680000 toman",
       "priceNote": "The page displayed 680,000 toman; price may change. No purchase was made."
     }
