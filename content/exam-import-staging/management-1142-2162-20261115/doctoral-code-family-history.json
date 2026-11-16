@@ -94,7 +94,35 @@
         "reason": "A separate Accounting exam set; do not absorb it into Management/Finance without a deliberate change of scope."
       }
     ],
-    "scopeBoundary": "The expanded inventory includes core Management codes and separately labelled specialist Management-titled exam sets. It excludes Tourism and Accounting as separately named exam sets. Any additional discipline discovered in a year-specific official guide must be added with evidence, not inferred from a related undergraduate admission field."
+    "scopeBoundary": "The core Management family remains distinct from adjacent management-named examination sets. The broad audit inventory should list those adjacent series separately (e.g. Educational Management 2143 and Sports Management 2115) so a request for complete Management-related doctoral coverage can include them without corrupting the core 2162 crosswalk. Tourism 2170 and Accounting 2173 remain separately classified and are not included merely by association.",
+    "extendedRelatedManagementTitledExamSets": [
+      {
+        "code": "2143",
+        "title": "مدیریت آموزشی",
+        "classification": "adjacent_education_management",
+        "examGroup": "علوم تربیتی",
+        "includeInBroadInventory": true,
+        "rule": "Keep as a separate exam-set series; do not merge with 2162. Include in the expanded inventory because the examination title is explicitly Management Education.",
+        "evidenceYears": [
+          1397,
+          1398,
+          1399
+        ],
+        "sourceUrl": "https://sedayemoshaveran.com/wp-content/uploads/2020/08/NoteCSphd99_v2.pdf"
+      },
+      {
+        "code": "2115",
+        "title": "علوم ورزشی — مدیریت ورزشی",
+        "classification": "adjacent_sports_management",
+        "examGroup": "علوم ورزشی",
+        "includeInBroadInventory": true,
+        "rule": "Keep as a separate Sports Sciences exam family; include as a related Management-named discipline in the broad inventory but never merge with 2162.",
+        "evidenceYears": [
+          1402
+        ],
+        "sourceUrl": "https://irantahsil.org/wp-content/uploads/2021/11/PhD1402-entekhab-reshte-PhDTest_ir.pdf"
+      }
+    ]
   },
   "yearMap": [
     {
@@ -549,7 +577,8 @@
     "Verify the 1403 transition against its official registration guide, booklet covers and official key indexes.",
     "Find original question booklet and exact answer-key versions for each core historical code/year, not only code 2162 Business & Strategy.",
     "Determine whether management educational, tourism, accounting, oil/gas contracts and law-enforcement specialist booklets should be included in any extended optional inventory, without conflating them with the core management family.",
-    "Extend the existing source-recovery register from single 2162 PhD year records to individual year × exam-code × track units."
+    "Extend the existing source-recovery register from single 2162 PhD year records to individual year × exam-code × track units.",
+    "Add separate booklet-source families for Educational Management (historically listed separately, e.g. 2143 in the 1399 selection guide) and Sports Management (exam set 2115 in the 1402 selection guide) to the broad adjacent inventory; do not merge these with 2162."
   ],
   "sources": [
     {
@@ -587,6 +616,18 @@
     {
       "url": "https://iusnews.ir/fa/news-details/211614/",
       "description": "Report on the 1396 exam code amendment affecting HR/organizational-behaviour tracks."
+    },
+    {
+      "url": "https://sedayemoshaveran.com/wp-content/uploads/2020/08/NoteCSphd99_v2.pdf",
+      "description": "1399 doctoral selection guide; code 2143 — Educational Management appears as a distinct series."
+    },
+    {
+      "url": "https://irantahsil.org/wp-content/uploads/2021/11/PhD1402-entekhab-reshte-PhDTest_ir.pdf",
+      "description": "1402 doctoral selection guide; code 2115 — Sports Sciences/Sports Management appears as a distinct series."
+    },
+    {
+      "url": "https://www.ariyadocs.ir/product/48930/",
+      "description": "Commercial catalogue of doctoral Educational Management questions and keys for 1396–1402; evidence of a multi-year separate booklet series, not an official source."
     }
   ],
   "status": {
@@ -611,6 +652,10 @@
     ],
     "verifiedQuestionOrAnswerRecordsAdded": 0,
     "sourcePdfsDownloadedInThisStep": 0,
-    "productionChanges": 0
+    "productionChanges": 0,
+    "adjacentManagementTitledExamSetsIdentified": [
+      "2143",
+      "2115"
+    ]
   }
 }
