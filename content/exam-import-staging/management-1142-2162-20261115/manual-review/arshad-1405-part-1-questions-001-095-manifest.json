@@ -61,7 +61,7 @@
   "rightsStatus": "restricted_permission_required",
   "allowedUse": [],
   "productionServableQuestions": 0,
-  "nextPart": "Part 2: Questions 96–190 — evidence-backed chapter/skill mappings and official answer-key reconciliation when exact 319A key PDF is available",
+  "nextPart": "Part 3: Questions 191–285 — deduplication, rights review and release gates; Part 2 mapping candidates are recorded but remain pending SME.",
   "sourceConsistencyFlags": [
     {
       "question": 55,
@@ -79,5 +79,6 @@
       "question": 87,
       "status": "source_bank_sign_conflict_confirmed"
     }
-  ]
+  ],
+  "answerKeyStatus": "target 1142/319A key remains unavailable; inspected candidate key file is 1152/117A and rejected."
 }

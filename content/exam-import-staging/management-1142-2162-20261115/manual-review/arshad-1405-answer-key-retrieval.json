@@ -24,15 +24,29 @@
     {
       "method": "container direct download",
       "result": "failed"
+    },
+    {
+      "method": "inspection of rendered local candidate key page",
+      "result": "candidate PDF filename MA_1142_1405_KEY.pdf but printed header is 1152/117A, not target 1142/319A; rejected"
     }
   ],
   "answerKeyRevisionCreated": false,
-  "rule": "Do not use the unrelated 1152/117A key found in repository history. Do not infer or copy correctOption values into an official AnswerKeyRevision.",
+  "rule": "Do not use any key whose printed exam set/booklet identity differs from 1142/319A. The inspected candidate MA_1142_1405_KEY.pdf is 1152/117A and must be rejected. Do not infer or copy correctOption values into an official AnswerKeyRevision.",
   "secondaryIndex": {
     "url": "https://irantahsil.org/دفترچه-سوالات-کنکور-ارشد/",
     "tableRow": "1142 – مدیریت | 319A | دریافت دفترچه | دریافت کلید",
     "articleLines": "278–280",
     "keyLinkResolution": "https://www8.sanjesh.org/noet_tk/Handlers/DownloadHandler.ashx?A=1405_arsh_319A",
     "status": "link_verified_pdf_not_retrieved"
-  }
+  },
+  "exactTargetKeyStatus": "not_retrieved",
+  "candidateIdentityConflicts": [
+    {
+      "filename": "MA_1142_1405_KEY.pdf",
+      "sha256": "89ec62ac861485a35294f755f4427510b438089b1a354579998ecaad206274db",
+      "printedExamSetCode": "1152",
+      "printedBookletControlCode": "117A",
+      "decision": "rejected_identity_mismatch"
+    }
+  ]
 }
