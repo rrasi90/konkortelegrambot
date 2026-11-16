@@ -37,21 +37,84 @@
       "exclusionNote": "These are separate examination-set codes and are not silently folded into 1142. Expand the project scope only through an explicit scope decision."
     },
     "doctoral": {
-      "examCode": "2162",
-      "officialLabel": "مدیریت",
-      "inScope": true,
-      "definition": "Treat 2162 as the full Management examination set, not merely as the commercial-catalogue label «مدیریت بازرگانی و راهبردی». The 1405 registration guide lists common course areas and multiple track-specific combinations, including business, public, industrial, media, information technology, entrepreneurship, technology management and foresight. Historical coverage must be reconciled year-by-year.",
-      "officialScopeEvidenceUrl": "https://www.samanehha.com/upload/files/897182075NOTERegPhd1405.pdf",
-      "officialScopeEvidencePage": 24,
-      "excludedAdjacentCodes": [
+      "domainLabel": "PhD Management exam family (historically multi-code; later consolidated under 2162)",
+      "currentUmbrellaCode": "2162",
+      "currentUmbrellaLabel": "مدیریت",
+      "historicalCodeFamilyRegistry": "content/exam-import-staging/management-1142-2162-20261115/doctoral-code-family-history.json",
+      "interpretation": "Do not treat the one 2162 file per year as complete doctoral Management coverage. In 1401–1402 multiple management disciplines were separate exam-set codes; by 1404–1405 the official guides place many of these tracks under umbrella code 2162 using course-combination codes. See the historical code-family registry.",
+      "coreHistoricalCodes": [
+        "2162",
+        "2163",
+        "2164",
+        "2165",
+        "2167",
+        "2169",
+        "2171"
+      ],
+      "specialistAdjacentCodes": [
+        {
+          "code": "2166",
+          "label": "مدیریت پیشگیری از جرم، جرم‌یابی و ایمنی ترافیک",
+          "classification": "restricted_specialist"
+        },
         {
           "code": "2168",
-          "label": "مدیریت قراردادهای بین‌المللی نفت و گاز"
+          "label": "مدیریت قراردادهای بین‌المللی نفت و گاز",
+          "classification": "separate_specialist"
         }
       ],
-      "exclusionNote": "2168 is a separate examination set in the 1405 guide. It is not part of 2162 unless the user broadens the intended scope."
+      "explicitlyExcludedSeparateCodes": [
+        {
+          "code": "2170",
+          "label": "گردشگری"
+        },
+        {
+          "code": "2173",
+          "label": "حسابداری"
+        }
+      ],
+      "officialScopeEvidence": [
+        {
+          "year": 1401,
+          "url": "https://phdphd.org/wp-content/uploads/2021/11/PhdNote1401_v1.pdf",
+          "pages": [
+            39,
+            40,
+            41
+          ]
+        },
+        {
+          "year": 1402,
+          "url": "https://irantahsil.org/wp-content/uploads/2022/08/دفترچه-ثبت-نام-آزمون-دکتری-1402.pdf",
+          "pages": [
+            40,
+            41,
+            42
+          ]
+        },
+        {
+          "year": 1404,
+          "url": "https://www.tahsilatali.ir/wp-content/uploads/2023/11/Phd1404NOTE_v1.pdf",
+          "pages": [
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "year": 1405,
+          "url": "https://www.samanehha.com/upload/files/897182075NOTERegPhd1405.pdf",
+          "pages": [
+            24,
+            25
+          ]
+        }
+      ],
+      "migrationCaveat": "Exact code maps for 1396–1400 and transition evidence for 1403 still require official guide/amendment reconciliation. No older code is assigned to 2162 by title similarity alone.",
+      "scopeCaveat": "The initial 10 doctoral package rows represent only existing 2162 OCR candidates. A full historical doctoral Management inventory must add a separate booklet/source identity for every exam code or course combination in the year-specific guide."
     },
-    "scopeCaveat": "The present 20-package plan is explicitly limited to 1142 and 2162. It must not be described as every Iranian exam set containing the word «مدیریت»."
+    "scopeCaveat": "The present 20-package plan is explicitly limited to 1142 and 2162. It must not be described as every Iranian exam set containing the word «مدیریت».",
+    "auditUnitDefinition": "The 20 rows in `packages[]` are parent year-level records only (10 master's 1142 + 10 doctoral 2162 OCR records). They are not a count of all original doctoral Management exam booklets. The complete doctoral inventory must expand each year into historical examSetCode and/or 2162 courseCombinationCode units."
   },
   "summary": {
     "targetPackages": 20,
@@ -64,7 +127,29 @@
     "questionAppearancesOfficiallyVerifiedByThisPhase": 0,
     "rightsClearanceObtained": 0,
     "productionServablePackages": 0,
-    "statusWarning": "The current manifest's `eligible` classification is a source-staging decision based on available OCR evidence; it is not official verification, complete question extraction, answer-key verification, or republication permission."
+    "statusWarning": "The 20 `packages[]` rows are year-level parent records, not the final count of doctoral Management exam booklets. The existing PhD OCR subset only follows code 2162; a historical multi-code/course-combination expansion is now required. `eligible` remains a staging status, not official verification, complete question extraction, key verification or republication permission.",
+    "targetYearLevelParentRecords": 20,
+    "existingDoctoral2162OcrParentRecords": 10,
+    "completeDoctoralManagementBookletUnitsEnumerated": 0,
+    "completeDoctoralManagementBookletUnitsStatus": "not_enumerated; historical code-family map added but source-unit retrieval and counting remain open",
+    "yearsWithOfficialCodeTablesInspected": [
+      1401,
+      1402,
+      1404,
+      1405
+    ],
+    "yearsWithManagementTitlesButIncompleteCodeMapping": [
+      1396,
+      1397,
+      1398,
+      1399
+    ],
+    "yearsAwaitingCodeTableRetrieval": [
+      1400
+    ],
+    "transitionYearsAwaitingOfficialConfirmation": [
+      1403
+    ]
   },
   "evidencePolicy": {
     "sourceIdentityIsSeparateFromQuestionTranscription": true,
@@ -1107,11 +1192,15 @@
     }
   ],
   "globalNextGates": [
-    "Retrieve/identify a complete original question booklet for each year and exam set.",
-    "For every booklet, record cover year, examination-set code, control code, booklet type, page count and any internal header conflicts from image evidence.",
-    "Map every PhD 2162 course combination/track for each historical year; do not use Business & Strategy catalogues as proof of full-scope coverage.",
-    "Acquire and validate the exact initial and final official answer-key revisions separately.",
+    "Expand each doctoral year into its actual exam codes and/or course-combination codes using the final registration guide and amendments for that year.",
+    "Retrieve/identify a complete original question booklet for every year × exam-code/course-combination unit in the management-family inventory.",
+    "For every booklet, record cover year, examination-set code, track, combination code, control code, booklet type, page count and internal header conflicts from image evidence.",
+    "Map changes in exam-set codes across years through explicit crosswalk records; do not merge historical appearances or infer equivalence from title similarity.",
+    "Acquire and validate the exact initial and final official answer-key revisions separately by year, exam code, combination and booklet type.",
     "Complete visual page review, exact question-number continuity and source hashes before replacing any quarantined OCR source.",
     "Resolve content rights and allowedUse before publication or production ingestion."
-  ]
+  ],
+  "relatedRegistries": {
+    "doctoralCodeFamilyHistory": "content/exam-import-staging/management-1142-2162-20261115/doctoral-code-family-history.json"
+  }
 }
