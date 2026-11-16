@@ -39,7 +39,36 @@
     "commerciallyCataloguedPhdYears": 5,
     "yearsWithPageLevelQuestionStructure": 2,
     "questionStructureTotalAcrossThesePages": 580,
-    "yearsWithPublicPdfAttachmentOrPublicQuestionScan": 6
+    "yearsWithPublicPdfAttachmentOrPublicQuestionScan": 6,
+    "officialCodeGuidesInspectedYears": [
+      1399,
+      1400,
+      1401,
+      1402,
+      1403,
+      1404,
+      1405
+    ],
+    "historicalCodeTablesStillUnresolvedYears": [
+      1396,
+      1397,
+      1398
+    ],
+    "newlyConfirmed1399ExamCodes": [
+      "2162",
+      "2163",
+      "2164",
+      "2165",
+      "2166",
+      "2167",
+      "2168",
+      "2169",
+      "2170",
+      "2171"
+    ],
+    "additional1399ProbableAdjacentCode": "2143",
+    "verifiedOfficialQuestionFilesDownloaded": 0,
+    "verifiedOfficialAnswerKeyRevisionsImported": 0
   },
   "entries": [
     {
@@ -641,7 +670,81 @@
         "status": "review_required",
         "allowedUse": [],
         "note": "Purchase access does not automatically grant republication rights."
-      }
+      },
+      "officialCodeFamilyEvidence": {
+        "guideUrl": "https://sedayemoshaveran.com/wp-content/uploads/2020/08/NoteCSphd99_v2.pdf",
+        "printedPages": [
+          45,
+          46,
+          47,
+          48,
+          49,
+          50
+        ],
+        "confirmedSeparateExamSets": [
+          {
+            "code": "2162",
+            "title": "مدیریت بازرگانی و راهبردی"
+          },
+          {
+            "code": "2163",
+            "title": "مدیریت دولتی"
+          },
+          {
+            "code": "2164",
+            "title": "مدیریت صنعتی"
+          },
+          {
+            "code": "2165",
+            "title": "مدیریت رسانه و اطلاعات"
+          },
+          {
+            "code": "2166",
+            "title": "مدیریت پیشگیری از جرم، جرم‌یابی و ایمنی ترافیک",
+            "restriction": "ویژه کارکنان رسمی نیروی انتظامی؛ فقط مرد"
+          },
+          {
+            "code": "2167",
+            "title": "مدیریت فناوری اطلاعات"
+          },
+          {
+            "code": "2168",
+            "title": "مدیریت قراردادهای بین‌المللی نفت و گاز",
+            "classification": "specialist_adjacent"
+          },
+          {
+            "code": "2169",
+            "title": "کارآفرینی، آینده‌پژوهی و مدیریت تکنولوژی"
+          },
+          {
+            "code": "2170",
+            "title": "گردشگری",
+            "classification": "excluded_separate"
+          },
+          {
+            "code": "2171",
+            "title": "مالی",
+            "classification": "management_related_track"
+          }
+        ],
+        "adjacentCodeCandidates": [
+          {
+            "code": "2143",
+            "title": "مدیریت آموزشی",
+            "status": "probable_heading_text_conflict",
+            "note": "One continuation heading reads ۲۱۴۳; earlier extracted heading reads ۱۴۲۳. Needs screenshot/image-level verification."
+          }
+        ],
+        "warnings": [
+          "Codes 2170–2175 also occur as course-location codes inside the 2163 Public Management table. Their numeric appearance there does not make them Management exam-set codes.",
+          "No separate 1399 Accounting exam-set code was verified in this guide; do not carry 2172/2173 from other years to 1399.",
+          "The local PhD_2162_1399.pdf was read as exam set 3162 and remains quarantined; it is not a substitute for the 2162/1399 booklet."
+        ],
+        "sourceType": "year_specific_selection_guide_copy",
+        "verification": "text headings inspected; PDF screenshot cache miss prevented image-level confirmation of the 2143/1423 conflict",
+        "answerKeys": "guide lists admission codes only; no official question booklet or answer key PDF was acquired/imported through this evidence"
+      },
+      "scopeFinding": "The 1399 Management PhD family contains multiple independently coded exam sets. The local OCR scan for the named 2162 year is a wrong-set 3162 candidate. The 1399 source inventory must expand to separate question booklets for 2162–2169 and Finance 2171, with specialist/restricted codes retained separately."
     },
     {
       "level": "phd",
