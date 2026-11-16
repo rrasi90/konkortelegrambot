@@ -35,3 +35,8 @@
 ## کنترل هویت منابع
 
 برای وضعیت فایل‌های اشتباه، تعارض کد/سال و شواهد بیرونی، گزارش [SOURCE-RECONCILIATION-2026-11-16.md](./SOURCE-RECONCILIATION-2026-11-16.md) را ببینید. این گزارش هیچ منبعی را بدون PDF اصلی و بازبینی تصویری verified نمی‌کند.
+
+
+## External source recovery
+
+The external source URLs and year-by-year evidence for missing/quarantined 1142 and 2162 years are recorded in [source-recovery-register.json](../../content/exam-import-staging/management-1142-2162-20261115/source-recovery-register.json). This register records source discovery only; it does not mean the files were downloaded, verified as official originals, or imported into the question bank.
