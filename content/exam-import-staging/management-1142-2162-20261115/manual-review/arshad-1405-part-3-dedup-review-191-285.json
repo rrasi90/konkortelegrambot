@@ -1,0 +1,297 @@
+{
+  "artifactType": "manual-cross-year-deduplication-review",
+  "schemaVersion": "1.0.0",
+  "batchId": "review-batch.arshad.1405.part-3.questions-191-285",
+  "examRef": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A"
+  },
+  "scope": {
+    "questionRange": {
+      "from": 191,
+      "to": 285,
+      "count": 95
+    },
+    "targetPdfPages": {
+      "previouslyReviewed": [
+        29
+      ],
+      "reviewedInThisPart": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ]
+    }
+  },
+  "method": {
+    "targetEvidence": "Original 1405 booklet page images visually reviewed; OCR DOCX was used only as a text locator and search aid.",
+    "historicalEvidence": "Compared against prior OCR DOCX documents with eligible 1142 cover identities (1401/517A, 1402/818C, 1404/519C; also checked eligible 1396 text where relevant). Historical scanned PDF pages were not independently available for visual confirmation in this pass.",
+    "identityRule": "Only prior documents whose OCR cover metadata identifies exam family 1142 and status eligible were used as historical candidates. Wrong-set/quarantined documents were not accepted as source evidence.",
+    "dedupRule": "A repeated learning objective alone is not a duplicate. Different stem/data/asked variable/choice intent remains a distinct question. Candidate matches are not canonical merges."
+  },
+  "counts": {
+    "reviewedTargetQuestions": 95,
+    "strongRecurrenceCandidates": 4,
+    "possibleSemanticRecurrenceCandidates": 1,
+    "conceptualOverlapOnlyCandidates": 2,
+    "internalAuthoredConceptOverlap": 1,
+    "confirmedExactDuplicates": 0,
+    "mergeOperations": 0,
+    "appearancesDeleted": 0,
+    "canonicalQuestionIdsChanged": 0
+  },
+  "candidateRelations": [
+    {
+      "target": 241,
+      "sourceYear": "1401",
+      "sourceQuestion": 51,
+      "sourcePage": 38,
+      "kind": "strong_recurrence_candidate",
+      "confidence": "high",
+      "topic": "Draught Survey",
+      "targetEvidence": "سؤال ۲۴۱ در PDF صفحه ۳۶ درباره هدف انجام Draught Survey در کشتی است.",
+      "historicalEvidence": "در OCR دفترچه ۱۴۰۱/۵۱، همان پرسش درباره هدف Draught Survey در کشتی و گزینه‌های مربوط به گزارش تصادف، صدمات و محاسبه وزن بار ثبت شده است.",
+      "decision": "preserve_separate_appearance_pending_historical_visual_check",
+      "targetQuestionRef": "review.arshad.1405.319A.q241",
+      "historicalExamRef": {
+        "examLevel": "master",
+        "examYear": 1401,
+        "examSetCode": "1142",
+        "bookletControlCode": "517A"
+      },
+      "historicalSource": {
+        "docx": "1142-1401.docx",
+        "docxSha256": "2d4bc42aef3b74a5017f21a4339d8707789e58c993373cbbd816f63a8552d92a",
+        "sourcePdf": "MA_1142_1401.pdf",
+        "sourcePdfSha256": "00b93b68a50aa2e18c4eb8b1d2813146e49311aee52f10089150d7234d7c6f98",
+        "ocrPdfPage": 38,
+        "verificationStatus": "ocr_text_only_historical_original_page_not_visually_rechecked"
+      }
+    },
+    {
+      "target": 242,
+      "sourceYear": "1402",
+      "sourceQuestion": 51,
+      "sourcePage": 36,
+      "kind": "strong_recurrence_candidate",
+      "confidence": "high",
+      "topic": "Suez Canal route-distance savings",
+      "targetEvidence": "سؤال ۲۴۲ جفت مسیر لندن–بمبئی و لندن–شانگهای و درصد کوتاه‌شدن مسیر با کانال سوئز را می‌پرسد.",
+      "historicalEvidence": "در OCR دفترچه ۱۴۰۲/۵۱ همان دو مسیر، همان کانال و محاسبه درصد کوتاه‌شدن مسیرها مطرح شده است؛ ترتیب نام مسیرها در متن/گزینه‌ها متفاوت است.",
+      "decision": "preserve_separate_appearance_pending_historical_visual_check",
+      "targetQuestionRef": "review.arshad.1405.319A.q242",
+      "historicalExamRef": {
+        "examLevel": "master",
+        "examYear": 1402,
+        "examSetCode": "1142",
+        "bookletControlCode": "818C"
+      },
+      "historicalSource": {
+        "docx": "1142-1402.docx",
+        "docxSha256": "b0b40957bbc844383abb128ced566de1590b5bfd0eeaf8d91592079208511eea",
+        "sourcePdf": "MA_1142_1402.pdf",
+        "sourcePdfSha256": "53ec9dd2484d3844d8309dbadb845fff9a5719aafa782cebdf37d38455479119",
+        "ocrPdfPage": 36,
+        "verificationStatus": "ocr_text_only_historical_original_page_not_visually_rechecked"
+      }
+    },
+    {
+      "target": 243,
+      "sourceYear": "1402",
+      "sourceQuestion": 41,
+      "sourcePage": 35,
+      "kind": "strong_recurrence_candidate",
+      "confidence": "high",
+      "topic": "Tare Weight definition",
+      "targetEvidence": "سؤال ۲۴۳ تعریف Tare Weight در صنعت کانتینر را می‌پرسد.",
+      "historicalEvidence": "در OCR دفترچه ۱۴۰۲/۴۱ همان پرسش «Tare Weight در صنعت کانتینر به چه معناست؟» با گزینه‌های تعریف وزن کانتینر آمده است.",
+      "decision": "preserve_separate_appearance_pending_historical_visual_check",
+      "targetQuestionRef": "review.arshad.1405.319A.q243",
+      "historicalExamRef": {
+        "examLevel": "master",
+        "examYear": 1402,
+        "examSetCode": "1142",
+        "bookletControlCode": "818C"
+      },
+      "historicalSource": {
+        "docx": "1142-1402.docx",
+        "docxSha256": "b0b40957bbc844383abb128ced566de1590b5bfd0eeaf8d91592079208511eea",
+        "sourcePdf": "MA_1142_1402.pdf",
+        "sourcePdfSha256": "53ec9dd2484d3844d8309dbadb845fff9a5719aafa782cebdf37d38455479119",
+        "ocrPdfPage": 35,
+        "verificationStatus": "ocr_text_only_historical_original_page_not_visually_rechecked"
+      }
+    },
+    {
+      "target": 273,
+      "sourceYear": "1404",
+      "sourceQuestion": 53,
+      "sourcePage": 34,
+      "kind": "possible_semantic_recurrence",
+      "confidence": "medium_low",
+      "topic": "IMO coal hazard classification",
+      "targetEvidence": "سؤال ۲۷۳ ویژگی خطر زغال‌سنگ نوع D در تقسیم‌بندی IMO را می‌پرسد.",
+      "historicalEvidence": "در OCR دفترچه ۱۴۰۴/۵۳ سؤال مشابهی درباره خطرات زغال‌سنگ در طبقه‌بندی IMO وجود دارد؛ شناسه کلاس در OCR قدیمی به شکل «1G/1D» مبهم است و با تصویر منبع تأیید نشده.",
+      "decision": "do_not_merge_until_historical_class_code_and_options_are_visually_checked",
+      "targetQuestionRef": "review.arshad.1405.319A.q273",
+      "historicalExamRef": {
+        "examLevel": "master",
+        "examYear": 1404,
+        "examSetCode": "1142",
+        "bookletControlCode": "519C"
+      },
+      "historicalSource": {
+        "docx": "1142-1404.docx",
+        "docxSha256": "5c19944e4f1e80bb824002bbb2b58f7d4419aa1fe979e04f375a78c33fa66e67",
+        "sourcePdf": "MA_1142_1404.pdf",
+        "sourcePdfSha256": "5c079813d53bef9e308b175b70665893e13e363f84cba08adea0b4948bdfccb1",
+        "ocrPdfPage": 34,
+        "verificationStatus": "ocr_text_only_historical_original_page_not_visually_rechecked"
+      }
+    },
+    {
+      "target": 276,
+      "sourceYear": "1401",
+      "sourceQuestion": 58,
+      "sourcePage": 38,
+      "kind": "strong_recurrence_candidate",
+      "confidence": "high",
+      "topic": "Dangerous goods class 3.2 flash point",
+      "targetEvidence": "سؤال ۲۷۶ نقطه اشتعال کالاهای خطرناک در زیرکلاس ۳٫۲ را می‌پرسد.",
+      "historicalEvidence": "در OCR دفترچه ۱۴۰۱/۵۸ همان عبارت درباره نقطه اشتعال کالاهای خطرناک در زیرکلاس ۳٫۲ آمده است.",
+      "decision": "preserve_separate_appearance_pending_historical_visual_check",
+      "targetQuestionRef": "review.arshad.1405.319A.q276",
+      "historicalExamRef": {
+        "examLevel": "master",
+        "examYear": 1401,
+        "examSetCode": "1142",
+        "bookletControlCode": "517A"
+      },
+      "historicalSource": {
+        "docx": "1142-1401.docx",
+        "docxSha256": "2d4bc42aef3b74a5017f21a4339d8707789e58c993373cbbd816f63a8552d92a",
+        "sourcePdf": "MA_1142_1401.pdf",
+        "sourcePdfSha256": "00b93b68a50aa2e18c4eb8b1d2813146e49311aee52f10089150d7234d7c6f98",
+        "ocrPdfPage": 38,
+        "verificationStatus": "ocr_text_only_historical_original_page_not_visually_rechecked"
+      }
+    },
+    {
+      "target": 246,
+      "sourceYear": "1401",
+      "sourceQuestion": 43,
+      "sourcePage": 38,
+      "kind": "conceptual_overlap_not_duplicate",
+      "confidence": "medium",
+      "topic": "Multimodal / combined transport",
+      "targetEvidence": "سؤال ۲۴۶ مزیت Multimodal بر Intermodal را می‌پرسد.",
+      "historicalEvidence": "سؤال ۱۴۰۱/۴۳ تفاوت حمل ترکیبی و چندوجهی را می‌پرسد؛ چارچوب مفهومی نزدیک است اما پرسش و تمایز اصطلاحی یکسان نیست.",
+      "decision": "keep_distinct_no_merge",
+      "targetQuestionRef": "review.arshad.1405.319A.q246",
+      "historicalExamRef": {
+        "examLevel": "master",
+        "examYear": 1401,
+        "examSetCode": "1142",
+        "bookletControlCode": "517A"
+      },
+      "historicalSource": {
+        "docx": "1142-1401.docx",
+        "docxSha256": "2d4bc42aef3b74a5017f21a4339d8707789e58c993373cbbd816f63a8552d92a",
+        "sourcePdf": "MA_1142_1401.pdf",
+        "sourcePdfSha256": "00b93b68a50aa2e18c4eb8b1d2813146e49311aee52f10089150d7234d7c6f98",
+        "ocrPdfPage": 38,
+        "verificationStatus": "ocr_text_only_historical_original_page_not_visually_rechecked"
+      }
+    },
+    {
+      "target": 247,
+      "sourceYear": "1401",
+      "sourceQuestion": 5,
+      "sourcePage": 39,
+      "kind": "conceptual_overlap_not_duplicate",
+      "confidence": "medium",
+      "topic": "Spar Ceiling",
+      "targetEvidence": "سؤال ۲۴۷ هدف استفاده از Spar Ceiling در انبار کشتی را می‌پرسد.",
+      "historicalEvidence": "سؤال ۱۴۰۱/۵ درباره وضعیت قرارگیری Spar Ceilings هنگام آماده‌سازی انبار برای بارگیری زغال‌سنگ است؛ سازه مشترک است اما خروجی مورد سنجش متفاوت است.",
+      "decision": "keep_distinct_no_merge",
+      "targetQuestionRef": "review.arshad.1405.319A.q247",
+      "historicalExamRef": {
+        "examLevel": "master",
+        "examYear": 1401,
+        "examSetCode": "1142",
+        "bookletControlCode": "517A"
+      },
+      "historicalSource": {
+        "docx": "1142-1401.docx",
+        "docxSha256": "2d4bc42aef3b74a5017f21a4339d8707789e58c993373cbbd816f63a8552d92a",
+        "sourcePdf": "MA_1142_1401.pdf",
+        "sourcePdfSha256": "00b93b68a50aa2e18c4eb8b1d2813146e49311aee52f10089150d7234d7c6f98",
+        "ocrPdfPage": 39,
+        "verificationStatus": "ocr_text_only_historical_original_page_not_visually_rechecked"
+      }
+    }
+  ],
+  "internalAuthoredRelations": [
+    {
+      "target": 192,
+      "kind": "internal_authored_concept_overlap_not_duplicate",
+      "relatedQuestionId": "q.mkt.plc.2",
+      "relatedSource": "internal authored bank item; marketing textbook-based, not an official booklet appearance",
+      "evidence": "هر دو درباره شرایط موفقیت قیمت‌گذاری سرشیرگیری برای محصول نوآورانه و بخش‌های کم‌حساس به قیمت‌اند؛ متن و صورت سنجش متفاوت است.",
+      "decision": "keep_distinct_no_merge"
+    }
+  ],
+  "explicitNonMergeClusters": [
+    {
+      "questions": [
+        244,
+        258,
+        279
+      ],
+      "topic": "Suez/Panama canal history",
+      "reason": "Q244 asks era association, Q258 asks inauguration dates, Q279 asks end of the canal transport era. Shared subject matter does not make them duplicate items."
+    },
+    {
+      "questions": [
+        257,
+        271,
+        277
+      ],
+      "topic": "decision-making and planning",
+      "reason": "Q257 concerns the first decision-making stage, Q271 asks the first planning stage, and Q277 asks the definition of planning; different constructs."
+    },
+    {
+      "questions": [
+        259,
+        263
+      ],
+      "topic": "division of labour and organizing",
+      "reason": "Q259 asks about specialization/division of work; Q263 asks which management function uses division of work to coordinate individuals."
+    },
+    {
+      "questions": [
+        274,
+        281,
+        284
+      ],
+      "topic": "leadership",
+      "reason": "Q274 defines leadership behavior, Q281 asks the historical approach to leadership effectiveness, and Q284 asks a low-concern leadership style. Different question objectives."
+    }
+  ],
+  "rules": {
+    "appearancePreservation": "Keep each exam occurrence as its own QuestionAppearance. Do not collapse different year/booklet appearances into a single appearance record.",
+    "canonicalMerge": "No canonical question merge is authorized by this report.",
+    "historicalImageCheck": "The four strong recurrence candidates and the coal-classification near-match require visual review of their historical source PDF pages before final duplicate adjudication."
+  },
+  "publicationStatus": "staging_only"
+}
