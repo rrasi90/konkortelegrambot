@@ -31,11 +31,11 @@
   "formulaTableAndSemanticsFlags": [
     {
       "question": 55,
-      "flag": "joint_distribution_table captured; derived expectation versus answer options requires second mathematical check"
+      "flag": "joint-distribution table transcribed; its implied E(Y) does not appear to agree with any printed answer option; needs SME/source erratum review"
     },
     {
       "question": 56,
-      "flag": "printed exponential literal is e^(−۰/۲); answer-option consistency requires high-resolution review"
+      "flag": "printed exponential literal e^(−۰/۲) appears inconsistent with the offered time choices under the printed Poisson rate; needs SME/source erratum review"
     },
     {
       "question": 57,
@@ -43,7 +43,7 @@
     },
     {
       "question": 60,
-      "flag": "regression coefficient glyphs appear inconsistent; preserve print literal pending source/SME verification"
+      "flag": "high-resolution literal is Xhat_y=8−0.48Y and Yhat_x=5−3X; their slope product implies r²=1.44, mathematically impossible for a correlation coefficient"
     },
     {
       "question": 67,
@@ -61,5 +61,23 @@
   "rightsStatus": "restricted_permission_required",
   "allowedUse": [],
   "productionServableQuestions": 0,
-  "nextPart": "Part 2: Questions 96–190 — evidence-backed chapter/skill mappings and official answer-key reconciliation when exact 319A key PDF is available"
+  "nextPart": "Part 2: Questions 96–190 — evidence-backed chapter/skill mappings and official answer-key reconciliation when exact 319A key PDF is available",
+  "sourceConsistencyFlags": [
+    {
+      "question": 55,
+      "status": "source_table_and_answer_option_mismatch_candidate"
+    },
+    {
+      "question": 56,
+      "status": "printed_probability_and_answer_option_mismatch_candidate"
+    },
+    {
+      "question": 60,
+      "status": "source_regression_equation_mathematically_impossible_as_printed"
+    },
+    {
+      "question": 87,
+      "status": "source_bank_sign_conflict_confirmed"
+    }
+  ]
 }
