@@ -111,7 +111,29 @@
         }
       ],
       "migrationCaveat": "Exact code maps for 1396–1400 and transition evidence for 1403 still require official guide/amendment reconciliation. No older code is assigned to 2162 by title similarity alone.",
-      "scopeCaveat": "The initial 10 doctoral package rows represent only existing 2162 OCR candidates. A full historical doctoral Management inventory must add a separate booklet/source identity for every exam code or course combination in the year-specific guide."
+      "scopeCaveat": "The initial 10 doctoral package rows represent only existing 2162 OCR candidates. A full historical doctoral Management inventory must add a separate booklet/source identity for every exam code or course combination in the year-specific guide.",
+      "extendedRelatedManagementTitledExamSets": [
+        {
+          "code": "2143",
+          "label": "مدیریت آموزشی",
+          "classification": "adjacent_education_management",
+          "rule": "Separate exam family in Educational Sciences; list in broad inventory without merging with 2162.",
+          "evidenceYears": [
+            1397,
+            1398,
+            1399
+          ]
+        },
+        {
+          "code": "2115",
+          "label": "علوم ورزشی — مدیریت ورزشی",
+          "classification": "adjacent_sports_management",
+          "rule": "Separate Sports Sciences exam family; list in broad inventory without merging with 2162.",
+          "evidenceYears": [
+            1402
+          ]
+        }
+      ]
     },
     "scopeCaveat": "The present 20-package plan is explicitly limited to 1142 and 2162. It must not be described as every Iranian exam set containing the word «مدیریت».",
     "auditUnitDefinition": "The 20 rows in `packages[]` are parent year-level records only (10 master's 1142 + 10 doctoral 2162 OCR records). They are not a count of all original doctoral Management exam booklets. The complete doctoral inventory must expand each year into historical examSetCode and/or 2162 courseCombinationCode units."
@@ -149,7 +171,13 @@
     ],
     "transitionYearsAwaitingOfficialConfirmation": [
       1403
-    ]
+    ],
+    "adjacentManagementTitledExamSetsIdentified": [
+      "2143",
+      "2115"
+    ],
+    "completeBroadDoctoralManagementInventoryEnumerated": 0,
+    "completeBroadDoctoralManagementInventoryStatus": "not_enumerated; core historical code family plus adjacent management-named exam sets identified but full source-unit inventory not yet counted"
   },
   "evidencePolicy": {
     "sourceIdentityIsSeparateFromQuestionTranscription": true,
