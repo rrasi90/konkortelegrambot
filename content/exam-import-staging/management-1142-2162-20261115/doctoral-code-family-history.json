@@ -117,6 +117,9 @@
         "officialCodeYears": [
           1400
         ],
+        "probableCodeYears": [
+          1399
+        ],
         "catalogueEvidenceYears": [
           1397,
           1398,
@@ -204,7 +207,7 @@
     },
     {
       "year": 1399,
-      "status": "titles_confirmed_codes_not_fully_reconciled",
+      "status": "official_guide_code_family_confirmed_with_one_educational_management_heading_ocr_conflict",
       "officialOrPublicQuestionTitleEvidence": [
         "مدیریت پیشگیری از جرم، جرم‌یابی و ایمنی ترافیک",
         "مدیریت بازرگانی و راهبردی",
@@ -218,8 +221,79 @@
         "مالی",
         "حسابداری"
       ],
-      "codeMappingStatus": "question_titles_listed_official_sanjesh_links_but_codes_not_all_extracted",
-      "notes": "The year-specific question archive exposes separate Sanjesh links by exam title. This demonstrates multi-booklet coverage is needed, but exact exam codes/controls are still to be extracted from the 1399 registration booklet."
+      "codeMappingStatus": "management_family_codes_2162_to_2171_confirmed_from_year_specific_selection_guide; adjacent_2143_probable_due_to_header_extraction_conflict",
+      "notes": "The 1399 selection guide confirms separate code headings 2162–2169, then 2170 Tourism and 2171 Finance. 2166 is restricted to active-duty NAJA personnel; 2168 is Oil & Gas Contracts Management. The guide also contains a continuation heading «ادامه ۲۱۴۳ – مدیریت آموزشی», although an earlier extracted heading reads ۱۴۲۳; keep this as probable code 2143 until the page image is reviewed. Do not mistake course-location codes 2170–2175 printed inside the 2163 Public Management table for exam-set codes: the separate section heading 2170 Tourism is a different namespace/context. No 1399 Accountancy exam-set code was verified from this guide.",
+      "officialGuideUrl": "https://sedayemoshaveran.com/wp-content/uploads/2020/08/NoteCSphd99_v2.pdf",
+      "officialGuidePages": [
+        45,
+        46,
+        47,
+        48,
+        49,
+        50
+      ],
+      "codes": [
+        {
+          "code": "2162",
+          "title": "مدیریت بازرگانی و راهبردی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2163",
+          "title": "مدیریت دولتی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2164",
+          "title": "مدیریت صنعتی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2165",
+          "title": "مدیریت رسانه و اطلاعات",
+          "classification": "core_management"
+        },
+        {
+          "code": "2166",
+          "title": "مدیریت پیشگیری از جرم، جرم‌یابی و ایمنی ترافیک",
+          "classification": "specialist_restricted_adjacent",
+          "restriction": "ویژه کارکنان شاغل رسمی نیروی انتظامی؛ فقط مرد"
+        },
+        {
+          "code": "2167",
+          "title": "مدیریت فناوری اطلاعات",
+          "classification": "core_management"
+        },
+        {
+          "code": "2168",
+          "title": "مدیریت قراردادهای بین‌المللی نفت و گاز",
+          "classification": "specialist_adjacent"
+        },
+        {
+          "code": "2169",
+          "title": "کارآفرینی، آینده‌پژوهی و مدیریت تکنولوژی",
+          "classification": "core_management"
+        },
+        {
+          "code": "2170",
+          "title": "گردشگری",
+          "classification": "excluded_separate"
+        },
+        {
+          "code": "2171",
+          "title": "مالی",
+          "classification": "management_related_track"
+        }
+      ],
+      "additionalAdjacentCodes": [
+        {
+          "code": "2143",
+          "title": "مدیریت آموزشی",
+          "classification": "adjacent_education_management",
+          "evidence": "The same 1399 selection guide includes a continuation heading explicitly reading «ادامه ۲۱۴۳ – مدیریت آموزشی», and independent 1397/1398 catalogues identify code 2143 for Educational Management.",
+          "verificationNote": "An earlier heading in the extracted PDF text appears as ۱۴۲۳ rather than ۲۱۴۳; this is an OCR/text-extraction conflict. Keep 2143 as probable, with image-level heading verification still open."
+        }
+      ]
     },
     {
       "year": 1400,
@@ -786,7 +860,6 @@
     "Do not count 2170 Tourism or 2173 Accounting as Management exam-set coverage."
   ],
   "outstandingResearch": [
-    "Extract exact final exam-code tables and amendments for 1396, 1397, 1398, 1399 and 1400; 1396 must account for the amendment moving HR/organizational-behaviour tracks.",
     "Verify the 1403 transition against its official registration guide, booklet covers and official key indexes.",
     "Find original question booklet and exact answer-key versions for each core historical code/year, not only code 2162 Business & Strategy.",
     "Determine whether management educational, tourism, accounting, oil/gas contracts and law-enforcement specialist booklets should be included in any extended optional inventory, without conflating them with the core management family.",
@@ -794,7 +867,10 @@
     "Add separate booklet-source families for Educational Management (historically listed separately, e.g. 2143 in the 1399 selection guide) and Sports Management (exam set 2115 in the 1402 selection guide) to the broad adjacent inventory; do not merge these with 2162.",
     "Retrieve original question booklets and official keys for all 1400 management-family exam codes (2162–2169, 2171, plus separate 2143 and 2115); the existing OCR only contains a 2162 candidate.",
     "Verify each historical Accounting code by year: the 1400 selection guide shows Accounting as 2172, while the 1402 registration guide shows Accounting as 2173; do not carry codes across years.",
-    "Confirm whether the 1403 2162 course-combination examination materials are all represented by one booklet, multiple personalized variants or distinct booklet-control forms; preserve each original QuestionAppearance."
+    "Confirm whether the 1403 2162 course-combination examination materials are all represented by one booklet, multiple personalized variants or distinct booklet-control forms; preserve each original QuestionAppearance.",
+    "Reconcile 1399 Educational Management code 2143 against the PDF page image: one extracted heading reads 1423, while the continuation heading reads 2143.",
+    "Retrieve the final registration code/amendment tables for 1396–1398 and determine exact year-specific codes for each distinct Management exam family.",
+    "For 1399, retrieve the exact separate question booklet and official answer key for each code 2162–2169; keep 2166 and 2168 distinct and restricted/specialist as appropriate."
   ],
   "sources": [
     {
@@ -852,11 +928,16 @@
     {
       "url": "https://irantahsil.org/wp-content/uploads/2024/04/NOETCSphd1403_v1.pdf",
       "description": "1403 official doctoral selection guide; printed pages 55–60 confirm umbrella code 2162 Management, course combinations 1–7 and separate codes 2166 and 2168."
+    },
+    {
+      "url": "https://sedayemoshaveran.com/wp-content/uploads/2020/08/NoteCSphd99_v2.pdf",
+      "description": "1399 doctoral selection guide; printed pages 45–50 confirm codes 2162–2169, 2170 Tourism and 2171 Finance, and a continuation heading for 2143 Educational Management with one text-extraction discrepancy."
     }
   ],
   "status": {
     "yearRecordsMapped": 10,
     "yearsWithOfficialCodeTableInspected": [
+      1399,
       1400,
       1401,
       1402,
@@ -870,7 +951,11 @@
       1398,
       1399
     ],
-    "yearsNeedingCodeTableRetrieval": [],
+    "yearsNeedingCodeTableRetrieval": [
+      1396,
+      1397,
+      1398
+    ],
     "transitionYearsNeedingOfficialConfirmation": [],
     "verifiedQuestionOrAnswerRecordsAdded": 0,
     "sourcePdfsDownloadedInThisStep": 0,
@@ -882,10 +967,16 @@
     "yearsWithHistoricalTitlesButCodesNotFullyReconciled": [
       1396,
       1397,
-      1398,
-      1399
+      1398
     ],
     "confirmed1403UmbrellaConsolidation": true,
-    "codeReuseWarning": "Never treat a four-digit code as globally constant across years. Example: Accounting is exam set 2172 in 1400 and 2173 in 1402; in 1400 the number 2173 also appears as a university/program-location code inside a 2163 selection table."
+    "codeReuseWarning": "Never treat a four-digit code as globally constant. Also distinguish exam-set codes from course-location codes: the 1399 2163 public-management table uses location numbers 2170–2175, while the separate section 2170 is Tourism and 2171 is Finance. 1399 Accountancy set code was not verified.",
+    "yearsWithHistoricalTitlesButCodesNotFullyReconciled1399": false,
+    "yearsAwaitingCodeTableRetrieval": [
+      1396,
+      1397,
+      1398
+    ],
+    "yearsWithOfficialCodeTableInspectedNote": "1399–1405 official or year-specific selection guides inspected; 1396–1398 exact final code tables/amendments still need reconciliation."
   }
 }
