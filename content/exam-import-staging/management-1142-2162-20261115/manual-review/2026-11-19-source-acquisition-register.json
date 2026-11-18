@@ -841,5 +841,20 @@
    }
   ]
  },
- "updatedAt": "2026-11-19"
+ "updatedAt": "2026-11-19",
+ "officialKeyPortalLeadsFollowup": {
+  "checkedAt": "2026-11-19",
+  "waybackSnapshots": {
+   "keyphd96": "http://web.archive.org/web/20190605144257/http://result2.sanjesh.org:80/keyphd96/ (200)",
+   "keyphd97": "http://web.archive.org/web/20200709101355/http://result2.sanjesh.org:80/keyphd97/ (200)"
+  },
+  "finding": "Both archived portal pages are ASP.NET lookup forms (exam group + exam code + booklet type + security-phrase CAPTCHA + postback). Per-set key results are POST-rendered and are NOT archived (Wayback CDX for result2.sanjesh.org contains no per-set PhD key URLs).",
+  "policy": "The mission forbids bypassing CAPTCHA; automated form submission with the security phrase is therefore out of scope. Manual browser retrieval by the owner remains possible and is the recommended path.",
+  "alternativePathsTried": [
+   "result2.sanjesh.org/Keys/phd96/ and /Keys/phd97/ (no Wayback snapshots)",
+   "result2.sanjesh.org direct access (timeout, unchanged)",
+   "dl.konkur.in 1397 family keys (dead links, recorded earlier)"
+  ],
+  "status": "blocked_pending_manual_retrieval"
+ }
 }
