@@ -403,7 +403,9 @@
    "1396 family files are RAR archives (password www.konkur.in) — extracted locally to valid PDFs.",
    "All family files live outside the repository; hashes recorded here.",
    "Set identity verification for family keys pending (all scanned; easyocr header pass planned).",
-   "1402 page does not list کارآفرینی 2169 — recorded as gap."
+   "1402 page does not list کارآفرینی 2169 — recorded as gap.",
+   "RESOLVED 1404 conflict: interior headers of BOTH 1404 files read «مدیریت (کد ۲۱۶۲) 820A» (visual check, page 7 of each). The variant cover also reads 2162/820A with 320 questions — the earlier '3162 cover/header' readings were OCR misreads (2↔3). The two files are alternate scans of the same booklet; variant2 stays as a variant, not a different set.",
+   "Umbrella-year booklets contain ALL combinations' subjects: 1404 = 320 questions (8 subjects × 40); 1403/1405 page counts consistent (44). The 80-question count applies to the 2162 core series 1396-1402 only."
   ],
   "files": {
    "PhD_2163_1396_booklet": {
