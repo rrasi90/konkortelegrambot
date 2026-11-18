@@ -6,8 +6,11 @@ on:
       - ocr/exam-booklets-docx-20261115
     paths:
       - docs/exam-ocr/**
+      - docs/content-coverage/EXAMS-CODE-REGISTER-*.md
+      - content/exam-import-staging/management-1142-2162-20261115/exam-code-register-1396-1405.json
       - tools/exam-import/build-ocr-appearance-staging.py
       - tools/exam-import/validate-ocr-appearance-staging.py
+      - tools/exam-import/validate-exam-code-register.py
       - .github/workflows/stage-ocr-exam-questions.yml
   workflow_dispatch:
 
@@ -34,6 +37,11 @@ jobs:
         run: |
           python tools/exam-import/validate-ocr-appearance-staging.py \
             --data-dir content/exam-import-staging/management-1142-2162-20261115
+
+      - name: Validate year-by-year exam-code register
+        run: |
+          python tools/exam-import/validate-exam-code-register.py \
+            --register content/exam-import-staging/management-1142-2162-20261115/exam-code-register-1396-1405.json
 
       - name: Commit only staging artifacts
         run: |
