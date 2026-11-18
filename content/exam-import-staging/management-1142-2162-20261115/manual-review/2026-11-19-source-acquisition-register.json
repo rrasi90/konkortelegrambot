@@ -27,18 +27,25 @@
      "questions": 295,
      "note": "dl.konkur.in Arshad/98/716-C(1142); cover verified visually."
     },
-    "1403": {
-     "control": "141C",
-     "questions": 285,
-     "note": "mastertest.ir upload; cover verified visually: مدیریت کد ۱۱۴۲، ۲۸۵ سؤال. The dl.konkur.in 142A scan is metallurgy 1272 and konkur.in's own 1403 row labels are shifted — audit finding recorded."
-    },
     "1399": {
      "control": "316A",
      "questions": 295,
      "note": "FOUND: dl.konkur.in Arshad/99/316-Arshad99; cover verified visually (مجموعه مدیریت کد ۱۱۴۲، ۲۹۵ سؤال، ۱۶ درس). The old 48-page local scan (cover OCR '317') is superseded — 317 belongs to the agriculture set."
+    },
+    "1403": {
+     "control": "141C",
+     "questions": 285,
+     "note": "mastertest.ir upload; cover verified visually: مدیریت کد ۱۱۴۲، ۲۸۵ سؤال. The dl.konkur.in 142A scan is metallurgy 1272 and konkur.in's own 1403 row labels are shifted — audit finding recorded."
     }
    },
    "verifiedKeys": {
+    "1396": {
+     "rows": null,
+     "expected": 320,
+     "match": null,
+     "note": "FOUND 2026-11-19 continuation: dl.konkur.in Arshad/96/pasokh/1142-key rar (extracted). Sanjesh header: کد ۱۱۴۲ مجموعه مدیریت نوع C, objections until 1396/02/18. Scanned — transcription pending.",
+     "file": "ma-1396-key/1142-key-Arshad96-[www.konkur.in]/1142-key-Arshad96-[www.konkur.in].pdf"
+    },
     "1397": {
      "rows": 295,
      "expected": 295,
@@ -91,16 +98,14 @@
      "match": null,
      "note": "FOUND: dl.konkur.in Arshad/1405/pasokh/A319A-key. Key header prints کد دفترچه ۳۱۹A and عنوان ۱۱۴۲ مدیریت — mutual confirmation with the booklet cover.",
      "file": "downloads/MA_1142_1405_319A_KEY.pdf"
-    },
-    "1396": {
-     "rows": null,
-     "expected": 320,
-     "match": null,
-     "note": "FOUND 2026-11-19 continuation: dl.konkur.in Arshad/96/pasokh/1142-key rar (extracted). Sanjesh header: کد ۱۱۴۲ مجموعه مدیریت نوع C, objections until 1396/02/18. Scanned — transcription pending.",
-     "file": "ma-1396-key/1142-key-Arshad96-[www.konkur.in]/1142-key-Arshad96-[www.konkur.in].pdf"
     }
    },
    "keyIdentityAudit": {
+    "1396": {
+     "set": "1142 مجموعه مدیریت (نوع C)",
+     "correct": true,
+     "evidence": "sanjesh header on extracted rar key"
+    },
     "1397": {
      "set": "1142 مدیریت",
      "correct": true,
@@ -145,11 +150,6 @@
      "set": "1142 مدیریت (319A دروس اختصاصی)",
      "correct": true,
      "evidence": "key header names کد دفترچه ۳۱۹A"
-    },
-    "1396": {
-     "set": "1142 مجموعه مدیریت (نوع C)",
-     "correct": true,
-     "evidence": "sanjesh header on extracted rar key"
     }
    }
   },
@@ -383,7 +383,8 @@
   "konkur.in Arshad/1403 table labels are shifted relative to the hosted scans: the row labelled «مدیریت 1142» hosts the metallurgy 1272 booklet (cover 142A) and 143A hosts علوم و مهندسی آب 1302. The true 1142/1403 booklet (control 141C) came from mastertest.ir.",
   "konkur.in PhD pages pair download links with the label row that FOLLOWS them for 97/99/1401/1402, but the arshad 1403 table is shifted — per-page pairing must be verified by cover image, never by table position alone.",
   "PhD 2162 booklets contain 80 questions (70 in 1402); earlier coverage tables implied a larger count.",
-  "dl.konkur.in hosts correct scans for every recovered year; the previous environment's download timeouts were environmental, not source absence."
+  "dl.konkur.in hosts correct scans for every recovered year; the previous environment's download timeouts were environmental, not source absence.",
+  "2026-11-19 follow-up: year-level official initial-key portals were identified for PhD 1396 (result2.sanjesh.org/keyphd96/) and 1397 (result2.sanjesh.org/keyphd97/) from contemporaneous announcements. They are discovery leads only: no direct per-set PDF was retrieved, no code-specific key identity was verified, and no answer rows were transcribed."
  ],
  "remainingGaps": [
   "PhD 1397 family keys (2163-2171): dead links on dl.konkur.in; alternative sources needed.",
@@ -802,6 +803,43 @@
     "1397 family keys missing (dead links)",
     "1396 family keys extracted but not yet header-verified"
    ]
-  }
- }
+  },
+  "officialKeyPortalLeads": [
+   {
+    "year": "1396",
+    "portalUrl": "http://result2.sanjesh.org/keyphd96/",
+    "portalType": "official_year_level_initial_key_portal",
+    "evidence": [
+     {
+      "sourceUrl": "https://iusnews.ir/fa/news-details/228639/",
+      "supports": "contemporaneous 1396 announcement links its «کلید سوالات» action to result2.sanjesh.org; following the link resolves to this year-level portal"
+     }
+    ],
+    "accessStatus": "web_fetch_timeout",
+    "downloaded": false,
+    "setSpecificPdfIdentified": false,
+    "nextAction": "Retry the official portal from a browser or retrieve a stable archived copy; identify the 2162 key by the printed exam-set identity before transcription."
+   },
+   {
+    "year": "1397",
+    "portalUrl": "http://result2.sanjesh.org/keyphd97/",
+    "portalType": "official_year_level_initial_key_portal",
+    "evidence": [
+     {
+      "sourceUrl": "https://iusnews.ir/fa/news-details/260132/",
+      "supports": "contemporaneous announcement confirms publication of the 1397 PhD initial key and directs candidates to Sanjesh by exam code"
+     },
+     {
+      "sourceUrl": "https://telegram.me/s/GapNetkamyaran?before=1235",
+      "supports": "archived repost of the Sanjesh announcement gives the year-level result2.sanjesh.org/keyphd97/ address"
+     }
+    ],
+    "accessStatus": "official_portal_url_discovered_but_inaccessible_to_web_fetch",
+    "downloaded": false,
+    "setSpecificPdfIdentified": false,
+    "nextAction": "Retrieve the official portal in a browser or locate archived per-code PDF endpoints; identify each management-family key using the printed set-code table."
+   }
+  ]
+ },
+ "updatedAt": "2026-11-19"
 }
