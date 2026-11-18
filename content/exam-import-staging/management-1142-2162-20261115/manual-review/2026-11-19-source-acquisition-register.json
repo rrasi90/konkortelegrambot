@@ -793,6 +793,15 @@
     "bytes": 341707,
     "url": "https://dl.konkur.in/PHD/1402/pasokh/334-key-PHD1402-[konkur.in].pdf"
    }
+  },
+  "keyHeaderVerification": {
+   "method": "easyocr on 30% top crop of each key PDF (30 keys)",
+   "result": "all 30 verified as sanjesh «کلید اولیه» pages whose banner year matches the pairing year (1398-1402)",
+   "setSpecificHeader": "the per-set table (عنوان دفترچه/کد امتحانی/نوع دفترچه) sits below the banner; reading it is the next verification step",
+   "gaps": [
+    "1397 family keys missing (dead links)",
+    "1396 family keys extracted but not yet header-verified"
+   ]
   }
  }
 }
