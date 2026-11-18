@@ -1,0 +1,77 @@
+{
+  "source": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A",
+    "pdf": "MA_1142_1405.pdf",
+    "pdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb"
+  },
+  "course": {
+    "subjectNumber": 1,
+    "subjectModelId": "master.1142.s1",
+    "sectionId": "english"
+  },
+  "pagesVisuallyReviewed": [
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "passages": [
+    {
+      "id": "passage.arshad.1405.319A.english.cloze.01",
+      "kind": "cloze",
+      "sourcePages": [
+        2
+      ],
+      "text": "Modern psychologists have many interests, ______ (8) upon different theories and approaches depending on what they are studying. There has been tremendous growth in the topics studied by psychologists ______ (9) developments in computers and data analysis. The American Psychological Association currently has 45 divisions, ______ (10) representing areas of special interest to psychologists.",
+      "status": "visually_transcribed_from_original_pdf"
+    },
+    {
+      "id": "passage.arshad.1405.319A.english.reading.01",
+      "kind": "reading",
+      "sourcePages": [
+        3
+      ],
+      "text": "Introduced in the early 1940s, Maslow’s theory of motivation remained primarily in the realm of clinical psychology where he did most of his developmental work. It was in 1957 that management and organizational theorists began to take note, beginning with Davis, Pellegrin and Coates, and McGregor. McGregor is credited with introducing Maslow to business educators in his 1960 book on the human side of enterprise. However, it was Davis who did more than anyone to bring Maslow’s name to the fore. In his 1957 textbook on Human Relations in business, Davis outlined Maslow’s hierarchy of needs.\n\nThat same year, Pellegrin and Coates, in an article in the Administrative Science Quarterly, discussed Maslow’s ‘well known formulation’ on motivation in relation to executive career success, and McGregor, presenting at a conference at MIT, credited the influence of Maslow on his work. Two years later both the McGregor presentation and the Pellegrin and Coates article were reproduced by Davis and Scott (1959) in a book of readings on Human Relations in business. A revised version of the McGregor paper appeared in The Management Review but without the previous reference to Maslow. It was McGregor’s (1960) popular book that restored reference to Maslow and helped establish McGregor as Maslow’s popularizer among business educators.",
+      "status": "visually_transcribed_from_original_pdf"
+    },
+    {
+      "id": "passage.arshad.1405.319A.english.reading.02",
+      "kind": "reading",
+      "sourcePages": [
+        4
+      ],
+      "text": "One of the biggest business developments in recent years has been the outsourcing of many of the tasks in the human resources (HR) arena to vendors. Everything from benefits to candidate search to training to outplacement can be done by vendors. As more companies move to the global market, they have operations of their own in many parts of the world. More choices about where and how needed tasks can be performed put organizations and many HR executives in the role of making decisions about sourcing: where will our different tasks be performed?\n\nOutsourcing in particular is not unique to the HR function, of course. But because the motivation for outsourcing is usually to cut labor costs, as labor is the majority of all operating costs, HR issues are involved in almost every outsourcing call. Data reported by the Human Resources Outsourcing Association (HROA) suggests that outsourcing of HR tasks grew by over 20% points from 2007 to 2009 alone and now exists in about 90% of organizations.\n\nChoices about sourcing are not new, either. Manufacturing firms have long had to decide in which of their locations to produce the various components of their final products or, more fundamentally, whether to use subcontractors to produce them. Better information technology has expanded the range of businesses where sourcing choices are possible, especially in white collar jobs. We could have the software done by our Indian office, the outbound calls initiated by our Philippine call center, and the policies drafted in the U.S.",
+      "status": "visually_transcribed_from_original_pdf"
+    },
+    {
+      "id": "passage.arshad.1405.319A.english.reading.03",
+      "kind": "reading",
+      "sourcePages": [
+        5,
+        6
+      ],
+      "text": "By April 2005, more than 88,800 facilities worldwide had certified their environmental management systems (EMS) to ISO 14001, the global EMS standard, and thousands more had adopted uncertified EMSs. [1] EMSs are strategic management approaches that define how an organization will address its impacts on the natural environment. While prior research has evaluated the reasons why organizations adopt an EMS and the potential these environmental strategies have for improving the environment, questions remain about whether organizations are using their EMSs to challenge their supplier networks to become more environmentally sustainable. At issue is that EMSs do not require organizations to improve their environmental performance, but instead focus on creating and documenting environmental policies and procedures. Additionally, there is no way of externally verifying that an organization’s environmental performance improvements actually occur. EMSs therefore may represent only symbolic efforts to improve an organization’s image. In instances where EMSs enhance an organization’s environmental performance, some scholars suggest that improvements are likely to occur within the organization’s operational boundaries rather than being extended throughout the supply chain. [2]\n\nDespite these concerns, the operational capabilities necessary to adopt an EMS may also assist an organization’s efforts to reduce its environmental impacts throughout its supply chain. EMS adopters therefore may be more likely to rely on their complementary knowledge-based capabilities towards working with their networks of suppliers and customers to minimize system-wide environmental impacts. [3] In other instances, organizations that chose to adopt an EMS may endure the same institutional pressures as organizations that adopt Green Supply Chain Management (GSCM) practices, which is why they utilize both environmental management practices simultaneously. Regardless of the nature of their potential complementarity, organizations that adopt EMSs may have a greater probability of implementing environmentally sustainable management practices by considering their environmental impacts beyond their organizational boundaries. [4]",
+      "status": "visually_transcribed_from_original_pdf"
+    }
+  ],
+  "questionCount": 25,
+  "rules": {
+    "answerKeyImported": 0,
+    "answerKeyRevisionCreated": 0,
+    "allowedUse": [],
+    "publicationStatus": "staging_only",
+    "rightsStatus": "restricted",
+    "smeApproval": "pending",
+    "canonicalQuestionMerged": 0
+  },
+  "notes": [
+    "Question 1–25 stems and four options transcribed directly from original page images; shared cloze/reading stimuli are stored separately and referenced by ID.",
+    "No answer key from the unrelated 1152/117A booklet was used.",
+    "Correct options remain unset until the exact official 319A answer-key PDF is retrieved and reconciled.",
+    "Rights approval is pending; the source cover restricts reproduction without permission."
+  ]
+}

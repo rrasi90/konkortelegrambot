@@ -1,0 +1,55 @@
+name: Render 1405 management exam source pages for visual review
+
+on:
+  push:
+    branches:
+      - ocr/exam-booklets-docx-20261115
+    paths:
+      - tools/exam-import/render-arshad-1405-review.py
+      - .github/workflows/render-arshad-1405-review.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore original question and answer-key PDFs from Git history
+        env:
+          SOURCE_COMMIT: 3d8a7031ffcd6dba450115a1f7f901ce4087fade
+        run: |
+          mkdir -p "$RUNNER_TEMP/exam-source"
+          git archive "$SOURCE_COMMIT" konkor/downloads | tar -x -C "$RUNNER_TEMP/exam-source"
+          mkdir -p "$RUNNER_TEMP/review"
+          cp "$RUNNER_TEMP/exam-source/konkor/downloads/MA_1142_1405.pdf" "$RUNNER_TEMP/review/"
+      - name: Download the exact official key matching set 1142 and booklet 319A
+        continue-on-error: true
+        run: |
+          curl --fail --show-error --location --retry 2 --connect-timeout 20 --max-time 120 \
+            "https://www8.sanjesh.org/noet_tk/Handlers/DownloadHandler.ashx?A=1405_arsh_319A" \
+            -o "$RUNNER_TEMP/review/MA_1142_1405_KEY_319A.pdf" || {
+              echo "Official Sanjesh key download failed; no answer key will be inferred."
+              rm -f "$RUNNER_TEMP/review/MA_1142_1405_KEY_319A.pdf"
+            }
+      - name: Render source pages for visual audit
+        run: |
+          python -m pip install --upgrade pip
+          sudo apt-get update
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-fas tesseract-ocr-eng
+          python -m pip install pymupdf Pillow
+          python tools/exam-import/render-arshad-1405-review.py \
+            --source-dir "$RUNNER_TEMP/review" \
+            --out "$RUNNER_TEMP/review-output"
+      - name: Upload image audit pack without committing PDFs or images
+        uses: actions/upload-artifact@v4
+        with:
+          name: arshad-management-1405-visual-review
+          path: ${{ runner.temp }}/review-output/
+          retention-days: 30
+          compression-level: 6

@@ -16,7 +16,7 @@ export interface SubjectPalette {
 }
 
 /** رنگ هر درس فقط در بستر محتوای همان درس استفاده می‌شود؛ کروم صفحه خنثی می‌ماند. */
-export const SUBJECT_PALETTES: Record<KonkorCourseSectionId, SubjectPalette> = {
+export const SUBJECT_PALETTES: Partial<Record<KonkorCourseSectionId, SubjectPalette>> = {
   islamic: {
     text: '#A5B4FC',
     strong: '#6366F1',
@@ -94,4 +94,4 @@ export const UNKNOWN_SUBJECT_PALETTE: SubjectPalette = {
 
 export const getSubjectPalette = (
   subjectId: KonkorCourseSectionId | undefined
-): SubjectPalette => (subjectId ? SUBJECT_PALETTES[subjectId] : UNKNOWN_SUBJECT_PALETTE);
+): SubjectPalette => (subjectId ? SUBJECT_PALETTES[subjectId] ?? UNKNOWN_SUBJECT_PALETTE : UNKNOWN_SUBJECT_PALETTE);

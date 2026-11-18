@@ -1,0 +1,37 @@
+{
+  "artifactType": "answer-key-identity-review",
+  "schemaVersion": "1.0.0",
+  "targetExamRef": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A"
+  },
+  "targetSanjeshUrl": "https://www8.sanjesh.org/noet_tk/Handlers/DownloadHandler.ashx?A=1405_arsh_319A",
+  "targetKeyRetrievalStatus": "not_retrieved",
+  "candidateArtifact": {
+    "filename": "MA_1142_1405_KEY.pdf",
+    "sha256": "89ec62ac861485a35294f755f4427510b438089b1a354579998ecaad206274db",
+    "renderedPages": 1,
+    "inspectedEvidence": "Rendered key page 1 from local visual-review bundle; render-manifest records this source hash.",
+    "printedIdentity": {
+      "examSetCode": "1152",
+      "bookletControlCode": "117A",
+      "bookletTitle": "دروس اختصاصی",
+      "examGroup": "مدیریت مدرسى معارف اسلامی"
+    }
+  },
+  "identityComparison": {
+    "targetExamSetCode": "1142",
+    "observedExamSetCode": "1152",
+    "targetBookletControlCode": "319A",
+    "observedBookletControlCode": "117A",
+    "matches": false
+  },
+  "decision": "reject_candidate_identity_mismatch",
+  "rationale": "The filename suggests a 1142 key, but the printed header inside the rendered key states exam set 1152 and booklet 117A. The printed identity is incompatible with the target 1142/319A booklet.",
+  "safetyRule": "Do not copy any option keys from this file into the target exam, even if question numbers overlap.",
+  "importedAnswers": 0,
+  "answerKeyRevisionsCreated": 0,
+  "remainingBlocker": "The exact 1142/319A Sanjesh key URL has been resolved but the target PDF fetch continues to time out."
+}

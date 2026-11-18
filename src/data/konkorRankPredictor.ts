@@ -11,7 +11,7 @@ export interface HistoricalTopRankProfile {
   admittedUniversity: string;
   totalTaraz: number;
   weightedAveragePercent: number;
-  coursePercentages: Record<KonkorCourseSectionId, number>;
+  coursePercentages: Partial<Record<KonkorCourseSectionId, number>>;
   note: string;
 }
 
@@ -71,10 +71,10 @@ export interface RankPredictionResult {
     title: string;
     coeff: number;
     userPercent: number;
-    rank1Percent: number;
-    rank10Percent: number;
-    gapFromRank1: number;
-    status: 'عالی (هم‌تراز رتبه برتر)' | 'خوب (تراز مثبت)' | 'متوسط (نیازمند ارتقا)' | 'نقطه ضعف (نیازمند جبران)';
+    rank1Percent: number | null;
+    rank10Percent: number | null;
+    gapFromRank1: number | null;
+    status: 'عالی (هم‌تراز رتبه برتر)' | 'خوب (تراز مثبت)' | 'متوسط (نیازمند ارتقا)' | 'نقطه ضعف (نیازمند جبران)' | 'داده تاریخی کافی نیست';
   }[];
   universityAdmissions: {
     tier: UniversityAdmissionTier;
@@ -785,8 +785,23 @@ export function predictKonkorRankAndUniversity(params: {
     ) ?? HISTORICAL_TOP_RANK_PROFILES[1];
 
   const courseBreakdown = courseInputs.map((c) => {
-    const r1 = top1RankComparison.coursePercentages[c.sectionId] ?? 50;
-    const r10 = top10RankComparison.coursePercentages[c.sectionId] ?? 42;
+    const r1 = top1RankComparison.coursePercentages[c.sectionId];
+    const r10 = top10RankComparison.coursePercentages[c.sectionId];
+
+    // No historical reference must stay unknown; zero/50/42 would fabricate a benchmark.
+    if (r1 === undefined || r10 === undefined) {
+      return {
+        sectionId: c.sectionId,
+        title: c.title,
+        coeff: c.coeff,
+        userPercent: c.netPercent,
+        rank1Percent: null,
+        rank10Percent: null,
+        gapFromRank1: null,
+        status: 'داده تاریخی کافی نیست' as const,
+      };
+    }
+
     const gap = Number((c.netPercent - r1).toFixed(1));
     let status: RankPredictionResult['courseBreakdown'][number]['status'] =
       'متوسط (نیازمند ارتقا)';
@@ -834,7 +849,10 @@ export function predictKonkorRankAndUniversity(params: {
 
   // ۶. توصیه استراتژیک هوشمند بر اساس بیشترین فاصله در دروس پرضریب
   const highCoeffWeakCourse = [...courseBreakdown]
-    .filter((c) => c.coeff >= 2)
+    .filter(
+      (c): c is typeof c & { gapFromRank1: number; rank10Percent: number } =>
+        c.coeff >= 2 && c.gapFromRank1 !== null && c.rank10Percent !== null,
+    )
     .sort((a, b) => a.gapFromRank1 * b.coeff - b.gapFromRank1 * a.coeff)[0];
 
   const strategicAdvice = highCoeffWeakCourse

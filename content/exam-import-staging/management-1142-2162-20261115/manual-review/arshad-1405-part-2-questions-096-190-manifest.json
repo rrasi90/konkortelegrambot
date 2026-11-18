@@ -1,0 +1,58 @@
+{
+  "batchId": "review-batch.arshad.1405.part-2.questions-096-190",
+  "examRef": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A"
+  },
+  "questionRange": {
+    "from": 96,
+    "to": 190,
+    "count": 95
+  },
+  "sourcePdf": "MA_1142_1405.pdf",
+  "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+  "pageRange": [
+    16,
+    29
+  ],
+  "visualPagesReviewed": 14,
+  "questionPageLocatorsConfirmed": 95,
+  "mappingCandidatesRecorded": 95,
+  "proposedNodes": 36,
+  "proposedSkills": 80,
+  "existingRegisteredNodeSkillPairsReused": 2,
+  "existingSkillReferencesBlockedByMissingParentNode": 2,
+  "semanticReviewFlags": [
+    112,
+    115,
+    117,
+    128,
+    135,
+    148,
+    185,
+    190
+  ],
+  "mappingApprovalCount": 0,
+  "newSyllabusNodesCommitted": 0,
+  "newSkillsCommitted": 0,
+  "answerKeyStatus": "target_key_unavailable; mismatched candidate rejected",
+  "answerKeyRevisionsCreated": 0,
+  "rejectedKeyIdentity": {
+    "examSetCode": "1152",
+    "bookletControlCode": "117A"
+  },
+  "deduplicationCompleted": 0,
+  "rightsStatus": "restricted_permission_required",
+  "allowedUse": [],
+  "productionServableQuestions": 0,
+  "nextPart": "All three review parts completed. Final production/release gates remain blocked; see arshad-1405-rights-release-gate.json.",
+  "notes": [
+    "Page images for PDF pages 16–29 were visually reviewed; this is not a full character-by-character transcription of all options.",
+    "Every mapping is a candidate, not an approved syllabus/skill assignment.",
+    "The only registered node+skill pairs reused are mkt.plc/skill.mkt.plc.stages and sm.portfolio/skill.sm.portfolio.bcg_ge.",
+    "The existing ind.or_simplex and ind.production_inv skills point to missing parent nodes; their mappings are blocked pending registry repair.",
+    "No official answer key values have been imported."
+  ]
+}

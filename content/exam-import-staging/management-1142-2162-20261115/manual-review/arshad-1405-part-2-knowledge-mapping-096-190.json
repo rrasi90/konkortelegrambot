@@ -1,0 +1,3244 @@
+{
+  "artifactType": "exam-knowledge-mapping-proposal",
+  "schemaVersion": "1.0.0",
+  "batchId": "review-batch.arshad.1405.part-2.questions-096-190",
+  "examRef": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A"
+  },
+  "questionRange": {
+    "from": 96,
+    "to": 190,
+    "count": 95
+  },
+  "source": {
+    "file": "MA_1142_1405.pdf",
+    "sha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+    "visuallyReviewedPdfPages": [
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ]
+  },
+  "methodology": {
+    "principle": "Map the dominant tested construct in the printed stem, not an inferred answer option.",
+    "evidence": "Question page images cross-checked against the OCR DOCX; subject boundaries cross-checked against the booklet cover.",
+    "confidence": "Confidence rates topical fit only; it is not an answer-key or scientific-correctness approval.",
+    "gate": "All mappings remain candidates pending SME review; no skill mastery, canonical question, or production record is changed."
+  },
+  "currentRegistryAudit": {
+    "syllabusNodeCount": 24,
+    "skillCount": 23,
+    "skillParentNodeReferencesMissing": [
+      "ind.or_simplex",
+      "ind.mcdm",
+      "ind.production_inv",
+      "ind.supply_chain"
+    ],
+    "danglingSkillPrerequisites": [
+      {
+        "skillId": "skill.mkt.brand.cbbe_pyramid",
+        "missingPrerequisite": "skill.mkt.stp.positioning"
+      }
+    ],
+    "impact": "Existing skill references to ind.or_simplex and ind.production_inv are not safe to activate until their parent nodes are restored to syllabus-nodes.json.",
+    "action": "No live syllabus-nodes.json or skills.json edits in this part; registry repairs are proposed separately and require approval."
+  },
+  "subjectCoverage": [
+    {
+      "courseSectionId": "economics",
+      "from": 96,
+      "to": 105,
+      "count": 10
+    },
+    {
+      "courseSectionId": "public_finance",
+      "from": 106,
+      "to": 120,
+      "count": 15
+    },
+    {
+      "courseSectionId": "human_resources",
+      "from": 121,
+      "to": 135,
+      "count": 15
+    },
+    {
+      "courseSectionId": "operations_research",
+      "from": 136,
+      "to": 150,
+      "count": 15
+    },
+    {
+      "courseSectionId": "financial_management",
+      "from": 151,
+      "to": 165,
+      "count": 15
+    },
+    {
+      "courseSectionId": "production",
+      "from": 166,
+      "to": 180,
+      "count": 15
+    },
+    {
+      "courseSectionId": "marketing",
+      "from": 181,
+      "to": 190,
+      "count": 10
+    }
+  ],
+  "proposedNodes": [
+    {
+      "id": "econ.price_indices",
+      "course": "اقتصاد خرد و کلان",
+      "chapter": "شاخص‌های قیمت و سنجش تورم",
+      "topic": "محاسبه تورم نقطه‌به‌نقطه با شاخص قیمت مصرف‌کننده",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        96
+      ]
+    },
+    {
+      "id": "econ.fiscal_policy",
+      "course": "اقتصاد خرد و کلان",
+      "chapter": "سیاست مالی کینزی و ضریب تکاثری",
+      "topic": "ضریب مخارج دولت، ضریب مالیات و اثر تغییرات مخارج و مالیات بر درآمد ملی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        97,
+        98,
+        101
+      ]
+    },
+    {
+      "id": "econ.monetary_theory",
+      "course": "اقتصاد خرد و کلان",
+      "chapter": "نظریه پول و سیاست پولی",
+      "topic": "تقاضای پول کینزی، دیدگاه پول‌گرایان و ابزارهای سیاست پولی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        99,
+        100,
+        102,
+        103
+      ]
+    },
+    {
+      "id": "econ.macroeconomic_models",
+      "course": "اقتصاد خرد و کلان",
+      "chapter": "مدل‌های کلان و روابط تورم و بیکاری",
+      "topic": "مدل IS–LM، تله نقدینگی و منحنی فیلیپس",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        104,
+        105
+      ]
+    },
+    {
+      "id": "pf.market_failure",
+      "course": "مالیه عمومی و بودجه",
+      "chapter": "شکست بازار و کالاهای عمومی",
+      "topic": "کالاهای عمومی، عدم رقابت، عدم محروم‌سازی و مسئله سواری مجانی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        106,
+        107,
+        118
+      ]
+    },
+    {
+      "id": "pf.tax_policy",
+      "course": "مالیه عمومی و بودجه",
+      "chapter": "طراحی و کارایی مالیات",
+      "topic": "اصل منافع، اضافه‌بار مالیاتی و کارایی نظام مالیاتی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        108,
+        110
+      ]
+    },
+    {
+      "id": "pf.budget_systems",
+      "course": "مالیه عمومی و بودجه",
+      "chapter": "اصول و نظام‌های بودجه‌ریزی",
+      "topic": "بودجه عملکردی، توازن بودجه، تخصیص، انواع بودجه و PPBS",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        109,
+        111,
+        112,
+        113,
+        114,
+        119
+      ]
+    },
+    {
+      "id": "pf.public_administration",
+      "course": "مالیه عمومی و بودجه",
+      "chapter": "مدیریت و حکمرانی بخش عمومی",
+      "topic": "مکاتب مدیریت دولتی و الگوهای همکاری و حکمرانی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        115,
+        116
+      ]
+    },
+    {
+      "id": "pf.public_expenditure",
+      "course": "مالیه عمومی و بودجه",
+      "chapter": "نظریه‌های مخارج عمومی و انتخاب عمومی",
+      "topic": "مطلوبیت نهایی مخارج عمومی و انگیزه‌های بازیگران دولتی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        117,
+        120
+      ]
+    },
+    {
+      "id": "hr.job_analysis",
+      "course": "مدیریت منابع انسانی",
+      "chapter": "تحلیل شغل و شایستگی",
+      "topic": "روش‌های تحلیل شغل در محیط‌های پویا و مبتنی بر شایستگی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        121
+      ]
+    },
+    {
+      "id": "hr.performance_management",
+      "course": "مدیریت منابع انسانی",
+      "chapter": "مدیریت و ارزشیابی عملکرد",
+      "topic": "خطاهای ادراکی، مصاحبه بازخورد و مقیاس‌های رتبه‌بندی رفتاری",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        122,
+        125,
+        129
+      ]
+    },
+    {
+      "id": "hr.compensation",
+      "course": "مدیریت منابع انسانی",
+      "chapter": "جبران خدمات و ارزشیابی مشاغل",
+      "topic": "ساختار پرداخت، مقایسه درونی و بیرونی، گروه‌های نیروی کار و روش‌های ارزشیابی شغل",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        123,
+        124,
+        126
+      ]
+    },
+    {
+      "id": "hr.workforce",
+      "course": "مدیریت منابع انسانی",
+      "chapter": "تأمین، تعدیل و انعطاف نیروی کار",
+      "topic": "روش‌های تعدیل عرضه نیروی کار، اشتغال منعطف و قراردادهای کاری",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        127,
+        135
+      ]
+    },
+    {
+      "id": "hr.job_design",
+      "course": "مدیریت منابع انسانی",
+      "chapter": "طراحی شغل و انگیزش کارکنان",
+      "topic": "ویژگی‌های شغل و نظریه‌های فعال‌سازی و انگیزش",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        128
+      ]
+    },
+    {
+      "id": "hr.strategic_hrm",
+      "course": "مدیریت منابع انسانی",
+      "chapter": "راهبرد منابع انسانی و همسویی سازمانی",
+      "topic": "همسویی عمودی و افقی و انطباق راهبرد HR با راهبرد کسب‌وکار",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        131,
+        132,
+        133
+      ]
+    },
+    {
+      "id": "hr.selection_assessment",
+      "course": "مدیریت منابع انسانی",
+      "chapter": "آزمون‌ها و ابزارهای انتخاب و استخدام",
+      "topic": "پایایی آزمون‌ها و روش فرم‌های معادل",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        130
+      ]
+    },
+    {
+      "id": "hr.discipline",
+      "course": "مدیریت منابع انسانی",
+      "chapter": "انضباط و اقدامات اصلاحی کارکنان",
+      "topic": "فرایند تنبیه تدریجی و تناسب اقدام انضباطی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        134
+      ]
+    },
+    {
+      "id": "ind.or_simplex",
+      "course": "تحقیق در عملیات",
+      "chapter": "برنامه‌ریزی خطی، سیمپلکس و تحلیل حساسیت",
+      "topic": "صورت‌بندی مدل، جدول سیمپلکس، دوگان، قیمت سایه‌ای و تحلیل حساسیت؛ این گره در رجیستری فعلی غایب است اما مهارت متناظر به آن ارجاع می‌دهد.",
+      "registryStatus": "missing_parent_for_existing_skill",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145,
+        146
+      ]
+    },
+    {
+      "id": "ind.transport_assignment",
+      "course": "تحقیق در عملیات",
+      "chapter": "مدل‌های حمل‌ونقل و تخصیص",
+      "topic": "مدل حمل‌ونقل، دامنه تغییر هزینه و ساختار متغیرهای مسئله تخصیص",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        147,
+        148
+      ]
+    },
+    {
+      "id": "ind.integer_programming",
+      "course": "تحقیق در عملیات",
+      "chapter": "برنامه‌ریزی عدد صحیح و برش‌ها",
+      "topic": "قیود منطقی پروژه‌ها، متغیرهای دودویی و برش‌های گوموری",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        149,
+        150
+      ]
+    },
+    {
+      "id": "fin.capital_structure",
+      "course": "مدیریت مالی",
+      "chapter": "ساختار سرمایه و سیاست‌های سهام",
+      "topic": "تجزیه سهام، سود سهمی، اهرم مالی و نظریه سلسله‌مراتبی تأمین مالی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        151,
+        152,
+        157
+      ]
+    },
+    {
+      "id": "fin.valuation",
+      "course": "مدیریت مالی",
+      "chapter": "ارزش‌گذاری اوراق بهادار و ارزش زمانی پول",
+      "topic": "مدل تنزیل سود نقدی، رشد چندمرحله‌ای، ارزش فعلی و جریان‌های با تأخیر",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        153,
+        154,
+        159,
+        155
+      ]
+    },
+    {
+      "id": "fin.break_even_cost",
+      "course": "مدیریت مالی",
+      "chapter": "تحلیل سربه‌سر و هزینه سرمایه",
+      "topic": "نقطه سربه‌سر حسابداری، نقدی و مالی و رابطه هزینه سرمایه با تصمیم تأمین مالی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        156,
+        160
+      ]
+    },
+    {
+      "id": "fin.return_metrics",
+      "course": "مدیریت مالی",
+      "chapter": "بازده و سنجه‌های عملکرد سرمایه‌گذاری",
+      "topic": "بازده هندسی، بازده مرکب پیوسته و مقایسه میانگین حسابی و هندسی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        158,
+        165,
+        162
+      ]
+    },
+    {
+      "id": "fin.cashflow_cost_of_capital",
+      "course": "مدیریت مالی",
+      "chapter": "تحلیل جریان نقد و هزینه سرمایه",
+      "topic": "جریان نقد آزاد، هزینه متوسط موزون سرمایه و مقایسه گزینه‌های تأمین مالی",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        163,
+        164
+      ]
+    },
+    {
+      "id": "fin.taxation",
+      "course": "مدیریت مالی",
+      "chapter": "مالیات شرکت و سهام‌داران",
+      "topic": "محاسبه نرخ مؤثر مالیات در توزیع سود پس از مالیات",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        161
+      ]
+    },
+    {
+      "id": "prod.scheduling_quality",
+      "course": "مدیریت تولید",
+      "chapter": "زمان‌بندی، پروژه و مدیریت کیفیت",
+      "topic": "الگوریتم مور، واریانس PERT و اولویت‌بندی ریسک با FMEA",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        166,
+        168,
+        169
+      ]
+    },
+    {
+      "id": "prod.production_systems",
+      "course": "مدیریت تولید",
+      "chapter": "سیستم‌های تولید و طراحی عملیات",
+      "topic": "تولید انبوه، منحنی یادگیری، انواع سیستم تولید و پایداری تولید",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        167,
+        170,
+        171,
+        172,
+        173
+      ]
+    },
+    {
+      "id": "prod.production_planning",
+      "course": "مدیریت تولید",
+      "chapter": "برنامه‌ریزی و ظرفیت تولید",
+      "topic": "پیش‌بینی تقاضا، برنامه‌ریزی تجمیعی، ظرفیت، ماشین‌آلات و توازن خط",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        174,
+        177,
+        178,
+        179
+      ]
+    },
+    {
+      "id": "prod.work_measurement",
+      "course": "مدیریت تولید",
+      "chapter": "مطالعه کار و اندازه‌گیری زمان",
+      "topic": "نمونه‌گیری کار، زمان استاندارد و اضافات مجاز",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        175
+      ]
+    },
+    {
+      "id": "ind.production_inv",
+      "course": "مدیریت تولید",
+      "chapter": "کنترل موجودی و برنامه‌ریزی نیازمندی مواد",
+      "topic": "EOQ، نسبت هزینه موجودی و MRP/BOM؛ این گره در رجیستری فعلی غایب است اما مهارت متناظر به آن ارجاع می‌دهد.",
+      "registryStatus": "missing_parent_for_existing_skill",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        176,
+        180
+      ]
+    },
+    {
+      "id": "mkt.pricing",
+      "course": "بازاریابی",
+      "chapter": "قیمت‌گذاری و ارزش ادراک‌شده",
+      "topic": "قیمت‌گذاری مبتنی بر ارزش از دید مشتری",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        181
+      ]
+    },
+    {
+      "id": "mkt.advertising_relationship",
+      "course": "بازاریابی",
+      "chapter": "ارتباطات بازاریابی و تعامل مشتری",
+      "topic": "جاذبه‌های تبلیغاتی و سازوکارهای تعامل مشتری با پیشنهاد شرکت",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        183,
+        185
+      ]
+    },
+    {
+      "id": "mkt.customer_satisfaction",
+      "course": "بازاریابی",
+      "chapter": "رضایت و تجربه مشتری",
+      "topic": "سنجش رضایت بر پایه عملکرد ادراک‌شده و انتظارات مشتری",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        184
+      ]
+    },
+    {
+      "id": "mkt.product_strategy",
+      "course": "بازاریابی",
+      "chapter": "راهبرد محصول و رشد بازار",
+      "topic": "سطوح محصول و چارچوب رشد محصول–بازار آنسوف",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        186,
+        187
+      ]
+    },
+    {
+      "id": "mkt.innovation_forecasting",
+      "course": "بازاریابی",
+      "chapter": "پذیرش نوآوری و پیش‌بینی فروش",
+      "topic": "طبقات پذیرش نوآوری و روش‌های پیش‌بینی فروش",
+      "registryStatus": "proposed_new_node",
+      "approvalStatus": "pending_sme",
+      "questionNumbers": [
+        189,
+        190
+      ]
+    }
+  ],
+  "proposedSkills": [
+    {
+      "id": "skill.econ.cpi_inflation",
+      "title": "محاسبه نرخ تورم از شاخص قیمت مصرف‌کننده",
+      "questionNumbers": [
+        96
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.econ.fiscal_multiplier",
+      "title": "محاسبه و تفسیر ضریب تکاثری مخارج و مالیات",
+      "questionNumbers": [
+        97,
+        98
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.econ.keynesian_money_market",
+      "title": "تحلیل نظریه کینزی تقاضای پول و تعیین نرخ بهره",
+      "questionNumbers": [
+        99
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.econ.stabilization_policy",
+      "title": "انتخاب ابزار مناسب سیاست تثبیت و مقابله با تورم یا رکود",
+      "questionNumbers": [
+        100,
+        102
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.econ.balanced_budget_multiplier",
+      "title": "تحلیل ضریب بودجه متوازن در تغییر هم‌زمان مخارج و مالیات",
+      "questionNumbers": [
+        101
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.econ.monetarism",
+      "title": "تشخیص گزاره‌های اصلی مکتب پول‌گرایی",
+      "questionNumbers": [
+        103
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.econ.liquidity_trap",
+      "title": "تحلیل تله نقدینگی در چارچوب IS–LM",
+      "questionNumbers": [
+        104
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.econ.phillips_curve",
+      "title": "مقایسه منحنی فیلیپس بلندمدت میان مکاتب اقتصاد کلان",
+      "questionNumbers": [
+        105
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.market_failure",
+      "title": "تشخیص شکست بازار به‌عنوان مبنای مداخله دولت",
+      "questionNumbers": [
+        106
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.public_goods",
+      "title": "تشخیص ویژگی‌های کالاهای عمومی",
+      "questionNumbers": [
+        107
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.tax_excess_burden",
+      "title": "ارزیابی کارایی مالیات و اضافه‌بار رفاهی",
+      "questionNumbers": [
+        108
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.performance_budgeting",
+      "title": "تبیین بودجه‌ریزی عملکردی و تخصیص مبتنی بر نتایج",
+      "questionNumbers": [
+        109
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.benefit_principle",
+      "title": "تمایز اصل منافع از سایر اصول مالیات‌ستانی",
+      "questionNumbers": [
+        110
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.balanced_budget",
+      "title": "تفسیر تعادل و پایداری بودجه عمومی",
+      "questionNumbers": [
+        111
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.nonallocation_rule",
+      "title": "تشخیص اصل عدم تخصیص و تمایز آن از منع جابه‌جایی اعتبار",
+      "questionNumbers": [
+        112
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.budget_types",
+      "title": "تمایز انواع و طبقه‌بندی‌های بودجه",
+      "questionNumbers": [
+        113
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.budget_reform",
+      "title": "مقایسه الگوهای اصلاح و نوین‌سازی بودجه",
+      "questionNumbers": [
+        114
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.public_governance",
+      "title": "تشخیص الگوهای مدیریت و حکمرانی بخش عمومی",
+      "questionNumbers": [
+        115
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.modified_accrual",
+      "title": "تشخیص مبنای تعهدی تعدیل‌شده در حسابداری دولتی",
+      "questionNumbers": [
+        116
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.marginal_utility",
+      "title": "تبیین نظریه مطلوبیت نهایی در مخارج عمومی",
+      "questionNumbers": [
+        117
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.free_rider",
+      "title": "تحلیل مسئله سواری مجانی در استفاده از کالاهای عمومی",
+      "questionNumbers": [
+        118
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.ppbs",
+      "title": "طبقه‌بندی نظام برنامه‌ریزی، برنامه‌ای و بودجه‌ای (PPBS)",
+      "questionNumbers": [
+        119
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.pf.public_choice",
+      "title": "تحلیل انگیزه‌های سیاسی و اداری در نظریه انتخاب عمومی",
+      "questionNumbers": [
+        120
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.competency_job_analysis",
+      "title": "انتخاب روش تحلیل شغل متناسب با محیط پویا و شایستگی‌محور",
+      "questionNumbers": [
+        121
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.halo_effect",
+      "title": "تشخیص اثر هاله‌ای در ارزشیابی عملکرد",
+      "questionNumbers": [
+        122
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.reward_segments",
+      "title": "تحلیل تفاوت بسته‌های پاداش برای گروه‌های متفاوت نیروی کار",
+      "questionNumbers": [
+        123
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.pay_structure",
+      "title": "تحلیل ساختار پرداخت با اتکا به مقایسه‌های داخلی و بازار",
+      "questionNumbers": [
+        124
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.feedback_interview",
+      "title": "تشخیص مصاحبه بازخورد مسئله‌محور",
+      "questionNumbers": [
+        125
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.job_evaluation",
+      "title": "تمایز روش‌های امتیازی و رتبه‌بندی ارزشیابی شغل",
+      "questionNumbers": [
+        126
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.staffing_adjustment",
+      "title": "مقایسه ابزارهای تعدیل و جابه‌جایی نیروی انسانی",
+      "questionNumbers": [
+        127
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.activation_job_design",
+      "title": "تحلیل ارتباط ویژگی‌های شغل با فعال‌سازی و انگیزش",
+      "questionNumbers": [
+        128
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.behavioral_rating",
+      "title": "تشخیص مقیاس‌های رتبه‌بندی رفتاری در ارزیابی عملکرد",
+      "questionNumbers": [
+        129
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.equivalent_forms",
+      "title": "تشخیص پایایی فرم‌های معادل در آزمون‌های استخدامی",
+      "questionNumbers": [
+        130
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.vertical_horizontal_fit",
+      "title": "تحلیل همسویی عمودی و افقی راهبرد منابع انسانی",
+      "questionNumbers": [
+        131
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.hr_strategy",
+      "title": "تطبیق راهبرد منابع انسانی با راهبرد رقابتی و الگوی کارکنان",
+      "questionNumbers": [
+        132,
+        133
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.progressive_discipline",
+      "title": "تعیین توالی اقدامات در نظام تنبیه تدریجی",
+      "questionNumbers": [
+        134
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.hr.flexible_work",
+      "title": "تمایز الگوهای اشتغال منعطف و قراردادهای کاری",
+      "questionNumbers": [
+        135
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.lp_formulation",
+      "title": "صورت‌بندی تابع هدف و محدودیت‌های برنامه‌ریزی خطی",
+      "questionNumbers": [
+        136
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.cutting_stock",
+      "title": "صورت‌بندی قید ضایعات در مسئله برش و برش‌کاری",
+      "questionNumbers": [
+        137
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.machine_load",
+      "title": "مدل‌سازی توزیع بار و زمان کار میان ماشین‌آلات",
+      "questionNumbers": [
+        138
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.lp_solution_state",
+      "title": "تشخیص حالات خاص جواب در برنامه‌ریزی خطی",
+      "questionNumbers": [
+        139
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.simplex_interpretation",
+      "title": "خواندن جدول سیمپلکس و استخراج اطلاعات مدل",
+      "questionNumbers": [
+        140,
+        143
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.shadow_prices",
+      "title": "تفسیر دوگان، قیمت سایه‌ای و ارزش منابع",
+      "questionNumbers": [
+        141,
+        142
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.sensitivity",
+      "title": "تحلیل حساسیت نسبت به سمت راست محدودیت‌ها و ضرایب تابع هدف",
+      "questionNumbers": [
+        144,
+        145,
+        146
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.transport_sensitivity",
+      "title": "تحلیل دامنه مجاز تغییر هزینه در مدل حمل‌ونقل",
+      "questionNumbers": [
+        147
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.assignment_structure",
+      "title": "تشخیص ساختار متغیرها و ابعاد مدل تخصیص",
+      "questionNumbers": [
+        148
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.binary_logic",
+      "title": "تبدیل روابط منطقی پروژه‌ها به قیود دودویی",
+      "questionNumbers": [
+        149
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.ind.gomory_cut",
+      "title": "تشخیص و ساخت قید برش در برنامه‌ریزی عدد صحیح",
+      "questionNumbers": [
+        150
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.stock_actions",
+      "title": "تحلیل اثر سود سهمی و تجزیه سهام بر قیمت سهم",
+      "questionNumbers": [
+        151
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.leverage",
+      "title": "تحلیل اثر تغییر اهرم بدهی بر ارزش و ریسک حقوق صاحبان سهام",
+      "questionNumbers": [
+        152
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.dividend_discount",
+      "title": "ارزش‌گذاری سهام با مدل تنزیل سود نقدی و رشد چندمرحله‌ای",
+      "questionNumbers": [
+        153,
+        154,
+        159
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.pvif",
+      "title": "محاسبه ارزش فعلی با عامل PVIF",
+      "questionNumbers": [
+        155
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.break_even",
+      "title": "تمایز نقاط سربه‌سر حسابداری، نقدی و مالی",
+      "questionNumbers": [
+        156,
+        160
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.pecking_order",
+      "title": "تبیین نظریه سلسله‌مراتبی انتخاب منابع تأمین مالی",
+      "questionNumbers": [
+        157
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.investment_return",
+      "title": "محاسبه و مقایسه بازده‌های هندسی و حسابی سرمایه‌گذاری",
+      "questionNumbers": [
+        158,
+        165
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.effective_tax",
+      "title": "محاسبه نرخ مؤثر مالیات شرکت و سهام‌دار",
+      "questionNumbers": [
+        161
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.continuous_return",
+      "title": "محاسبه بازده مرکب پیوسته از دنباله قیمت سهم",
+      "questionNumbers": [
+        162
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.free_cash_flow",
+      "title": "تفسیر جریان نقد آزاد از فعالیت‌های عملیاتی و سرمایه‌گذاری",
+      "questionNumbers": [
+        163
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.fin.wacc",
+      "title": "مقایسه گزینه‌های تأمین مالی بر پایه هزینه سرمایه",
+      "questionNumbers": [
+        164
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.moore",
+      "title": "به‌کارگیری الگوریتم مور برای کمینه‌سازی تعداد کارهای دیرکرددار",
+      "questionNumbers": [
+        166
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.taylor_limits",
+      "title": "تشخیص محدودیت‌های مدیریت علمی تیلور",
+      "questionNumbers": [
+        167
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.pert_variance",
+      "title": "محاسبه واریانس زمان تکمیل پروژه با مسیر بحرانی PERT",
+      "questionNumbers": [
+        168
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.fmea",
+      "title": "اولویت‌بندی ریسک با عدد اولویت ریسک در FMEA",
+      "questionNumbers": [
+        169
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.mass_production",
+      "title": "تحلیل مزیت‌های تولید انبوه نسبت به تولید سفارشی",
+      "questionNumbers": [
+        170
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.learning_curve",
+      "title": "تفسیر رابطه منحنی یادگیری با زمان تولید",
+      "questionNumbers": [
+        171
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.process_types",
+      "title": "تمایز سیستم‌های تولید پیوسته، گسسته، پروژه‌ای و سلولی",
+      "questionNumbers": [
+        172
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.sustainable_ops",
+      "title": "تشخیص رویکرد تولید پایدار و ملاحظات سه‌گانه آن",
+      "questionNumbers": [
+        173
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.exponential_smoothing",
+      "title": "محاسبه پیش‌بینی با روش هموارسازی نمایی",
+      "questionNumbers": [
+        174
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.standard_time",
+      "title": "محاسبه زمان استاندارد با داده‌های نمونه‌گیری کار و اضافات",
+      "questionNumbers": [
+        175
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.capacity",
+      "title": "محاسبه ظرفیت و تعداد ماشین‌آلات موردنیاز",
+      "questionNumbers": [
+        177
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.aggregate_plan",
+      "title": "تحلیل برنامه‌ریزی سطح تولید و موجودی پایان دوره",
+      "questionNumbers": [
+        178
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.prod.line_balance",
+      "title": "محاسبه حداقل ایستگاه‌های کاری در توازن خط",
+      "questionNumbers": [
+        179
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.mkt.value_pricing",
+      "title": "تشخیص قیمت‌گذاری مبتنی بر ارزش ادراک‌شده مشتری",
+      "questionNumbers": [
+        181
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.mkt.humor_appeal",
+      "title": "تحلیل کارکرد جاذبه طنز در تبلیغات",
+      "questionNumbers": [
+        183
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.mkt.satisfaction",
+      "title": "سنجش رضایت با مقایسه عملکرد ادراک‌شده و انتظار",
+      "questionNumbers": [
+        184
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.mkt.engagement",
+      "title": "تحلیل مرحله یا دروازه تعامل مشتری با پیشنهاد شرکت",
+      "questionNumbers": [
+        185
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.mkt.product_levels",
+      "title": "تمایز سطوح محصول در الگوی لایه‌ای محصول",
+      "questionNumbers": [
+        186
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.mkt.ansoff",
+      "title": "تشخیص راهبردهای رشد در ماتریس محصول–بازار آنسوف",
+      "questionNumbers": [
+        187
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.mkt.diffusion",
+      "title": "تشخیص طبقات پذیرش و انتشار نوآوری در بازار",
+      "questionNumbers": [
+        189
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    },
+    {
+      "id": "skill.mkt.sales_forecast",
+      "title": "تشخیص روش‌های پیش‌بینی فروش و نقش قضاوت مدیریتی",
+      "questionNumbers": [
+        190
+      ],
+      "status": "proposed_skill_title_pending_definition_and_sme"
+    }
+  ],
+  "questionMappings": [
+    {
+      "questionNumber": 96,
+      "sourcePage": 16,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "محاسبه تورم نقطه‌به‌نقطه از دو مقدار شاخص قیمت مصرف‌کننده",
+      "nodeId": "econ.price_indices",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.cpi_inflation",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 16,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 97,
+      "sourcePage": 16,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "محاسبه افزایش مخارج دولت لازم برای تغییر معین درآمد ملی با MPC و نرخ مالیات",
+      "nodeId": "econ.fiscal_policy",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.fiscal_multiplier",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 16,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 98,
+      "sourcePage": 16,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "تفسیر مفهوم ضریب تکاثری در اقتصاد کلان",
+      "nodeId": "econ.fiscal_policy",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.fiscal_multiplier",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 16,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 99,
+      "sourcePage": 16,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "گزاره‌های مرتبط و غیرمرتبط با نظریه کینزی نرخ بهره و تقاضای پول",
+      "nodeId": "econ.monetary_theory",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.keynesian_money_market",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 16,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 100,
+      "sourcePage": 16,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "انتخاب ابزار ضدتورمی در سیاست پولی و مالی",
+      "nodeId": "econ.monetary_theory",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.stabilization_policy",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 16,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 101,
+      "sourcePage": 17,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "اثر افزایش هم‌زمان مالیات مستقل و مخارج دولت بر درآمد ملی",
+      "nodeId": "econ.fiscal_policy",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.balanced_budget_multiplier",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 17,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 102,
+      "sourcePage": 17,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "انتخاب سیاست مناسب برای خروج از رکود",
+      "nodeId": "econ.monetary_theory",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.stabilization_policy",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 17,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 103,
+      "sourcePage": 17,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "دیدگاه پول‌گرایان درباره اثر عرضه پول بر تولید و سطح قیمت‌ها",
+      "nodeId": "econ.monetary_theory",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.monetarism",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 17,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 104,
+      "sourcePage": 17,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "شرایط شکل‌گیری تله نقدینگی در چارچوب IS–LM",
+      "nodeId": "econ.macroeconomic_models",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.liquidity_trap",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 17,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 105,
+      "sourcePage": 17,
+      "subject": "اقتصاد خرد و کلان",
+      "courseSectionId": "economics",
+      "conceptSummary": "مقایسه شکل منحنی فیلیپس بلندمدت در مکاتب اقتصاد کلان",
+      "nodeId": "econ.macroeconomic_models",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.econ.phillips_curve",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 17,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 106,
+      "sourcePage": 17,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "شکست بازار به‌عنوان توجیه دخالت دولت در اقتصاد",
+      "nodeId": "pf.market_failure",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.market_failure",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 17,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 107,
+      "sourcePage": 17,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "تشخیص عدم رقابت و عدم امکان محروم‌سازی در کالای عمومی",
+      "nodeId": "pf.market_failure",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.public_goods",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 17,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 108,
+      "sourcePage": 17,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "مقایسه انواع مالیات از نظر ایجاد اضافه‌بار مالیاتی",
+      "nodeId": "pf.tax_policy",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.tax_excess_burden",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 17,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 109,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "بودجه‌ریزی عملکردی و تخصیص بر مبنای فعالیت، برنامه و نتیجه",
+      "nodeId": "pf.budget_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.performance_budgeting",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 110,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "اصل منافع در طراحی نظام مالیاتی",
+      "nodeId": "pf.tax_policy",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.benefit_principle",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 111,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "مفهوم توازن بودجه و پایداری تأمین مخارج عمومی",
+      "nodeId": "pf.budget_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.balanced_budget",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 112,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "اصل عدم تخصیص در بودجه‌ریزی و تمایز آن از منع انتقال اعتبار",
+      "nodeId": "pf.budget_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.nonallocation_rule",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "low",
+      "mappingStatus": "ambiguous_concept_needs_sme",
+      "reviewFlags": [
+        "مفهوم چاپ‌شده «عدم تخصیص» با گزینه‌ای که به منع جابه‌جایی اعتبار اشاره دارد انطباق روشن ندارد؛ بازبینی علمی و کنترل صورت سؤال لازم است."
+      ],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 113,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "تمایز انواع بودجه ثابت، جاری، جامع و منعطف",
+      "nodeId": "pf.budget_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.budget_types",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 114,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "هدف و ویژگی‌های الگوهای اصلاح و نوین‌سازی بودجه دولت",
+      "nodeId": "pf.budget_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.budget_reform",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 115,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "مکاتب مدیریت دولتی و مفهوم «عصر همکاری»",
+      "nodeId": "pf.public_administration",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.public_governance",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "low",
+      "mappingStatus": "ambiguous_concept_needs_sme",
+      "reviewFlags": [
+        "اصطلاح عصر همکاری با گزینه‌های چاپی به‌طور بی‌ابهام هم‌تراز نیست؛ نسبت آن با مدیریت دولتی نوین/حکمرانی عمومی باید توسط SME تعیین شود."
+      ],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 116,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "تشخیص مبنای تعهدی تعدیل‌شده از روی زمان ثبت هزینه و درآمد",
+      "nodeId": "pf.public_administration",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.modified_accrual",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 117,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "نظریه مطلوبیت نهایی در نظریه بودجه و مخارج عمومی",
+      "nodeId": "pf.public_expenditure",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.marginal_utility",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "low",
+      "mappingStatus": "ambiguous_concept_needs_sme",
+      "reviewFlags": [
+        "انتساب تاریخی نظریه در صورت سؤال نیازمند بررسی منبع درسی و SME است؛ پاسخ کلیدی از آن استنباط نشده است."
+      ],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 118,
+      "sourcePage": 18,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "تعارض منافع فردی و جمعی در مصرف کالاهای عمومی و مسئله سواری مجانی",
+      "nodeId": "pf.market_failure",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.free_rider",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 18,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 119,
+      "sourcePage": 19,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "طبقه‌بندی نظام برنامه‌ریزی، برنامه‌ای و بودجه‌ای (PPBS)",
+      "nodeId": "pf.budget_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.ppbs",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 120,
+      "sourcePage": 19,
+      "subject": "مالیه عمومی و بودجه",
+      "courseSectionId": "public_finance",
+      "conceptSummary": "فرض‌های انگیزشی نظریه انتخاب عمومی درباره سیاستمداران و بوروکرات‌ها",
+      "nodeId": "pf.public_expenditure",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.pf.public_choice",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 121,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "انتخاب روش تحلیل شغل برای محیط پویا و متغیر",
+      "nodeId": "hr.job_analysis",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.competency_job_analysis",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 122,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "تشخیص اثر هاله‌ای در ارزیابی عملکرد کارکنان",
+      "nodeId": "hr.performance_management",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.halo_effect",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 123,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "مقایسه افق مزایا و پاداش برای کارکنان مزدور و هسته متعهد",
+      "nodeId": "hr.compensation",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.reward_segments",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 124,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "ساختار پرداخت مبتنی بر مقایسه‌های داخلی و بیرونی",
+      "nodeId": "hr.compensation",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.pay_structure",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 125,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "مصاحبه بازخورد مسئله‌محور برای حل مشکلات عملکرد",
+      "nodeId": "hr.performance_management",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.feedback_interview",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 126,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "مقایسه روش امتیازی و رتبه‌بندی در ارزشیابی مشاغل",
+      "nodeId": "hr.compensation",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.job_evaluation",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 127,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "مقایسه سرعت اثرگذاری ابزارهای تعدیل و جابه‌جایی نیروی کار",
+      "nodeId": "hr.workforce",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.staffing_adjustment",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 128,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "ارتباط ویژگی‌های شغل با فعال‌سازی کارکنان",
+      "nodeId": "hr.job_design",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.activation_job_design",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "low",
+      "mappingStatus": "ambiguous_concept_needs_sme",
+      "reviewFlags": [
+        "عنوان «نظریه فعال‌سازی» و گزینه‌های ویژگی شغل به تأیید معنایی نیاز دارد؛ احتمال هم‌پوشانی با نظریه‌های طراحی شغل وجود دارد."
+      ],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 129,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "تشخیص مقیاس رفتاری در طبقه‌بندی مقیاس‌های رتبه‌بندی",
+      "nodeId": "hr.performance_management",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.behavioral_rating",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 130,
+      "sourcePage": 19,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "تشخیص پایایی فرم‌های معادل در آزمون‌های استخدامی",
+      "nodeId": "hr.selection_assessment",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.equivalent_forms",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 19,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 131,
+      "sourcePage": 20,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "تحلیل همسویی عمودی و افقی در راهبرد منابع انسانی",
+      "nodeId": "hr.strategic_hrm",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.vertical_horizontal_fit",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 20,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 132,
+      "sourcePage": 20,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "تطبیق راهبرد منابع انسانی با راهبرد کسب‌وکار",
+      "nodeId": "hr.strategic_hrm",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.hr_strategy",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 20,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 133,
+      "sourcePage": 20,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "تفکیک گروه‌های نیروی کار و الگوهای راهبرد HR",
+      "nodeId": "hr.strategic_hrm",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.hr_strategy",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 20,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 134,
+      "sourcePage": 20,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "تعیین گام بعدی در فرایند تنبیه تدریجی کارکنان",
+      "nodeId": "hr.discipline",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.progressive_discipline",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 20,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 135,
+      "sourcePage": 20,
+      "subject": "مدیریت منابع انسانی",
+      "courseSectionId": "human_resources",
+      "conceptSummary": "تشخیص الگوی اشتغال منعطف مرتبط با کار دوره‌ای و on-call",
+      "nodeId": "hr.workforce",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.hr.flexible_work",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "low",
+      "mappingStatus": "ambiguous_concept_needs_sme",
+      "reviewFlags": [
+        "ارتباط دقیق میان اشتغال دوره‌ای، on-call و گزینه‌های چاپی (از جمله شغل‌سپاری/لیزینگ کارکنان) نیازمند تطبیق با منبع درسی است."
+      ],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 20,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 136,
+      "sourcePage": 20,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "ساخت تابع هدف برای بیشینه‌سازی تولید محصول از چند قطعه و ظرفیت بخش‌ها",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.lp_formulation",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 20,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 137,
+      "sourcePage": 20,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "صورت‌بندی محدودیت ضایعات در مسئله برش شیشه و سفارش‌ها",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.cutting_stock",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 20,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 138,
+      "sourcePage": 21,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "مدل‌سازی محدودیت تعادل زمان کار ماشین‌آلات",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.machine_load",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 21,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 139,
+      "sourcePage": 21,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تشخیص حالت خاص جواب در مدل برنامه‌ریزی خطی",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.lp_solution_state",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 21,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 140,
+      "sourcePage": 21,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "استخراج تابع هدف از جدول تکرار سیمپلکس",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.simplex_interpretation",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 21,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 141,
+      "sourcePage": 21,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "استخراج قیمت سایه‌ای منابع و مقدار تابع هدف از جدول نهایی",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.shadow_prices",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 21,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 142,
+      "sourcePage": 22,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تحلیل جدول نهایی و رابطه مدل اصلی و دوگان",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.shadow_prices",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 22,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 143,
+      "sourcePage": 22,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تفسیر تغییرات تولید و منابع از جدول نهایی سیمپلکس",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.simplex_interpretation",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 22,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 144,
+      "sourcePage": 22,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تحلیل حساسیت نسبت به تغییر هم‌زمان RHS محدودیت‌ها",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.sensitivity",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 22,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 145,
+      "sourcePage": 23,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تعیین دامنه مجاز تغییر ضریب تابع هدف",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.sensitivity",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 23,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 146,
+      "sourcePage": 23,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تحلیل اثر تغییر RHS محدودیت‌ها بر جواب بهینه",
+      "nodeId": "ind.or_simplex",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.sensitivity",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 23,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 147,
+      "sourcePage": 23,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تعیین دامنه مجاز تغییر هزینه یک خانه در مدل حمل‌ونقل",
+      "nodeId": "ind.transport_assignment",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.ind.transport_sensitivity",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 23,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 148,
+      "sourcePage": 23,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تشخیص تعداد متغیرها/خانه‌های پایه در مدل تخصیص و حمل‌ونقل",
+      "nodeId": "ind.transport_assignment",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.ind.assignment_structure",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "low",
+      "mappingStatus": "ambiguous_concept_needs_sme",
+      "reviewFlags": [
+        "صورت دقیق کمیت مورد سؤال و ترتیب مقایسه مدل تخصیص و حمل‌ونقل باید از تصویر با بزرگ‌نمایی نهایی و SME بازبینی شود."
+      ],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 23,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 149,
+      "sourcePage": 24,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تبدیل رابطه ناسازگاری/عدم انتخاب پروژه‌ها به قید دودویی",
+      "nodeId": "ind.integer_programming",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.ind.binary_logic",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 24,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 150,
+      "sourcePage": 24,
+      "subject": "تحقیق در عملیات",
+      "courseSectionId": "operations_research",
+      "conceptSummary": "تشخیص قید برش و بازگرداندن آن به مدل اصلی برنامه‌ریزی عدد صحیح",
+      "nodeId": "ind.integer_programming",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.ind.gomory_cut",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 24,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 151,
+      "sourcePage": 24,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "مقایسه اثر انتشار سود سهمی و تجزیه سهام بر قیمت مورد انتظار سهم",
+      "nodeId": "fin.capital_structure",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.stock_actions",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 24,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 152,
+      "sourcePage": 24,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "تحلیل اثر کاهش نسبت بدهی بر ارزش شرکت و ریسک صاحبان سهام",
+      "nodeId": "fin.capital_structure",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.leverage",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 24,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 153,
+      "sourcePage": 24,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "تحلیل تغییر ارزش سهم در مدل رشد گوردون با تغییر سود نقدی و نرخ رشد",
+      "nodeId": "fin.valuation",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.dividend_discount",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 24,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 154,
+      "sourcePage": 24,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "ارزش‌گذاری جریان نقدی با رشد چندمرحله‌ای و نرخ تنزیل ثابت",
+      "nodeId": "fin.valuation",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.dividend_discount",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 24,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 155,
+      "sourcePage": 25,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "محاسبه ارزش فعلی یک واحد پول با عامل PVIF",
+      "nodeId": "fin.valuation",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.pvif",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 25,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 156,
+      "sourcePage": 25,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "مقایسه نقطه سربه‌سر نقدی، حسابداری و مالی",
+      "nodeId": "fin.break_even_cost",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.break_even",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 25,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 157,
+      "sourcePage": 25,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "تفسیر نظریه سلسله‌مراتبی در انتخاب منابع تأمین مالی",
+      "nodeId": "fin.capital_structure",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.pecking_order",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 25,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 158,
+      "sourcePage": 25,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "محاسبه بازده سالانه مرکب از دوبرابر شدن ارزش دارایی",
+      "nodeId": "fin.return_metrics",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.investment_return",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 25,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 159,
+      "sourcePage": 25,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "ارزش فعلی سهم با شروع پرداخت سود در دوره‌های آتی و رشد ثابت",
+      "nodeId": "fin.valuation",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.dividend_discount",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 25,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 160,
+      "sourcePage": 25,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "تشخیص گزاره‌های درست درباره نقطه سربه‌سر مالی",
+      "nodeId": "fin.break_even_cost",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.break_even",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 25,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 161,
+      "sourcePage": 25,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "محاسبه نرخ مؤثر مالیات با وجود مالیات شرکت و مالیات سود سهام",
+      "nodeId": "fin.taxation",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.effective_tax",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 25,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 162,
+      "sourcePage": 26,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "محاسبه بازده مرکب پیوسته از قیمت‌های متوالی سهم",
+      "nodeId": "fin.return_metrics",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.continuous_return",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 26,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 163,
+      "sourcePage": 26,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "تشخیص تعریف جریان نقد آزاد از اجزای جریان‌های نقدی",
+      "nodeId": "fin.cashflow_cost_of_capital",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.free_cash_flow",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 26,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 164,
+      "sourcePage": 26,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "مقایسه گزینه‌های انتشار سهام، سهام ممتاز و اوراق بدهی بر اساس هزینه سرمایه",
+      "nodeId": "fin.cashflow_cost_of_capital",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.wacc",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 26,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 165,
+      "sourcePage": 26,
+      "subject": "مدیریت مالی",
+      "courseSectionId": "financial_management",
+      "conceptSummary": "مقایسه میانگین هندسی و حسابی بازده",
+      "nodeId": "fin.return_metrics",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.fin.investment_return",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 26,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 166,
+      "sourcePage": 26,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "تشخیص الگوریتم زمان‌بندی برای کمینه‌کردن تعداد کارهای دیرکرددار",
+      "nodeId": "prod.scheduling_quality",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.moore",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 26,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 167,
+      "sourcePage": 26,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "تشخیص محدودیت‌های مکتب مدیریت علمی تیلور",
+      "nodeId": "prod.production_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.taylor_limits",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 26,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 168,
+      "sourcePage": 26,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "محاسبه واریانس زمان تکمیل پروژه بر پایه فعالیت‌های مسیر بحرانی PERT",
+      "nodeId": "prod.scheduling_quality",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.pert_variance",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 26,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 169,
+      "sourcePage": 27,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "اولویت‌بندی اقدام اصلاحی با تحلیل حالات و آثار شکست (FMEA)",
+      "nodeId": "prod.scheduling_quality",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.fmea",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 27,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 170,
+      "sourcePage": 27,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "تحلیل مزیت‌های تولید انبوه نسبت به تولید سفارشی",
+      "nodeId": "prod.production_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.mass_production",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 27,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 171,
+      "sourcePage": 27,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "تحلیل رابطه زمان تحویل/تکمیل محصول با منحنی یادگیری",
+      "nodeId": "prod.production_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.learning_curve",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 27,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 172,
+      "sourcePage": 27,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "مقایسه سیستم‌های تولید از نظر مهارت و تعداد نیروی کار",
+      "nodeId": "prod.production_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.process_types",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 27,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 173,
+      "sourcePage": 27,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "تشخیص رویکرد تولید پایدار با ملاحظات زیست‌محیطی، اقتصادی و اجتماعی",
+      "nodeId": "prod.production_systems",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.sustainable_ops",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 27,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 174,
+      "sourcePage": 27,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "محاسبه پیش‌بینی دوره بعد با هموارسازی نمایی",
+      "nodeId": "prod.production_planning",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.exponential_smoothing",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 27,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 175,
+      "sourcePage": 27,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "محاسبه زمان استاندارد هر قطعه با داده‌های نمونه‌گیری کار و اضافات",
+      "nodeId": "prod.work_measurement",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.standard_time",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 27,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 176,
+      "sourcePage": 27,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "تحلیل نسبت هزینه کل موجودی بهینه و مقدار سفارش اقتصادی (EOQ)",
+      "nodeId": "ind.production_inv",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.production_inv",
+      "skillRegistryStatus": "registered_existing_skill",
+      "confidence": "high",
+      "mappingStatus": "blocked_registry_gap_needs_node_repair",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 27,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 177,
+      "sourcePage": 28,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "محاسبه تعداد ماشین/تجهیزات لازم با نرخ تولید، زمان عملیات و کارایی",
+      "nodeId": "prod.production_planning",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.capacity",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 28,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 178,
+      "sourcePage": 28,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "محاسبه موجودی پایان دوره در راهبرد تولید یکنواخت",
+      "nodeId": "prod.production_planning",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.aggregate_plan",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 28,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 179,
+      "sourcePage": 28,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "محاسبه حداقل ایستگاه‌های کاری برای نرخ تولید و زمان چرخه مشخص",
+      "nodeId": "prod.production_planning",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.prod.line_balance",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 28,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 180,
+      "sourcePage": 28,
+      "subject": "مدیریت تولید",
+      "courseSectionId": "production",
+      "conceptSummary": "محاسبه نیاز خالص قطعه از روی درخت محصول و موجودی در دسترس (MRP/BOM)",
+      "nodeId": "ind.production_inv",
+      "nodeRegistryStatus": "missing_node_registry_gap",
+      "skillId": "skill.ind.production_inv",
+      "skillRegistryStatus": "registered_existing_skill",
+      "confidence": "high",
+      "mappingStatus": "blocked_registry_gap_needs_node_repair",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 28,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 181,
+      "sourcePage": 28,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "تشخیص قیمت‌گذاری مبتنی بر ارزش ادراک‌شده مشتری",
+      "nodeId": "mkt.pricing",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.mkt.value_pricing",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 28,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 182,
+      "sourcePage": 28,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "تطبیق هدف بازاریابی با مرحله بلوغ چرخه عمر محصول",
+      "nodeId": "mkt.plc",
+      "nodeRegistryStatus": "registered_existing_node",
+      "skillId": "skill.mkt.plc.stages",
+      "skillRegistryStatus": "registered_existing_skill",
+      "confidence": "high",
+      "mappingStatus": "strong_candidate_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 28,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 183,
+      "sourcePage": 29,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "تحلیل اثر جاذبه طنز بر توجه و متقاعدسازی در تبلیغات",
+      "nodeId": "mkt.advertising_relationship",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.mkt.humor_appeal",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 29,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 184,
+      "sourcePage": 29,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "سنجش رضایت کلی مشتری از رابطه عملکرد ادراک‌شده و انتظار",
+      "nodeId": "mkt.customer_satisfaction",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.mkt.satisfaction",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 29,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 185,
+      "sourcePage": 29,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "تعیین مرحله یا دروازه تعامل مشتری هدف با پیشنهادهای شرکت",
+      "nodeId": "mkt.advertising_relationship",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.mkt.engagement",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "low",
+      "mappingStatus": "ambiguous_concept_needs_sme",
+      "reviewFlags": [
+        "عبارت دقیق سؤال و معنای «دروازه تعامل» از نظر مفهومی مبهم است؛ نیازمند بازخوانی SME و تطبیق با چارچوب سفر مشتری/تعامل است."
+      ],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 29,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 186,
+      "sourcePage": 29,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "طبقه‌بندی ویژگی‌های محصول در سطوح مختلف محصول",
+      "nodeId": "mkt.product_strategy",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.mkt.product_levels",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 29,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 187,
+      "sourcePage": 29,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "تشخیص گزینه خارج از چهار راهبرد ماتریس رشد محصول–بازار آنسوف",
+      "nodeId": "mkt.product_strategy",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.mkt.ansoff",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "high",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 29,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 188,
+      "sourcePage": 29,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "توصیف جایگاه واحد کسب‌وکار ستاره در ماتریس BCG",
+      "nodeId": "sm.portfolio",
+      "nodeRegistryStatus": "registered_existing_node",
+      "skillId": "skill.sm.portfolio.bcg_ge",
+      "skillRegistryStatus": "registered_existing_skill",
+      "confidence": "high",
+      "mappingStatus": "strong_candidate_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 29,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 189,
+      "sourcePage": 29,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "تشخیص طبقه پذیرندگان اثرگذار در انتشار محصول جدید",
+      "nodeId": "mkt.innovation_forecasting",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.mkt.diffusion",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "medium",
+      "mappingStatus": "proposed_node_and_skill_needs_sme",
+      "reviewFlags": [],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 29,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    },
+    {
+      "questionNumber": 190,
+      "sourcePage": 29,
+      "subject": "بازاریابی",
+      "courseSectionId": "marketing",
+      "conceptSummary": "تشخیص نقش قضاوت مدیران در روش‌های پیش‌بینی فروش",
+      "nodeId": "mkt.innovation_forecasting",
+      "nodeRegistryStatus": "proposed_node",
+      "skillId": "skill.mkt.sales_forecast",
+      "skillRegistryStatus": "proposed_skill",
+      "confidence": "low",
+      "mappingStatus": "ambiguous_concept_needs_sme",
+      "reviewFlags": [
+        "گزینه‌های چاپی همگی روش‌های کمی (هموارسازی نمایی، میانگین متحرک، سری زمانی، باکس–جنکینز) هستند؛ نسبت آن‌ها با «قضاوت مدیران» روشن نیست و سؤال به SME ارجاع می‌شود."
+      ],
+      "sourceEvidence": {
+        "sourceId": "src.master.1405.1142.319A",
+        "sourcePdf": "MA_1142_1405.pdf",
+        "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+        "pdfPage": 29,
+        "verification": "page image visually reviewed for section/question content; OCR DOCX used as reading aid"
+      }
+    }
+  ],
+  "unresolvedSemanticReviews": [
+    112,
+    115,
+    117,
+    128,
+    135,
+    148,
+    185,
+    190
+  ],
+  "gates": {
+    "officialAnswerKey": "blocked_target_booklet_key_not_available",
+    "answerKeyRevisionsCreated": 0,
+    "deduplication": "deferred_to_part_3",
+    "rights": "restricted_permission_required",
+    "allowedUse": [],
+    "production": "blocked",
+    "publicationStatus": "staging_only"
+  }
+}

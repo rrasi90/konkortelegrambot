@@ -1,0 +1,50 @@
+{
+  "artifactType": "exam-content-rights-and-release-gate",
+  "schemaVersion": "1.0.0",
+  "examRef": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A"
+  },
+  "source": {
+    "file": "MA_1142_1405.pdf",
+    "sha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb"
+  },
+  "rightsEvidence": {
+    "page": 1,
+    "evidenceType": "printed booklet notice",
+    "notice": "متن روی جلد/صفحه آغازین اعلام می‌کند تکثیر و انتشار سؤالات به هر روش، حتی پس از برگزاری آزمون، برای اشخاص حقیقی و حقوقی فقط با مجوز سازمان سنجش مجاز است.",
+    "permissionDocumentProvided": false,
+    "decision": "restricted_permission_required"
+  },
+  "gates": {
+    "sourceIdentity": "visually_confirmed_1142_319A",
+    "questionNumberAndPageLocators": "285_rows_have_pdf_page_and_printed_question_range",
+    "questionContentTranscription": "incomplete_for_questions_096_285; Part 3 was a dedup review, not full stem/option transcription",
+    "knowledgeMapping": "95 candidate mappings for 096-190 pending SME; graph registry references need repair; no mapping approval",
+    "scientificReview": "pending_sme_for_flagged_items",
+    "answerKey": "blocked_exact_1142_319A_key_not_retrieved",
+    "answerKeyRevisions": 0,
+    "historicalDeduplication": "candidate_review_recorded; historical visual confirmation pending; no merge performed",
+    "contentRights": "blocked_permission_not_provided",
+    "production": "blocked",
+    "distribution": "blocked"
+  },
+  "disposition": {
+    "allowedUse": [],
+    "publicationStatus": "staging_only",
+    "productionServableQuestions": 0,
+    "doNotMergeAppearanceRecords": true,
+    "doNotCopyCandidateAnswerKeys": true,
+    "doNotPublishQuestionTextOrOptionsWithoutWrittenPermission": true
+  },
+  "remainingRequirements": [
+    "Obtain written permission from the rights holder for reproduction and delivery of full question text/options.",
+    "Retrieve the exact official 1142/319A answer-key PDF; reject any candidate whose printed exam/booklet identity differs.",
+    "Visually verify the historical source PDFs for the four strong recurrence candidates and the IMO coal-classification near-match.",
+    "Complete stem-and-four-option transcription and SME review for questions 096–285.",
+    "Repair missing syllabus-node parent references and the dangling skill prerequisite before approving Part 2 mappings.",
+    "Approve mappings and scientific flags through qualified SME review before any production release."
+  ]
+}

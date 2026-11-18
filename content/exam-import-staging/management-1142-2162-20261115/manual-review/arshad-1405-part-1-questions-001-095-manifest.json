@@ -1,0 +1,84 @@
+{
+  "batchId": "review-batch.arshad.1405.part-1.questions-001-095",
+  "examRef": {
+    "examLevel": "master",
+    "examYear": 1405,
+    "examSetCode": "1142",
+    "bookletControlCode": "319A"
+  },
+  "questionRange": {
+    "from": 1,
+    "to": 95,
+    "count": 95
+  },
+  "sourcePdf": "MA_1142_1405.pdf",
+  "sourcePdfSha256": "1e5d686f08c52781a009cb77d07b40c11048a6ebdf36ce68fda23b8c3c3ba3cb",
+  "pageRange": [
+    2,
+    16
+  ],
+  "visualPagesReviewed": 15,
+  "questionPageLocatorsVerified": 95,
+  "transcriptionStatus": {
+    "full_stem_and_four_options_transcribed_from_original_pdf": 92,
+    "visually_checked_sample": 2,
+    "source_visual_verified_bank_conflict": 1
+  },
+  "transcribedQuestionCount": 95,
+  "fullStemAndOptionsTranscriptions": 92,
+  "visuallyCheckedExistingBankRecords": 2,
+  "sourceBankConflictCount": 1,
+  "formulaTableAndSemanticsFlags": [
+    {
+      "question": 55,
+      "flag": "joint-distribution table transcribed; its implied E(Y) does not appear to agree with any printed answer option; needs SME/source erratum review"
+    },
+    {
+      "question": 56,
+      "flag": "printed exponential literal e^(−۰/۲) appears inconsistent with the offered time choices under the printed Poisson rate; needs SME/source erratum review"
+    },
+    {
+      "question": 57,
+      "flag": "exact target statistic wording (sampling mean versus variance) requires semantic check"
+    },
+    {
+      "question": 60,
+      "flag": "high-resolution literal is Xhat_y=8−0.48Y and Yhat_x=5−3X; their slope product implies r²=1.44, mathematically impossible for a correlation coefficient"
+    },
+    {
+      "question": 67,
+      "flag": "option 4 has semantically unusual wording; preserve literal pending SME"
+    },
+    {
+      "question": 87,
+      "flag": "PDF has P=14+0.5Q; existing bank has P=14−0.5Q; do not overwrite before erratum decision"
+    }
+  ],
+  "answerKeysImported": 0,
+  "answerKeyRevisionsCreated": 0,
+  "chapterAndSkillMappingsApproved": 0,
+  "crossYearDeduplicationCompleted": 0,
+  "rightsStatus": "restricted_permission_required",
+  "allowedUse": [],
+  "productionServableQuestions": 0,
+  "nextPart": "Part 3: Questions 191–285 — deduplication, rights review and release gates; Part 2 mapping candidates are recorded but remain pending SME.",
+  "sourceConsistencyFlags": [
+    {
+      "question": 55,
+      "status": "source_table_and_answer_option_mismatch_candidate"
+    },
+    {
+      "question": 56,
+      "status": "printed_probability_and_answer_option_mismatch_candidate"
+    },
+    {
+      "question": 60,
+      "status": "source_regression_equation_mathematically_impossible_as_printed"
+    },
+    {
+      "question": 87,
+      "status": "source_bank_sign_conflict_confirmed"
+    }
+  ],
+  "answerKeyStatus": "target 1142/319A key remains unavailable; inspected candidate key file is 1152/117A and rejected."
+}

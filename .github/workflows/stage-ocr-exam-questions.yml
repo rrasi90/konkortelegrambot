@@ -1,0 +1,56 @@
+name: Build and validate OCR question staging corpus
+
+on:
+  push:
+    branches:
+      - ocr/exam-booklets-docx-20261115
+    paths:
+      - docs/exam-ocr/**
+      - docs/content-coverage/EXAMS-CODE-REGISTER-*.md
+      - content/exam-import-staging/management-1142-2162-20261115/exam-code-register-1396-1405.json
+      - tools/exam-import/build-ocr-appearance-staging.py
+      - tools/exam-import/validate-ocr-appearance-staging.py
+      - tools/exam-import/validate-exam-code-register.py
+      - .github/workflows/stage-ocr-exam-questions.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build private staging corpus from every OCR Word booklet
+        run: |
+          python tools/exam-import/build-ocr-appearance-staging.py \
+            --input-dir docs/exam-ocr \
+            --output-dir content/exam-import-staging/management-1142-2162-20261115
+
+      - name: Validate completeness, family isolation and publication gates
+        run: |
+          python tools/exam-import/validate-ocr-appearance-staging.py \
+            --data-dir content/exam-import-staging/management-1142-2162-20261115
+
+      - name: Validate year-by-year exam-code register
+        run: |
+          python tools/exam-import/validate-exam-code-register.py \
+            --register content/exam-import-staging/management-1142-2162-20261115/exam-code-register-1396-1405.json
+
+      - name: Commit only staging artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/exam-import-staging/management-1142-2162-20261115
+          if git diff --cached --quiet; then
+            echo "No staging changes."
+          else
+            git commit -m "docs(exams): add OCR question appearance staging corpus"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi

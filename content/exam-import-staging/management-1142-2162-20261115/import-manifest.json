@@ -1,0 +1,255 @@
+{
+  "version": 3,
+  "generatedAt": "2026-11-15",
+  "purpose": "private staging only; not a production question bank",
+  "ocrSource": "Tesseract fas+eng DOCX at 250 DPI",
+  "policies": [
+    "All OCR page text from every DOCX is preserved in raw-pages.jsonl, including quarantined sources.",
+    "Question numbers remain null; OCR number readings are candidates only.",
+    "No answer key, answer index, explanation, or key inference is imported.",
+    "No chapter, skill, or topic mapping is assigned without separate evidence.",
+    "No automatic duplicate merge; exact hashes are candidate metadata only.",
+    "Rights status is unknown and pending official check; allowedUse is empty; nothing is production-servable.",
+    "Mismatched covers, unverified covers, internal-code conflicts, and alternate scans stay in separate quarantine/variant files."
+  ],
+  "counts": {
+    "documents": 22,
+    "pages": 661,
+    "primaryCandidates": 902,
+    "arshadCandidates": 606,
+    "phdCandidates": 296,
+    "variantCandidates": 163,
+    "quarantinedCandidates": 739,
+    "completeFourOptionCandidates": 255,
+    "needsReview": 1616,
+    "quarantinedDocuments": 10,
+    "variantDocuments": 2,
+    "exactDuplicateCandidateGroups": 0,
+    "answerKeysImported": 0,
+    "chapterMappingsAssigned": 0,
+    "officiallyVerifiedQuestions": 0,
+    "productionServableCandidates": 0
+  },
+  "sources": [
+    {
+      "file": "1142-1396.docx",
+      "level": "arshad",
+      "coverYear": 1396,
+      "coverSetCode": "1142",
+      "status": "eligible",
+      "pages": 49,
+      "candidateBlocks": 107,
+      "needsReview": 92
+    },
+    {
+      "file": "1142-1397.docx",
+      "level": "other",
+      "coverYear": 1397,
+      "coverSetCode": "1143",
+      "status": "quarantined",
+      "pages": 20,
+      "candidateBlocks": 66,
+      "needsReview": 42
+    },
+    {
+      "file": "1142-1398.docx",
+      "level": "other",
+      "coverYear": 1398,
+      "coverSetCode": "1143",
+      "status": "quarantined",
+      "pages": 20,
+      "candidateBlocks": 70,
+      "needsReview": 52
+    },
+    {
+      "file": "1142-1399.docx",
+      "level": "arshad",
+      "coverYear": 1399,
+      "coverSetCode": "1142",
+      "status": "quarantined",
+      "pages": 48,
+      "candidateBlocks": 111,
+      "needsReview": 93
+    },
+    {
+      "file": "1142-1400.docx",
+      "level": "arshad",
+      "coverYear": 1400,
+      "coverSetCode": "1142",
+      "status": "quarantined",
+      "pages": 44,
+      "candidateBlocks": 99,
+      "needsReview": 83
+    },
+    {
+      "file": "1142-1401.docx",
+      "level": "arshad",
+      "coverYear": 1401,
+      "coverSetCode": "1142",
+      "status": "eligible",
+      "pages": 44,
+      "candidateBlocks": 135,
+      "needsReview": 114
+    },
+    {
+      "file": "1142-1402.docx",
+      "level": "arshad",
+      "coverYear": 1402,
+      "coverSetCode": "1142",
+      "status": "eligible",
+      "pages": 40,
+      "candidateBlocks": 110,
+      "needsReview": 105
+    },
+    {
+      "file": "1142-1403.docx",
+      "level": "other",
+      "coverYear": 1403,
+      "coverSetCode": "1272",
+      "status": "quarantined",
+      "pages": 24,
+      "candidateBlocks": 64,
+      "needsReview": 50
+    },
+    {
+      "file": "1142-1404.docx",
+      "level": "arshad",
+      "coverYear": 1404,
+      "coverSetCode": "1142",
+      "status": "eligible",
+      "pages": 36,
+      "candidateBlocks": 136,
+      "needsReview": 115
+    },
+    {
+      "file": "1142-1405.docx",
+      "level": "arshad",
+      "coverYear": 1405,
+      "coverSetCode": "1142",
+      "status": "eligible",
+      "pages": 40,
+      "candidateBlocks": 118,
+      "needsReview": 104
+    },
+    {
+      "file": "2162-1396.docx",
+      "level": "phd",
+      "coverYear": 1396,
+      "coverSetCode": "2162",
+      "status": "eligible",
+      "pages": 12,
+      "candidateBlocks": 27,
+      "needsReview": 26
+    },
+    {
+      "file": "2162-1397.docx",
+      "level": "other",
+      "coverYear": 1397,
+      "coverSetCode": "3163",
+      "status": "quarantined",
+      "pages": 12,
+      "candidateBlocks": 20,
+      "needsReview": 20
+    },
+    {
+      "file": "2162-1398.docx",
+      "level": "other",
+      "coverYear": 1398,
+      "coverSetCode": "3162",
+      "status": "quarantined",
+      "pages": 12,
+      "candidateBlocks": 25,
+      "needsReview": 25
+    },
+    {
+      "file": "2162-1399.docx",
+      "level": "other",
+      "coverYear": 1399,
+      "coverSetCode": "3162",
+      "status": "quarantined",
+      "pages": 12,
+      "candidateBlocks": 20,
+      "needsReview": 20
+    },
+    {
+      "file": "2162-1400.docx",
+      "level": "phd",
+      "coverYear": 1400,
+      "coverSetCode": "2162",
+      "status": "eligible",
+      "pages": 12,
+      "candidateBlocks": 34,
+      "needsReview": 30
+    },
+    {
+      "file": "2162-1401.docx",
+      "level": "phd",
+      "coverYear": 1401,
+      "coverSetCode": "2162",
+      "status": "eligible",
+      "pages": 12,
+      "candidateBlocks": 22,
+      "needsReview": 21
+    },
+    {
+      "file": "2162-1402.docx",
+      "level": "phd",
+      "coverYear": 1403,
+      "coverSetCode": "2162",
+      "status": "variant_only",
+      "pages": 12,
+      "candidateBlocks": 22,
+      "needsReview": 21
+    },
+    {
+      "file": "2162-1403.docx",
+      "level": "phd",
+      "coverYear": 1403,
+      "coverSetCode": "2162",
+      "status": "eligible",
+      "pages": 44,
+      "candidateBlocks": 117,
+      "needsReview": 115
+    },
+    {
+      "file": "2162-1404-variant2.docx",
+      "level": "other",
+      "coverYear": 1404,
+      "coverSetCode": "3162",
+      "status": "quarantined",
+      "pages": 40,
+      "candidateBlocks": 131,
+      "needsReview": 128
+    },
+    {
+      "file": "2162-1404.docx",
+      "level": "phd",
+      "coverYear": 1404,
+      "coverSetCode": "2162",
+      "status": "quarantined",
+      "pages": 40,
+      "candidateBlocks": 133,
+      "needsReview": 130
+    },
+    {
+      "file": "2162-1405-variant2.docx",
+      "level": "phd",
+      "coverYear": 1405,
+      "coverSetCode": "2162",
+      "status": "variant_only",
+      "pages": 44,
+      "candidateBlocks": 141,
+      "needsReview": 137
+    },
+    {
+      "file": "2162-1405.docx",
+      "level": "phd",
+      "coverYear": 1405,
+      "coverSetCode": "2162",
+      "status": "eligible",
+      "pages": 44,
+      "candidateBlocks": 96,
+      "needsReview": 93
+    }
+  ]
+}

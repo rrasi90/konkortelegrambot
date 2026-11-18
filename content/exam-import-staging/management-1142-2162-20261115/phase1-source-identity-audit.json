@@ -1,0 +1,1375 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-11-17",
+  "purpose": "Phase 1 — source archive and exam identity audit for the 1396–1405 master's 1142 and doctoral 2162 examination sets.",
+  "repository": {
+    "fullName": "rrasi90/konkortelegrambot",
+    "pullRequest": 35,
+    "branch": "ocr/exam-booklets-docx-20261115",
+    "headSha": "bae51b0c6e9793e1e3abcf5b03b4d97932470a3a",
+    "state": "open",
+    "draft": true,
+    "merged": false,
+    "lastObservedCiConclusion": "success"
+  },
+  "scope": {
+    "yearRange": [
+      1396,
+      1405
+    ],
+    "yearCount": 10,
+    "targetPackages": 20,
+    "masters": {
+      "examCode": "1142",
+      "officialLabel": "مجموعه مدیریت",
+      "inScope": true,
+      "definition": "The standard master's Management examination set 1142. All printed subject sections inside this exam set must be covered; the eight-course application subset is not the whole booklet.",
+      "excludedAdjacentCodes": [
+        {
+          "code": "1144",
+          "label": "مدیریت دریایی"
+        },
+        {
+          "code": "1148",
+          "label": "مدیریت کسب‌وکار و امور شهری"
+        }
+      ],
+      "exclusionNote": "These are separate examination-set codes and are not silently folded into 1142. Expand the project scope only through an explicit scope decision."
+    },
+    "doctoral": {
+      "domainLabel": "PhD Management exam family (historically multi-code; later consolidated under 2162)",
+      "currentUmbrellaCode": "2162",
+      "currentUmbrellaLabel": "مدیریت",
+      "historicalCodeFamilyRegistry": "content/exam-import-staging/management-1142-2162-20261115/doctoral-code-family-history.json",
+      "interpretation": "Do not treat the one 2162 file per year as complete doctoral Management coverage. In 1401–1402 multiple management disciplines were separate exam-set codes; by 1404–1405 the official guides place many of these tracks under umbrella code 2162 using course-combination codes. See the historical code-family registry.",
+      "coreHistoricalCodes": [
+        "2162",
+        "2163",
+        "2164",
+        "2165",
+        "2167",
+        "2169",
+        "2171"
+      ],
+      "specialistAdjacentCodes": [
+        {
+          "code": "2166",
+          "label": "مدیریت پیشگیری از جرم، جرم‌یابی و ایمنی ترافیک",
+          "classification": "restricted_specialist"
+        },
+        {
+          "code": "2168",
+          "label": "مدیریت قراردادهای بین‌المللی نفت و گاز",
+          "classification": "separate_specialist"
+        }
+      ],
+      "explicitlyExcludedSeparateCodes": [
+        {
+          "code": "2170",
+          "label": "گردشگری"
+        },
+        {
+          "code": "2173",
+          "label": "حسابداری"
+        }
+      ],
+      "officialScopeEvidence": [
+        {
+          "year": 1401,
+          "url": "https://phdphd.org/wp-content/uploads/2021/11/PhdNote1401_v1.pdf",
+          "pages": [
+            39,
+            40,
+            41
+          ]
+        },
+        {
+          "year": 1402,
+          "url": "https://irantahsil.org/wp-content/uploads/2022/08/دفترچه-ثبت-نام-آزمون-دکتری-1402.pdf",
+          "pages": [
+            40,
+            41,
+            42
+          ]
+        },
+        {
+          "year": 1404,
+          "url": "https://www.tahsilatali.ir/wp-content/uploads/2023/11/Phd1404NOTE_v1.pdf",
+          "pages": [
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "year": 1405,
+          "url": "https://www.samanehha.com/upload/files/897182075NOTERegPhd1405.pdf",
+          "pages": [
+            24,
+            25
+          ]
+        }
+      ],
+      "migrationCaveat": "Exact code maps for 1396–1400 and transition evidence for 1403 still require official guide/amendment reconciliation. No older code is assigned to 2162 by title similarity alone.",
+      "scopeCaveat": "The initial 10 doctoral package rows represent only existing 2162 OCR candidates. A full historical doctoral Management inventory must add a separate booklet/source identity for every exam code or course combination in the year-specific guide.",
+      "extendedRelatedManagementTitledExamSets": [
+        {
+          "code": "2143",
+          "label": "مدیریت آموزشی",
+          "classification": "adjacent_education_management",
+          "rule": "Separate exam family; never merge with 2162.",
+          "officialCodeYears": [
+            1400
+          ],
+          "probableCodeYears": [
+            1399
+          ],
+          "catalogueEvidenceYears": [
+            1397,
+            1398,
+            1399
+          ]
+        },
+        {
+          "code": "2115",
+          "label": "علوم ورزشی — مدیریت ورزشی",
+          "classification": "adjacent_sports_management",
+          "rule": "Separate Sports Sciences exam family; never merge with 2162.",
+          "officialCodeYears": [
+            1400,
+            1402,
+            1403
+          ]
+        }
+      ],
+      "officialGuideEvidenceByYear": [
+        {
+          "year": 1399,
+          "url": "https://sedayemoshaveran.com/wp-content/uploads/2020/08/NoteCSphd99_v2.pdf",
+          "pages": [
+            45,
+            46,
+            47,
+            48,
+            49,
+            50
+          ],
+          "evidence": "Year-specific guide confirms codes 2162–2169, 2170 Tourism and 2171 Finance. The adjacent Educational Management heading has an OCR inconsistency (one heading reads 2143, another 1423) and remains probable pending page-image verification."
+        },
+        {
+          "year": 1400,
+          "url": "https://phdnews.github.io/m/p/00147589-bcc5-4e68-9b17-b25e79cd363f/دفترچه-انتخاب-رشته-دکتری-1400.pdf",
+          "pages": [
+            37,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54
+          ],
+          "evidence": "Separate codes 2162–2169, 2171 and separately labelled 2143/2115; Tourism 2170 and Accounting 2172 are also distinct."
+        },
+        {
+          "year": 1401,
+          "url": "https://phdphd.org/wp-content/uploads/2021/11/PhdNote1401_v1.pdf",
+          "pages": [
+            39,
+            40,
+            41
+          ]
+        },
+        {
+          "year": 1402,
+          "url": "https://irantahsil.org/wp-content/uploads/2022/08/دفترچه-ثبت-نام-آزمون-دکتری-1402.pdf",
+          "pages": [
+            40,
+            41,
+            42
+          ],
+          "evidence": "Includes separate historical codes 2162–2169, 2170, 2171, 2173."
+        },
+        {
+          "year": 1403,
+          "url": "https://irantahsil.org/wp-content/uploads/2024/04/NOETCSphd1403_v1.pdf",
+          "pages": [
+            55,
+            56,
+            57,
+            58,
+            59,
+            60
+          ],
+          "evidence": "Official selection guide confirms 2162 Management with course combinations 1–7 and separate 2166/2168."
+        },
+        {
+          "year": 1404,
+          "url": "https://www.tahsilatali.ir/wp-content/uploads/2023/11/Phd1404NOTE_v1.pdf",
+          "pages": [
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "year": 1405,
+          "url": "https://www.samanehha.com/upload/files/897182075NOTERegPhd1405.pdf",
+          "pages": [
+            24,
+            25
+          ]
+        }
+      ],
+      "codeReuseWarning": "Codes are year-specific and context-specific. For example, Accounting is a separate exam set 2172 in 1400 and 2173 in 1402; 1399 guide does not verify an Accounting exam-set code. The 1399 Public Management 2163 table also uses numeric 2170–2175 as course-location codes, while its separate exam-set headings 2170 and 2171 mean Tourism and Finance."
+    },
+    "scopeCaveat": "The present 20-package plan is explicitly limited to 1142 and 2162. It must not be described as every Iranian exam set containing the word «مدیریت».",
+    "auditUnitDefinition": "The 20 rows in `packages[]` are parent year-level records only (10 master's 1142 + 10 doctoral 2162 OCR records). They are not a count of all original doctoral Management exam booklets. The complete doctoral inventory must expand each year into historical examSetCode and/or 2162 courseCombinationCode units."
+  },
+  "summary": {
+    "targetPackages": 20,
+    "localDocxFiles": 22,
+    "primaryPackagesMarkedEligibleByCurrentOcrManifest": 10,
+    "primaryPackagesNeedingReviewOrReplacement": 10,
+    "packagesWithExternalRecoveryRegisterEntry": 10,
+    "externalRecoveredPdfFilesDownloadedToRepository": 0,
+    "verifiedOfficialAnswerKeyRevisionsImported": 0,
+    "questionAppearancesOfficiallyVerifiedByThisPhase": 0,
+    "rightsClearanceObtained": 0,
+    "productionServablePackages": 0,
+    "statusWarning": "The 20 `packages[]` rows are year-level parent records, not the final count of doctoral Management exam booklets. The existing PhD OCR subset only follows code 2162; a historical multi-code/course-combination expansion is now required. `eligible` remains a staging status, not official verification, complete question extraction, key verification or republication permission.",
+    "targetYearLevelParentRecords": 20,
+    "existingDoctoral2162OcrParentRecords": 10,
+    "completeDoctoralManagementBookletUnitsEnumerated": 0,
+    "completeDoctoralManagementBookletUnitsStatus": "not_enumerated; the official code family is now confirmed for 1399–1405 but question booklet and answer-key source units have not been individually acquired and counted",
+    "yearsWithOfficialCodeTablesInspected": [
+      1399,
+      1400,
+      1401,
+      1402,
+      1403,
+      1404,
+      1405
+    ],
+    "yearsWithManagementTitlesButIncompleteCodeMapping": [
+      1396,
+      1397,
+      1398
+    ],
+    "yearsAwaitingCodeTableRetrieval": [
+      1396,
+      1397,
+      1398
+    ],
+    "transitionYearsAwaitingOfficialConfirmation": [],
+    "adjacentManagementTitledExamSetsIdentified": [
+      "2143",
+      "2115"
+    ],
+    "completeBroadDoctoralManagementInventoryEnumerated": 0,
+    "completeBroadDoctoralManagementInventoryStatus": "not_enumerated; core historical code family plus adjacent management-named exam sets identified but full source-unit inventory not yet counted",
+    "confirmed1403UmbrellaConsolidation": true,
+    "confirmed1400ExamCodeFamily": [
+      "2162",
+      "2163",
+      "2164",
+      "2165",
+      "2166",
+      "2167",
+      "2168",
+      "2169",
+      "2170",
+      "2171",
+      "2172",
+      "2143",
+      "2115"
+    ],
+    "confirmed1403Structure": {
+      "umbrellaCode": "2162",
+      "combinationCodes": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "separateCodes": [
+        "2166",
+        "2168"
+      ]
+    },
+    "accountingExamCodeByYear": {
+      "1400": "2172",
+      "1402": "2173"
+    },
+    "confirmed1399ExamCodeFamily": [
+      "2162",
+      "2163",
+      "2164",
+      "2165",
+      "2166",
+      "2167",
+      "2168",
+      "2169",
+      "2170",
+      "2171"
+    ],
+    "probableAdjacent1399Code": "2143"
+  },
+  "evidencePolicy": {
+    "sourceIdentityIsSeparateFromQuestionTranscription": true,
+    "ocrCoverEvidenceIsNotVisualVerification": true,
+    "commercialCatalogueIsNotAnOfficialOriginal": true,
+    "publicScanAvailabilityIsNotRepublicationPermission": true,
+    "controlCodesAndVariantsMustRemainDistinctUntilCompared": true,
+    "filenameYearMustNeverOverridePrintedCoverYear": true,
+    "answerKeysMustBeMatchedByYearSetControlAndBookletType": true,
+    "doNotInferMissingKeysOrQuestionText": true,
+    "allowedUse": [],
+    "rightsStatus": "review_required"
+  },
+  "recoveryRegisterPath": "content/exam-import-staging/management-1142-2162-20261115/source-recovery-register.json",
+  "packages": [
+    {
+      "level": "arshad",
+      "year": 1396,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_cover_ocr_matches_target_set",
+      "candidates": [
+        {
+          "file": "1142-1396.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1396.docx",
+          "sourcePdf": "1142-c-Arshad96-[www.konkur.in].pdf",
+          "coverYear": 1396,
+          "coverSetCode": "1142",
+          "coverControlCode": "106C",
+          "manifestStatus": "eligible",
+          "pageCount": 49,
+          "evidence": "OCR cover/subject table identifies management set 1142; control 106C."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "annual_exam_archive",
+          "url": "https://pnuna.com/53835/",
+          "sourceType": "archive_index",
+          "access": "public_page",
+          "evidence": "The 1396 master's exam archive lists exam set 1142 as مجموعه مدیریت and links to question booklet/key material."
+        }
+      ],
+      "answerKeyStatus": "not_imported; current corpus deliberately excludes KEY PDFs",
+      "blockers": [
+        "Control code and year are read from OCR metadata; image-level cover and internal-page audit remains required.",
+        "No AnswerKeyRevision has been verified/imported."
+      ],
+      "nextActions": [
+        "Visually verify the local PDF cover and page sequence.",
+        "Acquire/identify the exact official initial and final answer-key revisions for 1142/106C.",
+        "Audit all questions, options, figures and tables against source pages."
+      ]
+    },
+    {
+      "level": "arshad",
+      "year": 1397,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_file_is_wrong_set_external_target_scan_found",
+      "candidates": [
+        {
+          "file": "1142-1397.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1397.docx",
+          "sourcePdf": "MA_1142_1397.pdf",
+          "coverYear": 1397,
+          "coverSetCode": "1143",
+          "coverControlCode": "104E",
+          "manifestStatus": "quarantine",
+          "pageCount": 20,
+          "evidence": "OCR cover identifies counselling set 1143, not target management set 1142."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "question_booklet_scan",
+          "url": "https://iranmoshavere.com/wp-content/uploads/2018/06/Masters-of-Management-Entrance-Exam-Collection-97.pdf",
+          "sourceType": "scanned_official_booklet_mirror",
+          "access": "public_pdf",
+          "evidence": "44-page scan; cover visually checked and identifies 1397, set 1142, control 116A and 295 questions."
+        },
+        {
+          "role": "initial_answer_key_mirror",
+          "url": "https://iranmoshavere.com/wp-content/uploads/2018/06/Answers-to-the-entrance-exam-questions-of-the-Master-Management-Collection-97.pdf",
+          "sourceType": "answer_key_mirror",
+          "access": "public_pdf",
+          "evidence": "Two-page initial key; final page identifies 1397, management set 1142, booklet A."
+        },
+        {
+          "role": "official_sanjesh_question_url",
+          "url": "https://www6.sanjesh.org/download/arshad97q/116-A.pdf",
+          "sourceType": "official_direct_pdf_url",
+          "access": "host_timeout_previous_attempt",
+          "evidence": "Annual archive lists this exact Sanjesh URL for management set 1142; host timed out during earlier retrieval."
+        }
+      ],
+      "answerKeyStatus": "initial-key mirror located; not imported or validated as final key",
+      "blockers": [
+        "Current local DOCX is a wrong-set source and must remain quarantined.",
+        "The recovered 1142/116A external scan has not been downloaded into the repository or OCR-compared."
+      ],
+      "nextActions": [
+        "Acquire the exact 1142/116A PDF; compare cover, all pages and SHA-256 against any local candidates.",
+        "Keep the 1143/104E source as rejected/quarantined evidence, never relabel it.",
+        "Locate the final official key revision and rights status."
+      ]
+    },
+    {
+      "level": "arshad",
+      "year": 1398,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_file_is_wrong_set_external_target_scan_found",
+      "candidates": [
+        {
+          "file": "1142-1398.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1398.docx",
+          "sourcePdf": "MA_1142_1398.pdf",
+          "coverYear": 1398,
+          "coverSetCode": "1143",
+          "coverControlCode": "704A",
+          "manifestStatus": "quarantine",
+          "pageCount": 20,
+          "evidence": "OCR cover identifies counselling set 1143, not target management set 1142."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "question_booklet_scan",
+          "url": "https://iranmoshavere.com/wp-content/uploads/2018/06/Masters-of-Management-Entrance-Exam-Collection-98.pdf",
+          "sourceType": "scanned_official_booklet_mirror",
+          "access": "public_pdf",
+          "evidence": "40-page scan; first and last pages visually inspected; cover identifies 1398, management set 1142, control 716C and 295 questions."
+        },
+        {
+          "role": "initial_answer_key_mirror",
+          "url": "https://iranmoshavere.com/wp-content/uploads/2018/06/Answers-to-the-entrance-exam-questions-of-the-Master-Management-Collection-98.pdf",
+          "sourceType": "answer_key_mirror",
+          "access": "public_pdf",
+          "evidence": "Two-page initial key; final page identifies 1398, management set 1142."
+        },
+        {
+          "role": "official_sanjesh_question_url",
+          "url": "https://www6.sanjesh.org/download/arshadq98/716-C%281142%29.pdf",
+          "sourceType": "official_direct_pdf_url",
+          "access": "host_timeout_previous_attempt",
+          "evidence": "Annual archive lists the exact Sanjesh URL for management set 1142; host timed out during earlier retrieval."
+        }
+      ],
+      "answerKeyStatus": "initial-key mirror located; not imported or validated as final key",
+      "blockers": [
+        "Current local DOCX is a wrong-set source and must remain quarantined.",
+        "Recovered 1142/716C scan has not been acquired into the repository or OCR-compared."
+      ],
+      "nextActions": [
+        "Acquire 1142/716C and compare cover/pages against local files.",
+        "Retain the local 1143/704A file only as quarantined evidence.",
+        "Locate final official key revision and assess rights."
+      ]
+    },
+    {
+      "level": "arshad",
+      "year": 1399,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_control_conflicts_with_recovered_1142_scan",
+      "candidates": [
+        {
+          "file": "1142-1399.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1399.docx",
+          "sourcePdf": "MA_1142_1399.pdf",
+          "coverYear": 1399,
+          "coverSetCode": "1142",
+          "coverControlCode": "317",
+          "manifestStatus": "needs_cover_review",
+          "pageCount": 48,
+          "evidence": "Management candidate; archive metadata lists control 317 but cover/code is not visually confirmed."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "question_booklet_scan",
+          "url": "https://iranmoshavere.com/wp-content/uploads/2020/02/Management-Collection-Questionnaire.pdf",
+          "sourceType": "scanned_official_booklet_mirror",
+          "access": "public_pdf",
+          "evidence": "42-page scan; cover visually checked as 1399, set 1142, control 316A, 295 questions; final page shows question numbers through 295."
+        },
+        {
+          "role": "initial_answer_key_mirror",
+          "url": "https://iranmoshavere.com/wp-content/uploads/2020/02/Key-senior-management-questions.pdf",
+          "sourceType": "answer_key_mirror",
+          "access": "public_pdf",
+          "evidence": "Two-page initial key identifies 1399, management set 1142, booklet A and includes a Sanjesh result2 key reference."
+        },
+        {
+          "role": "sanjesh_key_endpoint_in_mirror",
+          "url": "http://result2.sanjesh.org/Keys/arshad99/NOET/Questionskey.aspx?id=gsf5J5ZDMZQ=",
+          "sourceType": "official_key_endpoint",
+          "access": "not_retrieved_directly",
+          "evidence": "The exact URL is printed in the mirrored initial-key PDF."
+        }
+      ],
+      "answerKeyStatus": "initial-key mirror and Sanjesh endpoint located; not retrieved/imported",
+      "blockers": [
+        "Local cover/control 317 conflicts with the recovered scan control 316A.",
+        "No page-by-page comparison has established whether these are alternate forms or a mislabeled file."
+      ],
+      "nextActions": [
+        "Acquire both source files and compare all pages plus control numbers.",
+        "Keep control 317 and 316A as distinct candidates until evidence resolves the conflict.",
+        "Retrieve official key through the printed Sanjesh endpoint and identify initial/final revisions."
+      ]
+    },
+    {
+      "level": "arshad",
+      "year": 1400,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_target_set_candidate_needs_visual_cover_review",
+      "candidates": [
+        {
+          "file": "1142-1400.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1400.docx",
+          "sourcePdf": "MA_1142_1400.pdf",
+          "coverYear": 1400,
+          "coverSetCode": "1142",
+          "coverControlCode": "717",
+          "manifestStatus": "needs_cover_review",
+          "pageCount": 44,
+          "evidence": "Management candidate; archive metadata lists control 717 but cover/control match is not visually confirmed."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "question_by_question_scanned_reference",
+          "url": "https://konkurstudy.ir/konkurs/management/1400",
+          "sourceType": "public_scanned_question_index",
+          "access": "public_web_page",
+          "evidence": "Identifies set 1142 and 295 questions with original question scans and section ranges; provider says solutions were checked against the official key."
+        },
+        {
+          "role": "multi_year_question_key_bundle",
+          "url": "https://ketab-khoob.4kia.ir/info/834224/",
+          "sourceType": "commercial_collection_listing",
+          "access": "paid_bundle",
+          "evidence": "Commercial listing says its 1394–1404 master's management package includes 1400 questions and answer key."
+        }
+      ],
+      "questionStructure": {
+        "totalQuestions": 295,
+        "sourceUrl": "https://konkurstudy.ir/konkurs/management/1400",
+        "evidenceType": "third_party_page_section_ranges"
+      },
+      "answerKeyStatus": "third-party solution/key claim exists; original official key not imported",
+      "blockers": [
+        "Local control 717 requires visual cover verification.",
+        "The public question scan page is not a substitute for the exact original PDF or licence."
+      ],
+      "nextActions": [
+        "Visually verify local control 717 and document all section/question ranges.",
+        "Acquire exact source PDF and official key version where possible.",
+        "Do not copy third-party scans/solutions without rights review."
+      ]
+    },
+    {
+      "level": "arshad",
+      "year": 1401,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_cover_ocr_matches_target_set",
+      "candidates": [
+        {
+          "file": "1142-1401.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1401.docx",
+          "sourcePdf": "MA_1142_1401.pdf",
+          "coverYear": 1401,
+          "coverSetCode": "1142",
+          "coverControlCode": "517A",
+          "manifestStatus": "eligible",
+          "pageCount": 44,
+          "evidence": "OCR cover identifies management set 1142, control 517A."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "question_by_question_scanned_reference",
+          "url": "https://konkurstudy.ir/konkurs/management/1401",
+          "sourceType": "public_scanned_question_index",
+          "access": "public_web_page",
+          "evidence": "The page identifies management set 1142 and 295 questions, with scans and section ranges."
+        }
+      ],
+      "questionStructure": {
+        "totalQuestions": 295,
+        "sourceUrl": "https://konkurstudy.ir/konkurs/management/1401",
+        "evidenceType": "third_party_page_section_ranges"
+      },
+      "answerKeyStatus": "not imported; exact official key version not linked in current audit",
+      "blockers": [
+        "Current status is cover OCR match, not full visual/source verification.",
+        "Complete question transcription and final key reconciliation are pending."
+      ],
+      "nextActions": [
+        "Verify cover and control 517A from page images.",
+        "Compare all question numbers and sections with the public scan index and obtain original official PDF/key.",
+        "Keep each question tied to booklet number and printed section."
+      ]
+    },
+    {
+      "level": "arshad",
+      "year": 1402,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_cover_ocr_matches_target_set",
+      "candidates": [
+        {
+          "file": "1142-1402.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1402.docx",
+          "sourcePdf": "MA_1142_1402.pdf",
+          "coverYear": 1402,
+          "coverSetCode": "1142",
+          "coverControlCode": "818C",
+          "manifestStatus": "eligible",
+          "pageCount": 40,
+          "evidence": "OCR cover identifies management set 1142, control 818C."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "question_by_question_scanned_reference",
+          "url": "https://konkurstudy.ir/konkurs/management/1402",
+          "sourceType": "public_scanned_question_index",
+          "access": "public_web_page",
+          "evidence": "Page identifies set 1142 and 285 questions, with original-question scans and section ranges."
+        }
+      ],
+      "questionStructure": {
+        "totalQuestions": 285,
+        "sourceUrl": "https://konkurstudy.ir/konkurs/management/1402",
+        "evidenceType": "third_party_page_section_ranges"
+      },
+      "answerKeyStatus": "not imported; external solution claim is not an official key revision",
+      "blockers": [
+        "Cover identity is based on OCR; full visual inspection and page count match are pending.",
+        "No approved answer-key revision has been created."
+      ],
+      "nextActions": [
+        "Verify cover/control 818C and all pages visually.",
+        "Reconcile source question sequence against the 285-question index.",
+        "Obtain official key revision and rights evidence."
+      ]
+    },
+    {
+      "level": "arshad",
+      "year": 1403,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_file_wrong_exam_set_external_1142_question_index_found",
+      "candidates": [
+        {
+          "file": "1142-1403.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1403.docx",
+          "sourcePdf": "MA_1142_1403.pdf",
+          "coverYear": 1403,
+          "coverSetCode": "1272",
+          "coverControlCode": "142A",
+          "manifestStatus": "quarantine",
+          "pageCount": 24,
+          "evidence": "OCR cover identifies materials/metallurgy set 1272, not management set 1142."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "question_by_question_scanned_reference",
+          "url": "https://konkurstudy.ir/konkurs/management/1403",
+          "sourceType": "public_scanned_question_index",
+          "access": "public_web_page",
+          "evidence": "Identifies 1142 management and 285 questions with original scans and section ranges."
+        },
+        {
+          "role": "multi_year_question_key_bundle",
+          "url": "https://ketab-khoob.4kia.ir/info/834224/",
+          "sourceType": "commercial_collection_listing",
+          "access": "paid_bundle",
+          "evidence": "Commercial listing explicitly includes the 1403 master's management booklet and key."
+        }
+      ],
+      "questionStructure": {
+        "totalQuestions": 285,
+        "sourceUrl": "https://konkurstudy.ir/konkurs/management/1403",
+        "evidenceType": "third_party_page_section_ranges"
+      },
+      "answerKeyStatus": "not imported; commercial bundle is not acquired",
+      "blockers": [
+        "Current local DOCX is wrong set 1272/142A and must stay quarantined.",
+        "Correct 1142/1403 original PDF has not been acquired into the repository."
+      ],
+      "nextActions": [
+        "Acquire the exact 1142/1403 PDF and independently check cover/control code.",
+        "Never relabel the local 1272/142A file.",
+        "Compare all 285 printed question numbers and sections; then obtain the official key."
+      ]
+    },
+    {
+      "level": "arshad",
+      "year": 1404,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_cover_ocr_matches_target_set_external_key_scan_candidate_found",
+      "candidates": [
+        {
+          "file": "1142-1404.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1404.docx",
+          "sourcePdf": "MA_1142_1404.pdf",
+          "coverYear": 1404,
+          "coverSetCode": "1142",
+          "coverControlCode": "519C",
+          "manifestStatus": "eligible",
+          "pageCount": 36,
+          "evidence": "OCR cover identifies management set 1142, control 519C."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "question_by_question_scanned_reference",
+          "url": "https://konkurstudy.ir/konkurs/management/1404",
+          "sourceType": "public_scanned_question_index",
+          "access": "public_web_page",
+          "evidence": "Page identifies set 1142 and 285 questions with scans and section ranges."
+        },
+        {
+          "role": "key_pdf_candidate",
+          "url": "https://pardazesh.org/wp-content/uploads/2025/04/1142-p.pdf",
+          "sourceType": "third_party_hosted_key_pdf",
+          "access": "public_pdf",
+          "evidence": "PDF text identifies year 1404, management set 1142 and booklet control 519C; it is a key candidate, not yet validated against an official Sanjesh revision."
+        }
+      ],
+      "questionStructure": {
+        "totalQuestions": 285,
+        "sourceUrl": "https://konkurstudy.ir/konkurs/management/1404",
+        "evidenceType": "third_party_page_section_ranges"
+      },
+      "answerKeyStatus": "third-party-hosted 519C key PDF located; not validated/imported",
+      "blockers": [
+        "Local source identity is still cover OCR based.",
+        "Key file needs revision identity and comparison to official answer publication."
+      ],
+      "nextActions": [
+        "Visually verify local cover 1142/519C and every source page.",
+        "Retrieve/compare official Sanjesh answer key and mark initial versus final key.",
+        "Assess licence before storing or reproducing source content."
+      ]
+    },
+    {
+      "level": "arshad",
+      "year": 1405,
+      "examCode": "1142",
+      "title": "مجموعه مدیریت",
+      "identityState": "local_cover_ocr_matches_target_set_official_key_endpoint_identified",
+      "candidates": [
+        {
+          "file": "1142-1405.docx",
+          "localPath": "docs/exam-ocr/1142/1142-1405.docx",
+          "sourcePdf": "MA_1142_1405.pdf",
+          "coverYear": 1405,
+          "coverSetCode": "1142",
+          "coverControlCode": "319A",
+          "manifestStatus": "eligible",
+          "pageCount": 40,
+          "evidence": "OCR cover identifies management set 1142, control 319A."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "question_by_question_scanned_reference",
+          "url": "https://konkurstudy.ir/konkurs/management/1405",
+          "sourceType": "public_scanned_question_index",
+          "access": "public_web_page",
+          "evidence": "Page identifies management set 1142 and 285 questions with original scans and solutions."
+        },
+        {
+          "role": "official_initial_key_endpoint",
+          "url": "https://www8.sanjesh.org/noet_tk/Handlers/DownloadHandler.ashx?A=1405_arsh_319A",
+          "sourceType": "official_sanjesh_key_endpoint",
+          "access": "retrieval_failed_previous_ci_attempt",
+          "evidence": "Exact booklet-specific endpoint was attempted in the branch workflow; timeout/download failure was recorded and no key was retained."
+        },
+        {
+          "role": "exam_publication_notice",
+          "url": "https://nournews.ir/fa/news/331458/",
+          "sourceType": "news_linking_to_sanjesh",
+          "access": "public_news_page",
+          "evidence": "Reports that 1405 master's question booklets and initial answer key are available through the Sanjesh exam search system."
+        }
+      ],
+      "questionStructure": {
+        "totalQuestions": 285,
+        "sourceUrl": "https://konkurstudy.ir/konkurs/management/1405",
+        "evidenceType": "third_party_page_question_listing"
+      },
+      "answerKeyStatus": "official booklet-specific endpoint identified but not retrieved; zero key records imported",
+      "blockers": [
+        "Exact official key download failed in previous CI attempt.",
+        "Rights and full visual review are still open."
+      ],
+      "nextActions": [
+        "Retry the exact Sanjesh 319A endpoint through a reliable retrieval path.",
+        "Visually reconcile cover and all 40 pages against 285 question numbers.",
+        "Do not infer answers from another booklet or from existing bank entries."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1396,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "local_cover_ocr_matches_target_set_control_unidentified",
+      "candidates": [
+        {
+          "file": "2162-1396.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1396.docx",
+          "sourcePdf": "PhD_2162_1396.pdf",
+          "coverYear": 1396,
+          "coverSetCode": "2162",
+          "coverControlCode": null,
+          "manifestStatus": "eligible",
+          "pageCount": 12,
+          "evidence": "OCR cover identifies doctoral management/business set 2162; control code not recorded."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "multi_year_question_answer_catalogue",
+          "url": "https://ketab-khoob.4kia.ir/info/834436/",
+          "sourceType": "commercial_collection_listing",
+          "access": "paid_bundle",
+          "evidence": "Commercial listing claims question booklets and answers for management business/strategy, code 2162, 1396–1404."
+        },
+        {
+          "role": "bibliographic_catalogue",
+          "url": "https://elmnet.ir/doc/31564147-21061",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Catalog record identifies a doctoral question-and-answer collection for code 2162 across earlier years."
+        }
+      ],
+      "answerKeyStatus": "not imported; only a commercial bundle/catalogue lead",
+      "blockers": [
+        "No control code or independent original-source cover evidence is recorded.",
+        "The title of commercial catalogues emphasizes business/strategy and cannot define full 2162 scope by itself."
+      ],
+      "nextActions": [
+        "Recover original 1396 booklet and identify cover/control and all course sections.",
+        "Determine whether the local 12-page scan contains the full 2162 exam, all combinations, and all language/aptitude sections.",
+        "Locate and verify the official key separately."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1397,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "local_file_wrong_exam_set_external_2162_catalogue_found",
+      "candidates": [
+        {
+          "file": "2162-1397.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1397.docx",
+          "sourcePdf": "PhD_2162_1397.pdf",
+          "coverYear": 1397,
+          "coverSetCode": "3163",
+          "coverControlCode": "126D",
+          "manifestStatus": "quarantine",
+          "pageCount": 12,
+          "evidence": "OCR cover identifies set 3163, not target 2162."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "multi_year_question_answer_catalogue",
+          "url": "https://ketab-khoob.4kia.ir/info/834436/",
+          "sourceType": "commercial_collection_listing",
+          "access": "paid_bundle",
+          "evidence": "Lists 2162 business/strategy questions with answers for 1397."
+        },
+        {
+          "role": "bibliographic_question_answer_record",
+          "url": "https://elmnet.ir/doc/31713009-1101",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Catalog record explicitly identifies 2162 doctoral management business/strategy, 1397, questions and explanatory answers."
+        },
+        {
+          "role": "commercial_pdf_part",
+          "url": "https://mahdroo.ir/shop/product/book-1578825-iu1cpr",
+          "sourceType": "commercial_book_catalogue",
+          "access": "purchase_or_library",
+          "evidence": "Lists PDF explanatory question/answer part 4 for 2162 PhD Management Business & Strategy 1397."
+        }
+      ],
+      "answerKeyStatus": "commercial/catalogue answer material identified; not acquired/imported",
+      "blockers": [
+        "Local source is 3163/126D and must remain quarantined.",
+        "A bibliographic listing does not supply the original exam booklet or validate its question content."
+      ],
+      "nextActions": [
+        "Acquire exact 2162/1397 source and independently identify the cover/control.",
+        "Do not relabel 3163/126D as 2162.",
+        "Map all relevant combinations and question ranges once the original is obtained."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1398,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "local_file_wrong_exam_set_external_2162_catalogue_found",
+      "candidates": [
+        {
+          "file": "2162-1398.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1398.docx",
+          "sourcePdf": "PhD_2162_1398.pdf",
+          "coverYear": 1398,
+          "coverSetCode": "3162",
+          "coverControlCode": "5251",
+          "manifestStatus": "quarantine",
+          "pageCount": 12,
+          "evidence": "OCR cover identifies set 3162, not target 2162."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "multi_year_question_answer_catalogue",
+          "url": "https://ketab-khoob.4kia.ir/info/834436/",
+          "sourceType": "commercial_collection_listing",
+          "access": "paid_bundle",
+          "evidence": "Lists 2162 management business/strategy questions and keys for 1398."
+        },
+        {
+          "role": "bibliographic_part_1",
+          "url": "https://elmnet.ir/doc/32134176-75611",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Identifies part 1 of 2162 PhD management business/strategy question and explanatory-answer materials for 1398."
+        },
+        {
+          "role": "bibliographic_part_2",
+          "url": "https://elmnet.ir/doc/32074812-16431",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Identifies part 2 of 2162 PhD management business/strategy question and explanatory-answer materials for 1398."
+        },
+        {
+          "role": "additional_bibliographic_record",
+          "url": "https://elmnet.ir/doc/31684665-99402",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Additional 2162 question/answer catalog entry for 1398."
+        }
+      ],
+      "answerKeyStatus": "commercial/catalogue answer material identified; not acquired/imported",
+      "blockers": [
+        "Local source is 3162/5251 and must remain quarantined.",
+        "No original 2162 PDF has been acquired."
+      ],
+      "nextActions": [
+        "Acquire the correct 2162/1398 booklet and answer material.",
+        "Preserve the local 3162 source as a separate wrong-set scan.",
+        "Verify course combinations and page/question sequence from the original."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1399,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "local_file_wrong_exam_set_external_stage_catalogues_found",
+      "candidates": [
+        {
+          "file": "2162-1399.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1399.docx",
+          "sourcePdf": "PhD_2162_1399.pdf",
+          "coverYear": 1399,
+          "coverSetCode": "3162",
+          "coverControlCode": null,
+          "manifestStatus": "quarantine",
+          "pageCount": 12,
+          "evidence": "OCR cover identifies set 3162, not target 2162."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "multi_year_question_answer_catalogue",
+          "url": "https://ketab-khoob.4kia.ir/info/834436/",
+          "sourceType": "commercial_collection_listing",
+          "access": "paid_bundle",
+          "evidence": "Lists 2162 question booklets and answer keys for 1399."
+        },
+        {
+          "role": "stage_1_question_answer_catalogue",
+          "url": "https://mahdroo.ir/shop/product/book-1112707-o6hxj0",
+          "sourceType": "commercial_book_catalogue",
+          "access": "purchase_or_library",
+          "evidence": "104-page 2162 PhD Management Business & Strategy question/answer publication, stage 1, 1399."
+        },
+        {
+          "role": "stage_2_question_answer_catalogue",
+          "url": "https://mahdroo.ir/shop/product/book-311077-8bvx4b",
+          "sourceType": "commercial_book_catalogue",
+          "access": "purchase_or_library",
+          "evidence": "2162 PhD Management Business & Strategy question/answer publication, stage 2, 1399."
+        },
+        {
+          "role": "stage_3_question_answer_catalogue",
+          "url": "https://mahdroo.ir/shop/product/book-1788851-au6ywh",
+          "sourceType": "commercial_book_catalogue",
+          "access": "purchase_or_library",
+          "evidence": "100-page 2162 PhD Management Business & Strategy question/answer publication, stage 3, 1399."
+        }
+      ],
+      "answerKeyStatus": "three commercial stage catalogues found; no answer key acquired/imported",
+      "blockers": [
+        "Local source is 3162 and must remain quarantined.",
+        "The three-stage catalogues must be mapped to official booklet/control identifiers before ingestion."
+      ],
+      "nextActions": [
+        "Acquire/retrieve all 2162/1399 exam stages and verify official exam code/cover for each.",
+        "Determine whether multiple stages are parts or separate variants; avoid assuming equivalence.",
+        "Identify official initial/final answer keys for each applicable booklet."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1400,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "local_cover_ocr_matches_target_set_control_unidentified",
+      "candidates": [
+        {
+          "file": "2162-1400.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1400.docx",
+          "sourcePdf": "PhD_2162_1400.pdf",
+          "coverYear": 1400,
+          "coverSetCode": "2162",
+          "coverControlCode": null,
+          "manifestStatus": "eligible",
+          "pageCount": 12,
+          "evidence": "OCR cover identifies doctoral management/business set 2162; control code not recorded."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "multi_year_question_answer_catalogue",
+          "url": "https://elmnet.ir/doc/32062094-74942",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Catalogues a 2162 PhD Management Business & Strategy question-and-answer collection spanning 1395–1400."
+        },
+        {
+          "role": "year_1400_question_answer_part_1",
+          "url": "https://elmnet.ir/doc/32049976-70277",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Catalogues part 1 of 2162 PhD 1400 question and explanatory answers."
+        },
+        {
+          "role": "year_1400_question_answer_part_3",
+          "url": "https://elmnet.ir/doc/32338474-58171",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Catalogues part 3 of 2162 PhD 1400 question and explanatory answers."
+        },
+        {
+          "role": "year_1400_question_answer_part_4",
+          "url": "https://elmnet.ir/doc/32356036-75124",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Catalogues part 4 of 2162 PhD 1400 question and explanatory answers."
+        }
+      ],
+      "answerKeyStatus": "bibliographic question/answer sources found; official key not imported",
+      "blockers": [
+        "No control code recorded in local OCR manifest.",
+        "Bibliographic collection title may cover only the business/strategy subset, not every 2162 course combination."
+      ],
+      "nextActions": [
+        "Inspect local cover and all interior section headers; identify all 2162 combinations represented.",
+        "Obtain the official source booklet and exact key revision.",
+        "Separate question appearances by course combination where applicable."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1401,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "local_cover_ocr_matches_target_set_year_text_noisy",
+      "candidates": [
+        {
+          "file": "2162-1401.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1401.docx",
+          "sourcePdf": "PhD_2162_1401.pdf",
+          "coverYear": 1401,
+          "coverSetCode": "2162",
+          "coverControlCode": null,
+          "manifestStatus": "eligible",
+          "pageCount": 12,
+          "evidence": "OCR cover identifies management/business set 2162; cover-year text partly noisy and control code is not recorded."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "answer_key_reference",
+          "url": "https://phdtalent.ir/1646477073911/کلید-سوالات-دکتری-مدیریت-بازرگانی-1401/",
+          "sourceType": "third_party_key_mirror",
+          "access": "public_web_page",
+          "evidence": "Page labels the key as PhD Management Business & Strategy 2162, booklet D; it warns that its initial key is not authoritative after final-key preparation and that not all booklet variants are supplied."
+        }
+      ],
+      "answerKeyStatus": "third-party mirror of an initial key plus warning about final key; not imported or treated as official",
+      "blockers": [
+        "Year text in cover OCR is noisy; exact booklet/control identity needs image review.",
+        "Third-party page cautions against relying on the initial key and notes only one booklet variant."
+      ],
+      "nextActions": [
+        "Visually verify cover year and set code; capture booklet type/control.",
+        "Retrieve the final official key and confirm it matches the same booklet type.",
+        "Audit all course combination sections, not only business/strategy."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1402,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "no_correct_year_local_candidate_mislabeled_local_file_is_1403",
+      "candidates": [
+        {
+          "file": "2162-1402.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1402.docx",
+          "sourcePdf": "PhD_2162_1402.pdf",
+          "coverYear": 1403,
+          "coverSetCode": "2162",
+          "coverControlCode": "3258",
+          "manifestStatus": "year_conflict_variant",
+          "pageCount": 12,
+          "evidence": "Filename indicates 1402 but OCR cover indicates PhD exam 1403, set 2162, control 3258; this file belongs in the 1403 variant pool, not 1402."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "institution_shared_booklet_attachment",
+          "url": "https://t.me/Negareh_ac/1531",
+          "sourceType": "public_channel_post_with_pdf_attachment",
+          "access": "public_post_attachment",
+          "evidence": "Negareh Institute post identifies an attached 1.3 MB PDF named دفترچه_دکتری_مدیریت_بازرگانی_۱۴۰۲.pdf and links to the Sanjesh announcement."
+        },
+        {
+          "role": "official_exam_announcement",
+          "url": "https://old.sanjesh.org/FullStory.aspx?gid=2&id=8287",
+          "sourceType": "official_sanjesh_announcement",
+          "access": "public_page_host_timeout_previous_attempt",
+          "evidence": "Sanjesh announcement linked from the institutional post; source host timed out during prior retrieval."
+        },
+        {
+          "role": "official_answer_key_index",
+          "url": "https://result2.sanjesh.org/Keys/phd1402/",
+          "sourceType": "official_key_index",
+          "access": "host_timeout_previous_attempt",
+          "evidence": "Exact Sanjesh key index was linked by the institute; it has not been successfully retrieved."
+        }
+      ],
+      "answerKeyStatus": "official key index located but not retrieved; no key values imported",
+      "blockers": [
+        "No correct 1402/2162 local source is present in the OCR set.",
+        "Local file named 1402 is actually 1403/2162/3258 and must remain a separate 1403 variant."
+      ],
+      "nextActions": [
+        "Download the public 1402 attachment or retrieve official Sanjesh booklet; inspect cover/control and all internal pages.",
+        "Compare the correct 1402 source with both 1403 variants without merging.",
+        "Retrieve the exact 1402 answer key and verify its booklet type/control."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1403,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "primary_local_620C_candidate_plus_3258_year_conflict_variant",
+      "candidates": [
+        {
+          "file": "2162-1403.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1403.docx",
+          "sourcePdf": "PhD_2162_1403_620c.pdf",
+          "coverYear": 1403,
+          "coverSetCode": "2162",
+          "coverControlCode": "620C",
+          "manifestStatus": "eligible",
+          "pageCount": 44,
+          "evidence": "OCR cover identifies doctoral exam 1403, set 2162, control 620C."
+        },
+        {
+          "file": "2162-1402.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1402.docx",
+          "sourcePdf": "PhD_2162_1402.pdf",
+          "coverYear": 1403,
+          "coverSetCode": "2162",
+          "coverControlCode": "3258",
+          "manifestStatus": "year_conflict_variant",
+          "pageCount": 12,
+          "evidence": "Filename says 1402; cover says 1403, set 2162, control 3258. Keep as a different 1403 candidate."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "bibliographic_multi_year_collection",
+          "url": "https://elmnet.ir/doc/31983089-30268",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Catalogues a 2162 PhD Management Business & Strategy question/answer collection for 1398–1403."
+        },
+        {
+          "role": "scanned_booklet_and_initial_answers_post",
+          "url": "https://t.me/s/modir87/3901",
+          "sourceType": "public_channel_post",
+          "access": "public_post_with_large_pdf_attachment",
+          "evidence": "Post advertises a 42.5 MB 620C-with-answer PDF and describes it as the 1403 PhD Management question booklet; answers are preliminary, not official final key."
+        }
+      ],
+      "answerKeyStatus": "a third-party preliminary-answer scan exists; not imported or treated as official final key",
+      "blockers": [
+        "Two different 2162 control candidates, 620C and 3258, exist for the same actual exam year.",
+        "They must not be merged or treated as identical without page-level comparison."
+      ],
+      "nextActions": [
+        "Compare both complete page sequences, covers, booklet type and question numbering.",
+        "Record whether 620C/3258 are legitimate variants or one is an incomplete/erroneous scan.",
+        "Retrieve and verify the final official key for the exact variant."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1404,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "cover_matches_but_internal_header_conflict_wrong_set_variant_also_present",
+      "candidates": [
+        {
+          "file": "2162-1404.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1404.docx",
+          "sourcePdf": "PhD_2162_1404_official.pdf",
+          "coverYear": 1404,
+          "coverSetCode": "2162",
+          "coverControlCode": "820A",
+          "manifestStatus": "needs_internal_code_review",
+          "pageCount": 40,
+          "evidence": "OCR cover identifies 2162/820A, but an interior header is OCR-read as 3162."
+        },
+        {
+          "file": "2162-1404-variant2.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1404-variant2.docx",
+          "sourcePdf": "PhD_2162_1404.pdf",
+          "coverYear": 1404,
+          "coverSetCode": "3162",
+          "coverControlCode": "820A",
+          "manifestStatus": "quarantine",
+          "pageCount": 40,
+          "evidence": "Alternate scan cover identifies set 3162, not target set 2162."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "multi_year_question_answer_collection",
+          "url": "https://elmnet.ir/doc/32349795-96177",
+          "sourceType": "bibliographic_catalogue",
+          "access": "public_metadata_no_file",
+          "evidence": "Catalogues 1400–1404 PhD question and explanatory-answer material for Management Business & Strategy, code 2162."
+        }
+      ],
+      "answerKeyStatus": "catalogue references question/answer material; no verified official key imported",
+      "blockers": [
+        "The primary candidate has an internal header conflict; image inspection is needed to distinguish an OCR error, inserted page or mixed booklet.",
+        "Variant2 is a separate wrong-code 3162 source and remains quarantined."
+      ],
+      "nextActions": [
+        "Render the cover and every page with a 3162 header; check image evidence rather than OCR text alone.",
+        "Verify that the 2162/820A document is a single coherent source and preserve any mixed pages separately.",
+        "Obtain exact official key for the confirmed 2162/820A variant."
+      ]
+    },
+    {
+      "level": "phd",
+      "year": 1405,
+      "examCode": "2162",
+      "title": "مدیریت",
+      "identityState": "two_local_2162_620A_candidates_need_page_comparison",
+      "candidates": [
+        {
+          "file": "2162-1405.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1405.docx",
+          "sourcePdf": "PhD_2162_1405_official.pdf",
+          "coverYear": 1405,
+          "coverSetCode": "2162",
+          "coverControlCode": "620A",
+          "manifestStatus": "eligible",
+          "pageCount": 44,
+          "evidence": "OCR cover identifies management set 2162, control 620A."
+        },
+        {
+          "file": "2162-1405-variant2.docx",
+          "localPath": "docs/exam-ocr/2162/2162-1405-variant2.docx",
+          "sourcePdf": "PhD_2162_1405.pdf",
+          "coverYear": 1405,
+          "coverSetCode": "2162",
+          "coverControlCode": "620A",
+          "manifestStatus": "eligible_variant",
+          "pageCount": 44,
+          "evidence": "Alternate scan appears to show 2162/620A; retain separately pending page comparison."
+        }
+      ],
+      "externalSources": [
+        {
+          "role": "official_registration_guide_scope_evidence",
+          "url": "https://www.samanehha.com/upload/files/897182075NOTERegPhd1405.pdf",
+          "sourceType": "registration_guide_mirror_of_sanjesh_document",
+          "access": "public_pdf",
+          "evidence": "Printed page 24 identifies exam set 2162 as مدیریت and lists common course areas plus combinations covering business, public, industrial, media, IT, entrepreneurship, technology and foresight. This confirms breadth of 2162 scope, not the question booklet itself."
+        }
+      ],
+      "answerKeyStatus": "not imported; no exact official answer key locator in this phase audit",
+      "blockers": [
+        "Two local 2162/620A sources may be duplicates, scans of different quality, or different page sequences.",
+        "Neither candidate has been audited against all 2162 subject combinations from the registration guide."
+      ],
+      "nextActions": [
+        "Compare all 44 pages and SHA-256 of source PDFs; preserve separate source identities until exact duplicates are proved.",
+        "Build a page-to-subject-combination map for the full 2162 scope.",
+        "Locate the exact official 1405 question booklet and initial/final answer key."
+      ]
+    }
+  ],
+  "globalNextGates": [
+    "Retrieve exact final registration tables and amendments for 1396–1398; reconcile each historical Management exam code/title including code amendments.",
+    "Expand each year into its actual exam codes and/or course-combination codes using the final registration guide and amendments for that year.",
+    "Retrieve/identify a complete original question booklet for every year × exam-code/course-combination unit in the Management family inventory.",
+    "For every booklet, record cover year, examination-set code, track, combination code, control code, booklet type, page count and internal header conflicts from image evidence.",
+    "Resolve the probable 1399 Educational Management code 2143 against the PDF page image; extracted headings conflict between 2143 and 1423.",
+    "Map changes in exam-set codes across years through explicit crosswalk records; do not merge historical appearances or infer equivalence from title similarity.",
+    "Acquire and validate the exact initial and final official answer-key revisions separately by year, exam code, combination and booklet type.",
+    "Complete visual page review, exact question-number continuity and source hashes before replacing any quarantined OCR source.",
+    "Resolve content rights and allowedUse before publication or production ingestion."
+  ],
+  "relatedRegistries": {
+    "doctoralCodeFamilyHistory": "content/exam-import-staging/management-1142-2162-20261115/doctoral-code-family-history.json"
+  }
+}
