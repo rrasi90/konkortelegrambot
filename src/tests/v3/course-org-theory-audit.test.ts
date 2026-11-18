@@ -21,8 +21,11 @@ describe('ممیزی درس ۱ — مبانی سازمان و مدیریت (cour
   });
 
   it('هر ۵۴ سؤال مرتبط با درس، کلید پاسخ سمت سرور دارند (R-036 پوشش کامل)', () => {
-    // ۳۳ سؤال اصلی + ۲۱ تست تألیفی فصل مبانی سازمان (q.auth.th.*)
-    expect(courseQuestions.length).toBe(57);
+    // وضعیت پس از ادغام PRهای ۲۷/۲۸/۳۵: ۳۰ سؤال اصلی + ۲۴ تست تألیفی فصل مبانی
+    // سازمان (q.auth.th.*). هدف ممیزی ۵۷ سؤال بود؛ ۳ سؤال اصلیِ باقی‌مانده هنوز
+    // نوشته نشده‌اند و به‌عنوان gap محتوایی در openItems رجیستر ممیزی باز است —
+    // هیچ سؤالی برای رسیدن به عدد هدف جعل نمی‌شود.
+    expect(courseQuestions.length).toBe(54);
     const missing = courseQuestions.filter((q) => !keyMap.has(q.id));
     expect(missing.map((q) => q.id)).toEqual([]);
   });
@@ -60,12 +63,12 @@ describe('ممیزی درس ۱ — مبانی سازمان و مدیریت (cour
     expect(INITIAL_INTERACTIVE_LESSONS['mb.contingency']).toBeDefined();
   });
 
-  it('تناقض ثبت‌شدهٔ ممیزی (V5-C1-01): هر ۳ نود درس تعاملی دارند؛ topicهای بات mb.decision/mb.institutional نود گراف ندارند', () => {
-    // وضعیت ممیزی‌شدهٔ manifest فاز ۱: پوشش درس‌های تعاملی کامل است اما دو topic
-    // درس‌نامهٔ بات (mb.decision / mb.institutional) به نود گراف نگاشت نشده‌اند —
-    // این تست تناقض را قابل‌مشاهده نگه می‌دارد تا در تکمیل رفع شود.
+  it('وضعیت V5-C1-01 پس از ممیزی: گرهٔ mb.decision افزوده شده؛ mb.institutional هنوز نود ندارد', () => {
+    // PR #28 (commit 37999f7) نود mb.decision را به گراف افزود و نیمهٔ اول
+    // تناقض V5-C1-01 را رفع کرد؛ topic بات mb.institutional همچنان بدون نود
+    // است — این نیمهٔ بازِ تناقض قابل‌مشاهده نگه داشته می‌شود.
     expect(INITIAL_INTERACTIVE_LESSONS['mb.culture']).toBeDefined();
-    expect(KNOWLEDGE_NODES.some((n) => n.id === 'mb.decision')).toBe(false);
+    expect(KNOWLEDGE_NODES.some((n) => n.id === 'mb.decision')).toBe(true);
     expect(KNOWLEDGE_NODES.some((n) => n.id === 'mb.institutional')).toBe(false);
   });
 });
