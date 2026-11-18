@@ -48,17 +48,17 @@ export const SUBJECT_COURSE_DEFINITIONS: SubjectCourseDefinition[] = [
     title: 'تئوری‌های مدیریت (مبانی سازمان، رفتار سازمانی و تئوری سازمان)',
     shortTitle: 'تئوری‌های مدیریت',
     englishTitle: 'Management Theories & Organizational Behavior',
-    badge: '۳۰ تست در کنکور ارشد · ضریب ۳ ارشد · ضریب ۵ دکتری',
+    badge: '۲۵ تست در آخرین دفترچهٔ ثبت‌شدهٔ ارشد (۱۴۰۵) · ضریب ۳ ارشد · ضریب ۵ دکتری',
     accentColor: 'indigo',
     gradient: 'from-indigo-600 to-blue-700',
-    questionCountInExam: '۳۰ سؤال (سؤالات ۶۶ تا ۹۵ دفترچه ارشد)',
+    questionCountInExam: '۲۵ سؤال در آزمون ارشد ۱۴۰۵ (سؤالات ۶۱ تا ۸۵ دفترچه)',
     coefficientMaster: 'ضریب ۳ در بازرگانی، صنعتی و فناوری (سنگین‌ترین درس مشترک)',
     coefficientDoctorate: 'ضریب ۵ در دکتری تخصصی مدیریت (تئوری‌های مدیریت پیشرفته)',
     primaryBookId: 'book.bus.org_theories_daft',
     primaryBookTitle: 'تئوری و طراحی سازمان (ریچارد دفت) + مبانی رابینز + رفتار رضائیان',
     primaryAuthor: 'ریچارد دفت (ترجمه پارسائیان و اعرابی) / استیفن رابینز / دکتر علی رضائیان',
     whyImportantInExam:
-      'با ۳۰ سؤال در دفترچه ارشد و ضریب ۳ (و ضریب ۵ در دکتری)، این درس ستون فقرات تراز داوطلب است. سؤالات مفهومی، ترکیبی و موردکاوی از ساختار ۵گانه مینتزبرگ، مکاتب کلاسیک و نئوکلاسیک، فرهنگ و رهبری به‌شدت پرتکرارند.',
+      'در ساختار ثبت‌شدهٔ آزمون ارشد ۱۴۰۵، این بخش ۲۵ سؤال (۶۱ تا ۸۵ دفترچه) و ضریب ۳ دارد؛ در برخی دفترچه‌های قدیمی‌ترِ مخزن، تعداد سؤالات این بخش ۳۰ بوده است. سؤالات مفهومی، ترکیبی و موردکاوی از ساختار ۵گانه مینتزبرگ، مکاتب کلاسیک و نئوکلاسیک، فرهنگ و رهبری به‌شدت پرتکرارند.',
     goldenChaptersSummary:
       'فصل ابعاد ساختاری و محتوایی سازمان، ساختارهای مکانیکی و ارگانیک برنز و استاکر، ارکان پنج‌گانه مینتزبرگ، نظریه‌های موقعیتی رهبری، فرهنگ سازمانی ادگار شاین',
     diagramTags: ['mintzberg', 'grid', 'ارکان پنج‌گانه', 'رهبری', 'ساختار سازمانی'],
@@ -243,6 +243,10 @@ export function getCourseSectionForQuestion(
     }
   }
 
+  // اگر شناسهٔ گره موجود است، نگاشت صریح آن بر حدس متنی مقدم است.
+  const linkedNode = nodes.find((n) => n.id === q.nodeId);
+  if (linkedNode) return getCourseSectionForNode(linkedNode);
+
   // بررسی بر اساس متن منبع یا صورت سوال
   const textBlob = (
     (q.sourceReference || '') +
@@ -252,24 +256,18 @@ export function getCourseSectionForQuestion(
     q.text
   ).toLowerCase();
 
-  if (textBlob.includes('اسلام') || textBlob.includes('مقیمی')) return 'islamic';
+  if (textBlob.includes('اسلام') || textBlob.includes('islamic_moghimi')) return 'islamic';
   if (textBlob.includes('english') || textBlob.includes('زبان') || textBlob.includes('اشراقی'))
     return 'english';
   if (textBlob.includes('ریاضی') || textBlob.includes('آمار') || textBlob.includes('رنجبران') || textBlob.includes('طورانی'))
     return 'math_stats';
-  if (textBlob.includes('بازاریابی') || textBlob.includes('کاتلر') || textBlob.includes('جلیلیان') || textBlob.includes('مروج'))
+  if (textBlob.includes('بازاریابی') || textBlob.includes('کاتلر'))
     return 'marketing';
-  if (textBlob.includes('اقتصاد') || textBlob.includes('نظری')) return 'economics';
+  if (textBlob.includes('اقتصاد') || textBlob.includes('محسن نظری')) return 'economics';
   if (textBlob.includes('پژوهش عملیاتی') || textBlob.includes('تحقیق در عملیات') || textBlob.includes('فدوی') || textBlob.includes('سیمپلکس'))
     return 'operations_research';
   if (textBlob.includes('تولید') || textBlob.includes('متقی') || textBlob.includes('جعفرنژاد') || textBlob.includes('موجودی'))
     return 'production';
-
-  // بررسی بر اساس گره متناظر
-  const linkedNode = nodes.find((n) => n.id === q.nodeId);
-  if (linkedNode) {
-    return getCourseSectionForNode(linkedNode);
-  }
 
   return 'management_theories';
 }

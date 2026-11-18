@@ -54,7 +54,7 @@
       "bookletQuestionNumber": 31,
       "courseId": null,
       "courseSectionId": "management_theories",
-      "sourceNodeId": "mb.structure",
+      "sourceNodeId": "mb.culture",
       "sourceReference": "کنکور ارشد مدیریت ۱۳۹۱ (کد 103D) — سؤال ۳۱ دفترچه — کلید رسمی سنجش: گزینه ۲",
       "questionText": "در کدام فرهنگ سازمانی، سبک رهبری محافظه‌کارانه است؟",
       "options": [
@@ -402,7 +402,7 @@
       "bookletQuestionNumber": 48,
       "courseId": null,
       "courseSectionId": "management_theories",
-      "sourceNodeId": "mb.contingency",
+      "sourceNodeId": "mb.leadership",
       "sourceReference": "کنکور ارشد مدیریت ۱۳۹۲ (کد 103A) — سؤال ۴۸ دفترچه — کلید رسمی سنجش: گزینه ۴",
       "questionText": "در نظریه اقتضایی دوره‌ای زندگی (هرسی و بلانچارد)، رهبری «وظیفه‌مدار قوی، رابطه‌مدار قوی» چه نامیده می‌شود؟",
       "options": [
@@ -1591,7 +1591,7 @@
       "bookletQuestionNumber": 77,
       "courseId": null,
       "courseSectionId": "management_theories",
-      "sourceNodeId": "mb.structure",
+      "sourceNodeId": "mb.decision",
       "sourceReference": "کنکور ارشد مدیریت ۱۴۰۰ (کد 716C) — سؤال ۷۷ دفترچه",
       "questionText": "کدام مورد بیانگر «نظریه تصمیم رفتاری (Behavioral Theory of Decision Making)» در مدیریت مذاکره و سازمان است؟",
       "options": [
@@ -2142,7 +2142,7 @@
       "bookletQuestionNumber": 66,
       "courseId": null,
       "courseSectionId": "management_theories",
-      "sourceNodeId": "mb.contingency",
+      "sourceNodeId": "mb.ob_motivation",
       "sourceReference": "کنکور ارشد مدیریت ۱۴۰۴ (کد 519C) — سؤال ۶۶ دفترچه",
       "questionText": "کدام مورد تعریف کامل‌تر و دقیق‌تری از «عوامل بهداشتی (نگهدارنده / Hygiene Factors)» در تئوری دوعاملی انگیزش (هرزبرگ) ارائه می‌دهد؟",
       "options": [

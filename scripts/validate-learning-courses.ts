@@ -194,6 +194,12 @@ assert.equal(layer1Crosswalk.counts.phdExpansionNodes, 12);
 assert.equal(layer1Crosswalk.counts.syllabusNodes, syllabusNodes.length);
 assert.equal(layer1Crosswalk.counts.skills, skills.length);
 assert.equal(layer1Crosswalk.nodeCrosswalk.length, layer1Crosswalk.counts.nodeCrosswalkRows);
+assert.equal(layer1Crosswalk.skillCrosswalk.length, skills.length, 'Crosswalk must include every skill exactly once.');
+assert.equal(layer1Crosswalk.counts.exactNodeMatches, layer1Crosswalk.nodeCrosswalk.filter((node: {mappingStatus:string}) => node.mappingStatus === 'exact_id_match').length);
+assert.equal(layer1Crosswalk.counts.nodesNeedingRegistry, layer1Crosswalk.nodeCrosswalk.filter((node: {mappingStatus:string}) => node.mappingStatus === 'needs_registry_node').length);
+assert.equal(layer1Crosswalk.counts.syllabusOnlyNodes, layer1Crosswalk.nodeCrosswalk.filter((node: {enginePresence:string}) => node.enginePresence === 'missing').length);
+assert.equal(layer1Crosswalk.counts.skillsWithMissingNode, layer1Crosswalk.skillCrosswalk.filter((skill: {nodeMappingStatus:string}) => skill.nodeMappingStatus !== 'exact_id_match').length);
+assert.equal(layer1Crosswalk.counts.missingSkillReferences, layer1Crosswalk.skillCrosswalk.reduce((count: number, skill: {missingPrerequisiteSkillIds:string[];missingConfusableSkillIds:string[]}) => count + skill.missingPrerequisiteSkillIds.length + skill.missingConfusableSkillIds.length, 0));
 console.log(
   'Layer 1 crosswalk: ' + layer1Crosswalk.nodeCrosswalk.length + ' node identities, ' +
   layer1Crosswalk.skillCrosswalk.length + ' skills, ' +

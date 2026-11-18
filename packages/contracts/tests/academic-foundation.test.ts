@@ -35,9 +35,9 @@ describe('AEL Layer 1 academic foundation', () => {
     expect(bundle.lessonMappings).toHaveLength(22);
     expect(bundle.tags).toHaveLength(49);
     expect(bundle.assignments.filter((a: {targetKind:string}) => a.targetKind === 'lesson_topic')).toHaveLength(22);
-    expect(bundle.assignments.filter((a: {targetKind:string}) => a.targetKind === 'syllabus_node')).toHaveLength(24);
+    expect(bundle.assignments.filter((a: {targetKind:string}) => a.targetKind === 'syllabus_node')).toHaveLength(25);
     expect(bundle.assignments.filter((a: {targetKind:string}) => a.targetKind === 'question')).toHaveLength(18);
-    expect(bundle.assignments.filter((a: {targetKind:string}) => a.targetKind === 'skill')).toHaveLength(23);
+    expect(bundle.assignments.filter((a: {targetKind:string}) => a.targetKind === 'skill')).toHaveLength(26);
   });
 
   it('rejects tag assignments and semantic relations with unresolved targets', () => {

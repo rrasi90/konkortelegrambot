@@ -412,7 +412,7 @@ export const YEARLY_KONKOR_QUESTIONS: YearlyKonkorQuestion[] = [
   },
   {
     id: 'q.k1391.31',
-    nodeId: 'mb.structure',
+    nodeId: 'mb.culture',
     examYear: 1391,
     bookletQuestionNumber: 31,
     courseSectionId: 'management_theories',
@@ -582,7 +582,7 @@ export const YEARLY_KONKOR_QUESTIONS: YearlyKonkorQuestion[] = [
   },
   {
     id: 'q.k1392.48',
-    nodeId: 'mb.contingency',
+    nodeId: 'mb.leadership',
     examYear: 1392,
     bookletQuestionNumber: 48,
     courseSectionId: 'management_theories',
@@ -1207,7 +1207,7 @@ export const YEARLY_KONKOR_QUESTIONS: YearlyKonkorQuestion[] = [
   },
   {
     id: 'q.k1400.77',
-    nodeId: 'mb.structure',
+    nodeId: 'mb.decision',
     examYear: 1400,
     bookletQuestionNumber: 77,
     courseSectionId: 'management_theories',
@@ -1515,7 +1515,7 @@ export const YEARLY_KONKOR_QUESTIONS: YearlyKonkorQuestion[] = [
   },
   {
     id: 'q.k1404.66',
-    nodeId: 'mb.contingency',
+    nodeId: 'mb.ob_motivation',
     examYear: 1404,
     bookletQuestionNumber: 66,
     courseSectionId: 'management_theories',
