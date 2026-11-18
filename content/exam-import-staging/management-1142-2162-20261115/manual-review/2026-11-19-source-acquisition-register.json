@@ -1,0 +1,93 @@
+{
+ "schemaVersion": "1.0.0",
+ "generatedAt": "2026-11-19",
+ "title": "Source acquisition register — correct booklets and keys retrieved and cover-verified",
+ "purpose": "Record every source file acquired on 2026-11-19 with URL, SHA-256, byte size and visual cover verification result. The PDF/DOCX binaries are kept OUTSIDE the repository (local private workspace) and are NOT committed; only this metadata is tracked.",
+ "policy": [
+  "No copyrighted booklet/key binary enters the repository in this commit.",
+  "A source is marked cover_verified only after the rendered cover image was visually inspected: year, set code, booklet control code and question count read from the image.",
+  "Key row-count verification means the extracted question->answer rows equal the printed question count.",
+  "Nothing here changes the production question bank; staging statuses only."
+ ],
+ "masterSetVerification": {
+  "msc_1142": {
+   "verifiedBooklets": {
+    "1396": {"control": "106C", "questions": 320, "note": "RAR from konkur.in archive extracted with password www.konkur.in; cover verified visually (page 2 of PDF; page 1 is konkur.in branding)."},
+    "1397": {"control": "116A", "questions": 295, "note": "dl.konkur.in Arshad/97/116-A; cover verified visually: مجموعه مدیریت کد ۱۱۴۲، ۲۹۵ سؤال."},
+    "1398": {"control": "716C", "questions": 295, "note": "dl.konkur.in Arshad/98/716-C(1142); cover verified visually."},
+    "1403": {"control": "141C", "questions": 285, "note": "mastertest.ir upload; cover verified visually: مدیریت کد ۱۱۴۲، ۲۸۵ سؤال. The dl.konkur.in 142A scan is metallurgy 1272 and konkur.in's own 1403 row labels are shifted — audit finding recorded."}
+   },
+   "verifiedKeys": {
+    "1397": {"rows": 295, "expected": 295, "match": true},
+    "1398": {"rows": null, "expected": 295, "match": null, "note": "scanned key; needs OCR/visual transcription"},
+    "1399": {"rows": null, "expected": 295, "match": null, "note": "scanned key (existing download); identity check pending"},
+    "1400": {"rows": null, "expected": 295, "match": null, "note": "scanned key"},
+    "1401": {"rows": 295, "expected": 295, "match": true},
+    "1402": {"rows": 285, "expected": 285, "match": true},
+    "1403": {"rows": 285, "expected": 285, "match": true, "note": "NEW 141C key from dl.konkur.in pasokh/141-key; the previously downloaded MA_1142_1403_KEY.pdf (408525 bytes) is the metallurgy 142-key (165 rows) and must be treated as a wrong-set source."},
+    "1404": {"rows": 285, "expected": 285, "match": true},
+    "1405": {"rows": null, "expected": 285, "match": null, "note": "scanned key"}
+   }
+  },
+  "phd_2162": {
+   "verifiedBooklets": {
+    "1396": {"control": "126A", "questions": 80, "note": "local PhD_2162_1396.pdf (phdtest.ir scan) cover verified visually: مدیریت بازرگانی کد ۲۱۶۲، ۸۰ سؤال، کنترل ۱۲۶A."},
+    "1397": {"control": "126D", "questions": 80, "note": "dl.konkur.in PHD/97/126-D; cover verified visually."},
+    "1398": {"control": "525B", "questions": 80, "note": "dl.konkur.in PHD/98/525; cover verified visually. The quarantined local scan (phdtest.ir) whose OCR read 3162/5251 is superseded by this clean scan of the same control code."},
+    "1399": {"control": "125D", "questions": 80, "note": "dl.konkur.in PHD/99/125; cover verified visually. konkur.in PhD pages pair links BEFORE the label row; 126 is مدیریت دولتی 2163."},
+    "1400": {"control": "325B", "questions": 80, "note": "dl.konkur.in PHD/1400/325-b; cover verified visually. Resolves the old 322/326 key ambiguity: 325 belongs to 2162."},
+    "1401": {"control": "125D", "questions": 80, "note": "dl.konkur.in PHD/1401/125-d; cover verified visually."},
+    "1402": {"control": "325A", "questions": 70, "note": "dl.konkur.in PHD/1402/325; cover verified visually. 1402 has 70 questions (not 80). 322-F is فقه شافعی, not 2162."}
+   },
+   "verifiedKeys": {
+    "1396": {"rows": null, "expected": 80, "match": null, "note": "still missing"},
+    "1397": {"rows": 80, "expected": 80, "match": true},
+    "1398": {"rows": 80, "expected": 80, "match": true},
+    "1399": {"rows": null, "expected": 80, "match": null, "note": "scanned key downloaded"},
+    "1400": {"rows": null, "expected": 80, "match": null, "note": "scanned key downloaded"},
+    "1401": {"rows": null, "expected": 80, "match": null, "note": "scanned key downloaded"},
+    "1402": {"rows": 70, "expected": 70, "match": true, "note": "325-key. The old PhD_2162_1402_KEY_322.pdf is فقه شافعی's key (80 rows) and PhD_2162_1402_KEY_326.pdf is a different set — both must not be used for 2162/1402."}
+   },
+   "questionCountCorrection": "The staging corpus previously assumed ~100+ questions per 2162 booklet. Verified covers show 80 questions for 1396-1401 and 70 for 1402. Coverage denominators must use these counts."
+  }
+ },
+ "files": {
+  "MA_1142_1396_booklet_extracted": {"sha256": "d84311f7e1a0", "bytes": 5870410, "source": "konkur.in rar archive (password www.konkur.in), extracted locally"},
+  "MA_1142_1397_116A_booklet": {"sha256": "1f9592d8d94c", "bytes": 3332583, "source": "https://dl.konkur.in/Arshad/97/116-A-Arshad97-[www.konkur.in].pdf"},
+  "MA_1142_1397_116A_key": {"sha256": "a62f2e87e73c", "bytes": 190829, "source": "https://dl.konkur.in/Arshad/97/pasokh/116-A-key-Arshad97-[www.konkur.in].pdf"},
+  "MA_1142_1398_716C_booklet": {"sha256": "bb4de2bc5db5", "bytes": 3236253, "source": "https://dl.konkur.in/Arshad/98/716-C(1142)-Arshad98-[www.konkur.in].pdf"},
+  "MA_1142_1398_716C_key": {"sha256": "49406105bff3", "bytes": 644429, "source": "https://dl.konkur.in/Arshad/98/pasokh/716-C(1142)-key-Arshad98-[www.konkur.in].pdf"},
+  "MA_1142_1403_141C_booklet": {"sha256": "3e436c86e1e7", "bytes": 38634544, "source": "https://mastertest.ir/wp-content/uploads/دفترچه-سوالات-کنکور-ارشد-1403-مدیریت-کد-1142.pdf"},
+  "MA_1142_1403_141C_key": {"sha256": "4ff841858c16", "bytes": 546270, "source": "https://dl.konkur.in/Arshad/1403/pasokh/141-key-Arshad1403-[konkur.in].pdf"},
+  "PhD_2162_1397_126D_booklet": {"sha256": "0a1975f21013", "bytes": 1296046, "source": "https://dl.konkur.in/PHD/97/126-D-PHD97-[www.konkur.in].pdf"},
+  "PhD_2162_1397_126D_key": {"sha256": "8e31fbd126dd", "bytes": 112989, "source": "https://dl.konkur.in/PHD/97/pasokh/126-D-key-PHD97-[www.konkur.in].pdf"},
+  "PhD_2162_1398_525B_booklet": {"sha256": "9e31018c4867", "bytes": 869402, "source": "https://dl.konkur.in/PHD/98/525-PHD98-[konkur.in].pdf"},
+  "PhD_2162_1398_525B_key": {"sha256": "ac6a4c876c6b", "bytes": 243285, "source": "https://dl.konkur.in/PHD/98/pasokh/525-key-PHD98-[www.konkur.in].pdf"},
+  "PhD_2162_1399_125D_booklet": {"sha256": "8854fc136857", "bytes": 1813764, "source": "https://dl.konkur.in/PHD/99/125-PHD99-[konkur.in].pdf"},
+  "PhD_2162_1399_125D_key": {"sha256": "97af2148d390", "bytes": 401619, "source": "https://dl.konkur.in/PHD/99/pasokh/125-key-PHD99-[konkur.in].pdf"},
+  "PhD_2163_1399_126D_booklet": {"sha256": "1dbb7de69004", "bytes": 1731468, "source": "https://dl.konkur.in/PHD/99/126-PHD99-[konkur.in].pdf"},
+  "PhD_2162_1400_325B_booklet": {"sha256": "fd695f9e47c7", "bytes": 1702502, "source": "https://dl.konkur.in/PHD/1400/325-b-PHD1400-[konkur.in].pdf"},
+  "PhD_2162_1400_325B_key": {"sha256": "45466010d08f", "bytes": 402410, "source": "https://dl.konkur.in/PHD/1400/pasokh/325-key-PHD1400-[konkur.in].pdf"},
+  "PhD_2162_1401_125D_booklet": {"sha256": "1fda1505e30f", "bytes": 1978051, "source": "https://dl.konkur.in/PHD/1401/125-d-PHD1401-[konkur.in].pdf"},
+  "PhD_2162_1401_125D_key": {"sha256": "75f98f92707c", "bytes": 396693, "source": "https://dl.konkur.in/PHD/1401/pasokh/125-key-PHD1401-[konkur.in].pdf"},
+  "PhD_2162_1402_325A_booklet": {"sha256": "bd5e4b1b9686", "bytes": 1418526, "source": "https://dl.konkur.in/PHD/1402/325-PHD1402-[konkur.in].pdf"},
+  "PhD_2162_1402_325A_key": {"sha256": "3a53a802ff33", "bytes": 342099, "source": "https://dl.konkur.in/PHD/1402/pasokh/325-key-PHD1402-[konkur.in].pdf"},
+  "PhD_2132_1402_322F_fiqh_booklet": {"sha256": "90b111a03539", "bytes": 1676174, "source": "https://dl.konkur.in/PHD/1402/322-PHD1402-[konkur.in].pdf", "note": "فقه شافعی — outside Management family; kept for completeness"},
+  "PhD_2132_1402_322F_key": {"sha256": "f0df32d3685d", "bytes": 352598, "source": "https://dl.konkur.in/PHD/1402/pasokh/322-key-PHD1402-[konkur.in].pdf", "note": "identical to the old PhD_2162_1402_KEY_322.pdf — proves that old filename was mislabeled"}
+ },
+ "sha256Note": "12-hex prefixes are recorded here for readability; the full 64-hex digests for every file exist in the local workspace evidence/acquired-2026-11-19-hashes.json and can be regenerated with sha256sum.",
+ "auditFindings": [
+  "konkur.in Arshad/1403 table labels are shifted relative to the hosted scans: the row labelled «مدیریت 1142» hosts the metallurgy 1272 booklet (cover 142A) and 143A hosts علوم و مهندسی آب 1302. The true 1142/1403 booklet (control 141C) came from mastertest.ir.",
+  "konkur.in PhD pages pair download links with the label row that FOLLOWS them for 97/99/1401/1402, but the arshad 1403 table is shifted — per-page pairing must be verified by cover image, never by table position alone.",
+  "PhD 2162 booklets contain 80 questions (70 in 1402); earlier coverage tables implied a larger count.",
+  "dl.konkur.in hosts correct scans for every recovered year; the previous environment's download timeouts were environmental, not source absence."
+ ],
+ "remainingGaps": [
+  "MA 1396 official answer key (106C) not found.",
+  "MA scanned keys 1398/1399/1400/1405 need OCR or visual transcription before use.",
+  "PhD 1396 key not found; PhD 1399/1400/1401 keys downloaded but are scans needing OCR.",
+  "PhD 2163-2171 booklets/keys for all years (multi-code family) not yet acquired; only 2162 core + 2163/1399 bonus.",
+  "PhD 1403-1405 variant comparisons and the 1404 internal-header check still open.",
+  "Rights clearance unchanged: no republication permission; allowedUse stays empty."
+ ]
+}
