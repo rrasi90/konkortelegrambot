@@ -1101,7 +1101,7 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                   <div className="flex items-center gap-2">
                     <HelpCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                      بانک تست چهارگزینه‌ای و تشریحی کنکور ({activeBook.sampleKonkorQuestions.length} تست منتخب با کالبدشکافی کامل)
+                      بانک سؤال‌های منتخب و تمرین‌های تألیفی ({activeBook.sampleKonkorQuestions.length} مورد)
                     </h3>
                   </div>
 
@@ -1149,7 +1149,7 @@ export const LessonsLibraryView: React.FC<LessonsLibraryViewProps> = ({
                               مقطع {q.degreeLevel}
                             </span>
                             <span className="font-bold text-slate-800 dark:text-slate-200">
-                              {q.examTitle} — سال {q.examYear}
+                              {q.origin === 'authored_supplement' ? 'تمرین تألیفی مکمل — سؤال کنکور رسمی نیست' : `${q.examTitle} — سال ${q.examYear ?? 'نامشخص'}`}
                             </span>
                           </div>
                           <span className="text-slate-500 dark:text-slate-400">

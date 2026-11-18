@@ -6,11 +6,15 @@ export type ExamDegreeLevel = 'ارشد و دکتری' | 'ویژه کارشنا�
 export interface ReferenceBookQuestion {
   id: string;
   examTitle: string;
-  examYear: number;
+  /** فقط برای سؤال دارای سال/دفترچهٔ واقعی؛ برای تمرین تألیفی حذف می‌شود. */
+  examYear?: number;
   degreeLevel: 'ارشد' | 'دکتری';
   chapterTopic: string;
   questionText: string;
   options: [string, string, string, string];
+  /** منشأ صریح؛ legacy records بدون origin تا زمان ممیزی جداگانه حفظ می‌شوند. */
+  origin?: 'official_exam' | 'authored_supplement';
+  sourceReference?: string;
 }
 
 export interface ReferenceBookChapterSummary {
@@ -1382,7 +1386,7 @@ export const REFERENCE_BOOKS_DATABASE: ReferenceBookItem[] = [
 
 import { COURSE_ENCYCLOPEDIA_SUPPLEMENTS } from './comprehensiveCourseEncyclopedia';
 
-// ادغام خودکار دایرةالمعارف مکمل ۱۰۰ صفحه‌ای هر درس در بانک کتب مرجع
+// ادغام خودکار فصل‌ها، نکات و تمرین‌های تکمیلی در بانک کتب مرجع
 for (const supp of COURSE_ENCYCLOPEDIA_SUPPLEMENTS) {
   const targetBook = REFERENCE_BOOKS_DATABASE.find((b) => b.id === supp.bookId);
   if (targetBook) {
@@ -1410,14 +1414,14 @@ for (const supp of COURSE_ENCYCLOPEDIA_SUPPLEMENTS) {
  */
 export function generateBookHandoutMarkdown(book: ReferenceBookItem): string {
   const lines: string[] = [];
-  lines.push(`# جزوه جامع، خلاصه فصول و بانک تست تشریحی: ${book.courseName}`);
+  lines.push(`# جزوهٔ خلاصهٔ فصل‌ها، نکات مرجع و تمرین‌ها: ${book.courseName}`);
   lines.push(`**کتاب مرجع:** ${book.bookTitle}`);
   lines.push(`**مؤلفان:** ${book.authors}`);
   lines.push(`**انتشارات / گردآورندگان:** ${book.translatorsOrCompilers}`);
   lines.push(`**ضریب در کنکور ارشد:** ${book.coefficientMaster}`);
   lines.push(`**ضریب در کنکور دکتری:** ${book.coefficientPhd}`);
   lines.push(`\n---\n`);
-  lines.push(`## چرا این منبع در کنکور حیاتی است؟`);
+  lines.push(`## معرفی و جایگاه این منبع`);
   lines.push(book.whyImportant);
   lines.push(`\n---\n`);
   lines.push(`## بخش اول: خلاصه فصل‌به‌فصل و نکات کلیدی`);
@@ -1442,9 +1446,13 @@ export function generateBookHandoutMarkdown(book: ReferenceBookItem): string {
   });
 
   lines.push(`\n---\n`);
-  lines.push(`## بخش سوم: بانک تست چهارگزینه‌ای با پاسخ کاملاً تشریحی و تحلیل دام طراح`);
+  lines.push(`## بخش سوم: سؤال‌های منتخب و تمرین‌های تألیفی چهارگزینه‌ای`);
   book.sampleKonkorQuestions.forEach((q, idx) => {
-    lines.push(`\n### سؤال ${idx + 1} (${q.examTitle} — سال ${q.examYear} | مقطع ${q.degreeLevel} | مبحث: ${q.chapterTopic})`);
+    const provenance = q.origin === 'authored_supplement'
+      ? 'تمرین تألیفی مکمل — سؤال کنکور رسمی نیست'
+      : `${q.examTitle} — سال ${q.examYear ?? 'نامشخص'}`;
+    lines.push(`\n### سؤال ${idx + 1} (${provenance} | مقطع ${q.degreeLevel} | مبحث: ${q.chapterTopic})`);
+    if (q.sourceReference) lines.push(`**منشأ:** ${q.sourceReference}`);
     lines.push(`**صورت سؤال:** ${q.questionText}\n`);
     q.options.forEach((opt, oIdx) => {
       lines.push(`${oIdx + 1}) ${opt}`);
@@ -1456,7 +1464,7 @@ export function generateBookHandoutMarkdown(book: ReferenceBookItem): string {
 }
 
 export function generateAllBooksMasterHandoutMarkdown(): string {
-  const header = `# پکیج کامل جزوات خلاصه فصول، فرمول‌نامه و بانک تست تشریحی کنکور کارشناسی ارشد و دکتری مدیریت\nشامل هر ۷ درس طلایی کارشناسی ارشد مدیریت بازرگانی + منابع تخصصی مدیریت صنعتی و مدیریت فناوری\n\n====================\n\n`;
+  const header = `# بستهٔ جزوات، نکات مرجع، سؤال‌های منتخب و تمرین‌های تألیفی مدیریت\nشامل منابع منتخب برای دروس مدیریت بازرگانی، صنعتی و فناوری؛ میزان پوشش هر آزمون باید جداگانه راستی‌آزمایی شود\n\n====================\n\n`;
   return (
     header +
     REFERENCE_BOOKS_DATABASE.map((b) => generateBookHandoutMarkdown(b)).join(
