@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "sourceFile": "content/knowledge/syllabus-nodes.json",
-  "sourceRowCount": 24,
+  "sourceRowCount": 25,
   "courseGroupCount": 7,
-  "chapterCount": 24,
-  "topicCount": 24,
+  "chapterCount": 25,
+  "topicCount": 25,
   "status": "proposal_only_waiting_registry_course_definition_mapping",
   "note": "Chapter/topic tree is grouped from the explicit course and chapter fields. It is not yet importable as canonical Registry SyllabusNode because CourseDefinition.code has not been resolved. Existing topic IDs are preserved.",
   "courseGroups": [
@@ -115,6 +115,27 @@
               "parentId": "chapter.mb.leadership",
               "position": 0,
               "sourceSyllabusNodeId": "mb.leadership",
+              "track": "common",
+              "proposedStatus": "awaiting_registry_course_definition"
+            }
+          ]
+        },
+        {
+          "id": "chapter.mb.culture",
+          "title": "فرهنگ سازمانی",
+          "nodeKind": "chapter",
+          "parentId": null,
+          "position": 5,
+          "proposedStatus": "awaiting_registry_course_definition",
+          "sourceCourseTitle": "مبانی سازمان و مدیریت",
+          "children": [
+            {
+              "id": "mb.culture",
+              "title": "لایه‌های فرهنگ شاین و ابعاد دنیسون",
+              "nodeKind": "topic",
+              "parentId": "chapter.mb.culture",
+              "position": 0,
+              "sourceSyllabusNodeId": "mb.culture",
               "track": "common",
               "proposedStatus": "awaiting_registry_course_definition"
             }

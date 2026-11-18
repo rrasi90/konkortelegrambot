@@ -325,5 +325,45 @@
     "confusable_with": [],
     "difficulty_estimate": 70,
     "estimated_study_minutes": 45
+  },
+  {
+    "id": "skill.mb.culture.schein_denison",
+    "node_id": "mb.culture",
+    "title": "تحلیل لایه‌های فرهنگ شاین و ابعاد فرهنگ دنیسون",
+    "operational_definition": "توانایی تمایز مصنوعات، ارزش‌های اعلام‌شده و مفروضات بنیادین شاین و تحلیل چهار بعد درگیری، سازگاری، ثبات/یکپارچگی و مأموریت در مدل دنیسون.",
+    "cognitive_level": "Analysis",
+    "bloom_level": 4,
+    "prerequisites": [],
+    "confusable_with": [],
+    "difficulty_estimate": 70,
+    "estimated_study_minutes": 40
+  },
+  {
+    "id": "skill.mb.motivation.theory_classification",
+    "node_id": "mb.ob_motivation",
+    "title": "تمایز نظریه‌های محتوایی و فرایندی انگیزش",
+    "operational_definition": "توانایی طبقه‌بندی نظریه‌های مازلو، آلدرفر، هرزبرگ و مک‌کللند به‌عنوان محتوایی و تحلیل نظریه‌های انتظار وروم، برابری آدامز و هدف‌گذاری لاک به‌عنوان فرایندی.",
+    "cognitive_level": "Analysis",
+    "bloom_level": 4,
+    "prerequisites": [],
+    "confusable_with": [
+      "skill.mb.leadership.contingency_transformational"
+    ],
+    "difficulty_estimate": 70,
+    "estimated_study_minutes": 45
+  },
+  {
+    "id": "skill.mb.leadership.contingency_transformational",
+    "node_id": "mb.leadership",
+    "title": "مقایسه و کاربرد نظریه‌های اقتضایی و تحول‌آفرین رهبری",
+    "operational_definition": "توانایی تشخیص منطق فیدلر، هرسی-بلانچارد و مسیر-هدف و تمایز آن‌ها از رهبری تعاملی و تحول‌آفرین باس و آوولیو در سناریوهای سازمانی.",
+    "cognitive_level": "Analysis",
+    "bloom_level": 4,
+    "prerequisites": [],
+    "confusable_with": [
+      "skill.mb.motivation.theory_classification"
+    ],
+    "difficulty_estimate": 75,
+    "estimated_study_minutes": 45
   }
 ]

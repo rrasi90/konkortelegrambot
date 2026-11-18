@@ -1158,6 +1158,30 @@
       "targetKind": "skill",
       "targetId": "skill.ind.supply_chain",
       "note": "حوزه علمی از شناسه مهارت و پیوند آن با گره دانش."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "syllabus_node",
+      "targetId": "mb.culture",
+      "note": "تطبیق گره فرهنگ سازمانی در موتور با سرفصل."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "skill",
+      "targetId": "skill.mb.culture.schein_denison",
+      "note": "طبقه‌بندی حوزه علمی بر اساس گره دانش و تعریف مهارت."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "skill",
+      "targetId": "skill.mb.motivation.theory_classification",
+      "note": "طبقه‌بندی حوزه علمی بر اساس گره دانش و تعریف مهارت."
+    },
+    {
+      "tagId": "discipline.organizational-theory",
+      "targetKind": "skill",
+      "targetId": "skill.mb.leadership.contingency_transformational",
+      "note": "طبقه‌بندی حوزه علمی بر اساس گره دانش و تعریف مهارت."
     }
   ],
   "relations": [],

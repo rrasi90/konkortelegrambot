@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "updatedOn": "2026-11-12",
+  "policy": "هر نوبت فقط یک درس؛ تا زمانی که درس جاری DONE نشده، همان درس ادامه یابد.",
+  "activeCourseId": "course-org-theory",
+  "courses": [
+    {
+      "courseId": "course-org-theory",
+      "title": "مبانی سازمان و مدیریت",
+      "status": "IN_PROGRESS",
+      "branch": "audit/course-org-management-20261112",
+      "reportPath": "docs/ael-content/courses/course-org-theory-audit-2026-11-12-fa.md",
+      "openItems": [
+        "تکمیل گراف مبانی مدیریت، رفتار گروهی، یادگیری/تغییر، کنترل/بوروکراسی و سرمایه اجتماعی",
+        "بازتولید crosswalk و رفع ابهام CourseDefinition/subject mapping",
+        "مقابله سؤال‌ها با PDF دفترچه و کلید رسمی",
+        "تکمیل provenance صفحه/چاپ کتاب و حقوق نشر",
+        "بازبینی SME، تست رابط و اجرای CI"
+      ],
+      "nextAction": "ادامهٔ همین درس؛ به درس بعدی نروید."
+    }
+  ],
+  "statuses": [
+    "NOT_STARTED",
+    "IN_PROGRESS",
+    "BLOCKED",
+    "NEEDS_SOURCE",
+    "NEEDS_SME",
+    "TECHNICAL_PASS",
+    "SOURCE_VERIFIED",
+    "DONE"
+  ]
+}

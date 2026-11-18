@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { FLASHCARDS } from '../data/flashcards';
+import { FLASHCARD_EXPANSION } from '../data/flashcards-expansion';
 import { COURSE_ENCYCLOPEDIA_SUPPLEMENTS } from '../data/comprehensiveCourseEncyclopedia';
 import {
   REFERENCE_BOOKS_DATABASE,
@@ -26,6 +27,47 @@ function binomialUpperTail(n: number, k: number): number {
   return Array.from({ length: n - k + 1 }, (_, i) => choose(n, k + i))
     .reduce((sum, value) => sum + value, 0) / 2 ** n;
 }
+
+describe('ممیزی دقت فلش‌کارت‌های مبانی سازمان و مدیریت', () => {
+  const expansionCard = (id: string) => FLASHCARD_EXPANSION.find(item => item.id === id);
+  it('ترجمه و ابعاد مدل دنیسون را از هم تفکیک می‌کند', () => {
+    expect(card('fc-mb-005')?.back).toContain('ارزش‌های اعلام‌شده');
+    expect(card('fc-mb-006')?.back).toContain('انسجام/یکپارچگی');
+    expect(card('fc-mb-006')?.back).not.toContain('سازگاری درونی');
+  });
+  it('سلسله‌مراتب مازلو را قانون قطعیِ ارضای مرحله‌ای معرفی نمی‌کند', () => {
+    const back = expansionCard('fc-mb-007')?.back ?? '';
+    expect(back).not.toContain('اثر سرایت');
+    expect(back).toContain('قاعده‌ای قطعی');
+    expect(expansionCard('fc-mb-007')?.extra).toContain('حمایت جزئی');
+  });
+  it('والانس وروم را به‌درستی ارزش ذهنی پیامد می‌نامد', () => {
+    expect(expansionCard('fc-mb-009')?.back).toContain('والانس/ارزش ذهنی پیامد');
+    expect(expansionCard('fc-mb-009')?.back).not.toContain('سرشناختی');
+  });
+  it('نظریه Z را به‌صورت یک برچسب ساده بین X و Y توصیف نمی‌کند', () => {
+    const extra = expansionCard('fc-mb-010')?.extra ?? '';
+    expect(extra).toContain('نقطهٔ میانی');
+    expect(extra).toContain('مشارکت در تصمیم‌گیری');
+  });
+  it('رابطه MBO و نظریه هدف‌گذاری را به‌صورت هم‌پوشانی، نه هم‌ارزی، معرفی می‌کند', () => {
+    const extra = expansionCard('fc-mb-012')?.extra ?? '';
+    expect(extra).toContain('هم‌پوشانی دارد');
+    expect(extra).toContain('یک نظام مدیریتی است');
+  });
+  it('پنج بخش، پنج سازوکار هماهنگی و پنج پیکربندی مینتزبرگ را درست تفکیک می‌کند', () => {
+    const cardText = expansionCard('fc-mb-013')?.back ?? '';
+    const extra = expansionCard('fc-mb-013')?.extra ?? '';
+    for (const phrase of ['انطباق متقابل','سرپرستی مستقیم','استانداردسازی فرایندهای کار','استانداردسازی ستانده‌ها','استانداردسازی مهارت‌ها']) expect(cardText).toContain(phrase);
+    expect(cardText).not.toContain('عرف‌یابی');
+    expect(extra).toContain('ساختار ساده');
+    expect(extra).toContain('ساختار بخشی');
+    expect(extra).not.toContain('سیاسی');
+  });
+  it('مدل سه‌مرحله‌ای لوین را منشأ مستقیم همه مدل‌های بعدی ادعا نمی‌کند', () => {
+    expect(expansionCard('fc-mb-014')?.extra).toContain('مشتق مستقیم');
+  });
+});
 
 describe('ممیزی دقت محتوای آموزشی AEL — 2026-11-12', () => {
   it('هفت آموزهٔ هود را از تمثیل هدایت‌گری آزبورن و گبلر جدا نگه می‌دارد', () => {
