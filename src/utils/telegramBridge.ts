@@ -263,6 +263,10 @@ export type DeepLinkCommand =
   | { type: 'night_quiz' }
   | { type: 'placement' }
   | { type: 'zero_reset' }
+  | { type: 'flashcards' }
+  | { type: 'preferences' }
+  | { type: 'yearly_exams' }
+  | { type: 'lessons' }
   | { type: 'lesson'; nodeId: string }
   | { type: 'practice'; nodeId: string }
   | { type: 'proof'; nodeId: string };
@@ -281,6 +285,10 @@ export function parseTelegramStartParam(): DeepLinkCommand {
     if (raw === 'night_quiz') return { type: 'night_quiz' };
     if (raw === 'placement') return { type: 'placement' };
     if (raw === 'zero_reset') return { type: 'zero_reset' };
+    if (raw === 'flashcards') return { type: 'flashcards' };
+    if (raw === 'preferences') return { type: 'preferences' };
+    if (raw === 'yearly_exams') return { type: 'yearly_exams' };
+    if (raw === 'lessons') return { type: 'lessons' };
     if (raw.startsWith('lesson_')) {
       return { type: 'lesson', nodeId: raw.replace('lesson_', '') };
     }

@@ -27,3 +27,6 @@ __pycache__/
 /anki/
 /anki-extracted/
 dist-miniapp/
+
+# local dev-server pid
+.dev-server.pid

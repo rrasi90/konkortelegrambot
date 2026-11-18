@@ -1,0 +1,16 @@
+book.bus.kotler_jalilian                   درس‌سؤال=۳۹   فصل‌پوشش=10/10 خالی=0
+book.bus.english_eshraghi                  درس‌سؤال=۳۴   فصل‌پوشش=10/10 خالی=0
+book.bus.robbins_daft                      درس‌سؤال=۱۴۱  فصل‌پوشش=10/10 خالی=0
+book.bus.econ_nazari                       درس‌سؤال=۳۰   فصل‌پوشش=10/10 خالی=0
+book.bus.math_stats_ranjbaran_tourani      درس‌سؤال=۴۵   فصل‌پوشش=10/10 خالی=0
+book.bus.islamic_moghimi                   درس‌سؤال=۳۰   فصل‌پوشش=10/10 خالی=0
+book.bus.or_fadavi                         درس‌سؤال=۵۲   فصل‌پوشش=10/10 خالی=0
+book.bus.david_porter_mintzberg            درس‌سؤال=۱۴۱  فصل‌پوشش=10/10 خالی=0
+book.ind.or_mehregan_fadavi                درس‌سؤال=۵۲   فصل‌پوشش=10/10 خالی=0
+book.ind.pom_mottaghi_jafarnejad           درس‌سؤال=۴۷   فصل‌پوشش=10/10 خالی=0
+book.ind.mcdm_dea_queue                    درس‌سؤال=۵۲   فصل‌پوشش=10/10 خالی=0
+book.tech.schilling                        درس‌سؤال=۱۴۱  فصل‌پوشش=10/10 خالی=0
+book.tech.tidd_khalil                      درس‌سؤال=۱۴۱  فصل‌پوشش=10/10 خالی=0
+book.tech.chesbrough_rothwell_transfer     درس‌سؤال=۱۴۱  فصل‌پوشش=10/10 خالی=0
+
+مجموع فصل‌های بدون سؤال: ۰ — مجموع سؤال‌های متصل: ۸۲۶

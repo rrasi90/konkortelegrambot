@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   upsertMistake,
   markMistakeResolved,
+  setMistakeErrorType,
   removeMistake,
   clearResolvedMistakes,
   filterMistakes,
@@ -74,6 +75,10 @@ describe('notebook operations', () => {
 
   it('marks entries resolved', () => {
     expect(markMistakeResolved(entries, 'q.test.1')[0].resolved).toBe(true);
+  });
+
+  it('updates the recorded error reason', () => {
+    expect(setMistakeErrorType(entries, 'q.test.1', 'misread')[0].errorType).toBe('misread');
   });
 
   it('removes a single entry', () => {

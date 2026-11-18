@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useMemo, useRef } from 'react';
 import {
   createZeroStateEngine,
   hydrateAndReconcileSavedState,
@@ -46,12 +46,20 @@ import {
 import { DashboardView } from './components/DashboardView';
 import { StudySessionView } from './components/StudySessionView';
 import { gradeAnswerOnServer, GradingUnavailableError } from './lib/serverGrading';
-import { SkillTreeGraph } from './components/SkillTreeGraph';
 import { LessonsLibraryView } from './components/LessonsLibraryView';
 import { PlacementModal } from './components/PlacementModal';
 import { OnboardingModal, OnboardingResult } from './components/OnboardingModal';
-import { FlashcardStudyView } from './components/FlashcardStudyView';
-import { CodePatchesView } from './components/CodePatchesView';
+import { StudyPreferencesView } from './components/StudyPreferencesView';
+import { queueMistakeReview } from './utils/mistakeReview';
+import { countDueMistakeCards } from './utils/reviewToday';
+import { toFaDigits } from './utils/persianDigits';
+import { appendReviewLog } from './utils/reviewLog';
+import {
+  USER_FLASHCARDS_EVENT,
+  removeMistakeReviewCard,
+  setMistakeReviewCardReason,
+  setMistakeReviewCardSuspended,
+} from './utils/userFlashcards';
 import { TelegramBotSimulatorModal } from './components/TelegramBotSimulatorModal';
 import { YearlyKonkorExamView } from './components/YearlyKonkorExamView';
 import { MistakeNotebookView } from './components/MistakeNotebookView';
@@ -64,6 +72,7 @@ import {
   saveMistakeNotebook,
   upsertMistake,
   markMistakeResolved,
+  setMistakeErrorType,
   removeMistake,
   clearResolvedMistakes,
 } from './utils/mistakeNotebook';
@@ -86,6 +95,16 @@ import {
   X,
 } from 'lucide-react';
 
+const SkillTreeGraph = lazy(() => import('./components/SkillTreeGraph').then((module) => ({ default: module.SkillTreeGraph })));
+const ReviewBookView = lazy(() => import('./components/ReviewBookView').then((module) => ({ default: module.ReviewBookView })));
+const CodePatchesView = lazy(() => import('./components/CodePatchesView').then((module) => ({ default: module.CodePatchesView })));
+
+const ViewLoading: React.FC = () => (
+  <div className="py-16 text-center text-sm text-slate-500 dark:text-slate-400" role="status">
+    در حال بارگذاری…
+  </div>
+);
+
 type ActiveTab =
   | 'home'
   | 'study'
@@ -95,7 +114,8 @@ type ActiveTab =
   | 'subject_hub'
   | 'notebook'
   | 'patches'
-  | 'flashcards';
+  | 'flashcards'
+  | 'preferences';
 
 const LEGACY_PRACTICE_BANK = INITIAL_QUESTION_BANK.filter((question) => !question.isQuarantinedProof);
 
@@ -154,6 +174,9 @@ export default function App() {
     loadMistakeNotebook()
   );
   const [sessionKey, setSessionKey] = useState<number>(0);
+  const [dueMistakeCards, setDueMistakeCards] = useState<number>(0);
+  const [pendingCardReview, setPendingCardReview] = useState<boolean>(false);
+  const [dailyReviewFlow, setDailyReviewFlow] = useState<boolean>(false);
   const [customSessionQueue, setCustomSessionQueue] = useState<ReviewCard[] | null>(
     null
   );
@@ -237,6 +260,20 @@ export default function App() {
   useEffect(() => {
     saveMistakeNotebook(mistakeEntries);
   }, [mistakeEntries]);
+
+  // کارت‌های خطای سررسید، بخشی از «مرور امروز» هستند.
+  useEffect(() => {
+    const refreshDue = () => setDueMistakeCards(countDueMistakeCards());
+    refreshDue();
+    window.addEventListener('ael:flashcard-schedule-changed', refreshDue);
+    window.addEventListener(USER_FLASHCARDS_EVENT, refreshDue);
+    window.addEventListener('storage', refreshDue);
+    return () => {
+      window.removeEventListener('ael:flashcard-schedule-changed', refreshDue);
+      window.removeEventListener(USER_FLASHCARDS_EVENT, refreshDue);
+      window.removeEventListener('storage', refreshDue);
+    };
+  }, []);
 
   // ۴. همگام‌سازی دکمه بازگشت بومی تلگرام (BackButton) و هشدار خروج در جلسه تست
   useEffect(() => {
@@ -368,6 +405,8 @@ export default function App() {
     if (!question) return;
     if (wasCorrect) {
       setMistakeEntries((prev) => markMistakeResolved(prev, question.id, true));
+      // کارت مرور مشتق‌شده از این خطا هم از صف خارج می‌شود؛ منبع حقیقت دفتر خطاست.
+      setMistakeReviewCardSuspended(question.id, true);
       return;
     }
     const node = nodes.find((n) => n.id === question.nodeId);
@@ -415,20 +454,52 @@ export default function App() {
 
     if (queue.length === 0) return;
     setIsNightQuizMode(false);
+    setDailyReviewFlow(false);
+    setPendingCardReview(false);
     setCustomSessionQueue(queue);
     setSessionKey((prev) => prev + 1);
     setActiveTab('study');
   };
 
-  // هندلر شروع جلسه روزانه استاندارد
+  // هندلر شروع جلسه روزانه استاندارد — سؤال‌ها و کارت‌های خطا یک جریان دارند.
   const handleStartDailySession = () => {
     tmaHaptic.impact('medium');
+    const dueCards = countDueMistakeCards();
+    setDueMistakeCards(dueCards);
     setIsNightQuizMode(false);
+    if (dailyQueue.length === 0 && dueCards > 0) {
+      setDailyReviewFlow(false);
+      setPendingCardReview(false);
+      setCustomSessionQueue(null);
+      setActiveTab('flashcards');
+      return;
+    }
+    setDailyReviewFlow(true);
+    setPendingCardReview(dueCards > 0);
     // صف جلسه را در لحظه شروع «قفل» می‌کنیم؛ وگرنه با هر پاسخ،
     // اولویت‌ها دوباره محاسبه می‌شوند و کارت زیر دست کاربر عوض می‌شود.
     setCustomSessionQueue(dailyQueue);
     setSessionKey((prev) => prev + 1);
     setActiveTab('study');
+  };
+
+  const handleStartFlashcardReview = () => {
+    setDailyReviewFlow(false);
+    setPendingCardReview(false);
+    setDueMistakeCards(countDueMistakeCards());
+    setActiveTab('flashcards');
+  };
+
+  const handleRecordMistakeReason = (questionId: string, errorType: MistakeErrorType) => {
+    setMistakeEntries((prev) => setMistakeErrorType(prev, questionId, errorType));
+    if (
+      errorType === 'concept_gap' ||
+      errorType === 'prerequisite_failure' ||
+      errorType === 'misread' ||
+      errorType === 'slip'
+    ) {
+      setMistakeReviewCardReason(questionId, errorType);
+    }
   };
 
   // هندلر شروع کوییز شبانه (Verification Mode)
@@ -455,6 +526,8 @@ export default function App() {
       .filter((c): c is ReviewCard => c !== null);
 
     setIsNightQuizMode(true);
+    setDailyReviewFlow(false);
+    setPendingCardReview(false);
     setCustomSessionQueue(nightCards);
     setSessionKey((prev) => prev + 1);
     setActiveTab('study');
@@ -490,6 +563,8 @@ export default function App() {
           fsrs: initFSRS(now),
         }));
       setIsNightQuizMode(false);
+      setDailyReviewFlow(false);
+      setPendingCardReview(false);
       setCustomSessionQueue([remCard, ...nodeQuestions]);
       setSessionKey((prev) => prev + 1);
       setActiveTab('study');
@@ -513,6 +588,8 @@ export default function App() {
 
     if (nodeQuestions.length > 0) {
       setIsNightQuizMode(false);
+      setDailyReviewFlow(false);
+      setPendingCardReview(false);
       setCustomSessionQueue(nodeQuestions);
       setSessionKey((prev) => prev + 1);
       setActiveTab('study');
@@ -537,6 +614,8 @@ export default function App() {
 
     if (courseQueue.length > 0) {
       setIsNightQuizMode(false);
+      setDailyReviewFlow(false);
+      setPendingCardReview(false);
       setCustomSessionQueue(courseQueue);
       setSessionKey((prev) => prev + 1);
       setActiveTab('study');
@@ -559,6 +638,14 @@ export default function App() {
       handleStartPracticeNode(cmd.nodeId, 'practice');
     } else if (cmd.type === 'proof') {
       handleStartPracticeNode(cmd.nodeId, 'proof');
+    } else if (cmd.type === 'flashcards') {
+      setActiveTab('flashcards');
+    } else if (cmd.type === 'preferences') {
+      setActiveTab('preferences');
+    } else if (cmd.type === 'yearly_exams') {
+      setActiveTab('exams');
+    } else if (cmd.type === 'lessons') {
+      setActiveTab('lessons');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -698,7 +785,7 @@ export default function App() {
             <button
               type="button"
               onClick={handleStartDailySession}
-              className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all active:scale-95 whitespace-nowrap shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
+              className="px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-slate-800 dark:text-slate-100 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 hover:border-blue-500 rounded-xl transition-all active:scale-95 whitespace-nowrap shrink-0 flex items-center gap-1 cursor-pointer shadow-xs"
             >
               <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
               <span className="hidden sm:inline">مرور امروز</span>
@@ -755,6 +842,8 @@ export default function App() {
             stats={stats}
             nodeStates={nodeStates}
             queue={dailyQueue}
+            dueMistakeCards={dueMistakeCards}
+            onStartFlashcardReview={handleStartFlashcardReview}
             roiRankings={roiRankings}
             examFrequencyList={examFrequencyList}
             onStartDailySession={handleStartDailySession}
@@ -854,6 +943,14 @@ export default function App() {
               const answeredQuestion = card.questionId
                 ? questions.find((q) => q.id === card.questionId)
                 : undefined;
+              const reviewCard = answeredQuestion && reveal && !result.report.wasCorrect && !result.report.wasSkipped
+                ? queueMistakeReview(answeredQuestion, selectedOption, reveal)
+                : null;
+              // اگر در «مرور امروز» کارت تازه ساخته شد، همان جریان امروز آن را نشان می‌دهد.
+              if (dailyReviewFlow && reviewCard?.queued) {
+                setPendingCardReview(true);
+                setDueMistakeCards(countDueMistakeCards());
+              }
               recordAnswerInNotebook(
                 answeredQuestion,
                 selectedOption,
@@ -861,6 +958,21 @@ export default function App() {
                 result.report.errorType as MistakeErrorType,
                 reveal
               );
+              const answeredNode = nodes.find((item) => item.id === card.nodeId);
+              appendReviewLog({
+                cardId: card.id,
+                source: 'question',
+                at: new Date().toISOString(),
+                result: result.report.wasSkipped
+                  ? 'skipped'
+                  : result.report.wasCorrect
+                    ? 'correct'
+                    : 'wrong',
+                durationMs: responseTimeMs,
+                courseId: answeredNode?.course ?? '',
+                courseTitle: answeredNode?.course ?? '',
+                nodeId: card.nodeId,
+              });
 
               if (customSessionQueue && result.report.spawnedCards.length > 0) {
                 const newReviewCards = result.nextCards.filter((nc) =>
@@ -871,7 +983,7 @@ export default function App() {
                 );
               }
 
-              return { report: result.report, snapshot: result.snapshot, reveal };
+              return { report: result.report, snapshot: result.snapshot, reveal, reviewCard };
             }}
             onRollbackSlip={(snapshot, report) => {
               const restored = rollbackSlipPenalty(snapshot, report);
@@ -893,7 +1005,14 @@ export default function App() {
             }}
             onExitSession={() => {
               setCustomSessionQueue(null);
-              setActiveTab('home');
+              setDailyReviewFlow(false);
+              if (pendingCardReview) {
+                setPendingCardReview(false);
+                setDueMistakeCards(countDueMistakeCards());
+                setActiveTab('flashcards');
+              } else {
+                setActiveTab('home');
+              }
             }}
             onOpenLessonNode={(nodeId) => {
               setSelectedLessonNodeId(nodeId);
@@ -901,6 +1020,12 @@ export default function App() {
             }}
             onOpenMistakeNotebook={() => setActiveTab('notebook')}
             onRestartMistakes={handleStartMistakeSession}
+            onRecordMistakeReason={handleRecordMistakeReason}
+            nextSegmentLabel={
+              pendingCardReview
+                ? `${toFaDigits(dueMistakeCards)} کارت خطا در صف مرور`
+                : undefined
+            }
           />
         )}
 
@@ -913,35 +1038,43 @@ export default function App() {
               setSelectedLessonNodeId(nodeId);
               setActiveTab('lessons');
             }}
-            onToggleResolved={(questionId, resolved) =>
+            onToggleResolved={(questionId, resolved) => {
               setMistakeEntries((prev) =>
                 markMistakeResolved(prev, questionId, resolved)
-              )
-            }
-            onRemove={(questionId) =>
-              setMistakeEntries((prev) => removeMistake(prev, questionId))
-            }
-            onClearResolved={() =>
-              setMistakeEntries((prev) => clearResolvedMistakes(prev))
-            }
+              );
+              setMistakeReviewCardSuspended(questionId, resolved);
+            }}
+            onRemove={(questionId) => {
+              setMistakeEntries((prev) => removeMistake(prev, questionId));
+              removeMistakeReviewCard(questionId);
+            }}
+            onClearResolved={() => {
+              const resolvedIds = mistakeEntries
+                .filter((entry) => entry.resolved)
+                .map((entry) => entry.questionId);
+              resolvedIds.forEach((questionId) => removeMistakeReviewCard(questionId));
+              setMistakeEntries((prev) => clearResolvedMistakes(prev));
+            }}
           />
         )}
 
         {activeTab === 'map' && (
-          <SkillTreeGraph
-            nodes={nodes}
-            dependencies={dependencies}
-            questions={questions}
-            lessons={lessons}
-            nodeStates={nodeStates}
-            roiRankings={roiRankings}
-            examFrequencyMap={examFrequencyMap}
-            onStartPracticeNode={handleStartPracticeNode}
-            onOpenLessonNode={(nodeId) => {
-              setSelectedLessonNodeId(nodeId);
-              setActiveTab('lessons');
-            }}
-          />
+          <Suspense fallback={<ViewLoading />}>
+            <SkillTreeGraph
+              nodes={nodes}
+              dependencies={dependencies}
+              questions={questions}
+              lessons={lessons}
+              nodeStates={nodeStates}
+              roiRankings={roiRankings}
+              examFrequencyMap={examFrequencyMap}
+              onStartPracticeNode={handleStartPracticeNode}
+              onOpenLessonNode={(nodeId) => {
+                setSelectedLessonNodeId(nodeId);
+                setActiveTab('lessons');
+              }}
+            />
+          </Suspense>
         )}
 
         {activeTab === 'lessons' && (
@@ -969,6 +1102,7 @@ export default function App() {
                 selectedMajorBranch: branch,
               }))
             }
+            onRecordMistakeReason={handleRecordMistakeReason}
             onRecordQuestionAttempt={(question, selectedOption) => {
               if (question.isQuarantinedProof || !nodes.some((node) => node.id === question.nodeId) ||
                   !questions.some((item) => item.id === question.id && item.nodeId === question.nodeId && !item.isQuarantinedProof)) return;
@@ -1039,6 +1173,8 @@ export default function App() {
 
               if (yearQueue.length > 0) {
                 setIsNightQuizMode(false);
+                setDailyReviewFlow(false);
+                setPendingCardReview(false);
                 setCustomSessionQueue(yearQueue);
                 setSessionKey((prev) => prev + 1);
                 setActiveTab('study');
@@ -1067,7 +1203,25 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'patches' && <CodePatchesView />}
+        {activeTab === 'patches' && (
+          <Suspense fallback={<ViewLoading />}>
+            <CodePatchesView />
+          </Suspense>
+        )}
+
+        {activeTab === 'flashcards' && (
+          <Suspense fallback={<ViewLoading />}>
+            <ReviewBookView
+              onOpenLessonNode={(nodeId) => {
+                setSelectedLessonNodeId(nodeId);
+                setActiveTab('lessons');
+              }}
+              onExit={() => setActiveTab('home')}
+            />
+          </Suspense>
+        )}
+
+        {activeTab === 'preferences' && <StudyPreferencesView onboarding={onboarding} />}
       </main>
 
       {/* نوار ناوبری پایین موبایل — شناور Warm Charcoal (AEL Visual Language) */}
@@ -1116,7 +1270,7 @@ export default function App() {
             aria-expanded={isMoreMenuOpen}
             aria-haspopup="menu"
             className={`flex flex-col items-center justify-center py-1.5 rounded-2xl text-[10px] font-medium transition-all active:scale-95 cursor-pointer min-h-[52px] ${
-              ['subject_hub', 'map', 'notebook', 'patches'].includes(activeTab)
+              ['subject_hub', 'map', 'notebook', 'patches', 'flashcards', 'preferences'].includes(activeTab)
                 ? 'text-[#36c4bd] dark:text-[#36c4bd] font-bold bg-[#36c4bd]/13'
                 : 'text-slate-500 dark:text-[#b1b0b0]'
             }`}
@@ -1152,6 +1306,8 @@ export default function App() {
               { id: 'subject_hub' as ActiveTab, label: 'مطالعه تفکیکی درس‌به‌درس', icon: Sparkles },
               { id: 'map' as ActiveTab, label: 'درخت مهارت و نقشه تسلط', icon: Layers },
               { id: 'notebook' as ActiveTab, label: 'دفتر خطا و مرور اشتباه‌ها', icon: BookMarked },
+              { id: 'flashcards' as ActiveTab, label: 'مرور کتاب و فلش‌کارت', icon: Layers },
+              { id: 'preferences' as ActiveTab, label: 'هدف دوم و یادآور', icon: Target },
             ].map((item) => {
               const Icon = item.icon;
               return (

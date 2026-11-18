@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1412">
+  <title>امروز | AEL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+
+      /* 60%: canvas and neutral surfaces */
+      --ink: #0b1412;
+      --surface: #14201d;
+      --surface-2: #1d2c28;
+
+      /* 30%: text, borders, structure */
+      --text: #f3faf6;
+      --text-2: #a8bbb4;
+      --text-3: #8aa199;
+      --border: rgba(180, 255, 235, 0.1);
+      --border-strong: rgba(180, 255, 235, 0.18);
+
+      /* 10%: action and attention */
+      --teal: #2fe0b0;
+      --teal-ink: #04231b;
+      --amber: #ffb45e;
+
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #080f0e;
+      color: var(--text);
+    }
+
+    body {
+      font-family: 'Vazirmatn', Tahoma, sans-serif;
+      font-size: 16px;
+      line-height: 1.9;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button, summary { font: inherit; }
+
+    button {
+      color: inherit;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:focus-visible,
+    summary:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
+    }
+
+    ::selection {
+      background: rgba(47, 224, 176, 0.28);
+      color: var(--text);
+    }
+
+    .preview-note {
+      display: none;
+      text-align: center;
+      padding: 18px 16px 0;
+      font-size: 12px;
+      color: var(--text-3);
+    }
+
+    .app {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: 0 16px 116px;
+      background: var(--ink);
+      position: relative;
+    }
+
+    @media (min-width: 560px) {
+      .preview-note { display: block; }
+      .app {
+        border-inline: 1px solid var(--border);
+        box-shadow: 0 0 80px rgba(0, 0, 0, 0.45);
+      }
+    }
+
+    /* ---------- header ---------- */
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: max(20px, env(safe-area-inset-top)) 0 14px;
+      background: var(--ink);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .context {
+      margin: 0 0 2px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text-2);
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .icon-btn:hover { background: var(--surface); border-color: var(--border-strong); }
+    .icon-btn:active { transform: scale(0.97); }
+
+    /* ---------- next step ---------- */
+
+    .hero {
+      margin-top: 10px;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-inline-start: 3px solid var(--teal);
+      border-radius: var(--radius);
+    }
+
+    .hero-top { margin-bottom: 10px; }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--amber);
+      line-height: 1.4;
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .hero p {
+      margin: 8px 0 0;
+      font-size: 16px;
+      line-height: 1.9;
+      color: var(--text-2);
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--text-2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .primary {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--teal);
+      color: var(--teal-ink);
+      font-size: 15px;
+      font-weight: 800;
+      box-shadow: 0 8px 24px rgba(47, 224, 176, 0.18);
+      transition: filter 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+    }
+
+    .primary:hover {
+      filter: brightness(1.06);
+      box-shadow: 0 10px 30px rgba(47, 224, 176, 0.26);
+    }
+    .primary:active { transform: scale(0.99); }
+
+    .why {
+      margin: 10px 0 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--text-3);
+    }
+
+    /* ---------- sections ---------- */
+
+    .section { margin-top: 28px; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .section-head::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .list {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .row {
+      width: 100%;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 0;
+      border-bottom: 1px solid var(--border);
+      background: transparent;
+      text-align: start;
+    }
+
+    .row:last-child { border-bottom: 0; }
+    .row:hover { background: var(--surface-2); }
+    .row:active { background: var(--surface-2); }
+
+    .row.current { background: rgba(47, 224, 176, 0.07); }
+    .row.current:hover { background: rgba(47, 224, 176, 0.11); }
+
+    .row-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: var(--surface-2);
+      color: var(--text-2);
+    }
+
+    .row.current .row-icon { color: var(--teal); }
+
+    .row-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .row-title {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .row-meta {
+      display: block;
+      margin-top: 2px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .row-state {
+      flex-shrink: 0;
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text-3);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .row-state.active { color: var(--teal); }
+
+    .chev {
+      flex-shrink: 0;
+      color: var(--text-3);
+    }
+
+    /* ---------- stats ---------- */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .stat {
+      padding: 16px 8px;
+      text-align: center;
+      border-inline-start: 1px solid var(--border);
+    }
+
+    .stat:first-child { border-inline-start: 0; }
+
+    .stat b {
+      display: block;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat b.streak {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      color: var(--amber);
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-2);
+    }
+
+    /* ---------- tools ---------- */
+
+    .tools {
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      padding-top: 6px;
+    }
+
+    .tools summary {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      list-style: none;
+      color: var(--text-2);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tools summary::-webkit-details-marker { display: none; }
+
+    .tools summary .summary-end {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-3);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .tools summary svg { transition: transform 0.15s ease; }
+    .tools[open] summary svg { transform: rotate(180deg); }
+
+    .tool-list {
+      display: grid;
+      gap: 8px;
+      padding: 6px 0 0;
+    }
+
+    .tool {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text-2);
+      font-size: 15px;
+      text-align: start;
+    }
+
+    .tool:hover { border-color: var(--border-strong); color: var(--text); }
+
+    .tool svg { color: var(--text-3); flex-shrink: 0; }
+
+    /* ---------- bottom navigation ---------- */
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      inset-inline: 0;
+      z-index: 20;
+      width: 100%;
+      max-width: 430px;
+      margin-inline: auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      padding: 6px 8px max(8px, env(safe-area-inset-bottom));
+      background: var(--surface);
+      border-top: 1px solid var(--border-strong);
+    }
+
+    .nav-item {
+      min-height: 56px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text-3);
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .nav-item:hover { color: var(--text-2); }
+
+    .nav-item[aria-current="page"] {
+      color: var(--teal);
+      background: rgba(47, 224, 176, 0.12);
+    }
+
+    .nav-item svg { flex-shrink: 0; }
+
+    /* ---------- toast ---------- */
+
+    .toast {
+      position: fixed;
+      bottom: 84px;
+      inset-inline: 16px;
+      z-index: 30;
+      max-width: 398px;
+      margin-inline: auto;
+      padding: 10px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      background: var(--surface-2);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.7;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <p class="preview-note">پیش‌نمایش طراحی · دادهٔ نمونه · بدون اتصال به محصول</p>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-text">
+        <p class="context"><span class="countdown">۲۳ روز تا آزمون</span> · ارشد بازرگانی</p>
+        <h1>امروز</h1>
+      </div>
+      <button class="icon-btn" type="button" aria-label="تنظیمات">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="next-step-title">
+        <div class="hero-top">
+          <span class="eyebrow">قدم بعدی</span>
+        </div>
+        <h2 id="next-step-title">مرور ۱۲ کارت امروز</h2>
+        <p>۹ مرور تازه و ۳ کارت سررسید شده در صف شماست.</p>
+        <div class="hero-meta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 7v5l3 2"></path>
+          </svg>
+          <span>۸ دقیقه</span>
+        </div>
+        <button class="primary" type="button" id="start-review">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="m7 4 12 8-12 8z"></path>
+          </svg>
+          <span>شروع مرور</span>
+        </button>
+        <p class="why">چرا این؟ ضریب بالای مبحث و افت تسلط.</p>
+      </section>
+
+      <section class="section" aria-labelledby="plan-title">
+        <div class="section-head">
+          <h2 id="plan-title">برنامهٔ امروز</h2>
+        </div>
+        <div class="list">
+          <button class="row current" type="button">
+            <span class="row-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 2v6h6"></path>
+                <path d="M3.5 8a9 9 0 1 0 2.1-5.7"></path>
+                <path d="M12 7v5l3 2"></path>
+              </svg>
+            </span>
+            <span class="row-body">
+              <span class="row-title">مرور ۱۲ کارت</span>
+              <span class="row-meta">۳ سررسید · ۸ دقیقه</span>
+            </span>
+            <span class="row-state active">در جریان</span>
+            <span class="chev" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+            </span>
+          </button>
+
+          <button class="row" type="button">
+            <span class="row-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"></circle>
+                <circle cx="12" cy="12" r="5"></circle>
+                <circle cx="12" cy="12" r="1.5"></circle>
+              </svg>
+            </span>
+            <span class="row-body">
+              <span class="row-title">تمرین ۱۰ تست</span>
+              <span class="row-meta">از ضعیف‌ترین مباحث · ۱۵ دقیقه</span>
+            </span>
+            <span class="row-state">شروع</span>
+            <span class="chev" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+            </span>
+          </button>
+
+          <button class="row" type="button">
+            <span class="row-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v18H6.5A2.5 2.5 0 0 1 4 18.5z"></path>
+                <path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"></path>
+              </svg>
+            </span>
+            <span class="row-body">
+              <span class="row-title">درسنامه: ساختار سازمانی</span>
+              <span class="row-meta">فصل ۳ · ۲۰ دقیقه</span>
+            </span>
+            <span class="row-state">شروع</span>
+            <span class="chev" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <section class="section" aria-label="وضعیت یادگیری">
+        <div class="stats">
+          <div class="stat">
+            <b>۴۲٪</b>
+            <span>تسلط</span>
+          </div>
+          <div class="stat">
+            <b>۶۸٪</b>
+            <span>دقت</span>
+          </div>
+          <div class="stat">
+            <b class="streak">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M8.5 14.5A5.5 5.5 0 0 0 12 22a5.5 5.5 0 0 0 5.5-5.5c0-2.5-1.5-4.5-3-6.5-.5 1.5-1.5 2-2 2 .5-2.5-.5-5.5-2.5-8-1 3.5-1.5 5.5-1.5 8.5z"></path>
+              </svg>
+              ۵ روز
+            </b>
+            <span>پیوسته</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="continue-title">
+        <div class="section-head">
+          <h2 id="continue-title">ادامهٔ مطالعه</h2>
+        </div>
+        <div class="list">
+          <button class="row" type="button">
+            <span class="row-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 7v14"></path>
+                <path d="M3 18a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-5a4 4 0 0 0-4 4 4 4 0 0 0-4-4z"></path>
+              </svg>
+            </span>
+            <span class="row-body">
+              <span class="row-title">ساختار سازمانی</span>
+              <span class="row-meta">فصل ۳ · از ۸ فصل</span>
+            </span>
+            <span class="chev" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <details class="tools">
+        <summary>
+          <span>ابزارها</span>
+          <span class="summary-end">
+            <span>۲ مورد</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+          </span>
+        </summary>
+        <div class="tool-list">
+          <button class="tool" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3v3"></path><path d="M12 18v3"></path><path d="M3 12h3"></path><path d="M18 12h3"></path><circle cx="12" cy="12" r="5"></circle>
+            </svg>
+            <span>تعیین سطح</span>
+          </button>
+          <button class="tool" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path>
+            </svg>
+            <span>کوییز شبانه</span>
+          </button>
+        </div>
+      </details>
+    </main>
+
+    <nav class="bottom-nav" aria-label="ناوبری اصلی">
+      <button class="nav-item" type="button" aria-current="page">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"></path>
+        </svg>
+        <span>امروز</span>
+      </button>
+      <button class="nav-item" type="button">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 7v14"></path>
+          <path d="M3 18a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-5a4 4 0 0 0-4 4 4 4 0 0 0-4-4z"></path>
+        </svg>
+        <span>مطالعه</span>
+      </button>
+      <button class="nav-item" type="button">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1.5"></circle>
+        </svg>
+        <span>تمرین</span>
+      </button>
+      <button class="nav-item" type="button">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 3v18h18"></path><path d="M7 16v-5"></path><path d="M12 16V8"></path><path d="M17 16v-3"></path>
+        </svg>
+        <span>پیشرفت</span>
+      </button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">در نسخهٔ کامل، جلسهٔ مرور باز می‌شود.</div>
+
+  <script>
+    const startButton = document.getElementById('start-review');
+    const toast = document.getElementById('toast');
+    let toastTimer;
+
+    startButton.addEventListener('click', () => {
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    });
+  </script>
+</body>
+</html>

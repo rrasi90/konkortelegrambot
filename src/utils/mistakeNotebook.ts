@@ -166,6 +166,17 @@ export function markMistakeResolved(
   );
 }
 
+/** ثبت یا اصلاح علت خطا؛ برای هدفمندکردن کارت مرور همان پرسش. */
+export function setMistakeErrorType(
+  entries: MistakeEntry[],
+  questionId: string,
+  errorType: MistakeErrorType
+): MistakeEntry[] {
+  return entries.map((e) =>
+    e.questionId === questionId ? { ...e, errorType } : e
+  );
+}
+
 export function removeMistake(
   entries: MistakeEntry[],
   questionId: string

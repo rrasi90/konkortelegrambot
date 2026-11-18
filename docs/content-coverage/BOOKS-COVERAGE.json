@@ -1,0 +1,2238 @@
+[
+ {
+  "bookId": "book.bus.kotler_jalilian",
+  "title": "مرجع کامل مدیریت بازاریابی (دکتر حسین جلیلیان) + بازاریابی (رضا مروج) + کتاب ۲۰۰۰ تست بازاریابی",
+  "authors": "دکتر حسین جلیلیان / رضا مروج / فیلیپ کاتلر و کوین لین کلر / روستا، ونوس و ابراهیمی",
+  "courseName": "۱. مدیریت بازاریابی (جامع جلیلیان + رضا مروج + ۲۰۰۰ تست)",
+  "linkedNodes": [
+   "mkt.plc"
+  ],
+  "chapters": [
+   {
+    "id": "ch.kotler.1",
+    "number": "۱",
+    "title": "مفاهیم پایه، فلسفه‌های پنج‌گانه و هشت حالت تقاضا",
+    "examCount": 4,
+    "nodes": [
+     "mkt.plc"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 3,
+    "questions": 8,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.1.md"
+   },
+   {
+    "id": "ch.kotler.4",
+    "number": "۴",
+    "title": "بخش‌بندی، هدف‌گذاری و جایگاه‌یابی (STP)",
+    "examCount": 4,
+    "nodes": [
+     "mkt.brand",
+     "mkt.consumer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.4.md"
+   },
+   {
+    "id": "ch.kotler.3",
+    "number": "۳",
+    "title": "رفتار مصرف‌کننده و رفتار خرید سازمانی",
+    "examCount": 3,
+    "nodes": [
+     "mkt.consumer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.3.md"
+   },
+   {
+    "id": "ch.kotler.5",
+    "number": "۵",
+    "title": "مدیریت محصول، برند و توسعهٔ محصول جدید",
+    "examCount": 3,
+    "nodes": [
+     "mkt.brand"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 1,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.5.md"
+   },
+   {
+    "id": "ch.kotler.6",
+    "number": "۶",
+    "title": "چرخهٔ عمر محصول و استراتژی‌های هر مرحله",
+    "examCount": 3,
+    "nodes": [
+     "mkt.plc"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 8,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.6.md"
+   },
+   {
+    "id": "ch.kotler.2",
+    "number": "۲",
+    "title": "محیط بازاریابی، نظام اطلاعات و تحقیقات بازار",
+    "examCount": 2,
+    "nodes": [
+     "mkt.plc"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 8,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.2.md"
+   },
+   {
+    "id": "ch.kotler.7",
+    "number": "۷",
+    "title": "قیمت‌گذاری: روش‌ها، کشش و ترفندهای روانی",
+    "examCount": 2,
+    "nodes": [
+     "mkt.plc"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 8,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.7.md"
+   },
+   {
+    "id": "ch.kotler.8",
+    "number": "۸",
+    "title": "کانال توزیع، خرده‌فروشی و عمده‌فروشی",
+    "examCount": 2,
+    "nodes": [
+     "mkt.plc"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 8,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.8.md"
+   },
+   {
+    "id": "ch.kotler.9",
+    "number": "۹",
+    "title": "ارتباطات بازاریابی یکپارچه (IMC) و ترویج",
+    "examCount": 2,
+    "nodes": [
+     "mkt.consumer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.9.md"
+   },
+   {
+    "id": "ch.kotler.10",
+    "number": "۱۰",
+    "title": "بازاریابی خدمات، رابطه‌مند و دیجیتال",
+    "examCount": 2,
+    "nodes": [
+     "mkt.plc"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 3,
+    "questions": 8,
+    "md": "content-coverage\\book-chapters\\book.bus.kotler_jalilian\\ch.kotler.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 3,
+   "withCards": 10,
+   "withQuestions": 10,
+   "totalCards": 6,
+   "totalQuestions": 17
+  }
+ },
+ {
+  "bookId": "book.bus.english_eshraghi",
+  "title": "زبان عمومی ارشد زیر ذره‌بین (جهانشاهی و حجازی) + زبان تخصصی مدیریت (آرمان اشراقی / دکتر ناصرزاده)",
+  "authors": "هادی جهانشاهی و حجازی (زبان عمومی) / آرمان اشراقی و دکتر ناصرزاده (زبان تخصصی مدیریت)",
+  "courseName": "زبان عمومی و تخصصی انگلیسی (زیر ذره‌بین جهانشاهی + تخصصی آرمان اشراقی)",
+  "linkedNodes": [
+   "bus.english_eshraghi"
+  ],
+  "chapters": [
+   {
+    "id": "ch.eng.1",
+    "number": "۱",
+    "title": "واژگان پرتکرار متون مدیریت (کونتز، استونر، رابینز)",
+    "examCount": 4,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.1.md"
+   },
+   {
+    "id": "ch.eng.4",
+    "number": "۴",
+    "title": "وارونگی و ساختارهای تأکیدی",
+    "examCount": 3,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.4.md"
+   },
+   {
+    "id": "ch.eng.7",
+    "number": "۷",
+    "title": "کلوز تست: تکنیک و حذف گزینه",
+    "examCount": 3,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.7.md"
+   },
+   {
+    "id": "ch.eng.8",
+    "number": "۸",
+    "title": "درک مطلب: سؤال جزئیات و استنباط",
+    "examCount": 3,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.8.md"
+   },
+   {
+    "id": "ch.eng.2",
+    "number": "۲",
+    "title": "هم‌آیندها (Collocations) و اصطلاحات ثابت",
+    "examCount": 2,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.2.md"
+   },
+   {
+    "id": "ch.eng.3",
+    "number": "۳",
+    "title": "زمان‌ها و تطابق فاعل و فعل",
+    "examCount": 2,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.3.md"
+   },
+   {
+    "id": "ch.eng.5",
+    "number": "۵",
+    "title": "جملات شرطی و وجه التزامی",
+    "examCount": 2,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.5.md"
+   },
+   {
+    "id": "ch.eng.9",
+    "number": "۹",
+    "title": "درک مطلب: ایدهٔ اصلی، عنوان و نگرش نویسنده",
+    "examCount": 2,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.9.md"
+   },
+   {
+    "id": "ch.eng.6",
+    "number": "۶",
+    "title": "معلوم، مجهول و نقل قول",
+    "examCount": 1,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.6.md"
+   },
+   {
+    "id": "ch.eng.10",
+    "number": "۱۰",
+    "title": "مدیریت زمان و ترتیب پاسخ‌دهی در آزمون زبان",
+    "examCount": 1,
+    "nodes": [
+     "bus.english_eshraghi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.english_eshraghi\\ch.eng.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 0,
+   "withCards": 0,
+   "withQuestions": 10,
+   "totalCards": 0,
+   "totalQuestions": 7
+  }
+ },
+ {
+  "bookId": "book.bus.robbins_daft",
+  "title": "مرجع کامل تئوری‌های مدیریت (دکتر سیدجوادین و دکتر جلیلیان - نگاه دانش) + مبانی سازمان و مدیریت (دکتر سید محمد مقیمی)",
+  "authors": "دکتر سیدرضا سیدجوادین و دکتر حسین جلیلیان / دکتر سید محمد مقیمی / رابینز / دفت / رضائیان / الوانی",
+  "courseName": "تئوری‌های مدیریت (جامع سیدجوادین و جلیلیان + مبانی سازمان دکتر مقیمی)",
+  "linkedNodes": [
+   "mb.contingency"
+  ],
+  "chapters": [
+   {
+    "id": "ch.th.1",
+    "number": "۱",
+    "title": "مکاتب مدیریت: کلاسیک تا اقتضایی",
+    "examCount": 4,
+    "nodes": [
+     "mb.structure",
+     "mb.contingency"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 12,
+    "questions": 30,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.1.md"
+   },
+   {
+    "id": "ch.th.4",
+    "number": "۴",
+    "title": "ساختار سازمانی: پیچیدگی، رسمیت و تمرکز",
+    "examCount": 4,
+    "nodes": [
+     "mb.structure"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 10,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.4.md"
+   },
+   {
+    "id": "ch.th.2",
+    "number": "۲",
+    "title": "نقش‌های managerial مینتزبرگ و مهارت‌های مدیریتی",
+    "examCount": 3,
+    "nodes": [
+     "mb.structure"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 10,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.2.md"
+   },
+   {
+    "id": "ch.th.3",
+    "number": "۳",
+    "title": "برنامه‌ریزی، تصمیم‌گیری و مدل‌های آن",
+    "examCount": 3,
+    "nodes": [
+     "mb.structure"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 10,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.3.md"
+   },
+   {
+    "id": "ch.th.5",
+    "number": "۵",
+    "title": "محیط، فناوری و ساختار: دیدگاه اقتضایی",
+    "examCount": 3,
+    "nodes": [
+     "mb.contingency"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 12,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.5.md"
+   },
+   {
+    "id": "ch.th.7",
+    "number": "۷",
+    "title": "انگیزش: نظریه‌های محتوایی و فرایندی",
+    "examCount": 3,
+    "nodes": [
+     "mb.culture"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 1,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.7.md"
+   },
+   {
+    "id": "ch.th.8",
+    "number": "۸",
+    "title": "رهبری: اقتضایی تا تحول‌آفرین",
+    "examCount": 3,
+    "nodes": [
+     "mb.culture",
+     "mb.contingency"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 4,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.8.md"
+   },
+   {
+    "id": "ch.th.6",
+    "number": "۶",
+    "title": "فرهنگ سازمانی: شاین، دنیسون و اوچی",
+    "examCount": 2,
+    "nodes": [
+     "mb.culture"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 1,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.6.md"
+   },
+   {
+    "id": "ch.th.9",
+    "number": "۹",
+    "title": "گروه‌ها، تیم‌ها، ارتباطات و تعارض",
+    "examCount": 2,
+    "nodes": [
+     "mb.culture"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 1,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.9.md"
+   },
+   {
+    "id": "ch.th.10",
+    "number": "۱۰",
+    "title": "کنترل، بوروکراسی و چرخهٔ حیات سازمان",
+    "examCount": 2,
+    "nodes": [
+     "mb.structure"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 10,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.robbins_daft\\ch.th.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 1,
+   "withCards": 10,
+   "withQuestions": 10,
+   "totalCards": 14,
+   "totalQuestions": 31
+  }
+ },
+ {
+  "bookId": "book.bus.econ_nazari",
+  "title": "اقتصاد خرد و اقتصاد کلان ویژه کنکور ارشد مدیریت (دکتر محسن نظری - انتشارات نگاه دانش)",
+  "authors": "دکتر محسن نظری (استاد دانشگاه تهران)",
+  "courseName": "اقتصاد خرد و کلان (جامع و تست دکتر محسن نظری - نگاه دانش)",
+  "linkedNodes": [
+   "bus.econ_nazari"
+  ],
+  "chapters": [
+   {
+    "id": "ch.econ.2",
+    "number": "۲",
+    "title": "کشش‌های قیمتی، درآمدی و تقاطعی",
+    "examCount": 3,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.2.md"
+   },
+   {
+    "id": "ch.econ.3",
+    "number": "۳",
+    "title": "رفتار مصرف‌کننده: مطلوبیت، اثر جانشینی و درآمدی",
+    "examCount": 3,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.3.md"
+   },
+   {
+    "id": "ch.econ.5",
+    "number": "۵",
+    "title": "ساختار بازار: رقابت کامل و انحصار",
+    "examCount": 3,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.5.md"
+   },
+   {
+    "id": "ch.econ.7",
+    "number": "۷",
+    "title": "حسابداری ملی و تعادل کینزی",
+    "examCount": 3,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.7.md"
+   },
+   {
+    "id": "ch.econ.8",
+    "number": "۸",
+    "title": "پول، مدل IS-LM و سیاست‌های اقتصادی",
+    "examCount": 3,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.8.md"
+   },
+   {
+    "id": "ch.econ.1",
+    "number": "۱",
+    "title": "عرضه، تقاضا و تعادل بازار",
+    "examCount": 2,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.1.md"
+   },
+   {
+    "id": "ch.econ.4",
+    "number": "۴",
+    "title": "تولید و هزینه در کوتاه‌مدت و بلندمدت",
+    "examCount": 2,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.4.md"
+   },
+   {
+    "id": "ch.econ.6",
+    "number": "۶",
+    "title": "رقابت انحصاری، انحصار چندجانبه و نظریهٔ بازی",
+    "examCount": 2,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.6.md"
+   },
+   {
+    "id": "ch.econ.9",
+    "number": "۹",
+    "title": "AD-AS، تورم، بیکاری و منحنی فیلیپس",
+    "examCount": 2,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.9.md"
+   },
+   {
+    "id": "ch.econ.10",
+    "number": "۱۰",
+    "title": "نظریه‌های مصرف، سرمایه‌گذاری و مکاتب کلان",
+    "examCount": 2,
+    "nodes": [
+     "bus.econ_nazari"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 18,
+    "md": "content-coverage\\book-chapters\\book.bus.econ_nazari\\ch.econ.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 4,
+   "withCards": 10,
+   "withQuestions": 10,
+   "totalCards": 2,
+   "totalQuestions": 18
+  }
+ },
+ {
+  "bookId": "book.bus.math_stats_ranjbaran_tourani",
+  "title": "ریاضیات عمومی و کاربرد آن در مدیریت (دکتر هادی رنجبران / محمودیان) + آمار و احتمال طرح ۹۰ درصد (محسن طورانی)",
+  "authors": "دکتر هادی رنجبران / دکتر محمودیان (ریاضی) و استاد محسن طورانی / دکتر عادل آذر (آمار)",
+  "courseName": "ریاضی و آمار (ریاضیات عمومی هادی رنجبران + آمار طرح ۹۰ درصد محسن طورانی)",
+  "linkedNodes": [
+   "bus.math_stats_ranjbaran_tourani"
+  ],
+  "chapters": [
+   {
+    "id": "ch.math.3",
+    "number": "۳",
+    "title": "مشتق و کاربرد اقتصادی آن",
+    "examCount": 3,
+    "nodes": [
+     "bus.math_stats_ranjbaran_tourani"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 0,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.3.md"
+   },
+   {
+    "id": "ch.math.2",
+    "number": "۲",
+    "title": "حد و پیوستگی و رفع ابهام",
+    "examCount": 2,
+    "nodes": [
+     "bus.math_stats_ranjbaran_tourani"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.2.md"
+   },
+   {
+    "id": "ch.math.5",
+    "number": "۵",
+    "title": "ماتریس، دترمینان و دستگاه معادلات",
+    "examCount": 2,
+    "nodes": [
+     "bus.math_stats_ranjbaran_tourani"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.5.md"
+   },
+   {
+    "id": "ch.math.6",
+    "number": "۶",
+    "title": "آمار توصیفی: مرکزی، پراکندگی و شکل توزیع",
+    "examCount": 2,
+    "nodes": [
+     "stats.scales"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.6.md"
+   },
+   {
+    "id": "ch.math.7",
+    "number": "۷",
+    "title": "احتمال، احتمال شرطی و قضیهٔ بیز",
+    "examCount": 2,
+    "nodes": [
+     "bus.math_stats_ranjbaran_tourani"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 0,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.7.md"
+   },
+   {
+    "id": "ch.math.8",
+    "number": "۸",
+    "title": "توزیع‌های گسسته و پیوسته",
+    "examCount": 2,
+    "nodes": [
+     "bus.math_stats_ranjbaran_tourani"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 0,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.8.md"
+   },
+   {
+    "id": "ch.math.9",
+    "number": "۹",
+    "title": "برآورد، فاصلهٔ اطمینان و آزمون فرض",
+    "examCount": 2,
+    "nodes": [
+     "stats.regression"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 4,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.9.md"
+   },
+   {
+    "id": "ch.math.10",
+    "number": "۱۰",
+    "title": "ANOVA، خی‌دو و رگرسیون",
+    "examCount": 2,
+    "nodes": [
+     "stats.anova",
+     "stats.regression"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 4,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.10.md"
+   },
+   {
+    "id": "ch.math.1",
+    "number": "۱",
+    "title": "تابع، دامنه و برد، انواع توابع",
+    "examCount": 1,
+    "nodes": [
+     "bus.math_stats_ranjbaran_tourani"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.1.md"
+   },
+   {
+    "id": "ch.math.4",
+    "number": "۴",
+    "title": "انتگرال و کاربرد آن",
+    "examCount": 1,
+    "nodes": [
+     "bus.math_stats_ranjbaran_tourani"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.math_stats_ranjbaran_tourani\\ch.math.4.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 5,
+   "withCards": 3,
+   "withQuestions": 10,
+   "totalCards": 6,
+   "totalQuestions": 25
+  }
+ },
+ {
+  "bookId": "book.bus.islamic_moghimi",
+  "title": "اصول و مبانی مدیریت از دیدگاه اسلام (تألیف دکتر سید محمد مقیمی - انتشارات راه دان)",
+  "authors": "دکتر سید محمد مقیمی (استاد تمام دانشکده مدیریت دانشگاه تهران)",
+  "courseName": "اصول و مبانی مدیریت از دیدگاه اسلام (دکتر سید محمد مقیمی - راه دان)",
+  "linkedNodes": [
+   "bus.islamic_moghimi"
+  ],
+  "chapters": [
+   {
+    "id": "ch.isl.7",
+    "number": "۷",
+    "title": "رهبری در مدیریت اسلامی و سیرهٔ علوی",
+    "examCount": 3,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.7.md"
+   },
+   {
+    "id": "ch.isl.8",
+    "number": "۸",
+    "title": "کنترل و نظارت: درونی و بیرونی",
+    "examCount": 3,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.8.md"
+   },
+   {
+    "id": "ch.isl.1",
+    "number": "۱",
+    "title": "مفهوم‌شناسی مدیریت اسلامی و مبانی آن",
+    "examCount": 2,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.1.md"
+   },
+   {
+    "id": "ch.isl.2",
+    "number": "۲",
+    "title": "انسان‌شناسی و نظام ارزش‌ها",
+    "examCount": 2,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.2.md"
+   },
+   {
+    "id": "ch.isl.3",
+    "number": "۳",
+    "title": "برنامه‌ریزی و تصمیم‌گیری در مدیریت اسلامی",
+    "examCount": 2,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.3.md"
+   },
+   {
+    "id": "ch.isl.4",
+    "number": "۴",
+    "title": "سازماندهی: تقسیم کار، وحدت فرماندهی و اخوت",
+    "examCount": 2,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.4.md"
+   },
+   {
+    "id": "ch.isl.5",
+    "number": "۵",
+    "title": "مدیریت منابع انسانی اسلامی و شایسته‌سالاری",
+    "examCount": 2,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.5.md"
+   },
+   {
+    "id": "ch.isl.6",
+    "number": "۶",
+    "title": "انگیزش: مادی و معنوی",
+    "examCount": 2,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.6.md"
+   },
+   {
+    "id": "ch.isl.9",
+    "number": "۹",
+    "title": "عدالت، اخلاق و مسئولیت اجتماعی سازمان",
+    "examCount": 2,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.9.md"
+   },
+   {
+    "id": "ch.isl.10",
+    "number": "۱۰",
+    "title": "مدیریت اسلامی در مقایسه با مکاتب",
+    "examCount": 2,
+    "nodes": [
+     "bus.islamic_moghimi"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.islamic_moghimi\\ch.isl.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 0,
+   "withCards": 10,
+   "withQuestions": 10,
+   "totalCards": 1,
+   "totalQuestions": 9
+  }
+ },
+ {
+  "bookId": "book.bus.or_fadavi",
+  "title": "پژوهش عملیاتی (تحقیق در عملیات) تألیف دکتر عارفه فدوی (انتشارات نگاه دانش)",
+  "authors": "دکتر عارفه فدوی (به همراه منابع مرجع دکتر محمدرضا مهرگان و دکتر عادل آذر)",
+  "courseName": "تحقیق در عملیات (پژوهش عملیاتی دکتر عارفه فدوی - نگاه دانش)",
+  "linkedNodes": [
+   "ind.or_simplex_duality"
+  ],
+  "chapters": [
+   {
+    "id": "ch.or.3",
+    "number": "۳",
+    "title": "روش سیمپلکس: بیشینه، کمینه و متغیرهای مصنوعی",
+    "examCount": 3,
+    "nodes": [
+     "ind.or_simplex_duality"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.3.md"
+   },
+   {
+    "id": "ch.or.4",
+    "number": "۴",
+    "title": "دوگان و قضیهٔ مکمل‌های متوازن",
+    "examCount": 3,
+    "nodes": [
+     "ind.or_simplex_duality"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.4.md"
+   },
+   {
+    "id": "ch.or.1",
+    "number": "۱",
+    "title": "مدل‌سازی برنامه‌ریزی خطی",
+    "examCount": 2,
+    "nodes": [
+     "ind.or_simplex_duality"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.1.md"
+   },
+   {
+    "id": "ch.or.2",
+    "number": "۲",
+    "title": "حل ترسیمی و حالات خاص جواب",
+    "examCount": 2,
+    "nodes": [
+     "ind.or_simplex_duality"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.2.md"
+   },
+   {
+    "id": "ch.or.5",
+    "number": "۵",
+    "title": "تحلیل حساسیت",
+    "examCount": 2,
+    "nodes": [
+     "ind.or_simplex_duality"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.5.md"
+   },
+   {
+    "id": "ch.or.6",
+    "number": "۶",
+    "title": "مسئلهٔ حمل‌ونقل و تخصیص",
+    "examCount": 2,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.6.md"
+   },
+   {
+    "id": "ch.or.9",
+    "number": "۹",
+    "title": "تئوری صف",
+    "examCount": 2,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.9.md"
+   },
+   {
+    "id": "ch.or.7",
+    "number": "۷",
+    "title": "مدیریت پروژه: CPM و PERT",
+    "examCount": 1,
+    "nodes": [],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 0,
+    "questions": 0,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.7.md"
+   },
+   {
+    "id": "ch.or.8",
+    "number": "۸",
+    "title": "برنامه‌ریزی عدد صحیح و آرمانی",
+    "examCount": 1,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.8.md"
+   },
+   {
+    "id": "ch.or.10",
+    "number": "۱۰",
+    "title": "شبیه‌سازی و تصمیم چندمعیاره",
+    "examCount": 1,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.bus.or_fadavi\\ch.or.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 2,
+   "withCards": 9,
+   "withQuestions": 9,
+   "totalCards": 3,
+   "totalQuestions": 14
+  }
+ },
+ {
+  "bookId": "book.bus.david_porter_mintzberg",
+  "title": "مدیریت استراتژیک (فرد دیوید) + جنگل استراتژی (هنری مینتزبرگ) + مرجع کامل استراتژیک دکتر جلیلیان",
+  "authors": "فرد ر. دیوید / هنری مینتزبرگ / مایکل پورتر / جی بارنی / دیوید تیس",
+  "courseName": "۸. مدیریت استراتژیک پیشرفته (فرد دیوید + جنگل استراتژی مینتزبرگ + پورتر و بارنی)",
+  "linkedNodes": [
+   "sm.rbv"
+  ],
+  "chapters": [
+   {
+    "id": "ch.str.3",
+    "number": "۳",
+    "title": "تحلیل محیط: PEST و پنج نیروی پورتر",
+    "examCount": 3,
+    "nodes": [
+     "sm.value_chain"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.3.md"
+   },
+   {
+    "id": "ch.str.4",
+    "number": "۴",
+    "title": "تحلیل درونی: RBV، VRIO و شایستگی محوری",
+    "examCount": 3,
+    "nodes": [
+     "sm.rbv"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.4.md"
+   },
+   {
+    "id": "ch.str.7",
+    "number": "۷",
+    "title": "ماتریس‌های سبد: BCG، GE، IE، SPACE و QSPM",
+    "examCount": 3,
+    "nodes": [
+     "sm.portfolio"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.7.md"
+   },
+   {
+    "id": "ch.str.1",
+    "number": "۱",
+    "title": "ماهیت، سطوح و مدل مدیریت استراتژیک",
+    "examCount": 2,
+    "nodes": [
+     "sm.rbv"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.1.md"
+   },
+   {
+    "id": "ch.str.2",
+    "number": "۲",
+    "title": "مکاتب ده‌گانه مینتزبرگ",
+    "examCount": 2,
+    "nodes": [
+     "sm.rbv"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.2.md"
+   },
+   {
+    "id": "ch.str.5",
+    "number": "۵",
+    "title": "زنجیرهٔ ارزش و نظام ارزش",
+    "examCount": 2,
+    "nodes": [
+     "sm.value_chain"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.5.md"
+   },
+   {
+    "id": "ch.str.6",
+    "number": "۶",
+    "title": "استراتژی‌های عمومی پورتر",
+    "examCount": 2,
+    "nodes": [
+     "sm.value_chain"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.6.md"
+   },
+   {
+    "id": "ch.str.8",
+    "number": "۸",
+    "title": "استراتژی سطح شرکت: تنوع، ادغام و واگذاری",
+    "examCount": 2,
+    "nodes": [
+     "sm.portfolio"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.8.md"
+   },
+   {
+    "id": "ch.str.10",
+    "number": "۱۰",
+    "title": "اجرا، ارزیابی و کارت امتیازی متوازن",
+    "examCount": 2,
+    "nodes": [
+     "sm.dynamic"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 1,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.10.md"
+   },
+   {
+    "id": "ch.str.9",
+    "number": "۹",
+    "title": "استراتژی بین‌الملل و مشارکت‌ها",
+    "examCount": 1,
+    "nodes": [
+     "sm.portfolio"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 7,
+    "md": "content-coverage\\book-chapters\\book.bus.david_porter_mintzberg\\ch.str.9.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 0,
+   "withCards": 10,
+   "withQuestions": 10,
+   "totalCards": 8,
+   "totalQuestions": 13
+  }
+ },
+ {
+  "bookId": "book.ind.or_mehregan_fadavi",
+  "title": "پژوهش عملیاتی (دکتر محمدرضا مهرگان) + پژوهش عملیاتی (دکتر عادل آذر) + تحقیق در عملیات (دکتر عارفه فدوی)",
+  "authors": "دکتر محمدرضا مهرگان / دکتر عادل آذر / دکتر عارفه فدوی / حمدی طه",
+  "courseName": "پژوهش عملیاتی پیشرفته (دکتر محمدرضا مهرگان و دکتر عادل آذر — مکمل فدوی)",
+  "linkedNodes": [
+   "ind.or_simplex_duality"
+  ],
+  "chapters": [
+   {
+    "id": "ch.meh.2",
+    "number": "۲",
+    "title": "سیمپلکس، تباهی و انواع جواب",
+    "examCount": 3,
+    "nodes": [
+     "ind.or_simplex_duality"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.2.md"
+   },
+   {
+    "id": "ch.meh.3",
+    "number": "۳",
+    "title": "دوگان و مکملیت",
+    "examCount": 3,
+    "nodes": [
+     "ind.or_simplex_duality"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.3.md"
+   },
+   {
+    "id": "ch.meh.1",
+    "number": "۱",
+    "title": "مدل‌سازی و تبدیل به فرم استاندارد",
+    "examCount": 2,
+    "nodes": [
+     "ind.or_simplex_duality"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.1.md"
+   },
+   {
+    "id": "ch.meh.4",
+    "number": "۴",
+    "title": "تحلیل حساسیت و قیمت سایه",
+    "examCount": 2,
+    "nodes": [
+     "ind.or_simplex_duality"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 2,
+    "questions": 9,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.4.md"
+   },
+   {
+    "id": "ch.meh.5",
+    "number": "۵",
+    "title": "مسئلهٔ حمل‌ونقل",
+    "examCount": 2,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.5.md"
+   },
+   {
+    "id": "ch.meh.7",
+    "number": "۷",
+    "title": "مدل‌های شبکه: کوتاه‌ترین مسیر و جریان",
+    "examCount": 2,
+    "nodes": [],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 0,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.7.md"
+   },
+   {
+    "id": "ch.meh.8",
+    "number": "۸",
+    "title": "برنامه‌ریزی عدد صحیح",
+    "examCount": 2,
+    "nodes": [],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 0,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.8.md"
+   },
+   {
+    "id": "ch.meh.9",
+    "number": "۹",
+    "title": "تئوری صف",
+    "examCount": 2,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.9.md"
+   },
+   {
+    "id": "ch.meh.10",
+    "number": "۱۰",
+    "title": "تصمیم چندمعیاره و DEA",
+    "examCount": 2,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.10.md"
+   },
+   {
+    "id": "ch.meh.6",
+    "number": "۶",
+    "title": "مسئلهٔ تخصیص و روش مجارستانی",
+    "examCount": 1,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.or_mehregan_fadavi\\ch.meh.6.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 1,
+   "withCards": 8,
+   "withQuestions": 8,
+   "totalCards": 3,
+   "totalQuestions": 14
+  }
+ },
+ {
+  "bookId": "book.ind.pom_mottaghi_jafarnejad",
+  "title": "مدیریت تولید و عملیات (دکتر عارفه فدوی - نگاه دانش) + مدیریت تولید (دکتر هایده متقی) + تولید و عملیات نوین (دکتر جعفرنژاد)",
+  "authors": "دکتر عارفه فدوی / دکتر هایده متقی / دکتر احمد جعفرنژاد / داگلاس سی. مونتگومری",
+  "courseName": "مدیریت تولید و عملیات (دکتر عارفه فدوی / دکتر هایده متقی / دکتر جعفرنژاد)",
+  "linkedNodes": [
+   "ind.pom_eoq_mrp"
+  ],
+  "chapters": [
+   {
+    "id": "ch.pom.1",
+    "number": "۱",
+    "title": "پیش‌بینی تقاضا",
+    "examCount": 3,
+    "nodes": [
+     "ind.pom_eoq_mrp"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 3,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.1.md"
+   },
+   {
+    "id": "ch.pom.2",
+    "number": "۲",
+    "title": "مدل‌های موجودی: EOQ و EPQ",
+    "examCount": 3,
+    "nodes": [
+     "ind.pom_eoq_mrp"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 3,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.2.md"
+   },
+   {
+    "id": "ch.pom.4",
+    "number": "۴",
+    "title": "MRP، MRPII و ERP",
+    "examCount": 3,
+    "nodes": [
+     "ind.pom_eoq_mrp"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.4.md"
+   },
+   {
+    "id": "ch.pom.6",
+    "number": "۶",
+    "title": "کنترل کیفیت آماری: Cp و Cpk",
+    "examCount": 3,
+    "nodes": [
+     "ind.pom_eoq_mrp"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 3,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.6.md"
+   },
+   {
+    "id": "ch.pom.3",
+    "number": "۳",
+    "title": "موجودی با عدم قطعیت: ROP و موجودی ایمنی",
+    "examCount": 2,
+    "nodes": [
+     "ind.pom_eoq_mrp"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 3,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.3.md"
+   },
+   {
+    "id": "ch.pom.5",
+    "number": "۵",
+    "title": "زمان‌بندی تولید و الگوریتم جانسون",
+    "examCount": 2,
+    "nodes": [
+     "ind.pom_eoq_mrp"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.5.md"
+   },
+   {
+    "id": "ch.pom.9",
+    "number": "۹",
+    "title": "زنجیرهٔ تأمین و اثر شلاقی",
+    "examCount": 2,
+    "nodes": [
+     "ind.pom_eoq_mrp"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.9.md"
+   },
+   {
+    "id": "ch.pom.7",
+    "number": "۷",
+    "title": "طراحی کار و مطالعهٔ زمان",
+    "examCount": 1,
+    "nodes": [
+     "ind.pom_eoq_mrp"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.7.md"
+   },
+   {
+    "id": "ch.pom.8",
+    "number": "۸",
+    "title": "چیدمان، ظرفیت و برنامه‌ریزی تجمیعی",
+    "examCount": 1,
+    "nodes": [
+     "ind.pom_eoq_mrp"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 3,
+    "questions": 13,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.8.md"
+   },
+   {
+    "id": "ch.pom.10",
+    "number": "۱۰",
+    "title": "مدیریت پروژه: CPM و PERT",
+    "examCount": 1,
+    "nodes": [],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 0,
+    "questions": 0,
+    "md": "content-coverage\\book-chapters\\book.ind.pom_mottaghi_jafarnejad\\ch.pom.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 5,
+   "withCards": 9,
+   "withQuestions": 9,
+   "totalCards": 3,
+   "totalQuestions": 13
+  }
+ },
+ {
+  "bookId": "book.ind.mcdm_dea_queue",
+  "title": "تصمیم‌گیری چندمعیاره (دکتر اصغرپور / دکتر مهرگان / دکتر امیری) + تحلیل پوششی داده‌ها و تئوری صف (دکتر عادل آذر و فدوی)",
+  "authors": "دکتر محمدجواد اصغرپور / دکتر محمدرضا مهرگان / دکتر عادل آذر / دکتر مقصود امیری / دکتر عارفه فدوی",
+  "courseName": "تصمیم‌گیری چندمعیاره (MCDM)، تحلیل پوششی داده‌ها (DEA) و تئوری صف",
+  "linkedNodes": [
+   "ind.mcdm_dea_queue"
+  ],
+  "chapters": [
+   {
+    "id": "ch.mcdm.1",
+    "number": "۱",
+    "title": "فرایند تحلیل سلسله‌مراتبی (AHP)",
+    "examCount": 3,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.1.md"
+   },
+   {
+    "id": "ch.mcdm.2",
+    "number": "۲",
+    "title": "TOPSIS و روش‌های فاصله‌ای",
+    "examCount": 2,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.2.md"
+   },
+   {
+    "id": "ch.mcdm.5",
+    "number": "۵",
+    "title": "DEA: مدل CCR",
+    "examCount": 2,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.5.md"
+   },
+   {
+    "id": "ch.mcdm.6",
+    "number": "۶",
+    "title": "DEA: مدل BCC و کارایی مقیاس",
+    "examCount": 2,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 1,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.6.md"
+   },
+   {
+    "id": "ch.mcdm.8",
+    "number": "۸",
+    "title": "صف M/M/1",
+    "examCount": 2,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 2,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.8.md"
+   },
+   {
+    "id": "ch.mcdm.3",
+    "number": "۳",
+    "title": "SAW، ELECTRE و VIKOR",
+    "examCount": 1,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.3.md"
+   },
+   {
+    "id": "ch.mcdm.4",
+    "number": "۴",
+    "title": "برنامه‌ریزی آرمانی (Goal Programming)",
+    "examCount": 1,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.4.md"
+   },
+   {
+    "id": "ch.mcdm.7",
+    "number": "۷",
+    "title": "مدل‌های پیشرفتهٔ DEA",
+    "examCount": 1,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.7.md"
+   },
+   {
+    "id": "ch.mcdm.9",
+    "number": "۹",
+    "title": "صف چندکاناله و اقتصاد ظرفیت",
+    "examCount": 1,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.9.md"
+   },
+   {
+    "id": "ch.mcdm.10",
+    "number": "۱۰",
+    "title": "شبیه‌سازی و کاربردهای تصمیم",
+    "examCount": 1,
+    "nodes": [
+     "ind.mcdm_dea_queue"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 5,
+    "md": "content-coverage\\book-chapters\\book.ind.mcdm_dea_queue\\ch.mcdm.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 4,
+   "withCards": 10,
+   "withQuestions": 10,
+   "totalCards": 1,
+   "totalQuestions": 5
+  }
+ },
+ {
+  "bookId": "book.tech.schilling",
+  "title": "مدیریت استراتژیک نوآوری فناورانه (ملیسا شیلینگ - Melissa A. Schilling)",
+  "authors": "ملیسا شیلینگ (Melissa A. Schilling)",
+  "courseName": "مدیریت استراتژیک نوآوری فناورانه (ملیسا شیلینگ)",
+  "linkedNodes": [
+   "inno.s_curve"
+  ],
+  "chapters": [
+   {
+    "id": "ch.sch.2",
+    "number": "۲",
+    "title": "منحنی S فناوری و طرح غالب",
+    "examCount": 3,
+    "nodes": [
+     "inno.s_curve"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.2.md"
+   },
+   {
+    "id": "ch.sch.1",
+    "number": "۱",
+    "title": "اهمیت نوآوری فناورانه و انواع آن",
+    "examCount": 2,
+    "nodes": [
+     "inno.s_curve"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.1.md"
+   },
+   {
+    "id": "ch.sch.3",
+    "number": "۳",
+    "title": "زمان‌بندی ورود به بازار",
+    "examCount": 2,
+    "nodes": [
+     "inno.s_curve"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.3.md"
+   },
+   {
+    "id": "ch.sch.4",
+    "number": "۴",
+    "title": "انتخاب و مدیریت پروژه‌های R&D",
+    "examCount": 2,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.4.md"
+   },
+   {
+    "id": "ch.sch.6",
+    "number": "۶",
+    "title": "حفاظت از نوآوری و ارزش appropriation",
+    "examCount": 2,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.6.md"
+   },
+   {
+    "id": "ch.sch.7",
+    "number": "۷",
+    "title": "سازماندهی برای نوآوری و سازمان دوپهلو",
+    "examCount": 2,
+    "nodes": [
+     "inno.ambidextrous"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 1,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.7.md"
+   },
+   {
+    "id": "ch.sch.5",
+    "number": "۵",
+    "title": "همکاری، اتحاد و شبکه‌های نوآوری",
+    "examCount": 1,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.5.md"
+   },
+   {
+    "id": "ch.sch.8",
+    "number": "۸",
+    "title": "استراتژی فناوری و سبد فناوری",
+    "examCount": 1,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.8.md"
+   },
+   {
+    "id": "ch.sch.9",
+    "number": "۹",
+    "title": "استانداردها، شبکه‌ها و اثر خارجی",
+    "examCount": 1,
+    "nodes": [
+     "inno.s_curve"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.9.md"
+   },
+   {
+    "id": "ch.sch.10",
+    "number": "۱۰",
+    "title": "نوآوری در مدل کسب‌وکار و بازار",
+    "examCount": 1,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.schilling\\ch.sch.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 0,
+   "withCards": 7,
+   "withQuestions": 10,
+   "totalCards": 3,
+   "totalQuestions": 8
+  }
+ },
+ {
+  "bookId": "book.tech.tidd_khalil",
+  "title": "مدیریت نوآوری (جو تید و جان بسانت) + مدیریت تکنولوژی (طاهر خلیل - Tarek Khalil)",
+  "authors": "جو تید و جان بسانت (Tidd & Bessant) / طاهر خلیل (Tarek M. Khalil)",
+  "courseName": "مدیریت نوآوری (تید و بسانت) و مدیریت تکنولوژی (طاهر خلیل)",
+  "linkedNodes": [
+   "inno.tidd_4p"
+  ],
+  "chapters": [
+   {
+    "id": "ch.tidd.1",
+    "number": "۱",
+    "title": "فضای چهاربعدی نوآوری (4P)",
+    "examCount": 3,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.1.md"
+   },
+   {
+    "id": "ch.tidd.2",
+    "number": "۲",
+    "title": "فرایند مدیریت نوآوری",
+    "examCount": 2,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.2.md"
+   },
+   {
+    "id": "ch.tidd.3",
+    "number": "۳",
+    "title": "استراتژی نوآوری",
+    "examCount": 2,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.3.md"
+   },
+   {
+    "id": "ch.tidd.4",
+    "number": "۴",
+    "title": "سازماندهی نوآوری و تیم‌ها",
+    "examCount": 2,
+    "nodes": [
+     "inno.ambidextrous"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 1,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.4.md"
+   },
+   {
+    "id": "ch.tidd.5",
+    "number": "۵",
+    "title": "مدیریت R&D و پروژه‌های توسعه",
+    "examCount": 2,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.5.md"
+   },
+   {
+    "id": "ch.tidd.7",
+    "number": "۷",
+    "title": "طبقه‌بندی استراتژیک فناوری (ADL)",
+    "examCount": 2,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.7.md"
+   },
+   {
+    "id": "ch.tidd.8",
+    "number": "۸",
+    "title": "اطلس فناوری و اجزای چهارگانه",
+    "examCount": 2,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.8.md"
+   },
+   {
+    "id": "ch.tidd.9",
+    "number": "۹",
+    "title": "چرخهٔ عمر فناوری",
+    "examCount": 2,
+    "nodes": [
+     "inno.s_curve"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.9.md"
+   },
+   {
+    "id": "ch.tidd.10",
+    "number": "۱۰",
+    "title": "ارزیابی و انتخاب فناوری",
+    "examCount": 2,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.10.md"
+   },
+   {
+    "id": "ch.tidd.6",
+    "number": "۶",
+    "title": "خلق و انتقال دانش",
+    "examCount": 1,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.tidd_khalil\\ch.tidd.6.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 0,
+   "withCards": 4,
+   "withQuestions": 10,
+   "totalCards": 3,
+   "totalQuestions": 8
+  }
+ },
+ {
+  "bookId": "book.tech.chesbrough_rothwell_transfer",
+  "title": "نوآوری باز (هنری چسبرو) + سیاست‌گذاری علم و فناوری (دکتر قاضی‌نوری) + مدیریت انتقال فناوری و نسل‌های R&D (روی روث‌ول)",
+  "authors": "هنری چسبرو (Henry Chesbrough) / روی روث‌ول (Roy Rothwell) / کلیتون کریستنسن / دکتر سید سپهر قاضی‌نوری",
+  "courseName": "نوآوری باز (چسبرو)، نسل‌های R&D (روث‌ول)، انتقال تکنولوژی و سیاست‌گذاری علم و فناوری",
+  "linkedNodes": [
+   "inno.open_rd_transfer"
+  ],
+  "chapters": [
+   {
+    "id": "ch.op.1",
+    "number": "۱",
+    "title": "از نوآوری بسته به نوآوری باز",
+    "examCount": 3,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.1.md"
+   },
+   {
+    "id": "ch.op.5",
+    "number": "۵",
+    "title": "نسل‌های پنج‌گانهٔ مدیریت R&D (روث‌ول)",
+    "examCount": 3,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.5.md"
+   },
+   {
+    "id": "ch.op.6",
+    "number": "۶",
+    "title": "قراردادهای انتقال فناوری",
+    "examCount": 3,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.6.md"
+   },
+   {
+    "id": "ch.op.2",
+    "number": "۲",
+    "title": "قیف نوآوری باز و خطاهای کاذب",
+    "examCount": 2,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.2.md"
+   },
+   {
+    "id": "ch.op.3",
+    "number": "۳",
+    "title": "ظرفیت جذب و توان جذب دانش بیرونی",
+    "examCount": 2,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.3.md"
+   },
+   {
+    "id": "ch.op.4",
+    "number": "۴",
+    "title": "مدل‌های کسب‌وکار باز",
+    "examCount": 2,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.4.md"
+   },
+   {
+    "id": "ch.op.7",
+    "number": "۷",
+    "title": "سطح آمادگی فناوری (TRL)",
+    "examCount": 2,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.7.md"
+   },
+   {
+    "id": "ch.op.8",
+    "number": "۸",
+    "title": "سیاست علم و فناوری و نظام ملی نوآوری",
+    "examCount": 1,
+    "nodes": [
+     "inno.tidd_4p"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 0,
+    "questions": 2,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.8.md"
+   },
+   {
+    "id": "ch.op.9",
+    "number": "۹",
+    "title": "اسپین‌آف، استارتاپ و سرمایه‌گذاری شرکتی",
+    "examCount": 1,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.9.md"
+   },
+   {
+    "id": "ch.op.10",
+    "number": "۱۰",
+    "title": "موانع انتقال فناوری و ارزیابی موفقیت",
+    "examCount": 1,
+    "nodes": [
+     "inno.open_rd_transfer"
+    ],
+    "points": 2,
+    "formulas": 0,
+    "flashcards": 1,
+    "questions": 3,
+    "md": "content-coverage\\book-chapters\\book.tech.chesbrough_rothwell_transfer\\ch.op.10.md"
+   }
+  ],
+  "totals": {
+   "chapters": 10,
+   "withPoints": 10,
+   "withFormulas": 0,
+   "withCards": 9,
+   "withQuestions": 10,
+   "totalCards": 1,
+   "totalQuestions": 5
+  }
+ }
+]

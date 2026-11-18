@@ -572,11 +572,13 @@ export class MemoryStore implements DataStore {
     return { adminUserId: row.adminUserId, telegramUserId: row.telegramUserId };
   }
 
-  async createFeedbackThread(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string }): Promise<string> {
+  async createFeedbackThread(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string; relatedEntityType?: string | null; relatedEntityId?: string | null }): Promise<string> {
     const id = makeRowId();
     this.feedbackThreads.push({
       id, user_id: input.userId, telegram_user_id: input.telegramUserId, chat_id: input.chatId,
       category: input.category, severity: 'normal', status: 'new',
+      related_entity_type: input.relatedEntityType ?? null,
+      related_entity_id: input.relatedEntityId ?? null,
       assignee: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
     });
     this.feedbackMessages.push({
@@ -603,6 +605,26 @@ export class MemoryStore implements DataStore {
 
   async listFeedbackMessages(threadId: string): Promise<unknown[]> {
     return this.feedbackMessages.filter(row => row.thread_id === threadId);
+  }
+
+  private reminders = new Map<string, import('./store').ReminderPreference>();
+
+  async getReminderPreference(userId: string): Promise<import('./store').ReminderPreference | null> {
+    return this.reminders.get(userId) ?? null;
+  }
+
+  async upsertReminderPreference(preference: import('./store').ReminderPreference): Promise<import('./store').ReminderPreference> {
+    this.reminders.set(preference.userId, { ...preference });
+    return { ...preference };
+  }
+
+  async listReminderPreferences(): Promise<import('./store').ReminderPreference[]> {
+    return [...this.reminders.values()].filter((preference) => preference.enabled);
+  }
+
+  async markReminderSent(userId: string, localDate: string): Promise<void> {
+    const preference = this.reminders.get(userId);
+    if (preference) this.reminders.set(userId, { ...preference, lastSentOn: localDate });
   }
 
   /* ---------- مأموریت v2 Phase 2 ---------- */

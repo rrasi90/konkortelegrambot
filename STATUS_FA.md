@@ -1,47 +1,60 @@
 # وضعیت پروژه AEL (STATUS)
 
-- **نسخه:** ۱ — ۵ نوامبر ۲۰۲۶ / ۱۴ آبان ۱۴۰۵
+- **نسخه:** ۲ — ۱۴ نوامبر ۲۰۲۶ / ۲۳ آبان ۱۴۰۵
 - **مالک به‌روزرسانی:** ایجنت توسعه (طبق بستهٔ GOV-01 نقشهٔ راه)
-- **مبنا:** کامیت `c9c3b6c` و نقشهٔ راه جامع [docs/roadmap/AEL_Master_Roadmap_FA_2026-11-05.md](docs/roadmap/AEL_Master_Roadmap_FA_2026-11-05.md)
+- **مبنا:** کامیت `abba6c0` و همین به‌روزرسانی اسناد؛ نقشهٔ راه جامع [docs/roadmap/AEL_Master_Roadmap_FA_2026-11-05.md](docs/roadmap/AEL_Master_Roadmap_FA_2026-11-05.md)
 - **فهرست کارها:** [BACKLOG_FA.md](BACKLOG_FA.md) — **تصمیم‌ها:** [DECISIONS_FA.md](DECISIONS_FA.md)
 
 این سند پاسخ می‌دهد: «الان چه چیزی کار می‌کند، مدرک چیست و چه چیزی باز است؟» هر ادعا باید مسیر و تاریخ داشته باشد. «موجود» یعنی اثر قابلیت یا گزارش آزمون محلی، نه تأیید علمی یا کاربر واقعی.
 
-## ۱. خط پایهٔ راستی‌آزمایی‌شده (اجرای ۵ نوامبر ۲۰۲۶)
+## ۱. خط پایهٔ راستی‌آزمایی‌شده (اجرای ۱۴ نوامبر ۲۰۲۶)
 
 | کنترل | فرمان | نتیجه |
 |---|---|---|
-| نصب تمیز | `npm ci` | ✅ موفق — Node v24.18.0، npm 12.0.1، lockfile نسخهٔ ۳ |
-| تست‌ها | `npm test` | ✅ ۴۳۲ تست در ۳۴ فایل (پس از EX-06/LEARN-03) |
-| تایپ | `npm run typecheck` | ✅ |
-| محتوای یادگیری | `npm run validate:learning` | ✅ ۸ مبحث/۲۴ سؤال مالی + ۲ مبحث/۵ سؤال آمار، ۱۰ منبع، ممیزی ۵ شاهد، ۱۶۸ شناسه |
-| فایل آفلاین | `npm run build:offline` | ✅ تولید `tools/offline/AEL_OFFLINE.html` |
+| تست‌ها | `npm test` | ✅ ۸۵۱ تست در ۸۸ فایل |
+| تایپ | `npm run typecheck` | ✅ صفر خطا |
+| محتوای یادگیری | `npm run validate:learning` | ✅ مالی ۸ مبحث/۲۴ سؤال، آمار ۳ مبحث/۸ سؤال، گسترش دکتری ۱۲ مبحث/۲۹ سؤال؛ ۲۰۰ شناسه و ۵ منبع بررسی شد (۵ فایل منبع در این checkout نیست) |
+| فایل آفلاین | `npm run build:offline` | ✅ تولید `tools/offline/AEL_OFFLINE.html` بدون کلید تصحیح |
 | اسکن دارایی | `npm run audit:miniapp` | ✅ بدون کلید جاسازی‌شده |
-| دیتابیس | `npm run test:db` | ✅ ۱۸ مهاجرت، replay ledger، بازیابی/پشتیبان |
+| دیتابیس | `npm run test:db` | ✅ ۲۹ مهاجرت + ۲ seed، replay ledger، کنترل‌های یکپارچگی و بازیابی/پشتیبان |
+| پیش‌بررسی production | `npm run check:production` | ⛔ متوقف؛ نبود `SUPABASE_URL` و `SUPABASE_SERVICE_ROLE_KEY`؛ هشدار `0029`، `APP_URL` و `ALLOW_DEMO_AUTH` |
 
-محیط اجرا: ویندوز (Git Bash)، `core.autocrlf=true`. شواهد کامل‌تر: [docs/ael-next/09_VERIFICATION_FA.md](docs/ael-next/09_VERIFICATION_FA.md).
+مهاجرت‌ها از `0001_init.sql` تا `0029_reminder_preferences.sql` ادامه دارند.
+
+### به‌روزرسانی ۱۴ نوامبر ۲۰۲۶ (بعدازظهر) — «هیچ فصل بدون سؤال»
+
+- **۲۳۱ تست تألیفی فصل** در [src/data/chapterAuthoredQuestions.ts](src/data/chapterAuthoredQuestions.ts) اضافه شد؛ ۷۷ فصل از فصل‌های کلیدی ۱۴ کتاب که سؤال وابسته نداشتند، هرکدام ۳ تست چهارگزینه‌ای هم‌سطح آزمون گرفتند. کلید و تشریح فقط در رجیستری سرور (`apps/worker/src/data/client-bank-keys.server.ts` — مجموع ۴۷۰ کلید) است و `audit:miniapp` بدون افشای کلید می‌گذرد.
+- پوشش سؤال فصل‌ها با [scripts/audit-chapter-questions.mts](scripts/audit-chapter-questions.mts) ممیزی شد: ۱۰/۱۰ فصل برای همهٔ کتاب‌ها، صفر فصل خالی ([reports/chapter-question-audit.txt](reports/chapter-question-audit.txt)). تست پوشش جدید: [src/tests/chapterQuestionCoverage.test.ts](src/tests/chapterQuestionCoverage.test.ts).
+- رفع خرابی محتوایی: فصل‌های «کانال توزیع» بازاریابی به‌اشتباه نمودار توزیع نرمال آماری می‌گرفتند ([TopicDiagramVisualizer.tsx](src/components/TopicDiagramVisualizer.tsx)).
+- باندل مینی‌اپ بازساخته و sync شد؛ محیط زندهٔ تلگرام همچنان باندل قدیمی را سرو می‌کند (بند ۱ بخش ۳).
+ محیط اجرا: ویندوز (Git Bash)، `core.autocrlf=true`. این خط پایه روی کامیت `abba6c0` ثبت و به `origin/main` push شد. هیچ دیپلوی production انجام نشد: ورکر زنده هنوز باندل قدیمی `index-D8G2k1lT.js` را سرو می‌کند و پیش‌بررسی به‌دلیل دو secret غایب متوقف می‌شود.
 
 ## ۲. کارکردهای موجود (با مرز ادعا)
 
+- **حلقهٔ مرور روزانه:** صف مشترک تست و کارت خطا، زمان‌بندی FSRS، برگشت «دوباره» در همان جلسه، واگرد امتیاز، کارت کامل با لینک مبحث، دفتر خطای منبع واحد، ثبت علت خطا و کارنامهٔ مرور. صف کارت‌ها هنوز محلی است و کارنامه به سرور فرستاده نمی‌شود.
+- **حالت‌های مرور:** ۱۲ حالت داده‌محور فعال است (شش اصلی و شش در «بیشتر»)؛ حالت‌های تصویری، تطبیق جفت‌ها و تشخیص تلهٔ چندگزینه‌ای به‌دلیل نبود داده/تصویر معتبر پیاده نشده‌اند.
+- **کارت شخصی:** ساخت، ویرایش، حذف، ورود CSV/TSV/JSON و پشتیبان JSON. همگام‌سازی خودکار بین دستگاه‌ها و ورود APKG هنوز نیست.
+
 - **آزمون تألیفی:** انتخاب چند مبحث از یک بستهٔ درس، سهمیه، ظرفیت، تصادفی بدون تکرار، شناسهٔ بازپخش، عدم افشای کلید قبل از پایان آزمون زمان‌دار. موتور: [packages/learning-engine/src/formative-quiz.ts](packages/learning-engine/src/formative-quiz.ts). **بستهٔ ۴:** آزمون چندبسته‌ای با سهمیهٔ بین درس‌ها و پیش‌نمایش نسخه‌pin ([multi-course-quiz.ts](packages/learning-engine/src/multi-course-quiz.ts))، عملیات تکرارپذیر نشست تألیفی و تمرین انتقالی سرتاسری. گروه‌بندی هم‌ارز در داده فعلاً استفاده نشده.
-- **محتوای پایلوت:** مالی (۸ مبحث، ۲۴ سؤال) و آمار (۲ مبحث، ۵ سؤال شامل ۱ تشریحی با روبریک). همه `origin: authored`، `rights: original_ael`، `review: pending_sme` — بازبینی متخصص انجام نشده است.
-- **شناسنامه‌ها:** ۱۶۸ رکورد در [content/learning-evidence/question-index.json](content/learning-evidence/question-index.json) = ۱۳۹ رکورد کنکور + ۲۹ تمرین تألیفی؛ فهرست [docs/ael-next/11_SOURCE_INVENTORY_FA.md](docs/ael-next/11_SOURCE_INVENTORY_FA.md). شمار نشان‌دهندهٔ پوشش کل کنکورها نیست.
+- **محتوای پایلوت:** مالی (۸ مبحث، ۲۴ سؤال)، آمار (۳ مبحث، ۸ سؤال) و گسترش دکتری (۱۲ مبحث، ۲۹ سؤال). همه `origin: authored`، `rights: original_ael`، `review: pending_sme` — بازبینی متخصص انجام نشده است.
+- **شناسنامه‌ها:** ۲۰۰ رکورد در [content/learning-evidence/question-index.json](content/learning-evidence/question-index.json)؛ فهرست [docs/ael-next/11_SOURCE_INVENTORY_FA.md](docs/ael-next/11_SOURCE_INVENTORY_FA.md). شمار نشان‌دهندهٔ پوشش کل کنکورها نیست.
 - **خطای ← مطالعه:** پیوند هر تمرین تألیفی به نکته/فرمول/مثال (`readingBlock`)؛ ارتباط با صفحهٔ کتاب کنکور تأیید نشده.
 - **شواهد تاریخی:** یک الگوی کاندید BCG (۱۴۰۲/818C/185 و ۱۴۰۵/319A/188) با وضعیت `trace_pending_review`؛ دو رکورد کشش تقاضا به‌دلیل تعارض از استخراج کنار گذاشته شدند ([content/learning-evidence/source-audit.json](content/learning-evidence/source-audit.json)).
 - **بازیابی کلیدهای تاریخی (۲۰۲۶-۱۱-۰۷):** اتحاد OCR + لایهٔ متن PDF، ۴۴۴۹ ورودی کلید (از ۳۸۶۸)؛ پوشش کامل کلید ۱۲ از ۱۵ سال؛ شواهد فقط محلی؛ [MISSING_ANSWER_RECOVERY_REPORT.md](docs/ael-implementation/MISSING_ANSWER_RECOVERY_REPORT.md) و [DATA_QUALITY_DASHBOARD.md](docs/ael-implementation/DATA_QUALITY_DASHBOARD.md)
-- **شبیه‌ساز استخری سرور:** با بستن اتمیک و تلاش مجدد (مهاجرت‌های 0017 و 0018، اعمال روی محیط مقصد جداست)؛ `contentOfficiality: scaled_pool` — بازسازی رسمی دفترچه ادعا نمی‌شود.
-- **آفلاین:** فایل HTML مستقل با ذخیره/پشتیبان/بازیابی نسخه‌دار؛ کلید تمرین‌های تألیفی داخل فایل است و برای آزمون محرمانه مناسب نیست.
+- **شبیه‌ساز استخری سرور:** با بستن اتمیک و تلاش مجدد (مهاجرت‌های ۰۰۱۷ و ۰۰۱۸، اعمال روی محیط مقصد جداست)؛ `contentOfficiality: scaled_pool` — بازسازی رسمی دفترچه ادعا نمی‌شود.
+- **آفلاین:** فایل HTML مستقل با ذخیره/پشتیبان/بازیابی نسخه‌دار و بدون کلید تصحیح؛ UI وضعیت `offline_unverified` را نشان می‌دهد و آزمون محرمانه در این فایل اجرا نمی‌شود.
 
 ## ۳. موارد باز (مسدودکننده‌های مهم)
 
-1. **حقوق و اصالت منابع (SRC-02):** شرایط OpenStax و سایر منابع برای بازنشر، آفلاین و ورود به سامانهٔ هوش مصنوعی تعیین نشده؛ بانک تاریخی بدون فیلد `rights` صریح است.
-2. **بازبینی علمی (SRC-04/FIN-01):** هیچ سؤال تألیفی توسط متخصص مستقل بازبینی نشده است.
-3. **امنیت محیط مقصد (SEC-02):** اصلاحات fail-closed در کد اعمال و با ۹ تست تأیید شد (پیش‌فرض سخت‌گیرانه، بستن دریبل دمو، رد auth_date آینده، CORS محدود، AT-28) — **اعمال روی ورکر مقصد و حذف `ALLOW_DEMO_AUTH` از secretهای مقصد هنوز انجام نشده**؛ گزارش و طرح بازگشت: [docs/security/SEC01_READ_ONLY_AUDIT_2026-11-05.md](docs/security/SEC01_READ_ONLY_AUDIT_2026-11-05.md) و [docs/deploy/SEC02_ROLLBACK_2026-11-05.md](docs/deploy/SEC02_ROLLBACK_2026-11-05.md).
-4. **مهاجرت‌های 0016–0018:** روی محیط مقصد اعمال و تأیید نشده‌اند.
-5. **دقت `--check` پس از اصلاح:** چک‌های تازگی فقط CRLF/LF را تحمل می‌کنند؛ هر ویرایش دستی واقعی در فایل‌های تولیدی همچنان شکست می‌خورد (رفتار مطلوب).
-6. **کاربر واقعی:** پایلوت، آزمون تلگرام واقعی و سنجش یادگیری انجام نشده‌اند (QA-03، OPS-02).
-7. **دامنهٔ پایلوت (GOV-02):** پیش‌فرض موقت ثبت شد ([docs/ael-next/13_PILOT_SCOPE_FA.md](docs/ael-next/13_PILOT_SCOPE_FA.md)) — تصمیم نهایی با مالک محصول.
-8. **مدل داده (DATA-01/02/03):** نگاشت، اعتبارسنج نسخه‌بندی و dry-run کامل شد ([12](docs/ael-next/12_DATA_MODEL_MAPPING_FA.md)، [14](docs/ael-next/14_MIGRATION_DRYRUN_FA.md)) — تبدیل واقعی باقی است. ماتریس حقوق SRC-02 آمادهٔ تصمیم است ([15](docs/ael-next/15_RIGHTS_MATRIX_FA.md)).
+1. **انتشار production:** `npm run check:production` با دو خطا متوقف می‌شود: نبود `SUPABASE_URL` و `SUPABASE_SERVICE_ROLE_KEY`. `ALLOW_DEMO_AUTH` باید روی ورکر مقصد `false` شود و `APP_URL` تنظیم شود. ورکر زنده در ۱۴ نوامبر ۲۰۲۶ باندل قدیمی `index-D8G2k1lT.js` را سرو می‌کند؛ بنابراین کد و مینی‌اپ تازه هنوز روی production نیستند.
+2. **مهاجرت `0029_reminder_preferences.sql`:** روی Supabase واقعی اعمال نشده است. `test:db` فقط ۲۹ مهاجرت را روی PGlite از صفر تأیید می‌کند، نه روی دیتابیس مقصد.
+3. **امنیت باز (SEC-01-F4/F5):** توکن نشست انقضا/لغو ندارد و محدودسازی نرخ در حافظه و per-isolate است. اصلاحات fail-closed قبلی (F1/F2/F3/F6) در کد هست، اما اعمال روی مقصد جدا است.
+4. **حلقهٔ مرور، ادامهٔ باز:** ورود APKG، همگام‌سازی خودکار/سروری کارت‌ها، آزمایشگاه ۱۰۰ ترکیب و حالت‌های تصویری/تطبیق جفت‌ها/تشخیص تله پیاده نشده‌اند. بازطراحی بصری چهار مقصد هم به تأیید صریح مالک نیاز دارد.
+5. **پنل و گردش‌کار محتوا:** پنل ادمین/صف بازبینی، رابط تصحیح تشریحی، اعلان اختیاری، همگام‌سازی آفلاین/آنلاین و صفحهٔ آزمون چنددرسی ساخته نشده‌اند؛ موتور یا طرح بعضی از این‌ها آماده است.
+6. **یکپارچه‌سازی معماری:** R-009 (۱۶ مصرف‌کنندهٔ موتور قدیمی و اختلاف parity) و R-025 (دو منبع حقیقت React/CloudStorage و Worker/Supabase) باز است.
+7. **محتوا و حقوق:** تصمیم حقوق منابع (SRC-02)، بازبینی SME (SRC-04/FIN-01) و پایلوت کاربر واقعی (QA-03/OPS-02) انجام نشده‌اند. ۴۴۳ کارت تصویری قرنطینه‌اند و فایل تصویر ۴۳۵ کارت در پروژه نیست.
+8. **ماژول‌های محتوایی:** §8.8 انگلیسی کد/API دارد اما صفر سؤال برچسب‌خورده و `operational=false` است؛ §8.9 آزمایشگاه پژوهشی به فهرست ۱۱قابلیتی تأییدشده، منبع و حاکمیت AI نیاز دارد.
+9. **عملیات و اعتبارسنجی:** E2E روی تلگرام واقعی، مانیتورینگ/هشدار، SLA، طرح بازیابی، تست بار در Cloudflare، تست چنددستگاهی و بازبینی حقوقی/حریم خصوصی انجام نشده‌اند.
 
 ## ۴. اشکالات شناخته‌شدهٔ این نسخه
 
@@ -50,6 +63,9 @@
 | QA-01-F1 | چک‌های `--check` با `core.autocrlf=true` ویندوز به‌دلیل اختلاف CRLF/LF غلط شکست می‌خوردند | رفع شد: نرمال‌سازی EOL در [scripts/extract-learning-recurrence.mjs](scripts/extract-learning-recurrence.mjs) و [scripts/build-question-index.mjs](scripts/build-question-index.mjs) |
 | SEC-01-F1/F2/F3/F6 | دریبل demo وابسته به ENVIRONMENT، سقوط به MemoryStore، CORS wildcard، پذیرش auth_date آینده | **رفع شد در کد (SEC-02):** fail-closed پیش‌فرض + بستن دمو در production + فهرست سفید CORS + رد آینده؛ اعمال روی مقصد باقی است |
 | SEC-01-F4/F5 | توکن نشست بدون انقضا، محدودسازی نرخ per-isolate | باز — بستهٔ جدا |
+| R-009/R-025 | اختلاف موتور React/Worker و دو منبع حقیقت learner store | باز — در جریان مهاجرت |
+| R-036 | افشای کلید پاسخ در باندل عمومی React | **بسته شد (۲۰۲۶-۱۱-۱۱)**؛ `audit:miniapp` و `audit:client-bundle` بدون کلید عبور می‌کنند و استثنای audit حذف شده است |
+| BUILD-SYNC | `sync:miniapp` چانک‌های پویا را کپی نمی‌کرد و audit فقط `index-*` را می‌پذیرفت | رفع شد: همهٔ JS/CSS ساخته‌شده کپی و stale prune می‌شوند؛ audit چانک هش‌شده را می‌پذیرد |
 | GOV-01-F1 | اسناد قدیمی (۰۱، ۰۸-Q09، ۰۹، docs/status/implementation-status.md) حاوی ادعاهای منسوخ بودند | رفع شد: تطبیق با دادهٔ فعلی و برچسب منسوخ |
 
 ## ۵. قاعدهٔ به‌روزرسانی
@@ -58,11 +74,11 @@
 
 ## ۶. وضعیت پلن در پایان بستهٔ ۶ (۵ نوامبر ۲۰۲۶)
 
-از ۳۹ بستهٔ کاری نقشه راه: **۲۳ آمادهٔ بازبینی (انجام ایجنت)**، ۶ آمادهٔ اقدام/بازبینی انسانی (ماتریس حقوق، بسته‌های SME، قرارداد تصحیح)، ۶ مسدود به تصمیم/امضای انسانی (EX-05، HIST-02، QA-03، OPS-02، BIZ-02، FIN-02) و ۴ طرح P2 آماده (OFF-02/OPS-01/ADMIN-01/NOTIFY-01). هر قلم با شاهد و تاریخ در [BACKLOG_FA.md](BACKLOG_FA.md) و ماتریس پذیرش [docs/ael-next/17](docs/ael-next/17_ACCEPTANCE_MATRIX_FA.md). گام بعدی فقط امضاهای انسانی و تصمیم‌های محصولی است؛ ایجنت بدون آن‌ها پیش نمی‌رود.
+این بند تاریخی است و شمارش ۲۳/۶/۶/۴ را برای ۵ نوامبر ثبت می‌کند؛ بازشماری بسته‌ها در این به‌روزرسانی انجام نشده است. وضعیت جاری و فهرست باز در بخش ۳ آمده است. مرجع جزئیات هر بسته [BACKLOG_FA.md](BACKLOG_FA.md) و ماتریس پذیرش [docs/ael-next/17](docs/ael-next/17_ACCEPTANCE_MATRIX_FA.md) است. گام بعدی همچنان امضاهای انسانی، secretهای production و تصمیم‌های محصولی است.
 
 ## ۷. مأموریت AEL-implementation (P0 — ۵ نوامبر ۲۰۲۶)
 
-سند مادر v2.1 به مخزن منتقل شد ([docs/ael-implementation/](docs/ael-implementation/)). P0 انجام شد: CI fix (کامیت 68c6c45)، ایمن‌سازی importer و حذف تب توهمی (0fd2271)، آشتی PR/شاخه با ۱۸ تگ آرشیو (454709b). ممیزی کامل: [BASELINE_AUDIT.md](docs/ael-implementation/BASELINE_AUDIT.md). باقی‌ماندهٔ انسانی: تأیید CI روی مقصد، Branch Protection، بستن PRها، امضاهای محتوا. فازهای ۱–۸ در BACKLOG ثبت و پس از Gate P0 نوبت‌بندی می‌شوند.
+سند مادر نسخهٔ ۲٫۱ به مخزن منتقل شد ([docs/ael-implementation/](docs/ael-implementation/)). مرحلهٔ P0 انجام شد: اصلاح CI (کامیت `68c6c45`)، ایمن‌سازی importer و حذف تب توهمی (`0fd2271`)، آشتی PR و شاخه با ۱۸ تگ آرشیو (`454709b`). ممیزی کامل: [BASELINE_AUDIT.md](docs/ael-implementation/BASELINE_AUDIT.md). باقی‌ماندهٔ انسانی: تأیید CI روی مقصد، Branch Protection، بستن PRها، امضاهای محتوا. فازهای ۱–۸ در BACKLOG ثبت و پس از Gate P0 نوبت‌بندی می‌شوند.
 
 
 ---
@@ -70,5 +86,5 @@
 # وضعیت AEL-PDF-ARCHIVE-001 (۶ نوامبر ۲۰۲۶)
 - خط ورود PDF فعال: Scanner/Registry/MinerU 4.1.7 local/Classifier/Pairing/Archive محلی/Guard Fail-Closed در CI.
 - ۱۶ کلید پاسخ OCR کامل (middle_json)؛ ۱۵ دفترچه در صف OCR (قابل ازسرگیری: `npm run ael:pdf:ocr`).
-- **Rights: همه pending_review — متن کامل فقط محلی.** تصمیم مالک برای انتشار = HUMAN_REQUIRED.
-- Merge به main: `08a1293` (تأییدشده). گزارش کامل: `docs/ael-implementation/AEL_313_REPAIR_AND_MERGE_REPORT.md`
+- **وضعیت حقوق:** همهٔ موارد `pending_review` و متن کامل فقط محلی است. تصمیم مالک برای انتشار یک اقدام انسانی است.
+- **ادغام:** به شاخهٔ اصلی با کامیت `08a1293` انجام شد. گزارش کامل: `docs/ael-implementation/AEL_313_REPAIR_AND_MERGE_REPORT.md`

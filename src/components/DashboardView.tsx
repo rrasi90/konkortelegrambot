@@ -54,6 +54,8 @@ interface DashboardViewProps {
   stats: UserStats;
   nodeStates: Record<string, LearnerSixDState>;
   queue: ReviewCard[];
+  dueMistakeCards: number;
+  onStartFlashcardReview: () => void;
   roiRankings: ROINodeRanking[];
   examFrequencyList: MultiYearFrequencyInsight[];
   onStartDailySession: () => void;
@@ -134,6 +136,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   stats,
   nodeStates,
   queue,
+  dueMistakeCards,
+  onStartFlashcardReview,
   roiRankings,
   examFrequencyList,
   onStartDailySession,
@@ -169,6 +173,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       c.cardType === 'comparison_card' ||
       c.cardType === 'trap_note'
   );
+  const weakTopicCount = roiRankings.filter(
+    (ranking) => ranking.state.masteryScore < 50 && ranking.state.coverageStatus !== 'mastered'
+  ).length;
+  const nextStepReason = [
+    `${toFaDigits(queue.length)} کار در صف`,
+    dueMistakeCards > 0 ? `${toFaDigits(dueMistakeCards)} خطای قبلی` : null,
+    weakTopicCount > 0 ? `${toFaDigits(weakTopicCount)} مبحث ضعیف` : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+  const hasNextStep = queue.length > 0 || dueMistakeCards > 0;
 
   // محاسبه درصد خالص کنکور با فرمول نمره منفی (۳+ درست، ۱- غلط)
   const rawDenominator = Math.max(1, stats.totalAnswered * 3);
@@ -343,8 +358,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 مرور گام‌به‌گام درسنامه‌ها و تست‌های شناسنامه‌دار کنکور با پاسخ تشریحی کامل
               </h1>
 
-              <p className="text-xs sm:text-sm text-slate-300/90 leading-7">
-                پس از پاسخ به هر تست، توضیح کامل مستخرج از کتب مرجع، دام طراح سازمان سنجش و خلاصه درسنامه همان مبحث نمایش داده می‌شود و تسلط شما در درخت دانش به‌روز می‌گردد.
+              <p
+                data-testid="today-next-step-reason"
+                className="text-xs sm:text-sm text-slate-300/90 leading-7"
+              >
+                قدم بعدی از دادهٔ واقعی صف: {nextStepReason || 'هنوز کاری در صف نیست؛ با تعیین سطح شروع کن.'}
               </p>
 
               {/* خلاصه ترکیب صف امروز با زیرکارت‌های شیشه‌ای */}
@@ -368,19 +386,38 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
                 </div>
               </div>
+
+              {dueMistakeCards > 0 && (
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-300/25 bg-amber-300/10 px-3 py-2.5">
+                  <span className="text-base leading-7 text-amber-100">
+                    {toFaDigits(dueMistakeCards)} کارت خطا هم برای مرور امروز سررسید است.
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      tmaHaptic.impact('light');
+                      onStartFlashcardReview();
+                    }}
+                    className="min-h-[44px] rounded-xl border border-amber-300/40 px-3 py-2 text-sm font-bold text-amber-100 hover:bg-amber-300/15 cursor-pointer"
+                  >
+                    مرور کارت‌های خطا
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="pt-6 mt-6 border-t border-white/12 flex flex-wrap items-center justify-between gap-3">
               <button
                 type="button"
+                disabled={!hasNextStep}
                 onClick={() => {
                   tmaHaptic.impact('heavy');
                   onStartDailySession();
                 }}
-                className="min-h-[44px] px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm flex items-center gap-2 transition-all shadow-lg shadow-blue-600/25 cursor-pointer"
+                className="min-h-[44px] px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-45 text-white font-bold text-sm flex items-center gap-2 transition-all shadow-lg shadow-blue-600/25 cursor-pointer"
               >
                 <Play className="w-4 h-4 fill-current" />
-                <span>شروع مرور امروز ({queue.length} گام)</span>
+                <span>{hasNextStep ? 'شروع ۱۰ دقیقه‌ای' : 'صف امروز خالی است'}</span>
               </button>
 
               <div className="flex flex-wrap items-center gap-2">

@@ -33,6 +33,8 @@ interface SessionReportProps {
   onOpenMistakeNotebook: () => void;
   onRestartMistakes: (questionIds: string[]) => void;
   onExitSession: () => void;
+  nextStepLabel?: string;
+  exitLabel?: string;
 }
 
 const ERROR_LABELS: Record<string, string> = {
@@ -52,6 +54,8 @@ export const SessionReport: React.FC<SessionReportProps> = ({
   onOpenMistakeNotebook,
   onRestartMistakes,
   onExitSession,
+  nextStepLabel,
+  exitLabel = 'بازگشت به میز کار',
 }) => {
   const answered = results.filter((r) => !r.wasSkipped);
   const correct = results.filter((r) => r.wasCorrect);
@@ -217,6 +221,9 @@ export const SessionReport: React.FC<SessionReportProps> = ({
             : answered.length > 0
               ? 'همه پاسخ‌های این جلسه درست بود؛ برای تثبیت، مرور فردا را از دست ندهید.'
               : 'در این جلسه سؤالی پاسخ داده نشد؛ دفعهٔ بعد چند کارت تستی را هم امتحان کن.'}
+          {nextStepLabel && (
+            <div className="mt-1 font-bold text-amber-700 dark:text-amber-300">بخش بعد: {nextStepLabel}</div>
+          )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
           {retryQuestionIds.length > 0 && (
@@ -242,7 +249,7 @@ export const SessionReport: React.FC<SessionReportProps> = ({
             onClick={onExitSession}
             className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer"
           >
-            بازگشت به میز کار
+            {exitLabel}
             <ArrowLeft className="w-4 h-4" />
           </button>
         </div>

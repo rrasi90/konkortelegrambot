@@ -78,6 +78,19 @@ export interface ExamSelection {
   selectedAt: string;
 }
 
+/** ترجیح یادآور روزانه؛ یک ردیف برای هر کاربر. ارسال فقط با cron انجام می‌شود. */
+export interface ReminderPreference {
+  userId: string;
+  enabled: boolean;
+  timeLocal: string;
+  timezone: string;
+  weekdays: number[];
+  quietStart: string;
+  quietEnd: string;
+  onlyWhenDue: boolean;
+  lastSentOn: string | null;
+}
+
 export interface AuditEventInput {
   userId: string | null;
   action: string;
@@ -292,10 +305,16 @@ export interface DataStore {
   countRecentFailedAdminLogins?(input: { telegramUserId: number; sinceIso: string }): Promise<number>;
   createAdminLaunchTicket?(input: { tokenHash: string; adminUserId: string; telegramUserId: number; expiresAt: string }): Promise<void>;
   consumeAdminLaunchTicket?(input: { tokenHash: string; nowIso: string }): Promise<{ adminUserId: string; telegramUserId: number } | null>;
-  createFeedbackThread?(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string }): Promise<string>;
+  createFeedbackThread?(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string; relatedEntityType?: string | null; relatedEntityId?: string | null }): Promise<string>;
   addFeedbackMessage?(input: { threadId: string; authorKind: 'user' | 'admin'; authorId: string | null; body: string; isInternalNote: boolean }): Promise<void>;
   listFeedbackThreads?(input: { status: string | null; limit: number }): Promise<unknown[]>;
   listFeedbackMessages?(threadId: string): Promise<unknown[]>;
+
+  /* ---------- یادآور روزانه (cron) ---------- */
+  getReminderPreference?(userId: string): Promise<ReminderPreference | null>;
+  upsertReminderPreference?(preference: ReminderPreference): Promise<ReminderPreference>;
+  listReminderPreferences?(): Promise<ReminderPreference[]>;
+  markReminderSent?(userId: string, localDate: string): Promise<void>;
 
   /* ---------- مأموریت v2 Phase 2 — CRUD عمومی دامنهٔ آموزشی (فهرست‌سفید در routes) ---------- */
   upsertDomainRow?(table: string, row: Record<string, unknown>): Promise<Record<string, unknown>>;
@@ -1301,10 +1320,12 @@ export class SupabaseStore implements DataStore {
     return rows.length ? { adminUserId: String(rows[0]!.admin_user_id), telegramUserId: Number(rows[0]!.telegram_user_id) } : null;
   }
 
-  async createFeedbackThread(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string }): Promise<string> {
+  async createFeedbackThread(input: { userId: string | null; telegramUserId: number | null; chatId: number | null; category: string; body: string; relatedEntityType?: string | null; relatedEntityId?: string | null }): Promise<string> {
     const rows = await this.request('POST', 'feedback_threads', {
       user_id: input.userId, telegram_user_id: input.telegramUserId, chat_id: input.chatId,
       category: input.category, status: 'new',
+      related_entity_type: input.relatedEntityType ?? null,
+      related_entity_id: input.relatedEntityId ?? null,
     }) as Array<Record<string, unknown>> | null;
     const threadId = String(rows?.[0]!.id);
     await this.request('POST', 'feedback_messages', {
@@ -1332,6 +1353,54 @@ export class SupabaseStore implements DataStore {
   async listFeedbackMessages(threadId: string): Promise<unknown[]> {
     const rows = await this.request('GET', 'feedback_messages', undefined, `?thread_id=eq.${threadId}&order=created_at.asc`) as unknown[] | null;
     return rows ?? [];
+  }
+
+  async getReminderPreference(userId: string): Promise<ReminderPreference | null> {
+    const rows = await this.request('GET', 'reminder_preferences', undefined, `?user_id=eq.${encodeURIComponent(userId)}&select=*`) as Array<Record<string, unknown>> | null;
+    return rows?.[0] ? this.toReminder(rows[0]) : null;
+  }
+
+  async upsertReminderPreference(preference: ReminderPreference): Promise<ReminderPreference> {
+    const rows = await this.request('POST', 'reminder_preferences?on_conflict=user_id', {
+      user_id: preference.userId,
+      enabled: preference.enabled,
+      time_local: preference.timeLocal,
+      timezone: preference.timezone,
+      weekdays: preference.weekdays,
+      quiet_start: preference.quietStart,
+      quiet_end: preference.quietEnd,
+      only_when_due: preference.onlyWhenDue,
+      last_sent_on: preference.lastSentOn,
+      updated_at: new Date().toISOString(),
+    }) as Array<Record<string, unknown>> | null;
+    if (!rows?.[0]) throw new Error('reminder_preferences upsert failed');
+    return this.toReminder(rows[0]);
+  }
+
+  async listReminderPreferences(): Promise<ReminderPreference[]> {
+    const rows = await this.request('GET', 'reminder_preferences', undefined, '?enabled=eq.true&select=*&limit=500') as Array<Record<string, unknown>> | null;
+    return (rows ?? []).map((row) => this.toReminder(row));
+  }
+
+  async markReminderSent(userId: string, localDate: string): Promise<void> {
+    await this.request('PATCH', 'reminder_preferences', { last_sent_on: localDate }, `?user_id=eq.${encodeURIComponent(userId)}`);
+  }
+
+  private toReminder(row: Record<string, unknown>): ReminderPreference {
+    const weekdays = Array.isArray(row.weekdays)
+      ? row.weekdays.map((day) => Number(day)).filter((day) => Number.isInteger(day) && day >= 0 && day <= 6)
+      : [0, 1, 2, 3, 4, 5, 6];
+    return {
+      userId: String(row.user_id),
+      enabled: row.enabled === true,
+      timeLocal: String(row.time_local ?? '21:00'),
+      timezone: String(row.timezone ?? 'Asia/Tehran'),
+      weekdays,
+      quietStart: String(row.quiet_start ?? '23:00'),
+      quietEnd: String(row.quiet_end ?? '08:00'),
+      onlyWhenDue: row.only_when_due !== false,
+      lastSentOn: row.last_sent_on === null || row.last_sent_on === undefined ? null : String(row.last_sent_on),
+    };
   }
 
   /* ---------- مأموریت v2 Phase 2 ---------- */

@@ -1,0 +1,149 @@
+[
+ {
+  "viewport": "desktop",
+  "tab": "home",
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "desktop",
+  "tab": "study",
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "desktop",
+  "tab": "exams",
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "desktop",
+  "tab": "map",
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "desktop",
+  "tab": "lessons",
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "desktop",
+  "tab": "subject_hub",
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "desktop",
+  "tab": "notebook",
+  "scrollWidth": 1440,
+  "innerWidth": 1440,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "mobile",
+  "tab": "home",
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "mobile",
+  "tab": "study",
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "mobile",
+  "tab": "exams",
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "mobile",
+  "tab": "map",
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "mobile",
+  "tab": "lessons",
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "mobile",
+  "tab": "subject_hub",
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "mobile",
+  "tab": "notebook",
+  "scrollWidth": 390,
+  "innerWidth": 390,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "telegram",
+  "tab": "home",
+  "scrollWidth": 430,
+  "innerWidth": 430,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "telegram",
+  "tab": "study",
+  "scrollWidth": 430,
+  "innerWidth": 430,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "telegram",
+  "tab": "exams",
+  "scrollWidth": 430,
+  "innerWidth": 430,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "telegram",
+  "tab": "map",
+  "scrollWidth": 430,
+  "innerWidth": 430,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "telegram",
+  "tab": "lessons",
+  "scrollWidth": 430,
+  "innerWidth": 430,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "telegram",
+  "tab": "subject_hub",
+  "scrollWidth": 430,
+  "innerWidth": 430,
+  "overflowX": "no"
+ },
+ {
+  "viewport": "telegram",
+  "tab": "notebook",
+  "scrollWidth": 430,
+  "innerWidth": 430,
+  "overflowX": "no"
+ }
+]

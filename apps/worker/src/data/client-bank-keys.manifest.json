@@ -1,11 +1,12 @@
 {
-  "generatedAt": "2026-11-09T22:47:12.296Z",
+  "generatedAt": "2026-11-15T00:55:50.679Z",
   "registryPath": "apps/worker/src/data/client-bank-keys.server.ts",
-  "registrySha256": "16dca716d9fb4369ba3072544515a2b3f348bc0e97f58cf099ce945b0cdc7725",
-  "totalKeys": 237,
+  "registrySha256": "9cfaea5a0f971413635ca38a63a80434ff6f820401d49268b600dfda10be25ae",
+  "totalKeys": 584,
   "perBank": {
-    "konkorData": 208,
+    "konkorData": 443,
     "referenceBooksRepo": 27,
+    "yearlyKonkorExams": 112,
     "security-canary": 2
   },
   "canaryIds": [

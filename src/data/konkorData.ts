@@ -6,6 +6,7 @@
 
 import { YEARLY_KONKOR_QUESTIONS } from './yearlyKonkorExams';
 import { PHD_EXPANSION_NODES, PHD_EXPANSION_QUESTIONS } from './phdExpansionContent';
+import { CHAPTER_AUTHORED_QUESTIONS } from './chapterAuthoredQuestions';
 
 export type TrackId = 'common' | 'business' | 'industrial' | 'technology' | 'strategy';
 export type DependencyRelation = 'prerequisite' | 'cross_course';
@@ -2258,6 +2259,34 @@ export const INITIAL_QUESTION_BANK: QuestionItem[] = [
     ],
     expectedTimeMs: 40000,
   },
+  {
+    id: 'q.mb.cult.2',
+    nodeId: 'mb.culture',
+    examYear: 1404,
+    sourceReference: 'تألیفی — منبع: مدل سازگاری دنیسون و تئوری Z ویلیام اوشی',
+    text: 'در مدل سازگاری دنیسون (Denison)، بُعد «مشارکت» (Involvement) با کدام ویژگی در تئوری Z ویلیام اوشی (Ouchi) بیشترین هم‌پوشانی دارد؟',
+    options: [
+      'تصمیم‌گیری متمرکز و سلسله‌مراتب رسمی',
+      'تصمیم‌گیری مشارکتی، مالکیت فردی و وفاداری بلندمدت سازمان',
+      'کنترل بیرونی از طریق قوانین مکتوب و دستورالعمل‌های استاندارد',
+      'ارزیابی عملکرد صرفاً بر مبنای شاخص‌های مالی کوتاه‌مدت',
+    ],
+    expectedTimeMs: 45000,
+  },
+  {
+    id: 'q.mb.cult.3',
+    nodeId: 'mb.culture',
+    examYear: 1405,
+    sourceReference: 'تألیفی — منبع: تعریف کلیمات و فرهنگ (علاقه‌بند) و تمایز آن‌ها',
+    text: 'کدام گزینه تمایز درست بین «اقلیم سازمانی» (Organizational Climate) و «فرهنگ سازمانی» (Organizational Culture) را بیان می‌کند؟',
+    options: [
+      'اقلیم پدیده‌ای عمیق و ناخودآگاه است؛ فرهنگ سطحی و قابل‌مشاهده.',
+      'فرهنگ پدیده‌ای عمیق و ناخودآگاه است؛ اقلیم ادراک سطحی و قابل‌مشاهده از محیط کاری.',
+      'هر دو یکسان‌اند و فقط در روش سنجش متفاوت‌اند.',
+      'اقلیم مختص بخش دولتی و فرهنگ مختص بخش خصوصی است.',
+    ],
+    expectedTimeMs: 45000,
+  },
 
   // ۱۲. بازاریابی - PLC
   {
@@ -2351,6 +2380,20 @@ export const INITIAL_QUESTION_BANK: QuestionItem[] = [
     ],
     expectedTimeMs: 50000,
   },
+  {
+    id: 'q.inno.ambi.2',
+    nodeId: 'inno.ambidextrous',
+    examYear: 1405,
+    sourceReference: 'تألیفی — منبع: اکتشاف در مقابل بهره‌برداری (مارس و سیمون ۱۹۵۸)',
+    text: 'کدام گزینه تخصیص درست منابع بین «اکتشاف» (Exploration) و «بهره‌برداری» (Exploitation) را از نظر مارس و سیمون بیان می‌کند؟',
+    options: [
+      'تمام منابع صرف بهره‌برداری شود چون بازده کوتاه‌مدت قطعی است.',
+      'تمام منابع صرف اکتشاف شود چون بقای بلندمدت مهم‌تر است.',
+      'تعادل پویا: بهره‌برداری سود امروز و اکتشاف تضمین بقای فردا؛ هر دو ضروری‌اند.',
+      'اکتشاف فقط در بحران مالی معنا دارد.',
+    ],
+    expectedTimeMs: 45000,
+  },
 
   // ۱۶. مدیریت صنعتی - تحقیق در عملیات (سیمپلکس و دوگان)
   {
@@ -2441,6 +2484,20 @@ export const INITIAL_QUESTION_BANK: QuestionItem[] = [
       'اطلاعات‌افزار (Infoware)',
       'سازمان‌افزار (Orgaware)',
       'فن‌افزار (Technoware)',
+    ],
+    expectedTimeMs: 45000,
+  },
+  {
+    id: 'q.inno.tidd.2',
+    nodeId: 'inno.tidd_4p',
+    examYear: 1405,
+    sourceReference: 'تألیفی — منبع: مدل ۴P نوآوری تید و بسانت (استراتژی فرآیند)',
+    text: 'در مدل ۴P نوآوری تید و بسانت (Tidd & Bessant)، «فرآیند نوآوری» (Process Innovation) به کدام گزینه اشاره دارد؟',
+    options: [
+      'معرفی محصول یا خدمت جدید به بازار',
+      'بهبود یا ایجاد روش تولید و تحویل جدید یا به‌طور معنادار بهبودیافته',
+      'ورود به بازارهای جغرافیایی جدید',
+      'تغییر در ساختار سازمانی و سبک رهبری',
     ],
     expectedTimeMs: 45000,
   },
@@ -2900,6 +2957,8 @@ export const INITIAL_QUESTION_BANK: QuestionItem[] = [
   ...YEARLY_KONKOR_QUESTIONS,
   // ۳۳. گسترش محتوای دکتری: دروس غایب بسته‌های رسمی (مدیریت دولتی، سیاست‌گذاری، MIS/مدیریت دانش، مالی، روش تحقیق، HR، زبان، آمار)
   ...PHD_EXPANSION_QUESTIONS,
+  // ۳۴. تست‌های تألیفی فصل‌ها («هیچ فصل بدون سؤال») — کلید پاسخ فقط در رجیستری سمت سرور
+  ...CHAPTER_AUTHORED_QUESTIONS,
 ];
 
 /**

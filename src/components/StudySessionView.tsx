@@ -18,6 +18,8 @@ import {
 } from '../engine/aelEngine';
 import { MathText } from './MathText';
 import { SessionReport } from './SessionReportView';
+import type { MistakeReviewOutcome } from '../utils/mistakeReview';
+import { MISTAKE_ERROR_LABELS, type MistakeErrorType } from '../utils/mistakeNotebook';
 import {
   Clock,
   CheckCircle2,
@@ -35,6 +37,7 @@ import {
   Flame,
   Target,
   HelpCircle,
+  Layers,
 } from 'lucide-react';
 
 interface StudySessionViewProps {
@@ -50,7 +53,7 @@ interface StudySessionViewProps {
     selectedOption: number | null;
     confidence: 'high' | 'low';
     responseTimeMs: number;
-  }) => Promise<{ report: RippleReport; snapshot: SnapshotForRollback; reveal?: { correctOption: number; explanation: string; trapNote: string } }>;
+  }) => Promise<{ report: RippleReport; snapshot: SnapshotForRollback; reveal?: { correctOption: number; explanation: string; trapNote: string }; reviewCard?: MistakeReviewOutcome | null }>;
   onRollbackSlip: (snapshot: SnapshotForRollback, report: RippleReport) => RippleReport;
   onRateLessonInSession: (nodeId: string, rating: 1 | 2 | 3 | 4 | 5) => string;
   onDismissNonQuestionCard: (cardId: string) => void;
@@ -58,6 +61,8 @@ interface StudySessionViewProps {
   onOpenLessonNode: (nodeId: string) => void;
   onOpenMistakeNotebook: () => void;
   onRestartMistakes: (questionIds: string[]) => void;
+  onRecordMistakeReason: (questionId: string, errorType: MistakeErrorType) => void;
+  nextSegmentLabel?: string;
 }
 
 interface SessionAnswerResult {
@@ -88,6 +93,8 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
   onOpenLessonNode,
   onOpenMistakeNotebook,
   onRestartMistakes,
+  onRecordMistakeReason,
+  nextSegmentLabel,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sessionResults, setSessionResults] = useState<SessionAnswerResult[]>([]);
@@ -96,6 +103,8 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string }>>({});
   const [gradingNotice, setGradingNotice] = useState<string | null>(null);
+  const [reviewNotice, setReviewNotice] = useState<string | null>(null);
+  const [mistakeReasonSaved, setMistakeReasonSaved] = useState<MistakeErrorType | null>(null);
   const [activeReport, setActiveReport] = useState<RippleReport | null>(null);
   const [activeSnapshot, setActiveSnapshot] = useState<SnapshotForRollback | null>(null);
   const [lessonDrawerOpen, setLessonDrawerOpen] = useState(false);
@@ -124,6 +133,8 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
   useEffect(() => {
     setSelectedOption(null);
     setActiveReport(null);
+    setReviewNotice(null);
+    setMistakeReasonSaved(null);
     setActiveSnapshot(null);
     setLessonDrawerOpen(false);
     setConceptCheckChoice(null);
@@ -150,6 +161,8 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
         onOpenMistakeNotebook={onOpenMistakeNotebook}
         onRestartMistakes={onRestartMistakes}
         onExitSession={onExitSession}
+        nextStepLabel={nextSegmentLabel}
+        exitLabel={nextSegmentLabel ? 'ادامه به کارت‌ها' : 'بازگشت به میز کار'}
       />
     );
   }
@@ -224,6 +237,13 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
       var report = out.report;
       var snapshot = out.snapshot;
       reveal = out.reveal;
+      setReviewNotice(
+        out.reviewCard?.queued
+          ? out.reviewCard.created
+            ? 'این پرسش به کارت‌های مرور اضافه شد و در جلسهٔ بعدی مرور دیده می‌شود.'
+            : 'کارت این پرسش از قبل بود؛ برای مرور بعدی دوباره در صف قرار گرفت.'
+          : null,
+      );
     } catch (err) {
       if (err instanceof GradingUnavailableError) {
         setGradingNotice('تصحیح آنلاین در دسترس نیست — پاسخ شما بدون ثبت نتیجه ماند. برای تمرین معتبر به اینترنت متصل شوید.');
@@ -845,6 +865,41 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
                   </span>
                 </div>
                 <p className="text-xs leading-6 opacity-95">{activeReport.mentorMessage}</p>
+                {!activeReport.wasCorrect && !activeReport.wasSkipped && reviewNotice && (
+                  <div className="mt-2 flex items-start gap-2 rounded-lg bg-white/60 dark:bg-slate-900/50 border border-rose-500/20 px-3 py-2 text-xs leading-6">
+                    <Layers className="w-4 h-4 shrink-0 mt-0.5 text-rose-500" />
+                    <span>{reviewNotice}</span>
+                  </div>
+                )}
+
+                {!activeReport.wasCorrect && !activeReport.wasSkipped && (
+                  <div className="mt-3 rounded-xl border border-rose-500/20 bg-white/60 dark:bg-slate-900/50 p-3">
+                    <div className="text-base font-bold text-slate-800 dark:text-slate-100">علت این خطا چه بود؟</div>
+                    <p className="mt-1 text-sm leading-6 text-slate-500 dark:text-slate-400">ثبت علت، کارت مرور بعدی را هدفمند می‌کند.</p>
+                    <div className="mt-2 grid grid-cols-2 gap-1.5">
+                      {(['concept_gap', 'prerequisite_failure', 'misread', 'slip'] as MistakeErrorType[]).map((reason) => (
+                        <button
+                          key={reason}
+                          type="button"
+                          onClick={() => {
+                            onRecordMistakeReason(activeReport.questionId, reason);
+                            setMistakeReasonSaved(reason);
+                          }}
+                          className={`min-h-[44px] rounded-lg border px-2 py-2 text-sm font-bold cursor-pointer ${
+                            mistakeReasonSaved === reason
+                              ? 'border-rose-500 bg-rose-500/15 text-rose-800 dark:text-rose-200'
+                              : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
+                          }`}
+                        >
+                          {MISTAKE_ERROR_LABELS[reason]}
+                        </button>
+                      ))}
+                    </div>
+                    {mistakeReasonSaved && (
+                      <div className="mt-2 text-sm text-emerald-700 dark:text-emerald-300">ثبت شد؛ پرسش بعدی این کارت بر همین علت تمرکز می‌کند.</div>
+                    )}
+                  </div>
+                )}
 
                 {!activeReport.wasCorrect &&
                   !activeReport.wasSkipped &&
