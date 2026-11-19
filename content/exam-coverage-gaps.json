@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T20:40:16.121Z",
+  "generatedAt": "2026-11-19T20:49:30.359Z",
   "window": {
     "from": 1396,
     "to": 1405,
@@ -8,12 +8,12 @@
   },
   "totals": {
     "declared": 2925,
-    "inBank": 356,
+    "inBank": 714,
     "staged": 886,
-    "percentInBank": 12.2,
-    "percentWithStaged": 42.5,
-    "officialCoverage": 13.2,
-    "totalCoverage": 46.6,
+    "percentInBank": 24.4,
+    "percentWithStaged": 54.7,
+    "officialCoverage": 26.8,
+    "totalCoverage": 60.1,
     "verifiedDenominator": 2355,
     "verifiedYears": [
       1396,
@@ -48,74 +48,10 @@
     "1404: مخرج با شاهد دوم تأیید نشده؛ برای این سال درصد گزارش نمی‌شود",
     "1405: مخرج با شاهد دوم تأیید نشده؛ برای این سال درصد گزارش نمی‌شود",
     "1405: سند کلید رسمی در دسترس نیست",
-    "مالیه عمومی و بودجه: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
-    "مدیریت منابع انسانی: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
-    "مدیریت مالی: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
-    "مدیریت سرمایه‌گذاری و ریسک: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
-    "مبانی کارآفرینی: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
-    "حسابداری مالی و صنعتی: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
-    "دانش حمل‌ونقل: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
-    "دانش مدیریت بازرگانی و حمل‌ونقل: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
     "تحقیق در عملیات: پوشش 2٪ — سؤال‌های این درس در OCR قابل استخراج نیستند",
     "ریاضی و آمار: پوشش 4٪ — سؤال‌های این درس در OCR قابل استخراج نیستند"
   ],
   "bySection": [
-    {
-      "sectionId": "public_finance",
-      "title": "مالیه عمومی و بودجه",
-      "declared": 150,
-      "inBank": 0,
-      "percent": 0
-    },
-    {
-      "sectionId": "human_resources",
-      "title": "مدیریت منابع انسانی",
-      "declared": 150,
-      "inBank": 0,
-      "percent": 0
-    },
-    {
-      "sectionId": "financial_management",
-      "title": "مدیریت مالی",
-      "declared": 150,
-      "inBank": 0,
-      "percent": 0
-    },
-    {
-      "sectionId": "investment_risk",
-      "title": "مدیریت سرمایه‌گذاری و ریسک",
-      "declared": 150,
-      "inBank": 0,
-      "percent": 0
-    },
-    {
-      "sectionId": "entrepreneurship",
-      "title": "مبانی کارآفرینی",
-      "declared": 150,
-      "inBank": 0,
-      "percent": 0
-    },
-    {
-      "sectionId": "accounting",
-      "title": "حسابداری مالی و صنعتی",
-      "declared": 150,
-      "inBank": 0,
-      "percent": 0
-    },
-    {
-      "sectionId": "transportation",
-      "title": "دانش حمل‌ونقل",
-      "declared": 150,
-      "inBank": 0,
-      "percent": 0
-    },
-    {
-      "sectionId": "business_transportation",
-      "title": "دانش مدیریت بازرگانی و حمل‌ونقل",
-      "declared": 300,
-      "inBank": 0,
-      "percent": 0
-    },
     {
       "sectionId": "publishing",
       "title": "publishing",
@@ -138,11 +74,25 @@
       "percent": 4
     },
     {
+      "sectionId": "financial_management",
+      "title": "مدیریت مالی",
+      "declared": 150,
+      "inBank": 10,
+      "percent": 6.7
+    },
+    {
       "sectionId": "english",
       "title": "زبان عمومی و تخصصی (انگلیسی)",
       "declared": 280,
       "inBank": 21,
       "percent": 7.5
+    },
+    {
+      "sectionId": "investment_risk",
+      "title": "مدیریت سرمایه‌گذاری و ریسک",
+      "declared": 150,
+      "inBank": 27,
+      "percent": 18
     },
     {
       "sectionId": "production",
@@ -152,11 +102,53 @@
       "percent": 20.7
     },
     {
+      "sectionId": "accounting",
+      "title": "حسابداری مالی و صنعتی",
+      "declared": 150,
+      "inBank": 31,
+      "percent": 20.7
+    },
+    {
+      "sectionId": "transportation",
+      "title": "دانش حمل‌ونقل",
+      "declared": 150,
+      "inBank": 33,
+      "percent": 22
+    },
+    {
       "sectionId": "economics",
       "title": "اقتصاد خرد و کلان",
       "declared": 200,
       "inBank": 49,
       "percent": 24.5
+    },
+    {
+      "sectionId": "public_finance",
+      "title": "مالیه عمومی و بودجه",
+      "declared": 150,
+      "inBank": 48,
+      "percent": 32
+    },
+    {
+      "sectionId": "business_transportation",
+      "title": "دانش مدیریت بازرگانی و حمل‌ونقل",
+      "declared": 300,
+      "inBank": 103,
+      "percent": 34.3
+    },
+    {
+      "sectionId": "entrepreneurship",
+      "title": "مبانی کارآفرینی",
+      "declared": 150,
+      "inBank": 52,
+      "percent": 34.7
+    },
+    {
+      "sectionId": "human_resources",
+      "title": "مدیریت منابع انسانی",
+      "declared": 150,
+      "inBank": 54,
+      "percent": 36
     },
     {
       "sectionId": "management_theories",
@@ -185,9 +177,9 @@
       "year": 1396,
       "declared": 310,
       "declaredVerified": true,
-      "inBank": 36,
-      "missing": 274,
-      "percent": 11.6,
+      "inBank": 72,
+      "missing": 238,
+      "percent": 23.2,
       "extracted": 142,
       "staged": 122,
       "keyEntries": 310,
@@ -198,9 +190,9 @@
       "year": 1397,
       "declared": 295,
       "declaredVerified": true,
-      "inBank": 46,
-      "missing": 249,
-      "percent": 15.6,
+      "inBank": 90,
+      "missing": 205,
+      "percent": 30.5,
       "extracted": 133,
       "staged": 114,
       "keyEntries": 295,
@@ -211,9 +203,9 @@
       "year": 1398,
       "declared": 295,
       "declaredVerified": true,
-      "inBank": 45,
-      "missing": 250,
-      "percent": 15.3,
+      "inBank": 90,
+      "missing": 205,
+      "percent": 30.5,
       "extracted": 141,
       "staged": 122,
       "keyEntries": 295,
@@ -224,9 +216,9 @@
       "year": 1399,
       "declared": 295,
       "declaredVerified": true,
-      "inBank": 40,
-      "missing": 255,
-      "percent": 13.6,
+      "inBank": 75,
+      "missing": 220,
+      "percent": 25.4,
       "extracted": 117,
       "staged": 93,
       "keyEntries": 295,
@@ -237,9 +229,9 @@
       "year": 1400,
       "declared": 295,
       "declaredVerified": true,
-      "inBank": 25,
-      "missing": 270,
-      "percent": 8.5,
+      "inBank": 47,
+      "missing": 248,
+      "percent": 15.9,
       "extracted": 98,
       "staged": 54,
       "keyEntries": 236,
@@ -250,9 +242,9 @@
       "year": 1401,
       "declared": 295,
       "declaredVerified": true,
-      "inBank": 45,
-      "missing": 250,
-      "percent": 15.3,
+      "inBank": 93,
+      "missing": 202,
+      "percent": 31.5,
       "extracted": 133,
       "staged": 110,
       "keyEntries": 295,
@@ -263,9 +255,9 @@
       "year": 1402,
       "declared": 285,
       "declaredVerified": true,
-      "inBank": 34,
-      "missing": 251,
-      "percent": 11.9,
+      "inBank": 70,
+      "missing": 215,
+      "percent": 24.6,
       "extracted": 103,
       "staged": 73,
       "keyEntries": 270,
@@ -276,9 +268,9 @@
       "year": 1403,
       "declared": 285,
       "declaredVerified": true,
-      "inBank": 41,
-      "missing": 244,
-      "percent": 14.4,
+      "inBank": 93,
+      "missing": 192,
+      "percent": 32.6,
       "extracted": 113,
       "staged": 98,
       "keyEntries": 285,
@@ -289,9 +281,9 @@
       "year": 1404,
       "declared": 285,
       "declaredVerified": false,
-      "inBank": 35,
-      "missing": 250,
-      "percent": 12.3,
+      "inBank": 75,
+      "missing": 210,
+      "percent": 26.3,
       "extracted": 118,
       "staged": 100,
       "keyEntries": 293,

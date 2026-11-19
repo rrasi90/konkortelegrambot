@@ -183,6 +183,158 @@ export const SUBJECT_COURSE_DEFINITIONS: SubjectCourseDefinition[] = [
       'واژگان پرتکرار مدیریت (استراتژی، بازاریابی، مالی، منابع انسانی)، ساختارهای گرامری مهم، مهارت‌های خواندن سریع و درک مطلب تخصصی (Reading Comprehension) و کلوزتست',
     diagramTags: ['english', 'vocabulary', 'زبان'],
   },
+  {
+    id: 'public_finance',
+    title: 'مالیه عمومی و بودجه',
+    shortTitle: 'مالیه عمومی',
+    englishTitle: 'Public Finance & Budgeting',
+    badge: '۱۵ تست در کنکور ارشد',
+    accentColor: 'sky',
+    gradient: 'from-sky-700 to-cyan-800',
+    questionCountInExam: '۱۵ سؤال (سؤالات ۱۰۶ تا ۱۲۰ دفترچهٔ ۱۴۰۵)',
+    coefficientMaster: 'در دفترچهٔ ۱۴۰۵ ضریب صفر ثبت شده؛ اهمیت درس به ترکیب درسی گرایش بستگی دارد',
+    coefficientDoctorate: 'ضریب دکتری در مخزن ثبت نشده است',
+    primaryBookId: '',
+    primaryBookTitle: 'کتاب مرجع اختصاصی در مخزن ثبت نشده؛ منابع دکتری: اندرسون و الوانی',
+    primaryAuthor: 'جیمز اندرسون (ترجمهٔ داوود کیانی)؛ دکتر سیدمهدی الوانی',
+    whyImportantInExam:
+      'این درس در همهٔ دفترچه‌های ۱۳۹۶ تا ۱۴۰۵ حاضر است و سالانه ۱۵ سؤال مستقیم در مجموعهٔ مدیریت دارد.',
+    goldenChaptersSummary: 'مرور سطح درس؛ تفکیک مبحثی در گام شش برنامهٔ پوشش افزوده می‌شود',
+    diagramTags: ['مالیه', 'بودجه', 'tax'],
+  },
+  {
+    id: 'human_resources',
+    title: 'مدیریت منابع انسانی',
+    shortTitle: 'منابع انسانی',
+    englishTitle: 'Human Resource Management',
+    badge: '۱۵ تست در کنکور ارشد',
+    accentColor: 'rose',
+    gradient: 'from-rose-700 to-red-800',
+    questionCountInExam: '۱۵ سؤال (سؤالات ۱۲۱ تا ۱۳۵ دفترچهٔ ۱۴۰۵)',
+    coefficientMaster: 'در دفترچهٔ ۱۴۰۵ ضریب صفر ثبت شده؛ اهمیت درس به ترکیب درسی گرایش بستگی دارد',
+    coefficientDoctorate: 'ضریب دکتری در مخزن ثبت نشده است',
+    primaryBookId: '',
+    primaryBookTitle: 'A Handbook of Human Resource Management Practice؛ Human Resource Champions',
+    primaryAuthor: 'مایکل آرمسترانگ؛ دیوید اولریش',
+    whyImportantInExam:
+      'مدل اولریش و مباحث استخدام، جبران خدمات و ارزیابی عملکرد در سؤالات پرتکرار ارشد و دکتری حضور مستمر دارند.',
+    goldenChaptersSummary: 'مرور سطح درس؛ تفکیک مبحثی در گام شش برنامهٔ پوشش افزوده می‌شود',
+    diagramTags: ['ulrich', 'جبران خدمات', 'استخدام'],
+  },
+  {
+    id: 'financial_management',
+    title: 'مدیریت مالی',
+    shortTitle: 'مدیریت مالی',
+    englishTitle: 'Financial Management',
+    badge: '۱۵ تست در کنکور ارشد',
+    accentColor: 'cyan',
+    gradient: 'from-cyan-700 to-sky-800',
+    questionCountInExam: '۱۵ سؤال (سؤالات ۱۵۱ تا ۱۶۵ دفترچهٔ ۱۴۰۵)',
+    coefficientMaster: 'در دفترچهٔ ۱۴۰۵ ضریب صفر ثبت شده؛ اهمیت درس به ترکیب درسی گرایش بستگی دارد',
+    coefficientDoctorate: 'ضریب دکتری در مخزن ثبت نشده است',
+    primaryBookId: '',
+    primaryBookTitle: 'اصول مدیریت مالی، گیتمان (ترجمهٔ جهانخانی)؛ Principles of Finance (OpenStax)',
+    primaryAuthor: 'لارنس گیتمان؛ تیم جنکینز و همکاران (OpenStax)',
+    whyImportantInExam:
+      'بخش بزرگی از سؤالات این درس محاسباتی است؛ ارزش زمانی پول و هزینهٔ سرمایه کلیدهای نمره‌آور آن‌اند.',
+    goldenChaptersSummary: 'مرور سطح درس؛ تفکیک مبحثی در گام شش برنامهٔ پوشش افزوده می‌شود',
+    diagramTags: ['TVM', 'هزینهٔ سرمایه', 'NPV'],
+  },
+  {
+    id: 'investment_risk',
+    title: 'مدیریت سرمایه‌گذاری و ریسک',
+    shortTitle: 'سرمایه‌گذاری و ریسک',
+    englishTitle: 'Investment & Risk Management',
+    badge: '۱۵ تست در کنکور ارشد',
+    accentColor: 'teal',
+    gradient: 'from-teal-700 to-emerald-800',
+    questionCountInExam: '۱۵ سؤال (سؤالات ۱۹۶ تا ۲۱۰ دفترچهٔ ۱۴۰۵)',
+    coefficientMaster: 'در دفترچهٔ ۱۴۰۵ ضریب صفر ثبت شده؛ اهمیت درس به ترکیب درسی گرایش بستگی دارد',
+    coefficientDoctorate: 'ضریب دکتری در مخزن ثبت نشده است',
+    primaryBookId: '',
+    primaryBookTitle: 'Investments (Bodie, Kane & Marcus)؛ Efficient Capital Markets (Fama, 1970)',
+    primaryAuthor: 'زوی بودی، کین و ماکوس؛ یوجین فاما',
+    whyImportantInExam:
+      'پرتفوی، CAPM و سطوح سه‌گانهٔ کارایی بازار از پرتکرارترین مباحث محاسباتی و تعریفی این درس‌اند.',
+    goldenChaptersSummary: 'مرور سطح درس؛ تفکیک مبحثی در گام شش برنامهٔ پوشش افزوده می‌شود',
+    diagramTags: ['CAPM', 'پرتفوی', 'کارایی'],
+  },
+  {
+    id: 'entrepreneurship',
+    title: 'مبانی کارآفرینی',
+    shortTitle: 'کارآفرینی',
+    englishTitle: 'Entrepreneurship Fundamentals',
+    badge: '۱۵ تست در کنکور ارشد',
+    accentColor: 'amber',
+    gradient: 'from-amber-600 to-orange-700',
+    questionCountInExam: '۱۵ سؤال (سؤالات ۲۱۱ تا ۲۲۵ دفترچهٔ ۱۴۰۵)',
+    coefficientMaster: 'در دفترچهٔ ۱۴۰۵ ضریب صفر ثبت شده؛ اهمیت درس به ترکیب درسی گرایش بستگی دارد',
+    coefficientDoctorate: 'ضریب دکتری در مخزن ثبت نشده است',
+    primaryBookId: '',
+    primaryBookTitle: 'کتاب مرجع اختصاصی در مخزن ثبت نشده است',
+    primaryAuthor: 'ثبت‌نشده',
+    whyImportantInExam:
+      'درس ۱۵ سؤالیِ همیشگی دفترچه؛ بخش تعریفی آن با مکتب کارآفرینی مینتزبرگ هم‌پوشانی دارد.',
+    goldenChaptersSummary: 'مرور سطح درس؛ تفکیک مبحثی در گام شش برنامهٔ پوشش افزوده می‌شود',
+    diagramTags: ['فرصت‌یابی', 'کارآفرینی'],
+  },
+  {
+    id: 'accounting',
+    title: 'حسابداری مالی و صنعتی',
+    shortTitle: 'حسابداری',
+    englishTitle: 'Financial & Cost Accounting',
+    badge: '۱۵ تست در کنکور ارشد',
+    accentColor: 'slate',
+    gradient: 'from-slate-600 to-slate-800',
+    questionCountInExam: '۱۵ سؤال (سؤالات ۲۲۶ تا ۲۴۰ دفترچهٔ ۱۴۰۵)',
+    coefficientMaster: 'در دفترچهٔ ۱۴۰۵ ضریب صفر ثبت شده؛ اهمیت درس به ترکیب درسی گرایش بستگی دارد',
+    coefficientDoctorate: 'ضریب دکتری در مخزن ثبت نشده است',
+    primaryBookId: '',
+    primaryBookTitle: 'کتاب مرجع اختصاصی در مخزن ثبت نشده است',
+    primaryAuthor: 'ثبت‌نشده',
+    whyImportantInExam:
+      'سؤالات این درس عمدتاً محاسباتی‌اند؛ ترازنامه، بهای تمام‌شده و نسبت‌های مالی ستون‌های اصلی آن‌اند.',
+    goldenChaptersSummary: 'مرور سطح درس؛ تفکیک مبحثی در گام شش برنامهٔ پوشش افزوده می‌شود',
+    diagramTags: ['ترازنامه', 'نسبت‌ها', 'بهای تمام‌شده'],
+  },
+  {
+    id: 'transportation',
+    title: 'دانش حمل‌ونقل',
+    shortTitle: 'حمل‌ونقل',
+    englishTitle: 'Transportation Knowledge',
+    badge: '۱۵ تست در کنکور ارشد',
+    accentColor: 'lime',
+    gradient: 'from-lime-700 to-green-800',
+    questionCountInExam: '۱۵ سؤال (سؤالات ۲۴۱ تا ۲۵۵ دفترچهٔ ۱۴۰۵)',
+    coefficientMaster: 'در دفترچهٔ ۱۴۰۵ ضریب صفر ثبت شده؛ اهمیت درس به ترکیب درسی گرایش بستگی دارد',
+    coefficientDoctorate: 'ضریب دکتری در مخزن ثبت نشده است',
+    primaryBookId: '',
+    primaryBookTitle: 'کتاب مرجع اختصاصی در مخزن ثبت نشده است',
+    primaryAuthor: 'ثبت‌نشده',
+    whyImportantInExam:
+      'بخش اختصاصی گرایش حمل‌ونقل؛ در همهٔ دفترچه‌های ده‌سال اخیر با ۱۵ سؤال حاضر است.',
+    goldenChaptersSummary: 'مرور سطح درس؛ تفکیک مبحثی در گام شش برنامهٔ پوشش افزوده می‌شود',
+    diagramTags: ['حمل‌ونقل', 'لجستیک'],
+  },
+  {
+    id: 'business_transportation',
+    title: 'دانش مدیریت بازرگانی و حمل‌ونقل',
+    shortTitle: 'بازرگانی و حمل‌ونقل',
+    englishTitle: 'Commercial & Transport Management Knowledge',
+    badge: '۳۰ تست در کنکور ارشد',
+    accentColor: 'orange',
+    gradient: 'from-orange-700 to-amber-800',
+    questionCountInExam: '۳۰ سؤال (سؤالات ۲۵۶ تا ۲۸۵ دفترچهٔ ۱۴۰۵)',
+    coefficientMaster: 'در دفترچهٔ ۱۴۰۵ ضریب صفر ثبت شده؛ اهمیت درس به ترکیب درسی گرایش بستگی دارد',
+    coefficientDoctorate: 'ضریب دکتری در مخزن ثبت نشده است',
+    primaryBookId: '',
+    primaryBookTitle: 'کتاب مرجع اختصاصی در مخزن ثبت نشده است',
+    primaryAuthor: 'ثبت‌نشده',
+    whyImportantInExam:
+      'بزرگ‌ترین درس دفترچه با ۳۰ سؤال؛ ترکیب بازرگانی، قراردادهای بین‌الملل و توزیع فیزیکی.',
+    goldenChaptersSummary: 'مرور سطح درس؛ تفکیک مبحثی در گام شش برنامهٔ پوشش افزوده می‌شود',
+    diagramTags: ['بازرگانی', 'اینکوترمز', 'توزیع'],
+  },
 ];
 
 /**
@@ -192,6 +344,22 @@ export function getCourseSectionForNode(node: KnowledgeNode): KonkorCourseSectio
   const nid = node.id.toLowerCase();
   const c = node.course.toLowerCase();
   const t = node.topic.toLowerCase();
+
+  // گره‌های سطح‌درس (هاب): نگاشت صریح شناسه، پیش از هر حدس متنی.
+  if (nid.endsWith('_hub')) {
+    const hubMap: Record<string, KonkorCourseSectionId> = {
+      'bus.pubfin_hub': 'public_finance',
+      'bus.hr_hub': 'human_resources',
+      'bus.finmgmt_hub': 'financial_management',
+      'bus.invrisk_hub': 'investment_risk',
+      'bus.entrep_hub': 'entrepreneurship',
+      'bus.accounting_hub': 'accounting',
+      'bus.transport_hub': 'transportation',
+      'bus.commerce_transport_hub': 'business_transportation',
+    };
+    const mapped = hubMap[nid];
+    if (mapped) return mapped;
+  }
 
   if (c.includes('اسلام') || nid.includes('islamic')) return 'islamic';
   if (c.includes('زبان') || nid.includes('english') || nid.includes('eng.')) return 'english';
@@ -237,6 +405,14 @@ export function getCourseSectionForQuestion(
       'operations_research',
       'production',
       'marketing',
+      'public_finance',
+      'human_resources',
+      'financial_management',
+      'investment_risk',
+      'entrepreneurship',
+      'accounting',
+      'transportation',
+      'business_transportation',
     ];
     if (valid.includes(q.courseSectionId as KonkorCourseSectionId)) {
       return q.courseSectionId as KonkorCourseSectionId;

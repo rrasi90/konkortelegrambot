@@ -42,17 +42,16 @@ describe('دفترچه ارشد مدیریت ۱۴۰۵ — کد ۱۱۴۲ / کنت
     expect(ranges.reduce((total, range) => total + range.count, 0)).toBe(285);
   });
 
-  it('برای درس‌هایی که گره دانش جامع ندارند، node حدسی نمی‌سازد', () => {
-    const unmapped = KONKOR_COURSE_SECTIONS.filter((section) => section.defaultNodeId === null);
-    expect(unmapped.map((section) => section.id)).toEqual([
-      'public_finance',
-      'human_resources',
-      'financial_management',
-      'investment_risk',
-      'entrepreneurship',
-      'accounting',
-      'transportation',
-      'business_transportation',
-    ]);
+  it('هر ۱۶ درس رسمی گرهٔ برنامهٔ درسی دارد؛ درس‌های تازه با گره سطح‌درس (هاب)', async () => {
+    const { INITIAL_KNOWLEDGE_NODES } = await import('../data/konkorData');
+    const nodeIds = new Set(INITIAL_KNOWLEDGE_NODES.map((node) => node.id));
+    for (const section of KONKOR_COURSE_SECTIONS) {
+      expect(section.defaultNodeId, section.id).toBeTruthy();
+      expect(nodeIds.has(section.defaultNodeId!)).toBe(true);
+    }
+    // هاب‌ها عمداً گره موضوعی نیستند؛ فقط جای مرور سطح‌درس‌اند.
+    const hubs = INITIAL_KNOWLEDGE_NODES.filter((node) => node.id.endsWith('_hub'));
+    expect(hubs.length).toBeGreaterThanOrEqual(8);
+    for (const hub of hubs) expect(hub.chapter).toBe('مرور سطح درس');
   });
 });

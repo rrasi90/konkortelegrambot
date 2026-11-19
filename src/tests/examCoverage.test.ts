@@ -38,8 +38,8 @@ describe('پوشش واقعی بانک سؤال', () => {
 
     expect(arshad.percent).toBeGreaterThanOrEqual(0);
     expect(arshad.percent).toBeLessThanOrEqual(100);
-    // بانک فعلی چند ده سؤال از چند هزار سؤال است
-    expect(arshad.percent).toBeLessThan(10);
+    // بانک هنوز فاصلهٔ زیادی تا پوشش کامل دارد؛ این گارد جلوی ادعای «نزدیک ۱۰۰٪» را می‌گیرد.
+    expect(arshad.percent).toBeLessThan(30);
   });
 
   it('برای دکتری هیچ دفترچه‌ای ثبت نشده و درصد به‌جای عدد ساختگی صفر است', () => {

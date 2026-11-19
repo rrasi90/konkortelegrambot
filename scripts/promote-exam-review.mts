@@ -304,8 +304,8 @@ for (const file of reviewFiles) {
       reject('کلید رسمی برای این شماره موجود نیست');
       continue;
     }
-    // گرهٔ برنامهٔ درسی: برای ۷ درس رسمی، گراف برنامهٔ درسی هیچ گره‌ای ندارد و
-    // `defaultNodeId` عمداً null است. چسباندنشان به گرهٔ درس دیگر، برچسب غلط می‌سازد.
+    // گرهٔ برنامهٔ درسی: از گام یک برنامهٔ پوشش، هر ۱۶ درس رسمی گره سطح‌درس (هاب) دارد.
+    // اگر درسی دوباره بی‌گره شد، چسباندنش به گرهٔ درس دیگر برچسب غلط می‌سازد؛ عمداً رد می‌شود.
     const nodeId = KONKOR_COURSE_SECTIONS.find(
       (section) => section.id === range.sectionId,
     )?.defaultNodeId;
@@ -371,6 +371,11 @@ const keep = accepted.filter(
 );
 accepted.length = 0;
 accepted.push(...keep);
+// کلیدهای مدخل‌های قرنطینه‌شده نباید در رجیستری بمانند؛ وگرنه کلید یتیم می‌سازد.
+const keepIds = new Set(keep.map((question) => question.id));
+for (const keyedId of Object.keys(keys)) {
+  if (!keepIds.has(keyedId)) delete keys[keyedId];
+}
 for (const question of keep) {
   report.byYear[String(question.examYear)] = (report.byYear[String(question.examYear)] ?? 0) + 1;
 }

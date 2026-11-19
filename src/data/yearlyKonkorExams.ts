@@ -70,7 +70,7 @@ export interface YearlyKonkorQuestion extends QuestionItem {
 export const KONKOR_COURSE_SECTIONS: {
   id: KonkorCourseSectionId;
   title: string;
-  /** null means the current syllabus graph has no defensible single default node for this whole subject. */
+  /** null یعنی گراف برنامهٔ درسی هنوز گرهٔ قابل‌دفاعی برای این درس ندارد؛ از گام یک١٬۴۰۶ هیچ درسی null نیست مگر با تصمیم مالک. */
   defaultNodeId: string | null;
 }[] = [
   { id: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', defaultNodeId: 'bus.english_eshraghi' },
@@ -78,17 +78,17 @@ export const KONKOR_COURSE_SECTIONS: {
   { id: 'math_stats', title: 'ریاضی و آمار', defaultNodeId: 'bus.math_stats_ranjbaran_tourani' },
   { id: 'management_theories', title: 'تئوری‌های مدیریت', defaultNodeId: 'mb.structure' },
   { id: 'economics', title: 'اقتصاد خرد و کلان', defaultNodeId: 'bus.econ_nazari' },
-  { id: 'public_finance', title: 'مالیه عمومی و بودجه', defaultNodeId: null },
-  { id: 'human_resources', title: 'مدیریت منابع انسانی', defaultNodeId: null },
+  { id: 'public_finance', title: 'مالیه عمومی و بودجه', defaultNodeId: 'bus.pubfin_hub' },
+  { id: 'human_resources', title: 'مدیریت منابع انسانی', defaultNodeId: 'bus.hr_hub' },
   { id: 'operations_research', title: 'تحقیق در عملیات', defaultNodeId: 'ind.or_simplex_duality' },
-  { id: 'financial_management', title: 'مدیریت مالی', defaultNodeId: null },
+  { id: 'financial_management', title: 'مدیریت مالی', defaultNodeId: 'bus.finmgmt_hub' },
   { id: 'production', title: 'مدیریت تولید', defaultNodeId: 'ind.pom_eoq_mrp' },
   { id: 'marketing', title: 'بازاریابی', defaultNodeId: 'mkt.plc' },
-  { id: 'investment_risk', title: 'مدیریت سرمایه‌گذاری و ریسک', defaultNodeId: null },
-  { id: 'entrepreneurship', title: 'مبانی کارآفرینی', defaultNodeId: null },
-  { id: 'accounting', title: 'حسابداری مالی و صنعتی', defaultNodeId: null },
-  { id: 'transportation', title: 'دانش حمل‌ونقل', defaultNodeId: null },
-  { id: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', defaultNodeId: null },
+  { id: 'investment_risk', title: 'مدیریت سرمایه‌گذاری و ریسک', defaultNodeId: 'bus.invrisk_hub' },
+  { id: 'entrepreneurship', title: 'مبانی کارآفرینی', defaultNodeId: 'bus.entrep_hub' },
+  { id: 'accounting', title: 'حسابداری مالی و صنعتی', defaultNodeId: 'bus.accounting_hub' },
+  { id: 'transportation', title: 'دانش حمل‌ونقل', defaultNodeId: 'bus.transport_hub' },
+  { id: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', defaultNodeId: 'bus.commerce_transport_hub' },
 ];
 
 /**

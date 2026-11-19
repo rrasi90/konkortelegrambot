@@ -410,6 +410,234 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1396.117",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 117,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 117 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "گروه بندی سرمایهگذاری های دولتی کدام است؟",
+    "options": [
+      "زیربنایی - اجتماعی - انتفاعی",
+      "زیربنایی - عمرانی - انتفاعی",
+      "اجتماعی - عمرانی - اقتصادی",
+      "مالی - انتفاعی - اجتماعی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.118",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 118,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 118 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تفاوت میان مالیه خصوصی و مالیه عمومی چیست؟",
+    "options": [
+      "سیاست کسری بودجه دارد (مالیه عمومی و خصوصی)، سیاست کسری بودجه ندارد (مالیه عمومی).",
+      "سود اجتماعی (مالیه عمومی و خصوصی)، سود شخصی (مالیه عمومی).",
+      "مخاطره کمتر در مالیه خصوصی، مخاطره بیشتر در مالیه عمومی.",
+      "بودجه سالیانه نیاز است (مالیه خصوصی)، نیاز به بودجه سالانه نیست (مالیه عمومی)."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.124",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 124,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 124 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "درآمدهای مؤسسات انتفاعی و بازرگانی وابسته به دولت کجا واریز می‌شود؟",
+    "options": [
+      "درآمد عمومی",
+      "درآمد مالی",
+      "درآمد اختصاصی",
+      "درآمد تسعیر ارز"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.127",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 127,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 127 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در مقایسه مالیات های اسلامی با مالیات های حکومتی، خمس منفعت و فواید کسب با کدام نوع مالیات هماهنگی دارد؟",
+    "options": [
+      "بر درآمد",
+      "سرانه",
+      "بر کالاها و خدمات",
+      "بر پس انداز یا سود سالیانه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.131",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 131,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 131 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام فرایند، یافتن فرد شایسته برای تصدی پست خالی از میان داوطلبان شغلی برای احراز پست موردنظر است؟",
+    "options": [
+      "جذب و بکارگیری",
+      "کارمندیابی",
+      "انتخاب",
+      "انتصاب"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.133",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 133,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 133 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "زمانی که فرد در تصمیم گیری پیرامون مسیر ترقی، سازمان های ارگانیک کوچک را برای کارکردن ترجیح می‌دهد، در کدام لنگرگاه مسیر ترقی قرار دارد؟",
+    "options": [
+      "استقلال",
+      "شایستگی فنی - کارکردی",
+      "امنیت",
+      "صلاحیت مدیریتی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.134",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 134,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 134 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام مورد، تمرکز اصلی روش توسعه مدیریت کاهش ناسازگاری‌ها و اصطکاک رفتارهای متقابل شخصی است؟",
+    "options": [
+      "مربیگری",
+      "آموزش حساسیت",
+      "ایفای نقش",
+      "بازی کسبوکار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.137",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 137,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 137 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام روش آموزش و بهبود سازمانی، این است که کارکنان شناختی عمیقتر نسبت به رفتار خود و دیگران بهدست آورند؟",
+    "options": [
+      "آموزش حساسیت",
+      "تیمسازی",
+      "بازخور پیمایشی",
+      "الگوسازی رفتاری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.138",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 138,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 138 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام فرایند، ماهیت و ویژگی های هر یک از مشاغل در سازمان بررسی می‌گردد و اطلاعات کافی درباره آن‌ها جمع‌آوری و گزارش می‌شود؟",
+    "options": [
+      "طراحی شغل",
+      "شرایط احراز شغل",
+      "شرح شغل",
+      "تجزیه و تحلیل شغل"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.139",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 139,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 139 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام روش جمع‌آوری اطلاعات درباره مشاغل، تحلیل گر معین می‌کند که اولاً شغل از چه عناصری تشکیل شده است و ثانیاً، هر یک از این عناصر چه سهمی در شغل دارند؟",
+    "options": [
+      "پرسش نامه",
+      "پرسش نامه تجزیه و تحلیل سمت",
+      "نشست متخصصان و کارشناسان",
+      "ثبت وقایع"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.140",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 140,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 140 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تأکید بر زمان کوتاهمدت و افراد، بیانگر کدام نقش منابع انسانی است؟",
+    "options": [
+      "کارشناس عملیاتی",
+      "شریک استراتژیک",
+      "توسعهدهنده سرمایه انسانی",
+      "حامی کارکنان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.143",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 143,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 143 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "توزیع اجباری و انتخاب اجباری، به ترتیب، جزو کدام استانداردهای ارزیابی هستند؟",
+    "options": [
+      "نسبی - نسبی",
+      "نسبی - مطلق",
+      "مطلق - نسبی",
+      "مطلق - مطلق"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1396.181",
     "nodeId": "ind.pom_eoq_mrp",
     "examYear": 1396,
@@ -596,6 +824,462 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
       "تجزیه و تحلیل روند",
       "هموارسازی نمایی",
       "ترکیب نیروهای فروش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.215",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 215,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 215 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "استراتژی ترکیب اختیارهای دوطرفه یکسان (استرادل)، در چه شرایطی به کار گرفته می‌شود؟",
+    "options": [
+      "ثبات نسبی قیمت",
+      "نوسان شدید قیمت",
+      "افزایش شدید قیمت",
+      "کاهش شدید قیمت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.216",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 216,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 216 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "فرض ضمنی در محاسبه نرخ بازده تا سررسید (YTM) اوراق قرضه این است که بهره های دریافتی مجدداً با نرخ .............. سرمایه گذاری گردد.",
+    "options": [
+      "کوپن",
+      "بازده تا سررسید در زمان سرمایه گذاری مجدد",
+      "بازده بازار",
+      "بازده تا سررسید رایج در زمانی که بهره دریافتی وصول می‌شود."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.224",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 224,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 224 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مخاطره پذیری (Risk Taking) و ادراک از مخاطره (Risk Perception)، چه نسبتی با یکدیگر دارند؟",
+    "options": [
+      "دوره های آموزشی کارآفرینی، بیشتر به دنبال اثرگذاری بر مخاطره پذیری افراد هستند، نه ادراک از مخاطره آنان.",
+      "ادراک از مخاطره، یک ویژگی شخصی پایدار است، ولی مخاطره پذیری قابلیت تغییر بیشتری دارد.",
+      "مخاطره پذیری یک ویژگی شخصی پایدار است، ولی ادراک از مخاطره قابلیت تغییر بیشتری دارد.",
+      "در تصمیم گیری های کارآفرینانه، مخاطره پذیری نقش مهم تری نسبت به ادراک از مخاطره دارد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.225",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 225,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 225 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "توسعه مفهومی کارآفرینی، از کدام مکتب اقتصادی بیشترین تأثیر را پذیرفته است؟",
+    "options": [
+      "نهادیون",
+      "کلاسیک",
+      "نئوکلاسیک و نهاییون",
+      "سنتی و نوین اتریش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.226",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 226,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 226 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مهم‌ترین مانع توانمندسازی بانوان از طریق کسبوکار، کدام مورد است؟",
+    "options": [
+      "جامعه مردسالار",
+      "کمبود اعتمادبه نفس",
+      "مشکل دستیابی به منابع مالی",
+      "ظرفیت اندک خطرپذیری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.227",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 227,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 227 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام نوع کارآفرینی، اداره امور کسبوکار جهت کشف راههای جدید برای دستیابی به تغییرات اجتماعی مثبت و سازنده است؟",
+    "options": [
+      "فردی",
+      "اجتماعی",
+      "پاسخگو",
+      "پایدار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.228",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 228,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 228 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "به اعتقاد «استیوارت و شائو»، تعریف کدام مورد، بیانیهای از این که یک شرکت چگونه پول درآورده و در طول زمان بتواند سود خود را استمرار بخشد، است؟",
+    "options": [
+      "فرآیند کسبوکار",
+      "طرح کسبوکار",
+      "مدل کسبوکار",
+      "طرح امکان سنجی کسبوکار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.229",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 229,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 229 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "این فرمایش امام علی (ع) که می‌فرمایند «جوینده چیزی یا به آن یا به بخشی از آن خواهد رسید» بر کدام مفهوم کارآفرینی تأکید دارد؟",
+    "options": [
+      "عزم راسخ",
+      "روحیه شکستناپذیری",
+      "فرصتشناسی",
+      "عملگرایی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.232",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 232,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 232 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام گزینه، در مورد جایگاه کارآفرین در نظام اقتصادی نادرست است؟",
+    "options": [
+      "هماهنگ کننده عوامل تولید و توزیع - ژان باتیست سه",
+      "پذیرش عدم اطمینان واقعی و عامل رشد - شولتز",
+      "عامل گرایش به سوی تعادل - کرزنر",
+      "برهم زننده تعادل - شومپیتر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.233",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 233,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 233 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کم مخاطره‌ترین روش های راهاندازی کسبوکارهای کارآفرینانه، به ترتیب، کدام اند؟",
+    "options": [
+      "پذیرش نمایندگی / شروع کسبوکار از صفر / خرید کسبوکار موجود",
+      "پذیرش نمایندگی / خرید کسبوکار موجود / شروع کسبوکار از صفر",
+      "خرید کسبوکار موجود / پذیرش نمایندگی / شروع کسبوکار از صفر",
+      "خرید کسبوکار موجود / شروع کسبوکار از صفر / پذیرش نمایندگی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.241",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 241,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 241 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر موجودی کالای پایان دوره ۴۰۰۰ ریال کمتر از میزان واقعی ارزشیابی شود، آثار این اشتباه در بهای تمام شده کالای فروخته شده و سود خالص به ترتیب کدام است؟",
+    "options": [
+      "کمتر از میزان واقعی، کمتر از میزان واقعی",
+      "کمتر از میزان واقعی، بیشتر از میزان واقعی",
+      "بیشتر از میزان واقعی، کمتر از میزان واقعی",
+      "بیشتر از میزان واقعی، بیشتر از میزان واقعی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.268",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 268,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 268 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام افراد، به ترتیب، کاشفان مسیرهای تجاری غرب و شرق بودند؟",
+    "options": [
+      "واسکودوگاما و کلمبو",
+      "کلمبو و واسکودوگاما",
+      "ماژلان و کلمبو",
+      "واسکودوگاما و ماژلان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.281",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 281,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 281 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام گزینه از شاخص های اصلی جهانی شدن نیست؟",
+    "options": [
+      "تحول و توسعه فناوری اطلاعات",
+      "نزدیکی قیمت های داخلی و خارجی",
+      "اهمیت روزافزون شرکت های چندملیتی",
+      "کاهش سرمایه گذاری خارجی در سرمایه گذاری ناخالص داخلی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.282",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 282,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 282 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کامل‌ترین نوع هم‌پیوندی اقتصادی چیست؟",
+    "options": [
+      "منطقه آزاد تجاری",
+      "اتحادیه اقتصادی",
+      "بازار مشترک",
+      "اتحادیه گمرکی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.283",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 283,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 283 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "عبارت «توصیفی از نقش‌ها و روابط میان مشتریان، مصرف کنندگان، شرکا و تأمین کنندگان است که به دنبال تعیین و تشخیص جریان های اصلی محصول، اطلاعات و پول و شناسایی مزایای اصلی برای سهام داران و شرکت کنندگان در کسبوکار می‌باشد و با استفاده از اینترنت برای انجام تعاملات و خلق ارزش برای مشتری و دیگر ذی نفعان عمل می‌کند». بیان کننده کدام گزینه است؟",
+    "options": [
+      "کسبوکار الکترونیک",
+      "تجارت الکترونیک",
+      "مدل های کسبوکار الکترونیک",
+      "برنامه ریزی منابع سازمان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.284",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 284,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 284 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "با استفاده از ماتریس بررسی رقابت، چه چیزی را می‌توان شناسایی کرد؟",
+    "options": [
+      "موضوع رقابت مورد بررسی",
+      "رقبای فرعی و نقاط قوت و ضعف آنها",
+      "رقبای اصلی و نقاط قوت آنها",
+      "رقبای اصلی و تهدیدات و فرصتهای محیطی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.286",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 286,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 286 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مبنای مأموریت سازمان‌ها چیست؟",
+    "options": [
+      "اولویت ها- استراتژی ها- برنامه ها- وظایف کاری",
+      "اولویت ها- استراتژی ها- دلیل ها- وظایف کاری",
+      "اولویت ها- برنامه ها- دلیل ها- وظایف کاری",
+      "طرحریزی- استراتژی ها- برنامه ها- وظایف کاری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.287",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 287,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 287 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام نوع استراتژی تنوع، شرکت محصولات و خدماتی جدید ولی بی ربط به بازار عرضه می‌کند؟",
+    "options": [
+      "عمودی",
+      "افقی",
+      "همگن",
+      "ناهمگن"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.288",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 288,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 288 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام نوع استراتژی «شرکت های رقیب را به مالکیت خود درمی آورد» و بر میزان کنترل خود بر آن‌ها می‌افزاید؟",
+    "options": [
+      "یکپارچگی متمرکز",
+      "یکپارچگی افقی",
+      "یکپارچگی عمودی معکوس",
+      "یکپارچگی عمودی پیشرو"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.289",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 289,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 289 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "عبارت «سیستم های اطلاعاتی یکی از عوامل تولید به شمار رفته که باعث کاهش هزینه‌ها و حجم نیروی انسانی می‌شود». بیان کننده کدام اثر اقتصادی فناوری و سیستم های اطلاعات است؟",
+    "options": [
+      "تئوری دادوستد",
+      "تئوری نمایندگی",
+      "اقتصاد خرد",
+      "اقتصاد کلان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.293",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 293,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 293 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "بنادر نسل سوم، اصطلاحاً چه نوع بنادری نامیده می‌شوند؟",
+    "options": [
+      "بنادر سنتی و واسطه.",
+      "بنادر صنعتی و توسعه یافته.",
+      "بنادر لجستیکی و زنجیره عرضه کالا.",
+      "بنادر کارآفرین و محصول محور."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.294",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 294,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 294 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کنوانسیون بین المللی تجسس و نجات به چه اموری وارد نمی‌شود؟ (Search and Rescue Convention- SAR)",
+    "options": [
+      "تجسس و نجات کشتی‌ها و کالاها.",
+      "تجسس و نجات جانداران دریایی و نظارت بر محیطزیست دریایی.",
+      "تجسس و نجات کشتی‌ها و انسان‌ها در دریا.",
+      "تجسس و نجات خدمه و مسافران کشتی‌ها."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.302",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 302,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 302 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام گزینه در خصوص کشتی های هیدروفیل نادرست است؟",
+    "options": [
+      "بهوسیله سیستم رانش جت آبی حرکت می‌کنند.",
+      "همانند هاورکرافت بهوسیله سیستم جت هوا حرکت می‌کنند.",
+      "بهوسیله سیستم رانش بالشتک هوا حرکت می‌کنند.",
+      "کشتی های هیدروفیل همان کشتی های سبک آبانشین هستند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.310",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 310,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 310 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "دموراژ به چه معناست؟",
+    "options": [
+      "پرداخت تشویقی بهوسیله مالک وسیله نقلیه به اجاره کننده به خاطر تحویل زودتر از موعد وسیله نقلیه.",
+      "پرداخت جریمه بهوسیله اجاره کننده وسیله نقلیه به مالک آن به خاطر تأخیر در تحویل وسیله نقلیه.",
+      "اجازه حمل کالا و مسافر در درون مرزهای یک کشور به شرکت های حمل ونقل کشور دیگر.",
+      "اجازه عبور هواییم هاای کشور بیگانه از آسمان کشور خود بدون فرود در کشور جهت حمل کالا و مسافر."
     ],
     "expectedTimeMs": 80000
   },
@@ -1189,6 +1873,424 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1397.116",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 116,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 116 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "ایجاد تغییرات در سیاست مالیاتی و هزینه ای در راستای خط مشی هایی که افراد فقیر منتفع شوند، پیرو کدام اصل است؟",
+    "options": [
+      "تثبیت",
+      "تخصیص",
+      "توزیع",
+      "کارایی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.117",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 117,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 117 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "نظریه «انتخاب عمومی» چیست؟",
+    "options": [
+      "رشد دولت و عوامل آن",
+      "اصلاح جایگاه دولت در اقتصاد",
+      "دیکتاتوری خیرخواهانه برای رفع ناکامی های بازار",
+      "منطقی از اقتصاد خرد که برای امور سیاسی و عمومی به کار می‌گیرد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.118",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 118,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 118 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "شاخص «انضباط مالی» کدام است؟",
+    "options": [
+      "کسری بودجه به تولید ناخالص داخلی",
+      "استقراض از بانک مرکزی به کسری بودجه",
+      "درآمدها به هزینه‌ها در بودجه",
+      "پیش بینی درآمدها به درآمدهای محقق شده در بودجه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.119",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 119,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 119 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "چگونه دولت می‌تواند کنترل فرایند بودجه را تعیین نماید تا بتواند به صورت خودکار هدایتگر عملیات دستگاه های اجرایی باشد؟ به عنوان پرسش کلیدی کدام عصر بودجه ریزی است؟",
+    "options": [
+      "دوره سوم: عصر برنامه ریزی",
+      "دوره چهارم: عصر خط مشی",
+      "دوره پنجم: عصر همکاری",
+      "دوره دوم: عصر یکپارچگی مدیریت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.121",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 121,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 121 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد به عنوان معایب بودجه ریزی تعهدی در بخش دولتی محسوب می‌شود؟",
+    "options": [
+      "عدم پاسخگویی بر مبنای نتایج",
+      "کاهش کنترل پارلمانی بر روی بودجه",
+      "کاهش شفافیت در هزینه‌ها",
+      "ناکارآمدی در تخصیص اعتبارات"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.122",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 122,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 122 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام نوع طبقه بندی بودجه ای، هدف از مخارج دولت مشخص می‌شود و حوزه های اصلی که دولت در تنظیم و تدارک مستقیم خدمات در کارکردهای مختلف درگیر است نشان می‌دهد؟",
+    "options": [
+      "هزینه ای",
+      "موضوعی یا اقتصادی",
+      "سازمانی و مدیریتی",
+      "وظیفه ای"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.123",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 123,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 123 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "برای پیش بینی کدام نوع درآمدهای بودجه ای، روش های کمی در مقایسه با روش های کیفی و قضاوتی مناسب‌تر هستند؟",
+    "options": [
+      "منابع درآمدی جدید",
+      "درآمدهای مالیات بر درآمد",
+      "کمک های اهدایی",
+      "فروش دارایی‌ها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.126",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 126,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 126 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "پرداخت یارانه براساس کدام مورد قابل توجیه‌تر است؟",
+    "options": [
+      "ضرورت کاهش قیمت برای افزایش تولید",
+      "پیامدهای خارجی منفی",
+      "پیامدهای خارجی مثبت",
+      "ضرورت کاهش قیمت برای حمایت از اقشار آسیب پذیر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.127",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 127,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 127 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "وضع مالیات بر واحد در بازار رقابت کامل، چه تغییری در تولید یکایک بنگاه‌ها دارد؟",
+    "options": [
+      "افزایش",
+      "کاهش",
+      "عدم تغییر",
+      "برخی کاهش و برخی را افزایش می‌دهند"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.128",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 128,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 128 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در صورتی که ارزش های اجتماعی ایجاد شده از طریق تصمیمات همگرا و یکپارچه شده در فرایند سیاسی، در قالب قوانین کدگذاری شوند، عقلانیت بودجه ای کدام است؟",
+    "options": [
+      "قانونی",
+      "اجتماعی",
+      "سیاسی",
+      "اقتصادی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.130",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 130,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 130 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "وضع «قانون طلایی» در مالیه عمومی چیست؟",
+    "options": [
+      "اشاره به نوعی از سازوکارهای رسمی و غیررسمی دارد.",
+      "سیاست مالی که رشد اقتصادی را تقویت می‌کند.",
+      "سهم بدهی و دیون دولتی نباید از سرمایه گذاری خالص دولتی تجاوز نماید.",
+      "سهم بدهی و دیون دولتی باید از سرمایه گذاری خالص دولتی تجاوز نماید."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.132",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 132,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 132 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام سبک مربی گری، سعی می‌شود زیردست به طور ضمنی آنچه را که می‌خواهیم انجام دهد؟",
+    "options": [
+      "دوستانه",
+      "ترغیب کننده",
+      "تحلیل کننده",
+      "هدایتگر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.133",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 133,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 133 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حق اولاد و بازنشستگی، به ترتیب، جزو کدام نوع جبران خدمات مالی است؟",
+    "options": [
+      "مستقیم نقدی - غیرمستقیم",
+      "غیرمستقیم - مستقیم نقدی",
+      "مستقیم نقدی - مستقیم نقدی",
+      "غیرمستقیم - غیرمستقیم"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.134",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 134,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 134 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، جزو سطوح شش گانه یادگیری از نظر بلوم نیست؟",
+    "options": [
+      "دانش",
+      "تحلیل",
+      "شاگردی",
+      "به‌کارگیری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.135",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 135,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 135 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در طراحی شغل، کانون توجه کدام روش بر تنظیم رابطه شاغل یا محیط کار متمرکز است؟",
+    "options": [
+      "ادراکی - حرکتی",
+      "دوعاملی",
+      "غنی سازی شغل",
+      "ویژگی های شغل"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.136",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 136,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 136 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "زمانی که راهبرد سازمان تمایز است، سیستم جبران خدمات باید بر چه اساسی پاداش دهد؟",
+    "options": [
+      "کمیت",
+      "کیفیت",
+      "نوآوری",
+      "کارایی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.137",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 137,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 137 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حالت روان شناختی احساس مسئولیت پیشتر در قبال نتایج کار، کدام ویژگی محوری شغل است؟",
+    "options": [
+      "استقلال",
+      "بازخور",
+      "هویت",
+      "تنوع"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.139",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 139,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 139 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام شیوه، مؤثرترین شیوه ارزیابی عملکرد برای سازمان بزرگی که پراکندگی جغرافیایی و مشاغل مشابه زیادی داشته است، محسوب می‌شود؟",
+    "options": [
+      "وقایع بحرانی",
+      "بازبینی میدانی",
+      "امتیازدهی رفتاری",
+      "توزیع اجباری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.141",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 141,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 141 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در یکی از روش های امتیازی و رتبه بندی مشاغل برای ارزشیابی مشاغل، به ترتیب از کدام عامل برای مقایسه مشاغل استفاده می‌کنند؟",
+    "options": [
+      "کل شغل - کل شغل",
+      "کل شغل - عوامل کلیدی",
+      "عوامل کلیدی - کل شغل",
+      "عوامل کلیدی - عوامل کلیدی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.142",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 142,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 142 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "روش های توصیفی و مقایسه زوجی، به ترتیب، در شمار کدام رویکردهای ارزیابی عملکرد قرار می‌گیرند؟",
+    "options": [
+      "نسبی - نسبی",
+      "مطلق - مطلق",
+      "نسبی - مطلق",
+      "مطلق - نسبی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.145",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 145,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 145 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مشارکت کارکنان در تصمیمات شغلی و توجه کم به آموزش و توسعه، به ترتیب جزو اقدامات کدام استراتژی های منابع انسانی است؟",
+    "options": [
+      "بهره برداری - بهره برداری",
+      "بهره برداری - تجمع",
+      "تسهیل کنندگی - بهره برداری",
+      "تجمع - بهره برداری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.175",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 175,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 175 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "شرکت A اقدام به تجزیه سهام ۱ به ۲ می‌نماید. شرکت B اقدام به افزایش سرمایه ۱۰۰ درصدی از محل سود انباشته و اندوخته‌ها می‌نماید. در نتیجه این فعالیت‌ها....",
+    "options": [
+      "حقوق صاحبان سهام و ارزش اسمی سهام هر دو شرکت بدون تغییر باقی می‌ماند.",
+      "حقوق صاحبان سهام هر دو شرکت افزایش می‌یابد، اما ارزش اسمی سهام هر دو شرکت بدون تغییر باقی می‌ماند.",
+      "حقوق صاحبان سهام هر دو شرکت تغییر نمی‌کنند، ارزش اسمی هر سهم A نصف می‌شود اما ارزش اسمی هر سهم B بدون تغییر باقی می‌ماند.",
+      "حقوق صاحبان سهام هر دو شرکت افزایش می‌یابد، ارزش اسمی هر سهم B نصف می‌شود اما ارزش اسمی هر سهم A بدون تغییر باقی می‌ماند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1397.187",
     "nodeId": "ind.pom_eoq_mrp",
     "examYear": 1397,
@@ -1394,6 +2496,424 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
       "فاقد کشش",
       "تقاضای انتقالی",
       "پرکشش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.207",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 207,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 207 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "ضریب تعدیل گر مخرج (divisor) در محاسبه شاخص وزنی – قیمتی (Price-weighted index) در کدام حالت نیاز به تعدیل ندارد؟",
+    "options": [
+      "تجزیه سهام",
+      "افزایش سرمایه از محل سود انباشته و اندوخته‌ها",
+      "افزایش سرمایه از محل مطالبات و یا آورده نقدی سهامداران",
+      "حذف یکی از شرکت‌ها از شاخص و ورود یک شرکت جدید به شاخص"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.213",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 213,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 213 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از ویژگی های منحنی بی تفاوتی نیست؟",
+    "options": [
+      "منحنی های بی تفاوتی یکدیگر را قطع نمی‌کنند.",
+      "هر فرد سرمایه گذار بی نهایت منحنی بی تفاوتی دارد.",
+      "هرچه منحنی بی تفاوتی بالاتر باشد، مطلوبیت آن بیشتر است.",
+      "شیب منحنی بی تفاوتی با ریسک گریزی سرمایه گذار رابطه معکوس دارد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.216",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 216,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 216 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "عبارت «ساختار زمانی نرخ بهره در صورتی تخت است که بازار انتظار دارد نرخ های بهره آتی کاهش یابد» مطابق کدام نظریه است؟",
+    "options": [
+      "انتظارات",
+      "تفکیک",
+      "رجحان نقدینگی",
+      "جدایی بازارها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.233",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 233,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 233 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام گزینه، اجزای فرایند کارآفرینی را به طور کامل نشان می‌دهد؟",
+    "options": [
+      "منابع - ساختار - طرح کسب وکار - مدل کسب وکار - تشخیص فرصت",
+      "فرصت - شرکت - طرح کسب وکار - ساختار - استراتژی - منابع",
+      "کارآفرین - فرصت - شرکت - تأمین مالی - طرح کسب وکار - برنامه عملیاتی",
+      "کارآفرین - فرصت - ساختار - منابع - استراتژی - طرح کسب وکار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.235",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 235,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 235 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک از انواع کارآفرینی، مبین تغییر وضع موجود با استفاده از فرصت های آینده در قالب یک مؤسسه یا سازمان است؟",
+    "options": [
+      "توزیع شده",
+      "پاسخگو",
+      "تأسیسی",
+      "درون سازمانی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.239",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 239,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 239 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در روش ادواری، کدام حساب به خلاصه سود و زیان بسته نمی‌شود؟",
+    "options": [
+      "خرید",
+      "فروش",
+      "استهلاک انباشته",
+      "موجودی کالا"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.243",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 243,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 243 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حساب تعهد صاحبان سهام در پایان سال با چه حسابی بسته می‌شود؟",
+    "options": [
+      "تراز اختتامیه",
+      "سرمایه - سهام عادی",
+      "سهام عادی تعهد شده",
+      "سود (زیان)"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.245",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 245,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 245 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "طبق کدام یک از اصول و مبانی حسابداری، کلیه درآمدها و هزینه‌ها باید به محض وقوع، شناسایی شوند، صرف نظر از اینکه وجهی بابت آنها دریافت یا پرداخت شده یا نشده باشد؟",
+    "options": [
+      "اصل احتیاط",
+      "اصل بهای تمام شده",
+      "مبنای تعهدی",
+      "فرض تداوم فعالیت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.248",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 248,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 248 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "از میان هزینه های زیر در دامنه مشخصی از فعالیت، کدام هزینه، ثابت تلقی می‌شود؟",
+    "options": [
+      "استهلاک ماشین آلات",
+      "اجاره محل",
+      "برق مصرفی",
+      "مواد مستقیم"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.250",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 250,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 250 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام عامل باعث افزایش نرخ جذب سربار می‌شود؟",
+    "options": [
+      "کاهش هزینه های واقعی سربار",
+      "کاهش مبنای برآوردی سربار",
+      "افزایش هزینه های واقعی سربار",
+      "افزایش مبنای برآوردی سربار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.255",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 255,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 255 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اولین استفاده از مسیر دریایی میان مدیترانه و هند، در چه عصری اتفاق افتاد؟",
+    "options": [
+      "عصر انقلاب صنعتی",
+      "عصر عثمانی‌ها",
+      "عصر رومی‌ها",
+      "هیچ کدام"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.256",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 256,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 256 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اولین کشتی های پارویی و بادبانی در چه سالی و در کدام نواحی مورد استفاده قرار گرفتند؟",
+    "options": [
+      "حدود ۲۵۰۰۰ سال قبل از میلاد مسیح در آبراه های اروپا و چین",
+      "حدود ۲۰۰۰۰ سال قبل از میلاد مسیح در آبراه های مدیترانه",
+      "حدود ۲۵۰۰۰ سال قبل از میلاد مسیح در آبراه های چین",
+      "حدود ۲۰۰۰۰ سال قبل از میلاد مسیح در آبراه های اروپا"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.258",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 258,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 258 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از عوامل توسعه حمل و نقل هوایی محسوب می‌شوند؟",
+    "options": [
+      "پیشرفت های فناوری در حمل و نقل هوایی",
+      "افزایش درآمد و ثروت مردم",
+      "جهانی شدن",
+      "همه موارد فوق"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.265",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 265,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 265 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حمل و نقل جاده ای، منتسب به کدام صنایع است؟",
+    "options": [
+      "سبک",
+      "سنگین",
+      "فولاد",
+      "چوب"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.274",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 274,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 274 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام گزینه جزو تقسیم بندی بازارها از نظر فعالیت محسوب می‌شوند؟",
+    "options": [
+      "واسطه",
+      "سازمانی",
+      "اقتصادی",
+      "کار و خدمات"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.277",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 277,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 277 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کرایه مقطوع نوعی از کرایه است که به موجب آن:",
+    "options": [
+      "حتی اگر بخشی از کالا در مقصد تحویل شود، کرایه تماماً قابل پرداخت خواهد بود.",
+      "فقط در صورتی کل کرایه پرداخت می‌شود که تمام کالا در مقصد تحویل داده شود.",
+      "کرایه کامل پرداخت نمی‌شود.",
+      "هیچ کدام"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.285",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 285,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 285 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "چرا در کشورهای کانادا و آمریکا از حمل و نقل ریلی برای جابه‌جایی مسافر کمتر استفاده می‌شود؟",
+    "options": [
+      "وسعت زیاد این کشورها و طولانی بودن مسیرهای مسافرت ریلی",
+      "نداشتن خط آهن در بسیاری از مسیرهای پرتردد مسافری",
+      "عدم توجه کافی دولت‌ها به حمل و نقل ریلی",
+      "کوتاهی مسیرها با حمل و نقل جاده ای"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.288",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 288,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 288 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اعتبارات اسنادی چیست؟",
+    "options": [
+      "وکالت صاحب کالا به شخص ترخیص کار",
+      "ریسک پرداخت وجه معامله از سوی واردکننده",
+      "وسیله و ابزار اتصال به بازار مالی و تجارت جهانی است.",
+      "تکنیک ردوبدل نمودن پول کالاها یا خدمات بر اساس استاندارد توسط بانک‌ها است."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.289",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 289,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 289 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "روش گمرکی که به موجب آن کالاها تحت نظارت گمرک از یک وسیله حمل و نقل ورودی به یک وسیله حمل و نقل خروجی (صدور) در حوزه یک دفتر گمرکی که آن دفتر در عین حال دفتر گمرکی توأم برای ورود و صدور است، انتقال داده می‌شود، چه نام دارد؟",
+    "options": [
+      "درابک",
+      "ترانشیپ",
+      "دمپینگ",
+      "بیجهک"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.291",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 291,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 291 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کابوتاژ به چه معنا است؟",
+    "options": [
+      "حق حمل ونقل میان بنادر یک قاره با قاره ای دیگر",
+      "حق حمل ونقل میان بنادر واقع شده در یک کشور",
+      "حق حمل ونقل میان یک بندر داخلی و بندر دیگر در کشور همسایه",
+      "حق حمل ونقل میان بنادر یک کشور و ترمینال های حمل ونقل جاده ای کشور همسایه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.292",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 292,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 292 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "برچسب های مربوط به کالاهای خطرناک چه شکل هندسی دارند و حاوی چه اطلاعاتی هستند؟",
+    "options": [
+      "دایره - نشان دهنده نام کالا و شماره کلاس آن",
+      "لوزی - نشان دهنده طبیعت خطرناک کالا و شماره کلاس آن",
+      "مربع - نشان دهنده طبیعت خطرناک کالا و شماره کلاس آن",
+      "مستطیل - نشان دهنده نام کالا و شماره کلاس آن و اخطارها و دستور العمل های لازم برای حمل ونقل"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1397.294",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1397,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 294,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1397 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1397 — سؤال 294 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در مبحث تخلیه و بارگیری، صدور به چه معنا است؟",
+    "options": [
+      "بارگیری کشتی به پایان رسیده و آماده سفر است.",
+      "تخلیه کشتی به پایان رسیده است و آماده سفر است.",
+      "تخلیه کشتی به پایان رسیده است و آماده بارگیری است.",
+      "سفر کشتی به پایان رسیده و آماده تخلیه و بارگیری است."
     ],
     "expectedTimeMs": 80000
   },
@@ -1911,6 +3431,367 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1398.116",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 116,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 116 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اثربخشی یک برنامه یا یک دستگاه اجرایی طبق بودجه ریزی عملیاتی با کدام نسبت اندازه گیری می‌شود؟",
+    "options": [
+      "ورودی به هزینه‌ها",
+      "خروجی به ورودی",
+      "خروجی به نتایج",
+      "نتایج به ورودی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.117",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 117,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 117 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام عبارت نظریه «فداکاری نسبی» را نشان می‌دهد؟",
+    "options": [
+      "برابری مطلوبیت ناشی از پرداخت مالیات",
+      "نسبت مطلوبیت ازدست رفته ناشی از مالیات به مطلوبیت کل درآمد",
+      "نسبت مطلوبیت کل درآمد به مطلوبیت ازدست رفته ناشی از مالیات",
+      "پرداخت مالیات یکسان افراد با درآمد برابر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.118",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 118,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 118 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "منظور از «تبدیل مالیات به سرمایه» چیست؟",
+    "options": [
+      "نرخ مالیات به سرمایه انتقال می‌یابد.",
+      "مالیات به فعالیت های بعدی و قبلی انتقال می‌یابد.",
+      "فقط مالیات های فعلی براساس مالیات های قبلی انتقال می‌یابند.",
+      "مالیات بر کالاهای غیرمصرفی فاسدنشدنی به ارزش آن‌ها منتقل می‌شود."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.119",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 119,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 119 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "هدف اصلی کدام رویکرد بودجه ریزی دولتی، کنترل مالی دستگاه های دولتی است؟",
+    "options": [
+      "روش خودکار",
+      "بودجه ریزی یک قلم",
+      "بودجه ریزی تدریج گرا",
+      "بودجه ریزی مواد - هزینه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.120",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 120,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 120 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "از موجودی حساب ذخیره ارزی در کدام روش تأمین کسری بودجه دولتی در ایران، استفاده می‌شود؟",
+    "options": [
+      "واگذاری دارایی های مالی",
+      "واگذاری دارایی های سرمایه ای",
+      "انتشار سند خزانه کوتاه مدت",
+      "افزایش نرخ ارز"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.122",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 122,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 122 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام رویکرد بودجه ریزی دولتی در جستجوی برقراری ارتباط خط مشی با اهدافی است که به روشنی تعریف شده اند؟",
+    "options": [
+      "اداری",
+      "عقلاتی",
+      "غلتان",
+      "مشارکتی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.123",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 123,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 123 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "گنجانده نشدن برخی فعالیت های دولت همانند سیاست های خارجی و عملیات سری و نظامی در بودجه عمومی، به عنوان استثنایی کدام اصل شناخته می‌شوند؟",
+    "options": [
+      "جامعیت",
+      "شاملیت",
+      "شفافیت",
+      "وحدت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.124",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 124,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 124 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تنظیم مالیات و مخارج دولتی برای تحقق ثبات اقتصادی در کدام رویکرد نظریه ای بودجه ای مورد تأکید قرار می‌گیرد؟",
+    "options": [
+      "تدریج گرایی",
+      "کلاسیک",
+      "کینزین",
+      "کشورهای توسعه یافته"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.125",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 125,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 125 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر ضریب جینی از ۳۴/۰ به ۳۲/۰ کاهش یابد، به چه معنی است؟",
+    "options": [
+      "توزیع درآمد عادلانه‌تر شده است.",
+      "توزیع درآمد ناعادلانه‌تر شده است.",
+      "توزیع کالاها و خدمات ناعادلانه‌تر شده است.",
+      "توزیع کالاها و خدمات عادلانه‌تر شده است."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.127",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 127,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 127 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تبدیل اوراق قرضه به قرضه های جدید منتشره، در شرایط ثبات اقتصادی، به چه منظور است؟",
+    "options": [
+      "بهبود توزیع درآمد",
+      "تثبیت شرایط",
+      "تخصیص بهینه منابع",
+      "کاهش هزینه های جاری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.132",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 132,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 132 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام یک از روش های ارزشیابی مشاغل، ابتدا براساس ماهیت مشاغل، عواملی مانند مهارت، مسئولیت، تلاش فکری و شرایط کاری را انتخاب نموده و سپس آن‌ها را به عوامل جزئی‌تر تقسیم و برای آن‌ها وزن و درجاتی معین می‌نماییم؟",
+    "options": [
+      "امتیازی",
+      "رتبه بندی",
+      "درجه بندی",
+      "مقایسه عوامل"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.136",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 136,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 136 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "هنگامی که حق تصمیم گیری و اختیارات به شغل واگذار می‌شود، چه اقدامی روی شغل انجام داده ایم؟",
+    "options": [
+      "اثربخش کرده ایم.",
+      "غنی کرده ایم.",
+      "کارا کرده ایم.",
+      "توسعه داده ایم."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.137",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 137,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 137 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام روش ارزیابی عملکرد، نقش ارزیابی کننده بیشتر تقویت است و ارزیابی کننده به جای قضاوت، نقش مشاوره ای دارد؟",
+    "options": [
+      "توصیفی",
+      "عامل سنجی",
+      "مقیاسی گسسته",
+      "مدیریت بر مبنای هدف"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.138",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 138,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 138 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "روش های «بازی های مدیریتی»، «مربی گری» و «سمینار» به ترتیب، جزو کدام روش های اصلی آموزش هستند؟",
+    "options": [
+      "ضمن خدمت، ارائه اطلاعات، شبیه سازی",
+      "ضمن خدمت، شبیه سازی، ارائه اطلاعات",
+      "شبیه سازی، ضمن خدمت، ارائه اطلاعات",
+      "ارائه اطلاعات، ضمن خدمت، شبیه سازی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.140",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 140,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 140 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "بیمه درمانی جزو کدام نوع سیستم جبران خدمات است؟",
+    "options": [
+      "مالی غیرمستقیم",
+      "مالی مستقیم نقدی",
+      "مالی مستقیم غیرنقدی",
+      "غیرمالی سازمانی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.141",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 141,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 141 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "ثبت وقایع حساس و مقیاس رتبه بندی توصیفی، به ترتیب، جزو کدام نوع استانداردهای ارزیابی هستند؟",
+    "options": [
+      "مطلق - مقایسه ای",
+      "مقایسه ای - مطلق",
+      "مطلق - مطلق",
+      "مقایسه ای - مقایسه ای"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.142",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 142,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 142 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "طبق کدام رویکرد، سازمان‌ها اقدامات مدیریت منابع انسانی را در جهت کسب مشروعیت های درونی و بیرونی به منظور اخذ منابع محیطی کمیاب و حفظ خویش و کسب حمایت اجتماعی در محیط برنامه ریزی می‌کنند؟",
+    "options": [
+      "نهادگرایی",
+      "مبتنی بر منابع",
+      "قدرت - وابستگی منابع",
+      "هزینه های مبادله - نمایندگی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.173",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 173,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 173 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در اغلب تصمیم گیری های مالی، کدام نرخ مالیاتی اهمیت دارد؟",
+    "options": [
+      "نرخ متوسط",
+      "نرخ نهایی",
+      "حداکثر نرخ",
+      "حداقل نرخ"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.175",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 175,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 175 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از معایب شرکت های انفرادی و تضامنی محسوب نمی‌شود؟",
+    "options": [
+      "طول عمر محدود",
+      "دشواری انتقال مالکیت",
+      "مسئولیت نامحدود مالکان",
+      "ریسک بالای اعتباری شرکت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1398.176",
     "nodeId": "ind.pom_eoq_mrp",
     "examYear": 1398,
@@ -2173,6 +4054,500 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
       "مفاهیم نام تجاری",
       "تصویر ذهنی نام تجاری",
       "برجستگی نام تجاری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.207",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 207,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 207 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "به منظور پوشش ریسک ناشی از افزایش نرخ بهره، سرمایه گذار از چه راهبردی استفاده می‌کند؟",
+    "options": [
+      "اتخاذ موقعیت خرید در قرارداد آتی نرخ بهره",
+      "اتخاذ موقعیت فروش در قرارداد آتی نرخ بهره",
+      "خرید اوراق قرضه با نرخ کوپن ثابت",
+      "خرید اوراق قرضه با نرخ کوپن بالا و سررسید بلندمدت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.219",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 219,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 219 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "هرگاه مطلوبیت سرمایه گذار با افزایش ثروت وی کاهش یابد، این سرمایه گذار: الف) ریسک گریز است. ب) ریسک طلب است. ج) تابع مطلوبیت نهایی صعودی دارد. د) تابع مطلوبیت نهایی نزولی دارد.",
+    "options": [
+      "ب و د",
+      "ب و ج",
+      "الف و ج",
+      "الف و د"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.221",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 221,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 221 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، بیانگر ویژگی های فرصت های شومپیتری است؟",
+    "options": [
+      "کشف فرصت",
+      "عدم تعادل",
+      "تکیه بر اطلاعات موجود",
+      "نوآوری سطح پایین"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.222",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 222,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 222 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "فرضیه بنیادین نظریه عمومی کارآفرینی اسکات شین (۲۰۰۰) کدام است؟",
+    "options": [
+      "کارآفرینی پیوند فرد - فرصت است.",
+      "کارآفرینی فعالیتی جمعی است.",
+      "در فرایند کارآفرینی شکلی از نوآوری وجود دارد.",
+      "در بطن کارآفرینی عدم اطمینان وجود دارد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.224",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 224,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 224 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام یک از مراحل ایجاد و توسعه کسب وکار، برنامه های رسمی برای کسب وکار و تأمین سرمایه تدوین می‌شوند؟",
+    "options": [
+      "نوآوری",
+      "تثبیت کسب وکار",
+      "شروع کسب وکار",
+      "رشد کسب وکار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.225",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 225,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 225 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام مکتب اقتصادی، تأکید بیشتری بر نقش اطلاعات در کشف فرصت های کارآفرینانه دارد؟",
+    "options": [
+      "اتریش",
+      "نئوکلاسیک",
+      "نهادگرایی",
+      "شیکاگو"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.227",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 227,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 227 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در طبقه بندی دیده بان جهانی کارآفرینی (GEM) کشور ایران در ردیف کدام یک از اقتصادهای سه گانه قرار دارد؟",
+    "options": [
+      "منبع محور",
+      "نوآوری محور",
+      "کارایی محور",
+      "مرحله گذار از کارایی به نوآوری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.228",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 228,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 228 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "زنجیره ارزش در کارآفرینی، به ترتیب، کدام اند؟",
+    "options": [
+      "ایده پردازی - کارآفرینی - نوآوری - خلاقیت - فرصت شناسی",
+      "کارآفرینی - فرصت شناسی - خلاقیت - نوآوری - ایده پردازی",
+      "فرصت شناسی - ایده پردازی - خلاقیت - نوآوری - کارآفرینی",
+      "خلاقیت - نوآوری - کارآفرینی - ایده پردازی - فرصت شناسی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.229",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 229,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 229 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "برای توسعه کارآفرینی در یک سازمان، ساختار سازمانی باید از کدام ویژگی برخوردار باشد؟",
+    "options": [
+      "بر تمرکزگرایی در تصمیم گیری متمرکز شود.",
+      "مشارکت کارکنان تعدیل شده باشد.",
+      "بر کنترل های استراتژیک به جای کنترل های مالی تأکید شود.",
+      "محدودکردن تحرک کارکنان میان واحدهای سازمان در دستورکار باشد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.230",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 230,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 230 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "با توجه به رویکرد هستی شناسانه به کارآفرینی، غایت و هدف اصلی کارآفرینی تأسیسی چیست؟",
+    "options": [
+      "خلق ارزش برای شهروندان در سایه خدمات رسانی مضاعف",
+      "تغییر وضع موجود با استفاده از فرصت های آینده در قالب یک مؤسسه یا سازمان",
+      "خلق سود تحت شرایط ریسک و عدم اطمینان",
+      "خلق ارزش های اقتصادی، اجتماعی و محیطی به صورت توأمان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.231",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 231,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 231 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام تکنیک مسئله یابی خلاقانه از پیوند تصادفی و ایجاد یک اندیشه واسطه غیرممکن استفاده می‌شود؟",
+    "options": [
+      "تفکر موازی",
+      "الگوبرداری از طبیعت",
+      "پرسش های سؤال برانگیز",
+      "گردش تخیلی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.232",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 232,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 232 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در نظریه منبع محور، مزیت رقابتی شرکت به کدام عامل بستگی دارد؟",
+    "options": [
+      "عوامل محیطی و خارجی",
+      "ویژگی های درونی شرکت",
+      "منابع یکسان شرکت های فعال در یک صنعت",
+      "متجانس بودن منابع شرکت‌ها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.233",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 233,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 233 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "به ترتیب، از نظر ژان باتیست سی و ریچارد کانتیلون، کارآفرین چگونه تعبیر شده است؟",
+    "options": [
+      "ماجراجو - مالک کسب وکار",
+      "مالک کسب وکار - ماجراجو",
+      "معامله گر - ماجراجو",
+      "ماجراجو - معامله گر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.234",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 234,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 234 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام دسته از کارآفرینان سعی در به کمال رسیدن در کسب وکار را دارند و مهارت های تجاری خود را برای کسب سود به کار می‌گیرند؟",
+    "options": [
+      "نسل اول",
+      "ناب",
+      "کلاسیک",
+      "مدرن"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.236",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 236,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 236 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اقلام تشکیل دهنده بهای اولیه و بهای تبدیل، به ترتیب، کدام است؟",
+    "options": [
+      "مواد مستقیم، سربار ساخت - دستمزد مستقیم، سربار ساخت",
+      "مواد مستقیم، دستمزد مستقیم - دستمزد مستقیم، سربار ساخت",
+      "مواد مستقیم، مواد مستقیم - دستمزد مستقیم، سربار ساخت",
+      "مواد مستقیم، دستمزد مستقیم - مواد مستقیم، سربار ساخت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.242",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 242,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 242 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "موجودی کالای پایان دوره با چه حسابی بسته می‌شود؟",
+    "options": [
+      "موجودی کالای اول دوره",
+      "عملکرد",
+      "سود (زیان)",
+      "تراز اختتامیه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.244",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 244,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 244 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اثر خرید نسیه ماشین آلات در معادله حسابداری کدام است؟",
+    "options": [
+      "کاهش دارایی‌ها، افزایش بدهی‌ها",
+      "افزایش دارایی‌ها، افزایش سرمایه",
+      "افزایش دارایی‌ها، افزایش بدهی‌ها",
+      "افزایش بدهی‌ها، افزایش سرمایه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.246",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 246,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 246 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "این فرض که «قرار نیست در آینده ای نزدیک، شرکت به فروش رود یا منحل شود» مبتنی بر کدام فرض حسابداری است؟",
+    "options": [
+      "دوره مالی",
+      "تفکیک شخصیت",
+      "تداوم فعالیت",
+      "واحد اندازه گیری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.249",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 249,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 249 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "وقتی سهام عادی بر مبنای تعهد پرداخت، فروخته می‌شود، به ترتیب کدام حساب بدهکار و کدام حساب بستانکار می‌شود؟",
+    "options": [
+      "حساب های دریافتنی بدهکار، حساب تعهد صاحبان سهام بستانکار",
+      "تعهد صاحبان سهام بدهکار، سرمایه - سهام عادی بستانکار",
+      "وجه نقد بدهکار، حساب تعهد صاحبان سهام بستانکار",
+      "تعهد صاحبان سهام بدهکار، سرمایه - سهام عادی تعهد شده بستانکار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.253",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 253,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 253 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "دلیل اصلی ساخت سیستم کانال بزرگ چین چیست؟",
+    "options": [
+      "مصارف نظامی",
+      "حمل و نقل مسافر بین شهرهای مختلف امپراتوری چین",
+      "سهولت و تسریع در توزیع غله در شهرهای مختلف امپراتوری چین",
+      "سهولت در جمع‌آوری مالیات در مناطق مختلف امپراتوری چین"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.254",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 254,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 254 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام گزینه مربوط به درآمد حمل ونقل جاده ای است؟",
+    "options": [
+      "مالیات بر سوخت و خرید و فروش خودروها",
+      "فروش زمین برای ایجاد زیرساخت‌ها",
+      "خرید زمین برای ایجاد زیرساخت‌ها",
+      "سلب مالکیت از مالکین خصوصی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.257",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 257,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 257 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در عصر انقلاب صنعتی، دلیل اصلی جایگزینی حمل ونقل کانالی با حمل ونقل ریلی کدام گزینه بود؟",
+    "options": [
+      "مزیت حمل کالای بیشتر",
+      "مزیت زمانی و هزینه ای",
+      "مزیت حمل مسافت طولانی‌تر",
+      "مزیت حمل مسافر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.258",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 258,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 258 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از اشکالات اساسی حمل ونقل جاده ای محسوب می‌گردد؟",
+    "options": [
+      "زیرساخت های نامتناسب",
+      "قوانین و مقررات دست و پا گیر",
+      "شرایط بد آب و هوا",
+      "هزینه بالای نگهداری وسایط نقلیه جاده ای و زیرساخت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.268",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 268,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 268 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از عوامل اصلی خسارت به بار کشتی های فله بر محسوب می‌شود؟",
+    "options": [
+      "توزیع نامساوی و نامناسب کالا",
+      "شرجی و رطوبت هوا",
+      "نشت آب به داخل انبارها",
+      "آتش سوزی در انبارها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.282",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 282,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 282 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام کشور در ثبت کشتی‌ها تحت پرچم آسایش پیشرو است؟",
+    "options": [
+      "استرالیا",
+      "پاناما",
+      "کانادا",
+      "کلمبیا"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.294",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 294,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 294 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حمل ونقل Intermodal به عنوان حمل کالا و یا مسافر میان مبدأ و مقصد با استفاده از کدام مورد انجام می‌شود؟",
+    "options": [
+      "چند نوع وسیله نقلیه متفاوت تحت قراردادهای مجزا",
+      "یک نوع وسیله نقلیه تحت یک قرارداد",
+      "چند نوع وسیله نقلیه متفاوت تحت یک قرارداد",
+      "چند نوع وسیله نقلیه مشابه تحت قراردادهای مجزا"
     ],
     "expectedTimeMs": 80000
   },
@@ -2690,6 +5065,120 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1399.128",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 128,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 128 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تأکید نظام بودجه کنترل شده یا مدیریت شده چیست؟",
+    "options": [
+      "اشتغال کامل",
+      "تحقق ثبات اقتصادی",
+      "تحقق هزینه های دولتی",
+      "تحقق درآمدهای مالیاتی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.135",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 135,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 135 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام گزینه، مرحله اول فرایند برنامه ریزی نیروی انسانی محسوب می‌شود؟",
+    "options": [
+      "مقایسه عرضه و تقاضای نیروی انسانی",
+      "مطالعه و بررسی اهداف آتی سازمان",
+      "تعیین موجودی نیروی انسانی",
+      "برآورد عرضه نیروی انسانی از منابع داخلی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.138",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 138,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 138 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "زمانی که کارکنان بتوانند نتیجه کار خود را در قالب یک کل ببینند، چه احساسی پیدا می‌کنند؟",
+    "options": [
+      "استقلال",
+      "توانمندی",
+      "رضایت",
+      "هویت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.139",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 139,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 139 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "نسبت بازده در ارزیابی منابع کارمندیابی مشخص کننده چیست؟",
+    "options": [
+      "بازده منابع انسانی چقدر است.",
+      "چند نفر در سال استخدام می‌شوند.",
+      "کل هزینه های پرداختی برای کارمندیابی چقدر است.",
+      "چند درصد داوطلبان به مراحل بعدی راه پیدا می‌کنند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.162",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 162,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 162 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "سرمایه شرکت «الف» شامل ۴ میلیون سهم عادی است که صددرصد افزایش سرمایه از محل آورده نقدی (حق تقدم) داشته است. شخصی که قبل از افزایش سرمایه مالک ۵ درصد سهام این شرکت بوده است، نیمی از حق تقدم خود را فروخته و بقیه را استفاده کرده و سپس ۱۰ درصد کل سهام شرکت را خریده است. نسبت مالکیت این سهامدار چه تغییری کرده است؟",
+    "options": [
+      "کاهش یافته",
+      "افزایش یافته",
+      "تغییر نکرده است.",
+      "اطلاعات کافی نیست."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.163",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 163,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 163 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام عامل بر بازده اوراق قرضه مؤثر نیست؟",
+    "options": [
+      "تورم انتظاری",
+      "ارزش اسمی",
+      "نقدشوندگی",
+      "مالیات پذیری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1399.183",
     "nodeId": "ind.pom_eoq_mrp",
     "examYear": 1399,
@@ -2857,6 +5346,557 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
       "تولید",
       "بازاریابی",
       "کالا"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.216",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 216,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 216 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "بازده تا سررسید یک ورقه قرضه با سررسید ۵ سال و نرخ کوپن ۱۰ درصد، معادل ۸ درصد است. چنانچه نرخ بهره بازار تغییر نکند، انتظار می‌رود یک سال بعد، قیمت این ورقه قرضه .....",
+    "options": [
+      "کاهش یابد",
+      "افزایش یابد",
+      "بدون تغییر باقی بماند",
+      "متناسب با نرخ کوپن اوراق قرضه جدیدالانتشار ممکن است افزایش یا کاهش یابد"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.221",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 221,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 221 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام یک از اجزای برنامه کسب وکار، مزایای بالقوه ای که کسب وکار در بلندمدت در رقابت با دیگران از آن برخوردار است، تشریح می‌شود؟",
+    "options": [
+      "بخش مدیریت",
+      "بخش بازاریابی",
+      "بخش ریسک های بسیار مهم",
+      "شرح کسب وکار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.222",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 222,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 222 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "بیشترین منابع مالی کارآفرینان برای راه اندازی کسب وکار کدام است؟",
+    "options": [
+      "پس اندازهای شخصی و استقراض از خانواده",
+      "فرشتگان کسب وکار و پس اندازهای شخصی",
+      "سرمایه گذاران خطرپذیر و وام بانکی",
+      "وام بانکی و استقراض از خانواده"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.231",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 231,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 231 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "انسان کارآفرینانه در کانون بررسی و توجه کدام صاحب نظران قرار دارد؟",
+    "options": [
+      "جامعه شناسان",
+      "روانشناسان",
+      "اندیشمندان مدیریت",
+      "اندیشمندان علوم سیاسی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.232",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 232,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 232 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کارآفرینی راهبردی (استراتژیک) به عنوان یک مفهوم کلیدی به پیگیری عملکرد برتر توسط شرکت‌ها از طریق ...... و ...... اشاره دارد.",
+    "options": [
+      "فرصت - استراتژی",
+      "مزیت جویی - رفع نیاز",
+      "فرصت جویی - مزیت جویی",
+      "فرصت جویی - رفع نیاز"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.234",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 234,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 234 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام عامل تشکیل تیم های کارآفرینانه را تسهیل می‌نماید؟",
+    "options": [
+      "منافع و علایق مشترک",
+      "اهداف کسب و کاری متفاوت",
+      "درک متفاوت از مشکل",
+      "دسترسی به منابع کمیاب"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.236",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 236,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 236 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام عبارت در مورد اندوخته قانونی در شرکت های سهامی صحیح است؟",
+    "options": [
+      "۱٪ از سود تا به میزان ۲٪ سرمایه برسد.",
+      "۱٪ از سود تا به میزان ۱٪ سرمایه برسد.",
+      "۱٪ از سود تا به میزان ۴٪ سرمایه برسد.",
+      "۴٪ از سود تا به میزان ۱٪ سرمایه برسد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.237",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 237,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 237 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مانده حساب عملکرد به چه معنی است؟",
+    "options": [
+      "سود یا زیان خالص",
+      "سود یا زیان ویژه",
+      "سود یا زیان ناویژه",
+      "بهای تمام شده کالای ساخته شده"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.238",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 238,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 238 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حداقل تعداد شرکاء در شرکت تضامنی چند نفر است؟",
+    "options": [
+      "سه",
+      "دو",
+      "یک",
+      "پنج"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.239",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 239,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 239 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "چنانچه سررسید اسناد دریافتنی ۳ سال آینده باشد، حساب اسناد دریافتنی در ترازنامه چگونه منعکس می‌شود؟",
+    "options": [
+      "دارایی نامشهود",
+      "دارایی ثابت",
+      "دارایی جاری",
+      "سایر دارایی‌ها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.243",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 243,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 243 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مواد مستقیم مصرفی و مواد غیرمستقیم مصرفی به ترتیب در کدام حساب‌ها بدهکار می‌شوند؟",
+    "options": [
+      "کنترل سربار، کار در جریان ساخت",
+      "کار در جریان ساخت، کنترل سربار جذب شده",
+      "کار در جریان ساخت، کنترل سربار",
+      "کالای تکمیل شده، کنترل سربار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.244",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 244,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 244 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "ضایعات غیرعادی به کدام حساب بسته می‌شود؟",
+    "options": [
+      "سود و زیان دوره",
+      "کار در جریان ساخت",
+      "موجودی محصول",
+      "کنترل سربار ساخت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.247",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 247,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 247 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اضافه (کسر) جذب سربار روی کدام یک از حساب های زیر تأثیر ندارد؟",
+    "options": [
+      "کنترل مواد",
+      "کار در جریان ساخت",
+      "کالای تکمیل شده",
+      "بهای ساخت کالای فروش رفته"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.266",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 266,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 266 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "آخرین گام در فرایند برنامه ریزی استراتژیک کدام است؟",
+    "options": [
+      "تدوین اهداف",
+      "تدوین مأموریت‌ها",
+      "تعیین خط مشی‌ها",
+      "تفکیک مأموریت‌ها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.267",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 267,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 267 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در تقسیم بندی IMO ذغال سنگ نوع D چه خصوصیتی دارد؟",
+    "options": [
+      "بدون خطر",
+      "خطر گازهای اشتعال زا",
+      "خطر افزایش حرارت خود به خود",
+      "خطر گازهای اشتعال زا و افزایش حرارت خود به خود"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.270",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 270,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 270 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "برنامه جامع و کاملی که بر مبنای آن نیل به اهداف اساسی سازمان تضمین می‌شود، چه نام دارد؟",
+    "options": [
+      "رسالت",
+      "استراتژی",
+      "مأموریت",
+      "سازماندهی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.272",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 272,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 272 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "نمودار سازمانی نشان دهنده چیست؟",
+    "options": [
+      "درجه مسئولیت و اختیارات پست های هم سطح",
+      "چارچوب و اسکلت کلی و اساسی سازمان",
+      "تمامی کانال های ارتباطی و تماس",
+      "ساختار غیررسمی سازمان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.274",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 274,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 274 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "چه عاملی هسته مرکزی برنامه ریزی را تشکیل می‌دهد؟",
+    "options": [
+      "تعهدات",
+      "قانون",
+      "روش",
+      "بودجه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.277",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 277,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 277 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تأثیر زیرساخت های حمل ونقل بر ارزش زمین چیست؟",
+    "options": [
+      "باعث افزایش ارزش زمین می‌گردد.",
+      "باعث کاهش ارزش زمین می‌گردد.",
+      "تأثیر قابل‌توجهی بر ارزش زمین ندارد.",
+      "در بعضی موارد باعث کاهش و در بعضی موارد باعث افزایش ارزش زمین می‌گردد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.278",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 278,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 278 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "ساده‌ترین و قدیمی‌ترین روش برنامه ریزی کدام است؟",
+    "options": [
+      "روش پرت",
+      "نمودار گانت",
+      "برنامه ریزی شبکه",
+      "برنامه ریزی تجاری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.279",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 279,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 279 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "سیکودا (ASYCODA) چیست و چه نقشی در تجارت دارد؟",
+    "options": [
+      "نرم افزار مالی گمرک - محاسبه نرخ عوارض گمرکی",
+      "نرم افزار سیستم گردش مالی گمرک - ذخیره اطلاعات مالی",
+      "نرم افزار پردازش خودکار داده های گمرکی - ذخیره اطلاعات حمل و نقلی",
+      "نرم افزار پردازش خودکار داده های گمرکی - تسهیل کننده تجارت جهانی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.281",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 281,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 281 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "دلیل اصلی شفافیت، عملیات کارا و همسان سازی در ادارات گمرک کشورهای دنیا چیست؟",
+    "options": [
+      "استفاده از آسیکودا",
+      "ارتباط نزدیک‌تر گمرکات کشورها",
+      "استفاده از قوانین یکنواخت سراسری",
+      "ایجاد نظام هماهنگ گمرکی در همه کشورها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.282",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 282,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 282 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از عمده صفات ویژه رهبری (leadership) محسوب می‌گردد؟",
+    "options": [
+      "نفوذ ذاتی",
+      "توانایی ترغیب",
+      "انگیزش درونی",
+      "داشتن قدرت منتسب"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.283",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 283,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 283 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد ممکن است در هنگام حمل و نقل کپرا (Copra) مغز نارگیل، ظهور نماید؟",
+    "options": [
+      "کاهش شدید اکسیژن در انبار و احتراق به خودی خود",
+      "احتراق به خودی خود و افزایش حرارت به خودی خود",
+      "افزایش حرارت به خودی خود و کاهش شدید اکسیژن در انبار",
+      "احتراق به خودی خود، افزایش حرارت به خودی خود و کاهش شدید اکسیژن در انبار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.284",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 284,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 284 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "روش های یادگیری دانش مدیریت کدامند؟",
+    "options": [
+      "یادگیری در رفتار",
+      "نهادینه کردن ارزش",
+      "آموزش و انجام کار",
+      "مشاهده رفتار مدیران"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.286",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 286,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 286 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "افزایش توانایی های مدیران به کدام یک از ساخته های سازمانی منجر می‌شود؟",
+    "options": [
+      "بلندتر",
+      "تخت‌تر",
+      "رسمی‌تر",
+      "غیررسمی‌تر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.288",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 288,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 288 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "با توجه به تعریف مدیریت، مفهوم نهفتهٔ مدیریت کدام مورد است؟",
+    "options": [
+      "فعالیت های هدف دار",
+      "فرآیندی بودن مدیریت",
+      "هدایت تشکیلات سازمانی",
+      "تخصیص و مصرف مدبرانه منابع"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.291",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 291,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 291 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در خط شاهین کشتی‌ها، علامت WNA مورد استفاده چه کشتی هایی است؟",
+    "options": [
+      "کشتی های بالای ۱۰۰ متر طول، فعال در مناطق غربی اقیانوس اطلس شمالی",
+      "کشتی های زیر ۱۰۰ متر طول، فعال در مناطق غربی اقیانوس اطلس شمالی",
+      "کشتی های زیر ۱۰۰ متر طول، فعال در فصل زمستان در مناطق خاصی از اقیانوس اطلس شمالی",
+      "کشتی های بالای ۱۰۰ متر طول، فعال در فصل زمستان در مناطق خاصی از اقیانوس اطلس شمالی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1399.294",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1399,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 294,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1399 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1399 — سؤال 294 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد برنامه ریزی را به صورت یک ضرورت انکارناپذیر در تمام نهادها تبدیل کرده است؟",
+    "options": [
+      "فرایندی مداوم و چالشی برای مدیران و سازمان است.",
+      "عدم اطمینانی که از تغییرات محیطی ناشی می‌شود.",
+      "زیربنای هر نوع تصمیم گیری است.",
+      "یک نگرش و راه زندگی که متضمن تعهد به عمل بر مبنای اندیشه است."
     ],
     "expectedTimeMs": 80000
   },
@@ -3146,6 +6186,177 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1400.127",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 127,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 127 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "پدیده ای که بر اساس آن، هزینه های کامل خدمات دولتی پنهان است و یا به وسیله رأی دهندگان به درستی درک و فهم نمی‌شود را اصطلاحاً چه می‌نامند؟",
+    "options": [
+      "قانون واگنر",
+      "توهم مالی",
+      "کفالت همگانی",
+      "مدل رشد کوهان شتر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.131",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 131,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 131 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "ریشه مفهوم غنی سازی شغلی در کدام نظریه انگیزشی نهفته است؟",
+    "options": [
+      "نظریه علمی",
+      "نظریه فعال سازی",
+      "نظریه ویژگی های شغل",
+      "نظریه دوعاملی هرزبرگ"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.132",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 132,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 132 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام روش، تأمین منابع انسانی مورد نیاز از شرکت های کارفرمای حرفه ای انجام می‌شود؟",
+    "options": [
+      "لیزینگ کارکنان",
+      "برون سپاری",
+      "انتقال موقت",
+      "شغل سپاری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.134",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 134,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 134 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام روش جهت پاداش در جبران خدمات دارای این مزیت است که منافع سازمانی مدنظر همه بخش‌ها قرار گرفته و از بهینه سازی فرعی جلوگیری می‌شود؟",
+    "options": [
+      "سهم بهره وری",
+      "تسهیم سهام",
+      "کارانه سازمانی",
+      "کارت امتیازی متوازن"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.138",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 138,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 138 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "ویژگی سازمان دموکراتیک که بر مفهوم توانمندسازی تمامی اعضای سازمان تأکید دارد، در کدام نظریه سازمان مطرح می‌شود؟",
+    "options": [
+      "انعکاسی",
+      "مدرنیست",
+      "نومدرنیست",
+      "پست مدرنیست"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.139",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 139,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 139 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "به یادسپاری رفتار حتی در شرایطی که الگو حضور ندارد، بیانگر کدام مرحله در نظریه یادگیری اجتماعی است؟",
+    "options": [
+      "مدل سازی",
+      "تقویت",
+      "بازتولید",
+      "توجه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.140",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 140,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 140 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "آزادی عمل و اندازه تأثیر ابعاد کدام عامل اصلی در مدل ارزشیابی مشاغل مدیریتی هی است؟",
+    "options": [
+      "شرایط کار",
+      "دانش کار",
+      "حل مسئله",
+      "پاسخگویی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.141",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 141,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 141 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام روش رتبه بندی، از ارزیابان خواسته می‌شود برای ابعاد متعدد عملکردی، رتبه بندی اعدادی و ارقامی انجام دهند؟",
+    "options": [
+      "ترسیمی",
+      "تشریحی",
+      "اجباری",
+      "ریاضی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.143",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 143,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 143 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام روش آموزش، هر دو جنبه عقلایی و احساسی رفتار انسان دخالت دارد؟",
+    "options": [
+      "آموزش تیمی",
+      "کارگاه آموزشی",
+      "بازی های تجاری",
+      "ایفای نقش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1400.159",
     "nodeId": "ind.or_simplex_duality",
     "examYear": 1400,
@@ -3237,6 +6448,253 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
       "تقتیر",
       "تبذیر",
       "إتراف"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.211",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 211,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 211 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر ضریب همبستگی بین بازده دو دارایی A و B برابر یک باشد، انحراف معیار بازده سبد سرمایه گذاری شامل این دو دارایی کدام است؟",
+    "options": [
+      "میانگین وزنی انحراف معیار بازده دو دارایی",
+      "میانگین ساده انحراف معیار بازده دو دارایی",
+      "میانگین وزنی واریانس بازده دو دارایی منهای کوواریانس بازده آنها",
+      "میانگین ساده واریانس بازده دو دارایی منهای کوواریانس بازده آنها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.216",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 216,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 216 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "یک شرکت ایرانی برای تأمین مالی پروژه، قرضه بدون کوپن به یورو منتشر کرده است. شرکت برای پوشش ریسک نرخ ارز باید:",
+    "options": [
+      "در پیمان آتی ریال، موقعیت فروش اتخاذ کند.",
+      "در پیمان آتی ریال، موقعیت خرید اتخاذ کند.",
+      "در پیمان آتی یورو، موقعیت فروش اتخاذ کند.",
+      "در پیمان آتی یورو، موقعیت خرید اتخاذ کند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.218",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 218,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 218 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "قیمت نقدی هر سکه بهار آزادی ۱۰۵ میلیون ریال و قیمت آتی آن به سر رسید یک سال بعد ۱۲۵ میلیون ریال و نرخ سود بدون ریسک ۲۰ درصد است. در این حالت استراتژی مطلوب کدام می‌باشد؟",
+    "options": [
+      "فروش استقراضی سکه بهار آزادی در بازار نقدی",
+      "اتخاذ موقعیت خرید در قرارداد آتی سکه بهار آزادی",
+      "خرید سکه بهار آزادی در بازار نقدی و اتخاذ موقعیت فروش در قرارداد آتی",
+      "فروش استقراضی سکه بهار آزادی در بازار نقدی و اتخاذ موقعیت فروش در قرارداد آتی سکه بهار آزادی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.221",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 221,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 221 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "از نظر تئودور شولتز، کارآفرین چه کسی است؟",
+    "options": [
+      "نوآور",
+      "سوداگر",
+      "پیش بینی کننده",
+      "تخصیص دهنده منابع"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.224",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 224,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 224 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مطابق با مدل نظری دیده بان جهانی کارآفرینی (GEM)، فعالیت های کارآفرینانه با توجه به مراحل به ترتیب کدام مورد می‌باشد؟",
+    "options": [
+      "نوپا، جدید، تأسیس شده، خروج",
+      "تأسیس شده، جدید، نوپا، خروج",
+      "جدید، نوپا، تأسیس شده، خروج",
+      "تأسیس شده، نوپا، جدید، خروج"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.242",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 242,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 242 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "طبقه بندی دارایی‌ها و بدهی‌ها به جاری و غیرجاری بیانگر کدام فرضیه و اصول حسابداری است؟",
+    "options": [
+      "واحد پولی",
+      "تداوم فعالیت",
+      "تفکیک شخصیت",
+      "بهای تمام شده تاریخی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.245",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 245,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 245 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در دفاتر گیرنده، هنگام دریافت سفته حساب ...... می‌گردد، حساب مزبور جزء ...... مؤسسه تلقی می‌شود.",
+    "options": [
+      "اسناد پرداختی بستانکار - بدهی",
+      "اسناد دریافتی بدهکار - دارایی",
+      "اسناد دریافتی بدهکار - بدهی",
+      "اسناد پرداختی بدهکار - دارایی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.246",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 246,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 246 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "با ارسال صورت حساب به مشتریان، کدام مورد بدهکار می‌شود؟",
+    "options": [
+      "خرید",
+      "هزینه",
+      "حساب های دریافتنی",
+      "حساب های پرداختنی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.247",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 247,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 247 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در شرایطی که با افزایش قیمت‌ها روبرو هستیم، استفاده از روش میانگین موزون برای ارزش گذاری در مقایسه با روش اولین صادره از آخرین وارده باعث می‌شود که موجودی پایان دوره ...... و سود ...... گزارش شود.",
+    "options": [
+      "بیشتر - بیشتر",
+      "کمتر - کمتر",
+      "کمتر - بیشتر",
+      "بیشتر - کمتر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.272",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 272,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 272 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "طراحی سازمان حاصل کدام اصل مدیریت است؟",
+    "options": [
+      "برنامه ریزی",
+      "سازماندهی",
+      "هدایت",
+      "کنترل"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.277",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 277,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 277 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، مهم‌ترین میان برهای دریایی ساخته دست بشر در دنیا می‌باشند؟",
+    "options": [
+      "تنگه های ماژلان و هرمز",
+      "تنگه های مالاکا و سوندا",
+      "کانال های پاناما و سوئز",
+      "کانال های مانش و دانمارک"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.281",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 281,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 281 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "پایان دوره حمل ونقل کانالی در چه عصر و حدوداً چه سالی به وقوع پیوست؟",
+    "options": [
+      "فوردیست - ۱۹۵۰-",
+      "پسافوردیست - ۱۹۸۰-",
+      "حمل ونقل در انقلاب صنعتی - ۱۸۵۰-",
+      "ظهور سیستم های حمل ونقل مدرن - ۱۸۹۰-"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1400.284",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1400,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 284,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1400 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1400 — سؤال 284 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در نمودار سازمانی، خطوط ترسیم شده بین واحدها بیانگر چه مفهومی است؟",
+    "options": [
+      "اختیار",
+      "قدرت",
+      "پاسخگویی",
+      "رسمی بودن"
     ],
     "expectedTimeMs": 80000
   },
@@ -3716,6 +7174,234 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1401.118",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 118,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 118 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام وضعیت کاهش رفاه اقتصادی (زیان کل ناشی از مالیات) بیشتری را نشان می‌دهد؟",
+    "options": [
+      "کاهش میزان مازاد رفاه تولیدکنندگان و افزایش میزان مازاد مصرف کنندگان",
+      "کاهش میزان مازاد رفاه مصرف کنندگان و افزایش میزان مازاد تولیدکنندگان",
+      "کاهش زیان عادی مصرف کنندگان و افزایش زیان اضافی تولیدکنندگان",
+      "کاهش میزان مازاد رفاه مصرف کنندگان و تولیدکنندگان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.119",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 119,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 119 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در رابطه جانشینی فراغت با درآمد، مالیات بر درآمد، کارایی اقتصادی را چه تغییری می‌دهد؟",
+    "options": [
+      "کاهش می‌دهد.",
+      "بدون تغییر می‌گذارد.",
+      "افزایش می‌دهد.",
+      "قابل اظهارنظر نیست."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.130",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 130,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 130 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در مرحله «شناخت ابعاد و شاخص های عملکرد» در فرایند انجام مدیریت عملکرد در دستگاه های اجرایی، کدام اقدامات صورت می‌گیرد؟",
+    "options": [
+      "پایش عملکرد و جمع‌آوری داده‌ها و محاسبه شاخص های عملکرد",
+      "بازنگری تعریف شاخص‌ها و وزن دهی آن‌ها",
+      "تحلیل اطلاعات و ارزیابی عملکرد",
+      "اصلاح برنامه‌ها و نظارت بر اجرای"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.131",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 131,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 131 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در مدیریت راهبردی منابع انسانی، اگر همسوی افقی با راهبردهای سازمانی زیاد و همسوی عمودی با آن کم باشد، راهبرد حاصله چه خواهد بود؟",
+    "options": [
+      "نتیجه گرا",
+      "راهبرد گرا",
+      "فرایند گرا",
+      "تاکتیک گرا"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.132",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 132,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 132 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در نظریه گینزبرگ (Ginzberg) جریان رشد انسان فرایندی تکاملی است و انتخاب شغل نیز فرایند تکاملی دارد. کدام مورد، مراحل این فرایند کدام مورد می‌باشد؟",
+    "options": [
+      "رویایی، آزمایشی، واقعبینی",
+      "سنجش، انتخاب، تصمیم نهایی",
+      "رغبت، صلاحیت، انتقال",
+      "مکاشفه، تبلور، تعیین"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.133",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 133,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 133 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مدیران درونی برون نگر، دارای کدام ویژگی‌ها هستند؟",
+    "options": [
+      "در عین استخدام از درون سازمان، از بیرون سازمان استخدام می‌کنند.",
+      "در عین شناخت سازمان، نگاه بیرونی قوی دارند.",
+      "برای تقویت سازمان، از محیط بهره می‌گیرند.",
+      "هم درون نگر و هم برون نگر هستند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.135",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 135,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 135 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "زمانی که در برنامه ریزی نیروی آنسانی از روش رگرسیون استفاده می‌شود، چه مشکلی امکان وقوع دارد؟",
+    "options": [
+      "ناتوانی در پیش بینی پیامدهای آینده",
+      "ناتوانی پیش بینی تغییرات جهشی",
+      "نادیده گرفتن روندهای طبیعی",
+      "خطای ناشی از تعمیم"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.142",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 142,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 142 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "طبق کدام مسیر شغلی، برخی از کارکنان ترجیح می‌دهند از سازمانی به سازمان دیگر رفته، فرصت های استخدامی متفاوت را تجربه و مسیر شغلی خود را پیگیری کنند؟",
+    "options": [
+      "دوگانه",
+      "بدون مرز",
+      "نردبانی",
+      "بیرونی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.143",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 143,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 143 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام روش ارزیابی عملکرد، کارکنان در گروه های برتر، عالی، خوب، متوسط و ضعیف قرار می‌گیرند، اگر بنا باشد ۱۵ نفر کارمند ارزیابی شوند، ۲ نفر برتر، ۳ نفر عالی، ۵ نفر خوب، ۳ نفر متوسط و ۲ نفر ضعیف معرفی شوند؟",
+    "options": [
+      "انتخاب اجباری",
+      "رتبه بندی توصیفی",
+      "توزیع اجباری",
+      "مقایسه زوجی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.144",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 144,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 144 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر راهبرد منابع انسانی سازمان تمایز و استفاده از کارکنان دائمی باشد، نتیجه حاصله به‌کارگیری چه نوع نیروی انسانی است؟",
+    "options": [
+      "نخبگان متعهد",
+      "سرباز وفادار",
+      "کارکنان روزمره",
+      "نیروهای آزاد"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.145",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 145,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 145 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "برای حصول بهره وری کامل از مساعی هر شغل، در طراحی شغل باید به چه موردی توجه کنیم؟",
+    "options": [
+      "تأکید اصلی طراحی را بر شغل متمرکز کنیم.",
+      "مسیر شغلی را به طور دقیق و روشن ترسیم کنیم.",
+      "طراحی شغل و مسیر شغلی را با هم مورد بررسی قرار دهیم.",
+      "نیازهای شاغل را در طراحی به طور کامل مدنظر قرار دهیم."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.161",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 161,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 161 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "شرکت اول اقدام به افزایش سرمایه از محل تجدید ارزیابی دارایی‌ها می‌کند و شرکت دوم از محل سود انباشته افزایش سرمایه می‌دهد. در نتیجه، حقوق مالکانه .....",
+    "options": [
+      "در هر دو شرکت تغییر نمی‌کند.",
+      "در هر دو شرکت افزایش می‌یابد.",
+      "در شرکت اول افزایش اما در شرکت دوم کاهش می‌یابد.",
+      "در شرکت اول تغییر می‌کند اما در شرکت دوم تغییر نمی‌کند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1401.176",
     "nodeId": "ind.pom_eoq_mrp",
     "examYear": 1401,
@@ -4020,6 +7706,690 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1401.206",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 206,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 206 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد نادرست است؟",
+    "options": [
+      "با افزایش سررسید، دیرش قرضه با نرخ کاهندهای افزایش می‌یابد.",
+      "دیرش قرضه، معیار حساسیت قیمت به تغییرات نرخ بهره بازار است.",
+      "نرخ بازده تا سررسید، ارتباط مستقیم با دیرش قرضه دارد.",
+      "نرخ کوپن، رابطه معکوسی با دیرش قرضه دارد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.207",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 207,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 207 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "عبارت زیر مطابق کدام تئوری است؟ «در حالت تعادل، باید نرخ های نقد بلندمدت با میانگین هندسی نرخ های کوتاهمدت نقد و آتی برابر باشد».",
+    "options": [
+      "تفکیک بازار",
+      "رجحان نقدینگی",
+      "انتظارات",
+      "کارایی بازار سرمایه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.208",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 208,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 208 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "رابطه نرخ سود اوراق مشارکت و دوره سررسید آن با ریسک سرمایه گذاری مجدد، به ترتیب (از راست به چپ) کدام است؟",
+    "options": [
+      "صعودی - صعودی",
+      "نزولی - نزولی",
+      "نزولی - صعودی",
+      "صعودی - نزولی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.214",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 214,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 214 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر ریسک معادل احتمال زیان فرض شود، کدام معیار شاخص مناسب تری برای اندازه گیری ریسک است؟",
+    "options": [
+      "نیم انحراف معیار",
+      "دامنه تغییرات",
+      "انحراف معیار",
+      "ضریب تغییرات"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.217",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 217,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 217 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "سهمی اکنون ۱۰۰۰ ریال ارزش دارد، پیش بینی می‌شود شش ماه بعد قیمت ۱۱۰۰ ریال یا ۹۰۰ ریال باشد. چه ترکیبی از این سهم و اختیار خرید در قیمت (At The Money) آن، با سررسید شش ماهه می‌تواند عایدات بدون ریسکی در انتهای دوره شش ماهه به همراه داشته باشد؟",
+    "options": [
+      "خرید یک سهم و فروش یک اختیار خرید",
+      "فروش یک سهم و خرید دو اختیار خرید",
+      "خرید یک سهم و خرید یک اختیار خرید",
+      "خرید یک سهم و خرید دو اختیار خرید"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.221",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 221,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 221 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در مرحله قبل از تأسیس رسمی بنگاه، کدام نهاد از کارآفرین حمایت می‌کند؟",
+    "options": [
+      "سرمایه گذاران خطرپذیر",
+      "پارک علم و فناوری",
+      "فرشتگان کسبوکار",
+      "کارخانه نوآوری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.224",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 224,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 224 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در بطن فرصت های کشف و خلق به ترتیب کدام مورد وجود دارد؟",
+    "options": [
+      "عدم اطمینان - اطمینان",
+      "ریسک - عدم اطمینان",
+      "اطمینان - عدم اطمینان",
+      "عدم اطمینان - ریسک"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.225",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 225,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 225 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "رابطه سن افراد با احتمال بهره برداری از فرصت های کارآفرینانه چگونه است؟",
+    "options": [
+      "رابطه منفی دارد.",
+      "رابطه منحنی شکل دارد.",
+      "رابطه مثبت دارد.",
+      "رابطه ای ندارد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.231",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 231,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 231 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تأمین مالی برای تبلیغات، پرداخت هزینه فروش، حقوق و دستمزد کارکنان و مدیران، دغدغه عمده کدام مرحله توسعه کسبوکار است؟",
+    "options": [
+      "قبل از شروع کسبوکار",
+      "شروع کسبوکار",
+      "بهرهبرداری",
+      "رشد"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.247",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 247,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 247 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "رویداد مالی که موجب افزایش یک حساب دارایی می‌شود احتمالاً موجب تغییر در کدام حساب می‌شود؟",
+    "options": [
+      "افزایش یک حساب هزینه",
+      "افزایش حساب درآمد",
+      "کاهش حساب سرمایه",
+      "کاهش یک بدهی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.254",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 254,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 254 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حمل ونقل ترکیبی بدون کانتینر، چه نوع حمل و نقلی محسوب می‌شود؟",
+    "options": [
+      "کارآمد ولی گران",
+      "کند ولی ارزان",
+      "ناکارآمد و گران",
+      "سریع و ارزان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.255",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 255,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 255 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مؤثرترین سیستم حملو نقل موجود در عصر حمل و نقل قبل از انقلاب صنعتی (قبل از سده ۱۸۰۰) کدام گزینه بود؟",
+    "options": [
+      "ریلی",
+      "کانالی",
+      "رودخانه ای",
+      "جاده ای"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.256",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 256,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 256 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "عامل اصلی حفظ انسجام سیستم های اقتصادی از امپراطوری های قدیم تا بلوک های اقتصادی مدرن کدام است؟",
+    "options": [
+      "مهم شمردن اقتصاد حمل و نقل",
+      "توجه به فناوری های حمل و نقل",
+      "توجه ویژه به زیرساخته های حمل و نقل",
+      "توزیع مؤثر کالا و جابه‌جایی مسافر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.257",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 257,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 257 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "دلایل رشد روزافزون حمل و نقل کدام مورد می‌باشد؟",
+    "options": [
+      "ظهور سیستم های مدرن، ایجاد روساخته‌ها، ایجاد زیرساخته‌ها",
+      "رشد تقاضا، کاهش هزینه‌ها، توسعه زیرساخته‌ها",
+      "جهانی شدن، صنعتی شدن، ظهور سیستم های مدرن",
+      "صنعتی شدن، کاهش نرخ‌ها، افزایش ظرفیت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.259",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 259,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 259 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مسئولیت اصلی نظارت بر بارچینی و تعادل کشتی با کدام فرد است؟",
+    "options": [
+      "افسر سوم",
+      "افسر دوم",
+      "افسر اول",
+      "کاپیتان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.262",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 262,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 262 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در حمل بار بین دو نقطه، فرق اصلی حمل و نقل های ترکیبی و چندوجهی کدام مورد می‌باشد؟",
+    "options": [
+      "تعداد وسیله نقلیه",
+      "تعداد توقف‌ها",
+      "تعداد بارنامه",
+      "تعداد تخلیه و بارگیری‌ها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.265",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 265,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 265 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از روش‌ها و فنون معین تصمیم گیری می‌باشد؟",
+    "options": [
+      "بودجه بندی",
+      "عدم اطمینان",
+      "معقولیت نسبی",
+      "مفاهیم زیربنایی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.268",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 268,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 268 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام موقعیت تصمیم گیری، میزان احتمال هرگونه نتیجه ممکن، معین است؟",
+    "options": [
+      "موقعیت اطمینان",
+      "موقعیت مخاطره",
+      "موقعیت عدم اطمینان",
+      "موقعیت ابهام"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.269",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 269,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 269 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "با توجه به ارتباط بین هزینه، مسافت و انتخاب نوع وسیله حمل و نقل، کدام مورد درست است؟",
+    "options": [
+      "حمل و نقل دریایی برای مسافت های بلند استفاده می‌شود.",
+      "حمل و نقل جاده ای برای مسافت های کوتاه استفاده می‌شود.",
+      "حمل و نقل ریلی برای مسافت های متوسط استفاده می‌شود.",
+      "هر سه مورد"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.270",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 270,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 270 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد به وظیفه مدیر مالی در هدایت به سمت سودآوری اشاره دارد؟",
+    "options": [
+      "افزایش در وجه",
+      "اداره جریان وجه داخلی",
+      "اندازه گیری بازده مورد انتظار",
+      "پیش بینی جریان نقدی سازمان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.272",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 272,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 272 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، سه متغیر فیدلر در انتخاب سبک رهبری می‌باشد؟",
+    "options": [
+      "تکنولوژی، رابطه رهبر و پیرو، قدرت پست و مقام",
+      "رابطه رهبر و پیرو، کار، قدرت پست و مقام",
+      "رابطه رهبر و پیرو، تکنولوژی، ساختار",
+      "تکنولوژی، کار، ساختار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.273",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 273,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 273 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حمل کانتینر مختص کدام خطوط کشتیرانی است؟",
+    "options": [
+      "منظم (لاینر)",
+      "نامنظم (ترمپ)",
+      "چند وجهی",
+      "ترکیبی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.274",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 274,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 274 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از ویژگی برجسته ادهوکراسی محسوب می‌شود؟",
+    "options": [
+      "قوانین و ضوابط نامحدود",
+      "مسئولیت بخشی اقتضایی",
+      "گرههای کاری دائم",
+      "تمرکز در اختیارات"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.276",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 276,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 276 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام تقاضا، مطلوب مدیر بازاریابی بوده و در جهت حفظ شرایط آن می‌کوشد؟",
+    "options": [
+      "کامل",
+      "بیش از حد",
+      "سالم",
+      "پنهان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.278",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 278,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 278 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "فرایند شناسایی مسئله و تعیین اهداف و اولویتبندی آنها را چه می‌نامند؟",
+    "options": [
+      "حل مسئله",
+      "شناخت مسئله",
+      "مسئله یابی",
+      "مسئله سازی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.280",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 280,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 280 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام نوع ارتباطات، پیام در دو سطح مختلف از سلسله مراتب سازمانی یا خارج از سلسله مراتب اداری مبادله می‌شود؟",
+    "options": [
+      "یک جانبه",
+      "عمودی",
+      "مورب",
+      "افقی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.282",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 282,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 282 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام طراحی، از قدیمی‌ترین شکل های طراحی اداره می‌باشد که معمولاً در سطوح پایین سازمان به کار برده می‌شود؟",
+    "options": [
+      "بازاری اداره",
+      "ناحیه ای اداره",
+      "زمانی اداره",
+      "محصولی اداره"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.283",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 283,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 283 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کابوتاژ حق حمل ونقل بین کدام موارد می‌باشد؟",
+    "options": [
+      "بنادر یک کشور و ترمینال های حمل و نقل جاده ای کشور همسایه",
+      "یک بندر داخلی و بندر دیگر در کشور همسایه",
+      "بنادر واقع شده در یک کشور",
+      "بنادر یک قاره با قارهای دیگر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.284",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 284,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 284 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، مقیاس تعیین کننده محل اخذ تصمیم می‌باشد؟",
+    "options": [
+      "هماهنگی",
+      "سازماندهی",
+      "تفویض اختیار",
+      "تمرکز"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.285",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 285,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 285 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از دلایل اصلی نامتعادل بودن ترافیک هوایی در جهان می‌باشد؟",
+    "options": [
+      "نامنظم بودن پراکنش جمعیت و متفاوت بودن سطح توسعه در مناطق مختلف جهان",
+      "عدم امضاء کنوانسیون بین المللی ۱۹۴۴ شیکاگو توسط برخی از کشورهای جهان",
+      "محدودیت مالی اکثر کشورهای جهان در خرید و نگهداری ناوگان هوایی",
+      "عدم وجود کریدورهای هوایی تعریف شده در بعضی از مناطق جهان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.286",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 286,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 286 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد درست است؟",
+    "options": [
+      "فن پرت و سی پی.ام در مدل های تصمیم گیری کاربرد دارند.",
+      "فن سی پی.ام تغییرات زمانی همراه با زمان مورد انتظار را تخمین می‌زند.",
+      "فن پرت بهطور مشخص زمان مورد انتظار یک پروژه را تعیین می‌کند.",
+      "فن پرت با مسئله عدم اطمینان زمانی، مستقیمتر از فن سی پی.ام برخورد می‌کند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.288",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 288,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 288 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "نمودار پایان نمای گانت، جزء کدام فنون است؟",
+    "options": [
+      "کنترل و هماهنگی",
+      "برنامه ریزی",
+      "سازماندهی",
+      "تصمیم گیری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.290",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 290,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 290 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام روش راه حل جویی، به فن گوردون مشهور بوده است؟",
+    "options": [
+      "قیاسی رقابتی مستقیم",
+      "قیاسی غیرمستقیم",
+      "قیاسی مستقیم",
+      "استقرایی مستقیم"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.293",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 293,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 293 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "عامل تأثیرگذار در انتخاب نوع حمل و نقل کدام مورد می‌باشد؟",
+    "options": [
+      "مبداً و مقصد و فاصله بین آنها",
+      "نوع کالا و زیرساخت موجود در انواع مختلف حمل و نقل‌ها",
+      "فناوری موجود در انواع مختلف حمل و نقل‌ها",
+      "هر سه مورد"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.294",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 294,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 294 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از انواع عمده شیوه تفکر می‌باشد؟",
+    "options": [
+      "شهودی و استنباطی",
+      "خلاق و استقرایی",
+      "قیاسی و شهودی",
+      "سببی و استنباطی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1401.295",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1401,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 295,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1401 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1401 — سؤال 295 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام نظریه، جزء مکتب کلاسیک می‌باشد؟",
+    "options": [
+      "فرآیندی مدیریت",
+      "سیستمی",
+      "روابط انسانی",
+      "مدیریت اقتضایی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1402.26",
     "nodeId": "bus.islamic_moghimi",
     "examYear": 1402,
@@ -4305,6 +8675,139 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1402.112",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 112,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 112 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر به جای مالیات بر مصرف کلیه کالاها، مالیات بر درآمد وضع شود، درخصوص اثر درآمدی و کارایی اقتصادی چه می‌توان گفت؟",
+    "options": [
+      "اثر درآمدی وجود دارد، ولی کارایی اقتصادی حفظ می‌شود.",
+      "اثر درآمدی وجود ندارد، ولی کارایی اقتصادی حفظ می‌شود.",
+      "اثر درآمدی وجود دارد و باعث به هم خوردن کارایی اقتصادی می‌شود.",
+      "اثر درآمدی وجود ندارد و باعث به هم خوردن کارایی اقتصادی می‌شود."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.113",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 113,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 113 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در بازار رقابت کامل و با وضع مالیات بر واحد، افزایش کشش قیمتی عرضه به چه تغییراتی می‌انجامد؟",
+    "options": [
+      "افزایش سهم فروشندگان از مالیات وضع شده",
+      "افزایش سهم خریداران از مالیات وضع شده",
+      "عدم تغییر سهم خریداران و فروشندگان از مالیات وضع شده",
+      "افزایش کشش قیمتی تقاضا و از این رو، حذف اثر وضع مالیات بر واحد"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.122",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 122,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 122 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام نوع اعتبار، به سازگاری میان سؤالات آزمون و نوع موقعیت‌ها و مشکلاتی که در شغل رخ می‌دهد، اشاره دارد؟",
+    "options": [
+      "سازه",
+      "پیش بینی",
+      "محتوا",
+      "وابسته به معیار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.130",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 130,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 130 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "چالش های فکری، جزو ابعاد کدام عامل در مدل ارزشیابی هی است؟",
+    "options": [
+      "پاسخگویی",
+      "حل مسئله",
+      "شرایط کار",
+      "دانش کار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.132",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 132,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 132 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، بیانگر اساسی‌ترین نقش منابع انسانی است؟",
+    "options": [
+      "حامی کارکنان",
+      "شریک استراتژیک",
+      "کارشناس عملیاتی",
+      "توسعه دهنده سرمایه های انسانی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.153",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 153,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 153 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "استفاده از قاعده ۷۲ برای محاسبه مدت زمان لازم برای ۲ برابر شدن سرمایه گذاری اولیه، مبتنی بر کدام فرض است؟",
+    "options": [
+      "بهره به صورت مرکب محاسبه می‌شود.",
+      "بهره به صورت ساده محاسبه می‌شود.",
+      "بهره به صورت پیوسته محاسبه می‌شود.",
+      "بهره به صورت کمتر از ۲۰ درصد محاسبه می‌شود."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.157",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 157,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 157 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر شرکتی از نرخ متوسط هزینه سرمایه شرکت برای ارزیابی پروژه های با ریسک متفاوت استفاده کند، در نتیجه.",
+    "options": [
+      "منابع بیشتری به پروژه های پرریسک تخصیص می‌یابد",
+      "منابع بیشتری به پروژه های کم ریسک تخصیص می‌یابد",
+      "تخصیص منابع بین پروژه‌ها به درستی صورت می‌گیرد",
+      "منابع متناسب با حجم ریالی پروژه‌ها تخصیص می‌یابد"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1402.175",
     "nodeId": "ind.pom_eoq_mrp",
     "examYear": 1402,
@@ -4339,6 +8842,557 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
       "زمان خروج اولین محصول",
       "مجموع زمان های بیکاری منقطع ایستگاه‌ها",
       "زمان تکمیل یک دسته سفارش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.204",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 204,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 204 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام روش غربال گری ضرایب در تحلیل تکنیکال، توصیه به خرید سهامی می‌شود که قیمت آن روند صعودی دارد؟",
+    "options": [
+      "قیمت",
+      "فصلی",
+      "مومنتوم",
+      "سهام مغفول"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.209",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 209,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 209 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در یک بازار کارا، پس از اعلان یک خبر خوب غیرمنتظره، کدام یک مورد انتظار است؟",
+    "options": [
+      "افزایش آنی قیمت سهم در روز اعلان خبر و بدون شتاب قیمت در روزهای بعدی",
+      "افزایش آنی قیمت سهم در روز اعلان خبر و سپس کمی شتاب قیمت در روزهای بعدی",
+      "افزایش آنی قیمت سهم در روز اعلان خبر و سپس کمی اصلاح قیمت در روزهای بعدی",
+      "تغییری در قیمت اتفاق نمی‌افتد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.210",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 210,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 210 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مجموعه فرصت سرمایه گذاری با ترکیب یک دارایی ریسکی و یک دارایی بدون ریسک، بر کدام خط قرار می‌گیرد؟",
+    "options": [
+      "بازار اوراق بهادار",
+      "تخصیص سرمایه (SML)",
+      "بازار سرمایه (CML)",
+      "مشخصات"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.211",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 211,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 211 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تکیه بر کدام عامل زیر، می‌تواند باعث ایجاد تفاوت در فرایند توسعه محصول / خدمت هر سازمانی شود، به طوری که مدل کسب وکار آن با دیگر سازمان‌ها تا حدودی متفاوت می‌گردد؟",
+    "options": [
+      "برنامه ریزی",
+      "تحقیق و توسعه",
+      "مدیریت نوآوری",
+      "راه اندازی و تأمین مالی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.219",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 219,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 219 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مفهوم «تخریب خلاق» را چه کسی، برای اولین بار مطرح کرد؟",
+    "options": [
+      "کرزنر",
+      "جان استوارت میل",
+      "شومپیتر",
+      "کارل منکر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.221",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 221,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 221 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "انجام مأموریت های انسان دوستانه از طریق فعالیت های کسب وکار، در کدام نوع از کارآفرینی صورت می‌گیرد؟",
+    "options": [
+      "پایدار",
+      "عمومی",
+      "دولتی",
+      "اجتماعی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.222",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 222,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 222 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام کنسرسیوم دانشگاهی، به پایش کارآفرینی و محیط کسب وکار می‌پردازد؟",
+    "options": [
+      "مؤسسه جهانی کارآفرینی و نوآوری",
+      "دیده بان جهانی کارآفرینی",
+      "مجمع جهانی اقتصاد",
+      "سازمان بین المللی کار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.223",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 223,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 223 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک از موارد زیر، به ترتیب، سیر تکاملی رویکردهای مطالعاتی کارآفرینی را نشان می‌دهد؟",
+    "options": [
+      "رهیافت جامعه شناسی، اقتصادی، سازمانی و روان شناسی",
+      "رهیافت روان شناسی، اقتصادی، سازمانی و جامعه شناسی",
+      "رهیافت اقتصادی، روان شناسی، جامعه شناسی و سازمانی",
+      "رهیافت سازمانی، جامعه شناسی، اقتصادی و روان شناسی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.224",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 224,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 224 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "بنیان گذاران کسب وکارهای نوپای ناب، فعالیت شان را با ...... آغاز نمی‌کنند، بلکه با جست وجو برای ...... شروع می‌کنند.",
+    "options": [
+      "قصد کارآفرینانه – ایده کسب وکار",
+      "طرح کسب وکار – ایده کسب وکار",
+      "مدل کسب وکار – ایده کسب وکار",
+      "طرح کسب وکار – مدل کسب وکار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.234",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 234,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 234 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در تسویه آنی شرکت های تضامنی، در کدام مرحله، حساب تصفیه بدهکار و حساب های سرمایه بستانکار می‌شود؟",
+    "options": [
+      "واگذاری دارایی شرکت به یکی از شرکا",
+      "تقسیم زیان تصفیه بین شرکا",
+      "پرداخت هزینه های تصفیه",
+      "تقسیم سود تصفیه بین شرکا"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.237",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 237,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 237 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "این فرض که قرار نیست در آینده نزدیک واحد تجاری به فروش برسد یا منحل شود، کدام مورد زیر را دربر می‌گیرد؟",
+    "options": [
+      "فرض دوره مالی",
+      "فرض تداوم فعالیت",
+      "فرض واحد اندازه گیری",
+      "فرض تفکیک شخصیت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.238",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 238,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 238 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اثر سود سهمی بر جمع حقوق صاحبان سهام، کدام است؟",
+    "options": [
+      "بدون تأثیر است.",
+      "حقوق صاحبان سهام را افزایش می‌دهد.",
+      "حقوق صاحبان سهام را کاهش می‌دهد.",
+      "بستگی به قابل ملاحظه بودن سود سهمی دارد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.243",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 243,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 243 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در چه زمانی، جرثقیل یک کشتی باید تست شود؟",
+    "options": [
+      "بعد از اولین نصب",
+      "هر ۵ سال یک بار",
+      "بعد از هر تعمیر اساسی",
+      "همه موارد"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.244",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 244,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 244 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "عبارت «Kilindo Rope»، بیانگر کدام نوع طناب است؟",
+    "options": [
+      "ضد پاره شدن",
+      "مخصوص مهار کانتینر",
+      "دارای حلقه های فلزی در دو انتها",
+      "دارای قابلیت ضدپیچش و گره خوردن"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.245",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 245,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 245 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کانال سوئز، توسط کدام کشور ساخته شد؟",
+    "options": [
+      "مصر",
+      "اسپانیا",
+      "فرانسه",
+      "انگلستان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.247",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 247,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 247 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "توسعه حمل ونقل شهری مربوط به کدام عصر حمل ونقل است؟",
+    "options": [
+      "ظهور سیستم های مدرن حمل ونقل",
+      "پس از فوردیست",
+      "انقلاب صنعتی",
+      "فوردیست"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.250",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 250,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 250 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کالاهای خطرناک، «Auto-ignition temperature» به چه معنی است؟",
+    "options": [
+      "بالاترین درجه حرارتی که یک ماده بدون شعله خارجی شروع به سوختن می‌کند.",
+      "بالاترین درجه حرارتی که یک ماده با کمک شعله خارجی شروع به سوختن می‌کند.",
+      "پایین‌ترین درجه حرارتی که یک ماده بدون شعله خارجی شروع به سوختن می‌کند.",
+      "پایین‌ترین درجه حرارتی که یک ماده با کمک شعله خارجی شروع به سوختن می‌کند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.255",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 255,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 255 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در ابتدای ظهور صنعت حمل ونقل هوایی، محدودیت های این صنعت مربوط به کدام موارد است؟",
+    "options": [
+      "مسافر و نوع بار",
+      "ظرفیت و برد",
+      "نوع هواپیما",
+      "ایمنی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.263",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 263,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 263 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "قیاس تعیین کننده محل اخذ تصمیم، کدام است؟",
+    "options": [
+      "حیطه نظارت",
+      "میزان قدرت",
+      "درجه تمرکز",
+      "تعداد سطوح در سلسله مراتب"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.264",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 264,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 264 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، تعریف مناسبی برای حمل ونقل ترانس مودال است؟",
+    "options": [
+      "جابه‌جایی کالا و یا مسافر فقط با استفاده از جاده",
+      "جابه‌جایی کالا و یا مسافر بین چند نوع حمل ونقل",
+      "جابه‌جایی کالا و یا مسافر بین دو نوع حمل ونقل (مثلاً از کشتی به قطار)",
+      "جابه‌جایی کالا و یا مسافر درون یک نوع حمل ونقل (مثلاً از یک کشتی به کشتی دیگر)"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.265",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 265,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 265 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، جزو نظریه های فرایندی انگیزش محسوب می‌شود؟",
+    "options": [
+      "انتظار",
+      "سلسله مراتب نیازها",
+      "دوساحتی بودن انسان",
+      "انگیزش و بهداشت روانی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.266",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 266,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 266 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در فرایند سازمانی، اولین گام کدام است؟",
+    "options": [
+      "ترکیب افقی",
+      "تعیین شرح شغل",
+      "تقسیم بندی افقی",
+      "تقسیم بندی عمودی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.269",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 269,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 269 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حق صدور دستور و به اجرا درآوردن آن به کمک تشویق و تنبیه، چه نامیده می‌شود؟",
+    "options": [
+      "تمرکز",
+      "قدرت",
+      "اختیار",
+      "انضباط"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.271",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 271,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 271 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مدیریت کارا، چه نوع مدیریتی است؟",
+    "options": [
+      "تخصیص و مصرف مدبرانه",
+      "بسیج منابع و امکانات",
+      "مدیریت مؤثر",
+      "علم و هنر"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.277",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 277,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 277 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "به اعتقاد دراکر، عضو حیات بخش هر سازمان کدام است؟",
+    "options": [
+      "مدیریت",
+      "نیروی انسانی",
+      "منابع و امکانات",
+      "فناوری و تجهیزات"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.278",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 278,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 278 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "هماهنگی در حفظ وضع موجود، به کدام نوع از همبستگی یا هماهنگی اطلاق می‌شود؟",
+    "options": [
+      "ترتیبی",
+      "تنظیمی",
+      "مرحله ای",
+      "مجموعه ای"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.280",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 280,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 280 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تحلیل داده‌ها و آماده کردن اطلاعات برای تصمیم گیری، جزو وظایف کدام سطح از مدیریت است؟",
+    "options": [
+      "سرپرستی",
+      "عالی",
+      "عملیاتی",
+      "میانی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.282",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 282,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 282 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "عوامل مؤثر در توسعه حمل ونقل ترکیبی، کدام است؟",
+    "options": [
+      "کوتاه شدن مدت توقف کشتی‌ها در بنادر",
+      "فناوری در تخلیه و بارگیری و مقررات زدایی حمل ونقل",
+      "فناوری در صنعت حمل ونقل دریایی و توسعه فعالیت های لجستیکی در بنادر",
+      "ارتباط بین بنادر و پس کرانه و ارتباط بهتر بین پس کرانه و حمل ونقل دریایی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1402.285",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1402,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 285,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1402 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1402 — سؤال 285 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در بخش جابه‌جایی اطلاعات و توسعه شاهراه های اطلاعاتی، در کدام عصر حمل ونقل، فیبرهای نوری به تدریج جایگزین کابل های مسی شد؟",
+    "options": [
+      "پسافوردیست",
+      "فوردیست",
+      "ظهور حمل ونقل مدرن",
+      "حمل ونقل و انقلاب صنعتی"
     ],
     "expectedTimeMs": 80000
   },
@@ -4666,6 +9720,215 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1403.108",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 108,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 108 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، سیاست مالی انقباضی محسوب می‌شود؟",
+    "options": [
+      "کاهش مالیات‌ها",
+      "کاهش حجم نقدینگی",
+      "افزایش هزینه های دولت",
+      "کاهش مستمری بازنشستگان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.109",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 109,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 109 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک، سبب واگرایی بین منافع و هزینه های خصوصی و اجتماعی است؟",
+    "options": [
+      "وجود پیامد خارجی",
+      "مراوده های داوطلبانه",
+      "سیاست های مالی دولت",
+      "شیوه مصرف کالاها و خدمات"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.113",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 113,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 113 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تراکنش های مالی مربوط به فعالیت های شرکت های دولتی، اعتبارات مربوط به کمک های مشروط یا تعهدشده بهوسیله دولت، از جمله موارد کدام یک از استثناهای اصل جامعیت بودجه هستند؟",
+    "options": [
+      "صندوق های فرابودجه ای",
+      "مخرج بودجه ای خاموش",
+      "مخرج خارج از بودجه",
+      "اعتبارات فرابودجه ای"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.114",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 114,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 114 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام روش پیش بینی بودجه، برای پیش بینی درآمدها بهجای اینکه فقط بر روی تغییرات زمانی متمرکز شود، مبتنی بر روابط بین متغیرها است؟",
+    "options": [
+      "علت - معلولی",
+      "رگرسیون خودکار",
+      "سری های زمانی",
+      "پیش بینی شبه علی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.118",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 118,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 118 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "استفاده از بودجه برای تأمین مالی پروژه های چند ساله، در کدام دوره مطرح می‌شود؟",
+    "options": [
+      "پاسخگویی",
+      "برنامه ریزی",
+      "همکاری",
+      "کنترل"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.120",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 120,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 120 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام نوع از حسابرسی، میزان تطابق اقدام انجامشده با اختیارات قانونی را مورد بررسی قرار می‌دهد؟",
+    "options": [
+      "مالی",
+      "رعایت",
+      "عملکرد",
+      "تعهدی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.121",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 121,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 121 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام رویکرد طراحی شغل، بر ذهن و رفتار انسان تأکید می‌شود؟",
+    "options": [
+      "بیولوژیک",
+      "انگیزشی",
+      "ادراکی",
+      "مهندسی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.124",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 124,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 124 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، به اقدامات و طرح های استراتژی تجمیع اشاره دارد؟",
+    "options": [
+      "انتخاب کارکنان مستعد - مسیر شغلی گسترده - پاداش براساس عملکرد",
+      "شرح شغل روشن - تأکید بر اهمیت بازخورد - توجه بسیار زیاد به آموزش و توسعه",
+      "تأکید زیاد بر کار تیمی - تأکید زیاد بر نتیجه در ارزیابی عملکرد - پاداش براساس عملکرد",
+      "تأکید زیاد بر کوچک سازی - استفاده از کارکنان نیمهوقت - ساده سازی کار و توجه کم به آموزش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.131",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 131,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 131 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "افراد در کدام لنگرگاه مسیر ترقی، با مسائل به صورت تحلیلی برخورد می‌کنند؟",
+    "options": [
+      "شایستگی فنی - کارکردی",
+      "صلاحیت مدیریتی",
+      "خلاقیت",
+      "امنیت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.134",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 134,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 134 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر افراد را در درون گروه‌ها و مجموعه های مشخصی قرار دهیم، دچار کدام خطا در ارزیابی عملکرد شدهایم؟",
+    "options": [
+      "هاله ای",
+      "مقایسه",
+      "کلیشه ای",
+      "دسترسی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.157",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 157,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 157 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "یک طرح سرمایهگذاری با NPV مثبت وجود دارد. اگر تمام جریان های نقدی این طرح، شامل مبلغ سرمایهگذاری اولیه و خالص جریان های نقدی آتی، دو برابر شود، نرخ بازده داخلی و NPV، بهترتیب، چگونه تغییر خواهد کرد؟",
+    "options": [
+      "ثابت - افزایش",
+      "افزایش - افزایش",
+      "ثابت - ثابت",
+      "افزایش - ثابت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1403.169",
     "nodeId": "ind.pom_eoq_mrp",
     "examYear": 1403,
@@ -4909,6 +10172,785 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
       "فروش",
       "بازاریابی",
       "محصول"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.206",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 206,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 206 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در مدل قیمت گذاری مبتنی بر دارایی، ارزش سهام چگونه تعیین می‌شود؟",
+    "options": [
+      "ارزش دارایی‌ها منهای بدهی های شرکت",
+      "ارزش جایگزینی دارایی‌ها منهای استقراض شرکت",
+      "ارزش بازار برآوردی دارایی‌ها منهای بدهی های شرکت",
+      "ارزش بازار برآوردی دارایی های شرکت منهای استقراض شرکت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.207",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 207,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 207 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "با کاهش قیمت دارایی پایه، کدام یک منتفع می‌شود؟",
+    "options": [
+      "خریدار اختیار فروش",
+      "فروشنده اختیار فروش",
+      "خریدار اختیار خرید و فروشنده اختیار فروش",
+      "فروشنده اختیار خرید و خریدار اختیار فروش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.208",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 208,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 208 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "میزان تغییر در ارزش قرضهای با نرخ کوپن ۲۰ درصد در هریک از حالت های «الف» و «ب»، چگونه است؟ الف – نرخ بهره بازار از ۲۰ به ۲۲ درصد افزایش یابد. ب – نرخ بهره بازار از ۲۰ به ۱۸ درصد کاهش یابد.",
+    "options": [
+      "کاهش ارزش در حالت «الف» کمتر از افزایش ارزش در حالت «ب» است.",
+      "افزایش ارزش در حالت «الف» کمتر از کاهش ارزش در حالت «ب» است.",
+      "کاهش ارزش در حالت «الف» بیشتر از افزایش ارزش در حالت «ب» است.",
+      "افزایش ارزش در حالت «الف» بیشتر از افزایش ارزش در حالت «ب» است."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.210",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 210,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 210 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در مورد «اختیار خرید اوراق قرضه»، انتظار می‌رود «کاهش قیمت دارایی پایه» و «کاهش نرخ تنزیل»، به ترتیب موجب چه تغییری در قیمت اختیار خرید شود؟",
+    "options": [
+      "کاهش - کاهش",
+      "افزایش - افزایش",
+      "کاهش - افزایش",
+      "افزایش - کاهش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.213",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 213,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 213 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کارآفرین قبل از تدوین برنامه کسبوکار، چه اقدامی انجام می‌دهد؟",
+    "options": [
+      "ارتباط با دولت",
+      "ارتباط با مشتری",
+      "اعتباریابی ایده",
+      "ارتباط با عرضه کننده"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.214",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 214,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 214 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "زمانی که برای هتلها در ایام تابستان و تعطیلات، قیمت گرانتر و در ایام زمستان، قیمت ارزانتر تعیین می‌شود، از چه رویکرد قیمت گذاری استفاده می‌شود؟",
+    "options": [
+      "سنتی",
+      "تقاضامحور",
+      "هزینهمحور",
+      "رقابتمحور"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.215",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 215,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 215 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، مبتنی بر دیدگاه ژوزف شومپیتر است؟",
+    "options": [
+      "کارآفرین، فرایند تخریب خلاق را مهار می‌کند.",
+      "کارآفرین، بهعنوان یک رهبر و تسهیل گر درنظر گرفته می‌شود.",
+      "کارآفرین، فردی است که تعادل اقتصادی ایجاد می‌کند.",
+      "کارآفرین، صرفاً کسی است که کسبوکار مستقلی ایجاد می‌کند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.218",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 218,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 218 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، درست است؟",
+    "options": [
+      "خلاقیت می‌تواند کالای جدید، خدمت جدید یا راهی جدید برای انجام کاری باشد.",
+      "نوآوری، توانایی و قدرت ایجاد فکر یا ایده جدید و بدیع است.",
+      "نوآوری، به‌کارگیری ایده های نوین ناشی از خلاقیت است.",
+      "خلاقیت، تبدیل نوآوری به عمل و نتیجه است."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.219",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 219,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 219 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "قرار نگرفتن فرد در ...... مورد انتظار، سنجیده می‌شود تا وی نسبت به اقدام کارآفرینانه ...... نشان دهد.",
+    "options": [
+      "الگوی نقش - انگیزش",
+      "پایگاه اجتماعی - عدم تمایل",
+      "الگوی نقش - عدم تمایل",
+      "پایگاه اجتماعی - انگیزش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.231",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 231,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 231 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "چنانچه حساب پیش پرداخت در پایان دوره مالی اصلاح نشود، نتایج آثار مالی آن کدام است؟",
+    "options": [
+      "دارایی و سرمایه کمتر از مبلغ واقعی",
+      "سود خالص کمتر از میزان واقعی",
+      "هزینه‌ها کمتر از میزان واقعی",
+      "دارایی‌ها و سرمایه بیش از مبلغ واقعی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.233",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 233,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 233 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حساب جاری شریک یک شرکت تضامنی، در کدام یک از موارد زیر طبقه بندی می‌شود؟",
+    "options": [
+      "صورت سرمایه",
+      "صورت وجوه نقد",
+      "صورت وضعیت مالی (ترازنامه)",
+      "صورت سود (زیان)"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.234",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 234,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 234 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد از مانده صورت حساب بانک بعد از تهیه صورت حساب مغایرت بانکی کسر می‌شود؟",
+    "options": [
+      "وجه بین راهی",
+      "چک های معوق",
+      "چک برگشتی بلامحل",
+      "برداشت بانک بابت گشایش اعتبار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.238",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 238,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 238 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "هزینه های مشترک در تولید محصولات مشترک، مربوط به کدام مورد است؟",
+    "options": [
+      "بعد از نقطه تفکیک",
+      "قبل از نقطه تفکیک",
+      "قبل و بعد از نقطه تفکیک",
+      "پردازش اضافی محصول مشترک"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.239",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 239,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 239 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "«سربار جذب شده» به چه معنا است؟",
+    "options": [
+      "سربار پیش بینی شده",
+      "تحقق یافته برای تولید",
+      "سربار جذب شده در تولید",
+      "سربار منظور شده در تولید"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.241",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 241,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 241 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در حمل ونقل هوایی، بر اساس کنوانسیون بین المللی، مفهوم حق آزادی دوم چیست؟",
+    "options": [
+      "حق پرواز از یک کشور به کشور خودی، برای مقاصد تجاری (حمل کالا یا مسافر)",
+      "حق پرواز از کشور خودی به یک کشور دیگر، برای مقاصد تجاری (حمل کالا یا مسافر)",
+      "حق پرواز از کشور خودی به یک کشور دیگر، برای مقاصد غیرتجاری (سوخت گیری یا فرود اضطراری)",
+      "حق پرواز از یک فرودگاه داخلی به یک فرودگاه داخلی دیگر، برای مقاصد غیرتجاری (سوخت گیری یا فرود اضطراری)"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.242",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 242,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 242 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در مبحث تخلیه و بارگیری کالاهای یخچالی، صدور به چه معنی است؟",
+    "options": [
+      "تخلیه کشتی به پایان رسیده است و انبارها تمیز و آماده بارگیری است.",
+      "سفر کشتی به پایان رسیده و آماده تخلیه و بارگیری است.",
+      "بارگیری کشتی به پایان رسیده و آماده سفر است.",
+      "انبارها تمیز ولی هنوز آماده بارگیری نیست."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.246",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 246,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 246 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "پیدایش متروهای زیرزمینی، محصول کدام عصر حمل ونقل است؟",
+    "options": [
+      "فوردیست",
+      "پس از فوردیست",
+      "انقلاب صنعتی و حمل ونقل",
+      "ظهور سیستم های حمل ونقل مدرن"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.250",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 250,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 250 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در اروپا، حمل ونقل کالا توسط کانال های آبی (حمل ونقل رودخانه ای) از اواخر کدام قرن و ابتدا در کدام کشورها آغاز شد؟",
+    "options": [
+      "هفدهم - اسپانیا و هلند",
+      "هجدهم - اسپانیا و پرتغال",
+      "هفدهم - پرتغال و انگلستان",
+      "هجدهم - هلند و انگلستان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.251",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 251,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 251 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک از افراد زیر، به ترتیب کاشفان مسیرهای تجاری غرب و شرق بودند؟",
+    "options": [
+      "ماژلان و کلمبو",
+      "کلمبو و واسکو دو گاما",
+      "واسکو دو گاما و کلمبو",
+      "واسکو دو گاما و ماژلان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.252",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 252,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 252 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "«FSU»، در حمل ونقل دریایی چیست؟",
+    "options": [
+      "شناور نگهداری مواد نفتی",
+      "واحد جابه‌جایی مواد شیمیایی",
+      "شناور جرثقیل دار",
+      "واحد توان جرثقیل"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.253",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 253,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 253 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در تقسیم بندی «IMO»، ذغال سنگ نوع B چه خصوصیتی دارد؟",
+    "options": [
+      "بدون خطر",
+      "خطر گازهای اشتعال زا",
+      "خطر افزایش حرارت خودبه خود",
+      "خطر گازهای اشتعال زا و افزایش حرارت خودبه خود"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.254",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 254,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 254 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "هدف اصلی «IMDG Code»، چیست؟",
+    "options": [
+      "ارائه یک قانون جامع دربرگیرنده کلیه موضوعات مرتبط با حمل کالاهای خطرناک",
+      "ارائه توضیحات لازم فقط در رابطه با موضوعات مرتبط با بسته بندی کالاهای خطرناک",
+      "ارائه توضیحات لازم فقط در رابطه با موضوعات مرتبط با کلاس بندی کالاهای خطرناک",
+      "ارائه یک قانون جامع دربرگیرنده کلیه موضوعات مرتبط با فقط مستندسازی کالاهای خطرناک"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.257",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 257,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 257 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام یک از شیوه های اندیشیدن، فرد استدلال های خود را براساس اجزای گوناگونی، برای رسیدن به یک نتیجه یا اصل کلی قرار می‌دهد؟",
+    "options": [
+      "قضاوتی",
+      "قیاسی",
+      "خلاق",
+      "استقرایی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.259",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 259,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 259 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "نیاز به برنامه ریزی، از کدام واقعیت اساسی نشأت می‌گیرد؟",
+    "options": [
+      "افزایش کارایی",
+      "رسیدن به اهداف",
+      "رسیدن به کیفیت بالاتر",
+      "تغییرات و تحولات محیطی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.263",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 263,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 263 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، جزء مواردی است که نمودار سازمانی بیانگر آن است؟",
+    "options": [
+      "اختیارات پستهای همسطح",
+      "سازمان غیررسمی",
+      "روابط سازمانی",
+      "درجه مسئولیت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.265",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 265,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 265 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "«آشوب زدایی»، جزء کدام یک از نقش های مینتزبرگ است؟",
+    "options": [
+      "متقابل شخصی",
+      "تصمیم گیری",
+      "فرماندهی",
+      "اطلاعاتی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.266",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 266,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 266 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک از کارکردهای فرهنگ سازمانی تحقق پیدا خواهد کرد اگر افراد سازمان افتخار کنند که در یک چنین سازمانی و برای هدف های آن تلاش می‌کنند؟",
+    "options": [
+      "شکل دهی رفتار اعضا",
+      "ثبات سیستم اجتماعی",
+      "تعهد مسئولیت جمعی",
+      "هویت سازمانی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.267",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 267,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 267 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "حمل مواد معدنی (بهطور عام) توسط کشتی معمولاً چه خطری را به همراه دارد؟",
+    "options": [
+      "انفجار",
+      "آتش سوزی",
+      "تولید حرارت",
+      "حرکت و جابه‌جایی در داخل انبار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.268",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 268,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 268 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "نظریه بوروکراسی به عنوان یکی از نظریه های مکتب کلاسیک، توسط کدام دانشمند ارائه گردیده است؟",
+    "options": [
+      "فردریک تیلور",
+      "کنت بلانچارد",
+      "ماکس وبر",
+      "هنری مینتزبرگ"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.269",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 269,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 269 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "برنامه جامع، واحد و کاملی که بر مبنای آن نیل به اهداف اساسی سازمان تضمین می‌شود، چه نام دارد؟",
+    "options": [
+      "استراتژی",
+      "مأموریت",
+      "خطمشی",
+      "تاکتیک"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.271",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 271,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 271 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام روش، برای ایجاد فکری میان دو شیء یا فکری که قبلاً هرگز اتحاد و قرابتی نداشته، روابط اجباری برقرار می‌شود؟",
+    "options": [
+      "تحلیل شبکه",
+      "راهحل جویی قیاسی مستقیم",
+      "راهحل جوبی قیاسی غیرمستقیم",
+      "راهحل جویی قیاسی رقابتی مستقیم"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.275",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 275,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 275 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام نوع ارتباطات، پیام در دو سطح مختلف از سلسلهمراتب سازمانی یا خارج از سلسلهمراتب اداری مبادله می‌شود؟",
+    "options": [
+      "افقی",
+      "مورب",
+      "عمودی",
+      "یک جانبه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.276",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 276,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 276 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "به کدام کشورها، انکلیوهای دریایی (Maritime Enclaves) اطلاق می‌گردد؟",
+    "options": [
+      "کشورهای حوزه خلیج فارس",
+      "کشورهایی که به دریا دسترسی ندارند.",
+      "کشورهای مشترکالمنافع که به دریا دسترسی دارند.",
+      "کشورهایی که بهصورت قراردادی، قوانین دریایی مشترک دارند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.277",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 277,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 277 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد جزء نظریه های فرایندی است؟",
+    "options": [
+      "نظریه انتظار و نظریه برابری",
+      "نظریه انتظار و نظریه دو ساحتی انسان",
+      "نظریه سلسله مراتب نیازها و نظریه دو ساحتی انسان",
+      "نظریه برابری و نظریه سلسله مراتب نیازها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.278",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 278,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 278 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام یک از موقعیت های تصمیم گیری، میزان احتمال هرگونه نتیجه ممکن، معین است و به عبارت دیگر اطلاعات کامل موجود نیست؟",
+    "options": [
+      "استاندارد",
+      "اطمینان",
+      "مخاطره",
+      "عدم اطمینان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.279",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 279,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 279 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "مراحل مختلف زنجیره حمل ونقل ترکیبی، بهترتیب کدام است؟",
+    "options": [
+      "اتصال - مبادله - ترکیب - تجزیه",
+      "ترکیب - تجزیه - اتصال - مبادله",
+      "اتصال - ترکیب - مبادله - تجزیه",
+      "ترکیب - اتصال - مبادله - تجزیه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.280",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 280,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 280 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، شامل مناطقی می‌شود که از استانداردها انحراف دارند و کنترل این نقاط باعث کارایی بیشتر می‌شود؟",
+    "options": [
+      "نقاط اهرمی",
+      "نقاط استراتژیک",
+      "نقاط سربهسر مالی",
+      "نقاط سربهسر عملیاتی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.281",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 281,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 281 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اولین گام در فرایند برنامه ریزی، کدام است؟",
+    "options": [
+      "تعیین بدیلها",
+      "تعیین اهداف کوتاهمدت",
+      "ارزیابی برنامه های مختلف",
+      "آگاهی از فرصت‌ها، مسائل یا نیازها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.282",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 282,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 282 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد «تقاضای مشتق شده غیرمستقیم» در حمل ونقل محسوب می‌شود؟",
+    "options": [
+      "حمل بار",
+      "اشتغال زایی",
+      "مصرف انرژی",
+      "ایاب و ذهاب مسافران"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.284",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 284,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 284 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "نخستین رویه غیرمستقیم برای آگاهی از وجود مسئله از کدام طریق است؟",
+    "options": [
+      "کارکنان",
+      "مافوق‌ها",
+      "مشتری",
+      "ارباب رجوع"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1403.285",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1403,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 285,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1403 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1403 — سؤال 285 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در تانکرها، برای شستشوی تانک های نفت خام توسط سیستم COW، از کدام ماده استفاده می‌شود؟",
+    "options": [
+      "کربن دی اکسید",
+      "اکسیژن",
+      "گاز خنثی",
+      "نفت خام"
     ],
     "expectedTimeMs": 80000
   },
@@ -5217,6 +11259,272 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
+    "id": "q.k1404.106",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 106,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 106 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "سطوح، دسته، اقلام و اقلام فرعی، مربوط به کدام طبقه بندی بودجه ای است؟",
+    "options": [
+      "موضوعی",
+      "وظیفه ای",
+      "سازمانی",
+      "برنامه ای"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.108",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 108,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 108 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "استفاده از بودجه برای تأمین مالی پروژه های چندساله، در کدام یک از دوره های زیر مطرح می‌شود؟",
+    "options": [
+      "عصر پاسخگویی",
+      "عصر کنترل",
+      "عصر همکاری",
+      "عصر برنامه ریزی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.109",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 109,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 109 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "دو قاعده مهم عدم تخصیص و بودجه ناخالص، در کدام یک از اصول بودجه ریزی مطرح هستند؟",
+    "options": [
+      "شاملیت",
+      "شفافیت",
+      "جامعیت",
+      "وحدت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.112",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 112,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 112 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "استیضاح به کدام معنی است؟",
+    "options": [
+      "ضمانت اجرایی نظارت پس از خرج",
+      "تأمین اعتبار بهتر بودجه",
+      "بهبود تفریغ بودجه",
+      "اصلاح بودجه"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.113",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 113,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 113 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "پیام منحنی لافر، کدام است؟",
+    "options": [
+      "وقتی نرخ مالیات صفر است، درآمد مالیاتی در حداکثر است.",
+      "برای داشتن درآمد مالیاتی بیشتر، دولت باید نرخ مالیات بر درآمد را کاهش دهد.",
+      "برای داشتن درآمد مالیاتی بیشتر برای دولت، نیاز است که نرخ مالیات بر درآمد افزایش یابد.",
+      "برای داشتن درآمد مالیاتی بیشتر برای دولت، نیاز به آن نیست که حتماً نرخ مالیات بر درآمد افزایش یابد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.114",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 114,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 114 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تعیین میزان بدهی قابل پرداخت به موجب مدارک اثبات کننده بدهی را چه می‌گویند؟",
+    "options": [
+      "حواله",
+      "تعهد",
+      "تسجیل",
+      "تأمین"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.115",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 115,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 115 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک از رویکردهای بودجه ریزی، به عنوان ابزار کنترل مدیریت مورد استفاده قرار می‌گیرد؟",
+    "options": [
+      "عملکرد اولیه",
+      "مواد - هزینه",
+      "کلاسیک",
+      "یک قلم"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.116",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 116,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 116 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "هدف نهایی رویکرد جدید (رویکرد کینزین)، کدام مورد است؟",
+    "options": [
+      "دستیابی به اشتغال کامل",
+      "کاهش مداخلات دولت",
+      "توازن بودجه",
+      "افزایش تقاضا"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.119",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 119,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 119 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "طبق قانون طلایی، در بحث مالیه عمومی، بدهی و دیون دولتی، از کدام شاخص نباید تجاوز کند؟",
+    "options": [
+      "مجموع مالیات های مستقیم و غیرمستقیم",
+      "سرمایه گذاری خالص دولتی",
+      "انتشار نقدینگی جدید",
+      "هزینه دولت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.120",
+    "nodeId": "bus.pubfin_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 120,
+    "courseSectionId": "public_finance",
+    "courseSectionTitle": "مالیه عمومی و بودجه",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مالیه عمومی و بودجه",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 120 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در بازار رقابت کامل، وضع یارانه چه تغییری در اضافه بار گمشده (DWL) ایجاد می‌کند؟",
+    "options": [
+      "توسط وضع مالیات در بازار دیگر، خنثی می‌شود.",
+      "مثبت می‌شود (افزایش خالص رفاه)",
+      "منفی می‌شود (کاهش خالص رفاه)",
+      "تغییری پیدا نمی‌کند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.130",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 130,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 130 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر از گروهی از برنامه نویسان کامپیوتری خواسته شود که با بررسی آزمون برنامه نویسی کامپیوتر مشخص کند که آیا این آزمون، به درستی دانش موردنیاز برای این شغل را می‌سنجد یا خیر، از کدام نوع روانی استفاده شده است؟",
+    "options": [
+      "ملاک محور",
+      "محتوا",
+      "پیش بین",
+      "همزمان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.132",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 132,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 132 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "طبق کدام سبک یادگیری، افراد قابلیت های مفهوم سازی انتزاعی و مشاهده تأملی قوی دارند؟",
+    "options": [
+      "ادغام کننده",
+      "واگرا",
+      "همگرا",
+      "تطبیق یابنده"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.135",
+    "nodeId": "bus.hr_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 135,
+    "courseSectionId": "human_resources",
+    "courseSectionTitle": "مدیریت منابع انسانی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مدیریت منابع انسانی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 135 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تأثیر تقویت مثبت و تقویت منفی، بر روی پاسخ به ترتیب چگونه است؟",
+    "options": [
+      "کاهش - افزایش",
+      "افزایش - کاهش",
+      "کاهش - کاهش",
+      "افزایش - افزایش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.151",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 151,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 151 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "اگر جریان های نقدی یک پروژه متعارف و NPV آن مثبت باشد، کدام مورد به طور کامل درست است؟",
+    "options": [
+      "شاخص سودآوری، بزرگ‌تر از ۱ و دوره بازگشت تنزیلی سرمایه آن، قابل قبول است.",
+      "نرخ بازده داخلی، بزرگ‌تر از نرخ بازده موردانتظار و شاخص سودآوری برابر یک است.",
+      "شاخص سودآوری، بزرگ‌تر از ۱ و نرخ بازده داخلی آن، بزرگ‌تر از نرخ بازده موردانتظار است.",
+      "دوره بازگشت سرمایه و دوره بازگشت تنزیلی سرمایه آن، قابل قبول و نرخ بازده داخلی آن بزرگ‌تر از نرخ بازده موردانتظار است."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
     "id": "q.k1404.171",
     "nodeId": "ind.pom_eoq_mrp",
     "examYear": 1404,
@@ -5479,6 +11787,500 @@ export const EXAM_ARCHIVE_PERSIAN_QUESTIONS: YearlyKonkorQuestion[] = [
       "فروشگاه های تخصصی لوازم خودرو",
       "فروش مستقیم به مشتریان از طریق سایت",
       "فروش به واسطه فروشگاه های آنلاین عمومی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.198",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 198,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 198 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "طبق نظریه بازار سرمایه، کدام ریسک در بازار قیمت گذاری می‌شود؟",
+    "options": [
+      "غیرسیستماتیک",
+      "سیستماتیک",
+      "سیستماتیک و غیرسیستماتیک",
+      "قابل تنوع بخشی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.199",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 199,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 199 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام معیار عملکرد، نیاز به مقایسه با مقدار دیگری ندارد؟",
+    "options": [
+      "آلفای جنسن",
+      "نسبت شارپ",
+      "نسبت ترینور",
+      "نسبت سورتینو"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.206",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 206,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 206 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد درخصوص بتا نادرست است؟",
+    "options": [
+      "تغییرپذیری قیمت یک سهم در رابطه با کل بازار را منعکس می‌کند.",
+      "ریسک های سیستماتیک تجاری و مالی یک سهم را منعکس می‌کند.",
+      "نسبت کوواریانس بین بازده سهم و بازار را به واریانس بازده بازار می‌سنجد.",
+      "ریسک کل شامل ریسک سیستماتیک و غیرسیستماتیک را منعکس می‌کند."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.209",
+    "nodeId": "bus.invrisk_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 209,
+    "courseSectionId": "investment_risk",
+    "courseSectionTitle": "مدیریت سرمایه‌گذاری و ریسک",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مدیریت سرمایه‌گذاری و ریسک",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 209 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در شرایطی که بازار انتظار افزایش نرخ بهره را داشته باشد نسبت .....",
+    "options": [
+      "افزایش قیمت سهام کمتر از نسبت افزایش قیمت اوراق قرضه است",
+      "افزایش قیمت سهام بیشتر از نسبت افزایش قیمت اوراق قرضه است",
+      "کاهش قیمت اوراق قرضه کمتر از نسبت افزایش قیمت سهام است",
+      "کاهش قیمت اوراق قرضه بیشتر از نسبت کاهش قیمت سهام است"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.211",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 211,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 211 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تأمین کننده مالی از کدام ابزار، برای ارزیابی ظرفیت بالقوه کسب وکار استفاده می‌کند؟",
+    "options": [
+      "برنامه کسب وکار",
+      "ساختار کسب وکار",
+      "ریسک مالی",
+      "ایده کسب وکار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.212",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 212,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 212 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک از روش های راه اندازی کسب وکارهای کارآفرینانه را نوعی ازدواج تجاری می‌گویند؟",
+    "options": [
+      "شرکت تضامنی",
+      "پذیرش نمایندگی",
+      "خرید کسب وکار",
+      "شرکت مختلط سهامی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.213",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 213,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 213 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، در قلب هر کسب وکار موفقی قرار دارد؟",
+    "options": [
+      "منابع اصلی",
+      "ارتباط با مشتری",
+      "فعالیت های کلیدی",
+      "ارزش پیشنهادی جذاب"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.214",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 214,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 214 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تبدیل جهان به مکانی بهتر، هدف اصلی کدام یک از کارآفرینان است؟",
+    "options": [
+      "سریالی",
+      "اقتصادی",
+      "اجتماعی",
+      "فرهنگی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.220",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 220,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 220 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام یک از مراحل ایجاد و توسعه کسب وکار، انتقال از رهبری انفرادی کارآفرینانه به رهبری تیم گرای مدیریتی مطرح است؟",
+    "options": [
+      "شروع",
+      "تثبیت",
+      "رشد",
+      "نوآوری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.222",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 222,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 222 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "ساخترهای سه گانه قانونی کسب وکار کدام اند؟",
+    "options": [
+      "تعاونی - خصوصی - دولتی",
+      "تعاونی - شراکت - شرکت",
+      "مالکیت انفرادی - شراکت - شرکت",
+      "مالکیت گروهی - مالکیت انفرادی - تعاونی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.224",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 224,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 224 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام رویکرد به کارآفرینی، «فعالیت های کارآفرین» مورد مطالعه قرار می‌گیرد؟",
+    "options": [
+      "ویژگی‌ها",
+      "رفتاری",
+      "جامعه شناسی",
+      "روان کاوی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.225",
+    "nodeId": "bus.entrep_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 225,
+    "courseSectionId": "entrepreneurship",
+    "courseSectionTitle": "مبانی کارآفرینی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس مبانی کارآفرینی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 225 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مفهوم، بیشترین فاصله را بین کارآفرینی و اشتغال زایی مطرح می‌کند؟",
+    "options": [
+      "تشخیص فرصت‌ها",
+      "توسعه اقتصادی",
+      "خلق ثروت",
+      "تخریب خلاق"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.246",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 246,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 246 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، مربوط به هزینه حمل و نقل جاده ای است؟",
+    "options": [
+      "ثبت خودروها",
+      "فروش زمین برای ایجاد زیرساخت‌ها",
+      "سلب مالکیت از مالکین خصوصی",
+      "مالیات بر سوخت و خرید و فروش خودروها"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.247",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 247,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 247 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کلاس هفتم، مربوط به کدام نوع از کالاهای خطرناک است؟",
+    "options": [
+      "مواد رادیواکتیو",
+      "مواد اشتعال زا",
+      "مواد منفجره",
+      "مواد سمی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.253",
+    "nodeId": "bus.transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 253,
+    "courseSectionId": "transportation",
+    "courseSectionTitle": "دانش حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 253 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در تقسیم بندی IMO، زغال سنگ نوع B چه خطراتی دارد؟",
+    "options": [
+      "بدون خطر",
+      "گازهای اشتعال زا",
+      "افزایش خودبه خودی حرارت",
+      "گازهای اشتعال زا و افزایش خودبه خودی حرارت"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.256",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 256,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 256 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، درخصوص رابطه میان ساخت سازمانی و حیطه نظارت درست است؟",
+    "options": [
+      "این دو مقوله، هیچ ارتباطی با هم ندارند.",
+      "حیطه نظارت صرفاً بستگی به میزان تمرکز سازمان دارد.",
+      "هرچه حیطه نظارت محدودتر باشد، ساخت سازمانی کوتاه‌تر خواهد بود.",
+      "هرچه حیطه نظارت محدودتر باشد، ساخت سازمانی بلندتر خواهد بود."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.257",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 257,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 257 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام یک از انواع تقاضا، مردم نیاز شدیدی به کالا و خدمات دارند، اما کالا و خدمات واقعی جهت ارضای نیاز وجود ندارد؟",
+    "options": [
+      "نامنظم",
+      "پنهان",
+      "بیش از حد",
+      "کندشونده"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.258",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 258,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 258 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "تقاضای مشتق شده غیر مستقیم در حمل و نقل، شامل کدام موارد می‌شود؟",
+    "options": [
+      "سوخت و انبارداری",
+      "فعالیت های اقتصادی",
+      "جابه‌جایی کالا و مسافر",
+      "انتخاب نوع حمل و نقل"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.259",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 259,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 259 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "براساس دیدگاه بولدینگ، سطح نهم سیستم‌ها کدام است؟",
+    "options": [
+      "ژنتیک",
+      "حیوان",
+      "انسان",
+      "ماوراء الطبیعه (متعالی)"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.262",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 262,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 262 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک از ویژگی های فرهنگ نهادی موجب انتقال اطلاعات مناسب و به هنگام می‌شود و طرفینی بودن نفوذ را که خود لازمه رشد و تعالی است ممکن می‌سازد؟",
+    "options": [
+      "مردمی بودن",
+      "تعهد",
+      "اعتماد",
+      "ثبات"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.264",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 264,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 264 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "رشد روزافزون اهمیت حمل و نقل، در گرو کدام یک از موارد زیر است؟",
+    "options": [
+      "توسعه های اقتصادی، سیاسی و اجتماعی",
+      "استفاده از سوخت های غیرفسیلی و پاک با حداقل آلودگی",
+      "رشد تقاضا، کاهش هزینه حمل و نقل و توسعه زیرساخت‌ها",
+      "افزایش توجه به محیط زیست و آلاینده های مربوط به حمل و نقل"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.266",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 266,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 266 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک از انواع مهارت‌ها برای تمامی مدیران در سطوح مختلف، قطعی و لازم است؟",
+    "options": [
+      "فنی",
+      "نظری",
+      "حل مسئله",
+      "انسانی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.271",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 271,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 271 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام یک از نظریه های فرایندی، علت این را که چرا مردم یک رفتار را بر رفتار دیگری ترجیح می‌دهند و انتخاب می‌کنند، شرح می‌دهد؟",
+    "options": [
+      "سلسله مراتب نیازها",
+      "دوساحتی",
+      "برابری",
+      "انتظار"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.272",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 272,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 272 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کدام مورد، توصیف کننده نهادی اجتماعی، طرفدار، سیستمی با ساختار آگاهانه و دارای مرزهای مشخص است؟",
+    "options": [
+      "فناوری",
+      "سازمان",
+      "ساختار",
+      "فرهنگ"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.274",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 274,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 274 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "کنترل هزینه‌ها و قیمت گذاری، به کدام یک از وظایف مدیران مالی اشاره دارد؟",
+    "options": [
+      "اداره وجوه",
+      "هدایت به طرف نقدینگی",
+      "هدایت به طرف سودآوری",
+      "پیش بینی جریان نقدی سازمان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.280",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 280,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 280 دفترچه — متن بازبینی‌شده از استخراج PDF",
+    "text": "در کدام یک از انواع سیستم های غیررسمی، فرد اطلاعات را با انتخاب افراد پخش می‌کند و آن فرد انتخاب شده به همین ترتیب اطلاعات را منتشر می‌سازد؟",
+    "options": [
+      "شبکه رشته ای",
+      "شبکه انشعابی",
+      "شبکه تصادفی",
+      "شبکه خوشه ای"
     ],
     "expectedTimeMs": 80000
   }
