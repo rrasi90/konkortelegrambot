@@ -1,4 +1,5 @@
 import type { QuestionItem } from './konkorData';
+import { EXAM_ARCHIVE_IMPORTED_QUESTIONS } from './examArchiveImported';
 
 export type KonkorCourseSectionId =
   | 'english'
@@ -3490,4 +3491,5 @@ export const YEARLY_KONKOR_QUESTIONS: YearlyKonkorQuestion[] = [
     ],
     expectedTimeMs: 45000,
   },
+  ...EXAM_ARCHIVE_IMPORTED_QUESTIONS,
 ];

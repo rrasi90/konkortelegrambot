@@ -679,6 +679,32 @@ export const CLIENT_BANK_ANSWER_KEYS: readonly ClientBankAnswerKey[] = [
   { id: "q.phd1405.38", bank: "yearlyKonkorExams", correctOption: 0, explanation: "متن مأموریت اولیهٔ هابل و سال بهره‌برداری جیمز وب را نمی‌گوید؛ اما تغییر احتمالی دانش (II) صریح است.", trapNote: "" },
   { id: "q.phd1405.39", bank: "yearlyKonkorExams", correctOption: 2, explanation: "ناتاراجان: «No data has broken the universe» ولی «interesting potential tensions» — برآورد محتاطانه‌تر.", trapNote: "" },
   { id: "q.phd1405.40", bank: "yearlyKonkorExams", correctOption: 1, explanation: "جملهٔ حذفی خلاصهٔ مدل استاندارد است و درست پیش از «But JWST's initial results ...» در جایگاه [۲] می‌نشیند.", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌های انگلیسی ارشد که از متن دفترچه وارد شده‌اند (`src/data/examArchiveImported.ts`).
+   * کلید این سؤال‌ها از شاهد کلید رسمی بازیابی‌شده آمده است و متن سؤال هرگز
+   * کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1402.1", bank: "examArchiveImported", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 1 (official-key:1402:1).", trapNote: "" },
+  { id: "q.k1402.13", bank: "examArchiveImported", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 13 (official-key:1402:13).", trapNote: "" },
+  { id: "q.k1402.16", bank: "examArchiveImported", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 16 (official-key:1402:16).", trapNote: "" },
+  { id: "q.k1402.17", bank: "examArchiveImported", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 17 (official-key:1402:17).", trapNote: "" },
+  { id: "q.k1402.19", bank: "examArchiveImported", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 19 (official-key:1402:19).", trapNote: "" },
+  { id: "q.k1402.2", bank: "examArchiveImported", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 2 (official-key:1402:2).", trapNote: "" },
+  { id: "q.k1402.21", bank: "examArchiveImported", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 21 (official-key:1402:21).", trapNote: "" },
+  { id: "q.k1402.22", bank: "examArchiveImported", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 22 (official-key:1402:22).", trapNote: "" },
+  { id: "q.k1402.24", bank: "examArchiveImported", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 24 (official-key:1402:24).", trapNote: "" },
+  { id: "q.k1402.3", bank: "examArchiveImported", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 3 (official-key:1402:3).", trapNote: "" },
+  { id: "q.k1402.4", bank: "examArchiveImported", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 4 (official-key:1402:4).", trapNote: "" },
+  { id: "q.k1402.5", bank: "examArchiveImported", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 5 (official-key:1402:5).", trapNote: "" },
+  { id: "q.k1402.6", bank: "examArchiveImported", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 6 (official-key:1402:6).", trapNote: "" },
+  { id: "q.k1403.1", bank: "examArchiveImported", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 1 (official-key:1403:1).", trapNote: "" },
+  { id: "q.k1403.2", bank: "examArchiveImported", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 2 (official-key:1403:2).", trapNote: "" },
+  { id: "q.k1403.3", bank: "examArchiveImported", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 3 (official-key:1403:3).", trapNote: "" },
+  { id: "q.k1403.4", bank: "examArchiveImported", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 4 (official-key:1403:4).", trapNote: "" },
+  { id: "q.k1403.5", bank: "examArchiveImported", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 5 (official-key:1403:5).", trapNote: "" },
+  { id: "q.k1403.6", bank: "examArchiveImported", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 6 (official-key:1403:6).", trapNote: "" },
 ];
 
 export const CLIENT_BANK_ANSWER_KEY_BY_ID: ReadonlyMap<string, ClientBankAnswerKey> =

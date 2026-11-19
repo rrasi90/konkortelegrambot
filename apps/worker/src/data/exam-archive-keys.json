@@ -1,0 +1,119 @@
+{
+ "note": "کلید سؤال‌های واردشده از متن دفترچه؛ سمت سرور نگه داشته می‌شود.",
+ "keys": {
+  "q.k1402.1": {
+   "correctOption": 2,
+   "examYear": 1402,
+   "bookletQuestionNumber": 1,
+   "source": "official-key:1402:1"
+  },
+  "q.k1402.2": {
+   "correctOption": 3,
+   "examYear": 1402,
+   "bookletQuestionNumber": 2,
+   "source": "official-key:1402:2"
+  },
+  "q.k1402.3": {
+   "correctOption": 0,
+   "examYear": 1402,
+   "bookletQuestionNumber": 3,
+   "source": "official-key:1402:3"
+  },
+  "q.k1402.4": {
+   "correctOption": 1,
+   "examYear": 1402,
+   "bookletQuestionNumber": 4,
+   "source": "official-key:1402:4"
+  },
+  "q.k1402.5": {
+   "correctOption": 0,
+   "examYear": 1402,
+   "bookletQuestionNumber": 5,
+   "source": "official-key:1402:5"
+  },
+  "q.k1402.6": {
+   "correctOption": 1,
+   "examYear": 1402,
+   "bookletQuestionNumber": 6,
+   "source": "official-key:1402:6"
+  },
+  "q.k1402.13": {
+   "correctOption": 0,
+   "examYear": 1402,
+   "bookletQuestionNumber": 13,
+   "source": "official-key:1402:13"
+  },
+  "q.k1402.16": {
+   "correctOption": 0,
+   "examYear": 1402,
+   "bookletQuestionNumber": 16,
+   "source": "official-key:1402:16"
+  },
+  "q.k1402.17": {
+   "correctOption": 2,
+   "examYear": 1402,
+   "bookletQuestionNumber": 17,
+   "source": "official-key:1402:17"
+  },
+  "q.k1402.19": {
+   "correctOption": 1,
+   "examYear": 1402,
+   "bookletQuestionNumber": 19,
+   "source": "official-key:1402:19"
+  },
+  "q.k1402.21": {
+   "correctOption": 2,
+   "examYear": 1402,
+   "bookletQuestionNumber": 21,
+   "source": "official-key:1402:21"
+  },
+  "q.k1402.22": {
+   "correctOption": 3,
+   "examYear": 1402,
+   "bookletQuestionNumber": 22,
+   "source": "official-key:1402:22"
+  },
+  "q.k1402.24": {
+   "correctOption": 0,
+   "examYear": 1402,
+   "bookletQuestionNumber": 24,
+   "source": "official-key:1402:24"
+  },
+  "q.k1403.1": {
+   "correctOption": 1,
+   "examYear": 1403,
+   "bookletQuestionNumber": 1,
+   "source": "official-key:1403:1"
+  },
+  "q.k1403.2": {
+   "correctOption": 3,
+   "examYear": 1403,
+   "bookletQuestionNumber": 2,
+   "source": "official-key:1403:2"
+  },
+  "q.k1403.3": {
+   "correctOption": 0,
+   "examYear": 1403,
+   "bookletQuestionNumber": 3,
+   "source": "official-key:1403:3"
+  },
+  "q.k1403.4": {
+   "correctOption": 2,
+   "examYear": 1403,
+   "bookletQuestionNumber": 4,
+   "source": "official-key:1403:4"
+  },
+  "q.k1403.5": {
+   "correctOption": 2,
+   "examYear": 1403,
+   "bookletQuestionNumber": 5,
+   "source": "official-key:1403:5"
+  },
+  "q.k1403.6": {
+   "correctOption": 3,
+   "examYear": 1403,
+   "bookletQuestionNumber": 6,
+   "source": "official-key:1403:6"
+  }
+ }
+}
