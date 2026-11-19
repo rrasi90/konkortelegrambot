@@ -328,6 +328,8 @@ async function importResults(): Promise<void> {
       citation: a.citation ?? '',
       method: a.layer === 'D1' ? 'computation' : 'definition',
       corroboration: 'second_pass_agree' as const,
+      /** استدلال گذر دوم برای شفافیت؛ در دروازه فقط هم‌خوانی شمارش می‌شود. */
+      secondPassDerivation: b.derivation ?? '',
       optionsRejected: Array.isArray(rejects) ? rejects : Object.entries(rejects ?? {}).map(([key, value]) => `گزینهٔ ${key}: ${value}`),
       textSource: q.textSource,
       officialAgreement,
