@@ -1,11 +1,11 @@
 /**
  * ورود سؤال‌های فارسی دفترچه‌های ارشد از متن تبدیل‌شدهٔ PDF.
  *
- * این ابزار فقط برای سال‌هایی اجرا می‌شود که جدول بازهٔ درس‌هایشان کامل است، چون
- * شمارهٔ هر سؤال از همان بازه می‌آید. متن منبع OCR است؛ پس هر سؤال باید چند
- * دروازه را بگذراند: صورت سؤال فارسی و سالم، چهار گزینهٔ یکتای فارسی یا عددی،
- * شمارهٔ داخل بازهٔ درس، و کلید رسمی موجود. سؤال مشکوک وارد نمی‌شود و در گزارش
- * با دلیل ثبت می‌شود.
+ * این ابزار فقط برای سال‌هایی اجرا می‌شود که جدول بازهٔ درس‌هایشان کامل است.
+ * شمارهٔ هر سؤال دو شاهد دارد: شماره‌ای که در متن دفترچه خوانده شده و با ترتیب
+ * همان درس می‌خواند، یا تطبیق کامل تعداد سؤال‌های درس با جدول جلد دفترچه. سؤالی
+ * که هیچ‌کدام را ندارد وارد نمی‌شود، چون کلیدش از شماره خوانده می‌شود و شمارهٔ
+ * حدسی یعنی کلید حدسی.
  *
  * خروجی این ابزار عمداً در ناحیهٔ آماده‌سازی می‌نشیند، نه در بانک سؤال برنامه:
  * متن OCR فارسی روی نمونهٔ بررسی‌شده حدود یک واژه در هر هفت واژه خطا دارد. تا
@@ -20,15 +20,8 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { join } from 'node:path';
 import { buildVocabulary } from './lib/persian-quality.mts';
-import {
-  cleanPage,
-  isSaneText,
-  optionGroups,
-  sectionTexts,
-  sectionOfLine,
-  splitPages,
-  stemNumber,
-} from './lib/md-questions.mts';
+import { splitPages } from './lib/md-questions.mts';
+import { extractByNumber } from './lib/sequential-questions.mts';
 
 const root = process.cwd();
 const write = process.argv.includes('--write');
@@ -39,9 +32,16 @@ interface SourceFile {
 }
 
 const SOURCES: SourceFile[] = [
+  { year: 1396, path: 'pdf/دفترچه_سؤالات_کنکور_ارشد_مدیریت_1396.md' },
+  { year: 1397, path: 'pdf/دفترچه_سؤالات_کنکور_ارشد_مدیریت_1397.md' },
+  { year: 1398, path: 'pdf/دفترچه_سؤالات_کنکور_ارشد_مدیریت_1398.md' },
+  { year: 1399, path: 'pdf/دفترچه_سؤالات_کنکور_ارشد_مدیریت_1399.md' },
+  { year: 1400, path: 'pdf/دفترچه_سؤالات_کنکور_ارشد_مدیریت_1400.md' },
+  { year: 1401, path: 'pdf/دانلود سؤالات کنکور کارشناسی ارشد مدیریت سال ۱۴۰۱.md' },
   { year: 1402, path: 'pdf/arshd modiriat-1402.md' },
   { year: 1403, path: 'pdf/Arshad_modiriat_1403[cafetadris.com].md' },
   { year: 1404, path: 'pdf/1142-مدیریت.md' },
+  { year: 1405, path: 'pdf/1405-مدیریت.md' },
 ];
 
 interface BookletRange {
@@ -71,7 +71,6 @@ async function loadBooklets(): Promise<Map<number, Booklet>> {
   for (const booklet of module.YEARLY_KONKOR_BOOKLETS) {
     if ((booklet.examLevel ?? 'ارشد') !== 'ارشد') continue;
     const ranges = [...booklet.subjectRanges].sort((a, b) => a.fromQuestion - b.fromQuestion);
-    if (ranges.length !== 16) continue;
     let next = 1;
     let contiguous = true;
     for (const range of ranges) {
@@ -101,7 +100,6 @@ const evidence = JSON.parse(
   readFileSync(join(root, 'content', 'exam-key-evidence', 'answers-by-year.json'), 'utf8'),
 ) as KeyEvidence;
 
-/** پایگاه گزینه‌های کلید: ۱ یعنی گزینهٔ ۱ درست است. */
 const keyFor = (year: number, number: number): number | null => {
   const record = evidence.years[String(year)];
   if (!record) return null;
@@ -115,6 +113,7 @@ interface ImportedQuestion {
   examLevel: 'ارشد';
   sectionId: string;
   bookletQuestionNumber: number;
+  numberSource: 'count' | 'number';
   text: string;
   options: string[];
   source: 'ocr_markdown';
@@ -127,11 +126,11 @@ const MAX_UNKNOWN_RATIO = 0.08;
 
 const report: Record<string, unknown>[] = [];
 const imported: ImportedQuestion[] = [];
-// کلید عمداً اینجا نوشته نمی‌شود؛ کلید فقط در content/exam-key-evidence می‌نشیند.
+const extractedAll: Record<string, unknown>[] = [];
 let keyChecks = 0;
 
 const booklets = await loadBooklets();
-console.log(`سال‌های با بازهٔ کامل: ${[...booklets.keys()].join('، ')}`);
+console.log(`سال‌های با بازهٔ کامل: ${[...booklets.keys()].sort().join('، ')}`);
 
 for (const source of SOURCES) {
   const booklet = booklets.get(source.year);
@@ -146,90 +145,117 @@ for (const source of SOURCES) {
     report.push({ year: source.year, skipped: 'فایل منبع نیست' });
     continue;
   }
-  const pages = splitPages(raw).map((page) => cleanPage(page));
-  const sections = sectionTexts(pages);
-  const rangeOf = new Map(booklet.ranges.map((range) => [range.sectionId, range]));
-  const used = new Set<number>();
+
+  const result = extractByNumber(splitPages(raw), {
+    total: booklet.total,
+    ranges: booklet.ranges,
+  });
+
   const reasons: Record<string, number> = {};
+  const reject = (reason: string) => {
+    reasons[reason] = (reasons[reason] ?? 0) + 1;
+  };
   let kept = 0;
   let candidates = 0;
+  const perSection = new Map<string, number>();
+  const extracted: Record<string, unknown>[] = [];
 
-  for (const block of sections) {
-    const range = rangeOf.get(block.sectionId);
-    if (!range) {
-      reasons['درس بدون بازهٔ ثبت‌شده'] = (reasons['درس بدون بازهٔ ثبت‌شده'] ?? 0) + 1;
+  for (const question of result.questions) {
+    // زبان انگلیسی جدا و با منبع دوم مقابله می‌شود؛ اینجا وارد نمی‌شود.
+    if (question.sectionId === 'english') continue;
+    candidates += 1;
+
+    const stem = question.stem.replace(/\s+/g, ' ').trim();
+    const persian = (stem.match(/[\u0600-\u06FF]/g) ?? []).length;
+    if (stem.length < 12) {
+      reject('صورت سؤال خیلی کوتاه است');
+      extracted.push({ ...question, gate: 'صورت سؤال خیلی کوتاه است' });
       continue;
     }
-    let cursor = range.from;
-    for (const group of optionGroups(block.text)) {
-      candidates += 1;
-      const stem = block.text.slice(group.stemStart, group.stemEnd).trim();
-      if (!isSaneText(stem, 'stem')) {
-        reasons['صورت سؤال ناسالم'] = (reasons['صورت سؤال ناسالم'] ?? 0) + 1;
-        continue;
-      }
-      const options = group.options
-        .map((option) => ({ index: option.index, text: option.text.replace(/\s+/g, ' ').trim() }))
-        .sort((a, b) => a.index - b.index);
-      if (options.length !== 4) {
-        reasons['گزینه‌ها چهارتایی نیستند'] = (reasons['گزینه‌ها چهارتایی نیستند'] ?? 0) + 1;
-        continue;
-      }
-      if (!options.every((option) => isSaneText(option.text, 'option'))) {
-        reasons['گزینهٔ ناسالم'] = (reasons['گزینهٔ ناسالم'] ?? 0) + 1;
-        continue;
-      }
-      const unknownRatio = vocabulary.unknownRatio(`${stem} ${options.map((option) => option.text).join(' ')}`);
-      if (unknownRatio > MAX_UNKNOWN_RATIO) {
-        reasons['متن پرخطا: واژه‌های ناشناس زیاد'] = (reasons['متن پرخطا: واژه‌های ناشناس زیاد'] ?? 0) + 1;
-        continue;
-      }
-      if (new Set(options.map((option) => option.text)).size !== 4) {
-        reasons['گزینهٔ تکراری'] = (reasons['گزینهٔ تکراری'] ?? 0) + 1;
-        continue;
-      }
-      const vote = stemNumber(stem);
-      let number: number;
-      if (vote !== null && vote >= range.from && vote <= range.to && !used.has(vote)) {
-        number = vote;
-      } else {
-        while (cursor <= range.to && used.has(cursor)) cursor += 1;
-        if (cursor > range.to) {
-          reasons['شمارهٔ خالی در بازه نیست'] = (reasons['شمارهٔ خالی در بازه نیست'] ?? 0) + 1;
-          continue;
-        }
-        number = cursor;
-      }
-      const key = keyFor(source.year, number);
-      if (key === null) {
-        reasons['کلید رسمی برای این شماره موجود نیست'] = (reasons['کلید رسمی برای این شماره موجود نیست'] ?? 0) + 1;
-        continue;
-      }
-      used.add(number);
-      if (number >= cursor) cursor = number + 1;
-      imported.push({
-        id: `q.k${source.year}.${number}`,
-        examYear: source.year,
-        examLevel: 'ارشد',
-        sectionId: range.sectionId,
-        bookletQuestionNumber: number,
-        text: stem.replace(/\s+/g, ' ').trim(),
-        options: options.map((option) => option.text),
-        source: 'ocr_markdown',
-        designedFromTextbook: false,
-      });
-      keyChecks += 1;
-      kept += 1;
+    // درس زبان صورت سؤال انگلیسی دارد؛ الزام فارسی فقط برای درس‌های فارسی است.
+    if (question.sectionId !== 'english' && persian < 6) {
+      reject('صورت سؤال فارسی کافی ندارد');
+      extracted.push({ ...question, gate: 'صورت سؤال فارسی کافی ندارد' });
+      continue;
     }
+    if (question.options.some((option) => option.length === 0 || option.length > 260)) {
+      reject('گزینهٔ خالی یا بسیار بلند');
+      extracted.push({ ...question, gate: 'گزینهٔ خالی یا بسیار بلند' });
+      continue;
+    }
+    if (/\?\?|�|@@/.test(stem) || question.options.some((option) => /\?\?|�|@@/.test(option))) {
+      reject('متن آشغال دارد');
+      extracted.push({ ...question, gate: 'متن آشغال دارد' });
+      continue;
+    }
+    // اگر نزدیک ابتدای متن شمارهٔ سؤال دیگری باشد، متن به این ردیف تعلق ندارد.
+    const near = stem.slice(0, 40).match(/(?:^|\s)([0-9۰-۹]{1,3})(?=[\s\-–.)])/);
+    if (near) {
+      const read = Number(
+        near[1].replace(/[۰-۹]/g, (digit) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit))),
+      );
+      if (read > question.number && read <= question.number + 40) {
+        reject('شمارهٔ متن با ردیف نمی‌خواند');
+        extracted.push({ ...question, gate: 'شمارهٔ متن با ردیف نمی‌خواند' });
+        continue;
+      }
+    }
+    const unknownRatio = vocabulary.unknownRatio(`${stem} ${question.options.join(' ')}`);
+    if (unknownRatio > MAX_UNKNOWN_RATIO) {
+      reject('متن پرخطا: واژه‌های ناشناس زیاد');
+      extracted.push({ ...question, gate: 'متن پرخطا: واژه‌های ناشناس زیاد', unknownRatio });
+      continue;
+    }
+    if (keyFor(source.year, question.number) === null) {
+      reject('کلید رسمی برای این شماره موجود نیست');
+      extracted.push({ ...question, gate: 'کلید رسمی برای این شماره موجود نیست' });
+      continue;
+    }
+
+    extracted.push({ ...question, gate: null, unknownRatio });
+
+    imported.push({
+      id: `q.k${source.year}.${question.number}`,
+      examYear: source.year,
+      examLevel: 'ارشد',
+      sectionId: question.sectionId,
+      bookletQuestionNumber: question.number,
+      numberSource: question.numberSource,
+      text: stem,
+      options: question.options,
+      source: 'ocr_markdown',
+      designedFromTextbook: false,
+    });
+    keyChecks += 1;
+    kept += 1;
+    perSection.set(question.sectionId, (perSection.get(question.sectionId) ?? 0) + 1);
   }
-  report.push({ year: source.year, candidates, kept, reasons });
-  console.log(`${source.year}: ${kept} از ${candidates} نامزد پذیرفته شد`);
+
+  for (const item of result.rejections) {
+    reject(`استخراج: ${item.reason}`);
+  }
+
+  report.push({
+    year: source.year,
+    declared: booklet.total,
+    extracted: result.questions.length,
+    candidates,
+    kept,
+    groups: result.stats.groups,
+    sectionsComplete: result.stats.sectionsComplete,
+    sectionsIncomplete: result.stats.sectionsIncomplete,
+    perSection: Object.fromEntries(perSection),
+    reasons,
+  });
+  extractedAll.push(...extracted.map((item) => ({ examYear: source.year, ...item })));
+  console.log(
+    `${source.year}: ${kept} سؤال پذیرفته از ${candidates} نامزد (استخراج ${result.questions.length}/${booklet.total})`,
+  );
 }
 
 console.log(JSON.stringify(report, null, 1));
 
 if (write) {
-  console.log(`کلید بررسی‌شده برای ${keyChecks} نامزد`);
   const seen = new Set<string>();
   const unique = imported.filter((question) => {
     if (seen.has(question.id)) return false;
@@ -247,6 +273,10 @@ if (write) {
     `${JSON.stringify({ questions: unique }, null, 1)}\n`,
     'utf8',
   );
-  console.log(`نوشته شد: ${unique.length} سؤال`);
+  writeFileSync(
+    join(root, 'content', 'exam-import-staging', 'ocr-persian', 'extracted.json'),
+    `${JSON.stringify({ note: 'همهٔ سؤال‌های استخراج‌شده، با حکم دروازهٔ کیفیت؛ ورودی مرحلهٔ بازبینی.', questions: extractedAll }, null, 1)}\n`,
+    'utf8',
+  );
+  console.log(`نوشته شد: ${unique.length} سؤال (کلید بررسی‌شده برای ${keyChecks} نامزد)`);
 }
-void sectionOfLine;

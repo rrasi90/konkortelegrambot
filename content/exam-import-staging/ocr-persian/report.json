@@ -1,43 +1,308 @@
 {
-  "generatedAt": "2026-11-19T15:18:28.237Z",
+  "generatedAt": "2026-11-19T18:37:10.938Z",
   "report": [
     {
-      "year": 1402,
-      "candidates": 198,
-      "kept": 51,
+      "year": 1396,
+      "declared": 310,
+      "extracted": 142,
+      "candidates": 123,
+      "kept": 122,
+      "groups": 270,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 17,
+      "perSection": {
+        "islamic": 12,
+        "math_stats": 2,
+        "management_theories": 18,
+        "economics": 6,
+        "public_finance": 10,
+        "human_resources": 10,
+        "operations_research": 2,
+        "financial_management": 1,
+        "production": 3,
+        "marketing": 11,
+        "investment_risk": 2,
+        "entrepreneurship": 12,
+        "accounting": 4,
+        "publishing": 9,
+        "transportation": 2,
+        "business_transportation": 18
+      },
       "reasons": {
-        "صورت سؤال ناسالم": 67,
-        "متن پرخطا: واژه‌های ناشناس زیاد": 60,
-        "گزینهٔ ناسالم": 8,
-        "گزینهٔ تکراری": 2,
-        "کلید رسمی برای این شماره موجود نیست": 9,
-        "شمارهٔ خالی در بازه نیست": 1
+        "شمارهٔ متن با ردیف نمی‌خواند": 1,
+        "استخراج: گزینه‌های کامل نیست": 51,
+        "استخراج: صورت سؤال خیلی کوتاه است": 1,
+        "استخراج: گزینهٔ تکراری": 4
+      }
+    },
+    {
+      "year": 1397,
+      "declared": 295,
+      "extracted": 133,
+      "candidates": 114,
+      "kept": 114,
+      "groups": 370,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 16,
+      "perSection": {
+        "islamic": 9,
+        "math_stats": 1,
+        "management_theories": 18,
+        "economics": 13,
+        "public_finance": 12,
+        "human_resources": 11,
+        "operations_research": 1,
+        "financial_management": 3,
+        "production": 2,
+        "marketing": 11,
+        "investment_risk": 5,
+        "entrepreneurship": 3,
+        "accounting": 7,
+        "transportation": 6,
+        "business_transportation": 12
+      },
+      "reasons": {
+        "استخراج: گزینه‌های کامل نیست": 89,
+        "استخراج: گزینهٔ تکراری": 1
+      }
+    },
+    {
+      "year": 1398,
+      "declared": 295,
+      "extracted": 141,
+      "candidates": 123,
+      "kept": 122,
+      "groups": 257,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 16,
+      "perSection": {
+        "islamic": 14,
+        "math_stats": 1,
+        "management_theories": 21,
+        "economics": 9,
+        "public_finance": 12,
+        "human_resources": 11,
+        "operations_research": 1,
+        "financial_management": 5,
+        "production": 4,
+        "marketing": 12,
+        "investment_risk": 4,
+        "entrepreneurship": 12,
+        "accounting": 7,
+        "transportation": 4,
+        "business_transportation": 5
+      },
+      "reasons": {
+        "گزینهٔ خالی یا بسیار بلند": 1,
+        "استخراج: صورت سؤال خیلی کوتاه است": 1,
+        "استخراج: گزینه‌های کامل نیست": 68,
+        "استخراج: گزینهٔ تکراری": 3
+      }
+    },
+    {
+      "year": 1399,
+      "declared": 295,
+      "extracted": 117,
+      "candidates": 93,
+      "kept": 93,
+      "groups": 277,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 16,
+      "perSection": {
+        "islamic": 10,
+        "management_theories": 18,
+        "economics": 6,
+        "public_finance": 2,
+        "human_resources": 4,
+        "operations_research": 2,
+        "financial_management": 3,
+        "production": 5,
+        "marketing": 11,
+        "investment_risk": 2,
+        "entrepreneurship": 5,
+        "accounting": 8,
+        "business_transportation": 17
+      },
+      "reasons": {
+        "استخراج: گزینه‌های کامل نیست": 68,
+        "استخراج: گزینهٔ تکراری": 4
+      }
+    },
+    {
+      "year": 1400,
+      "declared": 295,
+      "extracted": 98,
+      "candidates": 75,
+      "kept": 54,
+      "groups": 261,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 16,
+      "perSection": {
+        "islamic": 3,
+        "math_stats": 1,
+        "management_theories": 12,
+        "economics": 2,
+        "public_finance": 1,
+        "human_resources": 9,
+        "operations_research": 1,
+        "production": 6,
+        "marketing": 3,
+        "investment_risk": 3,
+        "entrepreneurship": 3,
+        "accounting": 4,
+        "business_transportation": 6
+      },
+      "reasons": {
+        "کلید رسمی برای این شماره موجود نیست": 21,
+        "استخراج: گزینه‌های کامل نیست": 73,
+        "استخراج: گزینهٔ تکراری": 2
+      }
+    },
+    {
+      "year": 1401,
+      "declared": 295,
+      "extracted": 133,
+      "candidates": 112,
+      "kept": 110,
+      "groups": 289,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 16,
+      "perSection": {
+        "islamic": 12,
+        "math_stats": 1,
+        "management_theories": 13,
+        "economics": 2,
+        "public_finance": 4,
+        "human_resources": 12,
+        "operations_research": 3,
+        "financial_management": 1,
+        "production": 7,
+        "marketing": 13,
+        "investment_risk": 5,
+        "entrepreneurship": 4,
+        "accounting": 4,
+        "transportation": 9,
+        "business_transportation": 20
+      },
+      "reasons": {
+        "گزینهٔ خالی یا بسیار بلند": 2,
+        "استخراج: گزینه‌های کامل نیست": 69,
+        "استخراج: گزینهٔ تکراری": 3
+      }
+    },
+    {
+      "year": 1402,
+      "declared": 285,
+      "extracted": 103,
+      "candidates": 83,
+      "kept": 73,
+      "groups": 210,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 16,
+      "perSection": {
+        "islamic": 9,
+        "math_stats": 1,
+        "management_theories": 9,
+        "economics": 5,
+        "public_finance": 2,
+        "human_resources": 4,
+        "operations_research": 1,
+        "financial_management": 3,
+        "production": 2,
+        "marketing": 2,
+        "investment_risk": 5,
+        "entrepreneurship": 7,
+        "accounting": 4,
+        "transportation": 6,
+        "business_transportation": 13
+      },
+      "reasons": {
+        "صورت سؤال فارسی کافی ندارد": 1,
+        "گزینهٔ خالی یا بسیار بلند": 1,
+        "متن آشغال دارد": 4,
+        "کلید رسمی برای این شماره موجود نیست": 4,
+        "استخراج: صورت سؤال خیلی کوتاه است": 1,
+        "استخراج: گزینه‌های کامل نیست": 43,
+        "استخراج: گزینهٔ تکراری": 5
       }
     },
     {
       "year": 1403,
-      "candidates": 206,
-      "kept": 57,
+      "declared": 285,
+      "extracted": 113,
+      "candidates": 98,
+      "kept": 98,
+      "groups": 232,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 16,
+      "perSection": {
+        "islamic": 4,
+        "math_stats": 3,
+        "management_theories": 9,
+        "economics": 8,
+        "public_finance": 7,
+        "human_resources": 5,
+        "financial_management": 1,
+        "production": 3,
+        "marketing": 10,
+        "investment_risk": 4,
+        "entrepreneurship": 6,
+        "accounting": 7,
+        "transportation": 9,
+        "business_transportation": 22
+      },
       "reasons": {
-        "صورت سؤال ناسالم": 64,
-        "متن پرخطا: واژه‌های ناشناس زیاد": 69,
-        "گزینهٔ ناسالم": 13,
-        "گزینهٔ تکراری": 2,
-        "شمارهٔ خالی در بازه نیست": 1
+        "استخراج: گزینه‌های کامل نیست": 55,
+        "استخراج: گزینهٔ تکراری": 2
       }
     },
     {
       "year": 1404,
-      "candidates": 211,
-      "kept": 63,
+      "declared": 285,
+      "extracted": 118,
+      "candidates": 101,
+      "kept": 100,
+      "groups": 240,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 16,
+      "perSection": {
+        "islamic": 9,
+        "management_theories": 8,
+        "economics": 6,
+        "public_finance": 10,
+        "human_resources": 4,
+        "financial_management": 5,
+        "production": 4,
+        "marketing": 12,
+        "investment_risk": 6,
+        "entrepreneurship": 8,
+        "accounting": 11,
+        "transportation": 5,
+        "business_transportation": 12
+      },
       "reasons": {
-        "صورت سؤال ناسالم": 63,
-        "متن پرخطا: واژه‌های ناشناس زیاد": 64,
-        "گزینهٔ تکراری": 2,
-        "گزینهٔ ناسالم": 8,
-        "شمارهٔ خالی در بازه نیست": 11
+        "گزینهٔ خالی یا بسیار بلند": 1,
+        "استخراج: گزینه‌های کامل نیست": 67,
+        "استخراج: گزینهٔ تکراری": 4
+      }
+    },
+    {
+      "year": 1405,
+      "declared": 285,
+      "extracted": 119,
+      "candidates": 107,
+      "kept": 0,
+      "groups": 231,
+      "sectionsComplete": 0,
+      "sectionsIncomplete": 16,
+      "perSection": {},
+      "reasons": {
+        "کلید رسمی برای این شماره موجود نیست": 104,
+        "گزینهٔ خالی یا بسیار بلند": 3,
+        "استخراج: گزینه‌های کامل نیست": 49,
+        "استخراج: صورت سؤال خیلی کوتاه است": 1
       }
     }
   ],
-  "kept": 171
+  "kept": 886
 }

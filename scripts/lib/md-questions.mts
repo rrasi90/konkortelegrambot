@@ -46,6 +46,7 @@ const ORDER = [
   'investment_risk',
   'entrepreneurship',
   'accounting',
+  'publishing',
   'transportation',
   'business_transportation',
 ];
@@ -76,6 +77,8 @@ const SECTION_TITLES: { sectionId: string; patterns: RegExp[] }[] = [
   { sectionId: 'investment_risk', patterns: [/مدیریت\s*سرمایه\s*گذاری\s*و\s*ریسک/] },
   { sectionId: 'entrepreneurship', patterns: [/مبانی\s*کارآفرینی/] },
   { sectionId: 'accounting', patterns: [/حسابداری\s*مالی\s*و\s*صنعتی/] },
+  // فقط دفترچهٔ ۱۳۹۶؛ OCR این عنوان را «عماتی/عباني/میانی نشر» هم می‌خواند.
+  { sectionId: 'publishing', patterns: [/اصول\s*و\s*\S+\s*نشر/] },
   { sectionId: 'transportation', patterns: [/دانش\s*حمل\s*و\s*نقل/] },
   { sectionId: 'business_transportation', patterns: [/دانش\s*مدیریت\s*بازرگانی/] },
 ];

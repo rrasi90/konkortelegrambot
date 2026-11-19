@@ -1,5 +1,6 @@
 import type { QuestionItem } from './konkorData';
 import { EXAM_ARCHIVE_IMPORTED_QUESTIONS } from './examArchiveImported';
+import { EXAM_ARCHIVE_PERSIAN_QUESTIONS } from './examArchivePersian';
 
 export type KonkorCourseSectionId =
   | 'english'
@@ -17,7 +18,9 @@ export type KonkorCourseSectionId =
   | 'entrepreneurship'
   | 'accounting'
   | 'transportation'
-  | 'business_transportation';
+  | 'business_transportation'
+  /** درس «اصول و مبانی نشر» فقط در دفترچهٔ ۱۳۹۶ آمده است و در مدل ۱۶درسی امروز جایی ندارد. */
+  | 'publishing';
 
 export interface BookletSubjectRange {
   sectionId: KonkorCourseSectionId;
@@ -46,6 +49,14 @@ export interface YearlyKonkorBooklet {
   pdfAssetUrl: string;
   description: string;
   subjectRanges: BookletSubjectRange[];
+  /**
+   * آیا مخرج «تعداد سؤال اعلامی» با حداقل یک شاهد مستقلِ داخل مخزن یا رجیستر منبع
+   * (سند کلید رسمی، جدول بخش‌های konkurstudy، یا جلد بازبینی‌شده) می‌خواند؟
+   * تا false است، درصد پوشش آن سال گمراه‌کننده است و فقط عدد مطلق گزارش می‌شود.
+   */
+  declaredVerified?: boolean;
+  /** شرح شاهدانی که در تأیید یا رد مخرج شمار آمدند. */
+  declaredEvidence?: string[];
 }
 
 export interface YearlyKonkorQuestion extends QuestionItem {
@@ -80,12 +91,25 @@ export const KONKOR_COURSE_SECTIONS: {
   { id: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', defaultNodeId: null },
 ];
 
+/**
+ * درسی که فقط در دفترچه‌های قدیمی (۱۳۹۱، ۱۳۹۳، ۱۳۹۶) دیده شده است. عمداً از
+ * `KONKOR_COURSE_SECTIONS` بیرون مانده است، چون مدل رسمی آزمون امروز ۱۶ درس دارد
+ * و این درس در آن مدل نیست.
+ */
+export const LEGACY_KONKOR_COURSE_SECTIONS: { id: KonkorCourseSectionId; title: string }[] = [
+  { id: 'publishing', title: 'اصول و مبانی نشر' },
+];
+
 export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
   {
     year: 1405,
     bookletCode: '319A',
     examDateLabel: 'آزمون ورودی کارشناسی ارشد ناپیوسته ۱۴۰۵ — کد ۱۱۴۲',
     totalQuestionsInBooklet: 285,
+    declaredVerified: false,
+    declaredEvidence: [
+      'تنها شاهد، جدول جلد همان دفترچه است؛ شاهد دوم (سند کلید یا ساختار رجیستر) در مخزن نیست.',
+    ],
     durationMinutes: 150,
     pdfAssetUrl: '/assets/aistudio/1405-_______f08c886c.pdf',
     description:
@@ -114,6 +138,10 @@ export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
     bookletCode: '519C',
     examDateLabel: 'جمعه ۳ اسفند ۱۴۰۳ — کنکور ارشد ۱۴۰۴ (کد ۱۱۴۲)',
     totalQuestionsInBooklet: 285,
+    declaredVerified: false,
+    declaredEvidence: [
+      'سند کلید ۱۴۰۴ با مخرج نمی‌خواند: ۲۹۳ مدخل و بالاترین شماره ۳۹۹؛ بازبینی تصویر جلد و کلید لازم است.',
+    ],
     durationMinutes: 150,
     pdfAssetUrl: '/assets/aistudio/1142-_______fde40152.pdf',
     description:
@@ -142,6 +170,12 @@ export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
     bookletCode: '141C',
     examDateLabel: 'جمعه ۴ اسفند ۱۴۰۲ — کنکور ارشد ۱۴۰۳ (کد ۱۱۴۲)',
     totalQuestionsInBooklet: 285,
+    declaredVerified: true,
+    declaredEvidence: [
+      'جمع جدول بازهٔ کد: ۲۸۵.',
+      'ساختار بخش‌های konkurstudy در رجیستر منبع: ۲۸۵ سؤال در ۱۶ بخش.',
+      'سند کلید: ۲۸۵ مدخل.',
+    ],
     durationMinutes: 145,
     pdfAssetUrl: '/assets/aistudio/Arshad_modiriat_1403_cafetadris.com__dd7d7c57.pdf',
     description:
@@ -170,6 +204,11 @@ export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
     bookletCode: '818C',
     examDateLabel: 'جمعه ۱۲ اسفند ۱۴۰۱ — کنکور ارشد ۱۴۰۲ (کد ۱۱۴۲)',
     totalQuestionsInBooklet: 285,
+    declaredVerified: true,
+    declaredEvidence: [
+      'جمع جدول بازهٔ کد: ۲۸۵.',
+      'سند کلید: تا شمارهٔ ۲۸۵ با ۲۷۰ مدخل (حفره‌های کلید مخرج را تغییر نمی‌دهد).',
+    ],
     durationMinutes: 145,
     pdfAssetUrl: '/assets/aistudio/arshd_modiriat-1402_4bad2af3.pdf',
     description:
@@ -198,19 +237,32 @@ export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
     bookletCode: '517A',
     examDateLabel: 'پنج‌شنبه ۲۹ اردیبهشت ۱۴۰۱ — کنکور ارشد ۱۴۰۱ (کد ۱۱۴۲)',
     totalQuestionsInBooklet: 295,
+    declaredVerified: true,
+    declaredEvidence: [
+      'جمع جدول بازهٔ کد: ۲۹۵.',
+      'سند کلید: ۲۹۵ مدخل تا شمارهٔ ۲۹۵.',
+    ],
     durationMinutes: 150,
     pdfAssetUrl: '/assets/aistudio/__________________________________________________e161d562.pdf',
     description:
       'دفترچه رسمی کنکور کارشناسی ارشد مجموعه مدیریت (کد ۱۱۴۲) سال ۱۴۰۱ — کد کنترل 517A با ۲۹۵ سؤال.',
     subjectRanges: [
-      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2 },
-      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0 },
+      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 1, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 2, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 3, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 4, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 5, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'public_finance', title: 'مالیه عمومی و بودجه', fromQuestion: 116, toQuestion: 130, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 6, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'human_resources', title: 'مدیریت منابع انسانی', fromQuestion: 131, toQuestion: 145, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 7, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2, subjectNumber: 8, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'financial_management', title: 'مدیریت مالی', fromQuestion: 161, toQuestion: 175, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 9, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 10, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 11, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'investment_risk', title: 'مدیریت سرمایه‌گذاری و ریسک', fromQuestion: 206, toQuestion: 220, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 12, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'entrepreneurship', title: 'مبانی کارآفرینی', fromQuestion: 221, toQuestion: 235, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 13, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'accounting', title: 'حسابداری مالی و صنعتی', fromQuestion: 236, toQuestion: 250, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 14, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'transportation', title: 'دانش حمل‌ونقل', fromQuestion: 251, toQuestion: 265, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 15, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', fromQuestion: 266, toQuestion: 295, count: 30, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 16, sourcePage: 1, coefficientsVerified: false },
     ],
   },
   {
@@ -218,19 +270,33 @@ export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
     bookletCode: '716C',
     examDateLabel: 'مرداد ۱۴۰۰ — کنکور ارشد ۱۴۰۰ (کد ۱۱۴۲)',
     totalQuestionsInBooklet: 295,
+    declaredVerified: true,
+    declaredEvidence: [
+      'جمع جدول بازهٔ کد: ۲۹۵.',
+      'ساختار بخش‌های konkurstudy در رجیستر منبع: ۲۹۵ سؤال در ۱۶ بخش.',
+      'سند کلید ناقص است: ۲۳۶ مدخل تا شمارهٔ ۲۸۴.',
+    ],
     durationMinutes: 150,
     pdfAssetUrl: '/assets/aistudio/________________________________1400_36819d02.pdf',
     description:
       'دفترچه رسمی کنکور کارشناسی ارشد مجموعه مدیریت (کد ۱۱۴۲) سال ۱۴۰۰ — کد کنترل 716C با ۲۹۵ سؤال.',
     subjectRanges: [
-      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2 },
-      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0 },
+      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 1, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 2, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 3, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 4, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 5, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'public_finance', title: 'مالیه عمومی و بودجه', fromQuestion: 116, toQuestion: 130, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 6, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'human_resources', title: 'مدیریت منابع انسانی', fromQuestion: 131, toQuestion: 145, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 7, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2, subjectNumber: 8, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'financial_management', title: 'مدیریت مالی', fromQuestion: 161, toQuestion: 175, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 9, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 10, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 11, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'investment_risk', title: 'مدیریت سرمایه‌گذاری و ریسک', fromQuestion: 206, toQuestion: 220, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 12, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'entrepreneurship', title: 'مبانی کارآفرینی', fromQuestion: 221, toQuestion: 235, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 13, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'accounting', title: 'حسابداری مالی و صنعتی', fromQuestion: 236, toQuestion: 250, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 14, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'transportation', title: 'دانش حمل‌ونقل', fromQuestion: 251, toQuestion: 265, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 15, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', fromQuestion: 266, toQuestion: 295, count: 30, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 16, sourcePage: 1, coefficientsVerified: false },
     ],
   },
   {
@@ -238,19 +304,33 @@ export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
     bookletCode: '316A',
     examDateLabel: 'پنج‌شنبه ۲ مرداد ۱۳۹۹ — کنکور ارشد ۱۳۹۹ (کد ۱۱۴۲)',
     totalQuestionsInBooklet: 295,
+    declaredVerified: true,
+    declaredEvidence: [
+      'جمع جدول بازهٔ کد: ۲۹۵.',
+      'جلد بازبینی‌شده در رجیستر منبع (کد کنترل 316A): ۲۹۵ سؤال.',
+      'سند کلید: ۲۹۵ مدخل.',
+    ],
     durationMinutes: 150,
     pdfAssetUrl: '/assets/aistudio/________________________________1399_04a3c369.pdf',
     description:
       'دفترچه رسمی کنکور کارشناسی ارشد مجموعه مدیریت (کد ۱۱۴۲) سال ۱۳۹۹ — کد کنترل 316A.',
     subjectRanges: [
-      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2 },
-      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0 },
+      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 1, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 2, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 3, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 4, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 5, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'public_finance', title: 'مالیه عمومی و بودجه', fromQuestion: 116, toQuestion: 130, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 6, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'human_resources', title: 'مدیریت منابع انسانی', fromQuestion: 131, toQuestion: 145, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 7, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2, subjectNumber: 8, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'financial_management', title: 'مدیریت مالی', fromQuestion: 161, toQuestion: 175, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 9, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 10, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 11, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'investment_risk', title: 'مدیریت سرمایه‌گذاری و ریسک', fromQuestion: 206, toQuestion: 220, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 12, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'entrepreneurship', title: 'مبانی کارآفرینی', fromQuestion: 221, toQuestion: 235, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 13, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'accounting', title: 'حسابداری مالی و صنعتی', fromQuestion: 236, toQuestion: 250, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 14, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'transportation', title: 'دانش حمل‌ونقل', fromQuestion: 251, toQuestion: 265, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 15, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', fromQuestion: 266, toQuestion: 295, count: 30, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 16, sourcePage: 1, coefficientsVerified: false },
     ],
   },
   {
@@ -258,19 +338,33 @@ export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
     bookletCode: '716C',
     examDateLabel: 'پنج‌شنبه ۲۳ خرداد ۱۳۹۸ — کنکور ارشد ۱۳۹۸ (کد ۱۱۴۲)',
     totalQuestionsInBooklet: 295,
+    declaredVerified: true,
+    declaredEvidence: [
+      'جمع جدول بازهٔ کد: ۲۹۵.',
+      'جلد بازبینی‌شده در رجیستر منبع (کد کنترل 716C): ۲۹۵ سؤال.',
+      'سند کلید: ۲۹۵ مدخل.',
+    ],
     durationMinutes: 150,
     pdfAssetUrl: '/assets/aistudio/________________________________1398_bb4de2bc.pdf',
     description:
       'دفترچه رسمی کنکور کارشناسی ارشد مجموعه مدیریت (کد ۱۱۴۲) سال ۱۳۹۸ — کد کنترل 716C.',
     subjectRanges: [
-      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2 },
-      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0 },
+      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 1, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 2, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 3, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 4, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 5, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'public_finance', title: 'مالیه عمومی و بودجه', fromQuestion: 116, toQuestion: 130, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 6, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'human_resources', title: 'مدیریت منابع انسانی', fromQuestion: 131, toQuestion: 145, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 7, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2, subjectNumber: 8, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'financial_management', title: 'مدیریت مالی', fromQuestion: 161, toQuestion: 175, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 9, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 10, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 11, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'investment_risk', title: 'مدیریت سرمایه‌گذاری و ریسک', fromQuestion: 206, toQuestion: 220, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 12, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'entrepreneurship', title: 'مبانی کارآفرینی', fromQuestion: 221, toQuestion: 235, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 13, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'accounting', title: 'حسابداری مالی و صنعتی', fromQuestion: 236, toQuestion: 250, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 14, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'transportation', title: 'دانش حمل‌ونقل', fromQuestion: 251, toQuestion: 265, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 15, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', fromQuestion: 266, toQuestion: 295, count: 30, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 16, sourcePage: 1, coefficientsVerified: false },
     ],
   },
   {
@@ -278,19 +372,33 @@ export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
     bookletCode: '116A',
     examDateLabel: 'پنج‌شنبه ۶ اردیبهشت ۱۳۹۷ — کنکور ارشد ۱۳۹۷ (کد ۱۱۴۲)',
     totalQuestionsInBooklet: 295,
+    declaredVerified: true,
+    declaredEvidence: [
+      'جمع جدول بازهٔ کد: ۲۹۵.',
+      'جلد بازبینی‌شده در رجیستر منبع (کد کنترل 116A): ۲۹۵ سؤال.',
+      'سند کلید: ۲۹۵ مدخل.',
+    ],
     durationMinutes: 150,
     pdfAssetUrl: '/assets/aistudio/________________________________1397_17f8f2df.pdf',
     description:
       'دفترچه رسمی کنکور کارشناسی ارشد مجموعه مدیریت (کد ۱۱۴۲) سال ۱۳۹۷ — کد کنترل 116A.',
     subjectRanges: [
-      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2 },
-      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0 },
+      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 1, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 2, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 3, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 4, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 5, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'public_finance', title: 'مالیه عمومی و بودجه', fromQuestion: 116, toQuestion: 130, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 6, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'human_resources', title: 'مدیریت منابع انسانی', fromQuestion: 131, toQuestion: 145, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 7, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2, subjectNumber: 8, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'financial_management', title: 'مدیریت مالی', fromQuestion: 161, toQuestion: 175, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 9, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 10, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 11, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'investment_risk', title: 'مدیریت سرمایه‌گذاری و ریسک', fromQuestion: 206, toQuestion: 220, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 12, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'entrepreneurship', title: 'مبانی کارآفرینی', fromQuestion: 221, toQuestion: 235, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 13, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'accounting', title: 'حسابداری مالی و صنعتی', fromQuestion: 236, toQuestion: 250, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 14, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'transportation', title: 'دانش حمل‌ونقل', fromQuestion: 251, toQuestion: 265, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 15, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', fromQuestion: 266, toQuestion: 295, count: 30, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 16, sourcePage: 1, coefficientsVerified: false },
     ],
   },
   {
@@ -298,19 +406,33 @@ export const YEARLY_KONKOR_BOOKLETS: YearlyKonkorBooklet[] = [
     bookletCode: '106C',
     examDateLabel: 'پنج‌شنبه ۷ اردیبهشت ۱۳۹۶ — کنکور ارشد ۱۳۹۶ (کد ۱۱۴۲)',
     totalQuestionsInBooklet: 310,
+    declaredVerified: true,
+    declaredEvidence: [
+      'جمع جدول بازهٔ کد (۱۷ بخش، شامل نشر): ۳۱۰.',
+      'سند کلید: ۳۱۰ مدخل تا شمارهٔ ۳۱۰.',
+    ],
     durationMinutes: 150,
     pdfAssetUrl: '/assets/aistudio/________________________________1396_7ba65778.pdf',
     description:
       'دفترچه رسمی کنکور کارشناسی ارشد مجموعه مدیریت (کد ۱۱۴۲) سال ۱۳۹۶ — کد کنترل 106C با ۳۱۰ سؤال.',
     subjectRanges: [
-      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3 },
-      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2 },
-      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2 },
-      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0 },
+      { sectionId: 'english', title: 'زبان عمومی و تخصصی (انگلیسی)', fromQuestion: 1, toQuestion: 30, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 1, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'islamic', title: 'اصول و مبانی مدیریت از دیدگاه اسلام', fromQuestion: 31, toQuestion: 45, count: 15, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 2, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'math_stats', title: 'ریاضی و آمار', fromQuestion: 46, toQuestion: 65, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 3, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'management_theories', title: 'تئوری‌های مدیریت', fromQuestion: 66, toQuestion: 95, count: 30, coeffBusiness: 3, coeffIndustrial: 3, coeffTechnology: 3, subjectNumber: 4, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'economics', title: 'اقتصاد خرد و کلان', fromQuestion: 96, toQuestion: 115, count: 20, coeffBusiness: 2, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 5, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'public_finance', title: 'مالیه عمومی و بودجه', fromQuestion: 116, toQuestion: 130, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 6, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'human_resources', title: 'مدیریت منابع انسانی', fromQuestion: 131, toQuestion: 145, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 7, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'operations_research', title: 'تحقیق در عملیات', fromQuestion: 146, toQuestion: 160, count: 15, coeffBusiness: 2, coeffIndustrial: 3, coeffTechnology: 2, subjectNumber: 8, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'financial_management', title: 'مدیریت مالی', fromQuestion: 161, toQuestion: 175, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 9, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'production', title: 'مدیریت تولید', fromQuestion: 176, toQuestion: 190, count: 15, coeffBusiness: 0, coeffIndustrial: 2, coeffTechnology: 2, subjectNumber: 10, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'marketing', title: 'بازاریابی', fromQuestion: 191, toQuestion: 205, count: 15, coeffBusiness: 4, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 11, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'investment_risk', title: 'مدیریت سرمایه‌گذاری و ریسک', fromQuestion: 206, toQuestion: 220, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 12, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'entrepreneurship', title: 'مبانی کارآفرینی', fromQuestion: 221, toQuestion: 235, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 13, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'accounting', title: 'حسابداری مالی و صنعتی', fromQuestion: 236, toQuestion: 250, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 14, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'publishing', title: 'اصول و مبانی نشر', fromQuestion: 251, toQuestion: 265, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 15, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'transportation', title: 'دانش حمل‌ونقل', fromQuestion: 266, toQuestion: 280, count: 15, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 16, sourcePage: 1, coefficientsVerified: false },
+      { sectionId: 'business_transportation', title: 'دانش مدیریت بازرگانی و حمل‌ونقل', fromQuestion: 281, toQuestion: 310, count: 30, coeffBusiness: 0, coeffIndustrial: 0, coeffTechnology: 0, subjectNumber: 17, sourcePage: 1, coefficientsVerified: false },
     ],
   },
   {
@@ -3516,4 +3638,5 @@ export const YEARLY_KONKOR_QUESTIONS: YearlyKonkorQuestion[] = [
     expectedTimeMs: 45000,
   },
   ...EXAM_ARCHIVE_IMPORTED_QUESTIONS,
+  ...EXAM_ARCHIVE_PERSIAN_QUESTIONS,
 ];

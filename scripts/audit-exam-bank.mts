@@ -205,9 +205,14 @@ if (missingYears.length > 0) violations.push(`سال بدون هیچ سؤال ا
 
 console.log('== پوشش ارشد (۱۱۴۲) ==');
 for (const row of master.byYear) {
-  console.log(`  ${row.year}: ${row.available} از ${row.declared} (${row.percent}٪)`);
+  const verifiedMark = row.declaredVerified ? '' : ' [مخرج بی‌شاهد]';
+  console.log(`  ${row.year}: ${row.available} از ${row.declared} (${row.percent}٪)${verifiedMark}`);
 }
 console.log(`  جمع: ${master.available} از ${master.declared} (${master.percent}٪) در ${master.bookletCount} دفترچه`);
+console.log(
+  `  کلید رسمی روی مخرج تأییدشده: ${master.verifiedAvailable} از ${master.verifiedDeclared} ` +
+    `(${master.percentVsVerified}٪؛ سال‌های با مخرج بی‌شاهد در این کسر نیستند)`,
+);
 console.log('== پوشش دکتری (۲۱۶۲) ==');
 console.log(`  سؤال ثبت‌شده: ${doctorate.available} — دفترچهٔ رسمی ثبت‌شده: ${doctorate.bookletCount}`);
 console.log('== کلید ==');

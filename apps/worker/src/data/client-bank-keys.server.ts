@@ -705,6 +705,364 @@ export const CLIENT_BANK_ANSWER_KEYS: readonly ClientBankAnswerKey[] = [
   { id: "q.k1403.4", bank: "examArchiveImported", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 4 (official-key:1403:4).", trapNote: "" },
   { id: "q.k1403.5", bank: "examArchiveImported", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 5 (official-key:1403:5).", trapNote: "" },
   { id: "q.k1403.6", bank: "examArchiveImported", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 6 (official-key:1403:6).", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1396.107", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 107 (official-key:1396:107).", trapNote: "" },
+  { id: "q.k1396.108", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 108 (official-key:1396:108).", trapNote: "" },
+  { id: "q.k1396.181", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 181 (official-key:1396:181).", trapNote: "" },
+  { id: "q.k1396.187", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 187 (official-key:1396:187).", trapNote: "" },
+  { id: "q.k1396.192", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 192 (official-key:1396:192).", trapNote: "" },
+  { id: "q.k1396.193", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 193 (official-key:1396:193).", trapNote: "" },
+  { id: "q.k1396.194", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 194 (official-key:1396:194).", trapNote: "" },
+  { id: "q.k1396.197", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 197 (official-key:1396:197).", trapNote: "" },
+  { id: "q.k1396.198", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 198 (official-key:1396:198).", trapNote: "" },
+  { id: "q.k1396.199", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 199 (official-key:1396:199).", trapNote: "" },
+  { id: "q.k1396.200", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 200 (official-key:1396:200).", trapNote: "" },
+  { id: "q.k1396.201", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 201 (official-key:1396:201).", trapNote: "" },
+  { id: "q.k1396.34", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 34 (official-key:1396:34).", trapNote: "" },
+  { id: "q.k1396.36", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 36 (official-key:1396:36).", trapNote: "" },
+  { id: "q.k1396.37", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 37 (official-key:1396:37).", trapNote: "" },
+  { id: "q.k1396.40", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 40 (official-key:1396:40).", trapNote: "" },
+  { id: "q.k1396.41", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 41 (official-key:1396:41).", trapNote: "" },
+  { id: "q.k1396.42", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 42 (official-key:1396:42).", trapNote: "" },
+  { id: "q.k1396.43", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 43 (official-key:1396:43).", trapNote: "" },
+  { id: "q.k1396.67", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 67 (official-key:1396:67).", trapNote: "" },
+  { id: "q.k1396.68", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 68 (official-key:1396:68).", trapNote: "" },
+  { id: "q.k1396.71", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 71 (official-key:1396:71).", trapNote: "" },
+  { id: "q.k1396.77", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 77 (official-key:1396:77).", trapNote: "" },
+  { id: "q.k1396.81", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 81 (official-key:1396:81).", trapNote: "" },
+  { id: "q.k1396.82", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 82 (official-key:1396:82).", trapNote: "" },
+  { id: "q.k1396.83", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 83 (official-key:1396:83).", trapNote: "" },
+  { id: "q.k1396.84", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 84 (official-key:1396:84).", trapNote: "" },
+  { id: "q.k1396.86", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 86 (official-key:1396:86).", trapNote: "" },
+  { id: "q.k1396.87", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 87 (official-key:1396:87).", trapNote: "" },
+  { id: "q.k1396.88", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 88 (official-key:1396:88).", trapNote: "" },
+  { id: "q.k1396.91", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1396، سؤال 91 (official-key:1396:91).", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1397.104", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 104 (official-key:1397:104).", trapNote: "" },
+  { id: "q.k1397.105", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 105 (official-key:1397:105).", trapNote: "" },
+  { id: "q.k1397.107", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 107 (official-key:1397:107).", trapNote: "" },
+  { id: "q.k1397.109", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 109 (official-key:1397:109).", trapNote: "" },
+  { id: "q.k1397.112", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 112 (official-key:1397:112).", trapNote: "" },
+  { id: "q.k1397.114", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 114 (official-key:1397:114).", trapNote: "" },
+  { id: "q.k1397.115", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 115 (official-key:1397:115).", trapNote: "" },
+  { id: "q.k1397.187", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 187 (official-key:1397:187).", trapNote: "" },
+  { id: "q.k1397.191", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 191 (official-key:1397:191).", trapNote: "" },
+  { id: "q.k1397.192", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 192 (official-key:1397:192).", trapNote: "" },
+  { id: "q.k1397.193", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 193 (official-key:1397:193).", trapNote: "" },
+  { id: "q.k1397.194", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 194 (official-key:1397:194).", trapNote: "" },
+  { id: "q.k1397.195", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 195 (official-key:1397:195).", trapNote: "" },
+  { id: "q.k1397.196", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 196 (official-key:1397:196).", trapNote: "" },
+  { id: "q.k1397.198", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 198 (official-key:1397:198).", trapNote: "" },
+  { id: "q.k1397.199", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 199 (official-key:1397:199).", trapNote: "" },
+  { id: "q.k1397.200", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 200 (official-key:1397:200).", trapNote: "" },
+  { id: "q.k1397.32", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 32 (official-key:1397:32).", trapNote: "" },
+  { id: "q.k1397.34", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 34 (official-key:1397:34).", trapNote: "" },
+  { id: "q.k1397.35", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 35 (official-key:1397:35).", trapNote: "" },
+  { id: "q.k1397.38", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 38 (official-key:1397:38).", trapNote: "" },
+  { id: "q.k1397.42", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 42 (official-key:1397:42).", trapNote: "" },
+  { id: "q.k1397.43", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 43 (official-key:1397:43).", trapNote: "" },
+  { id: "q.k1397.44", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 44 (official-key:1397:44).", trapNote: "" },
+  { id: "q.k1397.45", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 45 (official-key:1397:45).", trapNote: "" },
+  { id: "q.k1397.66", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 66 (official-key:1397:66).", trapNote: "" },
+  { id: "q.k1397.67", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 67 (official-key:1397:67).", trapNote: "" },
+  { id: "q.k1397.68", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 68 (official-key:1397:68).", trapNote: "" },
+  { id: "q.k1397.69", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 69 (official-key:1397:69).", trapNote: "" },
+  { id: "q.k1397.71", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 71 (official-key:1397:71).", trapNote: "" },
+  { id: "q.k1397.76", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 76 (official-key:1397:76).", trapNote: "" },
+  { id: "q.k1397.77", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 77 (official-key:1397:77).", trapNote: "" },
+  { id: "q.k1397.80", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 80 (official-key:1397:80).", trapNote: "" },
+  { id: "q.k1397.84", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 84 (official-key:1397:84).", trapNote: "" },
+  { id: "q.k1397.86", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 86 (official-key:1397:86).", trapNote: "" },
+  { id: "q.k1397.87", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 87 (official-key:1397:87).", trapNote: "" },
+  { id: "q.k1397.91", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 91 (official-key:1397:91).", trapNote: "" },
+  { id: "q.k1397.94", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 94 (official-key:1397:94).", trapNote: "" },
+  { id: "q.k1397.97", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 97 (official-key:1397:97).", trapNote: "" },
+  { id: "q.k1397.99", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 99 (official-key:1397:99).", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1398.107", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 107 (official-key:1398:107).", trapNote: "" },
+  { id: "q.k1398.108", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 108 (official-key:1398:108).", trapNote: "" },
+  { id: "q.k1398.114", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 114 (official-key:1398:114).", trapNote: "" },
+  { id: "q.k1398.176", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 176 (official-key:1398:176).", trapNote: "" },
+  { id: "q.k1398.178", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 178 (official-key:1398:178).", trapNote: "" },
+  { id: "q.k1398.179", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 179 (official-key:1398:179).", trapNote: "" },
+  { id: "q.k1398.182", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 182 (official-key:1398:182).", trapNote: "" },
+  { id: "q.k1398.192", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 192 (official-key:1398:192).", trapNote: "" },
+  { id: "q.k1398.193", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 193 (official-key:1398:193).", trapNote: "" },
+  { id: "q.k1398.194", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 194 (official-key:1398:194).", trapNote: "" },
+  { id: "q.k1398.196", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 196 (official-key:1398:196).", trapNote: "" },
+  { id: "q.k1398.197", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 197 (official-key:1398:197).", trapNote: "" },
+  { id: "q.k1398.198", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 198 (official-key:1398:198).", trapNote: "" },
+  { id: "q.k1398.200", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 200 (official-key:1398:200).", trapNote: "" },
+  { id: "q.k1398.201", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 201 (official-key:1398:201).", trapNote: "" },
+  { id: "q.k1398.203", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 203 (official-key:1398:203).", trapNote: "" },
+  { id: "q.k1398.204", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 204 (official-key:1398:204).", trapNote: "" },
+  { id: "q.k1398.31", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 31 (official-key:1398:31).", trapNote: "" },
+  { id: "q.k1398.32", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 32 (official-key:1398:32).", trapNote: "" },
+  { id: "q.k1398.34", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 34 (official-key:1398:34).", trapNote: "" },
+  { id: "q.k1398.36", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 36 (official-key:1398:36).", trapNote: "" },
+  { id: "q.k1398.38", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 38 (official-key:1398:38).", trapNote: "" },
+  { id: "q.k1398.39", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 39 (official-key:1398:39).", trapNote: "" },
+  { id: "q.k1398.40", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 40 (official-key:1398:40).", trapNote: "" },
+  { id: "q.k1398.43", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 43 (official-key:1398:43).", trapNote: "" },
+  { id: "q.k1398.68", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 68 (official-key:1398:68).", trapNote: "" },
+  { id: "q.k1398.69", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 69 (official-key:1398:69).", trapNote: "" },
+  { id: "q.k1398.71", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 71 (official-key:1398:71).", trapNote: "" },
+  { id: "q.k1398.75", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 75 (official-key:1398:75).", trapNote: "" },
+  { id: "q.k1398.76", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 76 (official-key:1398:76).", trapNote: "" },
+  { id: "q.k1398.77", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 77 (official-key:1398:77).", trapNote: "" },
+  { id: "q.k1398.78", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 78 (official-key:1398:78).", trapNote: "" },
+  { id: "q.k1398.85", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 85 (official-key:1398:85).", trapNote: "" },
+  { id: "q.k1398.86", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 86 (official-key:1398:86).", trapNote: "" },
+  { id: "q.k1398.88", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 88 (official-key:1398:88).", trapNote: "" },
+  { id: "q.k1398.90", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 90 (official-key:1398:90).", trapNote: "" },
+  { id: "q.k1398.92", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 92 (official-key:1398:92).", trapNote: "" },
+  { id: "q.k1398.93", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 93 (official-key:1398:93).", trapNote: "" },
+  { id: "q.k1398.95", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 95 (official-key:1398:95).", trapNote: "" },
+  { id: "q.k1398.96", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 96 (official-key:1398:96).", trapNote: "" },
+  { id: "q.k1398.99", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1398، سؤال 99 (official-key:1398:99).", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1399.104", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 104 (official-key:1399:104).", trapNote: "" },
+  { id: "q.k1399.112", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 112 (official-key:1399:112).", trapNote: "" },
+  { id: "q.k1399.114", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 114 (official-key:1399:114).", trapNote: "" },
+  { id: "q.k1399.183", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 183 (official-key:1399:183).", trapNote: "" },
+  { id: "q.k1399.189", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 189 (official-key:1399:189).", trapNote: "" },
+  { id: "q.k1399.190", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 190 (official-key:1399:190).", trapNote: "" },
+  { id: "q.k1399.191", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 191 (official-key:1399:191).", trapNote: "" },
+  { id: "q.k1399.192", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 192 (official-key:1399:192).", trapNote: "" },
+  { id: "q.k1399.194", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 194 (official-key:1399:194).", trapNote: "" },
+  { id: "q.k1399.197", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 197 (official-key:1399:197).", trapNote: "" },
+  { id: "q.k1399.201", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 201 (official-key:1399:201).", trapNote: "" },
+  { id: "q.k1399.205", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 205 (official-key:1399:205).", trapNote: "" },
+  { id: "q.k1399.31", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 31 (official-key:1399:31).", trapNote: "" },
+  { id: "q.k1399.32", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 32 (official-key:1399:32).", trapNote: "" },
+  { id: "q.k1399.33", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 33 (official-key:1399:33).", trapNote: "" },
+  { id: "q.k1399.36", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 36 (official-key:1399:36).", trapNote: "" },
+  { id: "q.k1399.39", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 39 (official-key:1399:39).", trapNote: "" },
+  { id: "q.k1399.40", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 40 (official-key:1399:40).", trapNote: "" },
+  { id: "q.k1399.42", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 42 (official-key:1399:42).", trapNote: "" },
+  { id: "q.k1399.43", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 43 (official-key:1399:43).", trapNote: "" },
+  { id: "q.k1399.44", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 44 (official-key:1399:44).", trapNote: "" },
+  { id: "q.k1399.68", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 68 (official-key:1399:68).", trapNote: "" },
+  { id: "q.k1399.69", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 69 (official-key:1399:69).", trapNote: "" },
+  { id: "q.k1399.75", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 75 (official-key:1399:75).", trapNote: "" },
+  { id: "q.k1399.78", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 78 (official-key:1399:78).", trapNote: "" },
+  { id: "q.k1399.79", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 79 (official-key:1399:79).", trapNote: "" },
+  { id: "q.k1399.80", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 80 (official-key:1399:80).", trapNote: "" },
+  { id: "q.k1399.81", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 81 (official-key:1399:81).", trapNote: "" },
+  { id: "q.k1399.82", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 82 (official-key:1399:82).", trapNote: "" },
+  { id: "q.k1399.84", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 84 (official-key:1399:84).", trapNote: "" },
+  { id: "q.k1399.86", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 86 (official-key:1399:86).", trapNote: "" },
+  { id: "q.k1399.92", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 92 (official-key:1399:92).", trapNote: "" },
+  { id: "q.k1399.95", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 95 (official-key:1399:95).", trapNote: "" },
+  { id: "q.k1399.96", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 96 (official-key:1399:96).", trapNote: "" },
+  { id: "q.k1399.97", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 97 (official-key:1399:97).", trapNote: "" },
+  { id: "q.k1399.99", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1399، سؤال 99 (official-key:1399:99).", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1400.110", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 110 (official-key:1400:110).", trapNote: "" },
+  { id: "q.k1400.159", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 159 (official-key:1400:159).", trapNote: "" },
+  { id: "q.k1400.189", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 189 (official-key:1400:189).", trapNote: "" },
+  { id: "q.k1400.190", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 190 (official-key:1400:190).", trapNote: "" },
+  { id: "q.k1400.192", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 192 (official-key:1400:192).", trapNote: "" },
+  { id: "q.k1400.193", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 193 (official-key:1400:193).", trapNote: "" },
+  { id: "q.k1400.31", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 31 (official-key:1400:31).", trapNote: "" },
+  { id: "q.k1400.36", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 36 (official-key:1400:36).", trapNote: "" },
+  { id: "q.k1400.39", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 39 (official-key:1400:39).", trapNote: "" },
+  { id: "q.k1400.69", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 69 (official-key:1400:69).", trapNote: "" },
+  { id: "q.k1400.84", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 84 (official-key:1400:84).", trapNote: "" },
+  { id: "q.k1400.85", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 85 (official-key:1400:85).", trapNote: "" },
+  { id: "q.k1400.86", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 86 (official-key:1400:86).", trapNote: "" },
+  { id: "q.k1400.89", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 89 (official-key:1400:89).", trapNote: "" },
+  { id: "q.k1400.90", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 90 (official-key:1400:90).", trapNote: "" },
+  { id: "q.k1400.92", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 92 (official-key:1400:92).", trapNote: "" },
+  { id: "q.k1400.93", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 93 (official-key:1400:93).", trapNote: "" },
+  { id: "q.k1400.94", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 94 (official-key:1400:94).", trapNote: "" },
+  { id: "q.k1400.95", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 95 (official-key:1400:95).", trapNote: "" },
+  { id: "q.k1400.97", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1400، سؤال 97 (official-key:1400:97).", trapNote: "" },
+  { id: "q.k1401.113", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 113 (official-key:1401:113).", trapNote: "" },
+  { id: "q.k1401.176", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 176 (official-key:1401:176).", trapNote: "" },
+  { id: "q.k1401.179", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 179 (official-key:1401:179).", trapNote: "" },
+  { id: "q.k1401.185", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 185 (official-key:1401:185).", trapNote: "" },
+  { id: "q.k1401.191", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 191 (official-key:1401:191).", trapNote: "" },
+  { id: "q.k1401.193", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 193 (official-key:1401:193).", trapNote: "" },
+  { id: "q.k1401.194", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 194 (official-key:1401:194).", trapNote: "" },
+  { id: "q.k1401.195", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 195 (official-key:1401:195).", trapNote: "" },
+  { id: "q.k1401.196", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 196 (official-key:1401:196).", trapNote: "" },
+  { id: "q.k1401.197", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 197 (official-key:1401:197).", trapNote: "" },
+  { id: "q.k1401.198", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 198 (official-key:1401:198).", trapNote: "" },
+  { id: "q.k1401.199", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 199 (official-key:1401:199).", trapNote: "" },
+  { id: "q.k1401.200", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 200 (official-key:1401:200).", trapNote: "" },
+  { id: "q.k1401.201", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 201 (official-key:1401:201).", trapNote: "" },
+  { id: "q.k1401.202", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 202 (official-key:1401:202).", trapNote: "" },
+  { id: "q.k1401.203", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 203 (official-key:1401:203).", trapNote: "" },
+  { id: "q.k1401.204", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 204 (official-key:1401:204).", trapNote: "" },
+  { id: "q.k1401.31", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 31 (official-key:1401:31).", trapNote: "" },
+  { id: "q.k1401.32", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 32 (official-key:1401:32).", trapNote: "" },
+  { id: "q.k1401.34", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 34 (official-key:1401:34).", trapNote: "" },
+  { id: "q.k1401.36", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 36 (official-key:1401:36).", trapNote: "" },
+  { id: "q.k1401.37", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 37 (official-key:1401:37).", trapNote: "" },
+  { id: "q.k1401.39", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 39 (official-key:1401:39).", trapNote: "" },
+  { id: "q.k1401.41", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 41 (official-key:1401:41).", trapNote: "" },
+  { id: "q.k1401.42", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 42 (official-key:1401:42).", trapNote: "" },
+  { id: "q.k1401.44", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 44 (official-key:1401:44).", trapNote: "" },
+  { id: "q.k1401.45", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 45 (official-key:1401:45).", trapNote: "" },
+  { id: "q.k1401.66", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 66 (official-key:1401:66).", trapNote: "" },
+  { id: "q.k1401.67", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 67 (official-key:1401:67).", trapNote: "" },
+  { id: "q.k1401.68", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 68 (official-key:1401:68).", trapNote: "" },
+  { id: "q.k1401.69", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 69 (official-key:1401:69).", trapNote: "" },
+  { id: "q.k1401.76", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 76 (official-key:1401:76).", trapNote: "" },
+  { id: "q.k1401.78", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 78 (official-key:1401:78).", trapNote: "" },
+  { id: "q.k1401.80", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 80 (official-key:1401:80).", trapNote: "" },
+  { id: "q.k1401.84", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 84 (official-key:1401:84).", trapNote: "" },
+  { id: "q.k1401.85", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 85 (official-key:1401:85).", trapNote: "" },
+  { id: "q.k1401.86", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 86 (official-key:1401:86).", trapNote: "" },
+  { id: "q.k1401.88", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 88 (official-key:1401:88).", trapNote: "" },
+  { id: "q.k1401.92", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 92 (official-key:1401:92).", trapNote: "" },
+  { id: "q.k1401.93", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 93 (official-key:1401:93).", trapNote: "" },
+  { id: "q.k1401.98", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1401، سؤال 98 (official-key:1401:98).", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1402.100", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 100 (official-key:1402:100).", trapNote: "" },
+  { id: "q.k1402.101", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 101 (official-key:1402:101).", trapNote: "" },
+  { id: "q.k1402.175", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 175 (official-key:1402:175).", trapNote: "" },
+  { id: "q.k1402.178", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 178 (official-key:1402:178).", trapNote: "" },
+  { id: "q.k1402.26", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 26 (official-key:1402:26).", trapNote: "" },
+  { id: "q.k1402.28", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 28 (official-key:1402:28).", trapNote: "" },
+  { id: "q.k1402.29", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 29 (official-key:1402:29).", trapNote: "" },
+  { id: "q.k1402.30", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 30 (official-key:1402:30).", trapNote: "" },
+  { id: "q.k1402.31", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 31 (official-key:1402:31).", trapNote: "" },
+  { id: "q.k1402.32", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 32 (official-key:1402:32).", trapNote: "" },
+  { id: "q.k1402.64", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 64 (official-key:1402:64).", trapNote: "" },
+  { id: "q.k1402.75", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 75 (official-key:1402:75).", trapNote: "" },
+  { id: "q.k1402.77", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 77 (official-key:1402:77).", trapNote: "" },
+  { id: "q.k1402.80", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 80 (official-key:1402:80).", trapNote: "" },
+  { id: "q.k1402.86", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 86 (official-key:1402:86).", trapNote: "" },
+  { id: "q.k1402.95", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 95 (official-key:1402:95).", trapNote: "" },
+  { id: "q.k1402.96", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1402، سؤال 96 (official-key:1402:96).", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1397.100", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 100 (official-key:1397:100).", trapNote: "" },
+  { id: "q.k1397.202", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1397، سؤال 202 (official-key:1397:202).", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1403.169", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 169 (official-key:1403:169).", trapNote: "" },
+  { id: "q.k1403.171", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 171 (official-key:1403:171).", trapNote: "" },
+  { id: "q.k1403.175", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 175 (official-key:1403:175).", trapNote: "" },
+  { id: "q.k1403.181", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 181 (official-key:1403:181).", trapNote: "" },
+  { id: "q.k1403.183", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 183 (official-key:1403:183).", trapNote: "" },
+  { id: "q.k1403.184", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 184 (official-key:1403:184).", trapNote: "" },
+  { id: "q.k1403.187", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 187 (official-key:1403:187).", trapNote: "" },
+  { id: "q.k1403.188", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 188 (official-key:1403:188).", trapNote: "" },
+  { id: "q.k1403.191", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 191 (official-key:1403:191).", trapNote: "" },
+  { id: "q.k1403.192", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 192 (official-key:1403:192).", trapNote: "" },
+  { id: "q.k1403.193", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 193 (official-key:1403:193).", trapNote: "" },
+  { id: "q.k1403.194", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 194 (official-key:1403:194).", trapNote: "" },
+  { id: "q.k1403.195", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 195 (official-key:1403:195).", trapNote: "" },
+  { id: "q.k1403.26", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 26 (official-key:1403:26).", trapNote: "" },
+  { id: "q.k1403.27", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 27 (official-key:1403:27).", trapNote: "" },
+  { id: "q.k1403.29", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 29 (official-key:1403:29).", trapNote: "" },
+  { id: "q.k1403.40", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 40 (official-key:1403:40).", trapNote: "" },
+  { id: "q.k1403.56", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 56 (official-key:1403:56).", trapNote: "" },
+  { id: "q.k1403.61", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 61 (official-key:1403:61).", trapNote: "" },
+  { id: "q.k1403.63", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 63 (official-key:1403:63).", trapNote: "" },
+  { id: "q.k1403.65", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 65 (official-key:1403:65).", trapNote: "" },
+  { id: "q.k1403.66", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 66 (official-key:1403:66).", trapNote: "" },
+  { id: "q.k1403.67", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 67 (official-key:1403:67).", trapNote: "" },
+  { id: "q.k1403.69", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 69 (official-key:1403:69).", trapNote: "" },
+  { id: "q.k1403.71", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 71 (official-key:1403:71).", trapNote: "" },
+  { id: "q.k1403.86", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 86 (official-key:1403:86).", trapNote: "" },
+  { id: "q.k1403.88", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 88 (official-key:1403:88).", trapNote: "" },
+  { id: "q.k1403.90", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 90 (official-key:1403:90).", trapNote: "" },
+  { id: "q.k1403.91", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 91 (official-key:1403:91).", trapNote: "" },
+  { id: "q.k1403.98", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1403، سؤال 98 (official-key:1403:98).", trapNote: "" },
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+
+  /* ------------------------------------------------------------------
+   * سؤال‌هایی که از دفترچه‌های رسمی وارد شده‌اند (`src/data/examArchiveImported.ts`
+   * و `src/data/examArchivePersian.ts`). کلید این سؤال‌ها از شاهد کلید رسمی
+   * بازیابی‌شده آمده است و متن سؤال هرگز کلید را در بانک کلاینت نگه نمی‌دارد (R-036).
+   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.
+   * ------------------------------------------------------------------ */
+  { id: "q.k1404.171", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 171 (official-key:1404:171).", trapNote: "" },
+  { id: "q.k1404.172", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 172 (official-key:1404:172).", trapNote: "" },
+  { id: "q.k1404.174", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 174 (official-key:1404:174).", trapNote: "" },
+  { id: "q.k1404.178", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 178 (official-key:1404:178).", trapNote: "" },
+  { id: "q.k1404.181", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 181 (official-key:1404:181).", trapNote: "" },
+  { id: "q.k1404.182", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 182 (official-key:1404:182).", trapNote: "" },
+  { id: "q.k1404.183", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 183 (official-key:1404:183).", trapNote: "" },
+  { id: "q.k1404.185", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 185 (official-key:1404:185).", trapNote: "" },
+  { id: "q.k1404.189", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 189 (official-key:1404:189).", trapNote: "" },
+  { id: "q.k1404.190", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 190 (official-key:1404:190).", trapNote: "" },
+  { id: "q.k1404.192", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 192 (official-key:1404:192).", trapNote: "" },
+  { id: "q.k1404.193", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 193 (official-key:1404:193).", trapNote: "" },
+  { id: "q.k1404.194", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 194 (official-key:1404:194).", trapNote: "" },
+  { id: "q.k1404.195", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 195 (official-key:1404:195).", trapNote: "" },
+  { id: "q.k1404.26", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 26 (official-key:1404:26).", trapNote: "" },
+  { id: "q.k1404.27", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 27 (official-key:1404:27).", trapNote: "" },
+  { id: "q.k1404.29", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 29 (official-key:1404:29).", trapNote: "" },
+  { id: "q.k1404.31", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 31 (official-key:1404:31).", trapNote: "" },
+  { id: "q.k1404.34", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 34 (official-key:1404:34).", trapNote: "" },
+  { id: "q.k1404.35", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 35 (official-key:1404:35).", trapNote: "" },
+  { id: "q.k1404.36", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 36 (official-key:1404:36).", trapNote: "" },
+  { id: "q.k1404.62", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 62 (official-key:1404:62).", trapNote: "" },
+  { id: "q.k1404.68", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 68 (official-key:1404:68).", trapNote: "" },
+  { id: "q.k1404.78", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 78 (official-key:1404:78).", trapNote: "" },
+  { id: "q.k1404.79", bank: "examArchivePersian", correctOption: 3, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 79 (official-key:1404:79).", trapNote: "" },
+  { id: "q.k1404.83", bank: "examArchivePersian", correctOption: 0, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 83 (official-key:1404:83).", trapNote: "" },
+  { id: "q.k1404.85", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 85 (official-key:1404:85).", trapNote: "" },
+  { id: "q.k1404.89", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 89 (official-key:1404:89).", trapNote: "" },
+  { id: "q.k1404.95", bank: "examArchivePersian", correctOption: 1, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 95 (official-key:1404:95).", trapNote: "" },
+  { id: "q.k1404.96", bank: "examArchivePersian", correctOption: 2, explanation: "کلید رسمی بازیابی‌شدهٔ آزمون ارشد 1404، سؤال 96 (official-key:1404:96).", trapNote: "" },
 ];
 
 export const CLIENT_BANK_ANSWER_KEY_BY_ID: ReadonlyMap<string, ClientBankAnswerKey> =

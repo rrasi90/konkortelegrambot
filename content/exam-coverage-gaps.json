@@ -1,0 +1,316 @@
+{
+  "generatedAt": "2026-11-19T20:40:16.121Z",
+  "window": {
+    "from": 1396,
+    "to": 1405,
+    "years": 10,
+    "level": "ارشد"
+  },
+  "totals": {
+    "declared": 2925,
+    "inBank": 356,
+    "staged": 886,
+    "percentInBank": 12.2,
+    "percentWithStaged": 42.5,
+    "officialCoverage": 13.2,
+    "totalCoverage": 46.6,
+    "verifiedDenominator": 2355,
+    "verifiedYears": [
+      1396,
+      1397,
+      1398,
+      1399,
+      1400,
+      1401,
+      1402,
+      1403
+    ]
+  },
+  "doctorate": {
+    "inBank": 123,
+    "declared": null,
+    "note": "مخرج دکتری صفر است؛ تا ثبت دفترچهٔ رسمی درصد پوشش معنا ندارد."
+  },
+  "biggestGap": {
+    "year": 1405,
+    "declared": 285,
+    "declaredVerified": false,
+    "inBank": 9,
+    "missing": 276,
+    "percent": 3.2,
+    "extracted": 119,
+    "staged": 0,
+    "keyEntries": 0,
+    "keyStatus": "unknown",
+    "rangeComplete": true
+  },
+  "blockers": [
+    "1404: مخرج با شاهد دوم تأیید نشده؛ برای این سال درصد گزارش نمی‌شود",
+    "1405: مخرج با شاهد دوم تأیید نشده؛ برای این سال درصد گزارش نمی‌شود",
+    "1405: سند کلید رسمی در دسترس نیست",
+    "مالیه عمومی و بودجه: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
+    "مدیریت منابع انسانی: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
+    "مدیریت مالی: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
+    "مدیریت سرمایه‌گذاری و ریسک: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
+    "مبانی کارآفرینی: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
+    "حسابداری مالی و صنعتی: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
+    "دانش حمل‌ونقل: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
+    "دانش مدیریت بازرگانی و حمل‌ونقل: گرهٔ برنامهٔ درسی ندارد؛ سؤال این درس وارد بانک نمی‌شود",
+    "تحقیق در عملیات: پوشش 2٪ — سؤال‌های این درس در OCR قابل استخراج نیستند",
+    "ریاضی و آمار: پوشش 4٪ — سؤال‌های این درس در OCR قابل استخراج نیستند"
+  ],
+  "bySection": [
+    {
+      "sectionId": "public_finance",
+      "title": "مالیه عمومی و بودجه",
+      "declared": 150,
+      "inBank": 0,
+      "percent": 0
+    },
+    {
+      "sectionId": "human_resources",
+      "title": "مدیریت منابع انسانی",
+      "declared": 150,
+      "inBank": 0,
+      "percent": 0
+    },
+    {
+      "sectionId": "financial_management",
+      "title": "مدیریت مالی",
+      "declared": 150,
+      "inBank": 0,
+      "percent": 0
+    },
+    {
+      "sectionId": "investment_risk",
+      "title": "مدیریت سرمایه‌گذاری و ریسک",
+      "declared": 150,
+      "inBank": 0,
+      "percent": 0
+    },
+    {
+      "sectionId": "entrepreneurship",
+      "title": "مبانی کارآفرینی",
+      "declared": 150,
+      "inBank": 0,
+      "percent": 0
+    },
+    {
+      "sectionId": "accounting",
+      "title": "حسابداری مالی و صنعتی",
+      "declared": 150,
+      "inBank": 0,
+      "percent": 0
+    },
+    {
+      "sectionId": "transportation",
+      "title": "دانش حمل‌ونقل",
+      "declared": 150,
+      "inBank": 0,
+      "percent": 0
+    },
+    {
+      "sectionId": "business_transportation",
+      "title": "دانش مدیریت بازرگانی و حمل‌ونقل",
+      "declared": 300,
+      "inBank": 0,
+      "percent": 0
+    },
+    {
+      "sectionId": "publishing",
+      "title": "publishing",
+      "declared": 15,
+      "inBank": 0,
+      "percent": 0
+    },
+    {
+      "sectionId": "operations_research",
+      "title": "تحقیق در عملیات",
+      "declared": 150,
+      "inBank": 3,
+      "percent": 2
+    },
+    {
+      "sectionId": "math_stats",
+      "title": "ریاضی و آمار",
+      "declared": 200,
+      "inBank": 8,
+      "percent": 4
+    },
+    {
+      "sectionId": "english",
+      "title": "زبان عمومی و تخصصی (انگلیسی)",
+      "declared": 280,
+      "inBank": 21,
+      "percent": 7.5
+    },
+    {
+      "sectionId": "production",
+      "title": "مدیریت تولید",
+      "declared": 150,
+      "inBank": 31,
+      "percent": 20.7
+    },
+    {
+      "sectionId": "economics",
+      "title": "اقتصاد خرد و کلان",
+      "declared": 200,
+      "inBank": 49,
+      "percent": 24.5
+    },
+    {
+      "sectionId": "management_theories",
+      "title": "تئوری‌های مدیریت",
+      "declared": 280,
+      "inBank": 103,
+      "percent": 36.8
+    },
+    {
+      "sectionId": "islamic",
+      "title": "اصول و مبانی مدیریت از دیدگاه اسلام",
+      "declared": 150,
+      "inBank": 66,
+      "percent": 44
+    },
+    {
+      "sectionId": "marketing",
+      "title": "بازاریابی",
+      "declared": 150,
+      "inBank": 75,
+      "percent": 50
+    }
+  ],
+  "rows": [
+    {
+      "year": 1396,
+      "declared": 310,
+      "declaredVerified": true,
+      "inBank": 36,
+      "missing": 274,
+      "percent": 11.6,
+      "extracted": 142,
+      "staged": 122,
+      "keyEntries": 310,
+      "keyStatus": "preliminary",
+      "rangeComplete": true
+    },
+    {
+      "year": 1397,
+      "declared": 295,
+      "declaredVerified": true,
+      "inBank": 46,
+      "missing": 249,
+      "percent": 15.6,
+      "extracted": 133,
+      "staged": 114,
+      "keyEntries": 295,
+      "keyStatus": "preliminary",
+      "rangeComplete": true
+    },
+    {
+      "year": 1398,
+      "declared": 295,
+      "declaredVerified": true,
+      "inBank": 45,
+      "missing": 250,
+      "percent": 15.3,
+      "extracted": 141,
+      "staged": 122,
+      "keyEntries": 295,
+      "keyStatus": "preliminary",
+      "rangeComplete": true
+    },
+    {
+      "year": 1399,
+      "declared": 295,
+      "declaredVerified": true,
+      "inBank": 40,
+      "missing": 255,
+      "percent": 13.6,
+      "extracted": 117,
+      "staged": 93,
+      "keyEntries": 295,
+      "keyStatus": "preliminary",
+      "rangeComplete": true
+    },
+    {
+      "year": 1400,
+      "declared": 295,
+      "declaredVerified": true,
+      "inBank": 25,
+      "missing": 270,
+      "percent": 8.5,
+      "extracted": 98,
+      "staged": 54,
+      "keyEntries": 236,
+      "keyStatus": "preliminary",
+      "rangeComplete": true
+    },
+    {
+      "year": 1401,
+      "declared": 295,
+      "declaredVerified": true,
+      "inBank": 45,
+      "missing": 250,
+      "percent": 15.3,
+      "extracted": 133,
+      "staged": 110,
+      "keyEntries": 295,
+      "keyStatus": "unknown",
+      "rangeComplete": true
+    },
+    {
+      "year": 1402,
+      "declared": 285,
+      "declaredVerified": true,
+      "inBank": 34,
+      "missing": 251,
+      "percent": 11.9,
+      "extracted": 103,
+      "staged": 73,
+      "keyEntries": 270,
+      "keyStatus": "unknown",
+      "rangeComplete": true
+    },
+    {
+      "year": 1403,
+      "declared": 285,
+      "declaredVerified": true,
+      "inBank": 41,
+      "missing": 244,
+      "percent": 14.4,
+      "extracted": 113,
+      "staged": 98,
+      "keyEntries": 285,
+      "keyStatus": "preliminary",
+      "rangeComplete": true
+    },
+    {
+      "year": 1404,
+      "declared": 285,
+      "declaredVerified": false,
+      "inBank": 35,
+      "missing": 250,
+      "percent": 12.3,
+      "extracted": 118,
+      "staged": 100,
+      "keyEntries": 293,
+      "keyStatus": "unknown",
+      "rangeComplete": true
+    },
+    {
+      "year": 1405,
+      "declared": 285,
+      "declaredVerified": false,
+      "inBank": 9,
+      "missing": 276,
+      "percent": 3.2,
+      "extracted": 119,
+      "staged": 0,
+      "keyEntries": 0,
+      "keyStatus": "unknown",
+      "rangeComplete": true
+    }
+  ],
+  "stagingGeneratedAt": "2026-11-19T18:37:10.938Z"
+}

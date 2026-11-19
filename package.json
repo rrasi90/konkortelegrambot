@@ -49,6 +49,9 @@
     "v2:summary": "node scripts/v2/ledger.mjs summary",
     "v2:reading-notes": "node scripts/v2/reading-notes-check.mjs",
     "exam:inventory": "node --import tsx scripts/exam-inventory.mts",
+    "exam:gaps": "node --import tsx scripts/exam-gaps.mts",
+    "exam:promote": "node --import tsx scripts/promote-exam-review.mts",
+    "exam:keys:sync": "node --import tsx scripts/add-exam-archive-keys.mts",
     "import:exam-persian": "node --import tsx scripts/import-exam-persian.mts"
   },
   "dependencies": {

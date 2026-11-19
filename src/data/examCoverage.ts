@@ -26,6 +26,8 @@ export interface CoverageYearRow {
   available: number;
   /** درصد پوشش، گردشده تا یک رقم اعشار */
   percent: number;
+  /** آیا مخرج این سال با شاهد دوم تأیید شده است؟ */
+  declaredVerified: boolean;
   level: ExamLevel;
 }
 
@@ -34,6 +36,12 @@ export interface CoverageReport {
   declared: number;
   available: number;
   percent: number;
+  /** جمع مخرج فقط سال‌های با مخرج تأییدشده. */
+  verifiedDeclared: number;
+  /** سؤال موجود فقط در سال‌های با مخرج تأییدشده. */
+  verifiedAvailable: number;
+  /** درصد پوشش فقط نسبت به مخرج تأییدشده؛ سال بی‌شاهد درصد نمی‌گیرد. */
+  percentVsVerified: number;
   bookletCount: number;
   byYear: CoverageYearRow[];
   /** آیا برای این سطح، اصلاً دفترچه‌ای ثبت شده است؟ */
@@ -71,6 +79,7 @@ export function getArshadCoverage(): CoverageReport {
         declared: booklet.totalQuestionsInBooklet,
         available,
         percent: percentOf(available, booklet.totalQuestionsInBooklet),
+        declaredVerified: booklet.declaredVerified === true,
         level: 'ارشد' as ExamLevel,
       };
     })
@@ -78,12 +87,17 @@ export function getArshadCoverage(): CoverageReport {
 
   const declared = byYear.reduce((sum, r) => sum + r.declared, 0);
   const available = byYear.reduce((sum, r) => sum + r.available, 0);
+  const verifiedDeclared = byYear.reduce((sum, r) => sum + (r.declaredVerified ? r.declared : 0), 0);
+  const verifiedAvailable = byYear.reduce((sum, r) => sum + (r.declaredVerified ? r.available : 0), 0);
 
   return {
     level: 'ارشد',
     declared,
     available,
     percent: percentOf(available, declared),
+    verifiedDeclared,
+    verifiedAvailable,
+    percentVsVerified: percentOf(verifiedAvailable, verifiedDeclared),
     bookletCount: booklets.length,
     byYear,
     hasBooklets: booklets.length > 0,
@@ -111,6 +125,9 @@ export function getDoctorateCoverage(): CoverageReport {
     declared: 0,
     available: doctorateQuestions.length,
     percent: 0,
+    verifiedDeclared: 0,
+    verifiedAvailable: 0,
+    percentVsVerified: 0,
     bookletCount: 0,
     byYear: [],
     hasBooklets: false,
@@ -156,6 +173,11 @@ export function getCoverageVerdicts(): string[] {
   verdicts.push(
     `بانک آرشیو سؤالات: ${arshad.available} سؤال از ${arshad.declared} سؤال اعلام‌شده در ` +
       `${arshad.bookletCount} دفترچهٔ ارشد (${arshad.percent}٪).`
+  );
+
+  verdicts.push(
+    `پوشش تأییدشده: ${arshad.verifiedAvailable} از ${arshad.verifiedDeclared} در سال‌هایی که ` +
+      `مخرجشان با شاهد دوم خوانده (${arshad.percentVsVerified}٪). سال‌های بی‌شاهد در این کسر نیستند.`
   );
 
   verdicts.push(
