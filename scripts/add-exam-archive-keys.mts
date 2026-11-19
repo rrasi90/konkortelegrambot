@@ -24,16 +24,21 @@ interface SidecarEntry {
   source: string;
   /** نام بانکی که کلید در رجیستری به آن نسبت داده می‌شود. */
   bank?: string;
+  /** توضیح آماده (کلیدهای استنباطی استدلال خودشان را دارند). */
+  explanation?: string;
+  /** دام طراح از رد گزینه‌ها. */
+  trapNote?: string;
 }
 
 interface Sidecar {
   keys: Record<string, SidecarEntry>;
 }
 
-/** کلید سؤال‌های انگلیسی واردشده و کلید سؤال‌های فارسی بازبینی‌شده، دو سند جدا دارند. */
+/** کلیدهای واردشده انگلیسی، فارسی بازبینی‌شده و استنباطی؛ سه سند جدا. */
 const sidecarPaths = [
   join(root, 'apps', 'worker', 'src', 'data', 'exam-archive-keys.json'),
   join(root, 'apps', 'worker', 'src', 'data', 'exam-persian-keys.json'),
+  join(root, 'apps', 'worker', 'src', 'data', 'exam-derived-keys.json'),
 ];
 
 const merged: Sidecar = { keys: {} };
@@ -49,7 +54,7 @@ const sidecar = merged;
 const bankOf = (entry: SidecarEntry): string => entry.bank ?? 'examArchiveImported';
 
 const ENTRY = /\{ id: "([^"]+)", bank: "([^"]+)", correctOption: (\d+)/g;
-const derived = new Set(['examArchiveImported', 'examArchivePersian']);
+const derived = new Set(['examArchiveImported', 'examArchivePersian', 'examArchiveDerived']);
 
 const registry = readFileSync(registryPath, 'utf8');
 
@@ -95,8 +100,11 @@ const block = [
   '   * این بلوک با scripts/add-exam-archive-keys.mts اضافه شده است.',
   '   * ------------------------------------------------------------------ */',
   ...additions.map(([id, entry]) => {
-    const explanation = `کلید رسمی بازیابی‌شدهٔ آزمون ارشد ${entry.examYear}، سؤال ${entry.bookletQuestionNumber} (${entry.source}).`;
-    return `  { id: ${JSON.stringify(id)}, bank: ${JSON.stringify(bankOf(entry))}, correctOption: ${entry.correctOption}, explanation: ${JSON.stringify(explanation)}, trapNote: "" },`;
+    const explanation =
+      entry.explanation ??
+      `کلید رسمی بازیابی‌شدهٔ آزمون ارشد ${entry.examYear}، سؤال ${entry.bookletQuestionNumber} (${entry.source}).`;
+    const trapNote = entry.trapNote ?? '';
+    return `  { id: ${JSON.stringify(id)}, bank: ${JSON.stringify(bankOf(entry))}, correctOption: ${entry.correctOption}, explanation: ${JSON.stringify(explanation)}, trapNote: ${JSON.stringify(trapNote)} },`;
   }),
   '',
 ].join('\n');

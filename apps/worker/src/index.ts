@@ -2648,6 +2648,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
         correctOption: key.correctOption,
         explanation: key.explanation,
         trapNote: key.trapNote,
+        keySource: key.bank === 'examArchiveDerived' ? 'derived' : 'official',
         replay: true,
       });
     }
@@ -2688,6 +2689,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       correctOption: key.correctOption,
       explanation: key.explanation,
       trapNote: key.trapNote,
+      keySource: key.bank === 'examArchiveDerived' ? 'derived' : 'official',
       replay: false,
     });
   });
@@ -2710,6 +2712,7 @@ export function createApp(env: Env, options: CreateAppOptions = {}): Hono<{ Vari
       correctOption: key.correctOption,
       explanation: key.explanation,
       trapNote: key.trapNote,
+      keySource: key.bank === 'examArchiveDerived' ? 'derived' : 'official',
       answeredAt: existing.answeredAt,
     });
   });

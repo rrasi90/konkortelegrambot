@@ -43,6 +43,20 @@ const evidence = JSON.parse(
 ) as { years: Record<string, { keyStatus: string; entries: Record<string, number> }> };
 
 const stagingPath = join(root, 'content', 'exam-import-staging', 'ocr-persian', 'report.json');
+
+/** سه سند کلید: رسمی واردشده، رسمی بازبینی‌شده فارسی، و استنباطی. */
+interface Sidecar { keys: Record<string, { source: string }> }
+const readSidecar = (name: string): Sidecar => {
+  const path = join(root, 'apps', 'worker', 'src', 'data', name);
+  return existsSync(path)
+    ? (JSON.parse(readFileSync(path, 'utf8')) as Sidecar)
+    : { keys: {} };
+};
+const officialSidecarIds = new Set<string>([
+  ...Object.keys(readSidecar('exam-archive-keys.json').keys),
+  ...Object.keys(readSidecar('exam-persian-keys.json').keys),
+]);
+const derivedSidecarIds = new Set<string>(Object.keys(readSidecar('exam-derived-keys.json').keys));
 const staging = existsSync(stagingPath)
   ? (JSON.parse(readFileSync(stagingPath, 'utf8')) as {
       generatedAt: string;
@@ -70,8 +84,13 @@ const windowYears = masters
 
 const rows = windowYears.map((year) => {
   const booklet = masters.find((item) => item.year === year)!;
-  const inBank = YEARLY_KONKOR_QUESTIONS.filter(
+  const yearQuestions = YEARLY_KONKOR_QUESTIONS.filter(
     (question) => question.examYear === year && (question.examLevel ?? 'ارشد') === 'ارشد',
+  );
+  const inBank = yearQuestions.length;
+  const officialInBank = yearQuestions.filter((question) => officialSidecarIds.has(question.id)).length;
+  const derivedInBank = yearQuestions.filter(
+    (question) => derivedSidecarIds.has(question.id) && !officialSidecarIds.has(question.id),
   ).length;
   const declared = booklet.totalQuestionsInBooklet;
   const record = staging?.report.find((item) => item.year === year);
@@ -85,6 +104,8 @@ const rows = windowYears.map((year) => {
     declared,
     declaredVerified: booklet.declaredVerified === true,
     inBank,
+    officialInBank,
+    derivedInBank,
     missing: declared - inBank,
     percent: declared === 0 ? 0 : Math.round((inBank / declared) * 1000) / 10,
     extracted: record?.extracted ?? 0,
@@ -131,6 +152,8 @@ const stagedTotal = rows.reduce((sum, row) => sum + row.staged, 0);
 const verifiedRows = rows.filter((row) => row.declaredVerified);
 const verifiedDeclaredTotal = verifiedRows.reduce((sum, row) => sum + row.declared, 0);
 const verifiedBankTotal = verifiedRows.reduce((sum, row) => sum + row.inBank, 0);
+const verifiedOfficialTotal = verifiedRows.reduce((sum, row) => sum + row.officialInBank, 0);
+const verifiedDerivedTotal = verifiedRows.reduce((sum, row) => sum + row.derivedInBank, 0);
 const verifiedStagedTotal = verifiedRows.reduce((sum, row) => sum + row.staged, 0);
 const biggest = [...rows].sort((a, b) => b.missing - a.missing)[0] ?? null;
 
@@ -172,13 +195,16 @@ const ledger = {
     percentInBank: declaredTotal === 0 ? 0 : Math.round((bankTotal / declaredTotal) * 1000) / 10,
     percentWithStaged:
       declaredTotal === 0 ? 0 : Math.round(((bankTotal + stagedTotal) / declaredTotal) * 1000) / 10,
-    /** دو عدد جدای پوشش؛ هرگز با هم مخلوط نمی‌شوند. */
+    /** دو عدد جدای پوشش؛ هرگز با هم مخلوط نمی‌شوند (§۰ برنامه). */
     officialCoverage: verifiedDeclaredTotal === 0
       ? null
-      : Math.round((verifiedBankTotal / verifiedDeclaredTotal) * 1000) / 10,
+      : Math.round((verifiedOfficialTotal / verifiedDeclaredTotal) * 1000) / 10,
+    derivedCoverageAdditive: verifiedDeclaredTotal === 0
+      ? null
+      : Math.round((verifiedDerivedTotal / verifiedDeclaredTotal) * 1000) / 10,
     totalCoverage: verifiedDeclaredTotal === 0
       ? null
-      : Math.round(((verifiedBankTotal + verifiedStagedTotal) / verifiedDeclaredTotal) * 1000) / 10,
+      : Math.round(((verifiedOfficialTotal + verifiedDerivedTotal) / verifiedDeclaredTotal) * 1000) / 10,
     verifiedDenominator: verifiedDeclaredTotal,
     verifiedYears: verifiedRows.map((row) => row.year),
   },
@@ -204,12 +230,12 @@ if (asJson) {
   console.log(JSON.stringify(ledger, null, 2));
 } else {
   const lines = [
-    `| سال | اعلامی | مخرج | در بانک | درصد | استخراج‌شده | آمادهٔ بازبینی | کلید | بازهٔ درس |`,
-    `| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | --- |`,
+    `| سال | اعلامی | مخرج | در بانک | رسمی | استنباطی | درصد | استخراج‌شده | آمادهٔ بازبینی | کلید | بازهٔ درس |`,
+    `| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |`,
   ];
   for (const row of rows) {
     lines.push(
-      `| ${row.year} | ${row.declared} | ${row.declaredVerified ? 'تأییدشده' : 'بی‌شاهد'} | ${row.inBank} | ${row.declaredVerified ? `${row.percent}٪` : `— (${row.inBank} سؤال)`} | ${row.extracted} | ${row.staged} | ${row.keyEntries} (${row.keyStatus}) | ${row.rangeComplete ? 'کامل' : 'ناقص'} |`,
+      `| ${row.year} | ${row.declared} | ${row.declaredVerified ? 'تأییدشده' : 'بی‌شاهد'} | ${row.inBank} | ${row.officialInBank} | ${row.derivedInBank} | ${row.declaredVerified ? `${row.percent}٪` : `— (${row.inBank} سؤال)`} | ${row.extracted} | ${row.staged} | ${row.keyEntries} (${row.keyStatus}) | ${row.rangeComplete ? 'کامل' : 'ناقص'} |`,
     );
   }
   console.log(lines.join('\n'));
@@ -219,9 +245,10 @@ if (asJson) {
   );
   if (verifiedDeclaredTotal > 0) {
     console.log(
-      `پوشش رسمی روی مخرج تأییدشده (${verifiedRows.map((row) => row.year).join('، ')}): ` +
-        `${verifiedBankTotal} از ${verifiedDeclaredTotal}، یعنی ${ledger.totals.officialCoverage}٪؛ ` +
-        `با نامزدهای بازبینی‌شده ${ledger.totals.totalCoverage}٪.`,
+      `پوشش روی مخرج تأییدشده (${verifiedRows.map((row) => row.year).join('، ')}): ` +
+        `کلید رسمی ${verifiedOfficialTotal} از ${verifiedDeclaredTotal}، یعنی ${ledger.totals.officialCoverage}٪؛ ` +
+        `کلید استنباطی ${verifiedDerivedTotal} سؤال (${ledger.totals.derivedCoverageAdditive}٪ افزوده)؛ ` +
+        `مجموع دو مسیر: ${ledger.totals.totalCoverage}٪.`,
     );
   }
   console.log(

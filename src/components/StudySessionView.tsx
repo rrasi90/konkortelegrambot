@@ -53,7 +53,7 @@ interface StudySessionViewProps {
     selectedOption: number | null;
     confidence: 'high' | 'low';
     responseTimeMs: number;
-  }) => Promise<{ report: RippleReport; snapshot: SnapshotForRollback; reveal?: { correctOption: number; explanation: string; trapNote: string }; reviewCard?: MistakeReviewOutcome | null }>;
+  }) => Promise<{ report: RippleReport; snapshot: SnapshotForRollback; reveal?: { correctOption: number; explanation: string; trapNote: string; keySource?: 'official' | 'derived' }; reviewCard?: MistakeReviewOutcome | null }>;
   onRollbackSlip: (snapshot: SnapshotForRollback, report: RippleReport) => RippleReport;
   onRateLessonInSession: (nodeId: string, rating: 1 | 2 | 3 | 4 | 5) => string;
   onDismissNonQuestionCard: (cardId: string) => void;
@@ -101,7 +101,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
   const [isFinished, setIsFinished] = useState(false);
   const [confidence, setConfidence] = useState<'high' | 'low'>('high');
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string }>>({});
+  const [questionReveals, setQuestionReveals] = useState<Record<string, { correctOption: number; explanation: string; trapNote: string; keySource?: 'official' | 'derived' }>>({});
   const [gradingNotice, setGradingNotice] = useState<string | null>(null);
   const [reviewNotice, setReviewNotice] = useState<string | null>(null);
   const [mistakeReasonSaved, setMistakeReasonSaved] = useState<MistakeErrorType | null>(null);
@@ -226,7 +226,7 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
     setSelectedOption(choice);
 
     void (async () => {
-    let reveal: { correctOption: number; explanation: string; trapNote: string } | undefined;
+    let reveal: { correctOption: number; explanation: string; trapNote: string; keySource?: 'official' | 'derived' } | undefined;
     try {
       const out = await onSubmitAnswer({
       card: currentCard,
@@ -663,6 +663,11 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
           </div>
 
           <div className="text-xs text-slate-600 dark:text-slate-400 leading-6">
+            {activeReveal?.keySource === 'derived' && (
+              <div className="mb-2 inline-flex items-center rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                <span>کلید استنباطی؛ بدون پاسخنامهٔ رسمی</span>
+              </div>
+            )}
             <span className="font-bold text-slate-800 dark:text-slate-200">پاسخ تشریحی تست مرجع: </span>
             <MathText text={activeReveal?.explanation ?? ''} />
           </div>
@@ -933,6 +938,11 @@ export const StudySessionView: React.FC<StudySessionViewProps> = ({
                 </div>
 
                 <div className="text-slate-800 dark:text-slate-200 leading-7 whitespace-pre-line">
+                  {activeReveal?.keySource === 'derived' && (
+                    <div className="mb-2 inline-flex items-center rounded-lg border border-slate-200 bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                      <span>کلید استنباطی؛ بدون پاسخنامهٔ رسمی</span>
+                    </div>
+                  )}
                   <MathText text={activeReveal?.explanation ?? ''} />
                 </div>
 

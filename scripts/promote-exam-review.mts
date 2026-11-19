@@ -160,9 +160,13 @@ const { EXAM_ARCHIVE_IMPORTED_QUESTIONS } = (await import(
 const { EXAM_ARCHIVE_PERSIAN_QUESTIONS } = (await import(
   '../src/data/examArchivePersian.ts'
 )) as { EXAM_ARCHIVE_PERSIAN_QUESTIONS: { id: string; text: string }[] };
+const { EXAM_ARCHIVE_DERIVED_QUESTIONS } = (await import(
+  '../src/data/examArchiveDerived.ts'
+).catch(() => ({ EXAM_ARCHIVE_DERIVED_QUESTIONS: [] as { id: string; text: string }[] }))) as { EXAM_ARCHIVE_DERIVED_QUESTIONS: { id: string; text: string }[] };
 const derived = new Set([
   ...EXAM_ARCHIVE_IMPORTED_QUESTIONS.map((question) => question.id),
   ...EXAM_ARCHIVE_PERSIAN_QUESTIONS.map((question) => question.id),
+  ...EXAM_ARCHIVE_DERIVED_QUESTIONS.map((question) => question.id),
 ]);
 for (const question of YEARLY_KONKOR_QUESTIONS) {
   if (derived.has(question.id)) continue;

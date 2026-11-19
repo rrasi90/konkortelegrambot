@@ -1,0 +1,103 @@
+{
+ "generatedAt": "2026-11-19T20:58:00.166Z",
+ "poolSize": 282,
+ "bySection": {
+  "islamic": {
+   "total": 26,
+   "keyless": 7,
+   "reviewed": 0,
+   "numeric": 0
+  },
+  "management_theories": {
+   "total": 43,
+   "keyless": 15,
+   "reviewed": 1,
+   "numeric": 0
+  },
+  "economics": {
+   "total": 15,
+   "keyless": 6,
+   "reviewed": 0,
+   "numeric": 2
+  },
+  "public_finance": {
+   "total": 18,
+   "keyless": 8,
+   "reviewed": 0,
+   "numeric": 0
+  },
+  "human_resources": {
+   "total": 18,
+   "keyless": 4,
+   "reviewed": 1,
+   "numeric": 0
+  },
+  "operations_research": {
+   "total": 5,
+   "keyless": 1,
+   "reviewed": 0,
+   "numeric": 2
+  },
+  "financial_management": {
+   "total": 8,
+   "keyless": 2,
+   "reviewed": 1,
+   "numeric": 1
+  },
+  "marketing": {
+   "total": 28,
+   "keyless": 15,
+   "reviewed": 0,
+   "numeric": 0
+  },
+  "entrepreneurship": {
+   "total": 22,
+   "keyless": 15,
+   "reviewed": 1,
+   "numeric": 0
+  },
+  "accounting": {
+   "total": 24,
+   "keyless": 8,
+   "reviewed": 10,
+   "numeric": 4
+  },
+  "publishing": {
+   "total": 8,
+   "keyless": 0,
+   "reviewed": 6,
+   "numeric": 0
+  },
+  "transportation": {
+   "total": 11,
+   "keyless": 6,
+   "reviewed": 2,
+   "numeric": 3
+  },
+  "business_transportation": {
+   "total": 37,
+   "keyless": 19,
+   "reviewed": 3,
+   "numeric": 0
+  },
+  "production": {
+   "total": 11,
+   "keyless": 5,
+   "reviewed": 0,
+   "numeric": 2
+  },
+  "investment_risk": {
+   "total": 7,
+   "keyless": 2,
+   "reviewed": 0,
+   "numeric": 2
+  },
+  "math_stats": {
+   "total": 1,
+   "keyless": 0,
+   "reviewed": 0,
+   "numeric": 1
+  }
+ },
+ "note": "جمعیت واردِ دروازه؛ «keyless» یعنی بدون کلید رسمی، «numeric» یعنی گزینه‌های عددیِ قابل سنجش."
+}

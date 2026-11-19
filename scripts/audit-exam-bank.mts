@@ -10,7 +10,7 @@
  *
  * اجرا: npm run audit:exam-bank   (کد خروج ۱ یعنی نقض قابل‌اصلاح)
  */
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { YEARLY_KONKOR_BOOKLETS, YEARLY_KONKOR_QUESTIONS } from '../src/data/yearlyKonkorExams';
@@ -216,7 +216,22 @@ console.log(
 console.log('== پوشش دکتری (۲۱۶۲) ==');
 console.log(`  سؤال ثبت‌شده: ${doctorate.available} — دفترچهٔ رسمی ثبت‌شده: ${doctorate.bookletCount}`);
 console.log('== کلید ==');
-console.log(`  کلید سمت سرور: ${serverKeys.size} — سؤال بانک سالی: ${YEARLY_KONKOR_QUESTIONS.length}`);
+const realKeys = CLIENT_BANK_ANSWER_KEYS.filter((k) => !k.id.startsWith('sec.'));
+const derivedKeyCount = realKeys.filter((k) => k.bank === 'examArchiveDerived').length;
+const officialArchiveKeyCount = realKeys.filter((k) => k.bank === 'examArchiveImported' || k.bank === 'examArchivePersian').length;
+console.log(`  کلید سمت سرور: ${CLIENT_BANK_ANSWER_KEYS.length} — سؤال بانک سالی: ${YEARLY_KONKOR_QUESTIONS.length}`);
+console.log(`  دو شمارش جدا: کلید رسمی ${officialArchiveKeyCount} — کلید استنباطی ${derivedKeyCount}`);
+const derivedEvidenceFile = join(evidenceDir, 'derived-keys.json');
+const derivedEvidenceCount = existsSync(derivedEvidenceFile)
+  ? Object.keys((JSON.parse(readFileSync(derivedEvidenceFile, 'utf8')) as { keys: Record<string, unknown> }).keys).length
+  : 0;
+const derivedConfirmedCount = existsSync(derivedEvidenceFile)
+  ? Object.values((JSON.parse(readFileSync(derivedEvidenceFile, 'utf8')) as { keys: Record<string, { officialAgreement: string }> }).keys).filter((k) => k.officialAgreement === 'derived_confirmed').length
+  : 0;
+console.log(`  شواهد استنتاج: ${derivedEvidenceCount} کلید ثبت‌شده، ${derivedConfirmedCount} مورد با کلید رسمی هم‌خوان (derived_confirmed)`);
+if (derivedEvidenceCount !== derivedKeyCount) {
+  violations.push(`شمارش شواهد استنتاج (${derivedEvidenceCount}) با رجیستری (${derivedKeyCount}) نمی‌خواند`);
+}
 console.log(`  مقایسه با کلید رسمی بازیابی‌شده: ${compared} سؤال، ${agreed} همخوان، ${acknowledged.length} اختلاف ثبت‌شده`);
 console.log(`  مقابلهٔ سؤال انگلیسی با OCR دفترچه: ${englishChecked - englishFailures.length} از ${englishChecked} تأیید شد`);
 for (const line of acknowledged) console.log(`    - ${line}`);

@@ -26,6 +26,8 @@ export interface PracticeReveal {
   correctOption: number;
   explanation: string;
   trapNote: string;
+  /** منشأ کلید: رسمی یا استنباطی؛ برچسب صداقت در رابط کاربری. */
+  keySource?: 'official' | 'derived';
   replay?: boolean;
 }
 

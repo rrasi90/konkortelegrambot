@@ -400,7 +400,7 @@ export default function App() {
     selectedOption: number | null,
     wasCorrect: boolean,
     errorType: MistakeErrorType,
-    reveal?: { correctOption: number; explanation: string; trapNote: string }
+    reveal?: { correctOption: number; explanation: string; trapNote: string; keySource?: 'official' | 'derived' }
   ) => {
     if (!question) return;
     if (wasCorrect) {

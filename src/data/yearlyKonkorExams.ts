@@ -1,6 +1,7 @@
 import type { QuestionItem } from './konkorData';
 import { EXAM_ARCHIVE_IMPORTED_QUESTIONS } from './examArchiveImported';
 import { EXAM_ARCHIVE_PERSIAN_QUESTIONS } from './examArchivePersian';
+import { EXAM_ARCHIVE_DERIVED_QUESTIONS } from './examArchiveDerived';
 
 export type KonkorCourseSectionId =
   | 'english'
@@ -3639,4 +3640,5 @@ export const YEARLY_KONKOR_QUESTIONS: YearlyKonkorQuestion[] = [
   },
   ...EXAM_ARCHIVE_IMPORTED_QUESTIONS,
   ...EXAM_ARCHIVE_PERSIAN_QUESTIONS,
+  ...EXAM_ARCHIVE_DERIVED_QUESTIONS,
 ];

@@ -51,6 +51,7 @@
     "exam:inventory": "node --import tsx scripts/exam-inventory.mts",
     "exam:gaps": "node --import tsx scripts/exam-gaps.mts",
     "exam:promote": "node --import tsx scripts/promote-exam-review.mts",
+    "exam:derive": "node --import tsx scripts/derive-exam-keys.mts",
     "exam:keys:sync": "node --import tsx scripts/add-exam-archive-keys.mts",
     "import:exam-persian": "node --import tsx scripts/import-exam-persian.mts"
   },
