@@ -23,6 +23,7 @@ import {
   numericMarginOk,
   sanityCheckQuestion,
 } from './lib/derivation-gate.mts';
+import { corroboratesFa, docxText } from './lib/docx-text.mts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const mode = process.argv.find((item) => item.startsWith('--')) ?? '--measure';
@@ -239,6 +240,16 @@ async function readPass(pass: 'A' | 'B'): Promise<Map<string, PassRecord>> {
 async function importResults(): Promise<void> {
   const pool = await buildPool();
   const byId = new Map(pool.map((q) => [q.id, q]));
+
+  // ضدتکرار: متن یکسان در دو سال (سؤال تکراریِ ادوار) نباید دو کلید بسازد؛
+  // آدیت بانک «متن سؤال تکراری» را نقض می‌داند.
+  const { YEARLY_KONKOR_QUESTIONS } = (await import(
+    pathToFileURL(join(root, 'src', 'data', 'yearlyKonkorExams.ts')).href
+  )) as { YEARLY_KONKOR_QUESTIONS: { id: string; text: string }[] };
+  const stemSeen = new Map<string, string>();
+  for (const question of YEARLY_KONKOR_QUESTIONS) {
+    stemSeen.set(normalizeText(question.text), question.id);
+  }
   const passA = await readPass('A');
   const passB = await readPass('B');
   const evidence = loadOfficialEvidence();
@@ -248,11 +259,29 @@ async function importResults(): Promise<void> {
   const unresolved: Record<string, unknown>[] = [];
   const rejected: Record<string, unknown>[] = [];
 
+  // شاهد دومِ §۳.۱: متن خام OCR باید در docx همان سال هم خوانده شود.
+  // متن بازبینی‌شده انسانی از این شرط معاف است (بازبین خودِ او یک شاهد دوم بود).
+  const docxCache = new Map<number, string | null>();
+  const docxFor = (year: number): string | null => {
+    if (!docxCache.has(year)) {
+      docxCache.set(year, docxText(join(root, 'docs', 'exam-ocr', '1142', `1142-${year}.docx`)));
+    }
+    return docxCache.get(year) ?? null;
+  };
+
   for (const [id, a] of passA) {
     const q = byId.get(id);
     if (!q) { rejected.push({ id, reason: 'در جمعیت دروازه نیست (متن یا ساختار رد شده)' }); continue; }
     const b = passB.get(id);
     if (!b) { rejected.push({ id, reason: 'گذر دوم موجود نیست' }); continue; }
+    if (q.textSource === 'raw') {
+      const witness = docxFor(q.year);
+      const corroboration = corroboratesFa({ text: q.stem, options: q.options }, witness);
+      if (!corroboration.ok) {
+        rejected.push({ id, reason: `شاهد دوم (docx همان سال) متن خام را تأیید نکرد (واژه ${Math.round(corroboration.wordRatio * 100)}٪، گزینه ${corroboration.optionHits})` });
+        continue;
+      }
+    }
     if (!a.layer || !a.answerOption || !b.answerOption) { rejected.push({ id, reason: 'رکورد ناقص' }); continue; }
     if (a.layer === 'R' || b.layer === 'R') { unresolved.push({ id, reason: 'طبقهٔ R — استنتاج‌ناپذیر' }); continue; }
     if (a.answerOption !== b.answerOption) {
@@ -269,6 +298,13 @@ async function importResults(): Promise<void> {
       if (!citationOk) { rejected.push({ id, reason: 'نقل D2 در مخزن پیدا نشد' }); continue; }
     }
     // شرط ۳: رد همهٔ رقیب‌ها مستند باشد.
+    const stemKey = normalizeText(q.stem);
+    const twin = stemSeen.get(stemKey);
+    if (twin && twin !== id) {
+      rejected.push({ id, reason: `متن سؤال تکراری (همسان ${twin})` });
+      continue;
+    }
+    stemSeen.set(stemKey, id);
     const rejects = a.optionsRejected;
     const rejectEntries = Array.isArray(rejects) ? rejects : Object.values(rejects ?? {});
     if (rejectEntries.length < 3) { rejected.push({ id, reason: 'رد گزینه‌های رقیب کامل نیست' }); continue; }

@@ -84,3 +84,44 @@ export function corroborates(
 
   return { ok: words.length >= 3 && wordRatio >= 0.8 && optionHits >= 3, wordRatio, optionHits };
 }
+
+/** نرمال‌سازی فارسی برای مقابلهٔ دوگذره: حروف/ارقام زبانی، یکدست ی/ک/ه. */
+export const faKey = (text: string): string =>
+  text
+    .replace(/[۰-۹٠-٩]/g, (digit) => String('۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩'.indexOf(digit) % 10))
+    .replace(/[يى]/g, 'ی')
+    .replace(/ك/g, 'ک')
+    .replace(/[ۀة]/g, 'ه')
+    .replace(/\u200c/g, ' ')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+/**
+ * شاهد دومِ فارسی: واژه‌های کلیدی صورت و واژه‌های گزینه‌ها باید در متن OCR دوم
+ * (docx همان سال در docs/exam-ocr) دیده شوند. آستانه‌ها سخت‌گیرانه‌اند؛ هدف تأیید
+ * هویت سؤال است، نه اصلاح واژه به واژه.
+ */
+export function corroboratesFa(
+  item: { text: string; options: string[] },
+  haystack: string | null,
+): { ok: boolean; wordRatio: number; optionHits: number } {
+  if (!haystack) return { ok: false, wordRatio: 0, optionHits: 0 };
+  const hay = faKey(haystack);
+  if (!hay) return { ok: false, wordRatio: 0, optionHits: 0 };
+
+  const words = [...new Set(faKey(item.text).split(' ').filter((word) => word.length >= 4))];
+  if (words.length < 6) return { ok: false, wordRatio: 0, optionHits: 0 };
+  const hits = words.filter((word) => hay.includes(word)).length;
+  const wordRatio = hits / words.length;
+
+  const optionHits = item.options.filter((option) => {
+    const tokens = faKey(option).split(' ').filter((token) => token.length >= 4);
+    if (tokens.length === 0) return false;
+    const present = tokens.filter((token) => hay.includes(token)).length;
+    return present / tokens.length >= 0.6;
+  }).length;
+
+  return { ok: wordRatio >= 0.55 && optionHits >= 2, wordRatio, optionHits };
+}
