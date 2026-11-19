@@ -47,7 +47,9 @@
     "v2:ledger": "node scripts/v2/ledger.mjs",
     "v2:verify": "node scripts/v2/verify-ledger.mjs",
     "v2:summary": "node scripts/v2/ledger.mjs summary",
-    "v2:reading-notes": "node scripts/v2/reading-notes-check.mjs"
+    "v2:reading-notes": "node scripts/v2/reading-notes-check.mjs",
+    "exam:inventory": "node --import tsx scripts/exam-inventory.mts",
+    "import:exam-persian": "node --import tsx scripts/import-exam-persian.mts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
