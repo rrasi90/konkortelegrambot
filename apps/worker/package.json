@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -b",
     "dev": "npx --yes wrangler dev --var ENVIRONMENT:development",
-    "deploy": "npm run --prefix ../.. build:worker && npm run --prefix ../.. audit:miniapp && npm run --prefix ../.. check:production && npx --yes wrangler deploy"
+    "deploy": "npm run --prefix ../.. build:worker && npm run --prefix ../.. audit:miniapp && npm run --prefix ../.. audit:exam-bank && npm run --prefix ../.. check:production && npx --yes wrangler deploy"
   },
   "dependencies": {
     "@ael/contracts": "*",

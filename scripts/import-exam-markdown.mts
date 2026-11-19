@@ -19,7 +19,8 @@
  *
  * اجرا: node --import tsx scripts/import-exam-markdown.mts
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { inflateRawSync } from 'node:zlib';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { YEARLY_KONKOR_BOOKLETS, YEARLY_KONKOR_QUESTIONS } from '../src/data/yearlyKonkorExams';
@@ -57,6 +58,76 @@ interface ImportedQuestion {
   text: string;
   options: string[];
   expectedTimeMs: number;
+}
+
+
+/**
+ * متن یک فایل `.docx` را بدون ابزار بیرونی می‌خواند تا هر سؤال واردشده با OCR
+ * مستقل همان دفترچه مقابله شود. اگر فایل نبود یا خواندنش شکست خورد، null برمی‌گردد.
+ */
+function docxText(path: string): string | null {
+  if (!existsSync(path)) return null;
+  try {
+    const zip = readFileSync(path);
+    const eocd = zip.lastIndexOf(Buffer.from([0x50, 0x4b, 0x05, 0x06]));
+    if (eocd < 0) return null;
+    const centralSize = zip.readUInt32LE(eocd + 12);
+    const centralOffset = zip.readUInt32LE(eocd + 16);
+    let cursor = centralOffset;
+    while (cursor < centralOffset + centralSize) {
+      if (zip.readUInt32LE(cursor) !== 0x02014b50) break;
+      const method = zip.readUInt16LE(cursor + 10);
+      const compressedSize = zip.readUInt32LE(cursor + 20);
+      const nameLength = zip.readUInt16LE(cursor + 28);
+      const extraLength = zip.readUInt16LE(cursor + 30);
+      const commentLength = zip.readUInt16LE(cursor + 32);
+      const localOffset = zip.readUInt32LE(cursor + 42);
+      const name = zip.subarray(cursor + 46, cursor + 46 + nameLength).toString('utf8');
+      if (name === 'word/document.xml') {
+        const localNameLength = zip.readUInt16LE(localOffset + 26);
+        const localExtraLength = zip.readUInt16LE(localOffset + 28);
+        const dataStart = localOffset + 30 + localNameLength + localExtraLength;
+        const raw = zip.subarray(dataStart, dataStart + compressedSize);
+        const xml = (method === 0 ? raw : inflateRawSync(raw)).toString('utf8');
+        return xml
+          .replace(/<w:p[ >]/g, '\n<w:p ')
+          .replace(/<[^>]+>/g, '')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&apos;/g, "'");
+      }
+      cursor += 46 + nameLength + extraLength + commentLength;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+/** نرمال‌سازی برای مقابلهٔ متنی: فقط حروف و ارقام لاتین. */
+const latinKey = (text: string): string =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+/** آیا منبع دوم مستقل همین سؤال را تأیید می‌کند؟ */
+function corroboratedByDocx(item: { text: string; options: string[] }, haystack: string | null): boolean {
+  if (!haystack) return false;
+  const hay = latinKey(haystack);
+  if (!hay) return false;
+  const words = [...new Set(latinKey(item.text).split(' ').filter((word) => word.length > 3))];
+  if (words.length < 3) return false;
+  const hits = words.filter((word) => hay.includes(word)).length;
+  if (hits / words.length < 0.8) return false;
+  const optionHits = item.options.filter((option) => {
+    const key = latinKey(option);
+    return key.length > 2 && hay.includes(key);
+  }).length;
+  return optionHits >= 3;
 }
 
 const persianDigits = (text: string): string =>
@@ -160,6 +231,10 @@ for (const source of SOURCES) {
   }
 
   const lines = cleanLines(readFileSync(join(root, source.markdownPath), 'utf8'));
+  const corroboration = docxText(join(root, 'docs', 'exam-ocr', '1142', `1142-${source.year}.docx`));
+  if (!corroboration) {
+    report.push({ year: source.year, warning: 'متن OCR دوم برای مقابله پیدا نشد' });
+  }
   const starts: { number: number; index: number }[] = [];
   lines.forEach((line, index) => {
     const match = /^(\d{1,3})\s*[-–.]\s+/.exec(line);
@@ -235,6 +310,11 @@ for (const source of SOURCES) {
     const id = `q.k${source.year}.${number}`;
     if (imported.some((question) => question.id === id)) {
       reject('شناسهٔ تکراری');
+      continue;
+    }
+
+    if (!corroboratedByDocx({ text: prompt, options }, corroboration)) {
+      reject('منبع دوم مستقل تأیید نکرد');
       continue;
     }
 
