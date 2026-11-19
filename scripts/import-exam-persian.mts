@@ -114,6 +114,7 @@ interface ImportedQuestion {
   sectionId: string;
   bookletQuestionNumber: number;
   numberSource: 'count' | 'number';
+  optionsSource?: 'labels' | 'sequence';
   text: string;
   options: string[];
   source: 'ocr_markdown';
@@ -221,6 +222,7 @@ for (const source of SOURCES) {
       sectionId: question.sectionId,
       bookletQuestionNumber: question.number,
       numberSource: question.numberSource,
+      optionsSource: question.optionsSource,
       text: stem,
       options: question.options,
       source: 'ocr_markdown',

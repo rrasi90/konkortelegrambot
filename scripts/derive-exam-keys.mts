@@ -39,6 +39,8 @@ interface PoolQuestion {
   options: string[];
   /** متن بازبینی‌شده انسانی معتبرتر از متن خام OCR است. */
   textSource: 'reviewed' | 'raw';
+  /** گزینهٔ بدون برچسب هرگز استنتاج نمی‌شود؛ فقط به کارگاه بازبینی می‌رود (§۳.۲). */
+  optionsSource?: 'labels' | 'sequence';
 }
 
 async function loadBankIds(): Promise<Set<string>> {
@@ -55,11 +57,12 @@ async function buildPool(): Promise<PoolQuestion[]> {
 
   const extracted = (JSON.parse(
     readFileSync(join(root, 'content', 'exam-import-staging', 'ocr-persian', 'extracted.json'), 'utf8'),
-  ) as { questions: { examYear: number; sectionId: string; number: number; stem: string; options: string[] }[] })
+  ) as { questions: { examYear: number; sectionId: string; number: number; stem: string; options: string[]; optionsSource?: 'labels' | 'sequence' }[] })
     .questions;
 
   const pool = new Map<string, PoolQuestion>();
   const add = (item: PoolQuestion) => {
+    if (item.optionsSource === 'sequence' && item.textSource !== 'reviewed') return;
     const existing = pool.get(item.id);
     // متن بازبینی‌شده بر خام مقدم است؛ متن خام فقط اگر هیچ نسخهٔ بهتری نباشد می‌ماند.
     if (!existing || (existing.textSource === 'raw' && item.textSource === 'reviewed')) {
@@ -73,7 +76,7 @@ async function buildPool(): Promise<PoolQuestion[]> {
     const key = evidence[String(q.examYear)]?.entries[String(q.number)];
     add({
       id, year: q.examYear, number: q.number, sectionId: q.sectionId,
-      stem: q.stem, options: q.options, textSource: 'raw',
+      stem: q.stem, options: q.options, textSource: 'raw', optionsSource: q.optionsSource,
     });
     void key;
   }

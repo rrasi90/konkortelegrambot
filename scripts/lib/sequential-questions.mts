@@ -25,6 +25,8 @@ export interface SequentialQuestion {
   options: string[];
   /** شاهد شماره: `number` یعنی شمارهٔ خوانده‌شده با هم‌ترازی می‌خواند. */
   numberSource: 'count' | 'number';
+  /** 'sequence' یعنی گزینه‌ها برچسب‌خوانده‌شده نیستند؛ بدون بازبینی ارتقا نمی‌یابد. */
+  optionsSource?: 'labels' | 'sequence';
 }
 
 export interface SequentialRejection {
@@ -177,6 +179,8 @@ interface Draft {
   stem: string;
   options: string[];
   sample: string;
+  /** 'sequence' یعنی گزینه‌ها برچسب نداشتند و از چهار خط متوازن حدس زده شده‌اند. */
+  optionsSource: 'labels' | 'sequence';
 }
 
 /**
@@ -232,28 +236,60 @@ export function splitQuestions(lines: string[], total: number): Draft[] {
     index += 1;
     while (index < lines.length) {
       // تا چهار گزینهٔ برچسب‌دار خوانده نشود، خطوط ادامهٔ همین سؤال‌اند.
-      if (seenLabels(block.join(' ')) >= 4) break;
+      const joined = block.join(' ');
+      if (seenLabels(joined) >= 4) break;
       const next = lines[index].match(ANCHOR);
       if (next && Number(next[1]) > 4) break;
+      // بلوک بی‌نشانهٔ برچسب با چهار خط ادامه: هر خط شماره‌دار، سؤال بعدی است؛
+      // وگرنه سؤال «۲-» داخل گزینه‌های بی‌برچسب فرو می‌رود.
+      if (next && block.length >= 5 && !/[(]?[1-4]\s*(?:[)۔]|[-–])/.test(joined) && !/^\s*\(?\s*[1-4]\s*\)?\s*$/.test(joined)) break;
       block.push(lines[index]);
       index += 1;
     }
 
     const parsed = parseBlock(block.join(' '));
-    const resolved = parsed.options.some((option) => option.length === 0)
+    let resolved = parsed.options.some((option) => option.length === 0)
       ? (parseTrailingLabels(block) ?? parsed)
       : parsed;
+    let optionsSource: Draft['optionsSource'] = 'labels';
+    if (resolved.options.some((option) => option.length === 0)) {
+      const seq = parseSequenceOptions(block);
+      if (seq) {
+        resolved = seq;
+        optionsSource = 'sequence';
+      }
+    }
     drafts.push({
       number,
       stem: resolved.stem,
       options: resolved.options,
       sample: lines[startLine].slice(0, 90),
+      optionsSource,
     });
   }
   return drafts;
 }
 
-export function prepareLines(pages: string[]): string[] {
+  /**
+   * بازیابی بدون برچسب (§۳.۲ برنامه): اگر برچسبی خوانده نشد، چهار خط متوازن پس از
+   * صورت سؤال و پیش از شمارهٔ بعدی پذیرفته می‌شوند؛ اما علامت می‌خورند و بدون
+   * بازبینی ارتقا نمی‌یابند. ترتیب چاپ راست‌به‌چپ است، پس نسبت گزینه‌ها به شماره
+   * جزو حدس‌هاست و هیچ کلیدی از این حالت بدون بازبینی خوانده نمی‌شود.
+   */
+  function parseSequenceOptions(blockLines: string[]): { stem: string; options: string[] } | null {
+    const stem = blockLines[0] ?? '';
+    const rest = blockLines.slice(1).map((line) => line.trim()).filter((line) => line.length > 0);
+    if (rest.length !== 4) return null;
+    if (rest.some((line) => ANCHOR.test(line))) return null;
+    if (rest.some((line) => /(?:^|[\s،؛:(])(?:\()?\s*[1-4]\s*(?:\)|[-–]|\.(?=\s))\s*(?=\S)/.test(line))) return null;
+    const lengths = rest.map((line) => line.length);
+    const min = Math.min(...lengths);
+    const max = Math.max(...lengths);
+    if (min < 2 || max > 220 || min < max * 0.2) return null;
+    return { stem, options: rest };
+  }
+
+  export function prepareLines(pages: string[]): string[] {
   const lines: string[] = [];
   for (const page of pages) {
     for (const rawLine of page.split(String.fromCharCode(10))) {
@@ -376,6 +412,7 @@ export function extractByNumber(
       stem: draft.stem,
       options: draft.options,
       numberSource: 'number',
+      optionsSource: draft.optionsSource,
     });
   }
 
