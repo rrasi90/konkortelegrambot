@@ -32,6 +32,7 @@
     "ael:pdf:scan": "node scripts/ael-pdf-scan.mjs",
     "ael:pdf:ingest": "node scripts/ael-pdf-ingest.mjs",
     "ael:pdf:ocr": "node scripts/ael-pdf-ocr.mjs",
+    "ael:pdf:convert": "node scripts/convert-pdf-md.mjs",
     "ael:pdf:check": "node scripts/ael-pdf-guard.mjs",
     "ael:exam:analyze": "node scripts/ael-exam-analyze.mjs --run-id structural-20261106f",
     "ael:exam:recovery": "python -I scripts/ael-key-text-recovery.py",
