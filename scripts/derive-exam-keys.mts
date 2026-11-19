@@ -140,7 +140,8 @@ const run = async (): Promise<void> => {
   if (mode === '--import') return importResults();
   if (mode === '--write-bank') return writeBank();
   if (mode === '--audit-sample') return makeAuditSample();
-  console.error('حالت ناشناخته: --measure | --export | --import | --write-bank | --audit-sample');
+  if (mode === '--audit-check') return auditCheck();
+  console.error('حالت ناشناخته: --measure | --export | --import | --write-bank | --audit-sample | --audit-check');
   process.exit(2);
 };
 
@@ -416,6 +417,38 @@ async function makeAuditSample(): Promise<void> {
     .filter(Boolean);
   writeFileSync(join(batchesDir, 'audit-sample.json'), `${JSON.stringify(sample, null, 1)}\n`, 'utf8');
   console.log(`AUDIT_SAMPLE ${sample.length} از ${ids.length} (نرخ نمونه ${ids.length ? Math.round((sample.length / ids.length) * 100) : 0}٪)`);
+}
+
+// ---- audit-check ----
+/** §۴.۵: نرخ توافق بازاستخراج مستقل؛ زیر ۹۰٪ یعنی قاعده باید سخت‌تر شود. */
+async function auditCheck(): Promise<void> {
+  const samplePath = join(batchesDir, 'audit-sample.json');
+  const auditPath = join(batchesDir, 'out', 'audit.AUDIT.json');
+  const derivedFile = join(evidenceDir, 'derived-keys.json');
+  if (!existsSync(auditPath) || !existsSync(derivedFile)) {
+    console.log('AUDIT_CHECK ناتمام است: بازاستخراج یا شواهد موجود نیست.');
+    return;
+  }
+  const sample = new Set((JSON.parse(readFileSync(samplePath, 'utf8')) as { id: string }[]).map((q) => q.id));
+  const { keys } = JSON.parse(readFileSync(derivedFile, 'utf8')) as {
+    keys: Record<string, { answerOption: number }>;
+  };
+  const audit = JSON.parse(readFileSync(auditPath, 'utf8')) as { id: string; answerOption: number | null }[];
+  let compared = 0;
+  let agreed = 0;
+  const mismatches: { id: string; accepted: number; auditor: number | null }[] = [];
+  for (const record of audit) {
+    if (!sample.has(record.id)) continue;
+    const accepted = keys[record.id];
+    if (!accepted) continue;
+    compared += 1;
+    if (record.answerOption === accepted.answerOption) agreed += 1;
+    else mismatches.push({ id: record.id, accepted: accepted.answerOption, auditor: record.answerOption });
+  }
+  const rate = compared === 0 ? 0 : Math.round((agreed / compared) * 1000) / 10;
+  const report = { compared, agreed, agreementPercent: rate, pass: rate >= 90, mismatches };
+  writeFileSync(join(evidenceDir, 'derivation-audit.json'), `${JSON.stringify(report, null, 1)}\n`, 'utf8');
+  console.log(`AUDIT_CHECK compared=${compared} agreed=${agreed} rate=${rate}٪ pass=${report.pass}`);
 }
 
 await run();

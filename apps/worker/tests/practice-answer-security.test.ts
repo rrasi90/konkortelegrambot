@@ -55,6 +55,7 @@ function authed(token: string, init: RequestInit = {}): RequestInit {
 const KEY_FIELD_PATTERN = /["']?(correctOption|correctIndex|answerIndex)["']?\s*:/g;
 const realBankId = [...CLIENT_BANK_ANSWER_KEY_BY_ID.keys()].find((id) => !id.startsWith('sec.'))!;
 const canaryId = SECURITY_CANARY_IDS[0];
+const derivedKey = [...CLIENT_BANK_ANSWER_KEY_BY_ID.values()].find((k) => k.bank === 'examArchiveDerived');
 
 async function issueAndAnswer(token: string, questionId: string, selectedOption: number) {
   const issue = await app.request('/api/practice/attempts', authed(token, {
@@ -94,6 +95,14 @@ describe('SEC — تحویل server-only کلید پاسخ برای بانک ک�
     expect([401, 403]).toContain(res.status);
   });
 
+  it('SEC-011: کلید استنباطی با برچسب derived تحویل می‌شود، هرگز رسمی', async () => {
+    if (!derivedKey) return; // تا نخستین کلید استنباطی وارد رجیستری نشود، بی‌محتوا رد می‌شود.
+    const token = await login('برچسب-SEC011');
+    const res = await (await issueAndAnswer(token, derivedKey.id, derivedKey.correctOption)).json();
+    expect(res.keySource).toBe('derived');
+    expect(String(res.explanation)).toContain('کلید استنباطی');
+  });
+
   it('SEC-005: پاسخ صحیح و غلط سمت سرور تشخیص داده می‌شود (کلید از registry سرور)', async () => {
     const token = await login();
     const key = CLIENT_BANK_ANSWER_KEY_BY_ID.get(realBankId)!;
@@ -101,6 +110,7 @@ describe('SEC — تحویل server-only کلید پاسخ برای بانک ک�
     expect(correct.wasCorrect).toBe(true);
     expect(correct.correctOption).toBe(key.correctOption);
     expect(correct.replay).toBe(false);
+    expect(correct.keySource).toBe('official');
 
     const token2 = await login('داوطلب دوم-SEC005');
     const wrongOption = (key.correctOption + 1) % 4;
