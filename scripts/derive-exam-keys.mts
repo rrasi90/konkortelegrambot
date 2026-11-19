@@ -366,7 +366,7 @@ async function importResults(): Promise<void> {
       bookletQuestionNumber: record.number,
       source: `derived:${record.year}:${record.number}`,
       bank: 'examArchiveDerived',
-      explanation: `کلید استنباطی — بدون پاسخنامه. ${record.derivation}`,
+      explanation: `کلید استنباطی (بدون پاسخنامهٔ رسمی). ${record.derivation}`,
       trapNote: record.optionsRejected.join(' '),
     };
   }

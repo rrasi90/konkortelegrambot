@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-19T21:05:31.129Z",
+  "generatedAt": "2026-11-19T21:23:20.720Z",
   "window": {
     "from": 1396,
     "to": 1405,
@@ -31,6 +31,11 @@
     "inBank": 123,
     "declared": null,
     "note": "مخرج دکتری صفر است؛ تا ثبت دفترچهٔ رسمی درصد پوشش معنا ندارد."
+  },
+  "derivation": {
+    "pool": 282,
+    "import": null,
+    "audit": null
   },
   "biggestGap": {
     "year": 1405,

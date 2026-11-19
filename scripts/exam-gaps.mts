@@ -185,6 +185,17 @@ for (const row of weakSections) {
   }
 }
 
+// شمارش‌های خط لولهٔ استنتاج، برای اینکه دفتر شکاف «نامعلوم» باقی نگذارد (§۹).
+const derivationRead = (name: string): Record<string, unknown> | null => {
+  const path = join(root, 'content', 'exam-key-evidence', name);
+  return existsSync(path) ? (JSON.parse(readFileSync(path, 'utf8')) as Record<string, unknown>) : null;
+};
+const derivation = {
+  pool: (derivationRead('derivation-measure.json') as { poolSize?: number } | null)?.poolSize ?? null,
+  import: derivationRead('derived-import-report.json'),
+  audit: derivationRead('derivation-audit.json'),
+};
+
 const ledger = {
   generatedAt: new Date().toISOString(),
   window: { from, to, years: windowYears.length, level: 'ارشد' },
@@ -213,6 +224,7 @@ const ledger = {
     declared: null,
     note: 'مخرج دکتری صفر است؛ تا ثبت دفترچهٔ رسمی درصد پوشش معنا ندارد.',
   },
+  derivation,
   biggestGap: biggest,
   blockers,
   bySection,
