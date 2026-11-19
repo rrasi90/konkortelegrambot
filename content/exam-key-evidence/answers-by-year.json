@@ -3,6 +3,7 @@
  "correctOptionBase": 1,
  "years": {
   "1390": {
+   "keyStatus": "unknown",
    "maxQuestion": 320,
    "entries": {
     "1": 3,
@@ -336,6 +337,7 @@
    ]
   },
   "1391": {
+   "keyStatus": "unknown",
    "maxQuestion": 320,
    "entries": {
     "1": 1,
@@ -669,6 +671,7 @@
    ]
   },
   "1392": {
+   "keyStatus": "preliminary",
    "maxQuestion": 320,
    "entries": {
     "1": 2,
@@ -1002,6 +1005,7 @@
    ]
   },
   "1393": {
+   "keyStatus": "unknown",
    "maxQuestion": 295,
    "entries": {
     "1": 2,
@@ -1310,6 +1314,7 @@
    ]
   },
   "1394": {
+   "keyStatus": "unknown",
    "maxQuestion": 310,
    "entries": {
     "1": 3,
@@ -1633,6 +1638,7 @@
    ]
   },
   "1395": {
+   "keyStatus": "preliminary",
    "maxQuestion": 310,
    "entries": {
     "1": 3,
@@ -1956,6 +1962,7 @@
    ]
   },
   "1396": {
+   "keyStatus": "preliminary",
    "maxQuestion": 310,
    "entries": {
     "1": 3,
@@ -2279,6 +2286,7 @@
    ]
   },
   "1397": {
+   "keyStatus": "preliminary",
    "maxQuestion": 295,
    "entries": {
     "1": 2,
@@ -2587,6 +2595,7 @@
    ]
   },
   "1398": {
+   "keyStatus": "preliminary",
    "maxQuestion": 295,
    "entries": {
     "1": 1,
@@ -2895,6 +2904,7 @@
    ]
   },
   "1399": {
+   "keyStatus": "preliminary",
    "maxQuestion": 295,
    "entries": {
     "1": 4,
@@ -3203,6 +3213,7 @@
    ]
   },
   "1400": {
+   "keyStatus": "preliminary",
    "maxQuestion": 284,
    "entries": {
     "1": 3,
@@ -3465,6 +3476,7 @@
    ]
   },
   "1401": {
+   "keyStatus": "unknown",
    "maxQuestion": 295,
    "entries": {
     "1": 4,
@@ -3773,6 +3785,7 @@
    ]
   },
   "1402": {
+   "keyStatus": "unknown",
    "maxQuestion": 285,
    "entries": {
     "1": 3,
@@ -4069,6 +4082,7 @@
    ]
   },
   "1403": {
+   "keyStatus": "preliminary",
    "maxQuestion": 285,
    "entries": {
     "1": 2,
@@ -4367,6 +4381,7 @@
    ]
   },
   "1404": {
+   "keyStatus": "unknown",
    "maxQuestion": 399,
    "entries": {
     "1": 2,

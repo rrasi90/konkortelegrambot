@@ -24,7 +24,11 @@ const evidenceDir = join(root, 'content', 'exam-key-evidence');
 
 interface KeyEvidenceFile {
   correctOptionBase: 1 | 0;
-  years: Record<string, { entries: Record<string, number>; maxQuestion: number | null }>;
+  years: Record<string, {
+    keyStatus: 'preliminary' | 'final' | 'unknown';
+    entries: Record<string, number>;
+    maxQuestion: number | null;
+  }>;
 }
 
 interface ConflictFile {
@@ -184,6 +188,15 @@ if (englishFailures.length > 0) {
 if (yearsWithoutOcr.size > 0) {
   notices.push(`OCR دفترچه برای این سال‌ها موجود نیست: ${[...yearsWithoutOcr].sort().join('، ')}`);
 }
+
+// وضعیت سند کلید هر سال: کلید اولیه قابل استناد نهایی نیست، پس اختلاف با آن
+// «خطای قطعی بانک» معنا نمی‌دهد.
+const statusByYear = new Map<number, string>();
+for (const [year, record] of Object.entries(evidence.years)) statusByYear.set(Number(year), record.keyStatus);
+const preliminaryYears = [...statusByYear].filter(([, status]) => status === 'preliminary').map(([year]) => year).sort((a, b) => a - b);
+const unknownYears = [...statusByYear].filter(([, status]) => status === 'unknown').map(([year]) => year).sort((a, b) => a - b);
+if (preliminaryYears.length > 0) notices.push(`سند کلید این سال‌ها اولیه است، نه نهایی: ${preliminaryYears.join('، ')}`);
+if (unknownYears.length > 0) notices.push(`وضعیت سند کلید این سال‌ها نامشخص است: ${unknownYears.join('، ')}`);
 
 const master = getArshadCoverage();
 const doctorate = getDoctorateCoverage();

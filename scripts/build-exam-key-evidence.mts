@@ -36,6 +36,8 @@ interface KeyEntry {
 }
 
 interface YearEvidence {
+  /** وضعیت سند کلید همان سال: کلید اولیه یا کلید نهایی. */
+  keyStatus: 'preliminary' | 'final' | 'unknown';
   maxQuestion: number | null;
   entries: Record<string, number>;
   holes: { from: number; to: number }[];
@@ -54,6 +56,19 @@ for (const name of textLayerFiles) {
   if (!name.startsWith('src-') || !name.endsWith('.json')) continue;
   const record = JSON.parse(readFileSync(join(textLayerDir, name), 'utf8')) as { source_id?: string; pdf_sha256?: string };
   if (record.source_id && record.pdf_sha256) sha256BySource.set(record.source_id, record.pdf_sha256);
+}
+
+/** وضعیت کلید از متن تبدیل‌شدهٔ همان PDF کلید خوانده می‌شود (اگر در این checkout باشد). */
+function keyStatusFor(year: number): YearEvidence['keyStatus'] {
+  for (const name of [`جواب ${year}.md`, `جواب${year}.md`]) {
+    const path = join(root, 'pdf', name);
+    if (!existsSync(path)) continue;
+    const text = readFileSync(path, 'utf8');
+    if (/كليد اوليه|کلید اولیه/.test(text)) return 'preliminary';
+    if (/كليد نهايي|کلید نهایی/.test(text)) return 'final';
+    return 'unknown';
+  }
+  return 'unknown';
 }
 
 const years: Record<string, YearEvidence> = {};
@@ -80,6 +95,7 @@ for (const row of summaryRows) {
 
   const existing = years[year];
   years[year] = {
+    keyStatus: existing?.keyStatus ?? keyStatusFor(Number(year)),
     maxQuestion: Math.max(existing?.maxQuestion ?? 0, row.max_question ?? 0) || null,
     entries: { ...(existing?.entries ?? {}), ...sortedEntries },
     holes: [...(existing?.holes ?? []), ...(row.hole_ranges ?? [])],
