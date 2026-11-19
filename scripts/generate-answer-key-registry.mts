@@ -104,10 +104,49 @@ async function main(): Promise<void> {
   ];
 
   const keys = new Map<string, ExtractedKey>();
+  /** ترتیب رجیستری موجود حفظ می‌شود تا خروجی تازه فقط کلیدهای نو را اضافه کند. */
+  const existingOrder = new Map<string, number>();
+
+  // رجیستری موجود پایهٔ کار است: بانک‌های src/data پس از R-036 دیگر correctOption
+  // ندارند، پس بازتولید بدون این پایه، کلیدهای تاریخی را پاک می‌کرد.
+  const existingRegistryPath = path.resolve('apps/worker/src/data/client-bank-keys.server.ts');
+  if (fs.existsSync(existingRegistryPath)) {
+    for (const rawLine of fs.readFileSync(existingRegistryPath, 'utf8').split('\n')) {
+      const line = rawLine.trim();
+      if (!line.startsWith('{ id: ') || !line.endsWith('},')) continue;
+      // ساختار رجیستری تک‌خطی و ثابت است؛ کلیدهای فیلد را به JSON استاندارد تبدیل می‌کنیم.
+      const asJson = line
+        .slice(0, -1)
+        .replace(/([,\{]\s*)(id|bank|correctOption|explanation|trapNote): /g, '$1"$2": ');
+      const entry = JSON.parse(asJson) as {
+        id: string;
+        bank: string;
+        correctOption: number;
+        explanation?: string;
+        trapNote?: string;
+      };
+      if (!existingOrder.has(entry.id)) existingOrder.set(entry.id, existingOrder.size);
+      keys.set(entry.id, {
+        id: entry.id,
+        bank: entry.bank,
+        correctOption: entry.correctOption,
+        explanation: entry.explanation ?? '',
+        trapNote: entry.trapNote ?? '',
+      });
+    }
+    console.log(`existing registry: ${keys.size} keys`);
+  }
+
+  // کلیدهای استخراج‌شده از بانک فقط وقتی اضافه می‌شوند که در رجیستری نباشند؛
+  // رجیستری موجود مرجع تاریخی است و نباید با مشتق‌گیری دوباره بازنویسی شود.
+  const fresh = new Map<string, ExtractedKey>();
   for (const [bank, rel] of banks) {
     const mod = await importBank(rel);
     const seen = new Set<unknown>();
-    for (const exported of Object.values(mod)) collectFromValue(exported, bank, keys, seen);
+    for (const exported of Object.values(mod)) collectFromValue(exported, bank, fresh, seen);
+  }
+  for (const [id, entry] of fresh) {
+    if (!keys.has(id)) keys.set(id, entry);
   }
 
   // Canaryهای ماندگار برای SEC-010: رشته‌هایی که فقط در همین رجیستری سرور وجود
@@ -130,7 +169,33 @@ async function main(): Promise<void> {
   ];
   for (const c of canaries) keys.set(c.id, c);
 
-  const sorted = [...keys.values()].sort((a, b) => (a.id < b.id ? -1 : 1));
+  // کلید سؤال‌های واردشده از متن دفترچه‌ها. این‌ها از شاهد کلید رسمی
+  // (`content/exam-key-evidence`) ساخته می‌شوند و متن سؤال در src/data کلید ندارد (R-036).
+  const archiveKeysPath = path.resolve('apps/worker/src/data/exam-archive-keys.json');
+  if (fs.existsSync(archiveKeysPath)) {
+    const archive = JSON.parse(fs.readFileSync(archiveKeysPath, 'utf8')) as {
+      keys: Record<string, { correctOption: number; examYear: number; bookletQuestionNumber: number; source: string }>;
+    };
+    for (const [id, entry] of Object.entries(archive.keys)) {
+      if (keys.has(id)) {
+        throw new Error(`کلید تکراری برای سؤال واردشده: ${id}`);
+      }
+      keys.set(id, {
+        id,
+        bank: 'examArchiveImported',
+        correctOption: entry.correctOption,
+        explanation: `کلید رسمی بازیابی‌شدهٔ آزمون ارشد ${entry.examYear}، سؤال ${entry.bookletQuestionNumber} (${entry.source}).`,
+        trapNote: '',
+      });
+    }
+  }
+
+  const orderOf = (id: string) => existingOrder.get(id) ?? Number.MAX_SAFE_INTEGER;
+  const sorted = [...keys.values()].sort((a, b) => {
+    const delta = orderOf(a.id) - orderOf(b.id);
+    if (delta !== 0) return delta;
+    return a.id < b.id ? -1 : 1;
+  });
   const byBank = new Map<string, number>();
   for (const k of sorted) byBank.set(k.bank, (byBank.get(k.bank) ?? 0) + 1);
 

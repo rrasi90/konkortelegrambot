@@ -27,6 +27,7 @@ jobs:
       - run: npm run ael:pdf:check  # AEL-313: no PDF may enter commits
       - run: npx tsx scripts/engine-parity-harness.mts
       - run: npm run validate:content
+      - run: npm run audit:exam-bank  # پوشش، ساختار و تطبیق کلید بانک سؤال آزمون‌ها
       - run: npm run validate:learning
       - run: npm run build:worker
       - run: npm run audit:miniapp

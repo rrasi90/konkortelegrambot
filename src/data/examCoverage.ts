@@ -47,7 +47,7 @@ const percentOf = (available: number, declared: number): number =>
   declared <= 0 ? 0 : round1((available / declared) * 100);
 
 /** سؤال‌هایی که سطحشان صریحاً «دکتری» است یا در منبعشان کنکور دکتری قید شده است. */
-const isDoctorate = (q: object): boolean => {
+export const isDoctorateQuestion = (q: object): boolean => {
   const item = q as { examLevel?: string; sourceReference?: string };
   return (
     item.examLevel === 'دکتری' ||
@@ -61,7 +61,7 @@ const isDoctorate = (q: object): boolean => {
  */
 export function getArshadCoverage(): CoverageReport {
   const booklets = YEARLY_KONKOR_BOOKLETS;
-  const questions = YEARLY_KONKOR_QUESTIONS.filter((q) => !isDoctorate(q));
+  const questions = YEARLY_KONKOR_QUESTIONS.filter((q) => !isDoctorateQuestion(q));
 
   const byYear: CoverageYearRow[] = booklets
     .map((booklet) => {
@@ -102,8 +102,8 @@ export function getArshadCoverage(): CoverageReport {
 export function getDoctorateCoverage(): CoverageReport {
   // R-026: YEARLY ⊂ INITIAL — ادغام فقط با یکتاسازی id مجاز است
   const doctorateQuestions = mergeQuestionsUnique(
-    INITIAL_QUESTION_BANK.filter(isDoctorate),
-    YEARLY_KONKOR_QUESTIONS.filter(isDoctorate),
+    INITIAL_QUESTION_BANK.filter(isDoctorateQuestion),
+    YEARLY_KONKOR_QUESTIONS.filter(isDoctorateQuestion),
   );
 
   return {
