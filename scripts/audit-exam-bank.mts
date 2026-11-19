@@ -45,6 +45,34 @@ const stemSeen = new Map<string, string>();
 const numberSeen = new Set<string>();
 const bookletByYear = new Map(YEARLY_KONKOR_BOOKLETS.map((booklet) => [booklet.year, booklet]));
 
+/**
+ * سال‌هایی که جدول بازهٔ درس‌هایشان در بانک ناقص است. بازه‌ها برای ۱۴۰۲ تا ۱۴۰۵
+ * از جدول جلد همان دفترچه کامل شد؛ برای سال‌های قدیمی‌تر هنوز عکس جلد بازبینی نشده است.
+ */
+const RANGE_GAP_YEARS = new Set([1391, 1392, 1393, 1394, 1395, 1396, 1397, 1398, 1399, 1400, 1401]);
+const rangeGapBooklets: number[] = [];
+
+for (const booklet of YEARLY_KONKOR_BOOKLETS) {
+  const declared = booklet.totalQuestionsInBooklet;
+  const sum = booklet.subjectRanges.reduce((total, range) => total + range.count, 0);
+  if (sum !== declared) {
+    if (RANGE_GAP_YEARS.has(booklet.year)) rangeGapBooklets.push(booklet.year);
+    else violations.push(`جمع بازهٔ درس‌های ${booklet.year} برابر ${sum} است، نه ${declared}`);
+    continue;
+  }
+  let next = 1;
+  for (const range of [...booklet.subjectRanges].sort((a, b) => a.fromQuestion - b.fromQuestion)) {
+    if (range.fromQuestion !== next) violations.push(`بازهٔ پیوسته نیست در ${booklet.year} (شروع ${range.fromQuestion}، انتظار ${next})`);
+    if (range.toQuestion - range.fromQuestion + 1 !== range.count) {
+      violations.push(`شمارش بازهٔ ${range.sectionId} در ${booklet.year} با بازه نمی‌خواند`);
+    }
+    next = range.toQuestion + 1;
+  }
+}
+if (rangeGapBooklets.length > 0) {
+  notices.push(`جدول بازهٔ درس‌ها در ${rangeGapBooklets.length} دفترچه ناقص است: ${rangeGapBooklets.join('، ')}`);
+}
+
 for (const question of YEARLY_KONKOR_QUESTIONS) {
   if (idSeen.has(question.id)) violations.push(`شناسهٔ تکراری: ${question.id}`);
   idSeen.add(question.id);

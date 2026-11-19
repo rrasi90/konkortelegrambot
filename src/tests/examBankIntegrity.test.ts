@@ -93,6 +93,27 @@ describe('بانک سؤال آزمون‌ها', () => {
     expect(unregistered).toEqual([]);
   });
 
+  it('جدول بازهٔ درس‌های دفترچه‌های کامل‌شده با سؤال اعلام‌شده می‌خواند', () => {
+    // سال‌هایی که جدول بازهٔ درس‌هایشان از جلد دفترچه کامل شده است.
+    const completedYears = new Set([1402, 1403, 1404, 1405]);
+    const problems: string[] = [];
+
+    for (const booklet of YEARLY_KONKOR_BOOKLETS) {
+      if (!completedYears.has(booklet.year)) continue;
+      const sum = booklet.subjectRanges.reduce((total, range) => total + range.count, 0);
+      if (sum !== booklet.totalQuestionsInBooklet) problems.push(`${booklet.year}: ${sum} ≠ ${booklet.totalQuestionsInBooklet}`);
+      let next = 1;
+      for (const range of [...booklet.subjectRanges].sort((a, b) => a.fromQuestion - b.fromQuestion)) {
+        if (range.fromQuestion !== next) problems.push(`${booklet.year}: بازهٔ ناپیوسته در ${range.fromQuestion}`);
+        if (range.toQuestion - range.fromQuestion + 1 !== range.count) problems.push(`${booklet.year}: شمارش ${range.sectionId}`);
+        next = range.toQuestion + 1;
+      }
+      if (next - 1 !== booklet.totalQuestionsInBooklet) problems.push(`${booklet.year}: پایان ${next - 1}`);
+    }
+
+    expect(problems).toEqual([]);
+  });
+
   it('هیچ سال ارشد بی‌سؤال نمی‌ماند و پوشش صادقانه گزارش می‌شود', () => {
     const coverage = getArshadCoverage();
     expect(coverage.bookletCount).toBe(15);
