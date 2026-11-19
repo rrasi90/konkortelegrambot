@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { YEARLY_KONKOR_BOOKLETS, YEARLY_KONKOR_QUESTIONS } from '../src/data/yearlyKonkorExams';
 import { CLIENT_BANK_ANSWER_KEYS } from '../apps/worker/src/data/client-bank-keys.server';
 import { getArshadCoverage, getDoctorateCoverage, isDoctorateQuestion } from '../src/data/examCoverage';
+import { DOCTORATE_EXAM_YEAR_STRUCTURES } from '@ael/contracts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const evidenceDir = join(root, 'content', 'exam-key-evidence');
@@ -133,9 +134,22 @@ for (const question of YEARLY_KONKOR_QUESTIONS) {
   else violations.push(`اختلاف ثبت‌نشده با کلید رسمی: ${question.id} بانک=${bankOption} رسمی=${official}`);
 }
 
-const unverified = conflicts.conflicts.filter((conflict) => conflict.verdict === 'needs_booklet_review');
-if (unverified.length > 0) {
+const unverified = conflicts.conflicts.filter((conflict) => conflict.verdict === 'needs_booklet_review');if (unverified.length > 0) {
   notices.push(`${unverified.length} اختلاف در انتظار مشاهدهٔ تصویر کلید رسمی است: ${unverified.map((c) => c.id).join('، ')}`);
+}
+
+// شمارش زبان دکتری با ساختار رسمی همان سال مقایسه می‌شود. مخرج رسمی در contracts است.
+const doctorateEnglish = new Map<number, number>();
+for (const question of YEARLY_KONKOR_QUESTIONS) {
+  if (!isDoctorateQuestion(question) || question.courseSectionId !== 'english') continue;
+  doctorateEnglish.set(question.examYear, (doctorateEnglish.get(question.examYear) ?? 0) + 1);
+}
+for (const [year, count] of [...doctorateEnglish].sort((a, b) => a[0] - b[0])) {
+  const official = DOCTORATE_EXAM_YEAR_STRUCTURES[year]?.languageQuestionCount;
+  if (typeof official !== 'number') continue;
+  if (count > official) {
+    notices.push(`زبان دکتری ${year}: ${count} سؤال در بانک، سقف رسمی ${official}`);
+  }
 }
 
 const master = getArshadCoverage();
