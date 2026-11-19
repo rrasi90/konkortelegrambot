@@ -17,6 +17,7 @@ import { YEARLY_KONKOR_BOOKLETS, YEARLY_KONKOR_QUESTIONS } from '../src/data/yea
 import { CLIENT_BANK_ANSWER_KEYS } from '../apps/worker/src/data/client-bank-keys.server';
 import { getArshadCoverage, getDoctorateCoverage, isDoctorateQuestion } from '../src/data/examCoverage';
 import { DOCTORATE_EXAM_YEAR_STRUCTURES } from '@ael/contracts';
+import { corroborates, docxText } from './lib/docx-text.mts';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const evidenceDir = join(root, 'content', 'exam-key-evidence');
@@ -152,6 +153,38 @@ for (const [year, count] of [...doctorateEnglish].sort((a, b) => a[0] - b[0])) {
   }
 }
 
+// مقابلهٔ سؤال‌های انگلیسی با OCR مستقل همان دفترچه. متن لاتین قابل مقابلهٔ دقیق است؛
+// بخش فارسی به بازبینی دستی نیاز دارد و اینجا سنجیده نمی‌شود.
+const docxCache = new Map<number, string | null>();
+const bookletOcr = (year: number) => {
+  if (!docxCache.has(year)) {
+    docxCache.set(year, docxText(join(root, 'docs', 'exam-ocr', '1142', `1142-${year}.docx`)));
+  }
+  return docxCache.get(year) ?? null;
+};
+
+let englishChecked = 0;
+const englishFailures: string[] = [];
+const yearsWithoutOcr = new Set<number>();
+for (const question of YEARLY_KONKOR_QUESTIONS) {
+  if (isDoctorateQuestion(question) || question.courseSectionId !== 'english') continue;
+  const ocr = bookletOcr(question.examYear);
+  if (!ocr) {
+    yearsWithoutOcr.add(question.examYear);
+    continue;
+  }
+  englishChecked += 1;
+  if (!corroborates({ text: question.text, options: question.options }, ocr).ok) {
+    englishFailures.push(question.id);
+  }
+}
+if (englishFailures.length > 0) {
+  notices.push(`مقابله با OCR دفترچه رد شد: ${englishFailures.join('، ')}`);
+}
+if (yearsWithoutOcr.size > 0) {
+  notices.push(`OCR دفترچه برای این سال‌ها موجود نیست: ${[...yearsWithoutOcr].sort().join('، ')}`);
+}
+
 const master = getArshadCoverage();
 const doctorate = getDoctorateCoverage();
 const missingYears = master.byYear.filter((row) => row.available === 0).map((row) => row.year);
@@ -167,6 +200,7 @@ console.log(`  سؤال ثبت‌شده: ${doctorate.available} — دفترچه
 console.log('== کلید ==');
 console.log(`  کلید سمت سرور: ${serverKeys.size} — سؤال بانک سالی: ${YEARLY_KONKOR_QUESTIONS.length}`);
 console.log(`  مقایسه با کلید رسمی بازیابی‌شده: ${compared} سؤال، ${agreed} همخوان، ${acknowledged.length} اختلاف ثبت‌شده`);
+console.log(`  مقابلهٔ سؤال انگلیسی با OCR دفترچه: ${englishChecked - englishFailures.length} از ${englishChecked} تأیید شد`);
 for (const line of acknowledged) console.log(`    - ${line}`);
 
 for (const notice of notices) console.log(`\n[هشدار] ${notice}`);
