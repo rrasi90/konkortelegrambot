@@ -26,8 +26,8 @@ describe('ممیزی درس ۱ — مبانی سازمان و مدیریت (cour
     // نوشته نشده‌اند و به‌عنوان gap محتوایی در openItems رجیستر ممیزی باز است —
     // هیچ سؤالی برای رسیدن به عدد هدف جعل نمی‌شود.
     // ۹۱ سؤال دیگر از دفترچهٔ رسمی ۱۳۹۶ تا ۱۴۰۲ اضافه شده است (q.k1396.* تا q.k1404.*)؛ متنشان بازبینی
-    // شده و کلیدشان از شاهد رسمی است.
-    expect(courseQuestions.length).toBe(145);
+    // شده و کلیدشان از شاهد رسمی است. دو سؤال ۱۴۰۵ (مکاتب و ادهوکراسی) با کلید استنباطی آمده‌اند.
+    expect(courseQuestions.length).toBe(147);
     const missing = courseQuestions.filter((q) => !keyMap.has(q.id));
     expect(missing.map((q) => q.id)).toEqual([]);
   });

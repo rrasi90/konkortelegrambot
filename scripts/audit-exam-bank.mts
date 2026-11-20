@@ -209,9 +209,18 @@ for (const row of master.byYear) {
   console.log(`  ${row.year}: ${row.available} از ${row.declared} (${row.percent}٪)${verifiedMark}`);
 }
 console.log(`  جمع: ${master.available} از ${master.declared} (${master.percent}٪) در ${master.bookletCount} دفترچه`);
+const derivedSidecarFile = join(evidenceDir, '..', '..', 'apps', 'worker', 'src', 'data', 'exam-derived-keys.json');
+const derivedInVerified = existsSync(derivedSidecarFile)
+  ? Object.values(
+      (JSON.parse(readFileSync(derivedSidecarFile, 'utf8')) as { keys: Record<string, { examYear: number }> }).keys,
+    ).filter((k) => master.byYear.some((row) => row.declaredVerified && row.year === k.examYear)).length
+  : 0;
 console.log(
-  `  کلید رسمی روی مخرج تأییدشده: ${master.verifiedAvailable} از ${master.verifiedDeclared} ` +
-    `(${master.percentVsVerified}٪؛ سال‌های با مخرج بی‌شاهد در این کسر نیستند)`,
+  `  کلید رسمی/تألیفی روی مخرج تأییدشده: ${master.verifiedAvailable - derivedInVerified} از ${master.verifiedDeclared} ` +
+    `(${Math.round(((master.verifiedAvailable - derivedInVerified) / master.verifiedDeclared) * 1000) / 10}٪؛ سال‌های با مخرج بی‌شاهد در این کسر نیستند)`,
+);
+console.log(
+  `  کلید استنباطی روی همان مخرج: ${derivedInVerified} (${Math.round((derivedInVerified / master.verifiedDeclared) * 1000) / 10}٪ افزوده)`,
 );
 console.log('== پوشش دکتری (۲۱۶۲) ==');
 console.log(`  سؤال ثبت‌شده: ${doctorate.available} — دفترچهٔ رسمی ثبت‌شده: ${doctorate.bookletCount}`);

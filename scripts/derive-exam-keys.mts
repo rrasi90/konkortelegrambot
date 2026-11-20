@@ -283,8 +283,11 @@ async function importResults(): Promise<void> {
         continue;
       }
     }
-    if (!a.layer || !a.answerOption || !b.answerOption) { rejected.push({ id, reason: 'رکورد ناقص' }); continue; }
-    if (a.layer === 'R' || b.layer === 'R') { unresolved.push({ id, reason: 'طبقهٔ R — استنتاج‌ناپذیر' }); continue; }
+    if (!a.layer || !b.layer) { rejected.push({ id, reason: 'رکورد ناقص' }); continue; }
+    if (a.layer === 'R' || b.layer === 'R' || !a.answerOption || !b.answerOption) {
+      unresolved.push({ id, reason: a.layer === 'R' || b.layer === 'R' ? 'طبقهٔ R در یکی از گذرها — استنتاج‌ناپذیر' : 'یک گذر گزینه نداد', derivationA: a.derivation, derivationB: b.derivation });
+      continue;
+    }
     if (a.answerOption !== b.answerOption) {
       unresolved.push({ id, reason: `اختلاف دو گذر: A=${a.answerOption} B=${b.answerOption}`, derivationA: a.derivation, derivationB: b.derivation });
       continue;

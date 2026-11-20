@@ -88,7 +88,10 @@ const rows = windowYears.map((year) => {
     (question) => question.examYear === year && (question.examLevel ?? 'ارشد') === 'ارشد',
   );
   const inBank = yearQuestions.length;
-  const officialInBank = yearQuestions.filter((question) => officialSidecarIds.has(question.id)).length;
+  // آرایش دو شمارش: هر سؤالی که در بانک است یا کلید رسمی (سایدکار یا تألیفی با شاهد پاسخنامه)
+  // دارد یا استنباطی؛ پس رسمی = کل بانک − استنباطی. شمارش sidecar-only شمارهای تألیفیِ
+  // ۱۳۹۶–۱۴۰۳ را جا می‌انداخت و با آدیت ناهمخوانی می‌داد.
+  const officialInBank = yearQuestions.filter((question) => !derivedSidecarIds.has(question.id)).length;
   const derivedInBank = yearQuestions.filter(
     (question) => derivedSidecarIds.has(question.id) && !officialSidecarIds.has(question.id),
   ).length;

@@ -18,12 +18,12 @@ const COURSE_NODES: Record<string, string[]> = {
 };
 
 const EXPECTED_COUNTS: Record<string, number> = {
-  // شمارش‌ها پس از افزودن تست‌های تألیفی فصل (q.auth.*) و سؤال‌های بازبینی‌شدهٔ
-  // دفترچه‌های ۱۳۹۶ و ۱۳۹۷ (q.k1396.* تا q.k1404.*) به‌روز شده‌اند
+  // شمارش‌ها پس از افزودن تست‌های تألیفی فصل (q.auth.*)، سؤال‌های بازبینی‌شدهٔ
+  // دفترچه‌های ۱۳۹۶ و ۱۳۹۷ (q.k1396.* تا q.k1404.*) و ۲۰ کلید استنباطی ۱۴۰۴/۱۴۰۵ به‌روز شده‌اند
   'course-stats': 21,
   'course-islamic-mgmt': 92,
   'course-strategic-mgmt': 31,
-  'course-marketing': 101,
+  'course-marketing': 102,
   'course-innovation-mgmt': 28,
 };
 
