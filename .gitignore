@@ -33,3 +33,4 @@ dist-miniapp/
 
 # scratch of running subagents
 .passB-tmp/
+supabase/.temp/
