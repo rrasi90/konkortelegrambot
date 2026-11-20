@@ -9,8 +9,12 @@ correct option by the most direct defensible route:
 - D1 (computation): solve the numeric problem from the data in the stem itself.
 - D2 (definition): match the option to a standard definition/formula that
   EXISTS IN THIS REPOSITORY. You may only quote from files under `src/data/`
-  (bookChapters*.ts, flashcards*.ts, referenceBooksRepo.ts, konkorData.ts) or
-  `content/learning-courses/*.json`. No outside knowledge as a citation.
+  (bookChapters*.ts, flashcards*.ts, referenceBooksRepo.ts, konkorData.ts),
+  `content/learning-courses/*.json`, the registered book chapters under
+  `content/markdown/books/*/chapters/*.md`, or the project-authored compendium
+  `public/assets/konkor-100p-centralized-compendium.md` (definitions only: a
+  citation containing «سؤال <number>» is rejected by the gate). No outside
+  knowledge as a citation.
 - R (recall): if the answer needs a historical/theoretical fact that cannot be
   derived from the stem and has no in-repo quote, set layer "R", answerOption
   null. NEVER guess.

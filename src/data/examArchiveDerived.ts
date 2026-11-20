@@ -558,5 +558,24 @@ export const EXAM_ARCHIVE_DERIVED_QUESTIONS: YearlyKonkorQuestion[] = [
       "استراتژی"
     ],
     "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1405.62",
+    "nodeId": "mb.structure",
+    "examYear": 1405,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 62,
+    "courseSectionId": "management_theories",
+    "courseSectionTitle": "تئوری‌های مدیریت",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1405 — درس تئوری‌های مدیریت",
+    "sourceReference": "کنکور ارشد مدیریت 1405 — سؤال 62؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "گر سازمانی برای تحلیل و طراحی ساختار، همزمان بر اصول رسمنی و جهان شمول مدیریت، بر نیازها و انگیزش کارکنان و ارتباط پویا با محیط بیرونی تأکید کند، این رویکرد بیشتر با کدام طبقه بندی اسکات سازگار است؟",
+    "options": [
+      "کمّی",
+      "کلاسیک",
+      "نتوکلاسیک",
+      "سیستمی (باز)"
+    ],
+    "expectedTimeMs": 80000
   }
 ];

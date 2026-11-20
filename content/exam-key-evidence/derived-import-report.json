@@ -1,8 +1,8 @@
 {
- "accepted": 0,
+ "accepted": 1,
  "conflicts": 2,
  "unresolved": 86,
- "rejected": 194,
+ "rejected": 193,
  "rejectedDetail": [
   {
    "id": "q.k1396.35",
@@ -633,10 +633,6 @@
    "reason": "در جمعیت دروازه نیست (متن یا ساختار رد شده)"
   },
   {
-   "id": "q.k1405.62",
-   "reason": "نقل D2 در مخزن پیدا نشد"
-  },
-  {
    "id": "q.k1405.65",
    "reason": "شاهد دوم (docx همان سال) متن خام را تأیید نکرد (واژه 0٪، گزینه 0)"
   },
@@ -781,5 +777,5 @@
    "reason": "در جمعیت دروازه نیست (متن یا ساختار رد شده)"
   }
  ],
- "registrySidecar": 29
+ "registrySidecar": 30
 }

@@ -18,5 +18,9 @@ JSON array, one record per question:
 Rules:
 - Read nothing under out/ except to write your own file; do not read
   derived-keys.json or any batch .A/.B file. Independence is the point.
+- Grep only under content/ and src/data/. NEVER open or grep
+  apps/worker/src/data/ or apps/miniapp/ — those carry stored keys and
+  explanations; touching them voids your independence (a prior auditor
+  reported leaking correctOption from a registry grep there).
 - Persian derivation; Persian digits; no guessing: "R" when not derivable.
 - Write ONLY audit.AUDIT.json.

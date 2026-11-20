@@ -122,6 +122,35 @@ export async function citationCorpus(): Promise<string> {
       }
     }
     const { readdirSync } = await import('node:fs');
+    // فصول کتاب‌های ثبت‌شده در مخزن (۴۶ فایل md) — همان متنی که دادهٔ src/data از آن‌ها مشتق شده.
+    const walkBooks = (dir: string): void => {
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const full = join(dir, entry.name);
+        if (entry.isDirectory()) walkBooks(full);
+        else if (entry.name.endsWith('.md')) {
+          try {
+            parts.push(normalizeText(readFileSync(full, 'utf8')));
+          } catch {
+            /* فایل خواندنی نیست */
+          }
+        }
+      }
+    };
+    const booksDir = join(root, 'content', 'markdown', 'books');
+    try {
+      walkBooks(booksDir);
+    } catch {
+      /* دایرکتوری کتاب موجود نیست */
+    }
+    // دایرةالمعارف تألیفی خود پروژه (course.100p.*) — قابل‌استناد برای تعریف، نه برای کلید؛
+    // نقلِ شامل نشانگر «سؤال» در ادامه رد می‌شود تا متن پرسشِ کلیددار مدارک نشود.
+    for (const name of ['konkor-100p-centralized-compendium.md']) {
+      try {
+        parts.push(normalizeText(readFileSync(join(root, 'public', 'assets', name), 'utf8')));
+      } catch {
+        /* موجود نیست */
+      }
+    }
     const learningDir = join(root, 'content', 'learning-courses');
     for (const name of readdirSync(learningDir)) {
       if (!name.endsWith('.json')) continue;
@@ -137,6 +166,8 @@ export async function citationCorpus(): Promise<string> {
 export async function citationFoundInRepo(citation: string): Promise<boolean> {
   const needle = normalizeText(citation);
   if (needle.length < 12) return false;
+  // نقل از بلوک سؤال/پاسخ ممنوع: دایرةالمعارف برای تعریف است، نه مدارک کلید.
+  if (/سوال\s*\d|\bsq\b/.test(needle)) return false;
   const corpus = await citationCorpus();
   return corpus.includes(needle);
 }

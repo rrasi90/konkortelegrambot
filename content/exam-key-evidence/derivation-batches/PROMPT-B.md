@@ -10,7 +10,10 @@ For EVERY question in the assigned batch files (see task prompt):
 2. For each option, write one concrete reason it is wrong, judged ONLY from the
    stem, the option text, and facts derivable from them or quoted from this
    repository (`src/data/bookChapters*.ts`, `flashcards*.ts`,
-   `referenceBooksRepo.ts`, `konkorData.ts`, `content/learning-courses/*.json`).
+   `referenceBooksRepo.ts`, `konkorData.ts`, `content/learning-courses/*.json`,
+   the registered book chapters under `content/markdown/books/*/chapters/*.md`,
+   and `public/assets/konkor-100p-centralized-compendium.md` for definitions
+   only — a citation containing «سؤال <number>» is rejected by the gate).
 3. If more than one option survives elimination, or if eliminating the rivals
    requires a remembered fact not present in the stem and not quotable from the
    repo → layer "R", answerOption null. NEVER guess.
