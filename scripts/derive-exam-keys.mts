@@ -338,7 +338,7 @@ async function importResults(): Promise<void> {
       sectionId: q.sectionId,
       answerOption: a.answerOption,
       layer: a.layer,
-      derivation: a.derivation,
+      derivation: ensurePersianStart(a.derivation),
       citation: a.citation ?? '',
       method: a.layer === 'D1' ? 'computation' : 'definition',
       corroboration: 'second_pass_agree' as const,
@@ -368,6 +368,12 @@ async function importResults(): Promise<void> {
     ? (JSON.parse(readFileSync(derivedFile, 'utf8')) as { keys: Record<string, Record<string, unknown>> }).keys
     : {};
   for (const record of accepted) previous[String(record.id)] = record;
+  // یکسان‌سازی سبکی پذیرفته‌های پیشین (رکورد قدیمی بدون برچسب bidi نماند).
+  for (const raw of Object.values(previous)) {
+    const rec = raw as { derivation?: string; secondPassDerivation?: string };
+    if (rec.derivation) rec.derivation = ensurePersianStart(rec.derivation);
+    if (rec.secondPassDerivation) rec.secondPassDerivation = ensurePersianStart(rec.secondPassDerivation);
+  }
 
   // حذف دو حالت بی‌اعتبار: (۱) کلیدی که نه در جمعیت است و نه در بانک؛
   // (۲) پذیرش قدیمی که این دور با دادهٔ هر دو گذر دوباره ارزیابی شد و دیگر پذیرفته نیست.
@@ -454,6 +460,10 @@ async function makeAuditSample(): Promise<void> {
   writeFileSync(join(batchesDir, 'audit-sample.json'), `${JSON.stringify(sample, null, 1)}\n`, 'utf8');
   console.log(`AUDIT_SAMPLE ${sample.length} از ${ids.length} (نرخ نمونه ${ids.length ? Math.round((sample.length / ids.length) * 100) : 0}٪)`);
 }
+
+/** قاعدهٔ bidi: هر جملهٔ فارسی باید با واژهٔ فارسی شروع شود؛ فرمولِ اول‌سطر را برچسب می‌دهیم. */
+const ensurePersianStart = (text: string): string =>
+  /^[\u0601-\u06EF]/.test(text.trim()) ? text : `محاسبه: ${text.trim()}`;
 
 // ---- audit-check ----
 /** §۴.۵: نرخ توافق بازاستخراج مستقل؛ زیر ۹۰٪ یعنی قاعده باید سخت‌تر شود. */
