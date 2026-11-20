@@ -42,12 +42,12 @@ describe('گارد رجیستری کلید سمت سرور (R-036 remediation)',
     }
   });
 
-  it('۳. پوشش رجیستری: ۱٬۲۴۷ کلید واقعی (۴۴۳ konkorData + ۲۷ referenceBooksRepo + ۱۱۲ دفترچهٔ زبان دکتری + ۱۹ سؤال واردشده + ۶۴۶ سؤال بازبینی‌شدهٔ فارسی) + ۲ canary؛ تکراری/بی‌شناسه ممنوع', () => {
+  it('۳. پوشش رجیستری: ۱٬۲۸۰ کلید واقعی (۴۴۳ konkorData + ۲۷ referenceBooksRepo + ۱۱۲ دفترچهٔ زبان دکتری + ۱۹ سؤال واردشده + ۶۴۶ سؤال بازبینی‌شدهٔ فارسی + ۳۳ کلید استنباطی) + ۲ canary؛ تکراری/بی‌شناسه ممنوع', () => {
     const real = CLIENT_BANK_ANSWER_KEYS.filter((k) => !k.id.startsWith('sec.'));
     // شمارش به تفکیک بانک (با اجرای promote و keys:sync بازتولید می‌شود):
     // konkorData ۴۴۳ + referenceBooksRepo ۲۷ + yearlyKonkorExams ۱۱۲
-    // + examArchiveImported ۱۹ + examArchivePersian ۶۴۶ = ۱۲۴۷
-    expect(real.length).toBe(1277);
+    // + examArchiveImported ۱۹ + examArchivePersian ۶۴۶ + examArchiveDerived ۳۳ = ۱۲۸۰
+    expect(real.length).toBe(1280);
     const conceptChecks = real.filter((k) => k.id.endsWith('#conceptCheck'));
     expect(conceptChecks.length).toBe(25);
     const ids = new Set(real.map((k) => k.id));

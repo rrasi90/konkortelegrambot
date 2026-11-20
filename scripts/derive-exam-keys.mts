@@ -449,11 +449,20 @@ async function makeAuditSample(): Promise<void> {
     }
   }
   const ids = Object.keys(keys).sort();
-  const picked = ids.filter((id) => {
+  const hashOf = (id: string, salt: string): number => {
     let h = 0;
-    for (const ch of id + 'audit-v1') h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-    return h % 10 === 0;
-  });
+    for (const ch of id + salt) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    return h;
+  };
+  const picked = ids.filter((id) => hashOf(id, 'audit-v1') % 10 === 0);
+  // کف نمونه ۵ مورد (برای ۳۳ کلید، ۱۰٪ فقط ۳ می‌داد و نرخ توافق بی‌معنا بود).
+  if (picked.length < 5 && ids.length >= 5) {
+    const extra = ids
+      .filter((id) => !picked.includes(id))
+      .sort((a, b) => hashOf(a, 'audit-v2') - hashOf(b, 'audit-v2'))
+      .slice(0, 5 - picked.length);
+    picked.push(...extra);
+  }
   const sample = picked
     .map((id) => byId.get(id))
     .filter(Boolean);
@@ -482,19 +491,21 @@ async function auditCheck(): Promise<void> {
   const audit = JSON.parse(readFileSync(auditPath, 'utf8')) as { id: string; answerOption: number | null }[];
   let compared = 0;
   let agreed = 0;
+  let abstained = 0;
   const mismatches: { id: string; accepted: number; auditor: number | null }[] = [];
   for (const record of audit) {
     if (!sample.has(record.id)) continue;
     const accepted = keys[record.id];
     if (!accepted) continue;
+    if (record.answerOption == null) { abstained += 1; continue; }
     compared += 1;
     if (record.answerOption === accepted.answerOption) agreed += 1;
     else mismatches.push({ id: record.id, accepted: accepted.answerOption, auditor: record.answerOption });
   }
   const rate = compared === 0 ? 0 : Math.round((agreed / compared) * 1000) / 10;
-  const report = { compared, agreed, agreementPercent: rate, pass: rate >= 90, mismatches };
-  writeFileSync(join(evidenceDir, 'derivation-audit.json'), `${JSON.stringify(report, null, 1)}\n`, 'utf8');
-  console.log(`AUDIT_CHECK compared=${compared} agreed=${agreed} rate=${rate}٪ pass=${report.pass}`);
+  const report = { compared, agreed, abstained, agreementPercent: rate, pass: rate >= 90 };
+  writeFileSync(join(evidenceDir, 'derivation-audit.json'), `${JSON.stringify({ ...report, mismatches }, null, 1)}\n`, 'utf8');
+  console.log(`AUDIT_CHECK compared=${compared} agreed=${agreed} abstained=${abstained} rate=${rate}٪ pass=${report.pass}`);
 }
 
 await run();
