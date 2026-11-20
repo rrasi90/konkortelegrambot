@@ -30,3 +30,6 @@ dist-miniapp/
 
 # local dev-server pid
 .dev-server.pid
+
+# scratch of running subagents
+.passB-tmp/
