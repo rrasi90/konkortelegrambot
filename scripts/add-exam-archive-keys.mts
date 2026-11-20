@@ -34,11 +34,12 @@ interface Sidecar {
   keys: Record<string, SidecarEntry>;
 }
 
-/** کلیدهای واردشده انگلیسی، فارسی بازبینی‌شده و استنباطی؛ سه سند جدا. */
+/** کلیدهای واردشده انگلیسی، فارسی بازبینی‌شده، استنباطی و تأییدشدهٔ رسمی؛ چهار سند جدا. */
 const sidecarPaths = [
   join(root, 'apps', 'worker', 'src', 'data', 'exam-archive-keys.json'),
   join(root, 'apps', 'worker', 'src', 'data', 'exam-persian-keys.json'),
   join(root, 'apps', 'worker', 'src', 'data', 'exam-derived-keys.json'),
+  join(root, 'apps', 'worker', 'src', 'data', 'exam-confirmed-keys.json'),
 ];
 
 const merged: Sidecar = { keys: {} };
@@ -54,7 +55,7 @@ const sidecar = merged;
 const bankOf = (entry: SidecarEntry): string => entry.bank ?? 'examArchiveImported';
 
 const ENTRY = /\{ id: "([^"]+)", bank: "([^"]+)", correctOption: (\d+)/g;
-const derived = new Set(['examArchiveImported', 'examArchivePersian', 'examArchiveDerived']);
+const derived = new Set(['examArchiveImported', 'examArchivePersian', 'examArchiveDerived', 'examArchiveConfirmed']);
 
 const registry = readFileSync(registryPath, 'utf8');
 
@@ -66,7 +67,8 @@ const staleIds = new Set<string>();
 for (const match of registry.matchAll(ENTRY)) {
   const [, id, bank] = match;
   if (!derived.has(bank)) continue;
-  if (!(id in sidecar.keys)) staleIds.add(id);
+  const entry = sidecar.keys[id];
+  if (!entry || bankOf(entry) !== bank) staleIds.add(id); // نبود کلید یا تغییر بانک (استنتاج↔تأیید رسمی)
 }
 
 const pruned =
@@ -90,6 +92,13 @@ if (additions.length === 0 && staleIds.size === 0) {
   console.log('EXAM_ARCHIVE_KEYS_UP_TO_DATE');
   process.exit(0);
 }
+
+const bankComments: Record<string, string> = {
+  examArchiveImported: 'شاهد کلید رسمی واردشده',
+  examArchivePersian: 'شاهد کلید رسمی فارسی بازبینی‌شده',
+  examArchiveDerived: 'کلید استنباطی بدون پاسخنامه',
+  examArchiveConfirmed: 'کلید رسمی تأییدشده با استنتاج مستقل',
+};
 
 const block = [
   '',

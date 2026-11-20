@@ -9,63 +9,6 @@ import type { YearlyKonkorQuestion } from './yearlyKonkorExams';
 
 export const EXAM_ARCHIVE_DERIVED_QUESTIONS: YearlyKonkorQuestion[] = [
   {
-    "id": "q.k1404.227",
-    "nodeId": "bus.accounting_hub",
-    "examYear": 1404,
-    "examLevel": "ارشد",
-    "bookletQuestionNumber": 227,
-    "courseSectionId": "accounting",
-    "courseSectionTitle": "حسابداری مالی و صنعتی",
-    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس حسابداری مالی و صنعتی",
-    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 227؛ کلید استنباطی بدون پاسخنامه، متن بازبینی‌شده از دفترچه",
-    "text": "دریافت وجه نقد بابت بهای خدمات انجام‌شده، موجب کدام رویداد زیر می‌شود؟",
-    "options": [
-      "درآمد و بدهی کاهش می‌یابد.",
-      "سرمایه و دارایی افزایش می‌یابد.",
-      "درآمد افزایش می‌یابد و دارایی کاهش می‌یابد.",
-      "درآمد افزایش می‌یابد و بدهی کاهش می‌یابد."
-    ],
-    "expectedTimeMs": 80000
-  },
-  {
-    "id": "q.k1404.235",
-    "nodeId": "bus.accounting_hub",
-    "examYear": 1404,
-    "examLevel": "ارشد",
-    "bookletQuestionNumber": 235,
-    "courseSectionId": "accounting",
-    "courseSectionTitle": "حسابداری مالی و صنعتی",
-    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس حسابداری مالی و صنعتی",
-    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 235؛ کلید استنباطی بدون پاسخنامه، متن بازبینی‌شده از دفترچه",
-    "text": "از دست رفتن منابع بدون کسب هیچ‌گونه منفعتی، چه نامیده می‌شود؟",
-    "options": [
-      "زیان",
-      "هزینه",
-      "درآمد",
-      "بهای تمام شده"
-    ],
-    "expectedTimeMs": 80000
-  },
-  {
-    "id": "q.k1404.238",
-    "nodeId": "bus.accounting_hub",
-    "examYear": 1404,
-    "examLevel": "ارشد",
-    "bookletQuestionNumber": 238,
-    "courseSectionId": "accounting",
-    "courseSectionTitle": "حسابداری مالی و صنعتی",
-    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس حسابداری مالی و صنعتی",
-    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 238؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
-    "text": "قایسه ترازنامه یک شرکت در پایان سال های 1397 و 1398 نشان می دهد که جمع دارایی ها 90 میلیون ریال و سرمایه 36 میلیون ریال کاهش یافتته است. کدام مورد، رقم تغییر در بدهی سال 1398 را نشان می دهد؟",
-    "options": [
-      "36 میلیون ریال کاهش",
-      "میلیون ریال افزایش",
-      "54 میلیون ریال کاهش",
-      "136 میلیون ریال افزایش"
-    ],
-    "expectedTimeMs": 80000
-  },
-  {
     "id": "q.k1405.83",
     "nodeId": "mb.structure",
     "examYear": 1405,
@@ -389,82 +332,6 @@ export const EXAM_ARCHIVE_DERIVED_QUESTIONS: YearlyKonkorQuestion[] = [
     "expectedTimeMs": 80000
   },
   {
-    "id": "q.k1396.196",
-    "nodeId": "mkt.plc",
-    "examYear": 1396,
-    "examLevel": "ارشد",
-    "bookletQuestionNumber": 196,
-    "courseSectionId": "marketing",
-    "courseSectionTitle": "بازاریابی",
-    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس بازاریابی",
-    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 196؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
-    "text": "ر فروشگاههای زنجیرهای بزرگ، برخی محصولات با برند آن فروشگاه به فروش می روند، استراتژی نام گذاری در خصوص این کاللاها چیست؟",
-    "options": [
-      "واحد",
-      "مختلط",
-      "مختلف برای محصولات مختلف",
-      "عمدهفروشان / خردەفروشان"
-    ],
-    "expectedTimeMs": 80000
-  },
-  {
-    "id": "q.k1396.308",
-    "nodeId": "bus.commerce_transport_hub",
-    "examYear": 1396,
-    "examLevel": "ارشد",
-    "bookletQuestionNumber": 308,
-    "courseSectionId": "business_transportation",
-    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
-    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
-    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 308؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
-    "text": "دام تعریف مفهوم لجستیک را کاملتر تداعی می کنند؟",
-    "options": [
-      "لجستیک退还ی حمل کالا از نقطه ای به نقطه ای دی گر.",
-      "انتقال سربازان به همراه تسلیمحات و تجهیزات آن ها به منطقه مورد نظر در کمترین زمان ممکن.",
-      "حمل کالا به محل مناسب، در زمان مناسب با بهین هترین هزین ه و بالاترین کیفیت ممکن.",
-      "لجستیک退还ی انتقال کالا از دریا به خشکی و بالعکس در کمترین زمان و هزین ه ممکن."
-    ],
-    "expectedTimeMs": 80000
-  },
-  {
-    "id": "q.k1398.162",
-    "nodeId": "bus.finmgmt_hub",
-    "examYear": 1398,
-    "examLevel": "ارشد",
-    "bookletQuestionNumber": 162,
-    "courseSectionId": "financial_management",
-    "courseSectionTitle": "مدیریت مالی",
-    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت مالی",
-    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 162؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
-    "text": "طلاعات دو شرکت به شرح زیر است: درجه اهرم مالی درجه اهرم عملیاتی شرکت 3 1/6 A 4 1/2 B اگر حجم فروش هر دو شرکت 5 درصد افزایش یابد، کدام گزینه اثر این افزایش بر EPS دو شرکت را نشان می دهد؟",
-    "options": [
-      "درصد افزایش EPS هر دو شرکت برایر است.",
-      "درصد افزایش EPS شرکت A از شرکت B بیشتر است.",
-      "درصد افزایش EPS شرکت B از شرکت A بیشتر است.",
-      "درصد افزایش بستگی به مبلغ EPS دارد."
-    ],
-    "expectedTimeMs": 80000
-  },
-  {
-    "id": "q.k1398.195",
-    "nodeId": "mkt.plc",
-    "examYear": 1398,
-    "examLevel": "ارشد",
-    "bookletQuestionNumber": 195,
-    "courseSectionId": "marketing",
-    "courseSectionTitle": "بازاریابی",
-    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس بازاریابی",
-    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 195؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
-    "text": "یمت هایی که در حافظه خریداران وجود دارند و خریداران در هنگام ضرورت بررسی یک کالا از آنها استفاده می کنند، چه نام دارد؟",
-    "options": [
-      "پایه",
-      "روانی",
-      "ذهنی",
-      "مرجع"
-    ],
-    "expectedTimeMs": 80000
-  },
-  {
     "id": "q.k1405.265",
     "nodeId": "bus.commerce_transport_hub",
     "examYear": 1405,
@@ -575,6 +442,139 @@ export const EXAM_ARCHIVE_DERIVED_QUESTIONS: YearlyKonkorQuestion[] = [
       "کلاسیک",
       "نتوکلاسیک",
       "سیستمی (باز)"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.227",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 227,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 227؛ کلید استنباطی بدون پاسخنامه، متن بازبینی‌شده از دفترچه",
+    "text": "دریافت وجه نقد بابت بهای خدمات انجام‌شده، موجب کدام رویداد زیر می‌شود؟",
+    "options": [
+      "درآمد و بدهی کاهش می‌یابد.",
+      "سرمایه و دارایی افزایش می‌یابد.",
+      "درآمد افزایش می‌یابد و دارایی کاهش می‌یابد.",
+      "درآمد افزایش می‌یابد و بدهی کاهش می‌یابد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.235",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 235,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 235؛ کلید استنباطی بدون پاسخنامه، متن بازبینی‌شده از دفترچه",
+    "text": "از دست رفتن منابع بدون کسب هیچ‌گونه منفعتی، چه نامیده می‌شود؟",
+    "options": [
+      "زیان",
+      "هزینه",
+      "درآمد",
+      "بهای تمام شده"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1404.238",
+    "nodeId": "bus.accounting_hub",
+    "examYear": 1404,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 238,
+    "courseSectionId": "accounting",
+    "courseSectionTitle": "حسابداری مالی و صنعتی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1404 — درس حسابداری مالی و صنعتی",
+    "sourceReference": "کنکور ارشد مدیریت 1404 — سؤال 238؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "قایسه ترازنامه یک شرکت در پایان سال های 1397 و 1398 نشان می دهد که جمع دارایی ها 90 میلیون ریال و سرمایه 36 میلیون ریال کاهش یافتته است. کدام مورد، رقم تغییر در بدهی سال 1398 را نشان می دهد؟",
+    "options": [
+      "36 میلیون ریال کاهش",
+      "میلیون ریال افزایش",
+      "54 میلیون ریال کاهش",
+      "136 میلیون ریال افزایش"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.196",
+    "nodeId": "mkt.plc",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 196,
+    "courseSectionId": "marketing",
+    "courseSectionTitle": "بازاریابی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس بازاریابی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 196؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "ر فروشگاههای زنجیرهای بزرگ، برخی محصولات با برند آن فروشگاه به فروش می روند، استراتژی نام گذاری در خصوص این کاللاها چیست؟",
+    "options": [
+      "واحد",
+      "مختلط",
+      "مختلف برای محصولات مختلف",
+      "عمدهفروشان / خردەفروشان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.308",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 308,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 308؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "دام تعریف مفهوم لجستیک را کاملتر تداعی می کنند؟",
+    "options": [
+      "لجستیک退还ی حمل کالا از نقطه ای به نقطه ای دی گر.",
+      "انتقال سربازان به همراه تسلیمحات و تجهیزات آن ها به منطقه مورد نظر در کمترین زمان ممکن.",
+      "حمل کالا به محل مناسب، در زمان مناسب با بهین هترین هزین ه و بالاترین کیفیت ممکن.",
+      "لجستیک退还ی انتقال کالا از دریا به خشکی و بالعکس در کمترین زمان و هزین ه ممکن."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.162",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 162,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 162؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "طلاعات دو شرکت به شرح زیر است: درجه اهرم مالی درجه اهرم عملیاتی شرکت 3 1/6 A 4 1/2 B اگر حجم فروش هر دو شرکت 5 درصد افزایش یابد، کدام گزینه اثر این افزایش بر EPS دو شرکت را نشان می دهد؟",
+    "options": [
+      "درصد افزایش EPS هر دو شرکت برایر است.",
+      "درصد افزایش EPS شرکت A از شرکت B بیشتر است.",
+      "درصد افزایش EPS شرکت B از شرکت A بیشتر است.",
+      "درصد افزایش بستگی به مبلغ EPS دارد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.195",
+    "nodeId": "mkt.plc",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 195,
+    "courseSectionId": "marketing",
+    "courseSectionTitle": "بازاریابی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس بازاریابی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 195؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "یمت هایی که در حافظه خریداران وجود دارند و خریداران در هنگام ضرورت بررسی یک کالا از آنها استفاده می کنند، چه نام دارد؟",
+    "options": [
+      "پایه",
+      "روانی",
+      "ذهنی",
+      "مرجع"
     ],
     "expectedTimeMs": 80000
   },

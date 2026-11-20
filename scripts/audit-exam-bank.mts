@@ -227,19 +227,24 @@ console.log(`  سؤال ثبت‌شده: ${doctorate.available} — دفترچه
 console.log('== کلید ==');
 const realKeys = CLIENT_BANK_ANSWER_KEYS.filter((k) => !k.id.startsWith('sec.'));
 const derivedKeyCount = realKeys.filter((k) => k.bank === 'examArchiveDerived').length;
-const officialArchiveKeyCount = realKeys.filter((k) => k.bank === 'examArchiveImported' || k.bank === 'examArchivePersian').length;
+const officialArchiveKeyCount = realKeys.filter((k) => k.bank === 'examArchiveImported' || k.bank === 'examArchivePersian' || k.bank === 'examArchiveConfirmed').length;
 console.log(`  کلید سمت سرور: ${CLIENT_BANK_ANSWER_KEYS.length} — سؤال بانک سالی: ${YEARLY_KONKOR_QUESTIONS.length}`);
 console.log(`  دو شمارش جدا: کلید رسمی ${officialArchiveKeyCount} — کلید استنباطی ${derivedKeyCount}`);
 const derivedEvidenceFile = join(evidenceDir, 'derived-keys.json');
 const derivedEvidenceCount = existsSync(derivedEvidenceFile)
   ? Object.keys((JSON.parse(readFileSync(derivedEvidenceFile, 'utf8')) as { keys: Record<string, unknown> }).keys).length
   : 0;
-const derivedConfirmedCount = existsSync(derivedEvidenceFile)
-  ? Object.values((JSON.parse(readFileSync(derivedEvidenceFile, 'utf8')) as { keys: Record<string, { officialAgreement: string }> }).keys).filter((k) => k.officialAgreement === 'derived_confirmed').length
+const confirmedEvidenceFile = join(evidenceDir, 'derived-confirmed.json');
+const confirmedEvidenceCount = existsSync(confirmedEvidenceFile)
+  ? Object.keys((JSON.parse(readFileSync(confirmedEvidenceFile, 'utf8')) as { keys: Record<string, unknown> }).keys).length
   : 0;
-console.log(`  شواهد استنتاج: ${derivedEvidenceCount} کلید ثبت‌شده، ${derivedConfirmedCount} مورد با کلید رسمی هم‌خوان (derived_confirmed)`);
+const confirmedRegistryCount = realKeys.filter((k) => k.bank === 'examArchiveConfirmed').length;
+console.log(`  شواهد استنتاج: ${derivedEvidenceCount} کلید بدون پاسخنامه + ${confirmedEvidenceCount} تأیید رسمیِ مستقل`);
 if (derivedEvidenceCount !== derivedKeyCount) {
   violations.push(`شمارش شواهد استنتاج (${derivedEvidenceCount}) با رجیستری (${derivedKeyCount}) نمی‌خواند`);
+}
+if (confirmedEvidenceCount !== confirmedRegistryCount) {
+  violations.push(`شمارش تأییدهای رسمی (${confirmedEvidenceCount}) با رجیستری (${confirmedRegistryCount}) نمی‌خواند`);
 }
 console.log(`  مقایسه با کلید رسمی بازیابی‌شده: ${compared} سؤال، ${agreed} همخوان، ${acknowledged.length} اختلاف ثبت‌شده`);
 console.log(`  مقابلهٔ سؤال انگلیسی با OCR دفترچه: ${englishChecked - englishFailures.length} از ${englishChecked} تأیید شد`);

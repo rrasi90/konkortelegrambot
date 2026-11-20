@@ -1,0 +1,16 @@
+{
+ "compared": 4,
+ "agreed": 4,
+ "abstained": 0,
+ "officialOverruled": 1,
+ "agreementPercent": 100,
+ "pass": true,
+ "mismatches": [],
+ "officialOverrules": [
+  {
+   "id": "q.k1396.196",
+   "accepted": 4,
+   "auditor": 1
+  }
+ ]
+}

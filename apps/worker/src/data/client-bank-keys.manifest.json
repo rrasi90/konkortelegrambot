@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-11-15T00:55:50.679Z",
   "registryPath": "apps/worker/src/data/client-bank-keys.server.ts",
-  "registrySha256": "4b7c591d0ced2c1e2594e52b967fc4861136ef7f9e00eabc120548e6e9e2100e",
+  "registrySha256": "75929ef5ac966c5d7a4d4452f4359218df183aa22d3fc9af2ae4de4e172a8319",
   "totalKeys": 1282,
   "perBank": {
     "konkorData": 443,
@@ -10,7 +10,8 @@
     "security-canary": 2,
     "examArchiveImported": 19,
     "examArchivePersian": 646,
-    "examArchiveDerived": 33
+    "examArchiveDerived": 23,
+    "examArchiveConfirmed": 10
   },
   "canaryIds": [
     "sec.canary.correct.0001",

@@ -154,8 +154,13 @@ async function writeBank(): Promise<void> {
     process.exit(1);
   }
   const keys = JSON.parse(readFileSync(derivedFile, 'utf8')) as {
-    keys: Record<string, { id: string; year: number; number: number; sectionId: string; derivation: string }>;
+    keys: Record<string, { id: string; year: number; number: number; sectionId: string; derivation: string; officialAgreement?: string }>;
   };
+  const confirmedEvidenceFile = join(evidenceDir, 'derived-confirmed.json');
+  if (existsSync(confirmedEvidenceFile)) {
+    const confirmedKeys = JSON.parse(readFileSync(confirmedEvidenceFile, 'utf8')) as typeof keys;
+    Object.assign(keys.keys, confirmedKeys.keys);
+  }
   const pool = new Map((await buildPool()).map((q) => [q.id, q]));
   const { EXAM_ARCHIVE_DERIVED_QUESTIONS: existingRows } = (await import(
     pathToFileURL(join(root, 'src', 'data', 'examArchiveDerived.ts')).href
@@ -183,7 +188,8 @@ async function writeBank(): Promise<void> {
         courseSectionTitle: section?.title ?? q.sectionId,
         designedFromTextbook: `دفترچهٔ رسمی ارشد ${q.year} — درس ${section?.title ?? q.sectionId}`,
         sourceReference:
-          `کنکور ارشد مدیریت ${q.year} — سؤال ${q.number}؛ کلید استنباطی بدون پاسخنامه، ` +
+          `کنکور ارشد مدیریت ${q.year} — سؤال ${q.number}؛ ` +
+          (record.officialAgreement === 'derived_confirmed' ? 'کلید رسمی تأییدشده با استنتاج مستقل، ' : 'کلید استنباطی بدون پاسخنامه، ') +
           `متن ${q.textSource === 'reviewed' ? 'بازبینی‌شده' : 'استخراج‌شده'} از دفترچه`,
         text: q.stem,
         options: q.options,
@@ -362,18 +368,42 @@ async function importResults(): Promise<void> {
 
   for (const [id] of passB) if (!passA.has(id)) rejected.push({ id, reason: 'گذر B بدون معادل در گذر A' });
 
-  // نوشتن شواهد و sidecar.
+  // نوشتن شواهد و sidecar؛ تفکیک §۴.۵: موردی که کلید رسمی دارد و استنتاج دوگذره آن را
+  // تأیید می‌کند، رسمی است (کلید از پاسخنامه می‌آید، استنتاج فقط تأیید کرده) و هرگز
+  // برچسب «بدون پاسخنامه» نمی‌گیرد.
   const derivedFile = join(evidenceDir, 'derived-keys.json');
-  const previous = existsSync(derivedFile)
+  const confirmedFile = join(evidenceDir, 'derived-confirmed.json');
+  const derivedPrev = existsSync(derivedFile)
     ? (JSON.parse(readFileSync(derivedFile, 'utf8')) as { keys: Record<string, Record<string, unknown>> }).keys
     : {};
-  for (const record of accepted) previous[String(record.id)] = record;
-  // یکسان‌سازی سبکی پذیرفته‌های پیشین (رکورد قدیمی بدون برچسب bidi نماند).
-  for (const raw of Object.values(previous)) {
-    const rec = raw as { derivation?: string; secondPassDerivation?: string };
-    if (rec.derivation) rec.derivation = ensurePersianStart(rec.derivation);
-    if (rec.secondPassDerivation) rec.secondPassDerivation = ensurePersianStart(rec.secondPassDerivation);
+  const confirmedPrev = existsSync(confirmedFile)
+    ? (JSON.parse(readFileSync(confirmedFile, 'utf8')) as { keys: Record<string, Record<string, unknown>> }).keys
+    : {};
+  const acceptedDerived = accepted.filter((record) => record.officialAgreement !== 'derived_confirmed');
+  const acceptedConfirmed = accepted.filter((record) => record.officialAgreement === 'derived_confirmed');
+  // مهاجرت یک‌باره: پذیرش‌های پیشین که طبق فیلد خودِ رکورد، کلید رسمی‌شان تأیید شده
+  // است، از پروندهٔ استنتاج به پروندهٔ رسمی منتقل می‌شوند.
+  for (const id of Object.keys(derivedPrev)) {
+    const rec = derivedPrev[id] as { officialAgreement?: string };
+    if (rec.officialAgreement === 'derived_confirmed') { confirmedPrev[id] = derivedPrev[id]; delete derivedPrev[id]; }
   }
+  for (const id of Object.keys(confirmedPrev)) {
+    const rec = confirmedPrev[id] as { officialAgreement?: string };
+    if (rec.officialAgreement !== 'derived_confirmed') { derivedPrev[id] = confirmedPrev[id]; delete confirmedPrev[id]; }
+  }
+  for (const record of acceptedDerived) derivedPrev[String(record.id)] = record;
+  for (const record of acceptedConfirmed) confirmedPrev[String(record.id)] = record;
+  // برداشت‌های قدیمیِ اشتباهِ قبلی که حالا تأیید رسمی‌اند، از دیکشنری استنتاج بیرون می‌روند.
+  for (const record of acceptedConfirmed) delete derivedPrev[String(record.id)];
+  for (const record of acceptedDerived) delete confirmedPrev[String(record.id)];
+
+  const sanitize = (rec: Record<string, unknown>) => {
+    const r = rec as { derivation?: string; secondPassDerivation?: string };
+    if (r.derivation) r.derivation = ensurePersianStart(r.derivation);
+    if (r.secondPassDerivation) r.secondPassDerivation = ensurePersianStart(r.secondPassDerivation);
+  };
+  Object.values(derivedPrev).forEach(sanitize);
+  Object.values(confirmedPrev).forEach(sanitize);
 
   // حذف دو حالت بی‌اعتبار: (۱) کلیدی که نه در جمعیت است و نه در بانک؛
   // (۲) پذیرش قدیمی که این دور با دادهٔ هر دو گذر دوباره ارزیابی شد و دیگر پذیرفته نیست.
@@ -381,54 +411,72 @@ async function importResults(): Promise<void> {
   const bankIds = new Set(YEARLY_KONKOR_QUESTIONS.map((question) => question.id));
   const acceptedNow = new Set(accepted.map((record) => String(record.id)));
   let pruned = 0;
-  for (const id of Object.keys(previous)) {
-    const a = passA.get(id);
-    const b = passB.get(id);
-    const fullyEvaluable = a !== undefined && b !== undefined && a.layer && b.layer && a.answerOption && b.answerOption;
-    const staleNow = byId.has(id) && fullyEvaluable && !acceptedNow.has(id);
-    if (staleNow || (!byId.has(id) && !bankIds.has(id))) { delete previous[id]; pruned += 1; }
+  for (const dict of [derivedPrev, confirmedPrev]) {
+    for (const id of Object.keys(dict)) {
+      const a = passA.get(id);
+      const b = passB.get(id);
+      const fullyEvaluable = a !== undefined && b !== undefined && a.layer && b.layer && a.answerOption && b.answerOption;
+      const staleNow = byId.has(id) && fullyEvaluable && !acceptedNow.has(id);
+      if (staleNow || (!byId.has(id) && !bankIds.has(id))) { delete dict[id]; pruned += 1; }
+    }
   }
   if (pruned > 0) console.log(`PRUNED_ORPHAN_KEYS ${pruned}`);
 
   writeFileSync(derivedFile, `${JSON.stringify({
     generatedAt: new Date().toISOString(),
     note: 'کلید استنباطی؛ هرگز با برچسب رسمی نمایش داده نمی‌شود (شرط صداقت §۱۰).',
-    keys: previous,
+    keys: derivedPrev,
+  }, null, 1)}\n`, 'utf8');
+  writeFileSync(confirmedFile, `${JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    note: 'کلید رسمی (پاسخنامه) که استنتاج مستقل دوگذره آن را تأیید کرده؛ برچسب: رسمی.',
+    keys: confirmedPrev,
   }, null, 1)}\n`, 'utf8');
   writeFileSync(join(evidenceDir, 'derived-conflicts.json'), `${JSON.stringify({ generatedAt: new Date().toISOString(), conflicts }, null, 1)}\n`, 'utf8');
   writeFileSync(join(evidenceDir, 'derived-unresolved.json'), `${JSON.stringify({ generatedAt: new Date().toISOString(), unresolved }, null, 1)}\n`, 'utf8');
 
   // sidecar سمت سرور — کلید هرگز به کلاینت نمی‌رود (R-036).
-  const sidecarKeys: Record<string, unknown> = {};
-  for (const raw of Object.values(previous)) {
-    const record = raw as { id: string; year: number; number: number; answerOption: number; derivation: string; optionsRejected: string[] };
-    sidecarKeys[record.id] = {
-      correctOption: record.answerOption - 1,
-      examYear: record.year,
-      bookletQuestionNumber: record.number,
-      source: `derived:${record.year}:${record.number}`,
-      bank: 'examArchiveDerived',
-      explanation: `کلید استنباطی (بدون پاسخنامهٔ رسمی). ${record.derivation}`,
-      trapNote: record.optionsRejected.join(' '),
-    };
-  }
+  const buildSidecar = (dict: Record<string, Record<string, unknown>>, bankName: string, explPrefix: string) => {
+    const keys: Record<string, unknown> = {};
+    for (const raw of Object.values(dict)) {
+      const record = raw as { id: string; year: number; number: number; answerOption: number; derivation: string; optionsRejected: string[] };
+      keys[record.id] = {
+        correctOption: record.answerOption - 1,
+        examYear: record.year,
+        bookletQuestionNumber: record.number,
+        source: `${bankName === 'examArchiveConfirmed' ? 'confirmed' : 'derived'}:${record.year}:${record.number}`,
+        bank: bankName,
+        explanation: `${explPrefix}. ${record.derivation}`,
+        trapNote: record.optionsRejected.join(' '),
+      };
+    }
+    return keys;
+  };
+  const sidecarKeys = buildSidecar(derivedPrev, 'examArchiveDerived', 'کلید استنباطی (بدون پاسخنامهٔ رسمی)');
+  const confirmedSidecarKeys = buildSidecar(confirmedPrev, 'examArchiveConfirmed', 'کلید پاسخنامهٔ رسمی، تأییدشده با استنتاج مستقل');
   writeFileSync(
     join(root, 'apps', 'worker', 'src', 'data', 'exam-derived-keys.json'),
     `${JSON.stringify({ note: 'کلید استنباطی؛ فقط سمت سرور (R-036). بازتولید: derive-exam-keys --import', keys: sidecarKeys }, null, 1)}\n`,
     'utf8',
   );
+  writeFileSync(
+    join(root, 'apps', 'worker', 'src', 'data', 'exam-confirmed-keys.json'),
+    `${JSON.stringify({ note: 'هم‌خوانی استنتاج مستقل با کلید رسمی؛ برچسب رسمی (R-036).', keys: confirmedSidecarKeys }, null, 1)}\n`,
+    'utf8',
+  );
 
   void conflicts.length;
   const summary = {
-    accepted: accepted.length,
+    accepted: acceptedDerived.length,
+    confirmedOfficial: acceptedConfirmed.length,
     conflicts: conflicts.length,
     unresolved: unresolved.length,
     rejected: rejected.length,
     rejectedDetail: rejected,
-    registrySidecar: Object.keys(sidecarKeys).length,
+    registrySidecar: Object.keys(sidecarKeys).length + Object.keys(confirmedSidecarKeys).length,
   };
   writeFileSync(join(evidenceDir, 'derived-import-report.json'), `${JSON.stringify(summary, null, 1)}\n`, 'utf8');
-  console.log(`DERIVED_IMPORT accepted=${summary.accepted} conflicts=${summary.conflicts} unresolved=${summary.unresolved} rejected=${summary.rejected} sidecar=${summary.registrySidecar}`);
+  console.log(`DERIVED_IMPORT accepted=${summary.accepted} confirmedOfficial=${summary.confirmedOfficial} conflicts=${summary.conflicts} unresolved=${summary.unresolved} rejected=${summary.rejected} sidecar=${summary.registrySidecar}`);
 }
 
 // ---- audit-sample ----
@@ -485,27 +533,38 @@ async function auditCheck(): Promise<void> {
     return;
   }
   const sample = new Set((JSON.parse(readFileSync(samplePath, 'utf8')) as { id: string }[]).map((q) => q.id));
-  const { keys } = JSON.parse(readFileSync(derivedFile, 'utf8')) as {
-    keys: Record<string, { answerOption: number }>;
-  };
+  const keys: Record<string, { answerOption: number; year: number; number: number }> = {};
+  Object.assign(keys, (JSON.parse(readFileSync(derivedFile, 'utf8')) as { keys: typeof keys }).keys);
+  const confirmedFile2 = join(evidenceDir, 'derived-confirmed.json');
+  if (existsSync(confirmedFile2)) Object.assign(keys, (JSON.parse(readFileSync(confirmedFile2, 'utf8')) as { keys: typeof keys }).keys);
+  const officialEvidence = loadOfficialEvidence();
   const audit = JSON.parse(readFileSync(auditPath, 'utf8')) as { id: string; answerOption: number | null }[];
   let compared = 0;
   let agreed = 0;
   let abstained = 0;
+  const officialOverrules: { id: string; accepted: number; auditor: number | null }[] = [];
   const mismatches: { id: string; accepted: number; auditor: number | null }[] = [];
   for (const record of audit) {
     if (!sample.has(record.id)) continue;
     const accepted = keys[record.id];
     if (!accepted) continue;
     if (record.answerOption == null) { abstained += 1; continue; }
-    compared += 1;
-    if (record.answerOption === accepted.answerOption) agreed += 1;
-    else mismatches.push({ id: record.id, accepted: accepted.answerOption, auditor: record.answerOption });
+    if (record.answerOption === accepted.answerOption) { compared += 1; agreed += 1; }
+    else {
+      const off = officialEvidence[String(accepted.year)]?.entries?.[String(accepted.number)];
+      if (typeof off === 'number' && off === accepted.answerOption) {
+        // داور رسمی حکم می‌کند: ما با پاسخنامه هم‌خوانیم و بازاستخراج‌کننده خطا کرده.
+        officialOverrules.push({ id: record.id, accepted: accepted.answerOption, auditor: record.answerOption });
+        continue;
+      }
+      compared += 1;
+      mismatches.push({ id: record.id, accepted: accepted.answerOption, auditor: record.answerOption });
+    }
   }
   const rate = compared === 0 ? 0 : Math.round((agreed / compared) * 1000) / 10;
-  const report = { compared, agreed, abstained, agreementPercent: rate, pass: rate >= 90 };
-  writeFileSync(join(evidenceDir, 'derivation-audit.json'), `${JSON.stringify({ ...report, mismatches }, null, 1)}\n`, 'utf8');
-  console.log(`AUDIT_CHECK compared=${compared} agreed=${agreed} abstained=${abstained} rate=${rate}٪ pass=${report.pass}`);
+  const report = { compared, agreed, abstained, officialOverruled: officialOverrules.length, agreementPercent: rate, pass: rate >= 90 };
+  writeFileSync(join(evidenceDir, 'derivation-audit.json'), `${JSON.stringify({ ...report, mismatches, officialOverrules }, null, 1)}\n`, 'utf8');
+  console.log(`AUDIT_CHECK compared=${compared} agreed=${agreed} abstained=${abstained} overruledByOfficial=${officialOverrules.length} rate=${rate}٪ pass=${report.pass}`);
 }
 
 await run();
