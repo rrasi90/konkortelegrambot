@@ -387,5 +387,176 @@ export const EXAM_ARCHIVE_DERIVED_QUESTIONS: YearlyKonkorQuestion[] = [
       "بدهکار - بستانکار - بستانکار"
     ],
     "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.196",
+    "nodeId": "mkt.plc",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 196,
+    "courseSectionId": "marketing",
+    "courseSectionTitle": "بازاریابی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس بازاریابی",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 196؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "ر فروشگاههای زنجیرهای بزرگ، برخی محصولات با برند آن فروشگاه به فروش می روند، استراتژی نام گذاری در خصوص این کاللاها چیست؟",
+    "options": [
+      "واحد",
+      "مختلط",
+      "مختلف برای محصولات مختلف",
+      "عمدهفروشان / خردەفروشان"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1396.308",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1396,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 308,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1396 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1396 — سؤال 308؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "دام تعریف مفهوم لجستیک را کاملتر تداعی می کنند؟",
+    "options": [
+      "لجستیک退还ی حمل کالا از نقطه ای به نقطه ای دی گر.",
+      "انتقال سربازان به همراه تسلیمحات و تجهیزات آن ها به منطقه مورد نظر در کمترین زمان ممکن.",
+      "حمل کالا به محل مناسب، در زمان مناسب با بهین هترین هزین ه و بالاترین کیفیت ممکن.",
+      "لجستیک退还ی انتقال کالا از دریا به خشکی و بالعکس در کمترین زمان و هزین ه ممکن."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.162",
+    "nodeId": "bus.finmgmt_hub",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 162,
+    "courseSectionId": "financial_management",
+    "courseSectionTitle": "مدیریت مالی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس مدیریت مالی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 162؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "طلاعات دو شرکت به شرح زیر است: درجه اهرم مالی درجه اهرم عملیاتی شرکت 3 1/6 A 4 1/2 B اگر حجم فروش هر دو شرکت 5 درصد افزایش یابد، کدام گزینه اثر این افزایش بر EPS دو شرکت را نشان می دهد؟",
+    "options": [
+      "درصد افزایش EPS هر دو شرکت برایر است.",
+      "درصد افزایش EPS شرکت A از شرکت B بیشتر است.",
+      "درصد افزایش EPS شرکت B از شرکت A بیشتر است.",
+      "درصد افزایش بستگی به مبلغ EPS دارد."
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1398.195",
+    "nodeId": "mkt.plc",
+    "examYear": 1398,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 195,
+    "courseSectionId": "marketing",
+    "courseSectionTitle": "بازاریابی",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1398 — درس بازاریابی",
+    "sourceReference": "کنکور ارشد مدیریت 1398 — سؤال 195؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "یمت هایی که در حافظه خریداران وجود دارند و خریداران در هنگام ضرورت بررسی یک کالا از آنها استفاده می کنند، چه نام دارد؟",
+    "options": [
+      "پایه",
+      "روانی",
+      "ذهنی",
+      "مرجع"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1405.265",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1405,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 265,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1405 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1405 — سؤال 265؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "ر کدام برنامه ریزی، مشارکت توأم رئیس و مرئوس در تبدیل اهداف کلی به اهداف فردی، تأثیر مثبتی بر عملکرد کارکنان دارد؟",
+    "options": [
+      "عملیاتی",
+      "وظیفه ای",
+      "برمنبای هدف",
+      "تاکتیکی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1405.268",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1405,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 268,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1405 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1405 — سؤال 268؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "مروزه کدام عامل باغث از بین رفتن مرزهای ملی شده است؟",
+    "options": [
+      "جهانی شدن",
+      "قوانین سختگیرانه",
+      "تعرفه های وارداتی",
+      "محدودیت های وارداتی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1405.274",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1405,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 274,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1405 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1405 — سؤال 274؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "أثیرگذاری بر افراد برای نیل به اهداف خاص در شرایط ویژه چه نام دارد؟",
+    "options": [
+      "استراتژی",
+      "برنامه ریزی",
+      "رهبری",
+      "هدف گذاری"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1405.275",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1405,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 275,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1405 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1405 — سؤال 275؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "ر پایین ترین سطح سلسلهمراتب نیازهای مازلو، کدام نیاز قرار دارد؟",
+    "options": [
+      "ایمنی",
+      "فیزپولوژیکی",
+      "احترام",
+      "اجتماعی"
+    ],
+    "expectedTimeMs": 80000
+  },
+  {
+    "id": "q.k1405.283",
+    "nodeId": "bus.commerce_transport_hub",
+    "examYear": 1405,
+    "examLevel": "ارشد",
+    "bookletQuestionNumber": 283,
+    "courseSectionId": "business_transportation",
+    "courseSectionTitle": "دانش مدیریت بازرگانی و حمل‌ونقل",
+    "designedFromTextbook": "دفترچهٔ رسمی ارشد 1405 — درس دانش مدیریت بازرگانی و حمل‌ونقل",
+    "sourceReference": "کنکور ارشد مدیریت 1405 — سؤال 283؛ کلید استنباطی بدون پاسخنامه، متن استخراج‌شده از دفترچه",
+    "text": "جموعه ارزش ها، باورها و شیوه های تفکر که اعضای سازمان در آنها وجود مشترک دارند چه نامیده می شوند؟",
+    "options": [
+      "سلسله مرatab",
+      "فرهنگ",
+      "سبک",
+      "استراتژی"
+    ],
+    "expectedTimeMs": 80000
   }
 ];

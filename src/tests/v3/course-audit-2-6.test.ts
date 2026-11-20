@@ -23,7 +23,7 @@ const EXPECTED_COUNTS: Record<string, number> = {
   'course-stats': 21,
   'course-islamic-mgmt': 92,
   'course-strategic-mgmt': 31,
-  'course-marketing': 102,
+  'course-marketing': 104,
   'course-innovation-mgmt': 28,
 };
 

@@ -157,14 +157,21 @@ async function writeBank(): Promise<void> {
     keys: Record<string, { id: string; year: number; number: number; sectionId: string; derivation: string }>;
   };
   const pool = new Map((await buildPool()).map((q) => [q.id, q]));
+  const { EXAM_ARCHIVE_DERIVED_QUESTIONS: existingRows } = (await import(
+    pathToFileURL(join(root, 'src', 'data', 'examArchiveDerived.ts')).href
+  )) as { EXAM_ARCHIVE_DERIVED_QUESTIONS: Record<string, unknown>[] };
   const { KONKOR_COURSE_SECTIONS } = (await import(
     pathToFileURL(join(root, 'src', 'data', 'yearlyKonkorExams.ts')).href
   )) as { KONKOR_COURSE_SECTIONS: { id: string; title: string; defaultNodeId: string | null }[] };
 
   const rows = Object.values(keys.keys)
-    .filter((record) => pool.has(record.id))
     .map((record) => {
-      const q = pool.get(record.id)!;
+      const q = pool.get(record.id);
+      if (!q) {
+        // سؤال قبلاً در بانک استنتاجی نشسته؛ ردیف موجودش را بدون تغییر نگه می‌داریم
+        // (جمعیتِ دروازه عمداً سؤال‌های بانک‌شده را بیرون می‌گذارد).
+        return existingRows.find((row) => row.id === record.id) ?? null;
+      }
       const section = KONKOR_COURSE_SECTIONS.find((item) => item.id === q.sectionId);
       return {
         id: record.id,
@@ -183,7 +190,7 @@ async function writeBank(): Promise<void> {
         expectedTimeMs: 80_000,
       };
     })
-    .filter((row) => row.nodeId !== null);
+    .filter((row): row is NonNullable<typeof row> => row !== null && row.nodeId !== null);
 
   const header = `/**
  * GENERATED FILE — دست نزنید.
@@ -246,7 +253,11 @@ async function importResults(): Promise<void> {
   // آدیت بانک «متن سؤال تکراری» را نقض می‌داند.
   const { YEARLY_KONKOR_QUESTIONS } = (await import(
     pathToFileURL(join(root, 'src', 'data', 'yearlyKonkorExams.ts')).href
-  )) as { YEARLY_KONKOR_QUESTIONS: { id: string; text: string }[] };
+  )) as { YEARLY_KONKOR_QUESTIONS: { id: string; text: string }[]; KONKOR_COURSE_SECTIONS: { id: string; defaultNodeId: string | null }[] };
+  const { KONKOR_COURSE_SECTIONS } = (await import(
+    pathToFileURL(join(root, 'src', 'data', 'yearlyKonkorExams.ts')).href
+  )) as { KONKOR_COURSE_SECTIONS: { id: string; defaultNodeId: string | null }[] };
+  const sectionHasNode = new Map(KONKOR_COURSE_SECTIONS.map((s) => [s.id, s.defaultNodeId !== null]));
   const stemSeen = new Map<string, string>();
   for (const question of YEARLY_KONKOR_QUESTIONS) {
     stemSeen.set(normalizeText(question.text), question.id);
@@ -341,6 +352,11 @@ async function importResults(): Promise<void> {
       conflicts.push({ ...record, officialKey: official });
       continue; // تعارض هرگز خودکار وارد بانک نمی‌شود.
     }
+    if (!sectionHasNode.get(q.sectionId)) {
+      // درس‌های قدیمی (نشر) عمداً بیرون مدل ۱۶‌درسی‌اند؛ بانک سؤالی برایشان ندارد.
+      rejected.push({ id, reason: `درس «${q.sectionId}» بیرون مدل ۱۶‌درسی است (گام شش/کارگاه)` });
+      continue;
+    }
     accepted.push(record);
   }
 
@@ -352,6 +368,21 @@ async function importResults(): Promise<void> {
     ? (JSON.parse(readFileSync(derivedFile, 'utf8')) as { keys: Record<string, Record<string, unknown>> }).keys
     : {};
   for (const record of accepted) previous[String(record.id)] = record;
+
+  // حذف دو حالت بی‌اعتبار: (۱) کلیدی که نه در جمعیت است و نه در بانک؛
+  // (۲) پذیرش قدیمی که این دور با دادهٔ هر دو گذر دوباره ارزیابی شد و دیگر پذیرفته نیست.
+  // (idهای بانک‌شده عمداً از جمعیت بیرون‌اند؛ باطل کردنشان خطای دور قبل بود.)
+  const bankIds = new Set(YEARLY_KONKOR_QUESTIONS.map((question) => question.id));
+  const acceptedNow = new Set(accepted.map((record) => String(record.id)));
+  let pruned = 0;
+  for (const id of Object.keys(previous)) {
+    const a = passA.get(id);
+    const b = passB.get(id);
+    const fullyEvaluable = a !== undefined && b !== undefined && a.layer && b.layer && a.answerOption && b.answerOption;
+    const staleNow = byId.has(id) && fullyEvaluable && !acceptedNow.has(id);
+    if (staleNow || (!byId.has(id) && !bankIds.has(id))) { delete previous[id]; pruned += 1; }
+  }
+  if (pruned > 0) console.log(`PRUNED_ORPHAN_KEYS ${pruned}`);
 
   writeFileSync(derivedFile, `${JSON.stringify({
     generatedAt: new Date().toISOString(),
